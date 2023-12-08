@@ -80,7 +80,7 @@ namespace Dt.Mgr.Workflow
             _sketch.His.CmdChanged += OnSketchChanged;
         }
 
-        async void OnAdd(object sender, Mi e)
+        async void OnAdd(Mi e)
         {
             if (await CancelSave())
                 LoadPrc(-1);
@@ -97,7 +97,7 @@ namespace Dt.Mgr.Workflow
             IsChanged = _sketch.His.CanUndo || _prc.IsModified;
         }
 
-        async void OnSave(object sender, Mi e)
+        async void OnSave(Mi e)
         {
             DateTime now = Kit.Now;
             _prc.Mtime = now;
@@ -141,7 +141,7 @@ namespace Dt.Mgr.Workflow
             return Task.FromResult(true);
         }
 
-        async void OnDel(object sender, Mi e)
+        async void OnDel(Mi e)
         {
             if (await Kit.Confirm($"确认要删除流程模板[{_prc.Name}]吗？"))
             {

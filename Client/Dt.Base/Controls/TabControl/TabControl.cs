@@ -413,14 +413,14 @@ namespace Dt.Base
         /// <summary>
         /// 弹出面板关闭时清除选择项
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnPopClosed(object sender, bool e)
+        /// <param name="arg1"></param>
+        /// <param name="arg2"></param>
+        void OnPopClosed(Dlg arg1, bool arg2)
         {
             SelectedIndex = -1;
         }
 
-        void OnPopResized(object sender, EventArgs e)
+        void OnPopResized()
         {
             TabItem item = SelectedItem;
             if (item == null)

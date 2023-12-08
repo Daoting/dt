@@ -56,7 +56,7 @@ namespace Dt.Base
         /// <summary>
         /// 查询事件
         /// </summary>
-        public event EventHandler<string> Search;
+        public event Action<string> Search;
 
         /// <summary>
         /// 获取设置查询框提示内容
@@ -149,7 +149,7 @@ namespace Dt.Base
             }
         }
 
-        async void OnFixClick(object sender, ItemClickArgs e)
+        async void OnFixClick(ItemClickArgs e)
         {
             if (e.Data is string txt)
                 await OnSearch("#" + txt);
@@ -158,7 +158,7 @@ namespace Dt.Base
         async Task OnSearch(string p_text)
         {
             Result = p_text;
-            Search?.Invoke(this, p_text);
+            Search?.Invoke(p_text);
 
             // 非Tab内首页自动后退
             if (!IsHome)
@@ -246,7 +246,7 @@ namespace Dt.Base
             _lvHis.Data = null;
         }
 
-        async void OnHisClick(object sender, ItemClickArgs e)
+        async void OnHisClick(ItemClickArgs e)
         {
             await OnSearch(e.Data.To<SearchHistoryX>().Content);
         }

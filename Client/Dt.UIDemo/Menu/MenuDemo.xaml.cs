@@ -28,12 +28,12 @@ namespace Dt.UIDemo
             _lv.ItemClick += OnSelectMi;
         }
 
-        void OnItemClick(object sender, Mi e)
+        void OnItemClick(Mi e)
         {
             Kit.Msg(string.Format("点击菜单项：{0}", e.ID));
         }
 
-        void OnSelectMi(object sender, ItemClickArgs e)
+        void OnSelectMi(ItemClickArgs e)
         {
             _fv.Data = e.Data;
         }

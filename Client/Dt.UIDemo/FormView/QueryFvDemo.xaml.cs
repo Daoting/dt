@@ -27,12 +27,12 @@ namespace Dt.UIDemo
         {
             InitializeComponent();
             _fvFull.Data = _fv;
-            _fv.CellClick += (s, e) => _fvCell.Data = e;
+            _fv.CellClick += (e) => _fvCell.Data = e;
             _fv.Query += OnQuery;
             LoadData();
         }
 
-        void OnQuery(object sender, QueryClause e)
+        void OnQuery(QueryClause e)
         {
             Kit.Msg("执行查询");
         }

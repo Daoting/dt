@@ -43,7 +43,7 @@ namespace Dt.Base.Tools
             _lvFile.Data = nl;
         }
 
-        void OnRefreshFile(object sender, Mi e)
+        void OnRefreshFile(Mi e)
         {
             UpdateSqliteFile(e.Data.ToString());
         }

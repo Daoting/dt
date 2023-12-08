@@ -45,7 +45,7 @@ namespace Dt.Mgr.Module
             Forward(new SelectFilePage(new ResFileMgr { Setting = setting }, _owner));
         }
         
-        void OnSearch(object sender, Mi e)
+        void OnSearch(Mi e)
         {
             Forward(new SelectSearchPage(_owner));
         }

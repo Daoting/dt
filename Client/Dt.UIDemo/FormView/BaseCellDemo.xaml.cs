@@ -26,8 +26,8 @@ namespace Dt.UIDemo
         public BaseCellDemo()
         {
             InitializeComponent();
-            _fv.CellClick += (s, e) => CellDemoKit.OnCellClick(e, _pbCell);
-            _fv.Changed += (s, e) => CellDemoKit.OnChanged(_fv, e);
+            _fv.CellClick += (e) => CellDemoKit.OnCellClick(e, _pbCell);
+            _fv.Changed += (e) => CellDemoKit.OnChanged(_fv, e);
             _pbFv.Data = _fv;
             CreateTable();
             OnRow(null, null);
@@ -169,7 +169,7 @@ namespace Dt.UIDemo
             _link.Title = $"切换内容{++_cnt}";
         }
 
-        void OnPyChanged(object sender, object e)
+        void OnPyChanged(object e)
         {
             if (e != null)
                 _fv.Row["tgtpy"] = Kit.GetPinYin(e.ToString());

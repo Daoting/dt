@@ -41,7 +41,7 @@ namespace Dt.Mgr.Chat
             _lv.Data = await ChatMemberX.Query(null);
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             ItemClick?.Invoke(this, e.Row.ID);
         }

@@ -48,7 +48,7 @@ namespace Dt.Base.Report
             _fv.Data = null;
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             _fv.Data = e.Row;
             SelectTab("编辑");
@@ -60,12 +60,12 @@ namespace Dt.Base.Report
                 p_tabs.Select("编辑");
         }
 
-        void OnAdd(object sender, Mi e)
+        void OnAdd(Mi e)
         {
             _fv.Data = _info.Root.Data.DataSet.AddRow(new { name = "新数据", isscritp = true });
         }
 
-        void OnDel(object sender, Mi e)
+        void OnDel(Mi e)
         {
             _lv.Table.Remove(_fv.Row);
             _fv.Data = null;

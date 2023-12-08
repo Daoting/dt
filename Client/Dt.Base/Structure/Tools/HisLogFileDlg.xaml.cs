@@ -24,12 +24,12 @@ namespace Dt.Base.Tools
 
         public FileInfo FileInfo => ((LocalFileItem)_lv.SelectedItem)?.Info;
 
-        void OnOpen(object sender, Mi e)
+        void OnOpen(Mi e)
         {
             DoOpen();
         }
 
-        void OnDblClick(object sender, object e)
+        void OnDblClick(object e)
         {
             DoOpen();
         }

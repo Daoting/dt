@@ -33,7 +33,7 @@ namespace Dt.Mgr.Workflow
             _lvTask.Data = await WfdDs.GetAllMyPrc();
         }
 
-        void OnTaskItemClick(object sender, ItemClickArgs e)
+        void OnTaskItemClick(ItemClickArgs e)
         {
             var row = e.Row;
             if (row.Tag != null)

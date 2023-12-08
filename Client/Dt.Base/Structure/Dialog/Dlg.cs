@@ -216,17 +216,17 @@ namespace Dt.Base
         /// <summary>
         /// 对话框正在关闭事件，可以取消关闭
         /// </summary>
-        public event EventHandler<DlgClosingEventArgs> Closing;
+        public event Action<Dlg, DlgClosingArgs> Closing;
 
         /// <summary>
         /// 对话框关闭后事件
         /// </summary>
-        public event EventHandler<bool> Closed;
+        public event Action<Dlg, bool> Closed;
 
         /// <summary>
         /// 拖拽调整大小后事件
         /// </summary>
-        public event EventHandler Resized;
+        public event Action Resized;
         #endregion
 
         #region 属性
@@ -467,9 +467,8 @@ namespace Dt.Base
         /// <summary>
         /// 确认并关闭对话框，使方法ShowAsync返回true，方便菜单项使用
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void OnOK(object sender, Mi e)
+        public void OnOK(Mi e)
         {
             Close(true);
         }
@@ -1032,7 +1031,7 @@ namespace Dt.Base
                 // 关闭前
                 if (Closing != null)
                 {
-                    var args = new DlgClosingEventArgs() { Result = p_ok };
+                    var args = new DlgClosingArgs() { Result = p_ok };
                     Closing(this, args);
                     await args.EnsureAllCompleted();
                     if (args.Cancel)
@@ -1373,7 +1372,7 @@ namespace Dt.Base
                 _bdResize = null;
 
                 // 触发事件
-                Resized?.Invoke(this, EventArgs.Empty);
+                Resized?.Invoke();
             }
         }
 
@@ -1494,13 +1493,13 @@ namespace Dt.Base
             await _menu.OpenContextMenu(e.GetPosition(null));
         }
 
-        static void OnCopyDlg(object sender, Mi e)
+        static void OnCopyDlg(Mi e)
         {
             var dlg = _menu.DataContext as Dlg;
             Kit.CopyToClipboard(dlg.GetType().FullName, true);
         }
 
-        static void OnCopyContent(object sender, Mi e)
+        static void OnCopyContent(Mi e)
         {
             var dlg = _menu.DataContext as Dlg;
             if (dlg.Content != null)
@@ -1513,7 +1512,7 @@ namespace Dt.Base
             }
         }
 
-        static void OnDlgXaml(object sender, Mi e)
+        static void OnDlgXaml(Mi e)
         {
             Type tp = _menu.DataContext.GetType();
             if (tp == typeof(Dlg))
@@ -1533,7 +1532,7 @@ namespace Dt.Base
             }
         }
 
-        static void OnContentXaml(object sender, Mi e)
+        static void OnContentXaml(Mi e)
         {
             var dlg = _menu.DataContext as Dlg;
             if (dlg.Content != null)

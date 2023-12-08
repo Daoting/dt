@@ -24,8 +24,8 @@ namespace Dt.UIDemo
         public FileCellDemo()
         {
             InitializeComponent();
-            _fv.CellClick += (s, e) => CellDemoKit.OnCellClick(e, _pbCell);
-            _fv.Changed += (s, e) => CellDemoKit.OnChanged(_fv, e);
+            _fv.CellClick += (e) => CellDemoKit.OnCellClick(e, _pbCell);
+            _fv.Changed += (e) => CellDemoKit.OnChanged(_fv, e);
             _pbFv.Data = _fv;
             LoadData();
         }
@@ -56,7 +56,7 @@ namespace Dt.UIDemo
             });
         }
 
-        void OnChanged(object sender, object e)
+        void OnChanged(object e)
         {
             Kit.Msg("文件列表变化");
         }

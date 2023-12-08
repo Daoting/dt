@@ -499,11 +499,11 @@ namespace Dt.Base
             {
                 menu = new Menu { IsContextMenu = true };
                 Mi mi = new Mi { ID = "转为表格", Icon = Icons.田字格 };
-                mi.Click += (s, args) => AddSheetTable(_excel.ActiveSheet.Selections[0]);
+                mi.Click += (args) => AddSheetTable(_excel.ActiveSheet.Selections[0]);
                 menu.Items.Add(mi);
 
                 mi = new Mi { ID = "生成柱状图", Icon = Icons.对比图 };
-                mi.Click += (s, args) => AddChart(_excel.ActiveSheet.Selections[0]);
+                mi.Click += (args) => AddChart(_excel.ActiveSheet.Selections[0]);
                 menu.Items.Add(mi);
                 _info.SelectionMenu = menu;
             }
@@ -531,15 +531,15 @@ namespace Dt.Base
                 if (_info.Root.ViewSetting.ShowSelectionMenu)
                 {
                     Mi mi = new Mi { ID = "删除表格", Icon = Icons.田字格 };
-                    mi.Click += (s, args) => DelSheetTable();
+                    mi.Click += (args) => DelSheetTable();
                     menu.Items.Add(mi);
 
                     mi = new Mi { ID = "清除所有图表", Icon = Icons.对比图 };
-                    mi.Click += (s, args) => ClearChart();
+                    mi.Click += (args) => ClearChart();
                     menu.Items.Add(mi);
 
                     mi = new Mi { ID = "清除所有表格", Icon = Icons.田字格 };
-                    mi.Click += (s, args) => ClearTable();
+                    mi.Click += (args) => ClearTable();
                     menu.Items.Add(mi);
                 }
 

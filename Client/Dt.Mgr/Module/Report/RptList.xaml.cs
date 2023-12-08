@@ -61,25 +61,25 @@ namespace Dt.Mgr.Module
             Update();
         }
 
-        void OnNaviToSearch(object sender, Mi e)
+        void OnNaviToSearch(Mi e)
         {
             NaviTo(_win.Search);
         }
 
-        void OnAdd(object sender, Mi e)
+        void OnAdd(Mi e)
         {
             _win.Form.Update(-1);
             NaviTo(_win.Form);
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             if (e.IsChanged)
                 _win.Form.Update(e.Row.ID);
             NaviTo(_win.Form);
         }
 
-        void OnRefresh(object sender, Mi e)
+        void OnRefresh(Mi e)
         {
             RefreshSqliteWin.UpdateSqliteFile("report");
         }

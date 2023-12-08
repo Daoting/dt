@@ -75,7 +75,7 @@ namespace Dt.Mgr
         public static void AddMenu(Lv p_lv)
         {
             //Throw.IfNull(p_lv);
-            //p_lv.ItemDoubleClick += (s, e) => OpenFormWin(new WfFormInfo(((Row)e).Long("id")));
+            //p_lv.ItemDoubleClick += (e) => OpenFormWin(new WfFormInfo(((Row)e).Long("id")));
 
             //Menu menu = new Menu();
             //var mi = new Mi { ID = "查看表单", Icon = Icons.全选 };

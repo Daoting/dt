@@ -67,7 +67,7 @@ namespace Dt.MgrDemo
             _lv.Data= ds;
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             Kit.RunAsync(() =>
             {

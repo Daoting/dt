@@ -50,7 +50,7 @@ namespace Dt.MgrDemo
             ShowForm(-1);
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             if (_lv.SelectionMode != SelectionMode.Multiple)
                 ShowForm(e.Row.ID);

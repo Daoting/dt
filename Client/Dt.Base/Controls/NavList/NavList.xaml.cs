@@ -235,7 +235,7 @@ namespace Dt.Base
         #endregion
 
         #region 外部方法
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             Select(e.Data as Nav);
         }
@@ -258,7 +258,7 @@ namespace Dt.Base
             }
         }
 
-        async void OwnWin_Closing(object sender, AsyncCancelEventArgs e)
+        async void OwnWin_Closing(object sender, AsyncCancelArgs e)
         {
             using (e.Wait())
             {

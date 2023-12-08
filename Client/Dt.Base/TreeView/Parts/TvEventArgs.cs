@@ -15,7 +15,7 @@ namespace Dt.Base
     /// <summary>
     /// 加载子节点事件参数
     /// </summary>
-    public class LoadingChildArgs : AsyncEventArgs
+    public class LoadingChildArgs : AsyncArgs
     {
         public LoadingChildArgs(TvItem p_item)
         {

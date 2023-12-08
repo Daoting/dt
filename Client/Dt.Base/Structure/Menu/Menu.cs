@@ -43,22 +43,22 @@ namespace Dt.Base
         /// <summary>
         /// 菜单项点击事件
         /// </summary>
-        public event EventHandler<Mi> ItemClick;
+        public event Action<Mi> ItemClick;
 
         /// <summary>
         /// 打开上下文菜单前事件，可取消显示、禁止显示、初始化菜单项、替换整个菜单等处理
         /// </summary>
-        public event EventHandler<AsyncCancelEventArgs> Opening;
+        public event Action<Menu, AsyncCancelArgs> Opening;
 
         /// <summary>
         /// 上下文菜单打开后事件
         /// </summary>
-        public event EventHandler Opened;
+        public event Action<Menu> Opened;
 
         /// <summary>
         /// 上下文菜单关闭后事件
         /// </summary>
-        public event EventHandler Closed;
+        public event Action<Menu> Closed;
         #endregion
 
         #region 属性
@@ -381,7 +381,7 @@ namespace Dt.Base
 
         internal void OnItemClick(Mi p_item)
         {
-            ItemClick?.Invoke(this, p_item);
+            ItemClick?.Invoke(p_item);
         }
         #endregion
 

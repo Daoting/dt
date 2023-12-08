@@ -44,7 +44,7 @@ namespace Dt.Mgr.Rbac
         #endregion
 
         #region 交互
-        async void OnAdd(object sender, Mi e)
+        async void OnAdd(Mi e)
         {
             var dlg = new Group4UserDlg();
             if (await dlg.Show(_releatedID, e)
@@ -54,7 +54,7 @@ namespace Dt.Mgr.Rbac
             }
         }
 
-        async void OnDel(object sender, Mi e)
+        async void OnDel(Mi e)
         {
             if (!await Kit.Confirm("确认要删除关联吗？"))
             {
@@ -79,18 +79,18 @@ namespace Dt.Mgr.Rbac
         #endregion
 
         #region 选择
-        void OnSelectAll(object sender, Mi e)
+        void OnSelectAll(Mi e)
         {
             _lv.SelectAll();
         }
 
-        void OnMultiMode(object sender, Mi e)
+        void OnMultiMode(Mi e)
         {
             _lv.SelectionMode = Base.SelectionMode.Multiple;
             Menu.HideExcept("删除", "全选", "取消");
         }
 
-        void OnCancelMulti(object sender, Mi e)
+        void OnCancelMulti(Mi e)
         {
             _lv.SelectionMode = Base.SelectionMode.Single;
             Menu.ShowExcept("删除", "全选", "取消");

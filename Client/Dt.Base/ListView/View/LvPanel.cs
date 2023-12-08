@@ -943,7 +943,7 @@ namespace Dt.Base.ListView
             _topMargin = 0;
         }
 
-        void OnToolbarClick(object sender, Mi e)
+        void OnToolbarClick(Mi e)
         {
             string str = e.CmdParam as string;
             if (string.IsNullOrEmpty(str))

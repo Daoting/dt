@@ -25,7 +25,7 @@ namespace Dt.Mgr.Home
             LoadTopBar();
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             OwnDlg?.Close();
             Kit.RunAsync(() =>
@@ -41,9 +41,8 @@ namespace Dt.Mgr.Home
         /// <summary>
         /// 查询菜单
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="p_filter"></param>
-        void OnSearch(object sender, string p_filter)
+        void OnSearch(string p_filter)
         {
             if (string.IsNullOrEmpty(p_filter))
                 _lv.Data = null;
@@ -51,14 +50,14 @@ namespace Dt.Mgr.Home
                 _lv.Data = MenuDs.LoadMenusByName(p_filter.ToLower());
         }
 
-        void OnMenuOpening(object sender, AsyncCancelEventArgs e)
+        void OnMenuOpening(object sender, AsyncCancelArgs e)
         {
             RootMenu.DoMenuOpening(sender, e);
         }
 
-        void OnFav(object sender, Mi e)
+        void OnFav(Mi e)
         {
-            RootMenu.DoFavMenu(sender, e);
+            RootMenu.DoFavMenu(e);
         }
 
         void LoadTopBar()

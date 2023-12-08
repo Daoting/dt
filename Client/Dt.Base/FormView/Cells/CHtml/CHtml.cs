@@ -34,7 +34,7 @@ namespace Dt.Base
         /// <summary>
         /// 保存事件
         /// </summary>
-        public event EventHandler Saved;
+        public event Action<CHtml> Saved;
         #endregion
 
         protected override void OnApplyCellTemplate()
@@ -69,7 +69,7 @@ namespace Dt.Base
 
         internal void OnSaved()
         {
-            Saved?.Invoke(this, EventArgs.Empty);
+            Saved?.Invoke(this);
         }
 
         #region IHtmlEditHost

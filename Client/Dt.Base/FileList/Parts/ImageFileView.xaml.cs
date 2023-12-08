@@ -153,7 +153,7 @@ namespace Dt.Base.FileLists
             _isDragging = false;
         }
 
-        void OnSave(object sender, Mi e)
+        void OnSave(Mi e)
         {
             _curItem?.SaveAs();
         }

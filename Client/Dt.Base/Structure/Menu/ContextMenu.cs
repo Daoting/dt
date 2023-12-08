@@ -136,7 +136,7 @@ namespace Dt.Base
             // 取消或无菜单项时不显示
             if (Opening != null)
             {
-                var args = new AsyncCancelEventArgs();
+                var args = new AsyncCancelArgs();
                 Opening(this, args);
                 await args.EnsureAllCompleted();
                 if (args.Cancel || Items.Count == 0)
@@ -156,7 +156,7 @@ namespace Dt.Base
                     // 不向下层对话框传递Press事件
                     AllowRelayPress = false,
                 };
-                _dlg.Closed += (s, e) => Closed?.Invoke(this, EventArgs.Empty);
+                _dlg.Closed += (s, e) => Closed?.Invoke(this);
             }
 
             // 相对位置显示
@@ -189,7 +189,7 @@ namespace Dt.Base
             }
 
             Focus(FocusState.Programmatic);
-            Opened?.Invoke(this, EventArgs.Empty);
+            Opened?.Invoke(this);
             return true;
         }
 

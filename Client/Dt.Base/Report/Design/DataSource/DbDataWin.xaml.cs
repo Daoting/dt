@@ -31,7 +31,7 @@ namespace Dt.Base.Report
             _info.Saved += OnSaved;
             _lv.Filter = OnFilter;
             LoadTbl();
-            OnCreateSearchFv(null, null);
+            OnCreateSearchFv(null);
         }
 
         bool OnFilter(object obj)
@@ -50,7 +50,7 @@ namespace Dt.Base.Report
             _fv.Data = null;
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             _fv.Data = e.Row;
             SelectTab("编辑");
@@ -62,18 +62,18 @@ namespace Dt.Base.Report
                 p_tabs.Select("编辑");
         }
 
-        async void OnAdd(object sender, Mi e)
+        async void OnAdd(Mi e)
         {
             _fv.Data = _info.Root.Data.DataSet.AddRow(new { name = "新数据", srv = await _fv.GetCookie("srv") });
         }
 
-        void OnDel(object sender, Mi e)
+        void OnDel(Mi e)
         {
             _lv.Table.Remove(_fv.Row);
             _fv.Data = null;
         }
 
-        async void OnQuerySql(object sender, Mi e)
+        async void OnQuerySql(Mi e)
         {
             Fv fv = _tab.Content as Fv;
             if (fv == null)
@@ -93,14 +93,14 @@ namespace Dt.Base.Report
             NaviTo("查询结果");
         }
 
-        void OnCreateSearchFv(object sender, Mi e)
+        void OnCreateSearchFv(Mi e)
         {
             Fv fv = new Fv();
             _info.Root.Params.LoadFvCells(fv);
             _tab.Content = fv;
         }
 
-        void OnUpdateCols(object sender, Mi e)
+        void OnUpdateCols(Mi e)
         {
             var row = _fv.Row;
             var tbl = _lvCols.Table;

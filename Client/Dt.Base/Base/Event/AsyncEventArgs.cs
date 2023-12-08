@@ -21,7 +21,7 @@ namespace Dt.Base
     /// <para>    await Fun();</para>
     /// <para>}</para>
     /// </summary>
-    public class AsyncEventArgs : EventArgs
+    public class AsyncArgs : EventArgs
     {
         List<Task> _tasks;
 
@@ -63,10 +63,10 @@ namespace Dt.Base
 
         class Deferral : IDisposable
         {
-            AsyncEventArgs _owner;
+            AsyncArgs _owner;
             TaskCompletionSource<bool> _taskSrc;
 
-            public Deferral(AsyncEventArgs p_owner)
+            public Deferral(AsyncArgs p_owner)
             {
                 _owner = p_owner;
                 _taskSrc = new TaskCompletionSource<bool>();

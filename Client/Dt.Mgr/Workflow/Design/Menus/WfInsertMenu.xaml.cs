@@ -26,7 +26,7 @@ namespace Dt.Mgr.Workflow
             Opening += OnOpening;
         }
 
-        void OnOpening(object sender, AsyncCancelEventArgs e)
+        void OnOpening(Menu arg1, AsyncCancelArgs arg2)
         {
             this["插入起始活动"].Visibility = IsValidByShapetype("开始") ? Visibility.Collapsed : Visibility.Visible;
             this["插入结束活动"].Visibility = IsValidByShapetype("结束") ? Visibility.Collapsed : Visibility.Visible;
@@ -35,9 +35,8 @@ namespace Dt.Mgr.Workflow
         /// <summary>
         /// 执行插入开始菜单
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnStartNode(object sender, Mi e)
+        void OnStartNode(Mi e)
         {
             SNode node = new SNode(_sketch)
             {
@@ -52,9 +51,8 @@ namespace Dt.Mgr.Workflow
         /// <summary>
         /// 执行插入任务菜单
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnAtvNode(object sender, Mi e)
+        void OnAtvNode(Mi e)
         {
             SNode node = new SNode(_sketch)
             {
@@ -69,9 +67,8 @@ namespace Dt.Mgr.Workflow
         /// <summary>
         /// 执行插入延时菜单
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnSyncNode(object sender, Mi e)
+        void OnSyncNode(Mi e)
         {
             SNode node = new SNode(_sketch)
             {
@@ -88,9 +85,8 @@ namespace Dt.Mgr.Workflow
         /// <summary>
         /// 执行插入结束菜单
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnEndNode(object sender, Mi e)
+        void OnEndNode(Mi e)
         {
             SNode node = new SNode(_sketch)
             {
@@ -107,9 +103,8 @@ namespace Dt.Mgr.Workflow
         /// <summary>
         /// 执行插入文本项菜单
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnTextNode(object sender, Mi e)
+        void OnTextNode(Mi e)
         {
             TextBlock tb = new TextBlock { Text = "新文本", FontSize = 20 };
             Insert(tb);

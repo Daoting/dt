@@ -39,7 +39,7 @@ namespace Dt.Base
                 {
                     _menu = new Menu { IsContextMenu = true, Placement = MenuPosition.BottomLeft };
                     var item = new Mi { ID = "取消自启动", Icon = Icons.圈停止 };
-                    item.Click += (o, a) => AutoStartKit.DelAutoStart();
+                    item.Click += (a) => AutoStartKit.DelAutoStart();
                     _menu.Items.Add(item);
 
                     item = new Mi { ID = "设置自启动", Icon = Icons.圈播放 };
@@ -47,7 +47,7 @@ namespace Dt.Base
                     _menu.Items.Add(item);
 
                     item = new Mi { ID = "系统", Icon = Icons.设置 };
-                    item.Click += (o, a) => SysTrace.ShowSysBox();
+                    item.Click += (a) => SysTrace.ShowSysBox();
                     _menu.Items.Add(item);
                 }
 
@@ -75,7 +75,7 @@ namespace Dt.Base
             };
         }
 
-        static void SetAutoStart(object sender, Mi e)
+        static void SetAutoStart(Mi e)
         {
             AutoStartKit.SetAutoStart(_currentWin);
             _currentWin = null;

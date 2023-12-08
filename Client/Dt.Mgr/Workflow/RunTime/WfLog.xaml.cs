@@ -85,7 +85,7 @@ namespace Dt.Base
                 Kit.Msg(string.Format("{0}\r\n{1}", node.Title, msg));
         }
 
-        async void OnLog(object sender, Mi e)
+        async void OnLog(Mi e)
         {
             if (e.ID == "详细")
             {

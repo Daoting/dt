@@ -19,7 +19,7 @@ namespace Dt.UIDemo
             InitializeComponent();
         }
 
-        void OnSearch(object sender, string e)
+        void OnSearch(string e)
         {
             
         }

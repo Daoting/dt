@@ -48,7 +48,7 @@ namespace Dt.Base
         /// <summary>
         /// 查询事件
         /// </summary>
-        public event EventHandler<QueryClause> Query;
+        public event Action<QueryClause> Query;
         #endregion
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Dt.Base
 
         public void OnQuery()
         {
-            Query?.Invoke(this, new QueryClause(this));
+            Query?.Invoke(new QueryClause(this));
         }
 
         public void OnReset()

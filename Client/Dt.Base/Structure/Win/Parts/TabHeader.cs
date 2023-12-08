@@ -174,13 +174,13 @@ namespace Dt.Base.Docking
             }
         }
 
-        static void OnAutoHide(object sender, Mi e)
+        static void OnAutoHide(Mi e)
         {
             if (_menu.DataContext is Tab tab)
                 tab.IsPinned = false;
         }
 
-        static void OnCopyWin(object sender, Mi e)
+        static void OnCopyWin(Mi e)
         {
             var tab = _menu.DataContext as Tab;
             Type tp = tab.OwnWin != null ? tab.OwnWin.GetType() : (tab.OwnDlg != null ? tab.OwnDlg.GetType() : null);
@@ -194,7 +194,7 @@ namespace Dt.Base.Docking
             }
         }
 
-        static void OnCopyTab(object sender, Mi e)
+        static void OnCopyTab(Mi e)
         {
             var tab = _menu.DataContext as Tab;
             Type tp = tab.GetType();
@@ -208,7 +208,7 @@ namespace Dt.Base.Docking
         }
 
 #if WIN
-        static void OnWinXaml(object sender, Mi e)
+        static void OnWinXaml(Mi e)
         {
             var tab = _menu.DataContext as Tab;
             Type tp = tab.OwnWin != null ? tab.OwnWin.GetType() : (tab.OwnDlg != null ? tab.OwnDlg.GetType() : null);
@@ -229,7 +229,7 @@ namespace Dt.Base.Docking
             }
         }
 
-        static void OnTabXaml(object sender, Mi e)
+        static void OnTabXaml(Mi e)
         {
             var tab = _menu.DataContext as Tab;
             Type tp = tab.GetType();
@@ -243,7 +243,7 @@ namespace Dt.Base.Docking
             if (res == null)
             {
                 Kit.Msg($"[{tp.Name}] 无Xaml内容，\r\n显示容器Xaml");
-                OnWinXaml(sender, e);
+                OnWinXaml(e);
             }
             else
             {

@@ -27,7 +27,7 @@ namespace Dt.Mgr.Workflow
             _lv.Data = await WfdPrcX.Query("where 1=1 order by Dispidx");
         }
 
-        async void OnSearch(object sender, string e)
+        async void OnSearch(string e)
         {
             if (e == "#全部")
             {
@@ -40,18 +40,18 @@ namespace Dt.Mgr.Workflow
             NaviTo("列表");
         }
 
-        void OnAdd(object sender, Mi e)
+        void OnAdd(Mi e)
         {
             EditTemplate("新流程", -1);
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             var prc = e.Data.To<WfdPrcX>();
             EditTemplate(prc.Name, prc.ID);
         }
 
-        void OnEditTemplateContext(object sender, Mi e)
+        void OnEditTemplateContext(Mi e)
         {
             var prc = e.Data.To<WfdPrcX>();
             EditTemplate(prc.Name, prc.ID);
@@ -62,7 +62,7 @@ namespace Dt.Mgr.Workflow
             Kit.OpenWin(typeof(WorkflowDesign), p_title, Icons.修改, p_id);
         }
 
-        async void OnDelContext(object sender, Mi e)
+        async void OnDelContext(Mi e)
         {
             var p_prc = e.Data.To<WfdPrcX>();
             if (!await Kit.Confirm($"确认要删除流程模板[{p_prc.Name}]吗？"))
@@ -77,12 +77,12 @@ namespace Dt.Mgr.Workflow
             }
         }
 
-        void OnToSearch(object sender, Mi e)
+        void OnToSearch(Mi e)
         {
             NaviTo("搜索");
         }
 
-        void OnWfInst(object sender, Mi e)
+        void OnWfInst(Mi e)
         {
             Kit.OpenWin(typeof(WfInstMgr), "流程实例", Icons.信件);
         }

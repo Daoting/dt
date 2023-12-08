@@ -43,7 +43,7 @@ namespace Dt.Base.Report
             return $"Global({_lv.SelectedRow.Str("name")})";
         }
 
-        void OnSave(object sender, Mi e)
+        void OnSave(Mi e)
         {
             if (_lv.SelectedItem == null)
             {
@@ -69,9 +69,9 @@ namespace Dt.Base.Report
             _lv.Data = tbl;
         }
 
-        void OnDoubleClick(object sender, object e)
+        void OnDoubleClick(object e)
         {
-            OnSave(null, null);
+            OnSave(null);
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Dt.Mgr.Home
                 Menu[1].Visibility = Visibility.Collapsed;
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             if (!Kit.IsPhoneUI)
             {
@@ -77,17 +77,17 @@ namespace Dt.Mgr.Home
             }
         }
 
-        void OnMenuOpening(object sender, AsyncCancelEventArgs e)
+        void OnMenuOpening(object sender, AsyncCancelArgs e)
         {
             DoMenuOpening(sender, e);
         }
 
-        void OnFav(object sender, Mi e)
+        void OnFav(Mi e)
         {
-            DoFavMenu(sender, e);
+            DoFavMenu(e);
         }
 
-        internal static async void DoMenuOpening(object sender, AsyncCancelEventArgs e)
+        internal static async void DoMenuOpening(object sender, AsyncCancelArgs e)
         {
             Menu menu = (Menu)sender;
             var om = menu.TargetData.To<OmMenu>();
@@ -104,7 +104,7 @@ namespace Dt.Mgr.Home
             }
         }
 
-        internal static async void DoFavMenu(object sender, Mi e)
+        internal static async void DoFavMenu(Mi e)
         {
             var om = e.Data.To<OmMenu>();
             if (e.ID == "收藏")

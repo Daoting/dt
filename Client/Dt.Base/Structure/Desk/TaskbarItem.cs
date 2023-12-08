@@ -115,7 +115,7 @@ namespace Dt.Base
             {
                 _menu = new Menu { IsContextMenu = true };
                 var item = new Mi { ID = "取消自启动", Icon = Icons.圈停止 };
-                item.Click += (s, a) => AutoStartKit.DelAutoStart();
+                item.Click += (a) => AutoStartKit.DelAutoStart();
                 _menu.Items.Add(item);
                 item = new Mi { ID = "设置自启动", Icon = Icons.圈播放 };
                 item.Click += SetAutoStart;
@@ -195,12 +195,12 @@ namespace Dt.Base
             _ = _menu.OpenContextMenu(p_pos);
         }
 
-        static void SetAutoStart(object sender, Mi e)
+        static void SetAutoStart(Mi e)
         {
             AutoStartKit.SetAutoStart(_currentItem._win);
         }
 
-        static void ResetWinLayout(object sender, Mi e)
+        static void ResetWinLayout(Mi e)
         {
             Win win = _currentItem._win;
 
@@ -216,29 +216,29 @@ namespace Dt.Base
                 win.LoadDefaultLayout();
         }
 
-        static void CloseOtherWin(object sender, Mi e)
+        static void CloseOtherWin(Mi e)
         {
             Desktop.Inst.CloseExcept(_currentItem._win);
         }
 
-        static void DockLeft(object sender, Mi e)
+        static void DockLeft(Mi e)
         {
             Desktop.Inst.LeftWin = _currentItem._win;
         }
 
-        static void DockRight(object sender, Mi e)
+        static void DockRight(Mi e)
         {
             Desktop.Inst.RightWin = _currentItem._win;
         }
 
-        static void OnCopyWinName(object sender, Mi e)
+        static void OnCopyWinName(Mi e)
         {
             Type tp = _currentItem._win.GetType();
             Kit.CopyToClipboard(tp.FullName, true);
         }
 
 #if WIN
-        static void OnWinXaml(object sender, Mi e)
+        static void OnWinXaml(Mi e)
         {
             Type tp = _currentItem._win.GetType();
             if (tp == typeof(Win))

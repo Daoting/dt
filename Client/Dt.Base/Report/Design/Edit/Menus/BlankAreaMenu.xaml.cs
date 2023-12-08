@@ -32,7 +32,7 @@ namespace Dt.Base.Report
             _owner = p_owner;
         }
 
-        void OnInsertText(object sender, Mi e)
+        void OnInsertText(Mi e)
         {
             _owner.Excel.DecorationRange = null;
             CellRange range = _owner.Excel.ActiveSheet.Selections[0];
@@ -41,7 +41,7 @@ namespace Dt.Base.Report
             _owner.UpdateSelection();
         }
 
-        void OnInsertTbl(object sender, Mi e)
+        void OnInsertTbl(Mi e)
         {
             _owner.Excel.DecorationRange = null;
             CellRange range = _owner.Excel.ActiveSheet.Selections[0];
@@ -50,7 +50,7 @@ namespace Dt.Base.Report
             _owner.UpdateSelection();
         }
 
-        void OnInsertMtx(object sender, Mi e)
+        void OnInsertMtx(Mi e)
         {
             _owner.Excel.DecorationRange = null;
             CellRange range = _owner.Excel.ActiveSheet.Selections[0];
@@ -66,7 +66,7 @@ namespace Dt.Base.Report
             _owner.UpdateSelection();
         }
 
-        void OnInsertChart(object sender, Mi e)
+        void OnInsertChart(Mi e)
         {
             _owner.Excel.DecorationRange = null;
             CellRange range = _owner.Excel.ActiveSheet.Selections[0];
@@ -75,7 +75,7 @@ namespace Dt.Base.Report
             _owner.UpdateSelection();
         }
 
-        void OnInsertCopy(object sender, Mi e)
+        void OnInsertCopy(Mi e)
         {
 
         }

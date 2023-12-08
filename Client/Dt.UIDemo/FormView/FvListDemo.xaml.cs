@@ -25,8 +25,8 @@ namespace Dt.UIDemo
         public FvListDemo()
         {
             InitializeComponent();
-            _fv.CellClick += (s, e) => CellDemoKit.OnCellClick(e, _pbCell);
-            _fv.Changed += (s, e) => CellDemoKit.OnChanged(_fv, e);
+            _fv.CellClick += (e) => CellDemoKit.OnCellClick(e, _pbCell);
+            _fv.Changed += (e) => CellDemoKit.OnChanged(_fv, e);
             _pbFv.Data = _fv;
             LoadData();
         }
@@ -69,12 +69,12 @@ namespace Dt.UIDemo
             });
         }
 
-        void OnLoadPersons(object sender, AsyncEventArgs e)
+        void OnLoadPersons(CList arg1, AsyncArgs arg2)
         {
-            ((CList)sender).Data = SampleData.CreatePersonsList(20);
+            arg1.Data = SampleData.CreatePersonsList(20);
         }
 
-        void OnLoadDataTable(object sender, AsyncEventArgs e)
+        void OnLoadDataTable(CList arg1, AsyncArgs arg2)
         {
             Table tbl = new Table { { "id" }, { "name" } };
             tbl.AddRow(new { id = "1", name = "李全亮" });
@@ -83,10 +83,10 @@ namespace Dt.UIDemo
             tbl.AddRow(new { id = "4", name = "潘洋" });
             tbl.AddRow(new { id = "5", name = "李妍" });
             tbl.AddRow(new { id = "6", name = "尚涛" });
-            ((CList)sender).Data = tbl;
+            arg1.Data = tbl;
         }
 
-        void OnSelectedRow(object sender, object e)
+        void OnSelectedRow(CList arg1, object arg2)
         {
             Kit.Msg($"填充ID：{((Row)_fv.Data).Str("listrowid")}");
         }

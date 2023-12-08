@@ -115,9 +115,8 @@ namespace Dt.Base
         /// <summary>
         /// 单选
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnSingleClick(object sender, ItemClickArgs e)
+        void OnSingleClick(ItemClickArgs e)
         {
             if (e.Data is Row srcRow)
             {
@@ -184,9 +183,8 @@ namespace Dt.Base
         /// <summary>
         /// 多选
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnMultipleOK(object sender, Mi e)
+        void OnMultipleOK(Mi e)
         {
             // 暂未实现同步填充！
             List<object> ls = new List<object>();

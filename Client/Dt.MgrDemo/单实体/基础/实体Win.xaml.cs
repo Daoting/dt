@@ -29,12 +29,12 @@ namespace Dt.MgrDemo
 
         public 实体Query Query => _query;
 
-        void OnSearch(object sender, string e)
+        void OnSearch(string e)
         {
             _list.OnSearch(new QueryClause(e));
         }
 
-        void OnQuery(object sender, QueryClause e)
+        void OnQuery(QueryClause e)
         {
             _list.OnSearch(e);
         }

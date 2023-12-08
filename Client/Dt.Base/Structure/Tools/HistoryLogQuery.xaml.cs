@@ -47,7 +47,7 @@ namespace Dt.Base.Tools
             _fv.Data = row;
         }
 
-        void OnQuery(object sender, QueryClause e)
+        void OnQuery(QueryClause e)
         {
             _win.List.OnSearch(e);
         }

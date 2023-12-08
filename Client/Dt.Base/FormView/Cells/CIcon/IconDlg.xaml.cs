@@ -29,13 +29,13 @@ namespace Dt.Base.FormView
 
         public CIcon Owner { get; internal set; }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             Owner.SelectIcon(((IconItem)e.Data).Icon);
             Close();
         }
 
-        void OnSearch(object sender, string e)
+        void OnSearch(string e)
         {
             _lv.Refresh();
         }

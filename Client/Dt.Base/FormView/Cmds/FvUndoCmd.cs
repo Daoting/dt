@@ -23,7 +23,7 @@ namespace Dt.Base.FormView
         {
             _owner = p_owner;
             UpdateAllowExecute();
-            _owner.Dirty += (sender, e) => UpdateAllowExecute();
+            _owner.Dirty += (e) => UpdateAllowExecute();
         }
 
         /// <summary>

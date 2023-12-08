@@ -93,9 +93,9 @@ namespace Dt.Base.Report
             }
         }
 
-        void OnLoadField(object sender, AsyncEventArgs e)
+        void OnLoadField(CList arg1, AsyncArgs arg2)
         {
-            ((CList)_fv["field"]).Data = _info.Root.Data.GetColsData(_level.Matrix.Tbl);
+            arg1.Data = _info.Root.Data.GetColsData(_level.Matrix.Tbl);
         }
     }
 }

@@ -49,7 +49,7 @@ namespace Dt.Base
         /// <summary>
         /// 查询事件
         /// </summary>
-        public event EventHandler<string> Search;
+        public event Action<string> Search;
 
         /// <summary>
         /// 获取设置查询框提示内容
@@ -114,7 +114,7 @@ namespace Dt.Base
 
         void OnSearch()
         {
-            Search?.Invoke(this, _tb.Text);
+            Search?.Invoke(_tb.Text);
         }
     }
 }

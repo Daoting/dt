@@ -37,7 +37,7 @@ namespace Dt.Mgr.Module
             _lv.Data = tbl;
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             var mgr = (IFileMgr)Activator.CreateInstance(_fileMgr.GetType());
             mgr.FolderID = e.Row.ID;
@@ -45,7 +45,7 @@ namespace Dt.Mgr.Module
             Forward(new MoveFilePage(mgr, _owner));
         }
 
-        void OnSelect(object sender, Mi e)
+        void OnSelect(Mi e)
         {
             _owner.MoveTo(_fileMgr);
         }

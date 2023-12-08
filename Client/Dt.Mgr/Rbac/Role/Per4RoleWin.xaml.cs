@@ -29,14 +29,14 @@ namespace Dt.Mgr.Rbac
             _lvModule.Data = await PermissionModuleX.Query(null);
         }
 
-        async void OnModuleItemClick(object sender, ItemClickArgs e)
+        async void OnModuleItemClick(ItemClickArgs e)
         {
             if (e.IsChanged)
                 _lvFunc.Data = await PermissionFuncX.Query("where module_id=" + e.Row.ID);
             NaviTo("功能列表");
         }
 
-        async void OnFuncItemClick(object sender, ItemClickArgs e)
+        async void OnFuncItemClick(ItemClickArgs e)
         {
             if (e.IsChanged)
                 _lvPer.Data = await PermissionX.Query($"where not exists ( select per_id from cm_role_per b where a.id = b.per_id and role_id ={_roleID} ) and func_id={e.Row.ID}");

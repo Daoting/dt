@@ -32,7 +32,7 @@ namespace Dt.Base.FormView
 
         public CColor Owner { get; internal set; }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             Owner.SelectColor(((ColorItem)e.Data).Brush);
             Close();

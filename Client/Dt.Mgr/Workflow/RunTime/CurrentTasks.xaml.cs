@@ -48,23 +48,23 @@ namespace Dt.Mgr.Workflow
             Kit.OpenWin(typeof(HistoryTasks), "历史任务", Icons.拆信);
         }
 
-        void OnItemDoubleClick(object sender, object e)
+        void OnItemDoubleClick(object e)
         {
             OpenForm((Row)e);
         }
 
-        void OnOpenForm(object sender, Mi e)
+        void OnOpenForm(Mi e)
         {
             OpenForm((Row)e.Data);
         }
 
-        void OnOpenLog(object sender, Mi e)
+        void OnOpenLog(Mi e)
         {
             var row = (Row)e.Data;
             AtWf.ShowLog(row.Long("prci_id"), row.Long("prcd_id"));
         }
 
-        void OnOpenList(object sender, Mi e)
+        void OnOpenList(Mi e)
         {
             var prc = ((Row)e.Data).Str("prcname");
             var tp = Kit.GetTypeByAlias(typeof(WfListAttribute), prc);

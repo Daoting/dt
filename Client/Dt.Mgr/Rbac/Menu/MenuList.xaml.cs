@@ -85,13 +85,13 @@ namespace Dt.Mgr.Rbac
         #endregion
 
         #region 交互
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             _win.Form.Update(e.Row.ID);
             NaviTo(new List<Tab> { _win.Form, _win.RoleList, });
         }
 
-        void OnMoveUp(object sender, Mi e)
+        void OnMoveUp(Mi e)
         {
             var src = e.Data.To<MenuX>();
             if (src.ID == 0)
@@ -102,7 +102,7 @@ namespace Dt.Mgr.Rbac
                 Exchange(src, tgt);
         }
 
-        void OnMoveDown(object sender, Mi e)
+        void OnMoveDown(Mi e)
         {
             var src = e.Data.To<MenuX>();
             if (src.ID == 0)
@@ -125,7 +125,7 @@ namespace Dt.Mgr.Rbac
             }
         }
 
-        void OnRefresh(object sender, Mi e)
+        void OnRefresh(Mi e)
         {
             RefreshSqliteWin.UpdateSqliteFile("menu");
         }

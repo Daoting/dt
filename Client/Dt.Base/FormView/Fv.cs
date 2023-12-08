@@ -139,22 +139,22 @@ namespace Dt.Base
         /// <summary>
         /// 切换数据源事件
         /// </summary>
-        public event EventHandler<object> DataChanged;
+        public event Action<object> DataChanged;
 
         /// <summary>
         /// 数据源的列值/属性值修改后事件
         /// </summary>
-        public event EventHandler<ICell> Changed;
+        public event Action<ICell> Changed;
 
         /// <summary>
         /// 数据源修改状态变化事件
         /// </summary>
-        public event EventHandler<bool> Dirty;
+        public event Action<bool> Dirty;
 
         /// <summary>
         /// 单元格点击事件
         /// </summary>
-        public event EventHandler<FvCell> CellClick;
+        public event Action<FvCell> CellClick;
 
         /// <summary>
         /// 保存事件
@@ -1013,7 +1013,7 @@ namespace Dt.Base
         /// </summary>
         void OnFvDataChanged()
         {
-            DataChanged?.Invoke(this, Data);
+            DataChanged?.Invoke(Data);
         }
 
         /// <summary>
@@ -1022,7 +1022,7 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnValueChanged(ICell e)
         {
-            Changed?.Invoke(this, e);
+            Changed?.Invoke(e);
         }
 
         /// <summary>
@@ -1030,7 +1030,7 @@ namespace Dt.Base
         /// </summary>
         void OnDirty()
         {
-            Dirty?.Invoke(this, IsDirty);
+            Dirty?.Invoke(IsDirty);
         }
 
         /// <summary>
@@ -1039,7 +1039,7 @@ namespace Dt.Base
         /// <param name="p_cell"></param>
         internal void OnCellClick(FvCell p_cell)
         {
-            CellClick?.Invoke(this, p_cell);
+            CellClick?.Invoke(p_cell);
         }
 
         internal void OnSave()

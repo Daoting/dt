@@ -50,7 +50,7 @@ namespace Dt.Mgr.Module
             return row;
         }
 
-        async void OnSave(object sender, Mi e)
+        async void OnSave(Mi e)
         {
             if (_fv.ExistNull("name"))
                 return;
@@ -63,7 +63,7 @@ namespace Dt.Mgr.Module
             }
         }
 
-        void OnAdd(object sender, Mi e)
+        void OnAdd(Mi e)
         {
             _fv.Data = CreateData();
         }

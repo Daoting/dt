@@ -34,7 +34,7 @@ namespace Dt.Base
 #if ANDROID
         new
 #endif
-        public event EventHandler Click;
+        public event Action<CLink> Click;
 
         /// <summary>
         /// 点击事件，无事件参数，方便复用处理方法
@@ -108,7 +108,7 @@ namespace Dt.Base
         protected override void OnTapped(TappedRoutedEventArgs e)
         {
             base.OnTapped(e);
-            Click?.Invoke(this, EventArgs.Empty);
+            Click?.Invoke(this);
             Call?.Invoke();
         }
         #endregion

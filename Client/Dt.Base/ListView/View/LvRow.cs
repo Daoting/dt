@@ -245,10 +245,10 @@ namespace Dt.Base.ListView
             return btn;
         }
 
-        void OnMenuClosed(object sender, EventArgs e)
+        void OnMenuClosed(Menu obj)
         {
             // 关闭上下文菜单时移除行醒目颜色
-            ((Menu)sender).Closed -= OnMenuClosed;
+            obj.Closed -= OnMenuClosed;
             _rcPointer.Fill = null;
             _menuOpened = false;
         }

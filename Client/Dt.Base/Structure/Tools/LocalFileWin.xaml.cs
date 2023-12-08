@@ -45,7 +45,7 @@ namespace Dt.Base.Tools
             _lv.Data = list;
         }
 
-        void OnOpen(object sender, Mi e)
+        void OnOpen(Mi e)
         {
             var fi = e.Data.To<LocalFileItem>();
 
@@ -82,14 +82,14 @@ namespace Dt.Base.Tools
         }
 
 
-        async void OnShare(object sender, Mi e)
+        async void OnShare(Mi e)
         {
             var file = e.Data.To<LocalFileItem>();
             await Kit.ShareFile(file.Info.FullName);
         }
 
 #if WIN
-        async void OnSaveAs(object sender, Mi e)
+        async void OnSaveAs(Mi e)
         {
             var fi = e.Data.To<LocalFileItem>();
             var picker = Kit.GetFileSavePicker();
@@ -172,7 +172,7 @@ namespace Dt.Base.Tools
         }
 #endif
 
-        async void OnDel(object sender, Mi e)
+        async void OnDel(Mi e)
         {
             var fi = e.Data.To<LocalFileItem>();
             if (_dir == ".data"

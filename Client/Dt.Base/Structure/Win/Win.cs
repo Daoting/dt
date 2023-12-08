@@ -123,7 +123,7 @@ namespace Dt.Base
         /// <summary>
         /// 关闭前事件，可以取消关闭
         /// </summary>
-        public event EventHandler<AsyncCancelEventArgs> Closing;
+        public event EventHandler<AsyncCancelArgs> Closing;
 
         /// <summary>
         /// 关闭后事件
@@ -1236,7 +1236,7 @@ namespace Dt.Base
         {
             if (Closing != null)
             {
-                var args = new AsyncCancelEventArgs();
+                var args = new AsyncCancelArgs();
                 Closing(this, args);
                 await args.EnsureAllCompleted();
                 if (args.Cancel)

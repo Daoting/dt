@@ -36,9 +36,8 @@ namespace Dt.Mgr.Workflow
         /// <summary>
         /// 左对齐
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnAlignLeft(object sender, Mi e)
+        void OnAlignLeft(Mi e)
         {
             double left = Canvas.GetLeft(_target);
             foreach (FrameworkElement element in _sketch.SelectedNodes)
@@ -54,9 +53,8 @@ namespace Dt.Mgr.Workflow
         /// <summary>
         /// 右对齐
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnAlignRight(object sender, Mi e)
+        void OnAlignRight(Mi e)
         {
             double right = Canvas.GetLeft(_target) + _target.ActualWidth;
             foreach (FrameworkElement element in _sketch.SelectedNodes)
@@ -73,9 +71,8 @@ namespace Dt.Mgr.Workflow
         /// <summary>
         /// 上部对齐
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnAlignTop(object sender, Mi e)
+        void OnAlignTop(Mi e)
         {
             double top = Canvas.GetTop(_target);
             foreach (FrameworkElement element in _sketch.SelectedNodes)
@@ -91,9 +88,8 @@ namespace Dt.Mgr.Workflow
         /// <summary>
         /// 底部对齐
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnAlignBottom(object sender, Mi e)
+        void OnAlignBottom(Mi e)
         {
             double bottom = Canvas.GetTop(_target) + _target.ActualHeight;
 
@@ -111,9 +107,8 @@ namespace Dt.Mgr.Workflow
         /// <summary>
         /// 水平居中对齐
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnAlignHorCenter(object sender, Mi e)
+        void OnAlignHorCenter(Mi e)
         {
             double topCenter = Canvas.GetTop(_target) + _target.ActualHeight / 2;
             foreach (FrameworkElement element in _sketch.SelectedNodes)
@@ -129,9 +124,8 @@ namespace Dt.Mgr.Workflow
         /// <summary>
         /// 垂直居中对齐
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnAlignVerCenter(object sender, Mi e)
+        void OnAlignVerCenter(Mi e)
         {
             double leftCenter = Canvas.GetLeft(_target) + _target.ActualWidth / 2;
             foreach (FrameworkElement element in _sketch.SelectedNodes)
@@ -147,9 +141,8 @@ namespace Dt.Mgr.Workflow
         /// <summary>
         /// 水平间距
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnHorSpace(object sender, Mi e)
+        void OnHorSpace(Mi e)
         {
             double min = double.MaxValue;
             double max = 0.0;
@@ -183,9 +176,8 @@ namespace Dt.Mgr.Workflow
         /// <summary>
         /// 垂直间距
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnVerSpace(object sender, Mi e)
+        void OnVerSpace(Mi e)
         {
             double min = double.MaxValue;
             double max = 0.0;
@@ -216,7 +208,7 @@ namespace Dt.Mgr.Workflow
             RefreshSketch();
         }
 
-        void OnDel(object sender, Mi e)
+        void OnDel(Mi e)
         {
             _sketch.DeleteSelection();
         }

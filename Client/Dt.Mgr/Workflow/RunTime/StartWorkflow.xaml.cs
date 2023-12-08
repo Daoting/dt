@@ -34,12 +34,12 @@ namespace Dt.Mgr.Workflow
             _lv.Data = await WfdDs.GetMyStartablePrc();
         }
 
-        void OnItemDoubleClick(object sender, object e)
+        void OnItemDoubleClick(object e)
         {
             StartNew(e.To<Row>().Str("name"));
         }
 
-        void OnStart(object sender, Mi e)
+        void OnStart(Mi e)
         {
             StartNew(_lv.SelectedRow.Str("name"));
         }

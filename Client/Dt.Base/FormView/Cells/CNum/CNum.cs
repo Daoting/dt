@@ -307,7 +307,7 @@ namespace Dt.Base
         /// <summary>
         /// 数值变化事件
         /// </summary>
-        public event EventHandler<ValueChangedEventArgs<double>> ValueChanged;
+        public event Action<CNum, ValueChangedEventArgs<double>> ValueChanged;
         #endregion
 
         #region 属性

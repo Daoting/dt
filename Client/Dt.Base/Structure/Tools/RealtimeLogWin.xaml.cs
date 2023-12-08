@@ -29,7 +29,7 @@ namespace Dt.Base.Tools
             Closed += (s, e) => _lv.Data = null;
         }
 
-        void OnOutputClick(object sender, ItemClickArgs e)
+        void OnOutputClick(ItemClickArgs e)
         {
             var item = e.Data.To<TraceLogItem>();
             var d = new TraceLogData
@@ -42,7 +42,7 @@ namespace Dt.Base.Tools
             NaviTo("日志内容");
         }
 
-        void OnClear(object sender, Mi e)
+        void OnClear(Mi e)
         {
             TraceLogs.Clear();
         }

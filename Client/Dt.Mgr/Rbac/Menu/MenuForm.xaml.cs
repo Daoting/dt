@@ -150,11 +150,11 @@ namespace Dt.Mgr.Rbac
             }
         }
 
-        async void OnLoadTreeGroup(object sender, AsyncEventArgs e)
+        async void OnLoadTreeGroup(CTree arg1, AsyncArgs arg2)
         {
-            using (e.Wait())
+            using (arg2.Wait())
             {
-                ((CTree)sender).Data = await MenuX.Query("where is_group='1' order by dispidx");
+                arg1.Data = await MenuX.Query("where is_group='1' order by dispidx");
             }
         }
         #endregion
@@ -165,7 +165,7 @@ namespace Dt.Mgr.Rbac
             return _fv.DiscardChanges();
         }
 
-        void OnFvDataChanged(object sender, object e)
+        void OnFvDataChanged(object e)
         {
             var m = e as MenuX;
             if (m == null)

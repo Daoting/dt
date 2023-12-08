@@ -211,7 +211,7 @@ namespace Dt.Base.FormView
             _strMenu.Items.Add(item);
         }
 
-        static void OnMiClick(object sender, Mi e)
+        static void OnMiClick(Mi e)
         {
             ((FvCell)e.Owner.Tag).QueryFlag = (CompFlag)e.Tag;
         }

@@ -45,7 +45,7 @@ namespace Dt.Mgr.Module
                 _lv.Data = await _fileMgr.GetChildrenByType(_owner.TypeFilter);
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             if (e.Row.Bool("is_folder"))
             {
@@ -58,7 +58,7 @@ namespace Dt.Mgr.Module
             }
         }
 
-        void OnSelect(object sender, Mi e)
+        void OnSelect(Mi e)
         {
             if (_lv.SelectedCount == 0)
                 return;
@@ -74,12 +74,12 @@ namespace Dt.Mgr.Module
             _owner.Close(true);
         }
 
-        void OnSearch(object sender, Mi e)
+        void OnSearch(Mi e)
         {
             Forward(new SelectSearchPage(_owner));
         }
 
-        async void OnAdd(object sender, Mi e)
+        async void OnAdd(Mi e)
         {
             Dlg dlg = new Dlg();
             if (!Kit.IsPhoneUI)

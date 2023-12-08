@@ -62,9 +62,9 @@ namespace Dt.Base.Report
             ((CList)_fv["papername"]).Data = ls;
         }
 
-        void OnPaperChanged(object sender, object e)
+        void OnPaperChanged(CList arg1, object arg2)
         {
-            Size size = PaperSize.Dict[(PrintMediaSize)Enum.Parse(typeof(PrintMediaSize), (string)e)];
+            Size size = PaperSize.Dict[(PrintMediaSize)Enum.Parse(typeof(PrintMediaSize), (string)arg2)];
             if (!size.IsEmpty)
             {
                 _info.Root.PageSetting.Height = size.Height;

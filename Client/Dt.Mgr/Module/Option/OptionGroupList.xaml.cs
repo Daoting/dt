@@ -47,13 +47,13 @@ namespace Dt.Mgr.Module
         #endregion
 
         #region 交互
-        async void OnAdd(object sender, Mi e)
+        async void OnAdd(Mi e)
         {
             NaviToChild();
             await _win.ParentForm.Update(-1);
         }
 
-        async void OnItemClick(object sender, ItemClickArgs e)
+        async void OnItemClick(ItemClickArgs e)
         {
             if (_lv.SelectionMode != Base.SelectionMode.Multiple)
             {
@@ -69,7 +69,7 @@ namespace Dt.Mgr.Module
                 NaviTo(new List<Tab> { _win.ParentForm, _win.OptionList });
         }
 
-        async void OnDel(object sender, Mi e)
+        async void OnDel(Mi e)
         {
             if (!await Kit.Confirm("确认要删除选择的数据吗？"))
             {
@@ -86,7 +86,7 @@ namespace Dt.Mgr.Module
             }
         }
 
-        void OnRefresh(object sender, Mi e)
+        void OnRefresh(Mi e)
         {
             RefreshSqliteWin.UpdateSqliteFile("option");
         }
@@ -98,7 +98,7 @@ namespace Dt.Mgr.Module
         /// </summary>
         public QueryClause Clause { get; set; }
 
-        void OnToSearch(object sender, Mi e)
+        void OnToSearch(Mi e)
         {
             if (_dlgQuery == null)
                 CreateQueryDlg();
@@ -110,7 +110,7 @@ namespace Dt.Mgr.Module
             var fs = new FuzzySearch();
             fs.Fixed.Add("全部");
             fs.CookieID = _win.GetType().FullName;
-            fs.Search += (s, e) =>
+            fs.Search += (e) =>
             {
                 Clause = new QueryClause(e);
                 Update();

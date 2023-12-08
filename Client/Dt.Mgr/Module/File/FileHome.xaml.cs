@@ -75,7 +75,7 @@ namespace Dt.Mgr.Module
             });
         }
 
-        async void OnClearHis(object sender, Mi e)
+        async void OnClearHis(Mi e)
         {
             if (_fl.Items.Count() == 0)
                 return;
@@ -87,7 +87,7 @@ namespace Dt.Mgr.Module
             }
         }
 
-        async void OnDeleteHis(object sender, Mi e)
+        async void OnDeleteHis(Mi e)
         {
             if (await Kit.Confirm("确认要删除当前历史记录吗？"))
             {

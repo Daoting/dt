@@ -160,12 +160,12 @@ namespace Dt.Base
         /// <summary>
         /// 单击行事件
         /// </summary>
-        public event EventHandler<ItemClickArgs> ItemClick;
+        public event Action<ItemClickArgs> ItemClick;
 
         /// <summary>
         /// 双击行事件
         /// </summary>
-        public event EventHandler<object> ItemDoubleClick;
+        public event Action<object> ItemDoubleClick;
 
         /// <summary>
         /// 选择变化事件
@@ -175,7 +175,7 @@ namespace Dt.Base
         /// <summary>
         /// 切换数据源事件
         /// </summary>
-        public event EventHandler<object> DataChanged;
+        public event Action<object> DataChanged;
         #endregion
 
         #region 属性
@@ -879,7 +879,7 @@ namespace Dt.Base
         /// <param name="p_oldData"></param>
         internal void OnItemClick(object p_data, object p_oldData)
         {
-            ItemClick?.Invoke(this, new ItemClickArgs(p_data, p_oldData));
+            ItemClick?.Invoke(new ItemClickArgs(p_data, p_oldData));
         }
 
         /// <summary>
@@ -888,7 +888,7 @@ namespace Dt.Base
         /// <param name="p_data"></param>
         internal void OnItemDoubleClick(object p_data)
         {
-            ItemDoubleClick?.Invoke(this, p_data);
+            ItemDoubleClick?.Invoke(p_data);
         }
 
         /// <summary>
@@ -896,7 +896,7 @@ namespace Dt.Base
         /// </summary>
         void OnDataChanged()
         {
-            DataChanged?.Invoke(this, Data);
+            DataChanged?.Invoke(Data);
         }
         #endregion
     }

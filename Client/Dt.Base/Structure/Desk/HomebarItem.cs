@@ -114,14 +114,14 @@ namespace Dt.Base
             {
                 _menu = new Menu { IsContextMenu = true };
                 var item = new Mi { ID = "系统", Icon = Icons.设置 };
-                item.Click += (s, a) => SysTrace.ShowSysBox();
+                item.Click += (a) => SysTrace.ShowSysBox();
                 _menu.Items.Add(item);
 
 #if WIN //&& !DEBUG
                 if (Kit.IsUsingSvc)
                 {
                     item = new Mi { ID = "检查更新", Icon = Icons.刷新卡片 };
-                    item.Click += (s, a) => WinPkgUpdate.CheckUpdate(true);
+                    item.Click += (a) => WinPkgUpdate.CheckUpdate(true);
                     _menu.Items.Add(item);
                 }
 #endif

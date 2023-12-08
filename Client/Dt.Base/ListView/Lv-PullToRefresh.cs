@@ -37,7 +37,7 @@ namespace Dt.Base
         /// <summary>
         /// 下拉刷新事件
         /// </summary>
-        public event EventHandler<AsyncEventArgs> RefreshRequested;
+        public event Action<AsyncArgs> RefreshRequested;
 
         /// <summary>
         /// 获取设置是否允许下拉以刷新，默认false
@@ -109,8 +109,8 @@ namespace Dt.Base
             {
                 if (RefreshRequested != null)
                 {
-                    var args = new AsyncEventArgs();
-                    RefreshRequested(this, args);
+                    var args = new AsyncArgs();
+                    RefreshRequested(args);
                     await args.EnsureAllCompleted();
                 }
             }

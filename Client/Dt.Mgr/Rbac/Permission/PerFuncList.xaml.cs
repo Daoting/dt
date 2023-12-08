@@ -41,12 +41,12 @@ namespace Dt.Mgr.Rbac
             ShowForm(-1);
         }
 
-        void OnEdit(object sender, Mi e)
+        void OnEdit(Mi e)
         {
             ShowForm(e.Row.ID);
         }
 
-        void OnItemDoubleClick(object sender, object e)
+        void OnItemDoubleClick(object e)
         {
             ShowForm(e.To<Row>().ID);
         }
@@ -68,7 +68,7 @@ namespace Dt.Mgr.Rbac
                 Refresh();
         }
 
-        async void OnDel(object sender, Mi e)
+        async void OnDel(Mi e)
         {
             if (!await Kit.Confirm("确认要删除吗？"))
             {
@@ -80,7 +80,7 @@ namespace Dt.Mgr.Rbac
             }
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             if (e.IsChanged)
                 UpdateRelated(e.Row.ID);

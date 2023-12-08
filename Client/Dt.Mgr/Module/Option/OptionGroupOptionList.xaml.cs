@@ -46,12 +46,12 @@ namespace Dt.Mgr.Module
         #endregion
 
         #region 交互
-        void OnAdd(object sender, Mi e)
+        void OnAdd(Mi e)
         {
             ShowForm(-1);
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             if (_lv.SelectionMode != Base.SelectionMode.Multiple)
                 ShowForm(e.Row.ID);
@@ -65,7 +65,7 @@ namespace Dt.Mgr.Module
             await _form.Update(p_id, _parentID);
         }
         
-        async void OnDel(object sender, Mi e)
+        async void OnDel(Mi e)
         {
             if (!await Kit.Confirm("确认要删除选择的数据吗？"))
             {
@@ -91,7 +91,7 @@ namespace Dt.Mgr.Module
             _win.ChildForm.BackToHome();
         }
 
-        void OnMoveUp(object sender, Mi e)
+        void OnMoveUp(Mi e)
         {
             var src = e.Data.To<OptionX>();
             int index = _lv.Data.IndexOf(src);
@@ -99,7 +99,7 @@ namespace Dt.Mgr.Module
                 Exchange(src, _lv.Data[index - 1].To<OptionX>());
         }
 
-        void OnMoveDown(object sender, Mi e)
+        void OnMoveDown(Mi e)
         {
             var src = e.Data.To<OptionX>();
             int index = _lv.Data.IndexOf(src);
@@ -131,18 +131,18 @@ namespace Dt.Mgr.Module
         #endregion
 
         #region 选择
-        void OnSelectAll(object sender, Mi e)
+        void OnSelectAll(Mi e)
         {
             _lv.SelectAll();
         }
 
-        void OnMultiMode(object sender, Mi e)
+        void OnMultiMode(Mi e)
         {
             _lv.SelectionMode = Base.SelectionMode.Multiple;
             Menu.HideExcept("删除", "全选", "取消");
         }
 
-        void OnCancelMulti(object sender, Mi e)
+        void OnCancelMulti(Mi e)
         {
             _lv.SelectionMode = Base.SelectionMode.Single;
             Menu.ShowExcept("删除", "全选", "取消");

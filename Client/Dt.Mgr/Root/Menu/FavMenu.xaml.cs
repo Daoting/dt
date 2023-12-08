@@ -57,7 +57,7 @@ namespace Dt.Mgr.Home
             }
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             if (!Kit.IsPhoneUI)
             {
@@ -70,7 +70,7 @@ namespace Dt.Mgr.Home
             Kit.RunAsync(() => MenuDs.OpenMenu((OmMenu)e.Data));
         }
 
-        async void OnTop(object sender, Mi e)
+        async void OnTop(Mi e)
         {
             var om = e.Data.To<OmMenu>();
             var cnt = await AtLob.Exec($"update menufav set dispidx=(select min(dispidx)-1 from menufav) where userid={Kit.UserID} and MenuID={om.ID}");
@@ -80,7 +80,7 @@ namespace Dt.Mgr.Home
             }
         }
 
-        async void OnBottom(object sender, Mi e)
+        async void OnBottom(Mi e)
         {
             var om = e.Data.To<OmMenu>();
             var cnt = await AtLob.Exec($"update menufav set dispidx=(select max(dispidx)+1 from menufav) where userid={Kit.UserID} and MenuID={om.ID}");
@@ -90,7 +90,7 @@ namespace Dt.Mgr.Home
             }
         }
 
-        async void OnDelFav(object sender, Mi e)
+        async void OnDelFav(Mi e)
         {
             var om = e.Data.To<OmMenu>();
             var cnt = await AtLob.Exec($"delete from menufav where userid={Kit.UserID} and MenuID={om.ID}");
@@ -101,7 +101,7 @@ namespace Dt.Mgr.Home
             }
         }
 
-        void OnMenuOpening(object sender, AsyncCancelEventArgs e)
+        void OnMenuOpening(object sender, AsyncCancelArgs e)
         {
             Menu menu = (Menu)sender;
             var om = menu.TargetData.To<OmMenu>();

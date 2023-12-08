@@ -58,7 +58,7 @@ namespace Dt.Base.FormView
             }
         }
 
-        async void OnSave(object sender, Mi e)
+        async void OnSave(Mi e)
         {
             var html = await _wv.InvokeScriptAsync("getHtml", null);
             bool suc = await _host.SaveHtml(html);
@@ -69,7 +69,7 @@ namespace Dt.Base.FormView
             }
         }
 
-        async void OnInsertImg(object sender, Mi e)
+        async void OnInsertImg(Mi e)
         {
             var dlg = (ISelectFileDlg)Activator.CreateInstance(Type.GetType(FileItem.SelectFileDlgType));
             if (await dlg.Show(true, FileItem.ImageExt))
@@ -83,7 +83,7 @@ namespace Dt.Base.FormView
             }
         }
 
-        async void OnInsertVideo(object sender, Mi e)
+        async void OnInsertVideo(Mi e)
         {
             var dlg = (ISelectFileDlg)Activator.CreateInstance(Type.GetType(FileItem.SelectFileDlgType));
             if (await dlg.Show(true, FileItem.VideoExt))

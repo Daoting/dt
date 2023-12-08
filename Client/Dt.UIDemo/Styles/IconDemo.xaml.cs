@@ -28,7 +28,7 @@ namespace Dt.UIDemo
             _lv.Filter = OnFilter;
         }
 
-        void OnSearch(object sender, string e)
+        void OnSearch(string e)
         {
             _lv.Refresh();
         }

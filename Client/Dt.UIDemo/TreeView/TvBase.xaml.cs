@@ -57,7 +57,7 @@ namespace Dt.UIDemo
                 _tv.ItemClick -= OnItemClick;
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             if (e.Data is Row row)
             {
@@ -92,7 +92,7 @@ namespace Dt.UIDemo
                 _tv.ItemDoubleClick -= OnItemDoubleClick;
         }
 
-        void OnItemDoubleClick(object sender, object e)
+        void OnItemDoubleClick(object e)
         {
             if (e is Row row)
             {

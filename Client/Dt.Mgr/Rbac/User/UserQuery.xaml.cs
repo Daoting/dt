@@ -23,7 +23,7 @@ namespace Dt.Mgr.Rbac
         /// <summary>
         /// 查询事件
         /// </summary>
-        public event EventHandler<QueryClause> Query
+        public event Action<QueryClause> Query
         {
             add { _fv.Query += value; }
             remove { _fv.Query -= value; }

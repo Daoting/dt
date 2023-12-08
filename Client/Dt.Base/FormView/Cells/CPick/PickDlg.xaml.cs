@@ -54,12 +54,12 @@ namespace Dt.Base
             RemoveLv();
         }
         
-        void OnSelectOK(object sender, Mi e)
+        void OnSelectOK(Mi e)
         {
             _owner.OnPicking();
         }
 
-        void OnItemDoubleClick(object sender, object e)
+        void OnItemDoubleClick(object e)
         {
             _owner.OnPicking();
         }

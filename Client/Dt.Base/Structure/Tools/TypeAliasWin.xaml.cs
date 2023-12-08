@@ -50,7 +50,7 @@ namespace Dt.Base.Tools
             return tbl;
         }
 
-        void OnAttrItemClick(object sender, ItemClickArgs e)
+        void OnAttrItemClick(ItemClickArgs e)
         {
             var pre = e.Row.Str(0).Replace("Attribute", "-");
 
@@ -68,7 +68,7 @@ namespace Dt.Base.Tools
             NaviTo("类型列表");
         }
 
-        void OnGroupItemClick(object sender, ItemClickArgs e)
+        void OnGroupItemClick(ItemClickArgs e)
         {
             var pre = e.Row.Str(0).Replace("Attribute", "-");
 

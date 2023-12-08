@@ -34,7 +34,7 @@ namespace Dt.Mgr.Module
 
         public FuzzySearch Search => _search;
 
-        void OnSearch(object sender, string e)
+        void OnSearch(string e)
         {
             _list.OnSearch(e);
         }

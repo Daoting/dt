@@ -138,7 +138,7 @@ namespace Dt.Base
                 {
                     var menu = new Menu { Placement = MenuPosition.BottomLeft };
                     Mi mi = new Mi { ID = "上传图像", Icon = Icons.曲别针 };
-                    mi.Click += (s, e) => OnAddImage();
+                    mi.Click += (e) => OnAddImage();
                     menu.Items.Add(mi);
 
                     mi = new Mi { ID = "选择图像", Icon = Icons.图片 };
@@ -215,7 +215,7 @@ namespace Dt.Base
                 _fl.AddImage();
         }
 
-        async void OnSelectFiles(object sender, Mi e)
+        async void OnSelectFiles(Mi e)
         {
             var dlg = (ISelectFileDlg)Activator.CreateInstance(Type.GetType(FileItem.SelectFileDlgType));
             if (await dlg.Show(false, FileItem.ImageExt)

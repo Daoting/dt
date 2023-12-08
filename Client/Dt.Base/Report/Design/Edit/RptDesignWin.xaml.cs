@@ -341,9 +341,8 @@ namespace Dt.Base.Report
         /// <summary>
         /// 显示网格
         /// </summary>
-        /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnCheckChanged(object sender, Mi e)
+        void OnCheckChanged(Mi e)
         {
             _excel.ShowGridLine = e.IsChecked;
         }

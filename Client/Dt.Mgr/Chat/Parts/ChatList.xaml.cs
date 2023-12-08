@@ -82,12 +82,12 @@ namespace Dt.Mgr.Chat
                 new Dict { { "loginid", Kit.UserID } });
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             ItemClick?.Invoke(this, e.Row.Long("otherid"));
         }
 
-        async void OnDelMsg(object sender, Mi e)
+        async void OnDelMsg(Mi e)
         {
             Row row = e.Row;
             if (await Kit.Confirm($"确认要清空与{row.Str("othername")}的聊天记录吗？"))

@@ -263,7 +263,7 @@ namespace Dt.Base
                 {
                     var menu = new Menu { Placement = MenuPosition.BottomLeft };
                     Mi mi = new Mi { ID = "上传文件", Icon = Icons.曲别针 };
-                    mi.Click += (s, e) => OnAddFile();
+                    mi.Click += (e) => OnAddFile();
                     menu.Items.Add(mi);
 
                     mi = new Mi { ID = "选择文件", Icon = Icons.文件夹 };
@@ -317,7 +317,7 @@ namespace Dt.Base
                 _fl.AddFile();
         }
 
-        async void OnSelectFiles(object sender, Mi e)
+        async void OnSelectFiles(Mi e)
         {
             var dlg = (ISelectFileDlg)Activator.CreateInstance(Type.GetType(FileItem.SelectFileDlgType));
             if (await dlg.Show(MaxFileCount > 1, null)

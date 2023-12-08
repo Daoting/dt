@@ -49,7 +49,7 @@ namespace Dt.Base.ListView
         }
 
         #region 过滤过程
-        void OnFilter(object sender, Mi e)
+        void OnFilter(Mi e)
         {
             if (_data.IsChanged)
                 _owner.Filter = DoFilter;
@@ -58,7 +58,7 @@ namespace Dt.Base.ListView
             Close();
         }
 
-        void OnReset(object sender, Mi e)
+        void OnReset(Mi e)
         {
             _data.RejectChanges();
         }
@@ -456,22 +456,21 @@ namespace Dt.Base.ListView
             _fv.Items.Add(cell);
         }
 
-        void OnLoadList(object sender, AsyncEventArgs e)
+        void OnLoadList(CList arg1, AsyncArgs arg2)
         {
-            CList cl = (CList)sender;
             var data = new Table { { "name" } };
             if (_owner.Data is Table tbl)
             {
-                var ls = tbl.Distinct(new EqualityComparer(cl.ID));
+                var ls = tbl.Distinct(new EqualityComparer(arg1.ID));
                 foreach (var r in ls)
                 {
                     var row = data.AddRow();
-                    row.InitVal("name", r[cl.ID]);
+                    row.InitVal("name", r[arg1.ID]);
                 }
             }
             else
             {
-                var pi = _owner.Data[0].GetType().GetProperty(cl.ID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                var pi = _owner.Data[0].GetType().GetProperty(arg1.ID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                 Dictionary<string, string> dict = new Dictionary<string, string>();
                 foreach (var obj in _owner.Data)
                 {
@@ -485,7 +484,7 @@ namespace Dt.Base.ListView
                     }
                 }
             }
-            ((CList)sender).Data = data;
+            arg1.Data = data;
         }
         
         void OnConditionClick(object sender, RoutedEventArgs e)
@@ -608,7 +607,7 @@ namespace Dt.Base.ListView
             _strMenu.Items.Add(item);
         }
 
-        void OnMiClick(object sender, Mi e)
+        void OnMiClick(Mi e)
         {
             var con = (SearchConditionType)e.Tag;
             var btn = (Button)e.Owner.Tag;

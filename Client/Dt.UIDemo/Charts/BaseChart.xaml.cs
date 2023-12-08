@@ -40,7 +40,7 @@ namespace Dt.UIDemo
             _chart.ChartType = ChartType.Column;
         }
 
-        void OnChartTypeChanged(object sender, object e)
+        void OnChartTypeChanged(object e)
         {
             _chart.Data = _data.GetData((ChartType)e);
         }

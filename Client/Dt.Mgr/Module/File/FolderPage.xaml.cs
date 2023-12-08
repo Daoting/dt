@@ -44,7 +44,7 @@ namespace Dt.Mgr.Module
             _lv.Data = await _fileMgr.GetChildren();
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             if (_lv.SelectionMode == Base.SelectionMode.Multiple || !e.Row.Bool("is_folder"))
                 return;
@@ -74,12 +74,12 @@ namespace Dt.Mgr.Module
             });
         }
 
-        void OnSearch(object sender, Mi e)
+        void OnSearch(Mi e)
         {
             Forward(new SearchFilePage(_fileMgr));
         }
 
-        async void OnUpload(object sender, Mi e)
+        async void OnUpload(Mi e)
         {
             var files = await Kit.PickFiles();
             if (files == null || files.Count == 0)
@@ -122,34 +122,34 @@ namespace Dt.Mgr.Module
             Kit.Msg($"成功上传{cnt}个文件");
         }
 
-        async void OnAddFolder(object sender, Mi e)
+        async void OnAddFolder(Mi e)
         {
             if (await Forward<bool>(new EditFolder(_fileMgr)))
                 LoadData();
         }
 
-        async void OnEditFolder(object sender, Mi e)
+        async void OnEditFolder(Mi e)
         {
             if (await Forward<bool>(new EditFolder(_fileMgr), e.Row))
                 LoadData();
         }
 
-        void OnSaveAs(object sender, Mi e)
+        void OnSaveAs(Mi e)
         {
             GetFileItem(e.Row)?.SaveAs();
         }
 
-        void OnShare(object sender, Mi e)
+        void OnShare(Mi e)
         {
             GetFileItem(e.Row)?.ShareFile();
         }
 
-        void OnMove(object sender, Mi e)
+        void OnMove(Mi e)
         {
             MoveFiles(new List<Row> { e.Row });
         }
 
-        void OnMultiMove(object sender, Mi e)
+        void OnMultiMove(Mi e)
         {
             MoveFiles(_lv.SelectedRows);
         }
@@ -165,16 +165,16 @@ namespace Dt.Mgr.Module
                 mgr.Setting = _fileMgr.Setting;
                 Forward(new FolderPage(), mgr);
                 LoadData();
-                OnCancelMulti(null, null);
+                OnCancelMulti(null);
             }
         }
 
-        void OnDelete(object sender, Mi e)
+        void OnDelete(Mi e)
         {
             DeleteFiles(new List<Row> { e.Row });
         }
 
-        void OnMultiDelete(object sender, Mi e)
+        void OnMultiDelete(Mi e)
         {
             DeleteFiles(_lv.SelectedRows);
         }
@@ -216,7 +216,7 @@ namespace Dt.Mgr.Module
             return fl.Items.FirstOrDefault();
         }
 
-        async void OnMenuOpening(object sender, AsyncCancelEventArgs e)
+        async void OnMenuOpening(object sender, AsyncCancelArgs e)
         {
             Row row = (Row)_m.TargetData;
             if (row.Bool("is_folder"))
@@ -255,7 +255,7 @@ namespace Dt.Mgr.Module
 
         Menu _menu;
         Menu _menuMulti;
-        void OnMultiMode(object sender, Mi e)
+        void OnMultiMode(Mi e)
         {
             if (_menuMulti == null)
             {
@@ -280,12 +280,12 @@ namespace Dt.Mgr.Module
             _lv.SelectionMode = Base.SelectionMode.Multiple;
         }
 
-        void OnSelectAll(object sender, Mi e)
+        void OnSelectAll(Mi e)
         {
             _lv.SelectAll();
         }
 
-        void OnCancelMulti(object sender, Mi e)
+        void OnCancelMulti(Mi e)
         {
             Menu = _menu;
             _lv.SelectionMode = Base.SelectionMode.Single;

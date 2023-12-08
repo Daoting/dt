@@ -45,13 +45,13 @@ namespace Dt.Mgr.Rbac
         #endregion
 
         #region 交互
-        async void OnAdd(object sender, Mi e)
+        async void OnAdd(Mi e)
         {
             NaviToChild();
             await _win.MainForm.Update(-1);
         }
 
-        async void OnItemClick(object sender, ItemClickArgs e)
+        async void OnItemClick(ItemClickArgs e)
         {
             if (_lv.SelectionMode != Base.SelectionMode.Multiple)
             {
@@ -67,7 +67,7 @@ namespace Dt.Mgr.Rbac
                 NaviTo(new List<Tab> { _win.MainForm, _win.UserList, _win.MenuList, _win.PerList, _win.GroupList });
         }
 
-        async void OnDel(object sender, Mi e)
+        async void OnDel(Mi e)
         {
             if (!await Kit.Confirm("确认要删除选择的数据吗？"))
             {
@@ -91,7 +91,7 @@ namespace Dt.Mgr.Rbac
         /// </summary>
         public QueryClause Clause { get; set; }
 
-        void OnToSearch(object sender, Mi e)
+        void OnToSearch(Mi e)
         {
             if (_dlgQuery == null)
                 CreateQueryDlg();
@@ -103,7 +103,7 @@ namespace Dt.Mgr.Rbac
             var fs = new FuzzySearch();
             fs.Fixed.Add("全部");
             fs.CookieID = _win.GetType().FullName;
-            fs.Search += (s, e) =>
+            fs.Search += (e) =>
             {
                 Clause = new QueryClause(e);
                 Update();

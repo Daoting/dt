@@ -71,22 +71,22 @@ namespace Dt.Base
         /// <summary>
         /// 查询事件
         /// </summary>
-        public event EventHandler<string> Search;
+        public event Action<CPick, string> Search;
 
         /// <summary>
         /// 选择前事件，支持异步，可取消选择
         /// </summary>
-        public event EventHandler<AsyncCancelEventArgs> Picking;
+        public event Action<CPick, AsyncCancelArgs> Picking;
 
         /// <summary>
         /// 选择后事件
         /// </summary>
-        public event EventHandler Picked;
+        public event Action<CPick> Picked;
 
         /// <summary>
         /// 筛选按钮事件
         /// </summary>
-        public event EventHandler BtnClick;
+        public event Action<CPick> BtnClick;
         #endregion
 
         #region 属性
@@ -222,7 +222,7 @@ namespace Dt.Base
 
         void OnButtonClick(object sender, RoutedEventArgs e)
         {
-            BtnClick?.Invoke(this, EventArgs.Empty);
+            BtnClick?.Invoke(this);
         }
 
         internal void OnSearch(string p_txt)
@@ -240,7 +240,7 @@ namespace Dt.Base
             // 外部判断选择项是否允许
             if (Picking != null)
             {
-                var args = new AsyncCancelEventArgs();
+                var args = new AsyncCancelArgs();
                 Picking(this, args);
                 await args.EnsureAllCompleted();
                 if (args.Cancel)
@@ -253,7 +253,7 @@ namespace Dt.Base
                 FillCells(_lv.SelectedItem);
             }
 
-            Picked?.Invoke(this, EventArgs.Empty);
+            Picked?.Invoke(this);
             _dlg.Close();
             Owner.GotoNextCell(this);
         }

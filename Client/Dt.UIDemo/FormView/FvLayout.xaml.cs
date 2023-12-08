@@ -62,7 +62,7 @@ namespace Dt.UIDemo
             }
         }
 
-        void OnCellClick(object sender, FvCell e)
+        void OnCellClick(FvCell e)
         {
             _ob.Data = e;
         }

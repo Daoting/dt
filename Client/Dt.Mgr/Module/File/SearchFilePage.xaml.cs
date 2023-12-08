@@ -25,7 +25,7 @@ namespace Dt.Mgr.Module
             _fileMgr = p_fileMgr;
         }
 
-        async void OnSearch(object sender, string e)
+        async void OnSearch(string e)
         {
             _lv.Data = await _fileMgr.SearchFiles(e);
         }

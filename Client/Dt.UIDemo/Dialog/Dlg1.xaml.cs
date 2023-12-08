@@ -33,18 +33,18 @@ namespace Dt.UIDemo
             Close();
         }
 
-        async void OnClosing(object sender, DlgClosingEventArgs e)
+        async void OnClosing(Dlg arg1, DlgClosingArgs arg2)
         {
-            using (e.Wait())
+            using (arg2.Wait())
             {
                 await Task.Delay(100);
-                e.Cancel = (bool)_cbClosing.IsChecked;
-                if (e.Cancel)
+                arg2.Cancel = (bool)_cbClosing.IsChecked;
+                if (arg2.Cancel)
                     Kit.Msg("事件中设置禁止关闭");
             }
         }
 
-        void OnClosed(object sender, bool e)
+        void OnClosed(Dlg arg1, bool arg2)
         {
             Kit.Msg("关闭后事件");
         }

@@ -42,7 +42,7 @@ namespace Dt.Mgr.Workflow
             _fv.Query += OnSearch;
         }
 
-        async void OnSearch(object sender, QueryClause e)
+        async void OnSearch(QueryClause e)
         {
             var row = _fv.Row;
             _lv.Data = await WfdDs.GetMyHistoryPrcs(row.Bool("type"), row.Date("start"), row.Date("end"), row.Int("status"), row.Long("prcd_id"));
@@ -70,24 +70,24 @@ namespace Dt.Mgr.Workflow
             _fv.Row["end"] = new DateTime(time.Year, 12, 31, 23, 59, 59);
         }
 
-        void OnShowInst(object sender, Mi e)
+        void OnShowInst(Mi e)
         {
             AtWf.OpenFormWin(p_itemID: e.Row.Long("item_id"));
         }
 
-        void OnItemDoubleClick(object sender, object e)
+        void OnItemDoubleClick(object e)
         {
             Row row = (Row)e;
             AtWf.OpenFormWin(p_itemID: row.Long("item_id"));
         }
 
-        async void OnRetrieve(object sender, Mi e)
+        async void OnRetrieve(Mi e)
         {
             bool suc = await WfiDs.Retrieve(e.Row);
             if (suc)
             {
                 Kit.Msg("追回成功");
-                OnSearch(null, null);
+                OnSearch(null);
             }
             else
             {
@@ -95,12 +95,12 @@ namespace Dt.Mgr.Workflow
             }
         }
 
-        void OnShowLog(object sender, Mi e)
+        void OnShowLog(Mi e)
         {
             AtWf.ShowLog(e.Row.Long("prci_id"), e.Row.Long("prcd_id"));
         }
 
-        void OnOpenList(object sender, Mi e)
+        void OnOpenList(Mi e)
         {
             var prc = ((Row)e.Data).Str("prcname");
             var tp = Kit.GetTypeByAlias(typeof(WfListAttribute), prc);
@@ -108,13 +108,13 @@ namespace Dt.Mgr.Workflow
             Kit.OpenWin(tp, prc);
         }
 
-        async void OnLoadPrcd(object sender, AsyncEventArgs e)
+        async void OnLoadPrcd(CList arg1, AsyncArgs arg2)
         {
-            using (e.Wait())
+            using (arg2.Wait())
             {
                 var prc = await At.Query("select id,name from cm_wfd_prc order by dispidx");
                 prc.Insert(0, prc.NewRow(new { id = -1, name = "全部" }));
-                ((CList)sender).Data = prc;
+                arg1.Data = prc;
             }
         }
     }

@@ -34,7 +34,7 @@ namespace Dt.Base
         /// <summary>
         /// 查询命令
         /// </summary>
-        protected void OnQuery(object sender, Mi e)
+        protected void OnQuery(Mi e)
         {
             _info.UpdateParams(_row);
             Query?.Invoke(this, _info);
@@ -43,7 +43,7 @@ namespace Dt.Base
         /// <summary>
         /// 重置命令
         /// </summary>
-        protected void OnReset(object sender, Mi e)
+        protected void OnReset(Mi e)
         {
             _row.RejectChanges();
         }

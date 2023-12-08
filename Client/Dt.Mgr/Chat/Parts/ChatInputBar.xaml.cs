@@ -108,28 +108,28 @@ namespace Dt.Mgr.Chat
 #endif
         }
 
-        async void OnAddPhoto(object sender, Mi e)
+        async void OnAddPhoto(Mi e)
         {
             var files = await Kit.PickImages();
             if (files != null && files.Count > 0)
                 Owner.SendFiles(files);
         }
 
-        async void OnTakeVideo(object sender, Mi e)
+        async void OnTakeVideo(Mi e)
         {
             var fd = await Kit.TakeVideo();
             if (fd != null)
                 Owner.SendFiles(new List<FileData> { fd });
         }
 
-        async void OnTakePhoto(object sender, Mi e)
+        async void OnTakePhoto(Mi e)
         {
             var fd = await Kit.TakePhoto();
             if (fd != null)
                 Owner.SendFiles(new List<FileData> { fd });
         }
 
-        async void OnAddFile(object sender, Mi e)
+        async void OnAddFile(Mi e)
         {
             var files = await Kit.PickFiles();
             if (files != null && files.Count > 0)
@@ -137,7 +137,7 @@ namespace Dt.Mgr.Chat
         }
 
 #if WASM
-        async void OnWebRtc(object sender, Mi e)
+        async void OnWebRtc(Mi e)
         {
             if (VideoCaller.Inst == null)
             {

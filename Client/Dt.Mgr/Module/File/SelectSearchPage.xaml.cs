@@ -28,12 +28,12 @@ namespace Dt.Mgr.Module
                 _lv.SelectionMode = Base.SelectionMode.Multiple;
         }
 
-        async void OnSearch(object sender, string e)
+        async void OnSearch(string e)
         {
             _lv.Data = await FileDs.SearchFiles(e, _owner.TypeFilter);
         }
 
-        void OnSelect(object sender, Mi e)
+        void OnSelect(Mi e)
         {
             if (_lv.SelectedCount == 0)
                 return;

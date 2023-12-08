@@ -51,7 +51,7 @@ namespace Dt.MgrDemo
             await _win.Form.Update(-1);
         }
 
-        async void OnItemClick(object sender, ItemClickArgs e)
+        async void OnItemClick(ItemClickArgs e)
         {
             if (_lv.SelectionMode != SelectionMode.Multiple)
             {

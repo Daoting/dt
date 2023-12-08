@@ -72,12 +72,12 @@ namespace Dt.Base
         /// <summary>
         /// 外部自定义数据源事件，支持异步
         /// </summary>
-        public event EventHandler<AsyncEventArgs> LoadData;
+        public event Action<CTree, AsyncArgs> LoadData;
 
         /// <summary>
         /// 选择后事件，Selected与uno中重名，xaml中附加事件报错！
         /// </summary>
-        public event EventHandler<object> AfterSelect;
+        public event Action<CTree, object> AfterSelect;
         #endregion
 
         #region TreeView属性
@@ -245,7 +245,7 @@ namespace Dt.Base
         {
             if (LoadData != null)
             {
-                var args = new AsyncEventArgs();
+                var args = new AsyncArgs();
                 LoadData(this, args);
                 await args.EnsureAllCompleted();
                 return true;

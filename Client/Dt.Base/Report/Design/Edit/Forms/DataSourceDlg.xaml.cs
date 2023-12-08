@@ -122,7 +122,7 @@ namespace Dt.Base.Report
             return null;
         }
 
-        void OnSave(object sender, Mi e)
+        void OnSave(Mi e)
         {
             if (_lv.SelectedItem == null)
             {
@@ -147,9 +147,9 @@ namespace Dt.Base.Report
             }
         }
 
-        void OnDoubleClick(object sender, object e)
+        void OnDoubleClick(object e)
         {
-            OnSave(null, null);
+            OnSave(null);
         }
     }
 }

@@ -57,7 +57,7 @@ namespace Dt.Mgr.Workflow
 
         public string Note => _tbNote.Text;
 
-        void OnSend(object sender, Mi e)
+        void OnSend(Mi e)
         {
             int count = 0;
             foreach (var lv in _pnl.Children.OfType<Lv>())
@@ -160,7 +160,7 @@ namespace Dt.Mgr.Workflow
             ((Lv)((Button)sender).Tag).ClearSelection();
         }
 
-        async void OnFinish(object sender, Mi e)
+        async void OnFinish(Mi e)
         {
             if (await Kit.Confirm("任务结束(完成)后将不可修改，确认完成吗？"))
             {

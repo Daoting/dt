@@ -28,7 +28,7 @@ namespace Dt.UIDemo
             _lv.RefreshRequested += OnRefreshRequested;
         }
 
-        async void OnRefreshRequested(object sender, AsyncEventArgs e)
+        async void OnRefreshRequested(AsyncArgs e)
         {
             using (e.Wait())
             {

@@ -130,7 +130,7 @@ namespace Dt.Base
     /// <summary>
     /// 对话框关闭前事件参数
     /// </summary>
-    public class DlgClosingEventArgs : AsyncCancelEventArgs
+    public class DlgClosingArgs : AsyncCancelArgs
     {
         /// <summary>
         /// 对话框关闭时的返回值

@@ -206,7 +206,7 @@ namespace Dt.Base
 #if ANDROID
         new
 #endif
-        public event EventHandler<Mi> Click;
+        public event Action<Mi> Click;
 
         /// <summary>
         /// 点击事件，无事件参数，方便复用处理方法
@@ -539,7 +539,7 @@ namespace Dt.Base
                 }
 
                 // 触发本菜单项点击事件和ItemClick事件，两事件原型相同
-                Click?.Invoke(this, this);
+                Click?.Invoke(this);
                 // 无事件参数方便复用
                 Call?.Invoke();
                 Owner?.OnItemClick(this);

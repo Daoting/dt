@@ -59,7 +59,7 @@ namespace Dt.Mgr.Workflow
             }
         }
 
-        void OnDelete(object sender, Mi e)
+        void OnDelete(Mi e)
         {
             _lv.Data.Remove(e.Data);
         }

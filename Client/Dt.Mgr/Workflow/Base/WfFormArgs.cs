@@ -20,7 +20,7 @@ namespace Dt.Mgr
     /// <summary>
     /// 发送前事件参数
     /// </summary>
-    public class WfSendingArgs : AsyncEventArgs
+    public class WfSendingArgs : AsyncArgs
     {
         public WfSendingArgs(AtvRecvs p_recvs)
         {

@@ -25,7 +25,7 @@ namespace Dt.Mgr.Workflow
             _sketch = p_sketch;
         }
 
-        void OnDel(object sender, Mi e)
+        void OnDel(Mi e)
         {
             _sketch.DeleteSelection();
         }

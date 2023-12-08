@@ -37,7 +37,7 @@ namespace Dt.Mgr.Workflow
             _fv.Data = row;
         }
 
-        async void OnSearch(object sender, QueryClause e)
+        async void OnSearch(QueryClause e)
         {
             var row = _fv.Row;
             if (row.Str("prcd_id") == "")
@@ -68,24 +68,24 @@ namespace Dt.Mgr.Workflow
             _fv.Row["end"] = new DateTime(time.Year, 12, 31, 23, 59, 59);
         }
 
-        async void OnItemClick(object sender, ItemClickArgs e)
+        async void OnItemClick(ItemClickArgs e)
         {
             if (e.IsChanged)
                 _lvAtv.Data = await WfiAtvX.Query($"select atvi.id,atvd.name,status,inst_count from cm_wfi_atv atvi,cm_wfd_atv atvd where atvi.atvd_id=atvd.id and atvi.prci_id={e.Row.ID} order by atvi.ctime");
         }
 
-        async void OnAtvClick(object sender, ItemClickArgs e)
+        async void OnAtvClick(ItemClickArgs e)
         {
             if (e.IsChanged)
                 _lvItem.Data = await WfiItemX.GetItemsOfAtvi(e.Row.ID);
         }
 
-        void OnShowInst(object sender, Mi e)
+        void OnShowInst(Mi e)
         {
             ShowFormWin(e.Row);
         }
 
-        void OnItemDoubleClick(object sender, object e)
+        void OnItemDoubleClick(object e)
         {
             ShowFormWin((Row)e);
         }

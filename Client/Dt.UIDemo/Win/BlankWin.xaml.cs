@@ -63,7 +63,7 @@ namespace Dt.UIDemo
             Kit.OpenWin(typeof(ParamsWin), $"参数窗口{_rnd}", Icons.None, _rnd);
         }
 
-        void OnClosing(object sender, AsyncCancelEventArgs e)
+        void OnClosing(object sender, AsyncCancelArgs e)
         {
             e.Cancel = (bool)_cbClosing.IsChecked;
             if (e.Cancel)

@@ -28,7 +28,7 @@ namespace Dt.Mgr.Home
             Title = _parent.Name;
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             OwnDlg?.Close();
             Kit.RunAsync(() =>
@@ -41,19 +41,19 @@ namespace Dt.Mgr.Home
             });
         }
 
-        void OnSearch(object sender, Mi e)
+        void OnSearch(Mi e)
         {
             Forward(new SearchMenu());
         }
 
-        void OnMenuOpening(object sender, AsyncCancelEventArgs e)
+        void OnMenuOpening(object sender, AsyncCancelArgs e)
         {
             RootMenu.DoMenuOpening(sender, e);
         }
 
-        void OnFav(object sender, Mi e)
+        void OnFav(Mi e)
         {
-            RootMenu.DoFavMenu(sender, e);
+            RootMenu.DoFavMenu(e);
         }
     }
 }

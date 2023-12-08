@@ -32,7 +32,7 @@ namespace Dt.UIDemo
                 { "replace" },
             };
             OnRow(null, null);
-            _fv.Changed += (s, e) => CellDemoKit.OnChanged(_fv, e);
+            _fv.Changed += (e) => CellDemoKit.OnChanged(_fv, e);
         }
 
         void OnRow(object sender, RoutedEventArgs e)

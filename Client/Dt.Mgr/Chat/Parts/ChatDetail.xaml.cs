@@ -361,7 +361,7 @@ namespace Dt.Mgr.Chat
             }
         }
 
-        void OnCopyMsg(object sender, Mi e)
+        void OnCopyMsg(Mi e)
         {
             var l = (LetterX)e.DataContext;
             DataPackage data = new DataPackage();
@@ -369,7 +369,7 @@ namespace Dt.Mgr.Chat
             Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(data);
         }
 
-        async void OnUndoMsg(object sender, Mi e)
+        async void OnUndoMsg(Mi e)
         {
             var l = (LetterX)e.DataContext;
             if ((Kit.Now - l.STime).TotalMinutes > 2)
@@ -382,14 +382,14 @@ namespace Dt.Mgr.Chat
             }
         }
 
-        void OnDelMsg(object sender, Mi e)
+        void OnDelMsg(Mi e)
         {
             var l = (LetterX)e.DataContext;
             AtLob.Exec($"delete from Letter where ID={l.ID}");
             _lv.Data.Remove(l);
         }
 
-        void OnShareMsg(object sender, Mi e)
+        void OnShareMsg(Mi e)
         {
             _ = Kit.ShareText(((LetterX)e.DataContext).Content);
         }

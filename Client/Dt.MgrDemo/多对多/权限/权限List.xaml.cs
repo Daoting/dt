@@ -51,7 +51,7 @@ namespace Dt.MgrDemo
             await _win.MainForm.Update(-1);
         }
 
-        async void OnItemClick(object sender, ItemClickArgs e)
+        async void OnItemClick(ItemClickArgs e)
         {
             if (_lv.SelectionMode != SelectionMode.Multiple)
             {
@@ -104,7 +104,7 @@ namespace Dt.MgrDemo
             var fs = new FuzzySearch();
             fs.Fixed.Add("全部");
             fs.CookieID = _win.GetType().FullName;
-            fs.Search += (s, e) =>
+            fs.Search += (e) =>
             {
                 Clause = new QueryClause(e);
                 Update();
@@ -113,7 +113,7 @@ namespace Dt.MgrDemo
             tabs.Add(fs);
 
             var qs = new 权限Query();
-            qs.Query += (s, e) =>
+            qs.Query += (e) =>
             {
                 Clause = e;
                 Update();

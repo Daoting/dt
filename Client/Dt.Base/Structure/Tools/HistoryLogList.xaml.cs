@@ -200,7 +200,7 @@ namespace Dt.Base.Tools
         #endregion
 
         #region 详细
-        void OnOutputClick(object sender, ItemClickArgs e)
+        void OnOutputClick(ItemClickArgs e)
         {
             var r = e.Row;
             var lev = r.Str("level");
@@ -216,7 +216,7 @@ namespace Dt.Base.Tools
         #endregion
 
         #region 打开
-        async void OnOpenFile(object sender, Mi e)
+        async void OnOpenFile(Mi e)
         {
             var picker = Kit.GetFileOpenPicker();
             picker.FileTypeFilter.Add(".log");
@@ -227,7 +227,7 @@ namespace Dt.Base.Tools
                 LoadFile(new FileInfo(file.Path));
         }
 
-        async void OnSelectOther(object sender, Mi e)
+        async void OnSelectOther(Mi e)
         {
             var dlg = new HisLogFileOtherDlg();
             if (!Kit.IsPhoneUI)
@@ -241,7 +241,7 @@ namespace Dt.Base.Tools
             }
         }
 
-        async void OnSelectSelf(object sender, Mi e)
+        async void OnSelectSelf(Mi e)
         {
             var dlg = new HisLogFileDlg();
             if (!Kit.IsPhoneUI)

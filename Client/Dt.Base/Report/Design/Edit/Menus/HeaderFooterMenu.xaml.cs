@@ -23,7 +23,7 @@ namespace Dt.Base.Report
             _owner = p_owner;
         }
 
-        void OnInsertText(object sender,Mi e)
+        void OnInsertText(Mi e)
         {
             Worksheet sheet = _owner.Excel.ActiveSheet;
             CellRange range = sheet.Selections[0];

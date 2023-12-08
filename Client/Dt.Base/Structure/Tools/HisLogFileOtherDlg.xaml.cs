@@ -29,7 +29,7 @@ namespace Dt.Base.Tools
             _lvApp.Data = PackageKit.GetLogPaths();
         }
 
-        void OnItemClick(object sender, ItemClickArgs e)
+        void OnItemClick(ItemClickArgs e)
         {
             var info = e.Data.To<PackageKit.LogPathInfo>();
             _tb.Text = info.Path;
@@ -45,12 +45,12 @@ namespace Dt.Base.Tools
             _lvFile.Data = list;
         }
 
-        void OnOpen(object sender, Mi e)
+        void OnOpen(Mi e)
         {
             DoOpen();
         }
 
-        void OnDblClick(object sender, object e)
+        void OnDblClick(object e)
         {
             DoOpen();
         }

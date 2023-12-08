@@ -329,10 +329,10 @@ namespace Dt.Base.TreeDiagrams
             Children.Add(_btnMenu);
         }
 
-        void OnMenuClosed(object sender, EventArgs e)
+        void OnMenuClosed(Menu arg1)
         {
             // 关闭上下文菜单时移除行醒目颜色
-            ((Menu)sender).Closed -= OnMenuClosed;
+            arg1.Closed -= OnMenuClosed;
             _rcPointer.Fill = null;
             _menuOpened = false;
         }

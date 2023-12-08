@@ -70,7 +70,7 @@ namespace Dt.UIDemo
                 _lv.ItemClick -= OnRowChanged;
         }
 
-        void OnRowChanged(object sender, ItemClickArgs e)
+        void OnRowChanged(ItemClickArgs e)
         {
             if (e.Data is Row row)
             {
@@ -105,7 +105,7 @@ namespace Dt.UIDemo
                 _lv.ItemDoubleClick -= OnItemDoubleClick;
         }
 
-        void OnItemDoubleClick(object sender, object e)
+        void OnItemDoubleClick(object e)
         {
             if (e is Row row)
             {

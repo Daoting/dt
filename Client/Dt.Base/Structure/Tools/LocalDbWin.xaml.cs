@@ -51,7 +51,7 @@ namespace Dt.Base.Tools
             _lvDb.Data = tbl;
         }
 
-        async void OnDbClick(object sender, ItemClickArgs e)
+        async void OnDbClick(ItemClickArgs e)
         {
             if (e.IsChanged)
             {
@@ -63,7 +63,7 @@ namespace Dt.Base.Tools
         }
 
 #if WIN
-        async void OnBackup(object sender, Mi e)
+        async void OnBackup(Mi e)
         {
             var row = e.Row;
             var picker = Kit.GetFileSavePicker();
@@ -140,7 +140,7 @@ namespace Dt.Base.Tools
         }
 #endif
 
-        void OnShare(object sender, Mi e)
+        void OnShare(Mi e)
         {
             ShareFile(e);
         }
@@ -152,14 +152,14 @@ namespace Dt.Base.Tools
             _ = Kit.ShareFile(dbFile);
         }
 
-        async void OnTblClick(object sender, ItemClickArgs e)
+        async void OnTblClick(ItemClickArgs e)
         {
             if (e.IsChanged)
                 _lvData.Data = await GetDb().Query($"select * from '{e.Row.Str("name")}' limit 500");
             NaviTo("数据");
         }
 
-        async void OnDel(object sender, Mi e)
+        async void OnDel(Mi e)
         {
             if (_lvDb.SelectedRow.Str("name") == "model")
             {

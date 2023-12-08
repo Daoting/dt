@@ -53,13 +53,13 @@ namespace Dt.Mgr.Rbac
         #endregion
 
         #region 交互
-        async void OnAdd(object sender, Mi e)
+        async void OnAdd(Mi e)
         {
             NaviToChild();
             await _win.MainForm.Update(-1);
         }
 
-        async void OnItemClick(object sender, ItemClickArgs e)
+        async void OnItemClick(ItemClickArgs e)
         {
             if (_lv.SelectionMode != Base.SelectionMode.Multiple)
             {
@@ -75,7 +75,7 @@ namespace Dt.Mgr.Rbac
                 NaviTo(new List<Tab> { _win.MainForm, _win.GroupList, _win.RoleList });
         }
 
-        async void OnResetPwd(object sender, Mi e)
+        async void OnResetPwd(Mi e)
         {
             var user = e.Data.To<UserX>();
             if (!await Kit.Confirm($"确认要重置[{user.Acc}]的密码吗？\r\n密码会重置为4个1！"))
@@ -102,7 +102,7 @@ namespace Dt.Mgr.Rbac
             }
         }
 
-        async void OnToggleExpired(object sender, Mi e)
+        async void OnToggleExpired(Mi e)
         {
             var user = e.Data.To<UserX>();
             string act = user.Expired ? "启用" : "停用";
@@ -126,7 +126,7 @@ namespace Dt.Mgr.Rbac
             }
         }
 
-        async void OnDel(object sender, Mi e)
+        async void OnDel(Mi e)
         {
             var user = e.Data.To<UserX>();
             if (!await Kit.Confirm($"确认要删除[{user.Acc}]吗？\r\n删除后不可恢复，请谨慎删除！"))
@@ -143,12 +143,12 @@ namespace Dt.Mgr.Rbac
             }
         }
 
-        void OnUserMenu(object sender, Mi e)
+        void OnUserMenu(Mi e)
         {
             new UserMenuListDlg().Show(e.Row.ID);
         }
 
-        void OnUserPrv(object sender, Mi e)
+        void OnUserPrv(Mi e)
         {
             new UserPerListDlg().Show(e.Row.ID);
         }
@@ -160,7 +160,7 @@ namespace Dt.Mgr.Rbac
         /// </summary>
         public QueryClause Clause { get; set; }
 
-        void OnToSearch(object sender, Mi e)
+        void OnToSearch(Mi e)
         {
             if (_dlgQuery == null)
                 CreateQueryDlg();
@@ -173,7 +173,7 @@ namespace Dt.Mgr.Rbac
             var fs = new FuzzySearch();
             fs.Fixed.Add("全部");
             fs.CookieID = _win.GetType().FullName;
-            fs.Search += (s, e) =>
+            fs.Search += (e) =>
             {
                 Clause = new QueryClause(e);
                 Update();
@@ -182,7 +182,7 @@ namespace Dt.Mgr.Rbac
             tabs.Add(fs);
 
             var qs = new UserQuery();
-            qs.Query += (s, e) =>
+            qs.Query += (e) =>
             {
                 Clause = e;
                 Update();
