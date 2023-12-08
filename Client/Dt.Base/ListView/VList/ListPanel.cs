@@ -71,6 +71,13 @@ namespace Dt.Base.ListView
                 _header = null;
             }
         }
+
+        protected override double GetHeaderHeight()
+        {
+            if (_header != null)
+                return _header.DesiredSize.Height;
+            return 0;
+        }
         #endregion
 
         #region 虚拟行

@@ -67,6 +67,13 @@ namespace Dt.Base.ListView
             base.OnSortDescChanged();
             _colHeader?.SyncSortIcon();
         }
+
+        protected override double GetHeaderHeight()
+        {
+            if (_colHeader != null)
+                return _colHeader.DesiredSize.Height;
+            return 0;
+        }
         #endregion
 
         #region 虚拟行

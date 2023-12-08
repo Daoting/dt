@@ -327,20 +327,28 @@ namespace Dt.Base.ListView
             }
 
             double offset;
+            var scroll = _owner.Scroll;
             if (_owner.IsInnerScroll)
             {
-                offset = (p_index == _owner.Rows.Count - 1) ? _owner.Scroll.ScrollableHeight : GetRowVerPos(p_index);
+                offset = (p_index == _owner.Rows.Count - 1) ? scroll.ScrollableHeight : GetRowVerPos(p_index);
             }
             else
             {
                 double rowHeight = GetRowVerPos(p_index);
                 // 计算与滚动栏的相对位置
-                var pt = TransformToVisual(_owner.Scroll).TransformPoint(new Point());
-                offset = _owner.Scroll.VerticalOffset + pt.Y + rowHeight;
+                var pt = TransformToVisual(scroll).TransformPoint(new Point());
+                offset = scroll.VerticalOffset + pt.Y + rowHeight;
             }
 
-            // 不异步初次加载数据后滚出无效！
-            Kit.RunAsync(() => _owner.Scroll.ChangeView(null, offset, null));
+            // 顶部固定高度
+            double topFixed = GetFixedTopHeight();
+
+            // 在可视区域不用滚出
+            if (offset < scroll.VerticalOffset || offset + GetRowHeight(p_index) > scroll.VerticalOffset + scroll.ViewportHeight - topFixed)
+            {
+                // 不异步初次加载数据后滚出无效！
+                Kit.RunAsync(() => _owner.Scroll.ChangeView(null, offset, null));
+            }
         }
 
         /// <summary>
@@ -404,6 +412,47 @@ namespace Dt.Base.ListView
             return Math.Max(height, 0);
         }
 
+        /// <summary>
+        /// 获取顶部固定高度
+        /// </summary>
+        /// <returns></returns>
+        double GetFixedTopHeight()
+        {
+            double height = 0;
+            if (_groupHeader != null)
+                height += _groupHeader.DesiredSize.Height;
+            if (_filterBox != null)
+                height += _filterBox.DesiredSize.Height;
+            if (_toolbar != null)
+                height += _toolbar.DesiredSize.Height;
+            height += GetHeaderHeight();
+            return height;
+        }
+
+        /// <summary>
+        /// 获取指定行的行高
+        /// </summary>
+        /// <param name="p_index"></param>
+        /// <returns></returns>
+        double GetRowHeight(int p_index)
+        {
+            if (_owner.IsVir)
+                return _rowHeight;
+            
+            if (p_index >= 0 && p_index < _dataRows.Count)
+                return _dataRows[p_index].DesiredSize.Height;
+            return 0;
+        }
+
+        /// <summary>
+        /// 获取列头高度
+        /// </summary>
+        /// <returns></returns>
+        protected virtual double GetHeaderHeight()
+        {
+            return 0;
+        }
+        
         /// <summary>
         /// 设置为输入焦点
         /// </summary>
