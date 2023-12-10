@@ -138,7 +138,7 @@ namespace Dt.UIDemo
             {
                 if (p_args.Text != "根菜单")
                 {
-                    OnBack(null, null);
+                    OnBack(null);
                 }
             }
             else if (p_args.Col == 1)
@@ -179,14 +179,14 @@ namespace Dt.UIDemo
             }
         }
 
-        void OnBack(object sender, Mi e)
+        void OnBack(Mi e)
         {
             var ls = View.Tag as Stack<RptInfo>;
             if (ls != null && ls.Count > 0)
                 View.LoadReport(ls.Pop());
         }
 
-        void OnDetail(object sender, Mi e)
+        void OnDetail(Mi e)
         {
             Dlg dlg = new Dlg();
             dlg.Content = new TextBlock { Margin = new Thickness(20), Text = $"id：{View.Info.Params["parentid"]}\r\nname：{View.Info.Params["parentname"]}" };

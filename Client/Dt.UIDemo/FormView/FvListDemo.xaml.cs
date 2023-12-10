@@ -91,7 +91,7 @@ namespace Dt.UIDemo
             Kit.Msg($"填充ID：{((Row)_fv.Data).Str("listrowid")}");
         }
 
-        void OnEdit(object sender, Mi e)
+        void OnEdit(Mi e)
         {
             ((CList)_fv["order"]).Dlg.Close();
             Kit.Msg("打开编辑窗口");

@@ -30,7 +30,15 @@ namespace Dt.Core
             ConfigureServices(svc);
             SvcProvider = svc.BuildServiceProvider();
 
-            MergeDictionaryResource();
+            // 后台任务启动时可能为null
+            var app = Application.Current;
+            if (app != null)
+            {
+                var mi = app.GetType().GetMethod("InitDtDictionary", BindingFlags.Public | BindingFlags.Instance);
+                if (mi == null)
+                    throw new Exception(app.GetType().Name + " 中不包括 InitDtDictionary 方法！");
+                mi.Invoke(app, new object[0]);
+            }
         }
 
         /// <summary>
@@ -111,33 +119,6 @@ namespace Dt.Core
                     return ls;
             }
             return new List<Type>();
-        }
-
-        /// <summary>
-        /// 调用 App.MergeDictionaryResource 合并_sqliteDbs _typeAlias两个字典
-        /// </summary>
-        /// <exception cref="Exception"></exception>
-        void MergeDictionaryResource()
-        {
-            var app = Application.Current;
-            // 后台任务启动时可能为null
-            if (app != null)
-            {
-                var mi = app.GetType().GetMethod("MergeDictionaryResource", BindingFlags.Public | BindingFlags.Instance);
-                if (mi == null)
-                    throw new Exception(app.GetType().Name + " 中不包括 MergeDictionaryResource 方法！");
-
-                var sqliteDbs = new Dictionary<string, SqliteTblsInfo>(StringComparer.OrdinalIgnoreCase);
-                var aliasTypes = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
-                var aliasTypeList = new Dictionary<string, List<Type>>(StringComparer.OrdinalIgnoreCase);
-
-                mi.Invoke(app, new object[3] { sqliteDbs, aliasTypes, aliasTypeList });
-
-                // 高性能
-                _sqliteDbs = sqliteDbs.ToFrozenDictionary();
-                _aliasTypes = aliasTypes.ToFrozenDictionary();
-                _aliasTypeList = aliasTypeList.ToFrozenDictionary();
-            }
         }
 
         internal FrozenDictionary<string, SqliteTblsInfo> _sqliteDbs;

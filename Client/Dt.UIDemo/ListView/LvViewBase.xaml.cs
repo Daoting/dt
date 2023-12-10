@@ -300,7 +300,7 @@ namespace Dt.UIDemo
             _lv.ClearValue(Lv.PressedBrushProperty);
         }
 
-        void OnToggleViewMode(object sender, Mi e)
+        void OnToggleViewMode(Mi e)
         {
             if (_lv.ViewMode == ViewMode.Tile)
             {

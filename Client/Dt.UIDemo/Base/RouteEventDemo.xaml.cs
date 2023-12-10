@@ -278,7 +278,7 @@ namespace Dt.UIDemo
             return "(null)";
         }
 
-        void OnClear(object sender, Mi e)
+        void OnClear(Mi e)
         {
             if (_tbSingle.Text != "")
                 Log.Debug(_tbSingle.Text);

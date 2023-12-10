@@ -17,7 +17,7 @@ namespace Dt.Core.Mask
     /// <summary>
     /// 
     /// </summary>
-    public class RegExpDfa
+    public partial class RegExpDfa
     {
         #region 静态内容
         static RegExpDfa HardAnd(RegExpDfa head, RegExpDfa tail)

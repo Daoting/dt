@@ -38,23 +38,23 @@ namespace Dt.UIDemo
             return ((IconItem)p_obj).IsMatched(_sb.Text);
         }
 
-        void OnCopyIcons(object sender, Mi e)
+        void OnCopyIcons(Mi e)
         {
             ToClipboard($"Icons.{((IconItem)e.Data).Name}");
         }
 
-        void OnCopyName(object sender, Mi e)
+        void OnCopyName(Mi e)
         {
             ToClipboard(((IconItem)e.Data).Name);
         }
 
-        void OnCopyButton(object sender, Mi e)
+        void OnCopyButton(Mi e)
         {
             var icon = (IconItem)e.Data;
             ToClipboard($"<Button Content=\"&#x{icon.Hex};\" Style=\"{{StaticResource 字符按钮}}\" />");
         }
 
-        void OnCopyBlock(object sender, Mi e)
+        void OnCopyBlock(Mi e)
         {
             var icon = (IconItem)e.Data;
             ToClipboard($"<TextBlock Text=\"&#x{icon.Hex};\" FontFamily=\"{{StaticResource IconFont}}\" />");
