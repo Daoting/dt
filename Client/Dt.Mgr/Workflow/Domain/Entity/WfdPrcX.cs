@@ -39,7 +39,7 @@ namespace Dt.Mgr.Workflow
             return prc;
         }
 
-        public event EventHandler Modified;
+        public event Action Modified;
 
         public Table<WfdAtvX> Atvs { get; private set; }
 
@@ -85,7 +85,7 @@ namespace Dt.Mgr.Workflow
 
         void OnModified()
         {
-            Modified?.Invoke(this, EventArgs.Empty);
+            Modified?.Invoke();
         }
     }
 }

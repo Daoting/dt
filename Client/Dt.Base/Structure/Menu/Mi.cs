@@ -134,9 +134,9 @@ namespace Dt.Base
             {
                 mi.UpdateCheckedIcon();
                 if ((bool)e.NewValue)
-                    mi.Checked?.Invoke(mi, EventArgs.Empty);
+                    mi.Checked?.Invoke(mi);
                 else
-                    mi.Unchecked?.Invoke(mi, EventArgs.Empty);
+                    mi.Unchecked?.Invoke(mi);
             }
         }
 
@@ -216,12 +216,12 @@ namespace Dt.Base
         /// <summary>
         /// 勾选事件
         /// </summary>
-        public event EventHandler Checked;
+        public event Action<Mi> Checked;
 
         /// <summary>
         /// 取消勾选事件
         /// </summary>
-        public event EventHandler Unchecked;
+        public event Action<Mi> Unchecked;
         #endregion
 
         #region 属性

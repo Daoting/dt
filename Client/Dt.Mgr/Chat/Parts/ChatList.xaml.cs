@@ -25,7 +25,7 @@ namespace Dt.Mgr.Chat
     /// </summary>
     public sealed partial class ChatList : UserControl
     {
-        public event EventHandler<long> ItemClick;
+        public event Action<long> ItemClick;
 
         public ChatList()
         {
@@ -84,7 +84,7 @@ namespace Dt.Mgr.Chat
 
         void OnItemClick(ItemClickArgs e)
         {
-            ItemClick?.Invoke(this, e.Row.Long("otherid"));
+            ItemClick?.Invoke(e.Row.Long("otherid"));
         }
 
         async void OnDelMsg(Mi e)

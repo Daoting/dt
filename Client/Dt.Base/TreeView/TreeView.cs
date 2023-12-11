@@ -216,7 +216,7 @@ namespace Dt.Base
         /// <summary>
         /// 加载子节点事件
         /// </summary>
-        public event EventHandler<LoadingChildArgs> LoadingChild;
+        public event Action<LoadingChildArgs> LoadingChild;
 
         /// <summary>
         /// 选择变化事件
@@ -226,7 +226,7 @@ namespace Dt.Base
         /// <summary>
         /// 切换数据源事件
         /// </summary>
-        public event EventHandler<object> DataChanged;
+        public event Action<object> DataChanged;
         #endregion
 
         #region 属性
@@ -1252,7 +1252,7 @@ namespace Dt.Base
                 return;
 
             var args = new LoadingChildArgs(p_item);
-            LoadingChild(this, args);
+            LoadingChild(args);
             await args.EnsureAllCompleted();
             if (args.Children != null)
             {
@@ -1272,7 +1272,7 @@ namespace Dt.Base
         /// </summary>
         void OnDataChanged()
         {
-            DataChanged?.Invoke(this, Data);
+            DataChanged?.Invoke(Data);
         }
         #endregion
     }

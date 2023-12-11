@@ -28,7 +28,7 @@ namespace Dt.UIDemo
             _tv.LoadingChild += OnLoadingChild;
         }
 
-        async void OnLoadingChild(object sender, LoadingChildArgs e)
+        async void OnLoadingChild(LoadingChildArgs e)
         {
             using (e.Wait())
             {

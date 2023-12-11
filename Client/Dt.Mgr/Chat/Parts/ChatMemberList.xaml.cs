@@ -22,7 +22,7 @@ namespace Dt.Mgr.Chat
     /// </summary>
     public sealed partial class ChatMemberList : UserControl
     {
-        public event EventHandler<long> ItemClick;
+        public event Action<long> ItemClick;
 
         public ChatMemberList()
         {
@@ -43,7 +43,7 @@ namespace Dt.Mgr.Chat
 
         void OnItemClick(ItemClickArgs e)
         {
-            ItemClick?.Invoke(this, e.Row.ID);
+            ItemClick?.Invoke(e.Row.ID);
         }
     }
 }

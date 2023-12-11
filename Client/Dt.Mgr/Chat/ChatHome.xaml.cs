@@ -30,7 +30,7 @@ namespace Dt.Mgr.Chat
             InitializeComponent();
         }
 
-        void OnItemClick(object sender, long e)
+        void OnItemClick(long e)
         {
             _detail.OtherID = e;
             NaviTo("聊天内容");

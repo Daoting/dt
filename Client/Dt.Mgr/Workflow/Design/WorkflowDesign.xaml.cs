@@ -75,7 +75,7 @@ namespace Dt.Mgr.Workflow
                 }
             }
 
-            _prc.Modified += (s, e) => UpdateSaveState();
+            _prc.Modified += UpdateSaveState;
             _sketch.His.Clear();
             _sketch.His.CmdChanged += OnSketchChanged;
         }
