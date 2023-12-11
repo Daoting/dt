@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-11-21 创建
+* 日志: 2023-12-11 创建
 ******************************************************************************/
 #endregion
 
@@ -45,7 +45,7 @@ namespace Dt.MgrDemo
         #endregion
 
         #region 交互
-        async void OnAdd(object sender, Mi e)
+        async void OnAdd(Mi e)
         {
             NaviToChild();
             await _win.ParentForm.Update(-1);
@@ -64,10 +64,10 @@ namespace Dt.MgrDemo
         void NaviToChild()
         {
             if (Kit.IsPhoneUI)
-                NaviTo(new List<Tab> { _win.ParentForm, _win.大儿List, _win.小儿List });
+                NaviTo(new List<Tab> { _win.ParentForm, _win.小儿List, _win.大儿List });
         }
 
-        async void OnDel(object sender, Mi e)
+        async void OnDel(Mi e)
         {
             if (!await Kit.Confirm("确认要删除选择的数据吗？"))
             {
@@ -91,7 +91,7 @@ namespace Dt.MgrDemo
         /// </summary>
         public QueryClause Clause { get; set; }
 
-        void OnToSearch(object sender, Mi e)
+        void OnToSearch(Mi e)
         {
             if (_dlgQuery == null)
                 CreateQueryDlg();

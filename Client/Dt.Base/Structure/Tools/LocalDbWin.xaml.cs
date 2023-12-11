@@ -84,7 +84,7 @@ namespace Dt.Base.Tools
             }
         }
 #elif ANDROID
-        void OnBackup(object sender, Mi e)
+        void OnBackup(Mi e)
         {
             var row = e.Row;
             try
@@ -100,12 +100,12 @@ namespace Dt.Base.Tools
             }
         }
 #elif IOS
-        void OnBackup(object sender, Mi e)
+        void OnBackup(Mi e)
         {
             ShareFile(e);
         }
 #elif WASM
-        async void OnBackup(object sender, Mi e)
+        async void OnBackup(Mi e)
         {
             var row = e.Row;
             var picker = Kit.GetFileSavePicker();

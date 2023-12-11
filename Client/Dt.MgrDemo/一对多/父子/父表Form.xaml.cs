@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-11-21 创建
+* 日志: 2023-12-11 创建
 ******************************************************************************/
 #endregion
 
@@ -57,12 +57,12 @@ namespace Dt.MgrDemo
         #endregion
 
         #region 交互
-        void OnAdd(object sender, Mi e)
+        void OnAdd(Mi e)
         {
             Create();
         }
 
-        void OnSave(object sender, Mi e)
+        void OnSave(Mi e)
         {
             Save();
         }
@@ -117,8 +117,8 @@ namespace Dt.MgrDemo
 
         void UpdateRelated(long p_id)
         {
-            _win.大儿List.Update(p_id);
             _win.小儿List.Update(p_id);
+            _win.大儿List.Update(p_id);
             _win.ChildForm.BackToHome();
         }
 

@@ -30,8 +30,8 @@
             <a:Col ID="禁止保存" />
             <a:Col ID="禁止删除" />
             <a:Col ID="值变事件" />
-            <a:Col ID="创建时间" Width="110" />
-            <a:Col ID="修改时间" Width="110" />
+            <a:Col ID="创建时间" />
+            <a:Col ID="修改时间" />
         </a:Cols>
     </a:Lv>
 </a:Tab>

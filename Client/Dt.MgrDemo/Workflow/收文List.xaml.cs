@@ -24,7 +24,7 @@ namespace Dt.MgrDemo.Workflow
             AtWf.AddMenu(_lv);
         }
 
-        async void OnSearch(object sender, Mi e)
+        async void OnSearch(Mi e)
         {
             _lv.Data = await 收文X.Query(null);
             NaviTo("结果");

@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-11-21 创建
+* 日志: 2023-12-11 创建
 ******************************************************************************/
 #endregion
 
@@ -25,9 +25,9 @@ namespace Dt.MgrDemo
 
         public 父表Form ParentForm => _parentForm;
 
-        public 父表大儿List 大儿List => _大儿List;
-
         public 父表小儿List 小儿List => _小儿List;
+
+        public 父表大儿List 大儿List => _大儿List;
 
         public Tab ChildForm => _childForm;
     }

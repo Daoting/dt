@@ -113,7 +113,7 @@ namespace Dt.Base.Tools
             }
         }
 #elif ANDROID
-        void OnSaveAs(object sender, Mi e)
+        void OnSaveAs(Mi e)
         {
             var fi = e.Data.To<LocalFileItem>();
             try
@@ -132,13 +132,13 @@ namespace Dt.Base.Tools
             }
         }
 #elif IOS
-        async void OnSaveAs(object sender, Mi e)
+        async void OnSaveAs(Mi e)
         {
             var file = e.Data.To<LocalFileItem>();
             await Kit.ShareFile(file.Info.FullName);
         }
 #elif WASM
-        async void OnSaveAs(object sender, Mi e)
+        async void OnSaveAs(Mi e)
         {
             var fi = e.Data.To<LocalFileItem>();
             var picker = Kit.GetFileSavePicker();

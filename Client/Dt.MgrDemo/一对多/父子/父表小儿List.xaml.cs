@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-11-21 创建
+* 日志: 2023-12-11 创建
 ******************************************************************************/
 #endregion
 
@@ -35,7 +35,7 @@ namespace Dt.MgrDemo
         {
             if (_parentID > 0)
             {
-                _lv.Data = await 小儿X.Query($"where group_id={_parentID}");
+                _lv.Data = await 小儿X.Query($"where parent_id={_parentID}");
             }
             else
             {
@@ -45,7 +45,7 @@ namespace Dt.MgrDemo
         #endregion
 
         #region 交互
-        void OnAdd(object sender, Mi e)
+        void OnAdd(Mi e)
         {
             ShowForm(-1);
         }
@@ -64,7 +64,7 @@ namespace Dt.MgrDemo
             await _form.Update(p_id, _parentID);
         }
         
-        async void OnDel(object sender, Mi e)
+        async void OnDel(Mi e)
         {
             if (!await Kit.Confirm("确认要删除选择的数据吗？"))
             {
@@ -87,18 +87,18 @@ namespace Dt.MgrDemo
         #endregion
 
         #region 选择
-        void OnSelectAll(object sender, Mi e)
+        void OnSelectAll(Mi e)
         {
             _lv.SelectAll();
         }
 
-        void OnMultiMode(object sender, Mi e)
+        void OnMultiMode(Mi e)
         {
             _lv.SelectionMode = SelectionMode.Multiple;
             Menu.HideExcept("删除", "全选", "取消");
         }
 
-        void OnCancelMulti(object sender, Mi e)
+        void OnCancelMulti(Mi e)
         {
             _lv.SelectionMode = SelectionMode.Single;
             Menu.ShowExcept("删除", "全选", "取消");
