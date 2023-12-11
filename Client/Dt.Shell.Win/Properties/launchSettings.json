@@ -1,7 +1,0 @@
-{
-  "profiles": {
-    "Dt.Shell.Win": {
-      "commandName": "MsixPackage"
-    }
-  }
-}

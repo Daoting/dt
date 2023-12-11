@@ -349,14 +349,6 @@ healthchecksdb
 MigrationBackup/
 
 # 后添加
-Service/src/Dt.Cm/etc/log/
-Service/src/Dt.Cm/etc/model/
-Service/src/Dt.Msg/etc/log/
-Service/src/Dt.Fsm/etc/log/
-!Service/iis/tls.pfx 
-Client/Dt.Core/Base/Tools/
-Packages/
-Publish/
 Doc/商店截图/
 Doc/旧文档/
 Doc/搬运工模型.eapx

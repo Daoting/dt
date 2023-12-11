@@ -1,8 +1,0 @@
-﻿<a:Tab
-    x:Class="Dt.Mgr.Home.MenuHome"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base"
-    Title="菜单">
-
-</a:Tab>
