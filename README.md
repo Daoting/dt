@@ -18,7 +18,7 @@
 
 搬运工由客户端和服务端两部分组成，是一套用于快速构建业务系统的基础技术实现和规范集，本身与具体业务无关。
 
-* 客户端部分通过[Uno Platform](https://github.com/unoplatform/uno)支持在Windows、 浏览器(WebAssembly)、手机上跨平台运行，包括一系列可复用的前端控件和各种基础功能模块；
+* 客户端部分通过[Uno Platform](https://github.com/unoplatform/uno)支持在Windows、 浏览器(WebAssembly)、手机、Linux上跨平台运行，包括一系列可复用的前端控件和各种基础功能模块；
 
 * 服务端部分全面采用.NET云原生开发，提供多个通用的微服务，利用这些预定义的内容可直接快速的开发出符合常规要求的业务系统；
 
