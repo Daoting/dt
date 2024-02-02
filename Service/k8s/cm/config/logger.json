@@ -1,0 +1,11 @@
+﻿{
+  "Serilog": {
+    "Using":  ["Serilog.Sinks.Console"],
+    "MinimumLevel": {
+      "Default": "Debug",
+      "Override": {
+        "Microsoft": "Warning"
+      }
+    }
+  }
+}

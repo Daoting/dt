@@ -1,0 +1,5 @@
+﻿此目录为Autofac的开源扩展项目：
+Autofac.Extensions.DependencyInjection 4.4.0-----升级到.net5后----->v7.1.0
+Autofac.Extras.DynamicProxy 4.5.0-----升级到.net5后----->v6.0.0
+
+只改动RegistrationExtensions.cs的391行

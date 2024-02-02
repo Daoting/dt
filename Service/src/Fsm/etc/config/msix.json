@@ -1,0 +1,7 @@
+﻿{
+  "Version": "4.2.1.0",
+  // 是否强制更新
+  "ForceUpdate": false,
+  // 文件名前缀
+  "File": "Dt.Shell.Win"
+}

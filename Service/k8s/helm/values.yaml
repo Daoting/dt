@@ -1,0 +1,39 @@
+# 所有服务通用，不同变量值在install时重置
+# 此处变量值将应用到模板
+
+# 镜像名称格式：repository:tag
+# install时重置，--set image.repository=$fullName,image.tag=$tag
+image:
+  repository: svc
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# 启用ingress
+ingress:
+  enabled: true
+  # 未使用默认的hosts和paths（多host,多path）
+  host: ""
+  # install时重置，--set ingress.path
+  path: ""
+
+# 副本数
+replicaCount: 1
+
+# 未设置，使用Chart.name的值
+nameOverride: ""
+fullnameOverride: ""
+
+# 自定义资源如：
+resources: {}
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

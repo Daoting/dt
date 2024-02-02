@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <style>
+        a, b, body, div, font, h1, h2, h3, h4, i, input, lp, select, td, u {
+            font-family: Arial,宋体;
+            font-size: 16px;
+        }
+
+            a:link {
+                text-decoration: none;
+            }
+
+        table {
+            border: 0;
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        pre {
+            display: inline;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .aTitle {
+            font-size: 20px;
+            margin-left: 20px;
+        }
+
+        .logTitle {
+            background: green;
+            padding: 4px;
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0; height: 100%;">
+    <div id="div" style="width: 100%; height: 100%; position: absolute; background: black; color: white; overflow: auto;">
+        <div style="padding: 10px;">
+            <pre id="log" ></pre>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function ()
+        {
+            receiveLog();
+        }
+
+        function $(id)
+        {
+            return document.getElementById(id);
+        }
+
+        /************************ 日志 ************************/
+        var logRequest = null;
+        var logIndex = 0;
+        var _logUrl = location.href.substr(0, location.href.lastIndexOf("/")) + "/.log?index=";
+
+        function receiveLog()
+        {
+            if (logRequest !== null)
+            {
+                logRequest.abort();
+                logRequest = null;
+            }
+
+            logRequest = new XMLHttpRequest();
+            logRequest.open("get", _logUrl + logIndex, true);
+            logRequest.onload = function ()
+            {
+                if (logRequest.status == 200)
+                {
+                    // 返回格式：日志索引+日志列表
+                    var split = logRequest.response.indexOf("+");
+                    if (split > -1)
+                    {
+                        logIndex = logRequest.response.substring(0, split);
+                        $("log").innerHTML += logRequest.response.substring(split + 1);
+
+                        var div = $("div");
+                        div.scrollTop = div.scrollHeight;
+                    }
+
+                    receiveLog();
+                }
+            };
+            logRequest.send();
+        }
+    </script>
+</body>
+</html>

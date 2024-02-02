@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "svc.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "svc.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    helm.sh/chart: {{ include "svc.chart" . }}
+spec:
+  type: ClusterIP
+  ports:
+      # 集群内部服务之间访问的端口号， clusterIP:port
+    - port: 443
+      # Pod里容器的端口名，默认和以上port相同
+      targetPort: https
+      protocol: TCP
+      name: https
+  selector:
+    app.kubernetes.io/name: {{ include "svc.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}

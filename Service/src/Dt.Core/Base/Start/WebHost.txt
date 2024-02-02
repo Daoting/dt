@@ -1,0 +1,141 @@
+﻿1. 启动过程
+WebHost.CreateDefaultBuilder(args)
+使用默认配置创建WebHostBuilder，默认配置包括：
+web服务器为Kestrel；
+当前目录为ContentRootPath；
+加载所有配置参数：
+  appsettings.json, 
+  appsettings.[EnvironmentName].json, 
+  %APPDATA%\Microsoft\UserSecrets\userSecretsId\secrets.json 开发状态有效,
+  系统环境变量,
+  启动参数
+日志输出到控制台和调试输出窗口；
+可以和IIS集成；
+开发状态支持显示异常页面；
+
+.UseStartup<Startup>()
+指定WebHost初始化时的启动类型，指定多个时最后的有效，未实现IStartup时内部包装一层
+
+.Build()
+实例化WebHost并调用Initialize()，初始化时调用Startup.ConfigureServices和Configure
+
+.Run()
+内部调用WebHost.StartAsync()
+
+
+
+
+
+
+以下为部分代码：
+/// <summary>
+/// Specify the startup type to be used by the web host.
+/// </summary>
+/// <param name="hostBuilder">The <see cref="IWebHostBuilder"/> to configure.</param>
+/// <param name="startupType">The <see cref="Type"/> to be used.</param>
+/// <returns>The <see cref="IWebHostBuilder"/>.</returns>
+public static IWebHostBuilder UseStartup(this IWebHostBuilder hostBuilder, Type startupType)
+{
+    var startupAssemblyName = startupType.GetTypeInfo().Assembly.GetName().Name;
+
+    return hostBuilder
+        .UseSetting(WebHostDefaults.ApplicationKey, startupAssemblyName)
+        .ConfigureServices(services =>
+        {
+            if (typeof(IStartup).GetTypeInfo().IsAssignableFrom(startupType.GetTypeInfo()))
+            {
+                services.AddSingleton(typeof(IStartup), startupType);
+            }
+            else
+            {
+                services.AddSingleton(typeof(IStartup), sp =>
+                {
+                    var hostingEnvironment = sp.GetRequiredService<IHostingEnvironment>();
+                    return new ConventionBasedStartup(StartupLoader.LoadMethods(sp, startupType, hostingEnvironment.EnvironmentName));
+                });
+            }
+        });
+}
+
+
+// Microsoft.AspNetCore.WebHost
+/// <summary>
+///   Initializes a new instance of the <see cref="T:Microsoft.AspNetCore.Hosting.WebHostBuilder" /> class with pre-configured defaults.
+/// </summary>
+/// <remarks>
+///   The following defaults are applied to the returned <see cref="T:Microsoft.AspNetCore.Hosting.WebHostBuilder" />:
+///     use Kestrel as the web server and configure it using the application's configuration providers,
+///     set the <see cref="P:Microsoft.AspNetCore.Hosting.IHostingEnvironment.ContentRootPath" /> to the result of <see cref="M:System.IO.Directory.GetCurrentDirectory" />,
+///     load <see cref="T:Microsoft.Extensions.Configuration.IConfiguration" /> from 'appsettings.json' and 'appsettings.[<see cref="P:Microsoft.AspNetCore.Hosting.IHostingEnvironment.EnvironmentName" />].json',
+///     load <see cref="T:Microsoft.Extensions.Configuration.IConfiguration" /> from User Secrets when <see cref="P:Microsoft.AspNetCore.Hosting.IHostingEnvironment.EnvironmentName" /> is 'Development' using the entry assembly,
+///     load <see cref="T:Microsoft.Extensions.Configuration.IConfiguration" /> from environment variables,
+///     load <see cref="T:Microsoft.Extensions.Configuration.IConfiguration" /> from supplied command line args,
+///     configures the <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory" /> to log to the console and debug output,
+///     enables IIS integration,
+///     and enables the ability for frameworks to bind their options to their default configuration sections.
+/// </remarks>
+/// <param name="args">The command line args.</param>
+/// <returns>The initialized <see cref="T:Microsoft.AspNetCore.Hosting.IWebHostBuilder" />.</returns>
+// Token: 0x0600000B RID: 11 RVA: 0x000021C8 File Offset: 0x000003C8
+public static IWebHostBuilder CreateDefaultBuilder(string[] args)
+{
+	IWebHostBuilder webHostBuilder = WebHostBuilderExtensions.UseDefaultServiceProvider(WebHostBuilderIISExtensions.UseIISIntegration(WebHostBuilderExtensions.ConfigureLogging(HostingAbstractionsWebHostBuilderExtensions.UseContentRoot(WebHostBuilderKestrelExtensions.UseKestrel(new WebHostBuilder(), delegate(WebHostBuilderContext builderContext, KestrelServerOptions options)
+	{
+		options.Configure(builderContext.Configuration.GetSection("Kestrel"));
+	}), Directory.GetCurrentDirectory()).ConfigureAppConfiguration(delegate(WebHostBuilderContext hostingContext, IConfigurationBuilder config)
+	{
+		IHostingEnvironment hostingEnvironment = hostingContext.HostingEnvironment;
+		JsonConfigurationExtensions.AddJsonFile(JsonConfigurationExtensions.AddJsonFile(config, "appsettings.json", true, true), string.Format("appsettings.{0}.json", hostingEnvironment.EnvironmentName), true, true);
+		if (HostingEnvironmentExtensions.IsDevelopment(hostingEnvironment))
+		{
+			Assembly assembly = Assembly.Load(new AssemblyName(hostingEnvironment.ApplicationName));
+			if (assembly != null)
+			{
+				UserSecretsConfigurationExtensions.AddUserSecrets(config, assembly, true);
+			}
+		}
+		EnvironmentVariablesExtensions.AddEnvironmentVariables(config);
+		if (args != null)
+		{
+			CommandLineConfigurationExtensions.AddCommandLine(config, args);
+		}
+	}), delegate(WebHostBuilderContext hostingContext, ILoggingBuilder logging)
+	{
+		LoggingBuilderExtensions.AddConfiguration(logging, hostingContext.Configuration.GetSection("Logging"));
+		ConsoleLoggerExtensions.AddConsole(logging);
+		DebugLoggerFactoryExtensions.AddDebug(logging);
+	}).ConfigureServices(delegate(WebHostBuilderContext hostingContext, IServiceCollection services)
+	{
+		OptionsServiceCollectionExtensions.PostConfigure<HostFilteringOptions>(services, delegate(HostFilteringOptions options)
+		{
+			if (options.AllowedHosts == null || options.AllowedHosts.Count == 0)
+			{
+				string text = hostingContext.Configuration["AllowedHosts"];
+				string[] array = (text != null) ? text.Split(new char[]
+				{
+					59
+				}, StringSplitOptions.RemoveEmptyEntries) : null;
+				string[] allowedHosts;
+				if (array == null || array.Length == 0)
+				{
+					(allowedHosts = new string[1])[0] = "*";
+				}
+				else
+				{
+					allowedHosts = array;
+				}
+				options.AllowedHosts = allowedHosts;
+			}
+		});
+		ServiceCollectionServiceExtensions.AddSingleton<IOptionsChangeTokenSource<HostFilteringOptions>>(services, new ConfigurationChangeTokenSource<HostFilteringOptions>(hostingContext.Configuration));
+		ServiceCollectionServiceExtensions.AddTransient<IStartupFilter, HostFilteringStartupFilter>(services);
+	})), delegate(WebHostBuilderContext context, ServiceProviderOptions options)
+	{
+		options.ValidateScopes = HostingEnvironmentExtensions.IsDevelopment(context.HostingEnvironment);
+	});
+	if (args != null)
+	{
+		HostingAbstractionsWebHostBuilderExtensions.UseConfiguration(webHostBuilder, CommandLineConfigurationExtensions.AddCommandLine(new ConfigurationBuilder(), args).Build());
+	}
+	return webHostBuilder;
+}

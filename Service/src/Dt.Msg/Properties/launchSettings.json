@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Dt.Msg": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:58989;http://localhost:58991"
+    }
+  }
+}
