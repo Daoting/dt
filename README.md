@@ -25,13 +25,13 @@
 * 同时，两部分都支持独立使用，也可根据规范在不同层面、不同粒度下扩展框架，从而满足特定的业务需求。
 
 ## 所有项目
-* 使用样例　[项目](https://github.com/daoting/dt.demo)
-* 服务端　[NuGet](https://www.nuget.org/packages/Dt.Service)　[项目](https://github.com/daoting/dt.service)
-* 客户端　[NuGet](https://www.nuget.org/packages/Dt.Client)　[项目](https://github.com/daoting/dt.client)
-* Excel Chart控件　[NuGet](https://www.nuget.org/packages/Dt.Infras)　[项目](https://github.com/daoting/dt.infras)
-* Visual Studio扩展工具，包括项目模板、常用代码模板、中文代码简拼助手，[下载](https://github.com/daoting/dt/releases/latest)
+* Demo：使用样例
+* Service：服务端
+* Client：客户端
+* Infras：Excel Chart控件
 * [查看详细教程](https://daotingh.gitee.io/dt-docs/docs)
 * [最新Release版本](https://github.com/daoting/dt/releases/latest)
+* Visual Studio扩展工具，包括项目模板、常用代码模板、中文代码简拼助手，[下载](https://github.com/daoting/dt/releases/latest)
 
  
 ## 客户端
