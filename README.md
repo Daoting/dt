@@ -6,6 +6,10 @@
 ## 利用 C# + XAML 进行快速业务开发的跨平台框架
 [![GitHub Stars](https://img.shields.io/github/stars/daoting/dt?label=github%20stars)](https://github.com/daoting/dt/stargazers/)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/dt.client.svg)](https://www.nuget.org/packages/dt.client)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/dt.infras.svg)](https://www.nuget.org/packages/dt.infras)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/dt.buildtools.svg)](https://www.nuget.org/packages/dt.buildtools)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/dt.service.svg)](https://www.nuget.org/packages/dt.service)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/dt.tasks.svg)](https://www.nuget.org/packages/dt.tasks)
 
 ## 概述
 框架全名“数据的搬运工(Data Transfer)”，简称**搬运工**，缩写**dt**。
