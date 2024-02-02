@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net8.0-android</TargetFrameworks>
+        <SingleProject>true</SingleProject>
+        <OutputType>Exe</OutputType>
+        <UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
+        <IsUnoHead>true</IsUnoHead>
+        <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" />
+        <ProjectReference Include="..\Dt.Xls\Dt.Xls.csproj" />
+        <ProjectReference Include="..\Dt.Pdf\Dt.Pdf.csproj" />
+        <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" />
+        <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj" />
+        <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj" />
+    </ItemGroup>
+
+    <Import Project="..\Dt.Infras.Shared\Dt.Infras.Shared.projitems" Label="Shared" />
+</Project>

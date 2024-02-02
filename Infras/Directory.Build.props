@@ -1,0 +1,82 @@
+﻿<Project>
+    <PropertyGroup>
+        <TargetFrameworks>net8.0-windows10.0.19041;net8.0;net8.0-android;net8.0-ios</TargetFrameworks>
+        <NoWarn>$(NoWarn);1591;NU1701;Uno0001;0252;NETSDK1206</NoWarn>
+        <!-- 始终禁止xbf嵌入到pri文件，默认debug时不嵌入，release时嵌入，嵌入时包升级会造成引用项目都必须重新编译 -->
+        <DisableEmbeddedXbf>true</DisableEmbeddedXbf>
+        <!-- pbd调试信息 -->
+        <DebugType>portable</DebugType>
+        <DebugSymbols>True</DebugSymbols>
+        <IsWin>false</IsWin>
+        <IsAndroid>false</IsAndroid>
+        <IsIOS>false</IsIOS>
+        <IsNet>false</IsNet>
+    </PropertyGroup>
+    
+    <Choose>
+        <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
+            <PropertyGroup>
+                <IsWin>true</IsWin>
+                <!--ENABLECURSOR 启用光标，winui赋值时容易锁死-->
+                <DefineConstants>$(DefineConstants);WIN;ENABLECURSOR</DefineConstants>
+                <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+                <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+                <!-- 确保可运行 dotnet build command line -->
+                <EnableCoreMrtTooling Condition=" '$(BuildingInsideVisualStudio)' != 'true' ">false</EnableCoreMrtTooling>
+            </PropertyGroup>
+        </When>
+        <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+            <PropertyGroup>
+                <IsAndroid>true</IsAndroid>
+                <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
+                <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
+            </PropertyGroup>
+        </When>
+        <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+            <PropertyGroup>
+                <IsIOS>true</IsIOS>
+                <DefineConstants>$(DefineConstants);IOS</DefineConstants>
+                <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
+            </PropertyGroup>
+
+            <!--
+              Eagerly define capabilities for iOS to avoid VS 2022 to ask for
+              project reload, and ninitialize the debugger toolbar faster.
+              See https://github.com/unoplatform/uno/issues/14303.
+              -->
+            <ItemGroup>
+                <ProjectCapability Include="XamarinStaticLaunchProfiles" />
+                <ProjectCapability Include="Maui" />
+                <ProjectCapability Include="MauiCore" />
+            </ItemGroup>
+        </When>
+        <Otherwise>
+            <PropertyGroup>
+                <IsNet>true</IsNet>
+                <DefineConstants>$(DefineConstants);DOTNET;ENABLECURSOR</DefineConstants>
+            </PropertyGroup>
+        </Otherwise>
+    </Choose>
+
+    <Choose>
+        <When Condition="$(IsWin)">
+            <ItemGroup>
+                <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231219000" PrivateAssets="none" />
+            </ItemGroup>
+        </When>
+        <Otherwise>
+            <ItemGroup>
+                <PackageReference Include="Uno.WinUI" Version="5.1.31" PrivateAssets="none" />
+            </ItemGroup>
+
+            <!-- WindowsAppSDK已内置，uno需要，否则xaml文件无法编译 -->
+            <ItemGroup>
+                <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+                <Compile Update="**\*.xaml.cs">
+                    <DependentUpon>%(Filename)</DependentUpon>
+                </Compile>
+                <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+            </ItemGroup>
+        </Otherwise>
+    </Choose>
+</Project>
