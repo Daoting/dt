@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<ItemGroup>
+		<Content Include="Assets\**" />
+		<EmbeddedResource Include="Res\**" Exclude="Res\ResKit.cs" />
+		<EmbeddedResource Include="Report\数据源\*.json" />
+		<EmbeddedResource Include="Report\模板\*.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="appsettings.json" />
+		<PRIResource Include="Strings\**\*.resw" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Styles\Global.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <UpToDateCheckInput Remove="Styles\Global.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="Styles\Global.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+</Project>

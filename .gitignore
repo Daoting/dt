@@ -349,5 +349,4 @@ healthchecksdb
 MigrationBackup/
 
 # 后添加
-Doc/
 gitconfig.txt

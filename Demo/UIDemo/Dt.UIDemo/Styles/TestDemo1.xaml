@@ -1,0 +1,14 @@
+﻿<a:Win
+    x:Class="Dt.UIDemo.TestDemo1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:s="using:Dt.UIDemo">
+
+    <StackPanel x:Name="_sp" Margin="10">
+        <Button Content="主线程 Kit.RunAsync" Click="OnTest1" />
+        <Button Content="Task中 Kit.RunAsync" Click="OnTest2" />
+        <Button Content="主线程 Kit.RunSync" Click="OnTest3" />
+        <Button Content="Task中 Kit.RunSync" Click="OnTest4" />
+    </StackPanel>
+</a:Win>

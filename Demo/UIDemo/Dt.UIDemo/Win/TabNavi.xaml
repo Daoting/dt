@@ -1,0 +1,16 @@
+﻿<a:Win
+    x:Class="Dt.UIDemo.TabNavi"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.UIDemo">
+
+    <!-- 控件内部用ElementName设置数据源绑定时，在win范围若多个相同名称，会绑到最后加载的元素上 -->
+    <!-- 如：控件内部菜单项用ElementName绑定到内部另一元素上，但实际会绑到主区内部的元素上，诡异 -->
+    <a:Tabs a:Ex.Dock="Left" >
+        <l:TabNaviItem x:Name="_leftTab" Title="左区" Order="1" />
+        <a:Tab Title="空白" />
+    </a:Tabs>
+    <l:TabToggleItem Title="主区" Order="2" />
+    <l:TabNaviItem Title="右区" Order="3" a:Ex.Dock="Right" />
+</a:Win>

@@ -1,0 +1,12 @@
+﻿<a:FvDlg
+    x:Class="Dt.MgrDemo.父表大儿Form"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="大儿表单">
+
+    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+        <a:CNum ID="parent_id" />
+        <a:CText ID="大儿名" />
+    </a:Fv>
+</a:FvDlg>

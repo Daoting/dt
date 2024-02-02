@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType Condition="'$(Configuration)'=='Release'">WinExe</OutputType>
+		<OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
+		<TargetFrameworks>net8.0</TargetFrameworks>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<AppType>gtk</AppType>
+	</PropertyGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Package.appxmanifest" />
+		<Manifest Include="$(ApplicationManifest)" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Dt.MgrDemo\Dt.MgrDemo.csproj" />
+	</ItemGroup>
+	<Import Project="..\Dt.MgrDemo.Shared\Shared.props" />
+
+	<ItemGroup>
+		<Compile Include="..\..\Common\Gtk\Program.cs" Link="Program.cs" />
+	</ItemGroup>
+</Project>

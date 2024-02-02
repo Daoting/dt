@@ -1,0 +1,11 @@
+﻿<a:FvDlg
+    x:Class="Dt.MgrDemo.父表Form"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="父表表单">
+
+    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+        <a:CText ID="父名" />
+    </a:Fv>
+</a:FvDlg>

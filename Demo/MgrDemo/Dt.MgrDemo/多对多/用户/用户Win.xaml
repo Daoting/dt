@@ -1,0 +1,11 @@
+﻿<a:Win
+    x:Class="Dt.MgrDemo.用户Win"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.MgrDemo">
+
+    <l:用户Query x:Name="_query" Query="OnQuery" a:Ex.Dock="Left" Order="1" />
+    <l:用户List x:Name="_mainList" />
+    <l:用户角色List x:Name="_角色List" a:Ex.Dock="Right" />
+</a:Win>

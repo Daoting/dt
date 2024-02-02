@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "Dt.MgrDemo.Win": {
+      "commandName": "MsixPackage"
+    }
+  }
+}

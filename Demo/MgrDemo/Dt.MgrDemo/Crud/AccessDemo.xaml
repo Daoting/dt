@@ -1,0 +1,68 @@
+﻿<a:Win
+    x:Class="Dt.MgrDemo.AccessDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CBar Title="实体增删改" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="增加新实体" Click="OnInsert" />
+            <Button Content="更新实体" Click="OnUpdate" />
+            <Button Content="删除实体" Click="OnDelete" />
+            <Button Content="切换服务" Click="OnChangeSvc" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="批量增加" Click="OnBatchInsert" />
+            <Button Content="批量增更" Click="OnBatch" />
+            <Button Content="Table增删改" Click="OnSaveTable" />
+            <Button Content="批量删" Click="OnBatchDel" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="根据ID直接删除" Click="OnDirectDel" />
+            <Button Content="根据ID通过实体系统删除" Click="OnDelByID" />
+        </StackPanel>
+
+        <a:CBar Title="领域事件" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="新实体事件" Click="OnInsertEvent" />
+            <Button Content="Name修改事件" Click="OnUpdateEvent" />
+            <Button Content="删除实体事件" Click="OnDelEvent" />
+        </StackPanel>
+
+        <a:CBar Title="虚拟实体" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="增加实体" Click="OnInsertVir" />
+            <Button Content="更新实体" Click="OnUpdateVir" />
+            <Button Content="删除实体" Click="OnDelVir" />
+            <Button Content="批量增删改" Click="OnSaveVir" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="根据ID直接删除" Click="OnDirectDelVir" />
+            <Button Content="根据ID通过实体系统删除" Click="OnDelByIDVir" />
+        </StackPanel>
+        
+        <a:CBar Title="父子实体" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="增加新父子" Click="OnInsertWithChild" />
+            <Button Content="更新父子" Click="OnUpdateWithChild" />
+            <Button Content="查询父子" Click="OnQueryWithChild" />
+        </StackPanel>
+
+        <a:CBar Title="缓存实体：修改或删除后清除缓存，查询时缓存" />
+        <Button Content="增加实体" Click="OnInsertCache" />
+        <Button Content="更新实体，同步清除缓存" Click="OnUpdateCache" />
+        <Button Content="删除实体，同步清除缓存" Click="OnDelCache" />
+        <Button Content="GetFromCacheFirst查询" Click="OnCacheByKey" />
+
+        <a:CBar Title="领域服务" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="自由批量增删改" Click="OnSaveDs" />
+        </StackPanel>
+
+        <a:CBar Title="其它" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="存储过程查询数据" Click="OnQueryBySp" />
+        </StackPanel>
+    </a:Fv>
+</a:Win>

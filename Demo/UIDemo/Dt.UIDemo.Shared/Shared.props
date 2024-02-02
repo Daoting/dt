@@ -1,0 +1,23 @@
+<Project>
+	<ItemGroup>
+		<ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml" SubType="Designer" XamlRuntime="WinUI" Generator="MSBuild:Compile" Link="App.xaml" />
+		<Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs" XamlRuntime="WinUI" DependentUpon="App.xaml" Link="App.xaml.cs" />
+
+		<UnoIcon
+			Include="$(MSBuildThisFileDirectory)Icons\icon.svg"
+			ForegroundFile="$(MSBuildThisFileDirectory)Icons\icon_foreground.svg"
+			ForegroundScale="0.7"
+			AndroidForegroundScale="0.5"
+			Color="#1BA1E2" />
+		<UnoSplashScreen
+			Include="$(MSBuildThisFileDirectory)Icons\splash_screen.svg"
+			BaseSize="128,128"
+			Color="#1BA1E2"
+			AndroidScale="0.7" />
+		
+		<Content Include="..\..\Common\Images\*.png" Link="Images\%(Filename).png" Visible="False" />
+		<Content Include="$(MSBuildThisFileDirectory)Config.json" Condition="$(AppType) != 'wasm'" />
+		
+		<None Include="..\..\Common\Note.txt" Link="Note.txt" />
+	</ItemGroup>
+</Project>

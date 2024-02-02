@@ -1,0 +1,130 @@
+﻿<a:Win
+    x:Class="Dt.UIDemo.LvListStyle"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Win.Resources>
+        <DataTemplate x:Key="Table">
+            <a:HorPanel>
+                <a:Dot ID="xm" Title="姓名" />
+                <a:Dot ID="bumen" Title="所属部门" a:Ex.Width="200" />
+                <a:Dot ID="xb" Title="性别" a:Ex.Width="Auto" />
+                <a:Dot ID="chushengrq" Title="出生日期" a:Ex.Width="0.5*" />
+                <a:Dot ID="shenfenzh" Title="身份证号码" a:Ex.Width="*" />
+            </a:HorPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Free">
+            <StackPanel>
+                <a:HorPanel>
+                    <StackPanel a:Ex.Width="140">
+                        <a:Dot ID="bh" Title="编号" />
+                        <a:Dot ID="xm" Title="姓名" />
+                    </StackPanel>
+                    <StackPanel a:Ex.Width="140">
+                        <a:Dot ID="chushengrq" Title="出生日期" />
+                        <a:HorPanel>
+                            <a:Dot ID="xb" Title="性别" a:Ex.Width="*" />
+                            <a:Dot ID="hunfou" Title="婚否" a:Ex.Width="*" />
+                        </a:HorPanel>
+                    </StackPanel>
+                    <a:Dot ID="bumen" Title="所属部门" a:Ex.Width="130" />
+                    <StackPanel a:Ex.Width="*">
+                        <a:Dot ID="shenfenzh" Title="身份证号码" />
+                        <a:Dot ID="shengao" Title="身高" />
+                    </StackPanel>
+                </a:HorPanel>
+                <a:Dot ID="note" Title="备注" ToolTipService.ToolTip="详细内容" Call="Def.小灰" />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="Toolbar">
+            <a:Menu>
+                <a:Mi ID="姓名" CmdParam="xm" />
+                <a:Mi ID="出生日期" CmdParam="chushengrq desc" />
+                <a:Mi ID="筛选" Icon="漏斗" CmdParam="#Filter" />
+            </a:Menu>
+        </DataTemplate>
+
+        <DataTemplate x:Key="CustomHeader">
+            <StackPanel>
+                <a:HorPanel>
+                    <a:Dot Title="姓名" />
+                    <a:Dot Title="所属部门" a:Ex.Width="200" />
+                    <a:Dot Title="性别" a:Ex.Width="Auto" />
+                    <a:Dot Title="出生日期" a:Ex.Width="0.5*" />
+                    <a:Dot Title="身份证号码" a:Ex.Width="*" />
+                </a:HorPanel>
+                <a:HorPanel>
+                    <a:Dot Title="身份证号码" a:Ex.Width="*" />
+                    <a:Dot Title="所属部门" a:Ex.Width="200" />
+                    <a:Dot Title="性别" a:Ex.Width="Auto" />
+                    <a:Dot Title="姓名" />
+                    <a:Dot Title="出生日期" a:Ex.Width="0.5*" />
+                </a:HorPanel>
+            </StackPanel>
+        </DataTemplate>
+    </a:Win.Resources>
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="列表">
+                <a:Lv x:Name="_lv" ShowDotBorder="True" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv Data="{Binding ElementName=_lv}">
+                    <a:CBar Title="样式" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="表格行" Tag="Table" Click="OnLoadStyle" />
+                        <Button Content="自由行" Tag="Free" Click="OnLoadStyle" />
+                    </StackPanel>
+                    <a:CBar Title="数据源" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="10行" Tag="10" Click="OnLoadData" />
+                        <Button Content="100行" Tag="100" Click="OnLoadData" />
+                        <Button Content="空数据源" Click="OnLoadNull" />
+                    </StackPanel>
+                    <a:CFree Title="分组">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="显示" Click="OnGroup" />
+                            <Button Content="隐藏" Click="OnDelGroup" />
+                        </StackPanel>
+                    </a:CFree>
+                    <a:CFree Title="筛选框">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="显示" Click="OnFilterCfg" />
+                            <Button Content="隐藏" Click="OnDelFilter" />
+                        </StackPanel>
+                    </a:CFree>
+                    <a:CFree Title="工具栏">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="显示" Click="OnToolbar" />
+                            <Button Content="隐藏" Click="OnDelToolbar" />
+                        </StackPanel>
+                    </a:CFree>
+                    <a:CBar Title="属性" />
+                    <a:CBool Title="显示列头" ID="ShowListHeader" />
+                    <a:CFree Title="自定义列头">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="启用" Click="OnCustomHeader" />
+                            <Button Content="删除" Click="OnDelCustomHeader" />
+                        </StackPanel>
+                    </a:CFree>
+                    <a:CBool Title="显示Dot边框" ID="ShowDotBorder" />
+                    <a:CList Title="选择模式" ID="SelectionMode" />
+                    <a:CBool Title="显示行分割线" ID="ShowItemBorder" />
+                    <a:CBar Title="其他" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="自动行高" Click="OnAutoHeight" />
+                        <Button Content="随机滚动" Click="OnScroll" />
+                    </StackPanel>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

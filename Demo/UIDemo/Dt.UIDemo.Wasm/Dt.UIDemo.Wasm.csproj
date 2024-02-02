@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFrameworks>net8.0</TargetFrameworks>
+		<ImplicitUsings>disable</ImplicitUsings>
+        <!-- 使用Dt.BuildTools标志 -->
+        <UseWasmTools>true</UseWasmTools>
+		<AppType>wasm</AppType>
+		
+        <!-- 必须sdk完整路径，避免总下载失败，实际文件名加后缀 -simd -->
+        <NetCoreWasmSDKUri>d:\dt\Packages\wasm\dotnet-runtime-wasm-windows-5708d38-7331dcb60e0-6866112926-Release.zip</NetCoreWasmSDKUri>
+
+        <!-- 默认Interpreter -->
+        <!--<WasmShellMonoRuntimeExecutionMode>FullAOT</WasmShellMonoRuntimeExecutionMode>-->
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\Dt.UIDemo\Dt.UIDemo.csproj" />
+    </ItemGroup>
+	<Import Project="..\Dt.UIDemo.Shared\Shared.props" />
+
+    <ItemGroup>
+        <!-- 内容文件输出到 package_xxx 的对应子目录下 -->
+		
+        <!-- 嵌入资源文件输出到 package_xxx 根目录下，目录名不可修改，uno用 -->
+        <EmbeddedResource Include="WasmCSS\*.css" />
+        <EmbeddedResource Include="WasmScripts\*.js" />
+
+		<Compile Include="..\..\Common\Wasm\Program.cs" Link="Program.cs" />
+
+		<!-- 生成包时不参加裁剪的dll列表，能够反射出类型的dll都不可裁剪 -->
+        <LinkerDescriptor Include="..\..\Common\Wasm\LinkerConfig.xml" Link="LinkerConfig.xml" />
+    </ItemGroup>
+
+    <!-- Debug模式启用调试 -->
+    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+        <MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
+        <DefineConstants>$(DefineConstants);TRACE;DEBUG</DefineConstants>
+        <DebugType>portable</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+        <!-- 完全禁用链接器，不裁剪dll，生成速度快，但比裁剪多20M -->
+        <WasmShellILLinkerEnabled>false</WasmShellILLinkerEnabled>
+    </PropertyGroup>
+
+    <!-- PWA相关，只在Release时有效 -->
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <WasmPWAManifestFile>pwa/manifest.json</WasmPWAManifestFile>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(Configuration)'=='Release'">
+        <Content Include="..\..\Common\Wasm\pwa\**" />
+    </ItemGroup>
+</Project>

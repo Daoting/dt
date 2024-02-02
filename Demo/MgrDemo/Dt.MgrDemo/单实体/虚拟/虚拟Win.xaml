@@ -1,0 +1,10 @@
+﻿<a:Win
+    x:Class="Dt.MgrDemo.虚拟Win"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.MgrDemo">
+
+    <l:虚拟Query x:Name="_query" Query="OnQuery" a:Ex.Dock="Left" Order="1" />
+    <l:虚拟List x:Name="_list" />
+</a:Win>

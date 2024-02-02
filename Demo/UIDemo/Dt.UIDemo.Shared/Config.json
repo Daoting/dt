@@ -1,0 +1,15 @@
+﻿{
+  "Title": "控件样例",
+
+  // cm服务地址 或 直连数据库的键名
+  //"Server": "http://10.10.1.16/dt-cm",
+  //"Server": "pgdt",
+
+  // 可直连数据库列表
+  //"Database": {
+  //  "mydt": {
+  //    "ConnStr": "Server=10.10.1.2;Port=3306;Database=dt;Uid=dt;Pwd=dt;",
+  //    "DbType": "mysql"
+  //  }
+  //}
+}

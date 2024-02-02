@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "Dt.UIDemo.Win": {
+      "commandName": "MsixPackage"
+    }
+  }
+}

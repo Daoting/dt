@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net8.0-android</TargetFrameworks>
+        <SingleProject>true</SingleProject>
+        <OutputType>Exe</OutputType>
+        <IsUnoHead>true</IsUnoHead>
+		<AppType>android</AppType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <!-- apk支持的ABI架构，默认支持4种架构，减少支持ABI能缩小apk -->
+        <RuntimeIdentifier>android-arm64</RuntimeIdentifier>
+        <!--<RuntimeIdentifier>android-x64</RuntimeIdentifier>-->
+        <!--<RuntimeIdentifiers>android-arm64;android-arm</RuntimeIdentifiers>-->
+        <!-- 签名相关 -->
+        <AndroidKeyStore>True</AndroidKeyStore>
+        <AndroidSigningKeyStore>app.keystore</AndroidSigningKeyStore>
+        <AndroidSigningKeyAlias>key</AndroidSigningKeyAlias>
+        <AndroidSigningKeyPass>around</AndroidSigningKeyPass>
+        <AndroidSigningStorePass>around</AndroidSigningStorePass>
+    </PropertyGroup>
+    
+    <ItemGroup>
+		<ProjectReference Include="..\Dt.MgrDemo\Dt.MgrDemo.csproj" />
+    </ItemGroup>
+	<Import Project="..\Dt.MgrDemo.Shared\Shared.props" />
+
+	<ItemGroup>
+		<AndroidResource Include="..\..\Common\Android\Resources\values\*.xml" Link="Android\Resources\values\%(Filename).xml" />
+		<AndroidResource Include="..\..\Common\Android\Resources\xml\*.xml" Link="Android\Resources\xml\%(Filename).xml" />
+		<AndroidEnvironment Include="..\..\Common\Android\environment.conf" Link="Android/environment.conf" />
+	</ItemGroup>
+    
+    <ItemGroup>
+		<Compile Include="..\..\Common\Android\MainActivity.cs" Link="MainActivity.cs" />
+    </ItemGroup>
+</Project>

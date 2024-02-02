@@ -1,0 +1,40 @@
+﻿<a:Win
+    x:Class="Dt.MgrDemo.DbAccessDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CBar Title="普通增删改查" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="查询mysql" Click="OnQueryMysql" />
+            <Button Content="查询oracle" Click="OnQueryOrcl" />
+            <Button Content="查询pg" Click="OnQueryPg" />
+            <Button Content="查询mssql" Click="OnQueryMssql" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="插入" Click="OnInsertPg" />
+            <Button Content="更新" Click="OnUpdatePg" />
+            <Button Content="删除" Click="OnDelPg" />
+        </StackPanel>
+        <a:CBar Title="实体增删改" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="增加新实体" Click="OnInsert" />
+            <Button Content="更新实体" Click="OnUpdate" />
+            <Button Content="删除实体" Click="OnDelete" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="批量增加" Click="OnBatchInsert" />
+            <Button Content="批量增更" Click="OnBatch" />
+            <Button Content="批量删" Click="OnBatchDel" />
+        </StackPanel>
+        
+        <a:CFree RowSpan="5" ColSpan="0" ShowTitle="False">
+            <TextBox x:Name="_tbInfo"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     ScrollViewer.VerticalScrollMode="Enabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        </a:CFree>
+    </a:Fv>
+</a:Win>

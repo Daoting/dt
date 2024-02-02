@@ -1,0 +1,12 @@
+﻿<a:Win
+    x:Class="Dt.UIDemo.LocalEventDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CBar Title="打开系统日志监视事件处理情况" />
+        <Button Content="发布事件 一 单个处理者" Click="OnPub" />
+        <Button Content="发布事件 一 多个处理者" Click="OnPubMulti" />
+    </a:Fv>
+</a:Win>

@@ -1,0 +1,55 @@
+﻿<a:Win
+    x:Class="Dt.UIDemo.LogDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CBar Title="基础日志" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="调试" Click="OnDebug" />
+            <Button Content="普通" Click="OnNormal" />
+            <Button Content="警告" Click="OnWarn" />
+            <Button Content="出错" Click="OnError" />
+        </StackPanel>
+
+        <a:CBar Title="内部日志" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Rpc调用" Click="OnRpc" />
+            <Button Content="Sqlite访问" Click="OnSqlite" />
+            <Button Content="Push推送" Click="OnPush" />
+        </StackPanel>
+
+        <a:CBar Title="包含来源的日志" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="调试" Click="OnSrcDebug" />
+            <Button Content="普通" Click="OnSrcNormal" />
+            <Button Content="警告" Click="OnSrcWarn" />
+            <Button Content="出错" Click="OnSrcError" />
+        </StackPanel>
+
+        <a:CBar Title="系统日志内置属性" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="含IP内置属性" Click="OnAddIP" />
+            <Button Content="含用户ID内置属性" Click="OnAddUser" />
+            <Button Content="多附加属性" Click="OnAddContext" />
+            <Button Content="消息模板" Click="OnFormat" />
+        </StackPanel>
+
+        <a:CBar Title="领域服务中的日志" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="调试" Click="OnDsDebug" />
+            <Button Content="普通" Click="OnDsNormal" />
+            <Button Content="警告" Click="OnDsWarn" />
+            <Button Content="出错" Click="OnDsError" />
+        </StackPanel>
+
+        <a:CBar Title="实体中的日志" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="调试" Click="OnEntityDebug" />
+            <Button Content="普通" Click="OnEntityNormal" />
+            <Button Content="警告" Click="OnEntityWarn" />
+            <Button Content="出错" Click="OnEntityError" />
+        </StackPanel>
+    </a:Fv>
+</a:Win>

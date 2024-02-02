@@ -1,0 +1,14 @@
+﻿<a:Win
+    x:Class="Dt.MgrDemo.角色Win"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.MgrDemo">
+
+    <l:角色Query x:Name="_query" Query="OnQuery" a:Ex.Dock="Left" Order="1" />
+    <l:角色List x:Name="_mainList" />
+    <a:Tabs a:Ex.Dock="Right">
+        <l:角色权限List x:Name="_权限List" />
+        <l:角色用户List x:Name="_用户List" />
+    </a:Tabs>
+</a:Win>
