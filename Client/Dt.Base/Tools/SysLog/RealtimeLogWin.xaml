@@ -1,0 +1,30 @@
+﻿<a:Win
+    x:Class="Dt.Base.Tools.RealtimeLogWin"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:tools="using:Dt.Base.Tools"
+    Title="实时日志">
+
+    <a:Pane InitWidth="350">
+        <a:Tabs>
+            <a:Tab Title="实时日志">
+                <a:Tab.Menu>
+                    <a:Menu x:Name="_menu">
+                        <a:Mi ID="清空" Icon="删除" Click="OnClear" />
+                    </a:Menu>
+                </a:Tab.Menu>
+                <a:Lv x:Name="_lv" ItemClick="OnOutputClick" AutoScrollBottom="True">
+                    <DataTemplate>
+                        <a:Dot Call="LogCellUI.FormatItem" Padding="6" />
+                    </DataTemplate>
+                </a:Lv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+    <a:Pane>
+        <a:Tabs>
+            <tools:TraceLogForm x:Name="_fm" />
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

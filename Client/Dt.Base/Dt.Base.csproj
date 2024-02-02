@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <ItemGroup>
+        <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="Fonts\**" />
+        <EmbeddedResource Include="Controls\Policy\Privacy.txt" />
+        <EmbeddedResource Include="Controls\Policy\Agreement.txt" />
+        <EmbeddedResource Include="..\..\Service\src\Dt.Core\Internal\InitMode\InitSql\mysql-init.sql" Link="Tools\DbInit\Sql\mysql-init.sql" />
+        <EmbeddedResource Include="..\..\Service\src\Dt.Core\Internal\InitMode\InitSql\oracle-init.sql" Link="Tools\DbInit\Sql\oracle-init.sql" />
+        <EmbeddedResource Include="..\..\Service\src\Dt.Core\Internal\InitMode\InitSql\postgresql-init.sql" Link="Tools\DbInit\Sql\postgresql-init.sql" />
+        <EmbeddedResource Include="..\..\Service\src\Dt.Core\Internal\InitMode\InitSql\sqlserver-init.sql" Link="Tools\DbInit\Sql\sqlserver-init.sql" />
+    </ItemGroup>
+</Project>

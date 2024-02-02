@@ -1,0 +1,47 @@
+﻿<UserControl
+    x:Class="Dt.Base.Report.TableForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <ScrollViewer>
+        <StackPanel>
+            <a:Fv x:Name="_fv">
+                <a:CBar Title="表格" />
+                <a:CList ID="tbl" Title="数据源" />
+                <a:CNum ID="minrowcount" Title="最少行数，不够加空行" TitleWidth="200" Minimum="0" IsInteger="True" />
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="_btnHeader" Click="OnToggleHeader" />
+                    <Button x:Name="_btnFooter" Click="OnToggleFooter" />
+                    <Button Content="删除表格" Click="OnDeleteTbl" />
+                </StackPanel>
+                <a:CBool ID="repeatheader" Title="在每页重复表头" />
+                <a:CBool ID="repeatfooter" Title="在每页重复表尾" />
+
+                <a:CBar Title="多列布局，换列行数0表从不换列，-1表满页自动换列" />
+                <a:CNum ID="rowbreakcount" Title="换列时行数" Minimum="-1" IsInteger="True" />
+                <a:CNum ID="colbreakcount" Title="换行时列数" Minimum="1" IsInteger="True" />
+                <a:CBar Title="行操作" />
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="之前插入行" Click="OnInsertRow" Tag="Before" />
+                    <Button Content="后面插入行" Click="OnInsertRow" Tag="After" />
+                    <Button Content="删除行" Click="OnDeleteRow" />
+                </StackPanel>
+                <a:CBar Title="列操作" />
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="左侧插入列" Click="OnInsertCol" Tag="Left" />
+                    <Button Content="右侧插入列" Click="OnInsertCol" Tag="Right" />
+                    <Button Content="删除列" Click="OnDeleteCol" />
+                </StackPanel>
+            </a:Fv>
+            <a:Fv x:Name="_fvGrp">
+                <a:CBar Title="分组" />
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="插入分组" Click="OnInsertGrpClick" />
+                    <Button Content="清空分组" Click="OnClearGrpClick" />
+                </StackPanel>
+                <a:CList ID="field" Title="分组字段" />
+            </a:Fv>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

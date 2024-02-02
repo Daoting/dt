@@ -1,0 +1,16 @@
+﻿<a:Dlg
+    x:Class="Dt.Base.PrivacyDlg"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <ScrollViewer HorizontalScrollMode="Disabled">
+        <StackPanel Padding="20">
+            <TextBlock x:Name="_tbTitle" TextAlignment="Center" FontSize="24" FontWeight="Bold" />
+            <TextBlock x:Name="_tbUpdate" TextAlignment="Right" FontWeight="Bold" Margin="0,10,0,10" />
+            <TextBlock x:Name="_tbContent" TextWrapping="Wrap" />
+            <TextBlock x:Name="_tbApp" TextAlignment="Right" FontWeight="Bold" Margin="0,20,0,0" />
+            <TextBlock x:Name="_tbCompany" TextAlignment="Right" FontWeight="Bold" />
+        </StackPanel>
+    </ScrollViewer>
+</a:Dlg>

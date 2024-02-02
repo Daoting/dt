@@ -1,0 +1,21 @@
+﻿<Rpt cols="60,80,90,90">
+  <Params>
+    <Param />
+    <Param />
+  </Params>
+  <Data>
+    <Tbl />
+    <Tbl />
+  </Data>
+  <Page />
+  <Header>
+
+  </Header>
+  <Body rows="20,30,100">
+
+  </Body>
+  <Footer>
+
+  </Footer>
+  <View />
+</Rpt>

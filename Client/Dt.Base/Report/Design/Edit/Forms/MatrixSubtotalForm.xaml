@@ -1,0 +1,20 @@
+﻿<UserControl
+    x:Class="Dt.Base.Report.MatrixSubtotalForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:rpt="using:Dt.Base.Report">
+
+    <ScrollViewer>
+        <StackPanel>
+            <rpt:MatrixForm x:Name="_fvMtx" />
+            <a:Fv x:Name="_fv">
+                <a:CBar Title="小计" />
+                <a:CNum ID="span" Title="小计跨度" Minimum="1" IsInteger="True" />
+                <a:CBool ID="beforelevel" Title="显示在层次之前" />
+                <Button Content="新建子小计" Click="OnAddTotal" />
+                <Button Content="删除小计" Click="OnDelTotal" />
+            </a:Fv>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
