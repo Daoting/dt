@@ -28,8 +28,9 @@ namespace Dt.Cells.UI
     {
         const double _thickness = 3;
         CellsPanel _viewport;
-        readonly List<Line> _horLines;
-        readonly List<Line> _verLines;
+        PrintPaginator _paginator;
+        readonly List<LineInfo> _horLines;
+        readonly List<LineInfo> _verLines;
         readonly Rectangle _rect;
         Rect _bounds;
         int _startRow;
@@ -48,8 +49,8 @@ namespace Dt.Cells.UI
         public DecorationLayer(CellsPanel p_viewport)
         {
             _viewport = p_viewport;
-            _horLines = new List<Line>();
-            _verLines = new List<Line>();
+            _horLines = new List<LineInfo>();
+            _verLines = new List<LineInfo>();
 
             _bounds = new Rect();
             _rect = CreateRectangle();
@@ -75,7 +76,7 @@ namespace Dt.Cells.UI
                 _lastWidth = 5000;
             else if (Math.Abs(availableSize.Width - _lastWidth) > 1)
                 _lastWidth = Math.Round(availableSize.Width);
-            
+
             if (double.IsInfinity(availableSize.Height))
                 _lastHeight = 5000;
             else if (Math.Abs(availableSize.Height - _lastHeight) > 1)
@@ -103,20 +104,22 @@ namespace Dt.Cells.UI
                 _bounds = new Rect();
                 _rect.Measure(new Size(0.0, 0.0));
             }
+            var size = new Size(_lastWidth, _lastHeight);
 
             // 水平垂直分页线
-            Size paperSize = _viewport.Excel.PaperSize;
-            if (paperSize.Width > 0 && paperSize.Height > 0)
+            if (_paginator == null)
             {
-                PrepareLines(_lastWidth, _lastHeight, true, paperSize);
-                PrepareLines(_lastWidth, _lastHeight, false, paperSize);
+                var pi = _viewport.Excel.ActiveSheet.PrintInfo;
+                _paginator = new PrintPaginator(
+                    _viewport.Excel,
+                    pi,
+                    new Size(
+                        pi.PaperSize.PxWidth - pi.Margin.PxLeft - pi.Margin.PxRight,
+                        pi.PaperSize.PxHeight - pi.Margin.PxTop - pi.Margin.PxBottom));
             }
-            else
-            {
-                ClearLines(true);
-                ClearLines(false);
-            }
-            return _viewport.GetViewportSize(new Size(_lastWidth, _lastHeight));
+            _paginator.Paginate();
+            PrepareLines(size);
+            return _viewport.GetViewportSize(size);
         }
 
         /// <summary>
@@ -132,86 +135,94 @@ namespace Dt.Cells.UI
             _rect.Arrange(_bounds);
 
             // 分页线
-            Size paperSize = _viewport.Excel.PaperSize;
-            if (paperSize.Width > 0 && paperSize.Height > 0)
+            Point topLeft = _viewport.Excel.ActiveSheet.GetTopLeftLocation(_viewport.RowViewportIndex, _viewport.ColumnViewportIndex);
+            for (int i = 0; i < _horLines.Count; i++)
             {
-                Worksheet ws = _viewport.Excel.ActiveSheet;
-                Point topLeft = ws.GetTopLeftLocation(_viewport.RowViewportIndex, _viewport.ColumnViewportIndex);
-                double offsetY = topLeft.Y % paperSize.Height;
-                double offsetX = topLeft.X % paperSize.Width;
+                var info = _horLines[i];
+                Line line = info.Line;
+                line.Y1 = line.Y2 = info.Location.Y - topLeft.Y;
+                line.Arrange(new Rect(0, 0, finalSize.Width, finalSize.Height));
+            }
 
-                for (int i = 0; i < _horLines.Count; i++)
-                {
-                    double top = (i + 1) * paperSize.Height - offsetY;
-                    Line line = _horLines[i];
-                    line.Y1 = line.Y2 = top;
-                    line.Arrange(new Rect(0, 0, finalSize.Width, finalSize.Height));
-                }
-
-                for (int i = 0; i < _verLines.Count; i++)
-                {
-                    double left = (i + 1) * paperSize.Width - offsetX;
-                    Line line = _verLines[i];
-                    line.X1 = line.X2 = left;
-                    line.Arrange(new Rect(0, 0, finalSize.Width, finalSize.Height));
-                }
+            for (int i = 0; i < _verLines.Count; i++)
+            {
+                var info = _verLines[i];
+                Line line = info.Line;
+                line.X1 = line.X2 = info.Location.X - topLeft.X;
+                line.Arrange(new Rect(0, 0, finalSize.Width, finalSize.Height));
             }
             return finalSize;
         }
 
-        /// <summary>
-        /// 准备分页线
-        /// </summary>
-        /// <param name="p_width"></param>
-        /// <param name="p_height"></param>
-        /// <param name="p_isHor"></param>
-        /// <param name="p_paper"></param>
-        void PrepareLines(double p_width, double p_height, bool p_isHor, Size p_paper)
+        void PrepareLines(Size p_size)
         {
-            int count;
-            List<Line> lines;
-            if (p_isHor)
-            {
-                lines = _horLines;
-                count = (int)Math.Ceiling(p_height / p_paper.Height);
-            }
-            else
-            {
-                lines = _verLines;
-                count = (int)Math.Ceiling(p_width / p_paper.Width);
-            }
-            int newCount = count - lines.Count;
+            int newCount = _paginator.VerticalPageCount - _horLines.Count - 1;
+            if (newCount != 0)
+                CreateOrRemoveLines(_horLines, newCount);
 
-            if (newCount > 0)
+            newCount = _paginator.HorizontalPageCount - _verLines.Count - 1;
+            if (newCount != 0)
+                CreateOrRemoveLines(_verLines, newCount);
+
+            MeasureAllLines(p_size);
+        }
+
+        void CreateOrRemoveLines(List<LineInfo> p_lines, int p_newCount)
+        {
+            if (p_newCount > 0)
             {
                 // 原有子元素不够
-                for (int i = 0; i < newCount; i++)
+                for (int i = 0; i < p_newCount; i++)
                 {
                     Line line = CreateLine();
-                    lines.Add(line);
+                    p_lines.Add(new LineInfo { Line = line });
                     Children.Add(line);
                 }
             }
-            else if (newCount < 0)
+            else if (p_newCount < 0)
             {
                 // 移除多余的子元素
-                for (int i = 0; i < -newCount; i++)
+                for (int i = 0; i < -p_newCount; i++)
                 {
-                    int index = lines.Count - 1;
-                    Line line = lines[index];
-                    Children.Remove(line);
-                    lines.RemoveAt(index);
+                    int index = p_lines.Count - 1;
+                    Children.Remove(p_lines[index].Line);
+                    p_lines.RemoveAt(index);
+                }
+            }
+        }
+
+        void MeasureAllLines(Size p_size)
+        {
+            var sheet = _viewport.Excel.ActiveSheet;
+            double rowHeaderWidth = 0.0;
+            double colHeaderHeight = 0.0;
+            if (sheet.RowHeader.IsVisible)
+                rowHeaderWidth = ExcelPrinter.GetTotalWidth(sheet, sheet.RowHeader.ColumnCount, SheetArea.RowHeader);
+            if (sheet.ColumnHeader.IsVisible)
+                colHeaderHeight = ExcelPrinter.GetTotalHeight(sheet, sheet.ColumnHeader.RowCount, SheetArea.ColumnHeader);
+
+            if (_paginator.VerticalPageCount > 1)
+            {
+                for (int i = 0; i < _horLines.Count; i++)
+                {
+                    SheetPageInfo info = _paginator.GetPage(i, 0);
+                    _horLines[i].Location = new Point(0, info.RowPage.YEnd + colHeaderHeight);
+                    Line line = _horLines[i].Line;
+                    line.X1 = 0;
+                    line.X2 = p_size.Width;
                 }
             }
 
-            for (int i = 0; i < lines.Count; i++)
+            if (_paginator.HorizontalPageCount > 1)
             {
-                Line line = lines[i];
-                if (p_isHor)
-                    line.X2 = p_width;
-                else
-                    line.Y2 = p_height;
-                line.Measure(new Size(p_width, p_height));
+                for (int i = 0; i < _verLines.Count; i++)
+                {
+                    SheetPageInfo info = _paginator.GetPage(0, i);
+                    _verLines[i].Location = new Point(info.ColumnPage.XEnd + rowHeaderWidth, 0);
+                    Line line = _verLines[i].Line;
+                    line.Y1 = 0;
+                    line.Y2 = p_size.Height;
+                }
             }
         }
 
@@ -226,17 +237,6 @@ namespace Dt.Cells.UI
             line.Stroke = new SolidColorBrush(Color.FromArgb(0xFF, 0xC3, 0xC3, 0xC3));
             line.StrokeThickness = 2;
             return line;
-        }
-
-        void ClearLines(bool p_isHor)
-        {
-            List<Line> lines = p_isHor ? _horLines : _verLines;
-            while (lines.Count > 0)
-            {
-                Line line = lines[0];
-                Children.Remove(line);
-                lines.RemoveAt(0);
-            }
         }
 
         /// <summary>
@@ -398,6 +398,13 @@ namespace Dt.Cells.UI
             rect.Stroke = new SolidColorBrush(Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2));
             rect.StrokeThickness = _thickness;
             return rect;
+        }
+
+        class LineInfo
+        {
+            public Line Line { get; set; }
+
+            public Point Location { get; set; }
         }
     }
 }

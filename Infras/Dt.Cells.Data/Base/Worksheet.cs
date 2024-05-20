@@ -596,32 +596,6 @@ namespace Dt.Cells.Data
         /// Adds the picture.
         /// </summary>
         /// <param name="name">The name.</param>
-        /// <param name="source">The source.</param>
-        /// <returns></returns>
-        public Picture AddPicture(string name, Uri source)
-        {
-            Picture item = new Picture(name, source);
-            Pictures.Add(item);
-            return item;
-        }
-
-        /// <summary>
-        /// Adds the picture.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="source">The image source.</param>
-        /// <returns></returns>
-        public Picture AddPicture(string name, ImageSource source)
-        {
-            Picture item = new Picture(name, source);
-            Pictures.Add(item);
-            return item;
-        }
-
-        /// <summary>
-        /// Adds the picture.
-        /// </summary>
-        /// <param name="name">The name.</param>
         /// <param name="imageStream">The image source.</param>
         /// <param name="x">The x value.</param>
         /// <param name="y">The y value.</param>
@@ -629,21 +603,6 @@ namespace Dt.Cells.Data
         public Picture AddPicture(string name, Stream imageStream, double x, double y)
         {
             Picture item = new Picture(name, imageStream, x, y);
-            Pictures.Add(item);
-            return item;
-        }
-
-        /// <summary>
-        /// Adds the picture.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="source">The uri source.</param>
-        /// <param name="x">The x value.</param>
-        /// <param name="y">The y value.</param>
-        /// <returns></returns>
-        public Picture AddPicture(string name, Uri source, double x, double y)
-        {
-            Picture item = new Picture(name, source, x, y);
             Pictures.Add(item);
             return item;
         }
@@ -700,72 +659,6 @@ namespace Dt.Cells.Data
         /// Adds the picture.
         /// </summary>
         /// <param name="name">The name.</param>
-        /// <param name="source">The uri source.</param>
-        /// <param name="x">The x value.</param>
-        /// <param name="y">The y value.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <returns></returns>
-        public Picture AddPicture(string name, Uri source, double x, double y, double width, double height)
-        {
-            Picture item = new Picture(name, source, x, y, width, height);
-            Pictures.Add(item);
-            return item;
-        }
-
-        /// <summary>
-        /// Adds the picture.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="source">The source.</param>
-        /// <param name="row">The row.</param>
-        /// <param name="rowOffset">The row offset.</param>
-        /// <param name="column">The column.</param>
-        /// <param name="columnOffset">The column offset.</param>
-        /// <returns></returns>
-        public Picture AddPicture(string name, Uri source, int row, double rowOffset, int column, double columnOffset)
-        {
-            Point point = CalcLocation(row, rowOffset, column, columnOffset);
-            return AddPicture(name, source, point.X, point.Y);
-        }
-
-        /// <summary>
-        /// Adds the picture.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="source">The source.</param>
-        /// <param name="x">The x value.</param>
-        /// <param name="y">The y value.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <returns></returns>
-        public Picture AddPicture(string name, ImageSource source, double x, double y, double width, double height)
-        {
-            Picture item = new Picture(name, source, x, y, width, height);
-            Pictures.Add(item);
-            return item;
-        }
-
-        /// <summary>
-        /// Adds the picture.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="source">The source.</param>
-        /// <param name="row">The row.</param>
-        /// <param name="rowOffset">The row offset.</param>
-        /// <param name="column">The column.</param>
-        /// <param name="columnOffset">The column offset.</param>
-        /// <returns></returns>
-        public Picture AddPicture(string name, ImageSource source, int row, double rowOffset, int column, double columnOffset)
-        {
-            Point point = CalcLocation(row, rowOffset, column, columnOffset);
-            return AddPicture(name, source, point.X, point.Y);
-        }
-
-        /// <summary>
-        /// Adds the picture.
-        /// </summary>
-        /// <param name="name">The name.</param>
         /// <param name="imageStream">The image source.</param>
         /// <param name="row">The row.</param>
         /// <param name="rowOffset">The row offset.</param>
@@ -778,42 +671,6 @@ namespace Dt.Cells.Data
         {
             Point point = CalcLocation(row, rowOffset, column, columnOffset);
             return AddPicture(name, imageStream, point.X, point.Y, width, height);
-        }
-
-        /// <summary>
-        /// Adds the picture.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="source">The source.</param>
-        /// <param name="row">The row.</param>
-        /// <param name="rowOffset">The row offset.</param>
-        /// <param name="column">The column.</param>
-        /// <param name="columnOffset">The column offset.</param>
-        /// <param name="width">The picture width.</param>
-        /// <param name="height">The picture height.</param>
-        /// <returns></returns>
-        public Picture AddPicture(string name, Uri source, int row, double rowOffset, int column, double columnOffset, double width, double height)
-        {
-            Point point = CalcLocation(row, rowOffset, column, columnOffset);
-            return AddPicture(name, source, point.X, point.Y, width, height);
-        }
-
-        /// <summary>
-        /// Adds the picture.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="source">The source.</param>
-        /// <param name="row">The row.</param>
-        /// <param name="rowOffset">The row offset.</param>
-        /// <param name="column">The column.</param>
-        /// <param name="columnOffset">The column offset.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <returns></returns>
-        public Picture AddPicture(string name, ImageSource source, int row, double rowOffset, int column, double columnOffset, double width, double height)
-        {
-            Point point = CalcLocation(row, rowOffset, column, columnOffset);
-            return AddPicture(name, source, point.X, point.Y, width, height);
         }
 
         /// <summary>
@@ -841,55 +698,200 @@ namespace Dt.Cells.Data
             return AddPicture(name, imageStream, x, y, width, height);
         }
 
-        /// <summary>
-        /// Adds the picture.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="source">The source.</param>
-        /// <param name="row">The row.</param>
-        /// <param name="rowOffset">The row offset.</param>
-        /// <param name="column">The column.</param>
-        /// <param name="columnOffset">The column offset.</param>
-        /// <param name="endRow">The end row.</param>
-        /// <param name="endRowOffset">The end row offset.</param>
-        /// <param name="endColumn">The end column.</param>
-        /// <param name="endColumnOffset">The end column offset.</param>
-        /// <returns></returns>
-        public Picture AddPicture(string name, Uri source, int row, double rowOffset, int column, double columnOffset, int endRow, double endRowOffset, int endColumn, double endColumnOffset)
-        {
-            Point point = CalcLocation(row, rowOffset, column, columnOffset);
-            Point point2 = CalcLocation(endRow, endRowOffset, endColumn, endColumnOffset);
-            double x = (point.X < point2.X) ? point.X : point2.X;
-            double y = (point.Y < point2.Y) ? point.Y : point2.Y;
-            double width = Math.Abs((double)(point.X - point2.X));
-            double height = Math.Abs((double)(point.Y - point2.Y));
-            return AddPicture(name, source, x, y, width, height);
-        }
+        #region 无法导出，禁用
+        ///// <summary>
+        ///// Adds the picture.
+        ///// </summary>
+        ///// <param name="name">The name.</param>
+        ///// <param name="source">The source.</param>
+        ///// <returns></returns>
+        //public Picture AddPicture(string name, Uri source)
+        //{
+        //    Picture item = new Picture(name, source);
+        //    Pictures.Add(item);
+        //    return item;
+        //}
 
-        /// <summary>
-        /// Adds the picture.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="source">The source.</param>
-        /// <param name="row">The row.</param>
-        /// <param name="rowOffset">The row offset.</param>
-        /// <param name="column">The column.</param>
-        /// <param name="columnOffset">The column offset.</param>
-        /// <param name="endRow">The end row.</param>
-        /// <param name="endRowOffset">The end row offset.</param>
-        /// <param name="endColumn">The end column.</param>
-        /// <param name="endColumnOffset">The end column offset.</param>
-        /// <returns></returns>
-        public Picture AddPicture(string name, ImageSource source, int row, double rowOffset, int column, double columnOffset, int endRow, double endRowOffset, int endColumn, double endColumnOffset)
-        {
-            Point point = CalcLocation(row, rowOffset, column, columnOffset);
-            Point point2 = CalcLocation(endRow, endRowOffset, endColumn, endColumnOffset);
-            double x = (point.X < point2.X) ? point.X : point2.X;
-            double y = (point.Y < point2.Y) ? point.Y : point2.Y;
-            double width = Math.Abs((double)(point.X - point2.X));
-            double height = Math.Abs((double)(point.Y - point2.Y));
-            return AddPicture(name, source, x, y, width, height);
-        }
+        ///// <summary>
+        ///// Adds the picture.
+        ///// </summary>
+        ///// <param name="name">The name.</param>
+        ///// <param name="source">The image source.</param>
+        ///// <returns></returns>
+        //public Picture AddPicture(string name, ImageSource source)
+        //{
+        //    Picture item = new Picture(name, source);
+        //    Pictures.Add(item);
+        //    return item;
+        //}
+
+        ///// <summary>
+        ///// Adds the picture.
+        ///// </summary>
+        ///// <param name="name">The name.</param>
+        ///// <param name="source">The uri source.</param>
+        ///// <param name="x">The x value.</param>
+        ///// <param name="y">The y value.</param>
+        ///// <returns></returns>
+        //public Picture AddPicture(string name, Uri source, double x, double y)
+        //{
+        //    Picture item = new Picture(name, source, x, y);
+        //    Pictures.Add(item);
+        //    return item;
+        //}
+
+        ///// <summary>
+        ///// Adds the picture.
+        ///// </summary>
+        ///// <param name="name">The name.</param>
+        ///// <param name="source">The uri source.</param>
+        ///// <param name="x">The x value.</param>
+        ///// <param name="y">The y value.</param>
+        ///// <param name="width">The width.</param>
+        ///// <param name="height">The height.</param>
+        ///// <returns></returns>
+        //public Picture AddPicture(string name, Uri source, double x, double y, double width, double height)
+        //{
+        //    Picture item = new Picture(name, source, x, y, width, height);
+        //    Pictures.Add(item);
+        //    return item;
+        //}
+
+        ///// <summary>
+        ///// Adds the picture.
+        ///// </summary>
+        ///// <param name="name">The name.</param>
+        ///// <param name="source">The source.</param>
+        ///// <param name="row">The row.</param>
+        ///// <param name="rowOffset">The row offset.</param>
+        ///// <param name="column">The column.</param>
+        ///// <param name="columnOffset">The column offset.</param>
+        ///// <returns></returns>
+        //public Picture AddPicture(string name, Uri source, int row, double rowOffset, int column, double columnOffset)
+        //{
+        //    Point point = CalcLocation(row, rowOffset, column, columnOffset);
+        //    return AddPicture(name, source, point.X, point.Y);
+        //}
+
+        ///// <summary>
+        ///// Adds the picture.
+        ///// </summary>
+        ///// <param name="name">The name.</param>
+        ///// <param name="source">The source.</param>
+        ///// <param name="x">The x value.</param>
+        ///// <param name="y">The y value.</param>
+        ///// <param name="width">The width.</param>
+        ///// <param name="height">The height.</param>
+        ///// <returns></returns>
+        //public Picture AddPicture(string name, ImageSource source, double x, double y, double width, double height)
+        //{
+        //    Picture item = new Picture(name, source, x, y, width, height);
+        //    Pictures.Add(item);
+        //    return item;
+        //}
+
+        ///// <summary>
+        ///// Adds the picture.
+        ///// </summary>
+        ///// <param name="name">The name.</param>
+        ///// <param name="source">The source.</param>
+        ///// <param name="row">The row.</param>
+        ///// <param name="rowOffset">The row offset.</param>
+        ///// <param name="column">The column.</param>
+        ///// <param name="columnOffset">The column offset.</param>
+        ///// <returns></returns>
+        //public Picture AddPicture(string name, ImageSource source, int row, double rowOffset, int column, double columnOffset)
+        //{
+        //    Point point = CalcLocation(row, rowOffset, column, columnOffset);
+        //    return AddPicture(name, source, point.X, point.Y);
+        //}
+
+        ///// <summary>
+        ///// Adds the picture.
+        ///// </summary>
+        ///// <param name="name">The name.</param>
+        ///// <param name="source">The source.</param>
+        ///// <param name="row">The row.</param>
+        ///// <param name="rowOffset">The row offset.</param>
+        ///// <param name="column">The column.</param>
+        ///// <param name="columnOffset">The column offset.</param>
+        ///// <param name="width">The picture width.</param>
+        ///// <param name="height">The picture height.</param>
+        ///// <returns></returns>
+        //public Picture AddPicture(string name, Uri source, int row, double rowOffset, int column, double columnOffset, double width, double height)
+        //{
+        //    Point point = CalcLocation(row, rowOffset, column, columnOffset);
+        //    return AddPicture(name, source, point.X, point.Y, width, height);
+        //}
+
+        ///// <summary>
+        ///// Adds the picture.
+        ///// </summary>
+        ///// <param name="name">The name.</param>
+        ///// <param name="source">The source.</param>
+        ///// <param name="row">The row.</param>
+        ///// <param name="rowOffset">The row offset.</param>
+        ///// <param name="column">The column.</param>
+        ///// <param name="columnOffset">The column offset.</param>
+        ///// <param name="width">The width.</param>
+        ///// <param name="height">The height.</param>
+        ///// <returns></returns>
+        //public Picture AddPicture(string name, ImageSource source, int row, double rowOffset, int column, double columnOffset, double width, double height)
+        //{
+        //    Point point = CalcLocation(row, rowOffset, column, columnOffset);
+        //    return AddPicture(name, source, point.X, point.Y, width, height);
+        //}
+
+        ///// <summary>
+        ///// Adds the picture.
+        ///// </summary>
+        ///// <param name="name">The name.</param>
+        ///// <param name="source">The source.</param>
+        ///// <param name="row">The row.</param>
+        ///// <param name="rowOffset">The row offset.</param>
+        ///// <param name="column">The column.</param>
+        ///// <param name="columnOffset">The column offset.</param>
+        ///// <param name="endRow">The end row.</param>
+        ///// <param name="endRowOffset">The end row offset.</param>
+        ///// <param name="endColumn">The end column.</param>
+        ///// <param name="endColumnOffset">The end column offset.</param>
+        ///// <returns></returns>
+        //public Picture AddPicture(string name, Uri source, int row, double rowOffset, int column, double columnOffset, int endRow, double endRowOffset, int endColumn, double endColumnOffset)
+        //{
+        //    Point point = CalcLocation(row, rowOffset, column, columnOffset);
+        //    Point point2 = CalcLocation(endRow, endRowOffset, endColumn, endColumnOffset);
+        //    double x = (point.X < point2.X) ? point.X : point2.X;
+        //    double y = (point.Y < point2.Y) ? point.Y : point2.Y;
+        //    double width = Math.Abs((double)(point.X - point2.X));
+        //    double height = Math.Abs((double)(point.Y - point2.Y));
+        //    return AddPicture(name, source, x, y, width, height);
+        //}
+
+        ///// <summary>
+        ///// Adds the picture.
+        ///// </summary>
+        ///// <param name="name">The name.</param>
+        ///// <param name="source">The source.</param>
+        ///// <param name="row">The row.</param>
+        ///// <param name="rowOffset">The row offset.</param>
+        ///// <param name="column">The column.</param>
+        ///// <param name="columnOffset">The column offset.</param>
+        ///// <param name="endRow">The end row.</param>
+        ///// <param name="endRowOffset">The end row offset.</param>
+        ///// <param name="endColumn">The end column.</param>
+        ///// <param name="endColumnOffset">The end column offset.</param>
+        ///// <returns></returns>
+        //public Picture AddPicture(string name, ImageSource source, int row, double rowOffset, int column, double columnOffset, int endRow, double endRowOffset, int endColumn, double endColumnOffset)
+        //{
+        //    Point point = CalcLocation(row, rowOffset, column, columnOffset);
+        //    Point point2 = CalcLocation(endRow, endRowOffset, endColumn, endColumnOffset);
+        //    double x = (point.X < point2.X) ? point.X : point2.X;
+        //    double y = (point.Y < point2.Y) ? point.Y : point2.Y;
+        //    double width = Math.Abs((double)(point.X - point2.X));
+        //    double height = Math.Abs((double)(point.Y - point2.Y));
+        //    return AddPicture(name, source, x, y, width, height);
+        //}
+        #endregion
 
         /// <summary>
         /// Adds rows in this sheet.
@@ -3826,7 +3828,7 @@ namespace Dt.Cells.Data
                     FormattingRuleBase[] baseArray = ConditionalFormats[row, column];
                     if (baseArray.Length > 0)
                     {
-                        baseArray = Enumerable.ToArray<FormattingRuleBase>((IEnumerable<FormattingRuleBase>)Enumerable.OrderBy<FormattingRuleBase, int>(baseArray, delegate(FormattingRuleBase r)
+                        baseArray = Enumerable.ToArray<FormattingRuleBase>((IEnumerable<FormattingRuleBase>)Enumerable.OrderBy<FormattingRuleBase, int>(baseArray, delegate (FormattingRuleBase r)
                         {
                             return r.Priority;
                         }));
@@ -3872,14 +3874,33 @@ namespace Dt.Cells.Data
                     }
                 }
             }
-            if (((_workbook != null) && !info.IsFontFamilySet()) && !info.IsFontThemeSet())
+
+            // hdt 外部未设置字体时采用默认字体：中文宋体，其它 Times New Roman
+            if (!info.IsFontFamilySet() && !info.IsFontThemeSet())
             {
-                SpreadTheme currentTheme = _workbook.CurrentTheme;
-                if ((currentTheme != null) && (currentTheme.BodyFontFamily != null))
+                bool chinese = false;
+                if (GetValue(row, column, sheetArea) is String str)
                 {
-                    info.FontFamily = currentTheme.BodyFontFamily;
+                    foreach (var c in str)
+                    {
+                        if (c > 255)
+                        {
+                            chinese = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if (chinese)
+                {
+                    info.FontFamily = SimSunFont;
+                }
+                else if (_workbook != null && _workbook.CurrentTheme is SpreadTheme theme)
+                {
+                    info.FontFamily = theme.BodyFontFamily;
                 }
             }
+
             if (!info.IsFontSizeSet() || (info.FontSize < 0.0))
             {
                 info.FontSize = DefaultStyleCollection.DefaultFontSize;
@@ -3887,6 +3908,9 @@ namespace Dt.Cells.Data
             return info;
         }
 
+        // hdt 中文默认宋体
+        static FontFamily SimSunFont = new FontFamily("SimSun");
+        
         internal object GetActualValue(int modelRow, int modelColumn, SheetArea sheetArea)
         {
             if ((_tables != null) && (sheetArea == SheetArea.Cells))
@@ -4507,7 +4531,7 @@ namespace Dt.Cells.Data
             if (_conditionalFormats != null)
             {
                 FormattingRuleBase[] baseArray = ConditionalFormats[row, column];
-                baseArray = Enumerable.ToArray<FormattingRuleBase>((IEnumerable<FormattingRuleBase>)Enumerable.OrderBy<FormattingRuleBase, int>(baseArray, delegate(FormattingRuleBase r)
+                baseArray = Enumerable.ToArray<FormattingRuleBase>((IEnumerable<FormattingRuleBase>)Enumerable.OrderBy<FormattingRuleBase, int>(baseArray, delegate (FormattingRuleBase r)
                 {
                     return r.Priority;
                 }));
@@ -8948,7 +8972,7 @@ namespace Dt.Cells.Data
         /// <param name="encoding">The encoding.</param>
         public IAsyncAction OpenTextFileAsync(Stream stream, TextFileOpenFlags flags, string rowDelimiter, string columnDelimiter, string cellDelimiter, Encoding encoding)
         {
-            return AsyncInfo.Run(delegate(CancellationToken token)
+            return AsyncInfo.Run(delegate (CancellationToken token)
             {
                 return Task.Factory.StartNew(delegate
                 {
@@ -9024,7 +9048,7 @@ namespace Dt.Cells.Data
         /// <param name="xmlStream">The XML stream.</param>
         public IAsyncAction OpenXmlAsync(Stream xmlStream)
         {
-            return AsyncInfo.Run(delegate(CancellationToken token)
+            return AsyncInfo.Run(delegate (CancellationToken token)
             {
                 return Task.Factory.StartNew(delegate
                 {
@@ -9039,7 +9063,7 @@ namespace Dt.Cells.Data
         /// <param name="reader">The XML reader.</param>
         public IAsyncAction OpenXmlAsync(XmlReader reader)
         {
-            return AsyncInfo.Run(delegate(CancellationToken token)
+            return AsyncInfo.Run(delegate (CancellationToken token)
             {
                 return Task.Factory.StartNew(delegate
                 {
@@ -9655,7 +9679,7 @@ namespace Dt.Cells.Data
                 _columnRangeGroup = Serializer.DeserializeObj(typeof(RangeGroup), reader) as RangeGroup;
                 if (_columnRangeGroup != null)
                     _columnRangeGroup.Changed += new EventHandler(OnColumnRangeGroupChanged);
-            Label_1240:
+                Label_1240:
                 if ((reader.NodeType == ((XmlNodeType)((int)XmlNodeType.EndElement))) && (reader.Name == "Sheet"))
                     break;
             }
@@ -10154,7 +10178,7 @@ namespace Dt.Cells.Data
         /// <param name="stream">The HTML stream.</param>
         public IAsyncAction SaveHtmlAsync(Stream stream)
         {
-            return AsyncInfo.Run(delegate(CancellationToken token)
+            return AsyncInfo.Run(delegate (CancellationToken token)
             {
                 return Task.Factory.StartNew(delegate
                 {
@@ -10205,7 +10229,7 @@ namespace Dt.Cells.Data
         /// <param name="settings">The export settings.</param>
         public IAsyncAction SavePdfAsync(Stream stream, PdfExportSettings settings)
         {
-            return AsyncInfo.Run(delegate(CancellationToken token)
+            return AsyncInfo.Run(delegate (CancellationToken token)
             {
                 return Task.Factory.StartNew(delegate
                 {
@@ -10275,7 +10299,7 @@ namespace Dt.Cells.Data
         /// </exception>
         public IAsyncAction SaveTextFileRangeAsync(int row, int column, int rowCount, int columnCount, Stream stream, TextFileSaveFlags flags, string rowDelimiter, string columnDelimiter, string cellDelimiter, Encoding encoding)
         {
-            return AsyncInfo.Run(delegate(CancellationToken token)
+            return AsyncInfo.Run(delegate (CancellationToken token)
             {
                 return Task.Factory.StartNew(delegate
                 {
@@ -10319,6 +10343,15 @@ namespace Dt.Cells.Data
         }
 
         /// <summary>
+        /// hdt
+        /// </summary>
+        /// <param name="xmlStream"></param>
+        public void SaveXml(Stream xmlStream)
+        {
+            SaveXmlBackGround(xmlStream, false);
+        }
+
+        /// <summary>
         /// Saves the worksheet to an XML stream asynchronously.
         /// </summary>
         /// <param name="xmlStream">The XML stream.</param>
@@ -10343,7 +10376,7 @@ namespace Dt.Cells.Data
         /// <param name="dataOnly">Specifies whether to only save data.</param>
         public IAsyncAction SaveXmlAsync(Stream xmlStream, bool dataOnly)
         {
-            return AsyncInfo.Run(delegate(CancellationToken token)
+            return AsyncInfo.Run(delegate (CancellationToken token)
             {
                 return Task.Factory.StartNew(delegate
                 {
@@ -10359,7 +10392,7 @@ namespace Dt.Cells.Data
         /// <param name="dataOnly">Specifies whether to only save data.</param>
         public IAsyncAction SaveXmlAsync(XmlWriter writer, bool dataOnly)
         {
-            return AsyncInfo.Run(delegate(CancellationToken token)
+            return AsyncInfo.Run(delegate (CancellationToken token)
             {
                 return Task.Factory.StartNew(delegate
                 {

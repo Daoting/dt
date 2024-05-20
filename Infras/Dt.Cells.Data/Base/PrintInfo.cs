@@ -21,7 +21,7 @@ using System.Xml.Serialization;
 namespace Dt.Cells.Data
 {
     /// <summary>
-    /// Represents the information to use when printing a <see cref="T:Worksheet" />.
+    /// 打印或输出Pdf时页面信息
     /// </summary>
     public class PrintInfo : IXmlSerializable
     {
@@ -86,9 +86,8 @@ namespace Dt.Cells.Data
         }
 
         /// <summary>
-        /// Gets or sets the paper size for printing. 
+        /// 纸张大小，单位：0.01英寸
         /// </summary>
-        /// <value>A <see cref="P:PrintInfo.PaperSize" /> object that represents the paper size for printing.</value>
         public PaperSize PaperSize
         {
             get
@@ -107,9 +106,8 @@ namespace Dt.Cells.Data
         }
 
         /// <summary>
-        /// Gets or sets the margins for printing, in hundredths of an inch.  
+        /// 边距，单位：0.01英寸
         /// </summary>
-        /// <value>The margins for printing, in hundredths of an inch.</value>
         public Margins Margin
         {
             get { return _margin; }
@@ -121,12 +119,8 @@ namespace Dt.Cells.Data
         }
 
         /// <summary>
-        /// Gets or sets the page orientation used for printing. 
+        /// 纸张方向，默认纵向
         /// </summary>
-        /// <value>
-        /// A value that specifies the orientation for the printed page.
-        /// The default value is <see cref="T:PrintPageOrientation">Portrait</see>.
-        /// </value>
         [DefaultValue(1)]
         public PrintPageOrientation Orientation
         {
@@ -139,9 +133,8 @@ namespace Dt.Cells.Data
         }
 
         /// <summary>
-        /// Gets or sets how the printed page is centered.  
+        /// 获取或设置打印页的居中方式，默认 None
         /// </summary>
-        /// <value>A value that specifies how to center the printed page. The default value is <see cref="P:PrintInfo.Centering">None</see>.</value>
         [DefaultValue(0)]
         public Centering Centering
         {
@@ -154,12 +147,8 @@ namespace Dt.Cells.Data
         }
 
         /// <summary>
-        /// Gets or sets whether to print an outline border around the entire control.
+        /// 获取或设置是否打印整个控件的轮廓边框，默认true
         /// </summary>
-        /// <value>
-        /// <c>true</c> if an outline border is printed around the control; otherwise, <c>false</c>.
-        /// The default value is <c>true</c>.
-        /// </value>
         [DefaultValue(true)]
         public bool ShowBorder
         {

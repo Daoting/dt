@@ -28,10 +28,10 @@ namespace Dt.Cells.UI
         int _pageCount = -1;
         List<PageInfo> _rowPages;
 
-        public PrintPaginator(Excel p_spread, int p_sheetIndex, PrintInfo p_printSettings, Size p_paperSize)
+        public PrintPaginator(Excel p_excel, PrintInfo p_printSettings, Size p_paperSize)
         {
-            _excel = p_spread;
-            _sheet = p_spread.Sheets[p_sheetIndex];
+            _excel = p_excel;
+            _sheet = _excel.ActiveSheet;
             _pageSize = p_paperSize;
             _info = p_printSettings;
         }
@@ -54,6 +54,48 @@ namespace Dt.Cells.UI
             return new SheetPageInfo { RowPageIndex = num, ColumnPageIndex = num2, RowPage = _rowPages[num], ColumnPage = _columnPages[num2] };
         }
 
+        public SheetPageInfo GetPage(int p_rowIndex, int p_colIndex)
+        {
+            return new SheetPageInfo { RowPageIndex = p_rowIndex, ColumnPageIndex = p_colIndex, RowPage = _rowPages[p_rowIndex], ColumnPage = _columnPages[p_colIndex] };
+        }
+
+        /// <summary>
+        /// 区域打印时的位置
+        /// </summary>
+        /// <param name="p_info"></param>
+        /// <returns></returns>
+        public Point GetPageLocation(SheetPageInfo p_info)
+        {
+            double x = 0;
+            double y = 0;
+            if (_sheet.RowHeader.IsVisible)
+            {
+                for (int j = 0; j < _sheet.RowHeader.ColumnCount; j++)
+                {
+                    x += GetColumnWidth(j, SheetArea.RowHeader);
+                }
+            }
+
+            for (int i = 0; i < p_info.ColumnPage.ItemStart; i++)
+            {
+                x += GetColumnWidth(i, SheetArea.Cells);
+            }
+
+            if (_sheet.ColumnHeader.IsVisible)
+            {
+                for (int j = 0; j < _sheet.ColumnHeader.RowCount; j++)
+                {
+                    y += GetRowHeight(j, SheetArea.ColumnHeader);
+                }
+            }
+
+            for (int i = 0; i < p_info.RowPage.ItemStart; i++)
+            {
+                y += GetRowHeight(i, SheetArea.Cells);
+            }
+            return new Point(x, y);
+        }
+        
         /// <summary>
         /// 执行分页
         /// </summary>
@@ -162,13 +204,11 @@ namespace Dt.Cells.UI
 
         List<PageInfo> VerticalPaginateCore(int rowStart, int rowEnd, int repeatRowStart, int repetRowEnd, SheetArea sheetArea, double pageHeight)
         {
-            bool flag = repeatRowStart < rowStart;
-            double num = 0.0;
-            double num2 = 0.0;
-            double num3 = 0.0;
-            double num4 = pageHeight;
-            int num5 = repeatRowStart;
-            int num6 = repetRowEnd;
+            bool repeat = repeatRowStart < rowStart;
+            double curHeight = 0.0;
+            double contentHeight = 0.0;
+            double repeatHeight = 0.0;
+            double leaveHeight = pageHeight;
             double yEnd = 0.0;
             PageInfo info = null;
             List<PageInfo> list = new List<PageInfo>();
@@ -176,81 +216,94 @@ namespace Dt.Cells.UI
             {
                 rowStart = rowEnd;
             }
+
             for (int i = rowStart; i <= rowEnd; i++)
             {
-                if (flag && (sheetArea == SheetArea.Cells))
+                // 首页且显示列头，扣除列头高度
+                if (i == rowStart && _sheet.ColumnHeader.IsVisible)
                 {
-                    num5 = repeatRowStart;
-                    num6 = repetRowEnd;
-                    if ((num5 != -1) && (num5 < i))
+                    for (int k = 0; k < _sheet.ColumnHeader.RowCount; k++)
                     {
-                        if (num6 >= i)
-                        {
-                            num6 = i - 1;
-                        }
-                        if (info == null)
-                        {
-                            info = new PageInfo();
-                        }
-                        info.RepeatItemStart = num5;
-                        info.RepeatItemEnd = num6;
-                        for (int j = num5; j <= num6; j++)
-                        {
-                            double rowHeight = GetRowHeight(j, sheetArea);
-                            num3 += rowHeight;
-                        }
-                        num4 -= num3;
-                        flag = false;
+                        leaveHeight -= _sheet.GetActualRowHeight(k, SheetArea.ColumnHeader);
                     }
                 }
-                double rh = GetRowHeight(i, sheetArea);
-                num += rh;
-                yEnd += rh;
-                if ((num > num4) || (num == num4))
+
+                // 需要重复每页顶部时，扣除其高度
+                if (repeat
+                    && sheetArea == SheetArea.Cells
+                    && repeatRowStart != -1
+                    && repeatRowStart < i)
                 {
-                    if (num > num4)
+
+                    int leaveRow = repetRowEnd;
+                    if (leaveRow >= i)
                     {
-                        num2 = (num - GetRowHeight(i, sheetArea)) + num3;
-                        yEnd = (yEnd - GetRowHeight(i, sheetArea)) + num3;
+                        leaveRow = i - 1;
+                    }
+                    if (info == null)
+                    {
+                        info = new PageInfo();
+                    }
+                    info.RepeatItemStart = repeatRowStart;
+                    info.RepeatItemEnd = leaveRow;
+                    for (int j = repeatRowStart; j <= leaveRow; j++)
+                    {
+                        double rowHeight = GetRowHeight(j, sheetArea);
+                        repeatHeight += rowHeight;
+                    }
+                    leaveHeight -= repeatHeight;
+                    repeat = false;
+                }
+
+                double rh = GetRowHeight(i, sheetArea);
+                curHeight += rh;
+                yEnd += rh;
+                if ((curHeight > leaveHeight) || (curHeight == leaveHeight))
+                {
+                    if (curHeight > leaveHeight)
+                    {
+                        contentHeight = (curHeight - GetRowHeight(i, sheetArea)) + repeatHeight;
+                        yEnd = (yEnd - GetRowHeight(i, sheetArea)) + repeatHeight;
                         i--;
                     }
                     else
                     {
-                        num2 = num + num3;
-                        yEnd += num3;
+                        contentHeight = curHeight + repeatHeight;
+                        yEnd += repeatHeight;
                     }
+
                     if (info == null)
                     {
                         info = new PageInfo();
                     }
                     info.ItemEnd = i;
-                    info.ContentSize = num2;
+                    info.ContentSize = contentHeight;
                     info.YEnd = yEnd;
                     list.Add(info);
                     info = null;
-                    num = 0.0;
-                    num2 = 0.0;
-                    num3 = 0.0;
-                    num4 = pageHeight;
-                    flag = true;
+                    curHeight = 0.0;
+                    contentHeight = 0.0;
+                    repeatHeight = 0.0;
+                    leaveHeight = pageHeight;
+                    repeat = true;
                 }
-                else if (i == rowEnd)
+                else if (i == rowEnd && curHeight > 0)
                 {
                     if (info == null)
                     {
                         info = new PageInfo();
                     }
-                    num2 = num + num3;
+                    contentHeight = curHeight + repeatHeight;
                     info.ItemEnd = i;
-                    info.ContentSize = num2;
+                    info.ContentSize = contentHeight;
                     info.YEnd = yEnd;
                     list.Add(info);
                     info = null;
-                    num = 0.0;
-                    num2 = 0.0;
-                    num3 = 0.0;
-                    num4 = pageHeight;
-                    flag = true;
+                    curHeight = 0.0;
+                    contentHeight = 0.0;
+                    repeatHeight = 0.0;
+                    leaveHeight = pageHeight;
+                    repeat = true;
                 }
             }
             return list;
@@ -289,13 +342,11 @@ namespace Dt.Cells.UI
 
         List<PageInfo> HorizontalPaginatorCore(int columnStart, int columnEnd, int repeatColumnStart, int repeatColumnEnd, SheetArea sheetArea, double pageWidth)
         {
-            bool flag = repeatColumnStart < columnStart;
-            double num = 0.0;
-            double num2 = 0.0;
-            double num3 = 0.0;
-            double num4 = pageWidth;
-            int num5 = repeatColumnStart;
-            int num6 = repeatColumnEnd;
+            bool repeat = repeatColumnStart < columnStart;
+            double curWidth = 0.0;
+            double contentWidth = 0.0;
+            double repeatWidth = 0.0;
+            double leaveWidth = pageWidth;
             double xEnd = 0.0;
             PageInfo info = null;
             List<PageInfo> list = new List<PageInfo>();
@@ -303,81 +354,92 @@ namespace Dt.Cells.UI
             {
                 columnStart = columnEnd;
             }
+
             for (int i = columnStart; i <= columnEnd; i++)
             {
-                if (flag && (sheetArea == SheetArea.Cells))
+                // 首页且显示行头，扣除行头宽度
+                if (i == columnStart && _sheet.RowHeader.IsVisible)
                 {
-                    num5 = repeatColumnStart;
-                    num6 = repeatColumnEnd;
-                    if ((num5 != -1) && (num5 < i))
+                    for (int k = 0; k < _sheet.RowHeader.ColumnCount; k++)
                     {
-                        if (num6 >= i)
-                        {
-                            num6 = i - 1;
-                        }
-                        if (info == null)
-                        {
-                            info = new PageInfo();
-                        }
-                        info.RepeatItemStart = repeatColumnStart;
-                        info.RepeatItemEnd = repeatColumnEnd;
-                        for (int j = num5; j <= num6; j++)
-                        {
-                            double columnWidth = GetColumnWidth(j, sheetArea);
-                            num3 += columnWidth;
-                        }
-                        num4 -= num3;
-                        flag = false;
+                        leaveWidth -= _sheet.GetActualColumnWidth(k, SheetArea.RowHeader);
                     }
                 }
-                double cw = GetColumnWidth(i, sheetArea);
-                num += cw;
-                xEnd += cw;
-                if ((num > num4) || (num == num4))
+                
+                // 需要重复每页左侧时，扣除其宽度
+                if (repeat
+                    && sheetArea == SheetArea.Cells
+                    && repeatColumnStart != -1
+                    && repeatColumnStart < i)
                 {
-                    if (num > num4)
+                    int leaveCol = repeatColumnEnd;
+                    if (leaveCol >= i)
                     {
-                        num2 = (num - GetColumnWidth(i, sheetArea)) + num3;
-                        xEnd = (xEnd - GetColumnWidth(i, sheetArea)) + num3;
+                        leaveCol = i - 1;
+                    }
+                    if (info == null)
+                    {
+                        info = new PageInfo();
+                    }
+                    info.RepeatItemStart = repeatColumnStart;
+                    info.RepeatItemEnd = leaveCol;
+                    for (int j = repeatColumnStart; j <= leaveCol; j++)
+                    {
+                        double columnWidth = GetColumnWidth(j, sheetArea);
+                        repeatWidth += columnWidth;
+                    }
+                    leaveWidth -= repeatWidth;
+                    repeat = false;
+                }
+                
+                double cw = GetColumnWidth(i, sheetArea);
+                curWidth += cw;
+                xEnd += cw;
+                if ((curWidth > leaveWidth) || (curWidth == leaveWidth))
+                {
+                    if (curWidth > leaveWidth)
+                    {
+                        contentWidth = (curWidth - GetColumnWidth(i, sheetArea)) + repeatWidth;
+                        xEnd = (xEnd - GetColumnWidth(i, sheetArea)) + repeatWidth;
                         i--;
                     }
                     else
                     {
-                        num2 = num + num3;
-                        xEnd += num3;
+                        contentWidth = curWidth + repeatWidth;
+                        xEnd += repeatWidth;
                     }
                     if (info == null)
                     {
                         info = new PageInfo();
                     }
                     info.ItemEnd = i;
-                    info.ContentSize = num2;
+                    info.ContentSize = contentWidth;
                     info.XEnd = xEnd;
                     list.Add(info);
                     info = null;
-                    num = 0.0;
-                    num2 = 0.0;
-                    num3 = 0.0;
-                    num4 = pageWidth;
-                    flag = true;
+                    curWidth = 0.0;
+                    contentWidth = 0.0;
+                    repeatWidth = 0.0;
+                    leaveWidth = pageWidth;
+                    repeat = true;
                 }
-                else if (i == columnEnd)
+                else if (i == columnEnd && curWidth > 0)
                 {
                     if (info == null)
                     {
                         info = new PageInfo();
                     }
-                    num2 = num + num3;
+                    contentWidth = curWidth + repeatWidth;
                     info.ItemEnd = i;
-                    info.ContentSize = num2;
+                    info.ContentSize = contentWidth;
                     info.XEnd = xEnd;
                     list.Add(info);
                     info = null;
-                    num = 0.0;
-                    num2 = 0.0;
-                    num3 = 0.0;
-                    num4 = pageWidth;
-                    flag = true;
+                    curWidth = 0.0;
+                    contentWidth = 0.0;
+                    repeatWidth = 0.0;
+                    leaveWidth = pageWidth;
+                    repeat = true;
                 }
             }
             return list;

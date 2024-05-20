@@ -22,11 +22,39 @@ namespace Dt.Base
     /// </summary>
     public static class ExcelKit
     {
+        static Window _mainWin;
+        static Border _snapBorder;
+        static MethodInfo _msg;
+        static MethodInfo _warn;
+
         /// <summary>
         /// 主窗口，App启动时由外部设置
         /// </summary>
-        public static Window MainWin { get; set; }
+        public static Window MainWin
+        {
+            get
+            {
+                if (_mainWin == null)
+                    _mainWin = GetPropertyVal("MainWin") as Window;
+                return _mainWin;
+            }
+            set { _mainWin = value; }
+        }
 
+        /// <summary>
+        /// 截图用的Border
+        /// </summary>
+        public static Border SnapBorder
+        {
+            get
+            {
+                if (_snapBorder == null)
+                    _snapBorder = GetPropertyVal("SnapBorder") as Border;
+                return _snapBorder;
+            }
+            set { _snapBorder = value; }
+        }
+        
         /// <summary>
         /// 发布消息提示
         /// </summary>
@@ -39,9 +67,10 @@ namespace Dt.Base
         /// </param>
         public static void Msg(string p_content, int p_delaySeconds = 3)
         {
-            var method = GetMethod("Msg");
-            if (method != null)
-                method.Invoke(null, new object[] { p_content, p_delaySeconds });
+            if (_msg == null)
+                _msg = GetMethod("Msg");
+            if (_msg != null)
+                _msg.Invoke(null, new object[] { p_content, p_delaySeconds });
         }
 
         /// <summary>
@@ -56,9 +85,10 @@ namespace Dt.Base
         /// </param>
         public static void Warn(string p_content, int p_delaySeconds = 5)
         {
-            var method = GetMethod("Warn");
-            if (method != null)
-                method.Invoke(null, new object[] { p_content, p_delaySeconds });
+            if (_warn == null)
+                _warn = GetMethod("Warn");
+            if (_warn != null)
+                _warn.Invoke(null, new object[] { p_content, p_delaySeconds });
         }
 
         static MethodInfo GetMethod(string p_name)
@@ -66,6 +96,18 @@ namespace Dt.Base
             var tp = Type.GetType("Dt.Core.Kit,Dt.Core");
             if (tp != null)
                 return tp.GetMethod(p_name, BindingFlags.Public | BindingFlags.Static);
+            return null;
+        }
+
+        static object GetPropertyVal(string p_name)
+        {
+            var tp = Type.GetType("Dt.Core.Kit,Dt.Core");
+            if (tp != null)
+            {
+                var prop = tp.GetProperty(p_name, BindingFlags.Public | BindingFlags.Static);
+                if (prop != null)
+                    return prop.GetValue(null);
+            }
             return null;
         }
 

@@ -53,10 +53,10 @@ namespace Dt.Cells.Data
             font = font ?? this.defaultFont;
             if (string.IsNullOrEmpty(font.FontFamilyName))
             {
-                font = (Font) font.Clone();
+                font = (Font)font.Clone();
                 font.FontFamily = this.defaultFont.FontFamily;
             }
-            string str = string.Format("{0},{1}", (object[]) new object[] { font.FontFamilyName, font.FontStyleType });
+            string str = string.Format("{0},{1}", (object[])new object[] { font.FontFamilyName, font.FontStyleType });
             if (this.fontCaches.ContainsKey(str))
             {
                 return this.fontCaches[str];
@@ -145,9 +145,8 @@ namespace Dt.Cells.Data
                     arialMT.IsEmbedded = true;
                 }
             }
-            // hdt 原来Verdana
             if (arialMT == null)
-                arialMT = SimpleTrueTypeFont.SimSun;
+                arialMT = SimpleTrueTypeFont.Verdana;
             this.fontCaches.Add(str, arialMT);
             return arialMT;
         }
@@ -179,7 +178,7 @@ namespace Dt.Cells.Data
             {
                 num3 += num2 / 9f;
             }
-            return new Windows.Foundation.Size((double) num3, (double) (num2 * list.Count));
+            return new Windows.Foundation.Size((double)num3, (double)(num2 * list.Count));
         }
 
         /// <summary>
@@ -204,7 +203,7 @@ namespace Dt.Cells.Data
             {
                 return this.MeasureNoWrapString(str, font);
             }
-            List<string> list = Utilities.GetLines(str, font, true, (double) width, this);
+            List<string> list = Utilities.GetLines(str, font, true, (double)width, this);
             if (list.Count == 0)
             {
                 width = 0;
@@ -213,7 +212,7 @@ namespace Dt.Cells.Data
             {
                 return this.MeasureNoWrapString(str, font);
             }
-            return new Windows.Foundation.Size((double) width, (double) (list.Count * num2));
+            return new Windows.Foundation.Size((double)width, (double)(list.Count * num2));
         }
 
         /// <summary>
@@ -222,7 +221,7 @@ namespace Dt.Cells.Data
         /// <value>The default font.</value>
         public Font DefaultFont
         {
-            get { return  this.defaultFont; }
+            get { return this.defaultFont; }
         }
 
         /// <summary>
@@ -231,7 +230,7 @@ namespace Dt.Cells.Data
         /// <value>The dpi.</value>
         public int Dpi
         {
-            get { return  this.dpi; }
+            get { return this.dpi; }
             set { this.dpi = value; }
         }
 
@@ -241,7 +240,7 @@ namespace Dt.Cells.Data
         /// <value>The unit.</value>
         public UnitType Unit
         {
-            get { return  this.unit; }
+            get { return this.unit; }
             set { this.unit = value; }
         }
     }

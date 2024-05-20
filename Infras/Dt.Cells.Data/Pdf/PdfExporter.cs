@@ -284,18 +284,21 @@ namespace Dt.Cells.Data
             {
                 this.ExportEmptyPage(state, doc);
             }
+            
             if (state.Bookmarks.Count > 0)
             {
-                PdfOutlineItem item;
-                if (doc.Outlines.Items.Count > 0)
-                {
-                    item = doc.Outlines.Items[0];
-                }
-                else
-                {
-                    item = new PdfOutlineItem(this.report.Bookmark, state.FirstPage);
-                    doc.Outlines.Items.Add(item);
-                }
+                // 目录树移除Workbook，将Sheet作为一级目录
+                //PdfOutlineItem item;
+                //if (doc.Outlines.Items.Count > 0)
+                //{
+                //    item = doc.Outlines.Items[0];
+                //}
+                //else
+                //{
+                //    item = new PdfOutlineItem(this.report.Bookmark, state.FirstPage);
+                //    doc.Outlines.Items.Add(item);
+                //}
+
                 Dictionary<Bookmark, List<PdfOutlineItem>> dictionary = new Dictionary<Bookmark, List<PdfOutlineItem>>();
                 foreach (ExporterState.BookmarkState state4 in state.Bookmarks)
                 {
@@ -306,6 +309,7 @@ namespace Dt.Cells.Data
                     }
                     dictionary[state4.Bookmark].Add(item2);
                 }
+                
                 foreach (KeyValuePair<Bookmark, List<PdfOutlineItem>> pair in dictionary)
                 {
                     Bookmark bookmark = pair.Key;
@@ -314,7 +318,7 @@ namespace Dt.Cells.Data
                     {
                         foreach (PdfOutlineItem item3 in list6)
                         {
-                            item.ChildItems.Add(item3);
+                            doc.Outlines.Items.Add(item3);
                         }
                     }
                     else
@@ -339,6 +343,7 @@ namespace Dt.Cells.Data
                     }
                 }
             }
+            
             if (processSettings)
             {
                 if ((this.settings.DestinationType != DestinationType.Auto) || (doc.Pages.PageCount > 0))

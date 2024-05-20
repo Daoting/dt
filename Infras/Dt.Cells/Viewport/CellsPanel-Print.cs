@@ -22,23 +22,6 @@ namespace Dt.Cells.UI
                 _decorationLayer.InvalidateMeasure();
             }
         }
-
-        /// <summary>
-        /// 设置打印时隐藏分页线
-        /// </summary>
-        internal bool HideDecorationWhenPrinting
-        {
-            set
-            {
-                if (_decorationLayer != null)
-                {
-                    if (value)
-                        _decorationLayer.Visibility = Visibility.Collapsed;
-                    else
-                        _decorationLayer.Visibility = Visibility.Visible;
-                }
-            }
-        }
     }
 }
 

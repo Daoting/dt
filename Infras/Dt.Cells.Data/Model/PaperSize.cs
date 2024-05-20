@@ -20,17 +20,16 @@ using Windows.Graphics.Printing;
 namespace Dt.Cells.Data
 {
     /// <summary>
-    /// Specifies the paper size.
+    /// 纸张大小，单位统一用0.01英寸
     /// </summary>
     public class PaperSize : IXmlSerializable
     {
+        #region 静态
         static readonly Dictionary<PrintMediaSize, Size> _dict;
-        double _height;
-        double _width;
-        PrintMediaSize _mediaSize;
-        
+
         static PaperSize()
         {
+            // 尺寸为 DPI96 时的像素数
             Dictionary<PrintMediaSize, Size> dict = new Dictionary<PrintMediaSize, Size>();
             dict.Add(PrintMediaSize.PrinterCustom, Size.Empty);
             dict.Add(PrintMediaSize.BusinessCard, new Size(10, 20));
@@ -129,8 +128,23 @@ namespace Dt.Cells.Data
             _dict = dict;
         }
 
+        public static Size GetInchSize(PrintMediaSize p_paper)
+        {
+            if (_dict.TryGetValue(p_paper, out var size))
+            {
+                return new Size(Math.Round(size.Width / 0.96), Math.Round(size.Height / 0.96));
+            }
+            return Size.Empty;
+        }
+
+        public static Dictionary<PrintMediaSize, Size> Dict => _dict;
+        #endregion
+
+        Size _size;
+        PrintMediaSize _mediaSize;
+
         /// <summary>
-        /// Creates a new paper size setting.
+        /// 默认A4纸张
         /// </summary>
         public PaperSize()
         {
@@ -142,16 +156,11 @@ namespace Dt.Cells.Data
             MediaSize = mediaSize;
         }
 
-        public static Dictionary<PrintMediaSize, Size> Dict
-        {
-            get { return _dict; }
-        }
-
         /// <summary>
-        /// Creates a new paper size setting with a custom paper size.
+        /// 自定义页面大小，单位：0.01英寸
         /// </summary>
-        /// <param name="width">The custom width.</param>
-        /// <param name="height">The custom height.</param>
+        /// <param name="width">宽</param>
+        /// <param name="height">高</param>
         public PaperSize(double width, double height) : this()
         {
             if (width <= 0.0)
@@ -163,19 +172,83 @@ namespace Dt.Cells.Data
                 throw new ArgumentOutOfRangeException("height", ResourceStrings.ReportingPaperSizeHightError);
             }
             _mediaSize = PrintMediaSize.PrinterCustom;
-            _width = width;
-            _height = height;
+            _size = new Size(width, height);
         }
 
         /// <summary>
-        /// Initializes this instance.
+        /// 纸张高度，单位：0.01英寸
         /// </summary>
-        protected virtual void Init()
+        [DefaultValue(0x44c)]
+        public double Height
         {
-            _mediaSize = PrintMediaSize.NorthAmericaLetter;
-            Size pageSize = _dict[_mediaSize];
-            _width = pageSize.Width;
-            _height = pageSize.Height;
+            get { return _size.Height; }
+            set
+            {
+                if (value <= 0.0)
+                {
+                    throw new ArgumentOutOfRangeException("height", ResourceStrings.ReportingPaperSizeHightError);
+                }
+
+                if (_size.Height != value)
+                {
+                    _mediaSize = PrintMediaSize.NotAvailable;
+                }
+
+                _size.Height = value;
+            }
+        }
+
+        /// <summary>
+        /// 纸张宽度，单位：0.01英寸
+        /// </summary>
+        [DefaultValue(850)]
+        public double Width
+        {
+            get { return _size.Width; }
+            set
+            {
+                if (value <= 0.0)
+                {
+                    throw new ArgumentOutOfRangeException("width", ResourceStrings.ReportingPaperSizeWidthError);
+                }
+                if (_size.Width != value)
+                {
+                    _mediaSize = PrintMediaSize.PrinterCustom;
+                }
+                _size.Width = value;
+            }
+        }
+
+        /// <summary>
+        /// dpi像素高度
+        /// </summary>
+        public double PxHeight => Math.Round(_size.Height * UnitManager.Dpi / 100);
+        
+        /// <summary>
+        /// dpi像素宽度
+        /// </summary>
+        public double PxWidth => Math.Round(_size.Width * UnitManager.Dpi / 100);
+        
+        /// <summary>
+        /// 获取设置纸张类型
+        /// </summary>
+        public PrintMediaSize MediaSize
+        {
+            get { return _mediaSize; }
+            set
+            {
+                if (_mediaSize != value)
+                {
+                    _mediaSize = value;
+                    _size = GetInchSize(value);
+                }
+            }
+        }
+
+        void Init()
+        {
+            _mediaSize = PrintMediaSize.IsoA4;
+            _size = GetInchSize(_mediaSize);
         }
 
         /// <summary>
@@ -186,7 +259,7 @@ namespace Dt.Cells.Data
         {
             string str;
             Serializer.InitReader(reader);
-            if ((reader.NodeType == ((XmlNodeType) ((int) XmlNodeType.Element))) && ((str = reader.Name) != null))
+            if ((reader.NodeType == ((XmlNodeType)((int)XmlNodeType.Element))) && ((str = reader.Name) != null))
             {
                 if (str != "MediaSize")
                 {
@@ -194,9 +267,12 @@ namespace Dt.Cells.Data
                     {
                         if (str == "PaperHeight")
                         {
-                            _height = Serializer.ReadAttributeDouble("value", 0.0, reader);
+                            _size.Height = Serializer.ReadAttributeDouble("value", 0.0, reader);
                         }
-                        return;
+                    }
+                    else
+                    {
+                        _size.Width = Serializer.ReadAttributeDouble("value", 0.0, reader);
                     }
                 }
                 else
@@ -204,20 +280,10 @@ namespace Dt.Cells.Data
                     _mediaSize = Serializer.ReadAttributeEnum("value", PrintMediaSize.NorthAmericaLetter, reader);
                     if (_mediaSize != PrintMediaSize.PrinterCustom)
                     {
-                        try
-                        {
-                            Size pageSize = _dict[_mediaSize];
-                            _width = (int)pageSize.Width;
-                            _height = (int)pageSize.Height;
-                        }
-                        catch
-                        {
-
-                        }
+                        _size = GetInchSize(_mediaSize);
                     }
                     return;
                 }
-                _width = Serializer.ReadAttributeDouble("value", 0.0, reader);
             }
         }
 
@@ -242,14 +308,14 @@ namespace Dt.Cells.Data
             {
                 throw new ArgumentNullException("reader");
             }
-            if (reader.NodeType == ((XmlNodeType) ((int) XmlNodeType.XmlDeclaration)))
+            if (reader.NodeType == ((XmlNodeType)((int)XmlNodeType.XmlDeclaration)))
             {
                 reader.Read();
             }
             Init();
             while (reader.Read())
             {
-                if (reader.NodeType == ((XmlNodeType) ((int) XmlNodeType.Element)))
+                if (reader.NodeType == ((XmlNodeType)((int)XmlNodeType.Element)))
                 {
                     ReadXmlBase(reader);
                 }
@@ -276,85 +342,17 @@ namespace Dt.Cells.Data
         protected virtual void WriteXmlBase(XmlWriter writer)
         {
             Serializer.InitWriter(writer);
-            if (_mediaSize != PrintMediaSize.NorthAmericaLetter)
+            if (_mediaSize != PrintMediaSize.IsoA4)
             {
                 Serializer.SerializeObj(_mediaSize, "MediaSize", false, writer);
             }
             if (_mediaSize == PrintMediaSize.NotAvailable)
             {
-                Serializer.SerializeObj((double) _width, "PaperWidth", false, writer);
-                Serializer.SerializeObj((double) _height, "PaperHeight", false, writer);
+                Serializer.SerializeObj(_size.Width, "PaperWidth", false, writer);
+                Serializer.SerializeObj(_size.Height, "PaperHeight", false, writer);
             }
         }
 
-        /// <summary>
-        /// Gets or sets the height of the paper, in hundredths of an inch. 
-        /// </summary>
-        /// <value>The height of the paper. The default value is 1100, which is 11 inches.</value>
-        [DefaultValue(0x44c)]
-        public double Height
-        {
-            get { return  _height; }
-            set
-            {
-                if (_height != value)
-                {
-                    _mediaSize = PrintMediaSize.NotAvailable;
-                }
-                if (value <= 0.0)
-                {
-                    throw new ArgumentOutOfRangeException("height", ResourceStrings.ReportingPaperSizeHightError);
-                }
-                _height = value;
-            }
-        }
-
-        /// <summary>
-        /// 获取设置纸张类型
-        /// </summary>
-        public PrintMediaSize MediaSize
-        {
-            get { return _mediaSize; }
-            set
-            {
-                if (_mediaSize != value)
-                {
-                    _mediaSize = value;
-                    try
-                    {
-                        Size pageSize = _dict[_mediaSize];
-                        _width = pageSize.Width;
-                        _height = pageSize.Height;
-                    }
-                    catch
-                    {
-                       
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the width of the paper, in hundredths of an inch. 
-        /// </summary>
-        /// <value>The width of the paper. The default value is 850, which is 8.5 inches.</value>
-        [DefaultValue(850)]
-        public double Width
-        {
-            get { return  _width; }
-            set
-            {
-                if (_width != value)
-                {
-                    _mediaSize = PrintMediaSize.PrinterCustom;
-                }
-                if (value <= 0.0)
-                {
-                    throw new ArgumentOutOfRangeException("width", ResourceStrings.ReportingPaperSizeWidthError);
-                }
-                _width = value;
-            }
-        }
     }
 }
 

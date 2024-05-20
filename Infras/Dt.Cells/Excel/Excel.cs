@@ -43,8 +43,25 @@ namespace Dt.Base
         {
             Workbook = new Workbook();
             var sheet = new Worksheet();
-            AttachSheet(sheet);
             Workbook.Sheets.Add(sheet);
+            InitExcel();
+        }
+
+        public Excel(Workbook p_workbook)
+        {
+            if (p_workbook != null)
+            {
+                Workbook = p_workbook;
+                InitExcel();
+            }
+        }
+
+        void InitExcel()
+        {
+            foreach (var sheet in Workbook.Sheets)
+            {
+                AttachSheet(sheet);
+            }
             Workbook.Sheets.CollectionChanged += OnSheetsCollectionChanged;
             Workbook.PropertyChanged += OnWorkbookPropertyChanged;
 
@@ -740,22 +757,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置页面大小，修饰层画线用
-        /// </summary>
-        public Size PaperSize
-        {
-            get { return _paperSize; }
-            set
-            {
-                if (_paperSize != value)
-                {
-                    _paperSize = value;
-                    InvalidateDecoration();
-                }
-            }
-        }
-
-        /// <summary>
         /// 获取设置修饰区域
         /// </summary>
         public CellRange DecorationRange
@@ -804,8 +805,6 @@ namespace Dt.Base
         /// <returns></returns>
         public Task SaveExcel(Stream stream, ExcelFileFormat format = ExcelFileFormat.XLSX, ExcelSaveFlags saveFlags = ExcelSaveFlags.NoFlagsSet)
         {
-            if (stream == null)
-                throw new ArgumentNullException("stream");
             // WinUI
             return RunTask(() => Workbook.SaveExcel(stream, format, saveFlags));
         }
@@ -832,19 +831,6 @@ namespace Dt.Base
         {
             // WinUI
             return RunTask(() => SaveXmlBackground(xmlStream, dataOnly));
-        }
-
-        /// <summary>
-        /// Saves the content of the component to the specified stream asynchronously. 
-        /// </summary>
-        /// <param name="stream">Stream to which to save the data.</param>
-        /// <param name="sheetIndexes">The sheet indexes.</param>
-        /// <param name="settings">The export settings.</param>
-        /// <returns></returns>
-        public Task SavePdf(Stream stream, int[] sheetIndexes = null, PdfExportSettings settings = null)
-        {
-            // WinUI
-            return RunTask(() => Workbook.SavePdf(stream, sheetIndexes, settings));
         }
 
         /// <summary>
@@ -1933,7 +1919,8 @@ namespace Dt.Base
         /// </summary>
         /// <param name="columnViewportIndex">The column viewport index.</param>
         /// <param name="value">The column index.</param>
-        public void SetViewportLeftColumn(int columnViewportIndex, int value)
+        /// <param name="syncScrollBar"></param>
+        public void SetViewportLeftColumn(int columnViewportIndex, int value, bool syncScrollBar = true)
         {
             if ((ActiveSheet != null) && (HorizontalScrollable || _isTouchScrolling))
             {
@@ -1966,7 +1953,7 @@ namespace Dt.Base
                     SaveHitInfo(null);
                 }
 
-                if (_horizontalScrollBar != null)
+                if (_horizontalScrollBar != null && syncScrollBar)
                 {
                     GetSheetLayout();
                     if (((columnViewportIndex > -1) && (columnViewportIndex < _horizontalScrollBar.Length)) && (_horizontalScrollBar[columnViewportIndex].Value != value))
@@ -1985,14 +1972,15 @@ namespace Dt.Base
         /// </summary>
         /// <param name="rowViewportIndex">The row viewport index.</param>
         /// <param name="value">The row index.</param>
-        public void SetViewportTopRow(int rowViewportIndex, int value)
+        /// <param name="syncScrollBar"></param>
+        public void SetViewportTopRow(int rowViewportIndex, int value, bool syncScrollBar = true)
         {
             if ((ActiveSheet != null) && (VerticalScrollable || _isTouchScrolling))
             {
                 value = Math.Max(ActiveSheet.FrozenRowCount, value);
                 value = Math.Min((ActiveSheet.RowCount - ActiveSheet.FrozenTrailingRowCount) - 1, value);
                 value = TryGetNextScrollableRow(value);
-                if (_verticalScrollBar != null)
+                if (_verticalScrollBar != null && syncScrollBar)
                 {
                     GetSheetLayout();
                     if (((rowViewportIndex > -1) && (rowViewportIndex < _verticalScrollBar.Length)) && (value != _verticalScrollBar[rowViewportIndex].Value))
@@ -2624,72 +2612,6 @@ namespace Dt.Base
                 return _tabStrip.GetStartIndexToBringTabIntoView(tabIndex);
             }
             return StartSheetIndex;
-        }
-
-        /// <summary>
-        /// 打印Sheet内容
-        /// </summary>
-        /// <param name="p_printInfo">打印设置</param>
-        /// <param name="p_sheetIndex">要打印的Sheet索引，-1表示当前活动Sheet</param>
-        /// <param name="p_title">标题</param>
-        public void Print(PrintInfo p_printInfo = null, int p_sheetIndex = -1, string p_title = null)
-        {
-#if WIN
-            // 超出打印范围
-            if (p_sheetIndex >= SheetCount)
-                return;
-
-            PrintInfo printInfo = p_printInfo;
-            if (printInfo == null)
-            {
-                printInfo = new PrintInfo();
-            }
-
-            int index = p_sheetIndex;
-            if (index == -1)
-            {
-                index = ActiveSheetIndex;
-            }
-
-            string jobName = p_title;
-            if (string.IsNullOrWhiteSpace(jobName))
-            {
-                jobName = Sheets[index].Name;
-            }
-
-            if (!string.IsNullOrWhiteSpace(Sheets[index].PrintArea))
-            {
-                string[] masterPrintAreas = Sheets[index].PrintArea.Split("!");
-                if (masterPrintAreas.Length >= 2)
-                {
-                    string[] slavePrintAreas = masterPrintAreas[1].Split(":");
-                    if (slavePrintAreas.Length >= 2)
-                    {
-                        string[] start = slavePrintAreas[0].Split("$");
-                        if (start.Length > 2)
-                        {
-                            start = start.Where(w => !string.IsNullOrWhiteSpace(w)).ToArray();
-                        }
-
-                        string[] end = slavePrintAreas[1].Split("$");
-                        if (end.Length > 2)
-                        {
-                            end = end.Where(w => !string.IsNullOrWhiteSpace(w)).ToArray();
-                        }
-
-                        printInfo.RowStart = int.Parse(start[1]) - 1;
-                        printInfo.RowEnd = int.Parse(end[1]) - 1;
-                        printInfo.ColumnStart = ColNameToColIndex(start[0]);
-                        printInfo.ColumnEnd = ColNameToColIndex(end[0]);
-                    }
-                }
-            }
-
-            ExcelPrinter printer = new ExcelPrinter(this, printInfo, index);
-            printer.Print(jobName);
-#else
-            ExcelKit.Warn("打印功能暂时只支持Windows！");
-#endif
         }
         #endregion
     }

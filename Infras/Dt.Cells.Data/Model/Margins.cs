@@ -16,27 +16,27 @@ using System.Xml.Serialization;
 namespace Dt.Cells.Data
 {
     /// <summary>
-    /// Specifies the dimensions of the printed page margins.
+    /// 纸张边距，单位：0.01英寸
     /// </summary>
     public class Margins : IXmlSerializable
     {
-        int bottom;
-        int footer;
-        int header;
-        int left;
-        int right;
-        int top;
+        int _bottom;
+        int _footer;
+        int _header;
+        int _left;
+        int _right;
+        int _top;
 
         /// <summary>
-        /// Creates new margin settings.
+        /// 纸张边距，单位：0.01英寸
         /// </summary>
         public Margins()
         {
-            this.Init();
+            Init();
         }
 
         /// <summary>
-        /// Creates new margin settings, using the specified settings for the top, bottom, left, and right margins.
+        /// 纸张边距，单位：0.01英寸
         /// </summary>
         /// <param name="top">The top margin, in hundredths of an inch. </param>
         /// <param name="bottom">The bottom margin, in hundredths of an inch. </param>
@@ -44,14 +44,14 @@ namespace Dt.Cells.Data
         /// <param name="right">The right margin, in hundredths of an inch. </param>
         public Margins(int top, int bottom, int left, int right)
         {
-            this.top = top;
-            this.bottom = bottom;
-            this.left = left;
-            this.right = right;
+            _top = top;
+            _bottom = bottom;
+            _left = left;
+            _right = right;
         }
 
         /// <summary>
-        /// Creates new margin settings, using the specified settings for the top, bottom, left, and right margins, and for the header and footer offsets.
+        /// 纸张边距，单位：0.01英寸
         /// </summary>
         /// <param name="top">The top margin, in hundredths of an inch. </param>
         /// <param name="bottom">The bottom margin, in hundredths of an inch. </param>
@@ -61,77 +61,102 @@ namespace Dt.Cells.Data
         /// <param name="footer">The footer margin, in hundredths of an inch. </param>
         public Margins(int top, int bottom, int left, int right, int header, int footer) : this(top, bottom, left, right)
         {
-            this.header = header;
-            this.footer = footer;
+            _header = header;
+            _footer = footer;
         }
 
         /// <summary>
-        /// Determines whether these margin settings are equal to another Margin object's settings.
+        /// 页眉高度，单位：0.01英寸，默认0
         /// </summary>
-        /// <param name="other">The other Margin object.</param>
-        /// <returns><c>true</c> if the Margin objects are equal.</returns>
-        public bool Equals(Margins other)
+        public int Header
         {
-            if (object.ReferenceEquals(null, other))
-            {
-                return false;
-            }
-            return (object.ReferenceEquals(this, other) || (((((other.top == this.top) && (other.bottom == this.bottom)) && ((other.left == this.left) && (other.right == this.right))) && (other.header == this.header)) && (other.footer == this.footer)));
+            get { return _header; }
+            set { _header = value; }
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="T:System.Object" /> is equal to the current <see cref="T:System.Object" />.
+        /// 页眉高度，单位：dpi像素数
         /// </summary>
-        /// <param name="obj">The <see cref="T:System.Object" /> to compare with the current <see cref="T:System.Object" />.</param>
-        /// <returns>
-        /// <c>true</c> if the specified <see cref="T:System.Object" /> is equal to the current <see cref="T:System.Object" />; otherwise, <c>false</c>.
-        /// </returns>
-        /// <exception cref="T:System.NullReferenceException">
-        /// The <paramref name="obj" /> parameter is null.
-        /// </exception>
-        public override bool Equals(object obj)
+        public int PxHeader => (int)Math.Round(_header * UnitManager.Dpi / 100);
+        
+        /// <summary>
+        /// 页脚高度，单位：0.01英寸，默认0
+        /// </summary>
+        public int Footer
         {
-            if (object.ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-            if (object.ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-            if (obj.GetType() != typeof(Margins))
-            {
-                return false;
-            }
-            return this.Equals((Margins) obj);
+            get { return _footer; }
+            set { _footer = value; }
         }
 
         /// <summary>
-        /// Serves as a hash function for a particular type.
+        /// 页脚高度，单位：dpi像素数
         /// </summary>
-        /// <returns>
-        /// A hash code for the current <see cref="T:System.Object" />.
-        /// </returns>
-        public override int GetHashCode()
+        public int PxFooter => (int)Math.Round(_footer * UnitManager.Dpi / 100);
+
+        /// <summary>
+        /// 左边距，单位：0.01英寸，默认70
+        /// </summary>
+        public int Left
         {
-            int num = (this.top * 0x18d) ^ this.bottom;
-            num = (num * 0x18d) ^ this.left;
-            num = (num * 0x18d) ^ this.right;
-            num = (num * 0x18d) ^ this.header;
-            return ((num * 0x18d) ^ this.footer);
+            get { return _left; }
+            set { _left = value; }
         }
 
         /// <summary>
-        /// Initializes this instance.
+        /// 左边距，单位：dpi像素数
         /// </summary>
-        protected virtual void Init()
+        public int PxLeft => (int)Math.Round(_left * UnitManager.Dpi / 100);
+
+        /// <summary>
+        /// 右边距，单位：0.01英寸，默认70
+        /// </summary>
+        public int Right
         {
-            this.top = 0x4b;
-            this.bottom = 0x4b;
-            this.left = 70;
-            this.right = 70;
-            this.header = 30;
-            this.footer = 30;
+            get { return _right; }
+            set { _right = value; }
+        }
+
+        /// <summary>
+        /// 右边距，单位：dpi像素数
+        /// </summary>
+        public int PxRight => (int)Math.Round(_right * UnitManager.Dpi / 100);
+
+        /// <summary>
+        /// 上边距，单位：0.01英寸，默认100
+        /// </summary>
+        public int Top
+        {
+            get { return _top; }
+            set { _top = value; }
+        }
+
+        /// <summary>
+        /// 上边距，单位：dpi像素数
+        /// </summary>
+        public int PxTop => (int)Math.Round(_top * UnitManager.Dpi / 100);
+
+        /// <summary>
+        /// 下边距，单位：0.01英寸，默认100
+        /// </summary>
+        public int Bottom
+        {
+            get { return _bottom; }
+            set { _bottom = value; }
+        }
+
+        /// <summary>
+        /// 下边距，单位：dpi像素数
+        /// </summary>
+        public int PxBottom => (int)Math.Round(_bottom * UnitManager.Dpi / 100);
+
+        void Init()
+        {
+            _top = 100;
+            _bottom = 100;
+            _left = 70;
+            _right = 70;
+            _header = 0;
+            _footer = 0;
         }
 
         /// <summary>
@@ -161,32 +186,32 @@ namespace Dt.Cells.Data
                     {
                         if (str == "left")
                         {
-                            this.left = Serializer.ReadAttributeInt("value", 70, reader);
+                            _left = Serializer.ReadAttributeInt("value", 70, reader);
                             return;
                         }
                         if (str == "right")
                         {
-                            this.right = Serializer.ReadAttributeInt("value", 70, reader);
+                            _right = Serializer.ReadAttributeInt("value", 70, reader);
                             return;
                         }
                         if (str == "header")
                         {
-                            this.header = Serializer.ReadAttributeInt("value", 30, reader);
+                            _header = Serializer.ReadAttributeInt("value", 0, reader);
                             return;
                         }
                         if (str == "footer")
                         {
-                            this.footer = Serializer.ReadAttributeInt("value", 30, reader);
+                            _footer = Serializer.ReadAttributeInt("value", 0, reader);
                         }
                         return;
                     }
                 }
                 else
                 {
-                    this.top = Serializer.ReadAttributeInt("value", 0x4b, reader);
+                    _top = Serializer.ReadAttributeInt("value", 100, reader);
                     return;
                 }
-                this.bottom = Serializer.ReadAttributeInt("value", 0x4b, reader);
+                _bottom = Serializer.ReadAttributeInt("value", 100, reader);
             }
         }
 
@@ -215,12 +240,12 @@ namespace Dt.Cells.Data
             {
                 reader.Read();
             }
-            this.Init();
+            Init();
             while (reader.Read())
             {
                 if (reader.NodeType == ((XmlNodeType) ((int) XmlNodeType.Element)))
                 {
-                    this.ReadXmlBase(reader);
+                    ReadXmlBase(reader);
                 }
             }
         }
@@ -235,7 +260,7 @@ namespace Dt.Cells.Data
             {
                 throw new ArgumentNullException("writer");
             }
-            this.WriteXmlBase(writer);
+            WriteXmlBase(writer);
         }
 
         /// <summary>
@@ -248,90 +273,86 @@ namespace Dt.Cells.Data
             {
                 throw new ArgumentNullException("writer");
             }
-            if (this.top != 0x4b)
+            if (_top != 100)
             {
-                Serializer.SerializeObj((int) this.top, "top", false, writer);
+                Serializer.SerializeObj((int) _top, "top", false, writer);
             }
-            if (this.bottom != 0x4b)
+            if (_bottom != 100)
             {
-                Serializer.SerializeObj((int) this.bottom, "bottom", false, writer);
+                Serializer.SerializeObj((int) _bottom, "bottom", false, writer);
             }
-            if (this.left != 70)
+            if (_left != 70)
             {
-                Serializer.SerializeObj((int) this.left, "left", false, writer);
+                Serializer.SerializeObj((int) _left, "left", false, writer);
             }
-            if (this.right != 70)
+            if (_right != 70)
             {
-                Serializer.SerializeObj((int) this.right, "right", false, writer);
+                Serializer.SerializeObj((int) _right, "right", false, writer);
             }
-            if (this.header != 30)
+            if (_header != 0)
             {
-                Serializer.SerializeObj((int) this.header, "header", false, writer);
+                Serializer.SerializeObj((int) _header, "header", false, writer);
             }
-            if (this.footer != 30)
+            if (_footer != 0)
             {
-                Serializer.SerializeObj((int) this.footer, "footer", false, writer);
+                Serializer.SerializeObj((int) _footer, "footer", false, writer);
             }
         }
 
         /// <summary>
-        /// Gets or sets the bottom margin, in hundredths of an inch. 
+        /// Determines whether these margin settings are equal to another Margin object's settings.
         /// </summary>
-        /// <value>The bottom margin.</value>
-        public int Bottom
+        /// <param name="other">The other Margin object.</param>
+        /// <returns><c>true</c> if the Margin objects are equal.</returns>
+        public bool Equals(Margins other)
         {
-            get { return  this.bottom; }
-            set { this.bottom = value; }
+            if (object.ReferenceEquals(null, other))
+            {
+                return false;
+            }
+            return (object.ReferenceEquals(this, other) || (((((other._top == _top) && (other._bottom == _bottom)) && ((other._left == _left) && (other._right == _right))) && (other._header == _header)) && (other._footer == _footer)));
         }
 
         /// <summary>
-        /// Gets or sets the footer offset, in hundredths of an inch. 
+        /// Determines whether the specified <see cref="T:System.Object" /> is equal to the current <see cref="T:System.Object" />.
         /// </summary>
-        /// <value>The footer offset.</value>
-        public int Footer
+        /// <param name="obj">The <see cref="T:System.Object" /> to compare with the current <see cref="T:System.Object" />.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="T:System.Object" /> is equal to the current <see cref="T:System.Object" />; otherwise, <c>false</c>.
+        /// </returns>
+        /// <exception cref="T:System.NullReferenceException">
+        /// The <paramref name="obj" /> parameter is null.
+        /// </exception>
+        public override bool Equals(object obj)
         {
-            get { return  this.footer; }
-            set { this.footer = value; }
+            if (object.ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            if (object.ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if (obj.GetType() != typeof(Margins))
+            {
+                return false;
+            }
+            return Equals((Margins)obj);
         }
 
         /// <summary>
-        /// Gets or sets the header offset, in hundredths of an inch. 
+        /// Serves as a hash function for a particular type.
         /// </summary>
-        /// <value>The header offset.</value>
-        public int Header
+        /// <returns>
+        /// A hash code for the current <see cref="T:System.Object" />.
+        /// </returns>
+        public override int GetHashCode()
         {
-            get { return  this.header; }
-            set { this.header = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the left margin, in hundredths of an inch. 
-        /// </summary>
-        /// <value>The left margin.</value>
-        public int Left
-        {
-            get { return  this.left; }
-            set { this.left = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the right margin, in hundredths of an inch. 
-        /// </summary>
-        /// <value>The right margin.</value>
-        public int Right
-        {
-            get { return  this.right; }
-            set { this.right = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the top margin, in hundredths of an inch. 
-        /// </summary>
-        /// <value>The top margin.</value>
-        public int Top
-        {
-            get { return  this.top; }
-            set { this.top = value; }
+            int num = (_top * 0x18d) ^ _bottom;
+            num = (num * 0x18d) ^ _left;
+            num = (num * 0x18d) ^ _right;
+            num = (num * 0x18d) ^ _header;
+            return ((num * 0x18d) ^ _footer);
         }
     }
 }

@@ -34,24 +34,45 @@ namespace Dt.Cells.UI
         public ExcelPrinter(Excel p_excel, PrintInfo p_printInfo, int p_sheetIndex)
         {
         }
-
-        public PrintInfo Info => null;
-
-        public int SheetIndex => 0;
-
-        public Size PageSize => new Size();
-
-        public Rect PrintArea => new Rect();
-
-        public double HeaderMargin => 0;
-
-        public double FooterMargin => 0;
-
-        public int PageCount => 0;
-
+        
         public void Print(string p_jobName)
         {
         }
+        
+        /// <summary>
+        /// 获得列头或Excel当前表总高
+        /// </summary>
+        /// <param name="p_sheet"></param>
+        /// <param name="p_count"></param>
+        /// <param name="p_area"></param>
+        /// <returns></returns>
+        internal static double GetTotalHeight(Worksheet p_sheet, int p_count, SheetArea p_area)
+        {
+            double height = 0.0;
+            for (int i = 0; i < p_count; i++)
+            {
+                height += p_sheet.GetActualRowHeight(i, p_area);
+            }
+            return height;
+        }
+
+        /// <summary>
+        /// 获得行头或Excel当前表总宽
+        /// </summary>
+        /// <param name="p_sheet"></param>
+        /// <param name="p_count"></param>
+        /// <param name="p_area"></param>
+        /// <returns></returns>
+        internal static double GetTotalWidth(Worksheet p_sheet, int p_count, SheetArea p_area)
+        {
+            double width = 0.0;
+            for (int i = 0; i < p_count; i++)
+            {
+                width += p_sheet.GetActualColumnWidth(i, p_area);
+            }
+            return width;
+        }
+
     }
 #endif
 }

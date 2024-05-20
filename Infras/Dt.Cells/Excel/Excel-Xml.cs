@@ -75,12 +75,17 @@ namespace Dt.Base
             RefreshAll();
         }
 
-        internal void SaveXmlBackground(Stream xmlStream, bool dataOnly = false)
+        internal void SaveXmlBackground(Stream stream, bool dataOnly = false)
         {
+            if (stream == null || !stream.CanWrite)
+                throw new ArgumentException();
+
+            stream.Position = 0;
+            stream.SetLength(0);
             XmlWriter writer = null;
             try
             {
-                writer = XmlWriter.Create(xmlStream);
+                writer = XmlWriter.Create(stream);
                 Serializer.WriteStartObj("Spread", writer);
                 WriteXmlInternal(writer);
                 Serializer.WriteStartObj("View", writer);

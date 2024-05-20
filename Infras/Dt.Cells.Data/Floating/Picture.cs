@@ -197,6 +197,38 @@ namespace Dt.Cells.Data
             return null;
         }
 
+        internal byte[] GetImageData()
+        {
+            if (!string.IsNullOrEmpty(ImageByteArrayBase64String))
+                return Convert.FromBase64String(ImageByteArrayBase64String);
+
+            ImageSource imageSource = GetActualImageSource();
+            if (imageSource != null)
+            {
+                Stream stream = null;
+                RenderTargetBitmap rtb = imageSource as RenderTargetBitmap;
+                if (rtb != null)
+                {
+                    // hdt 新增，打印时保存成xml时用
+                    stream = Utility.GetBmpStream(rtb);
+                }
+                else if (imageSource is BitmapSource)
+                {
+                    ImageFormat imageFormat = Utility.GetImageFormat(_uriSource);
+                    stream = Utility.GetImageStream(imageSource, imageFormat, SerializationMode);
+                }
+
+                if (stream != null)
+                {
+                    byte[] buffer = new byte[stream.Length];
+                    stream.Seek(0L, SeekOrigin.Begin);
+                    stream.Read(buffer, 0, (int)stream.Length);
+                    return buffer;
+                }
+            }
+            return null;
+        }
+
         Size? GetPicturPreferredSize()
         {
             ImageSource imageSource = GetActualImageSource();
@@ -275,7 +307,7 @@ namespace Dt.Cells.Data
                 bmpImage.ImageOpened += (sender, e) => { Size = new Size(bmpImage.PixelWidth, bmpImage.PixelHeight); };
             }
         }
-        
+
         internal override void WriteXmlInternal(XmlWriter writer)
         {
             base.WriteXmlInternal(writer);
@@ -294,7 +326,7 @@ namespace Dt.Cells.Data
                     // hdt 新增，打印时保存成xml时用
                     stream = Utility.GetBmpStream(rtb);
                 }
-                else if(imageSource is BitmapSource)
+                else if (imageSource is BitmapSource)
                 {
                     ImageFormat imageFormat = Utility.GetImageFormat(_uriSource);
                     stream = Utility.GetImageStream(imageSource, imageFormat, SerializationMode);

@@ -10,18 +10,15 @@
 using Dt.Base;
 using Dt.Cells.Data;
 using Microsoft.UI;
-using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Printing;
 using Microsoft.UI.Xaml.Shapes;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Graphics.Printing;
 #endregion
@@ -44,9 +41,12 @@ namespace Dt.Cells.UI
         const string _rangeRegexEnd = "end";
         static Regex _rangeRegex;
 
-        readonly Excel _excel;
-        readonly PrintInfo _info;
-        readonly int _sheetIndex;
+        Canvas _pnl;
+        Excel _excel;
+        Rectangle _maskRight;
+        Rectangle _maskBottom;
+        Rectangle _border;
+        PrintInfo _info;
         readonly nint _hWnd;
         readonly PrintDocument _printDoc;
         PrintPaginator _paginator;
@@ -56,19 +56,12 @@ namespace Dt.Cells.UI
         List<int> _pageIndexs;
         Size _pageSize;
         string _jobName;
-
-        MemoryStream _cachedStream;
         readonly List<Rect> _pages;
-        bool _hasPictures;
-        bool _showDeco;
         #endregion
 
-        public ExcelPrinter(Excel p_excel, PrintInfo p_printInfo, int p_sheetIndex)
+        #region 构造方法
+        public ExcelPrinter()
         {
-            _excel = p_excel;
-            _info = p_printInfo;
-            _sheetIndex = p_sheetIndex;
-
             // 打印请求时
             _hWnd = WinRT.Interop.WindowNative.GetWindowHandle(ExcelKit.MainWin);
             var pr = PrintManagerInterop.GetForWindow(_hWnd);
@@ -83,75 +76,92 @@ namespace Dt.Cells.UI
             _printDoc.AddPages += OnAddPages;
 
             _pages = new List<Rect>();
-            _hasPictures = _excel.Sheets[_sheetIndex].Pictures.Count > 0;
-            _showDeco = _excel.ShowDecoration;
         }
+        #endregion
 
-        public PrintInfo Info
-        {
-            get { return _info; }
-        }
-
-        public int SheetIndex
-        {
-            get { return _sheetIndex; }
-        }
-
-        public Size PageSize
-        {
-            get { return _pageSize; }
-        }
-
-        public Rect PrintArea
-        {
-            get { return _printArea; }
-        }
-
-        public double HeaderMargin
-        {
-            get { return _headerMargin; }
-        }
-
-        public double FooterMargin
-        {
-            get { return _footerMargin; }
-        }
-
-        public int PageCount
-        {
-            get
-            {
-                if (_paginator != null)
-                    return _paginator.PageCount;
-                return 0;
-            }
-        }
-
+        #region 打印
         /// <summary>
         /// 显示打印预览对话框
         /// </summary>
+        /// <param name="p_excel"></param>
+        /// <param name="p_printInfo"></param>
+        /// <param name="p_sheetIndex"></param>
         /// <param name="p_jobName"></param>
-        public async void Print(string p_jobName)
+        public void Print(Excel p_excel, PrintInfo p_printInfo, int p_sheetIndex, string p_jobName)
         {
+            _info = p_printInfo;
             _jobName = p_jobName;
 
-            // 打印遮罩
-            //_excel.PrintMask = await CreatePrintMask(_excel);
-
-            // 打印时通过 _excel.ShowSelection = false 不打印选择框
-            // 去掉excel默认选择
-            //Worksheet sheet = _excel.Sheets[_sheetIndex];
-            //sheet.ClearSelections();
-            //sheet.AddSelection(sheet.RowCount, sheet.ColumnCount, 1, 1);
-
-            try
+            ExcelKit.RunAsync(async () =>
             {
-                await PrintManagerInterop.ShowPrintUIForWindowAsync(_hWnd);
-            }
-            catch
-            { }
+                try
+                {
+                    CopyExcel(p_excel, p_sheetIndex);
+                    await PrintManagerInterop.ShowPrintUIForWindowAsync(_hWnd);
+                }
+                catch
+                { }
+            });
         }
 
+        void CopyExcel(Excel p_excel, int p_sheetIndex)
+        {
+            Worksheet sheet = p_excel.Sheets[p_sheetIndex];
+            int endRow = sheet.GetLastDirtyRow();
+            int endCol = sheet.GetLastDirtyColumn();
+
+            double height = 0.0;
+            if (sheet.ColumnHeader.IsVisible)
+                height += GetTotalHeight(sheet, sheet.ColumnHeader.RowCount, SheetArea.ColumnHeader);
+            height += GetTotalHeight(sheet, endRow + 1, SheetArea.Cells);
+
+            double width = 0.0;
+            if (sheet.RowHeader.IsVisible)
+                width += GetTotalWidth(sheet, sheet.RowHeader.ColumnCount, SheetArea.RowHeader);
+            width += GetTotalWidth(sheet, endCol + 1, SheetArea.Cells);
+
+            // 为提供性能，只复制要打印的Sheet，所以跨Sheet引用时数据无效！！！
+            MemoryStream ms = new MemoryStream();
+            sheet.SaveXml(ms);
+            ms.Seek(0L, SeekOrigin.Begin);
+            Worksheet ws = new Worksheet();
+            Workbook wb = new Workbook();
+            // 先增加到Workbook再加载xml，否则Chart无数据源，因内部根据Worksheet名在Workbook中查找Worksheet！！！
+            wb.Sheets.Add(ws);
+            ws.OpenXml(ms);
+
+            _excel = new Excel(wb);
+            using (_excel.Defer())
+            {
+                _excel.Width = width;
+                _excel.Height = height;
+                _excel.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
+                _excel.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
+                _excel.TabStripVisibility = Visibility.Collapsed;
+                _excel.ShowRowRangeGroup = false;
+                _excel.ShowColumnRangeGroup = false;
+                _excel.ShowSelection = false;
+                _excel.ShowFreezeLine = false;
+
+                // PrintInfo控制行头列头网格是否显示
+                ws.PrintInfo = _info;
+                if (_info.ShowRowHeader == VisibilityType.Hide)
+                    ws.RowHeader.IsVisible = false;
+                if (_info.ShowColumnHeader == VisibilityType.Hide)
+                    ws.ColumnHeader.IsVisible = false;
+                if (!_info.ShowGridLine)
+                    ws.ShowGridLine = false;
+                
+                ws.ZoomFactor = 1f;
+                ViewportInfo info = new ViewportInfo(ws, 1, 1);
+                ws.SetViewportInfo(info);
+            }
+            _pnl = new Canvas { Width = width, Height = height };
+            _pnl.Children.Add(_excel);
+        }
+        #endregion
+
+        #region 打印事件处理
         /// <summary>
         /// 处理打印请求
         /// </summary>
@@ -169,46 +179,11 @@ namespace Dt.Cells.UI
                 if (size != PrintMediaSize.PrinterCustom)
                     printTask.Options.MediaSize = size;
 
-                Memento memento = new Memento();
-                ExcelKit.RunSync(() =>
-                {
-                    // 报表中包含图片,先将Excel导出,再导入。否则，图片打印不出来
-                    if (_hasPictures)
-                    {
-                        _excel.ShowDecoration = false;
-                        _cachedStream = new MemoryStream();
-                        _excel.SaveXmlBackground(_cachedStream);
-                        _cachedStream.Seek(0L, SeekOrigin.Begin);
-                        _excel.OpenXmlOnBackground(_cachedStream);
-                    }
-                    
-                    Init(memento);
-                    StretchContent();
-                    src.SetSource(_printDoc.DocumentSource);
-                });
-
-                // 打印任务完成时释放资源
-                printTask.Completed += (s, args) =>
-                {
-                    ExcelKit.RunSync(() =>
-                    {
-                        Resume(memento);
-                        if (_hasPictures)
-                        {
-                            // 恢复分页线
-                            if (_showDeco)
-                            {
-                                _excel.ShowDecoration = true;
-                                _cachedStream.Seek(0L, SeekOrigin.Begin);
-                                _excel.OpenXmlOnBackground(_cachedStream);
-                            }
-
-                            _cachedStream.Close();
-                            _cachedStream = null;
-                        }
-                    });
-                };
+                ExcelKit.RunSync(() => src.SetSource(_printDoc.DocumentSource));
             });
+
+            // 打印任务完成时释放资源
+            //printTask.Completed += (s, args) => ExcelKit.Msg("打印任务提交成功");
         }
 
         /// <summary>
@@ -221,34 +196,57 @@ namespace Dt.Cells.UI
             var desc = e.PrintTaskOptions.GetPageDescription(0);
 
             // 页面大小
-            Size pageSize = new Size();
+            _pageSize = new Size();
             if (_info.Orientation == PrintPageOrientation.Landscape)
             {
                 // 横向
-                pageSize.Width = _info.PaperSize.Height;
-                pageSize.Height = _info.PaperSize.Width;
+                _pageSize.Width = _info.PaperSize.PxHeight;
+                _pageSize.Height = _info.PaperSize.PxWidth;
             }
             else
             {
                 // 纵向
-                pageSize.Width = _info.PaperSize.Width;
-                pageSize.Height = _info.PaperSize.Height;
+                _pageSize.Width = _info.PaperSize.PxWidth;
+                _pageSize.Height = _info.PaperSize.PxHeight;
             }
-            _pageSize = new Size(pageSize.Width, pageSize.Height);
 
             // 内容区域及边距
-            double x = Math.Max(desc.ImageableRect.Left, _info.Margin.Left);
-            double y = Math.Max(desc.ImageableRect.Top, _info.Margin.Top);
-            double num3 = Math.Max(desc.PageSize.Width - desc.ImageableRect.Right, _info.Margin.Right);
-            double num4 = Math.Max(desc.PageSize.Height - desc.ImageableRect.Bottom, _info.Margin.Bottom);
-            _printArea = new Rect(x, y, (_pageSize.Width - x) - num3, (_pageSize.Height - y) - num4);
-            _headerMargin = Math.Max(desc.ImageableRect.Top, _info.Margin.Header);
-            _footerMargin = Math.Max(desc.ImageableRect.Top, _info.Margin.Footer);
+            double x = Math.Max(desc.ImageableRect.Left, _info.Margin.PxLeft);
+            double y = Math.Max(desc.ImageableRect.Top, _info.Margin.PxTop);
+            double right = Math.Max(desc.PageSize.Width - desc.ImageableRect.Right, _info.Margin.PxRight);
+            double bottom = Math.Max(desc.PageSize.Height - desc.ImageableRect.Bottom, _info.Margin.PxBottom);
+            _printArea = new Rect(x, y, (_pageSize.Width - x) - right, (_pageSize.Height - y) - bottom);
+            _headerMargin = Math.Max(desc.ImageableRect.Top, _info.Margin.PxHeader);
+            _footerMargin = Math.Max(desc.ImageableRect.Top, _info.Margin.PxFooter);
 
+            // 添加边距遮罩
+            SolidColorBrush bg = new SolidColorBrush(Colors.White);
+            var mask = new Rectangle { Width = Math.Max(x - 1, 0), Height = _pageSize.Height, Fill = bg };
+            Canvas.SetZIndex(mask, 10);
+            _pnl.Children.Add(mask);
+            mask = new Rectangle { Width = _pageSize.Width, Height = Math.Max(y - 1, 0), Fill = bg };
+            Canvas.SetZIndex(mask, 11);
+            _pnl.Children.Add(mask);
+            _maskRight = new Rectangle { Height = _pageSize.Height, Fill = bg };
+            Canvas.SetZIndex(_maskRight, 12);
+            _pnl.Children.Add(_maskRight);
+            _maskBottom = new Rectangle { Width = _pageSize.Width, Fill = bg };
+            Canvas.SetZIndex(_maskBottom, 13);
+            _pnl.Children.Add(_maskBottom);
+            
+            // 添加外框
+            if (_info.ShowBorder)
+            {
+                _border = new Rectangle { Stroke = new SolidColorBrush(Colors.Black), StrokeThickness = 1 };
+                Canvas.SetZIndex(_border, 14);
+                Canvas.SetLeft(_border, x);
+                Canvas.SetTop(_border, y);
+                _pnl.Children.Add(_border);
+            }
+            
             // 分页计算
             _paginator = new PrintPaginator(
                 _excel,
-                _sheetIndex,
                 _info,
                 new Size(_printArea.Width, _printArea.Height));
             _paginator.Paginate();
@@ -286,7 +284,6 @@ namespace Dt.Cells.UI
 
             _pages.Clear();
             _excel.RenderTransform = null;
-            _excel.Clip = null;
             if (_pageIndexs.Count > 0)
             {
                 CreatePages();
@@ -304,7 +301,7 @@ namespace Dt.Cells.UI
             try
             {
                 ArrangePage(e.PageNumber - 1);
-                _printDoc.SetPreviewPage(e.PageNumber, _excel);
+                _printDoc.SetPreviewPage(e.PageNumber, _pnl);
             }
             catch { }
         }
@@ -319,11 +316,13 @@ namespace Dt.Cells.UI
             for (int i = 0; i < _pages.Count; i++)
             {
                 ArrangePage(i);
-                _printDoc.AddPage(_excel);
+                _printDoc.AddPage(_pnl);
             }
             _printDoc.AddPagesComplete();
         }
+        #endregion
 
+        #region 内部方法
         /// <summary>
         /// 获取PrintInfo中设置的页面范围
         /// </summary>
@@ -418,139 +417,13 @@ namespace Dt.Cells.UI
         }
 
         /// <summary>
-        /// 生成打印遮罩
-        /// </summary>
-        /// <param name="p_tgt"></param>
-        /// <returns></returns>
-        async Task<Grid> CreatePrintMask(FrameworkElement p_tgt)
-        {
-            Grid grid = new Grid();
-            grid.Background = new SolidColorBrush(Colors.White);
-            grid.HorizontalAlignment = HorizontalAlignment.Left;
-            grid.VerticalAlignment = VerticalAlignment.Top;
-            RenderTargetBitmap bmp = new RenderTargetBitmap();
-            await bmp.RenderAsync(p_tgt);
-            grid.Children.Add(new Image { Source = bmp, Stretch = Stretch.None });
-            grid.Children.Add(new Rectangle { Fill = new SolidColorBrush(Colors.Transparent) });
-            Border border = new Border();
-            border.HorizontalAlignment = HorizontalAlignment.Center;
-            border.VerticalAlignment = VerticalAlignment.Center;
-            border.Background = new SolidColorBrush(Colors.Green);
-            border.BorderThickness = new Thickness();
-            TextBlock tb = new TextBlock();
-            tb.Text = "正在打印...";
-            tb.FontWeight = FontWeights.Bold;
-            tb.Margin = new Thickness(20, 10, 20, 10);
-            tb.Foreground = new SolidColorBrush(Colors.White);
-            border.Child = tb;
-            grid.Children.Add(border);
-            return grid;
-        }
-
-        /// <summary>
-        /// 平铺打印内容
-        /// </summary>
-        void StretchContent()
-        {
-            Worksheet sheet = _excel.Sheets[_sheetIndex];
-            int endRow = sheet.GetLastDirtyRow();
-            int endCol = sheet.GetLastDirtyColumn();
-            double height = 0.0;
-            double width = 0.0;
-            if (sheet.ColumnHeader.IsVisible)
-                height += GetTotalHeight(sheet, sheet.ColumnHeader.RowCount, SheetArea.ColumnHeader);
-            height += GetTotalHeight(sheet, endRow + 1, SheetArea.Cells);
-            if (sheet.RowHeader.IsVisible)
-                width += GetTotalWidth(sheet, sheet.RowHeader.ColumnCount, SheetArea.RowHeader);
-            width += GetTotalWidth(sheet, endCol + 1, SheetArea.Cells);
-
-            var parent = VisualTreeHelper.GetParent(_excel) as FrameworkElement;
-            if (parent != null)
-            {
-                if (parent.ActualHeight < height)
-                    parent.Height = height;
-                if (parent.ActualWidth < width)
-                    parent.Width = width;
-            }
-        }
-
-        /// <summary>
-        /// 打印设置
-        /// </summary>
-        /// <param name="p_memento"></param>
-        void Init(Memento p_memento)
-        {
-            var parent = VisualTreeHelper.GetParent(_excel) as FrameworkElement;
-            if (parent != null)
-            {
-                p_memento.Height = parent.Height;
-                p_memento.Width = parent.Width;
-            }
-            p_memento.VerticalScrollBarVisibility = _excel.VerticalScrollBarVisibility;
-            p_memento.HorizontalScrollBarVisibility = _excel.HorizontalScrollBarVisibility;
-            p_memento.TabStripVisibility = _excel.TabStripVisibility;
-            p_memento.ShowRowRangeGroup = _excel.ShowRowRangeGroup;
-            p_memento.ShowColumnRangeGroup = _excel.ShowColumnRangeGroup;
-            p_memento.ShowFreezeLine = _excel.ShowFreezeLine;
-            p_memento.ShowSelection = _excel.ShowSelection;
-
-            using (_excel.Defer())
-            {
-                _excel.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
-                _excel.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
-                _excel.TabStripVisibility = Visibility.Collapsed;
-                _excel.ShowRowRangeGroup = false;
-                _excel.ShowColumnRangeGroup = false;
-                _excel.ShowSelection = false;
-                _excel.HideDecorationWhenPrinting = true;
-                _excel.ShowFreezeLine = false;
-
-                Worksheet sheet = _excel.Sheets[_sheetIndex];
-                sheet.ZoomFactor = 1f;
-                ViewportInfo info = new ViewportInfo(sheet, 1, 1);
-                sheet.SetViewportInfo(info);
-            }
-            _excel.RefreshAll();
-        }
-
-        /// <summary>
-        /// 恢复打印前设置
-        /// </summary>
-        /// <param name="p_memento"></param>
-        void Resume(Memento p_memento)
-        {
-            var parent = VisualTreeHelper.GetParent(_excel) as FrameworkElement;
-            if (parent != null)
-            {
-                parent.Height = p_memento.Height;
-                parent.Width = p_memento.Width;
-            }
-
-            using (_excel.Defer())
-            {
-                _excel.VerticalScrollBarVisibility = p_memento.VerticalScrollBarVisibility;
-                _excel.HorizontalScrollBarVisibility = p_memento.HorizontalScrollBarVisibility;
-                _excel.TabStripVisibility = p_memento.TabStripVisibility;
-                _excel.ShowRowRangeGroup = p_memento.ShowRowRangeGroup;
-                _excel.ShowColumnRangeGroup = p_memento.ShowColumnRangeGroup;
-                _excel.ShowFreezeLine = p_memento.ShowFreezeLine;
-                _excel.ShowSelection = p_memento.ShowSelection;
-                _excel.HideDecorationWhenPrinting = false;
-
-                _excel.RenderTransform = null;
-                _excel.Clip = null;
-            }
-            _excel.RefreshAll();
-        }
-
-        /// <summary>
         /// 获得列头或Excel当前表总高
         /// </summary>
         /// <param name="p_sheet"></param>
         /// <param name="p_count"></param>
         /// <param name="p_area"></param>
         /// <returns></returns>
-        double GetTotalHeight(Worksheet p_sheet, int p_count, SheetArea p_area)
+        internal static double GetTotalHeight(Worksheet p_sheet, int p_count, SheetArea p_area)
         {
             double height = 0.0;
             for (int i = 0; i < p_count; i++)
@@ -567,7 +440,7 @@ namespace Dt.Cells.UI
         /// <param name="p_count"></param>
         /// <param name="p_area"></param>
         /// <returns></returns>
-        double GetTotalWidth(Worksheet p_sheet, int p_count, SheetArea p_area)
+        internal static double GetTotalWidth(Worksheet p_sheet, int p_count, SheetArea p_area)
         {
             double width = 0.0;
             for (int i = 0; i < p_count; i++)
@@ -582,25 +455,42 @@ namespace Dt.Cells.UI
         /// </summary>
         void CreatePages()
         {
-            Worksheet sheet = _excel.Sheets[_sheetIndex];
-            double rowHeaderWidth = 0.0;
-            double colHeaderHeight = 0.0;
-            if (sheet.RowHeader.IsVisible)
-                rowHeaderWidth = GetTotalWidth(sheet, sheet.RowHeader.ColumnCount, SheetArea.RowHeader);
-            if (sheet.ColumnHeader.IsVisible)
-                colHeaderHeight = GetTotalHeight(sheet, sheet.ColumnHeader.RowCount, SheetArea.ColumnHeader);
-            for (int i = 0; i < _pageIndexs.Count; i++)
+            Worksheet sheet = _excel.Sheets[0];
+            if ((_info.RowStart > -1 && _info.RowEnd > 0)
+                || (_info.ColumnStart > -1 && _info.ColumnEnd > 0))
             {
-                SheetPageInfo info = _paginator.GetPage(i);
-                double chw = sheet.RowHeader.IsVisible ? (info.ColumnPage.XStart == 0 ? rowHeaderWidth : 0) : 0;
-                double rhh = sheet.ColumnHeader.IsVisible ? (info.RowPage.YStart == 0 ? colHeaderHeight : 0) : 0;
-                _pages.Add(new Rect
+                // 区域打印
+                for (int i = 0; i < _pageIndexs.Count; i++)
                 {
-                    X = info.ColumnPage.XStart == 0 ? 0 : info.ColumnPage.XStart + rowHeaderWidth,
-                    Y = info.RowPage.YStart == 0 ? 0 : info.RowPage.YStart + colHeaderHeight,
-                    Width = info.ColumnPage.ContentSize + chw,
-                    Height = info.RowPage.ContentSize + rhh
-                });
+                    SheetPageInfo info = _paginator.GetPage(i);
+                    _pages.Add(new Rect(
+                        _paginator.GetPageLocation(info),
+                        new Size(
+                            Math.Min(info.ColumnPage.ContentSize, _pageSize.Width),
+                            Math.Min(info.RowPage.ContentSize, _pageSize.Height))));
+                }
+            }
+            else
+            {
+                double rowHeaderWidth = 0.0;
+                double colHeaderHeight = 0.0;
+                if (sheet.RowHeader.IsVisible)
+                    rowHeaderWidth = GetTotalWidth(sheet, sheet.RowHeader.ColumnCount, SheetArea.RowHeader);
+                if (sheet.ColumnHeader.IsVisible)
+                    colHeaderHeight = GetTotalHeight(sheet, sheet.ColumnHeader.RowCount, SheetArea.ColumnHeader);
+                for (int i = 0; i < _pageIndexs.Count; i++)
+                {
+                    SheetPageInfo info = _paginator.GetPage(i);
+                    double chw = sheet.RowHeader.IsVisible ? (info.ColumnPage.XStart == 0 ? rowHeaderWidth : 0) : 0;
+                    double rhh = sheet.ColumnHeader.IsVisible ? (info.RowPage.YStart == 0 ? colHeaderHeight : 0) : 0;
+                    _pages.Add(new Rect
+                    {
+                        X = info.ColumnPage.XStart == 0 ? 0 : info.ColumnPage.XStart + rowHeaderWidth,
+                        Y = info.RowPage.YStart == 0 ? 0 : info.RowPage.YStart + colHeaderHeight,
+                        Width = Math.Min(info.ColumnPage.ContentSize + chw, _pageSize.Width),
+                        Height = Math.Min(info.RowPage.ContentSize + rhh, _pageSize.Height)
+                    });
+                }
             }
         }
 
@@ -613,40 +503,25 @@ namespace Dt.Cells.UI
             var page = _pages[p_index];
 
             // 计算平移位置
-            TranslateTransform trans = new TranslateTransform();
-            trans.X = -page.Left + _printArea.Left;
-            trans.Y = -page.Top + _printArea.Top;
-            _excel.RenderTransform = trans;
+            Canvas.SetLeft(_excel, -page.Left + _printArea.Left);
+            Canvas.SetTop(_excel, -page.Top + _printArea.Top);
 
-            _excel.Clip = new RectangleGeometry { Rect = page };
+            var right = _pageSize.Width - _printArea.Left - page.Width;
+            _maskRight.Width = right;
+            Canvas.SetLeft(_maskRight, _printArea.Left + page.Width);
+            
+            _maskBottom.Height = _pageSize.Height - _printArea.Top - page.Height;
+            Canvas.SetTop(_maskBottom, _printArea.Top + page.Height);
+            
+            if (_border != null)
+            {
+                _border.Width = page.Width;
+                _border.Height = page.Height;
+            }
+            // 不在可视树上时Clip方式无效，无裁剪效果！
+            //_excel.Clip = new RectangleGeometry { Rect = page };
         }
-
-        /// <summary>
-        /// 记录Excel打印前状态
-        /// </summary>
-        internal class Memento
-        {
-            public double Height;
-
-            public double Width;
-
-            public ScrollBarVisibility VerticalScrollBarVisibility;
-
-            public ScrollBarVisibility HorizontalScrollBarVisibility;
-
-            public Visibility TabStripVisibility;
-
-            public Thickness BorderThickness = new Thickness(0);
-
-            public bool ShowRowRangeGroup;
-
-            public bool ShowColumnRangeGroup;
-
-            public bool ShowFreezeLine;
-
-            public bool ShowSelection;
-        }
+        #endregion
     }
 #endif
 }
-

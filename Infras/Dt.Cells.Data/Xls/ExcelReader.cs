@@ -22,11 +22,14 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Text;
+using Dt.Xls.Chart;
+using System.IO;
+using System.Collections;
 #endregion
 
 namespace Dt.Cells.Data
 {
-    internal class ExcelReader : IExcelReader, IExcelReader2, IExcelSparklineReader, IExcelTableReader
+    internal class ExcelReader : IExcelReader, IExcelReader2, IExcelSparklineReader, IExcelTableReader, IExcelChartReader
     {
         int _activeSheetIndex;
         Dictionary<int, string> _builtInStyleNames;
@@ -1231,10 +1234,10 @@ namespace Dt.Cells.Data
             {
                 return false;
             }
-            foreach (var type in pattern.ToCharArray().GroupBy<char, char>(delegate(char c)
+            foreach (var type in pattern.ToCharArray().GroupBy<char, char>(delegate (char c)
             {
                 return c;
-            }).Select(delegate(IGrouping<char, char> items)
+            }).Select(delegate (IGrouping<char, char> items)
             {
                 return new { Key = items.Key, Count = items.Count<char>() };
             }))
@@ -2261,10 +2264,10 @@ namespace Dt.Cells.Data
                                 }
                             }
                         }
-                        Sparkline[] sparklines = source.OrderBy<Sparkline, int>(delegate(Sparkline item)
+                        Sparkline[] sparklines = source.OrderBy<Sparkline, int>(delegate (Sparkline item)
                         {
                             return item.Row;
-                        }).OrderBy<Sparkline, int>(delegate(Sparkline item)
+                        }).OrderBy<Sparkline, int>(delegate (Sparkline item)
                         {
                             return item.Column;
                         }).ToArray<Sparkline>();
@@ -3313,6 +3316,153 @@ namespace Dt.Cells.Data
             if ((!this._openFlags.DataOnly() && !this._openFlags.DataFormulaOnly()) && this.IsValidWorkSheet(sheet))
             {
                 this._workbook.Sheets[sheet].ZoomFactor = zoom;
+            }
+        }
+
+        /// <summary>
+        /// hdt 打开excel文件正常显示图表
+        /// </summary>
+        /// <param name="sheetIndex"></param>
+        /// <param name="chart"></param>
+        public void SetExcelChart(int sheetIndex, IExcelChart chart)
+        {
+            if (chart == null || chart.Anchor is not TwoCellAnchor anchor)
+                return;
+
+            ExcelChartType tp;
+            IList series = null;
+            if (chart.BarChart != null)
+            {
+                tp = chart.BarChart.ChartType;
+                series = chart.BarChart.BarSeries;
+            }
+            else if (chart.LineChart != null)
+            {
+                tp = chart.LineChart.ChartType;
+                series = chart.LineChart.LineSeries;
+            }
+            else if (chart.AreaChart != null)
+            {
+                tp = chart.AreaChart.ChartType;
+                series = chart.AreaChart.AreaSeries;
+            }
+            else if (chart.PieChart != null)
+            {
+                tp = chart.PieChart.ChartType;
+                series = chart.PieChart.PieSeries;
+            }
+            else if (chart.BubbleChart != null)
+            {
+                tp = chart.BubbleChart.ChartType;
+                series = chart.BubbleChart.BubbleSeries;
+            }
+            else if (chart.SurfaceChart != null)
+            {
+                tp = chart.SurfaceChart.ChartType;
+                series = chart.SurfaceChart.SurfaceSeries;
+            }
+            else if (chart.OfPieChart != null)
+            {
+                tp = chart.OfPieChart.ChartType;
+                series = chart.OfPieChart.PieSeries;
+            }
+            else if (chart.StockChart != null)
+            {
+                tp = chart.StockChart.ChartType;
+                series = chart.StockChart.LineSeries;
+            }
+            else if (chart.ScatterChart != null)
+            {
+                tp = chart.ScatterChart.ChartType;
+                series = chart.ScatterChart.ScatterSeries;
+            }
+            else if (chart.RadarChart != null)
+            {
+                tp = chart.RadarChart.ChartType;
+                series = chart.RadarChart.RadarSeries;
+            }
+            else if (chart.DoughnutChart != null)
+            {
+                tp = chart.DoughnutChart.ChartType;
+                series = chart.DoughnutChart.PieSeries;
+            }
+            else if (chart.Pie3DChart != null)
+            {
+                tp = chart.Pie3DChart.ChartType;
+                series = chart.Pie3DChart.PieSeries;
+            }
+            else if (chart.Bar3DChart != null)
+            {
+                tp = chart.Bar3DChart.ChartType;
+                series = chart.Bar3DChart.BarSeries;
+            }
+            else if (chart.Area3DChart != null)
+            {
+                tp = chart.Area3DChart.ChartType;
+                series = chart.Area3DChart.AreaSeries;
+            }
+            else if (chart.Surface3DChart != null)
+            {
+                tp = chart.Surface3DChart.ChartType;
+                series = chart.Surface3DChart.SurfaceSeries;
+            }
+            else if (chart.Line3DChart != null)
+            {
+                tp = chart.Line3DChart.ChartType;
+                series = chart.Line3DChart.LineSeries;
+            }
+            else
+            {
+                return;
+            }
+            
+            var sheet = this._workbook.Sheets[sheetIndex];
+            var spreadChart = sheet.AddChart(
+                Guid.NewGuid().ToString().Substring(0, 6),
+                tp.ToSpreadChartType(),
+                null, //"Column!$A$1:$E$5",
+                anchor.FromRow,
+                anchor.FromRowOffset,
+                anchor.FromColumn,
+                anchor.FromColumnOffset,
+                anchor.ToRow,
+                anchor.ToRowOffset,
+                anchor.ToColumn,
+                anchor.ToColumnOffset);
+
+            foreach (var item in series)
+            {
+                if (item is IExcelChartSeriesBase sb)
+                {
+                    var ss = new SpreadDataSeries();
+                    ss.SetSeriesName(sb.SeriesName);
+                    ss.SetSeriesValue(sb.SeriesValue);
+                    spreadChart.DataSeries.Add(ss);
+                }
+            }
+        }
+
+        /// <summary>
+        /// hdt 打开excel文件正常显示图片
+        /// </summary>
+        /// <param name="p_sheetIndex"></param>
+        /// <param name="p_img"></param>
+        public void SetExcelImage(int p_sheetIndex, IExcelImage p_img)
+        {
+            if (p_img != null && p_img.Anchor is TwoCellAnchor anchor)
+            {
+                // 重新命名，避免重复
+                _workbook.Sheets[p_sheetIndex].AddPicture(
+                    Guid.NewGuid().ToString().Substring(0, 6),
+                    new MemoryStream(p_img.SourceArray),
+                    anchor.FromRow,
+                    anchor.FromRowOffset,
+                    anchor.FromColumn,
+                    anchor.FromColumnOffset,
+                    anchor.ToRow,
+                    anchor.ToRowOffset,
+                    anchor.ToColumn,
+                    anchor.ToColumnOffset);
             }
         }
 

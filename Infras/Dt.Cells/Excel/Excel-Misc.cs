@@ -12,20 +12,8 @@ using Dt.CalcEngine.Expressions;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
 using Dt.Cells.UndoRedo;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Xml;
-using Windows.Foundation;
-using Windows.UI;
-using Windows.UI.Core;
+using Microsoft.UI;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -33,9 +21,15 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Shapes;
-using Microsoft.UI;
-using Microsoft.UI.Dispatching;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
 #endregion
 
 namespace Dt.Base
@@ -7845,27 +7839,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// Sets the top row index async, for performance optimization 
-        /// </summary>
-        /// <param name="rowViewportIndex"></param>
-        void AsynSetViewportTopRow(int rowViewportIndex)
-        {
-            if (!_pendinging)
-            {
-                _pendinging = true;
-                // WinUI
-                RunAsync(delegate
-                {
-                    _pendinging = false;
-                    if (GetViewportTopRow(rowViewportIndex) != _scrollTo)
-                    {
-                        SetViewportTopRow(rowViewportIndex, _scrollTo);
-                    }
-                });
-            }
-        }
-
-        /// <summary>
         /// 确保在UI线程异步调用给定方法
         /// </summary>
         /// <param name="p_action"></param>
@@ -8678,64 +8651,99 @@ namespace Dt.Base
             CloseTooltip();
         }
 
+        static int _lastScrollColOrRow;
         void ProcessHorizontalScroll(int columnViewportIndex, ScrollEventArgs e)
         {
-            int viewportLeftColumn = GetViewportLeftColumn(columnViewportIndex);
+            int curCol = GetViewportLeftColumn(columnViewportIndex);
             int scrollValue = (int)Math.Round(e.NewValue);
             scrollValue = MapScrollValueToColumnIndex(ActiveSheet, scrollValue);
-            int num3 = scrollValue;
-            if (e.ScrollEventType == (ScrollEventType)3)
+            int newCol = scrollValue;
+            ScrollBar scrollBar = _horizontalScrollBar[columnViewportIndex];
+
+            //var msg = Guid.NewGuid().ToString("N").Substring(0, 4);
+            //Debug.WriteLine(e.ScrollEventType + "---" + msg);
+
+            // hdt 拖拽滚动栏特殊处理
+            if (e.ScrollEventType == ScrollEventType.ThumbTrack)
+            {
+                scrollBar.Value = e.NewValue;
+                newCol = TryGetNextScrollableColumn(scrollValue);
+                if (curCol != newCol && newCol != -1)
+                {
+                    // hdt 跳过历史未来得及的渲染
+                    _lastScrollColOrRow = newCol;
+                    DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
+                    {
+                        if (_lastScrollColOrRow > - 1)
+                        {
+                            SetViewportLeftColumn(columnViewportIndex, _lastScrollColOrRow, false);
+                            _lastScrollColOrRow = -1;
+                            //Debug.WriteLine("xxx---" + msg);
+                        }
+                        //else
+                        //{
+                        //    Debug.WriteLine("跳过--" + msg);
+                        //}
+                    });
+                }
+                return;
+            }
+
+            if (e.ScrollEventType == ScrollEventType.EndScroll)
+            {
+                //Debug.WriteLine("EndScroll");
+                _lastScrollColOrRow = -1;
+                newCol = TryGetNextScrollableColumn(scrollValue);
+            }
+            else if (e.ScrollEventType == ScrollEventType.LargeIncrement)
             {
                 if (NavigatorHelper.ScrollToNextPageOfColumns(this, columnViewportIndex))
                 {
-                    num3 = GetViewportLeftColumn(columnViewportIndex);
+                    newCol = GetViewportLeftColumn(columnViewportIndex);
                 }
                 else
                 {
-                    num3 = TryGetNextScrollableColumn(scrollValue);
+                    newCol = TryGetNextScrollableColumn(scrollValue);
                 }
             }
-            else if (e.ScrollEventType == (ScrollEventType)1)
-            {
-                num3 = TryGetNextScrollableColumn(scrollValue);
-            }
-            else if (e.ScrollEventType == (ScrollEventType)2)
+            else if (e.ScrollEventType == ScrollEventType.LargeDecrement)
             {
                 if (NavigatorHelper.ScrollToPreviousPageOfColumns(this, columnViewportIndex))
                 {
-                    num3 = GetViewportLeftColumn(columnViewportIndex);
+                    newCol = GetViewportLeftColumn(columnViewportIndex);
                 }
                 else
                 {
-                    num3 = TryGetPreviousScrollableColumn(scrollValue);
+                    newCol = TryGetPreviousScrollableColumn(scrollValue);
                 }
             }
-            else if (e.ScrollEventType == 0)
+            else if (e.ScrollEventType == ScrollEventType.SmallDecrement)
             {
-                num3 = TryGetPreviousScrollableColumn(scrollValue);
+                newCol = TryGetPreviousScrollableColumn(scrollValue);
             }
-            if ((e.ScrollEventType == (ScrollEventType)5) || (e.ScrollEventType == (ScrollEventType)8))
+            else if (e.ScrollEventType == ScrollEventType.SmallIncrement)
             {
-                num3 = TryGetNextScrollableColumn(scrollValue);
+                newCol = TryGetNextScrollableColumn(scrollValue);
             }
-            if ((viewportLeftColumn != num3) && (num3 != -1))
+
+            if (curCol != newCol && newCol != -1)
             {
-                SetViewportLeftColumn(columnViewportIndex, num3);
+                SetViewportLeftColumn(columnViewportIndex, newCol);
             }
-            if (((e.ScrollEventType != (ScrollEventType)5) && (num3 != e.NewValue)) && (_horizontalScrollBar != null))
+
+            if (newCol != e.NewValue && scrollBar.Value != newCol)
             {
                 GetSheetLayout();
-                if (((columnViewportIndex > -1) && (columnViewportIndex < _horizontalScrollBar.Length)) && (_horizontalScrollBar[columnViewportIndex].Value != num3))
-                {
-                    int invisibleColumnsBeforeColumn = GetInvisibleColumnsBeforeColumn(ActiveSheet, num3);
-                    num3 -= invisibleColumnsBeforeColumn;
-                    _horizontalScrollBar[columnViewportIndex].Value = (num3 != -1) ? ((double)num3) : ((double)viewportLeftColumn);
-                    _horizontalScrollBar[columnViewportIndex].InvalidateArrange();
-                }
+                int invisibleColumnsBeforeColumn = GetInvisibleColumnsBeforeColumn(ActiveSheet, newCol);
+                newCol -= invisibleColumnsBeforeColumn;
+                scrollBar.Value = (newCol != -1) ? ((double)newCol) : ((double)curCol);
+                scrollBar.InvalidateArrange();
             }
-            if (_showScrollTip && ((ShowScrollTip == ShowScrollTip.Both) || (ShowScrollTip == ShowScrollTip.Horizontal)))
+
+            if (_showScrollTip
+                && (ShowScrollTip == ShowScrollTip.Both || ShowScrollTip == ShowScrollTip.Horizontal))
             {
-                UpdateScrollToolTip(false, num3 + 1);
+                UpdateScrollToolTip(false, newCol + 1);
             }
         }
 
@@ -8776,64 +8784,86 @@ namespace Dt.Base
 
         void ProcessVerticalScroll(int rowViewportIndex, ScrollEventArgs e)
         {
-            int viewportTopRow = GetViewportTopRow(rowViewportIndex);
+            int curRow = GetViewportTopRow(rowViewportIndex);
             int scrollValue = (int)Math.Round(e.NewValue);
             scrollValue = MapScrollValueToRowIndex(ActiveSheet, scrollValue);
-            int beforeRow = scrollValue;
-            if (e.ScrollEventType == (ScrollEventType)1)
+            int newRow = scrollValue;
+            var scrollBar = _verticalScrollBar[rowViewportIndex];
+
+            if (e.ScrollEventType == ScrollEventType.ThumbTrack)
             {
-                beforeRow = TryGetNextScrollableRow(scrollValue);
+                scrollBar.Value = e.NewValue;
+                newRow = TryGetNextScrollableRow(scrollValue);
+                if (curRow != newRow && newRow != -1)
+                {
+                    // hdt 跳过历史未来得及的渲染
+                    _lastScrollColOrRow = newRow;
+                    DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
+                    {
+                        if (_lastScrollColOrRow > -1)
+                        {
+                            SetViewportTopRow(rowViewportIndex, _lastScrollColOrRow, false);
+                            _lastScrollColOrRow = -1;
+                        }
+                    });
+                }
+                return;
             }
-            else if (e.ScrollEventType == (ScrollEventType)3)
+            
+            if(e.ScrollEventType == ScrollEventType.EndScroll)
+            {
+                _lastScrollColOrRow = -1;
+                newRow = TryGetNextScrollableRow(scrollValue);
+            }
+            else if (e.ScrollEventType == ScrollEventType.SmallIncrement)
+            {
+                newRow = TryGetNextScrollableRow(scrollValue);
+            }
+            else if (e.ScrollEventType == ScrollEventType.LargeIncrement)
             {
                 if (NavigatorHelper.ScrollToNextPageOfRows(this, rowViewportIndex))
                 {
-                    beforeRow = GetViewportTopRow(rowViewportIndex);
+                    newRow = GetViewportTopRow(rowViewportIndex);
                 }
                 else
                 {
-                    beforeRow = TryGetNextScrollableRow(scrollValue);
+                    newRow = TryGetNextScrollableRow(scrollValue);
                 }
             }
-            else if (e.ScrollEventType == (ScrollEventType)2)
+            else if (e.ScrollEventType == ScrollEventType.LargeDecrement)
             {
                 if (NavigatorHelper.ScrollToPreviousPageOfRows(this, rowViewportIndex))
                 {
-                    beforeRow = GetViewportTopRow(rowViewportIndex);
+                    newRow = GetViewportTopRow(rowViewportIndex);
                 }
                 else
                 {
-                    beforeRow = TryGetPreviousScrollableRow(scrollValue);
+                    newRow = TryGetPreviousScrollableRow(scrollValue);
                 }
             }
-            else if (e.ScrollEventType == 0)
+            else if (e.ScrollEventType == ScrollEventType.SmallDecrement)
             {
-                beforeRow = TryGetPreviousScrollableRow(scrollValue);
+                newRow = TryGetPreviousScrollableRow(scrollValue);
             }
-            if ((e.ScrollEventType == (ScrollEventType)5) || (e.ScrollEventType == (ScrollEventType)8))
+            
+            if (curRow != newRow && newRow != -1)
             {
-                beforeRow = TryGetNextScrollableRow(scrollValue);
+                SetViewportTopRow(rowViewportIndex, newRow);
             }
-            if ((viewportTopRow != beforeRow) && (beforeRow != -1))
-            {
-                _scrollTo = beforeRow;
-                AsynSetViewportTopRow(rowViewportIndex);
-            }
-            if (((e.ScrollEventType != (ScrollEventType)5) && (beforeRow != e.NewValue)) && (_verticalScrollBar != null))
+
+            if (newRow != e.NewValue && scrollBar.Value != newRow)
             {
                 GetSheetLayout();
-                if (((rowViewportIndex > -1) && (rowViewportIndex < _verticalScrollBar.Length)) && (beforeRow != _verticalScrollBar[rowViewportIndex].Value))
-                {
-                    int invisibleRowsBeforeRow = GetInvisibleRowsBeforeRow(ActiveSheet, beforeRow);
-                    beforeRow -= invisibleRowsBeforeRow;
-                    _verticalScrollBar[rowViewportIndex].Value = (beforeRow != -1) ? ((double)beforeRow) : ((double)viewportTopRow);
-                    _verticalScrollBar[rowViewportIndex].InvalidateMeasure();
-                    _verticalScrollBar[rowViewportIndex].InvalidateArrange();
-                }
+                int invisibleRowsBeforeRow = GetInvisibleRowsBeforeRow(ActiveSheet, newRow);
+                newRow -= invisibleRowsBeforeRow;
+                scrollBar.Value = (newRow != -1) ? ((double)newRow) : ((double)curRow);
+                scrollBar.InvalidateMeasure();
+                scrollBar.InvalidateArrange();
             }
+
             if (_showScrollTip && ((ShowScrollTip == ShowScrollTip.Both) || (ShowScrollTip == ShowScrollTip.Vertical)))
             {
-                UpdateScrollToolTip(true, _scrollTo + 1);
+                UpdateScrollToolTip(true, newRow + 1);
             }
         }
 
@@ -9061,7 +9091,10 @@ namespace Dt.Base
                     scrollBar.IndicatorMode = ScrollingIndicatorMode.TouchIndicator;
 #endif
                     scrollBar.IsTabStop = false;
-                    scrollBar.TypeSafeSetStyle(HorizontalScrollBarStyle);
+                    ScrollViewer.SetHorizontalScrollBarVisibility(this, ScrollBarVisibility.Visible);
+                    // 无用
+                    //scrollBar.TypeSafeSetStyle(HorizontalScrollBarStyle);
+
                     scrollBar.Scroll += HorizontalScrollbar_Scroll;
                     scrollBar.PointerPressed += OnHorizontalScrollBarPointerPressed;
                     scrollBar.PointerReleased += OnHorizontalScrollBarPointerReleased;

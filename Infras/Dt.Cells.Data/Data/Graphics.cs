@@ -84,7 +84,7 @@ namespace Dt.Cells.Data
         /// <param name="height">The height.</param>
         public void AddImage(Image image, double x, double y, double width, double height)
         {
-            this.pdfGraphics.AddImage(image, (float) width, 0f, 0f, -((float) height), (float) x, (float) (y + height));
+            this.pdfGraphics.AddImage(image, (float)width, 0f, 0f, -((float)height), (float)x, (float)(y + height));
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Dt.Cells.Data
                 }
                 if (effect is ImageBrush)
                 {
-                    ImageBrush imageEF = (ImageBrush) effect;
+                    ImageBrush imageEF = (ImageBrush)effect;
                     Image image = null;
                     ImageSource imageSource = null;
                     imageSource = imageEF.ImageSource;
@@ -126,8 +126,8 @@ namespace Dt.Cells.Data
                         PdfTilingPattern p = new PdfTilingPattern(this.exporter.CurrentDocument);
                         p.Filters.Enqueue(PdfFilter.FlateFilter);
                         PdfGraphics g = p.Graphics;
-                        float width = (float) rect.Width;
-                        float height = (float) rect.Height;
+                        float width = (float)rect.Width;
+                        float height = (float)rect.Height;
                         float imageWidth = image.Width;
                         float imageHeight = image.Height;
                         float offsetX = 0f;
@@ -337,14 +337,14 @@ namespace Dt.Cells.Data
                         point2 = GetPoint(point2.X, point2.Y, this.matrix);
                         if (flag)
                         {
-                            shading = PdfAxialShading.Create((float) point.X, (float) point.Y, (float) point2.X, (float) point2.Y, colors, offsets);
+                            shading = PdfAxialShading.Create((float)point.X, (float)point.Y, (float)point2.X, (float)point2.Y, colors, offsets);
                         }
                         else
                         {
                             double introduced20 = Math.Pow(point.X - point2.X, 2.0);
-                            shading = PdfRadialShading.Create((float) point.X, (float) point.Y, 0f, (float) point.X, (float) point.Y, (float) Math.Sqrt(introduced20 + Math.Pow(point.Y - point2.Y, 2.0)), colors, offsets);
+                            shading = PdfRadialShading.Create((float)point.X, (float)point.Y, 0f, (float)point.X, (float)point.Y, (float)Math.Sqrt(introduced20 + Math.Pow(point.Y - point2.Y, 2.0)), colors, offsets);
                         }
-                        float alpha = ((float) FillEffects.ToColor(brush).A) / 255f;
+                        float alpha = ((float)FillEffects.ToColor(brush).A) / 255f;
                         if (isStroke)
                         {
                             this.SetStrokeAlpha(alpha);
@@ -371,7 +371,7 @@ namespace Dt.Cells.Data
         /// <param name="y">The y</param>
         void ApplyMatrix(double a, double b, double c, double d, double x, double y)
         {
-            this.pdfGraphics.ApplyCTM((float) a, (float) b, (float) c, (float) d, (float) x, (float) y);
+            this.pdfGraphics.ApplyCTM((float)a, (float)b, (float)c, (float)d, (float)x, (float)y);
         }
 
         /// <summary>
@@ -385,7 +385,7 @@ namespace Dt.Cells.Data
         /// <param name="y">The y value.</param>
         public void ApplyTextMatrix(double a, double b, double c, double d, double x, double y)
         {
-            this.pdfGraphics.SetTextMatrix((float) ((float) a), (float) ((float) b), (float) ((float) c), (float) ((float) d), (float) ((float) x), (float) ((float) y));
+            this.pdfGraphics.SetTextMatrix((float)((float)a), (float)((float)b), (float)((float)c), (float)((float)d), (float)((float)x), (float)((float)y));
         }
 
         /// <summary>
@@ -409,7 +409,7 @@ namespace Dt.Cells.Data
         /// <param name="stopAngle">The stop angle.</param>
         public void Arc(double x1, double y1, double x2, double y2, double startAngle, double stopAngle)
         {
-            this.pdfGraphics.Arc((float) x1, (float) y1, (float) x2, (float) y2, (float) startAngle, (float) stopAngle);
+            this.pdfGraphics.Arc((float)x1, (float)y1, (float)x2, (float)y2, (float)startAngle, (float)stopAngle);
         }
 
         /// <summary>
@@ -423,7 +423,7 @@ namespace Dt.Cells.Data
         /// <param name="stopAngle">The stop angle.</param>
         public void Arc2(double x1, double y1, double x2, double y2, double startAngle, double stopAngle)
         {
-            this.pdfGraphics.Arc2((float) x1, (float) y1, (float) x2, (float) y2, (float) startAngle, (float) stopAngle);
+            this.pdfGraphics.Arc2((float)x1, (float)y1, (float)x2, (float)y2, (float)startAngle, (float)stopAngle);
         }
 
         /// <summary>
@@ -547,7 +547,7 @@ namespace Dt.Cells.Data
         /// <param name="y3">The y3 value.</param>
         public void CurveFromTo(double x1, double y1, double x3, double y3)
         {
-            this.pdfGraphics.CurveFromTo((float) x1, (float) y1, (float) x3, (float) y3);
+            this.pdfGraphics.CurveFromTo((float)x1, (float)y1, (float)x3, (float)y3);
         }
 
         /// <summary>
@@ -580,7 +580,7 @@ namespace Dt.Cells.Data
         /// <param name="y3">The y3 value.</param>
         public void CurveTo(double x2, double y2, double x3, double y3)
         {
-            this.pdfGraphics.CurveTo((float) x2, (float) y2, (float) x3, (float) y3);
+            this.pdfGraphics.CurveTo((float)x2, (float)y2, (float)x3, (float)y3);
         }
 
         /// <summary>
@@ -594,7 +594,7 @@ namespace Dt.Cells.Data
         /// <param name="y3">The y3 value.</param>
         public void CurveTo(double x1, double y1, double x2, double y2, double x3, double y3)
         {
-            this.pdfGraphics.CurveTo((float) x1, (float) y1, (float) x2, (float) y2, (float) x3, (float) y3);
+            this.pdfGraphics.CurveTo((float)x1, (float)y1, (float)x2, (float)y2, (float)x3, (float)y3);
         }
 
         /// <summary>
@@ -611,10 +611,10 @@ namespace Dt.Cells.Data
             if (Utilities.HasFillEffect(effect))
             {
                 this.NewPath();
-                this.pdfGraphics.SetLineWidth((float) width);
+                this.pdfGraphics.SetLineWidth((float)width);
                 this.MoveTo(x0, y0);
                 this.LineTo(x1, y1);
-                Windows.Foundation.Rect rect = new Windows.Foundation.Rect(Math.Min(x0, x1), Math.Min(y0, y1), Math.Abs((double) (x0 - x1)), Math.Abs((double) (y0 - y1)));
+                Windows.Foundation.Rect rect = new Windows.Foundation.Rect(Math.Min(x0, x1), Math.Min(y0, y1), Math.Abs((double)(x0 - x1)), Math.Abs((double)(y0 - y1)));
                 if (rect.Width <= 0.0)
                 {
                     rect.Width = width;
@@ -683,103 +683,123 @@ namespace Dt.Cells.Data
         /// <param name="fitRect">if set to <c>true</c> [fit rect].</param>
         public void DrawString(string str, Font font, Brush effect, Windows.Foundation.Rect rect, StringFormat format, bool fitRect)
         {
-            if (((((rect.Width > 0.0) && (rect.Height > 0.0)) && (effect != null)) && !string.IsNullOrEmpty(str)) && Utilities.HasFillEffect(effect))
+            if (rect.Width <= 0.0
+                || rect.Height <= 0.0
+                || effect == null
+                || string.IsNullOrEmpty(str)
+                || !Utilities.HasFillEffect(effect))
             {
-                font = font ?? this.context.DefaultFont;
-                BaseFont font2 = this.exporter.GetFont(font);
-                float fontSize = font.GetFontSize(UnitType.CentileInch, this.Dpi);
-                float width = (font2.GetStringWidth(str) / 1000f) * fontSize;
-                float num3 = (font2.GetFontHeight() / 1000f) * fontSize;
-                float num4 = (font2.GetAscent() / 1000f) * fontSize;
-                float num5 = (font2.GetDescent() / 1000f) * fontSize;
-                MatrixMock mock = new MatrixMock(1.0, 0.0, 0.0, -1.0, rect.X, rect.Y);
-                bool isStroke = false;
-                if (font.Italic)
+                return;
+            }
+            
+            font = font ?? this.context.DefaultFont;
+            BaseFont font2 = this.exporter.GetFont(font);
+            float fontSize = font.GetFontSize(UnitType.CentileInch, this.Dpi);
+            float width = (font2.GetStringWidth(str) / 1000f) * fontSize;
+            float num3 = (font2.GetFontHeight() / 1000f) * fontSize;
+            float num4 = (font2.GetAscent() / 1000f) * fontSize;
+            float num5 = (font2.GetDescent() / 1000f) * fontSize;
+            MatrixMock mock = new MatrixMock(1.0, 0.0, 0.0, -1.0, rect.X, rect.Y);
+            
+            bool isStroke = false;
+            if (font.Italic)
+            {
+                mock.SkewPrepend(15.0, 0.0);
+            }
+            
+            if (font.Bold)
+            {
+                isStroke = true;
+                this.pdfGraphics.SetLineWidth(1f);
+                this.pdfGraphics.SetTextRenderingMode(2);
+            }
+            
+            if (fitRect)
+            {
+                double num6 = rect.Width / ((double)width);
+                double num7 = rect.Height / ((double)num3);
+                double scaleX = (num6 < num7) ? num6 : num7;
+                mock.Scale(scaleX, scaleX);
+                width = (float)rect.Width;
+                num3 = (float)rect.Height;
+                num5 *= (float)scaleX;
+            }
+            
+            if (format != null)
+            {
+                // hdt 左右对齐留边距2
+                if (format.Alignment.Equals(StringAlignment.Far))
                 {
-                    mock.SkewPrepend(15.0, 0.0);
+                    // 右对齐
+                    mock.Translate((rect.Width - width) - 3.0, 0.0);
                 }
-                if (font.Bold)
+                else if (format.Alignment.Equals(StringAlignment.Center))
                 {
-                    isStroke = true;
-                    this.pdfGraphics.SetLineWidth(1f);
-                    this.pdfGraphics.SetTextRenderingMode(2);
+                    // 居中
+                    mock.Translate((rect.Width - width) / 2.0, 0.0);
                 }
-                if (fitRect)
+                else
                 {
-                    double num6 = rect.Width / ((double) width);
-                    double num7 = rect.Height / ((double) num3);
-                    double scaleX = (num6 < num7) ? num6 : num7;
-                    mock.Scale(scaleX, scaleX);
-                    width = (float) rect.Width;
-                    num3 = (float) rect.Height;
-                    num5 *= (float) scaleX;
+                    // 左对齐
+                    mock.Translate(2.0, 0.0);
                 }
-                if (format != null)
+            }
+            
+            if (!fitRect && ((width >= rect.Width) || (num3 >= rect.Height)))
+            {
+                if ((format != null) && format.LineAlignment.Equals(StringAlignment.Center))
                 {
-                    if (format.Alignment.Equals(StringAlignment.Far))
-                    {
-                        mock.Translate((rect.Width - width) - 1.0, 0.0);
-                    }
-                    else if (format.Alignment.Equals(StringAlignment.Center))
-                    {
-                        mock.Translate((rect.Width - width) / 2.0, 0.0);
-                    }
+                    mock.Translate(0.0, -(rect.Height - num3) / 2.0);
                 }
-                if (!fitRect && ((width >= rect.Width) || (num3 >= rect.Height)))
+                this.SaveState();
+            }
+            
+            double offsetY = (num3 - (((double)(num3 - (num4 - num5))) / 2.0)) + num5;
+            mock.Translate(0.0, offsetY);
+            this.ApplyFillEffect(effect, new Windows.Foundation.Rect(mock.OffsetX, mock.OffsetY, (double)width, (double)num3), isStroke, true);
+            this.BeginText();
+            this.ApplyTextMatrix(mock.M11, mock.M12, mock.M21, mock.M22, mock.OffsetX, mock.OffsetY);
+            List<DrawStringInfo> list = this.SplitString(str, font2);
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (!string.IsNullOrEmpty(list[i].str) && (list[i].font != null))
                 {
-                    if ((format != null) && format.LineAlignment.Equals(StringAlignment.Center))
-                    {
-                        mock.Translate(0.0, -(rect.Height - num3) / 2.0);
-                    }
-                    this.SaveState();
+                    this.pdfGraphics.SetFontAndSize(list[i].font, fontSize);
+                    this.pdfGraphics.ShowText(list[i].str);
                 }
-                double offsetY = (num3 - (((double) (num3 - (num4 - num5))) / 2.0)) + num5;
-                mock.Translate(0.0, offsetY);
-                this.ApplyFillEffect(effect, new Windows.Foundation.Rect(mock.OffsetX, mock.OffsetY, (double) width, (double) num3), isStroke, true);
-                this.BeginText();
-                this.ApplyTextMatrix(mock.M11, mock.M12, mock.M21, mock.M22, mock.OffsetX, mock.OffsetY);
-                List<DrawStringInfo> list = this.SplitString(str, font2);
-                for (int i = 0; i < list.Count; i++)
+            }
+            this.EndText();
+            double height = ((double)num3) / 10.0;
+            double y = mock.OffsetY + (num3 / 5f);
+            double num13 = mock.OffsetY - (num3 / 3f);
+            if (font2 is OpenTypeFont)
+            {
+                OpenTypeFont font3 = font2 as OpenTypeFont;
+                if ((font3.OS_2Table != null) && (font3.FontHeaderTable != null))
                 {
-                    if (!string.IsNullOrEmpty(list[i].str) && (list[i].font != null))
-                    {
-                        this.pdfGraphics.SetFontAndSize(list[i].font, fontSize);
-                        this.pdfGraphics.ShowText(list[i].str);
-                    }
+                    height = (font3.OS_2Table.YStrikeoutSize * fontSize) / ((float)font3.FontHeaderTable.UnitsPerEm);
+                    y = mock.OffsetY - ((font3.GetDescent() * fontSize) / (font3.GetFontHeight() * 2f));
+                    num13 = mock.OffsetY - ((font3.OS_2Table.YStrikeoutPosition * fontSize) / ((float)font3.FontHeaderTable.UnitsPerEm));
                 }
-                this.EndText();
-                double height = ((double) num3) / 10.0;
-                double y = mock.OffsetY + (num3 / 5f);
-                double num13 = mock.OffsetY - (num3 / 3f);
-                if (font2 is OpenTypeFont)
-                {
-                    OpenTypeFont font3 = font2 as OpenTypeFont;
-                    if ((font3.OS_2Table != null) && (font3.FontHeaderTable != null))
-                    {
-                        height = (font3.OS_2Table.YStrikeoutSize * fontSize) / ((float) font3.FontHeaderTable.UnitsPerEm);
-                        y = mock.OffsetY - ((font3.GetDescent() * fontSize) / (font3.GetFontHeight() * 2f));
-                        num13 = mock.OffsetY - ((font3.OS_2Table.YStrikeoutPosition * fontSize) / ((float) font3.FontHeaderTable.UnitsPerEm));
-                    }
-                }
-                bool flag2 = false;
-                if (font.Underline == UnderlineType.Single)
-                {
-                    this.Rectangle(mock.OffsetX, y, (double) width, height);
-                    flag2 = true;
-                }
-                if (font.Strikeout)
-                {
-                    this.Rectangle(mock.OffsetX, num13, (double) width, height);
-                    flag2 = true;
-                }
-                if (flag2)
-                {
-                    this.Fill();
-                }
-                if (!fitRect && ((width >= rect.Width) || (num3 >= rect.Height)))
-                {
-                    this.RestoreState();
-                }
+            }
+            bool flag2 = false;
+            if (font.Underline == UnderlineType.Single)
+            {
+                this.Rectangle(mock.OffsetX, y, (double)width, height);
+                flag2 = true;
+            }
+            if (font.Strikeout)
+            {
+                this.Rectangle(mock.OffsetX, num13, (double)width, height);
+                flag2 = true;
+            }
+            if (flag2)
+            {
+                this.Fill();
+            }
+            if (!fitRect && ((width >= rect.Width) || (num3 >= rect.Height)))
+            {
+                this.RestoreState();
             }
         }
 
@@ -954,13 +974,13 @@ namespace Dt.Cells.Data
                 {
                     rect.X += alignment.TextIndent;
                 }
-                rect.Width = Math.Max((double) 0.0, (double) (rect.Width - alignment.TextIndent));
+                rect.Width = Math.Max((double)0.0, (double)(rect.Width - alignment.TextIndent));
             }
             font = font ?? this.context.DefaultFont;
             bool allowWrap = format.TextWrapping == TextWrapping.Wrap;
             BaseFont font2 = this.exporter.GetFont(font);
             float fontSize = font.GetFontSize(UnitType.CentileInch, this.Dpi);
-            List<string> list = Utilities.GetLines(text, font, allowWrap, rect.Width - UnitManager.ConvertTo(6.0, UnitType.Pixel, UnitType.CentileInch, (float) this.Dpi), this.context);
+            List<string> list = Utilities.GetLines(text, font, allowWrap, rect.Width - UnitManager.ConvertTo(6.0, UnitType.Pixel, UnitType.CentileInch, (float)this.Dpi), this.context);
             float num3 = (font2.GetFontHeight() / 1000f) * fontSize;
             switch (format.LineAlignment)
             {
@@ -974,7 +994,7 @@ namespace Dt.Cells.Data
             }
             for (int i = 0; i < list.Count; i++)
             {
-                Windows.Foundation.Rect rect2 = new Windows.Foundation.Rect(rect.X, rect.Y + (i * num3), rect.Width, (double) num3);
+                Windows.Foundation.Rect rect2 = new Windows.Foundation.Rect(rect.X, rect.Y + (i * num3), rect.Width, (double)num3);
                 if (IsIntersect(rect, rect2))
                 {
                     this.DrawString(list[i], font, effect, rect2, format, fitRect);
@@ -1228,7 +1248,7 @@ namespace Dt.Cells.Data
         /// <param name="y">The y value.</param>
         public void LineTo(double x, double y)
         {
-            this.pdfGraphics.LineTo((float) x, (float) y);
+            this.pdfGraphics.LineTo((float)x, (float)y);
         }
 
         /// <summary>
@@ -1247,7 +1267,7 @@ namespace Dt.Cells.Data
         /// <param name="y">The y value.</param>
         public void MoveTo(double x, double y)
         {
-            this.pdfGraphics.MoveTo((float) x, (float) y);
+            this.pdfGraphics.MoveTo((float)x, (float)y);
         }
 
         /// <summary>
@@ -1276,7 +1296,7 @@ namespace Dt.Cells.Data
         /// <param name="height">The height.</param>
         public void Rectangle(double x, double y, double width, double height)
         {
-            this.pdfGraphics.Rectangle((float) x, (float) y, (float) width, (float) height);
+            this.pdfGraphics.Rectangle((float)x, (float)y, (float)width, (float)height);
         }
 
         /// <summary>
@@ -1327,7 +1347,8 @@ namespace Dt.Cells.Data
         {
             if (alpha != this.fillAlpha)
             {
-                PdfExtGraphicState egs = new PdfExtGraphicState {
+                PdfExtGraphicState egs = new PdfExtGraphicState
+                {
                     FillAlpha = alpha
                 };
                 this.pdfGraphics.SetExtGState(egs);
@@ -1365,7 +1386,7 @@ namespace Dt.Cells.Data
             if (lineWidth > 0.0)
             {
                 float[] array = null;
-                float num = (float) lineWidth;
+                float num = (float)lineWidth;
                 switch (dashStyle)
                 {
                     case DashStyle.Solid:
@@ -1469,7 +1490,7 @@ namespace Dt.Cells.Data
         /// <param name="w">The width.</param>
         public void SetLineWidth(double w)
         {
-            this.pdfGraphics.SetLineWidth((float) w);
+            this.pdfGraphics.SetLineWidth((float)w);
         }
 
         /// <summary>
@@ -1478,12 +1499,12 @@ namespace Dt.Cells.Data
         /// <param name="color">The color.</param>
         public void SetRGBFill(Windows.UI.Color color)
         {
-            this.SetFillAlpha(((float) color.A) / 255f);
+            this.SetFillAlpha(((float)color.A) / 255f);
             if (this.GrayMode)
             {
                 color = Utilities.GetGrayColor(color);
             }
-            this.pdfGraphics.SetRGBColorFillF(((float) color.R) / 255f, ((float) color.G) / 255f, ((float) color.B) / 255f);
+            this.pdfGraphics.SetRGBColorFillF(((float)color.R) / 255f, ((float)color.G) / 255f, ((float)color.B) / 255f);
         }
 
         /// <summary>
@@ -1493,7 +1514,7 @@ namespace Dt.Cells.Data
         /// <param name="g">The graphics object.</param>
         public static void SetRGBFill(Windows.UI.Color color, PdfGraphics g)
         {
-            g.SetRGBColorFillF(((float) color.R) / 255f, ((float) color.G) / 255f, ((float) color.B) / 255f);
+            g.SetRGBColorFillF(((float)color.R) / 255f, ((float)color.G) / 255f, ((float)color.B) / 255f);
         }
 
         /// <summary>
@@ -1502,12 +1523,12 @@ namespace Dt.Cells.Data
         /// <param name="color">The color.</param>
         public void SetRGBStroke(Windows.UI.Color color)
         {
-            this.SetStrokeAlpha(((float) color.A) / 255f);
+            this.SetStrokeAlpha(((float)color.A) / 255f);
             if (this.GrayMode)
             {
                 color = Utilities.GetGrayColor(color);
             }
-            this.pdfGraphics.SetRGBColorStrokeF(((float) color.R) / 255f, ((float) color.G) / 255f, ((float) color.B) / 255f);
+            this.pdfGraphics.SetRGBColorStrokeF(((float)color.R) / 255f, ((float)color.G) / 255f, ((float)color.B) / 255f);
         }
 
         /// <summary>
@@ -1517,14 +1538,15 @@ namespace Dt.Cells.Data
         /// <param name="g">The graphics object.</param>
         public static void SetRGBStroke(Windows.UI.Color color, PdfGraphics g)
         {
-            g.SetRGBColorStrokeF(((float) color.R) / 255f, ((float) color.G) / 255f, ((float) color.B) / 255f);
+            g.SetRGBColorStrokeF(((float)color.R) / 255f, ((float)color.G) / 255f, ((float)color.B) / 255f);
         }
 
         public void SetStrokeAlpha(float alpha)
         {
             if (alpha != this.strokeAlpha)
             {
-                PdfExtGraphicState egs = new PdfExtGraphicState {
+                PdfExtGraphicState egs = new PdfExtGraphicState
+                {
                     StrokAlpha = alpha
                 };
                 this.pdfGraphics.SetExtGState(egs);
@@ -1563,7 +1585,8 @@ namespace Dt.Cells.Data
                 BaseFont font3 = this.FindSupportFont(str2, font);
                 if (!font3.Equals(font2) && !string.IsNullOrEmpty(builder.ToString()))
                 {
-                    DrawStringInfo info = new DrawStringInfo {
+                    DrawStringInfo info = new DrawStringInfo
+                    {
                         str = builder.ToString(),
                         font = font2
                     };
@@ -1575,7 +1598,8 @@ namespace Dt.Cells.Data
             }
             if (builder != null)
             {
-                DrawStringInfo info2 = new DrawStringInfo {
+                DrawStringInfo info2 = new DrawStringInfo
+                {
                     str = builder.ToString(),
                     font = font2
                 };
@@ -1673,7 +1697,7 @@ namespace Dt.Cells.Data
 
         public int Dpi
         {
-            get { return  this.exporter.Dpi; }
+            get { return this.exporter.Dpi; }
         }
 
         /// <summary>
@@ -1682,7 +1706,7 @@ namespace Dt.Cells.Data
         /// <value><c>true</c> if [gray mode]; otherwise, <c>false</c>.</value>
         public bool GrayMode
         {
-            get { return  this.grayMode; }
+            get { return this.grayMode; }
             set { this.grayMode = value; }
         }
     }

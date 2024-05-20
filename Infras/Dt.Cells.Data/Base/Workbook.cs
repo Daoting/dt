@@ -1343,6 +1343,11 @@ namespace Dt.Cells.Data
 
         public void SaveExcel(Stream stream, ExcelFileFormat workbookType, ExcelSaveFlags saveFlags)
         {
+            if (stream == null || !stream.CanWrite)
+                throw new ArgumentException();
+
+            stream.Position = 0;
+            stream.SetLength(0);
             ExcelWriter writer = new ExcelWriter(this, saveFlags);
             this.ExcelOperator = new ExcelOperator(null, writer, null);
             this.ExcelOperator.Save(stream, (ExcelFileType)workbookType, null);
@@ -1364,6 +1369,8 @@ namespace Dt.Cells.Data
             if (stream == null || !stream.CanWrite)
                 throw new ArgumentException();
 
+            stream.Position = 0;
+            stream.SetLength(0);
             if (this.Sheets.Count > 0)
             {
                 List<int> list = new List<int>();

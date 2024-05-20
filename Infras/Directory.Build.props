@@ -1,6 +1,7 @@
 ﻿<Project>
     <PropertyGroup>
-        <TargetFrameworks>net8.0-windows10.0.19041;net8.0;net8.0-android;net8.0-ios</TargetFrameworks>
+        <TargetFrameworks Condition="$(SolutionFileName.Contains('-win'))">net8.0-windows10.0.19041</TargetFrameworks>
+        <TargetFrameworks Condition="$(TargetFrameworks) == ''">net8.0-windows10.0.19041;net8.0-android;net8.0-ios;net8.0</TargetFrameworks>
         <NoWarn>$(NoWarn);1591;NU1701;Uno0001;0252;NETSDK1206</NoWarn>
         <!-- 始终禁止xbf嵌入到pri文件，默认debug时不嵌入，release时嵌入，嵌入时包升级会造成引用项目都必须重新编译 -->
         <DisableEmbeddedXbf>true</DisableEmbeddedXbf>
@@ -11,6 +12,7 @@
         <IsAndroid>false</IsAndroid>
         <IsIOS>false</IsIOS>
         <IsNet>false</IsNet>
+        <IsToolkit>false</IsToolkit>
     </PropertyGroup>
     
     <Choose>
@@ -50,6 +52,11 @@
                 <ProjectCapability Include="MauiCore" />
             </ItemGroup>
         </When>
+        <When Condition="$(TargetFramework.Contains('netstandard2.0'))">
+            <PropertyGroup>
+                <IsToolkit>true</IsToolkit>
+            </PropertyGroup>
+        </When>
         <Otherwise>
             <PropertyGroup>
                 <IsNet>true</IsNet>
@@ -61,12 +68,15 @@
     <Choose>
         <When Condition="$(IsWin)">
             <ItemGroup>
-                <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231219000" PrivateAssets="none" />
+                <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240428000" PrivateAssets="none" />
             </ItemGroup>
+        </When>
+        <When Condition="$(IsToolkit)">
+            <!-- 不引用任何 -->
         </When>
         <Otherwise>
             <ItemGroup>
-                <PackageReference Include="Uno.WinUI" Version="5.1.31" PrivateAssets="none" />
+                <PackageReference Include="Uno.WinUI" Version="5.2.119" PrivateAssets="none" />
             </ItemGroup>
 
             <!-- WindowsAppSDK已内置，uno需要，否则xaml文件无法编译 -->

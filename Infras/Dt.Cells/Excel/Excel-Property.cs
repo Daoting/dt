@@ -55,30 +55,6 @@ namespace Dt.Base
 
         internal bool IsTouchingResizingFloatingObjects { get; set; }
 
-        /// <summary>
-        /// 设置打印时隐藏分页线
-        /// </summary>
-        internal bool HideDecorationWhenPrinting
-        {
-            set
-            {
-                if (_cellsPanels != null)
-                {
-                    int rowBound = _cellsPanels.GetUpperBound(0);
-                    int colBound = _cellsPanels.GetUpperBound(1);
-                    for (int i = _cellsPanels.GetLowerBound(0); i <= rowBound; i++)
-                    {
-                        for (int j = _cellsPanels.GetLowerBound(1); j <= colBound; j++)
-                        {
-                            CellsPanel viewport = _cellsPanels[i, j];
-                            if (viewport != null)
-                                viewport.HideDecorationWhenPrinting = value;
-                        }
-                    }
-                }
-            }
-        }
-
         internal Canvas TrackersPanel
         {
             get { return _trackersPanel; }
@@ -523,7 +499,6 @@ namespace Dt.Base
         double[] _cachedViewportSplitBarY;
         TransformGroup[,] _cachedViewportTransform;
         double[] _cachedViewportWidths;
-        Size _paperSize;
         CellRange _decorationRange;
         Rect? _autoFillIndicatorRect;
         GripperLocationsStruct _gripperLocations;
@@ -627,8 +602,6 @@ namespace Dt.Base
 
         HashSet<int> _invisibleColumns;
         HashSet<int> _invisibleRows;
-        bool _pendinging;
-        int _scrollTo;
         bool _showScrollTip;
 
         bool IsTouchColumnSplitting;
