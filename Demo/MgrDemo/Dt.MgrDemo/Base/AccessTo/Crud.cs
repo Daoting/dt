@@ -19,7 +19,7 @@ namespace Dt.MgrDemo
         public static Task<bool> Insert()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.Insert"
             );
         }
@@ -27,7 +27,7 @@ namespace Dt.MgrDemo
         public static Task<bool> Update()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.Update"
             );
         }
@@ -35,7 +35,7 @@ namespace Dt.MgrDemo
         public static Task<bool> Delete()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.Delete"
             );
         }
@@ -43,7 +43,7 @@ namespace Dt.MgrDemo
         public static Task<bool> BatchInsert()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.BatchInsert"
             );
         }
@@ -51,7 +51,7 @@ namespace Dt.MgrDemo
         public static Task<bool> Batch()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.Batch"
             );
         }
@@ -59,7 +59,7 @@ namespace Dt.MgrDemo
         public static Task<bool> SaveTable()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.SaveTable"
             );
         }
@@ -67,7 +67,7 @@ namespace Dt.MgrDemo
         public static Task<bool> BatchDel()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.BatchDel"
             );
         }
@@ -75,7 +75,7 @@ namespace Dt.MgrDemo
         public static Task<bool> DirectDel()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.DirectDel"
             );
         }
@@ -83,7 +83,7 @@ namespace Dt.MgrDemo
         public static Task<bool> DelByID()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.DelByID"
             );
         }
@@ -91,7 +91,7 @@ namespace Dt.MgrDemo
         public static Task<bool> InsertEvent()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.InsertEvent"
             );
         }
@@ -99,7 +99,7 @@ namespace Dt.MgrDemo
         public static Task<bool> UpdateEvent()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.UpdateEvent"
             );
         }
@@ -107,7 +107,7 @@ namespace Dt.MgrDemo
         public static Task<bool> DelEvent()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.DelEvent"
             );
         }
@@ -115,7 +115,7 @@ namespace Dt.MgrDemo
         public static Task<bool> InsertVir()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.InsertVir"
             );
         }
@@ -123,7 +123,7 @@ namespace Dt.MgrDemo
         public static Task<bool> UpdateVir()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.UpdateVir"
             );
         }
@@ -131,7 +131,7 @@ namespace Dt.MgrDemo
         public static Task<bool> DelVir()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.DelVir"
             );
         }
@@ -139,7 +139,7 @@ namespace Dt.MgrDemo
         public static Task<bool> SaveVir()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.SaveVir"
             );
         }
@@ -147,7 +147,7 @@ namespace Dt.MgrDemo
         public static Task<bool> DirectDelVir()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.DirectDelVir"
             );
         }
@@ -155,7 +155,7 @@ namespace Dt.MgrDemo
         public static Task<bool> DelByIDVir()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.DelByIDVir"
             );
         }
@@ -163,7 +163,7 @@ namespace Dt.MgrDemo
         public static Task<bool> InsertWithChild()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.InsertWithChild"
             );
         }
@@ -171,7 +171,7 @@ namespace Dt.MgrDemo
         public static Task<bool> UpdateWithChild()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.UpdateWithChild"
             );
         }
@@ -179,7 +179,7 @@ namespace Dt.MgrDemo
         public static Task<string> QueryWithChild()
         {
             return Kit.Rpc<string>(
-                "demo",
+                "lob",
                 "CrudDs.QueryWithChild"
             );
         }
@@ -187,7 +187,7 @@ namespace Dt.MgrDemo
         public static Task<bool> InsertCache()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.InsertCache"
             );
         }
@@ -195,7 +195,7 @@ namespace Dt.MgrDemo
         public static Task<bool> UpdateCache()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.UpdateCache"
             );
         }
@@ -203,7 +203,7 @@ namespace Dt.MgrDemo
         public static Task<bool> DelCache()
         {
             return Kit.Rpc<bool>(
-                "demo",
+                "lob",
                 "CrudDs.DelCache"
             );
         }
@@ -211,7 +211,7 @@ namespace Dt.MgrDemo
         public static Task<string> CacheByID()
         {
             return Kit.Rpc<string>(
-                "demo",
+                "lob",
                 "CrudDs.CacheByID"
             );
         }
@@ -219,7 +219,7 @@ namespace Dt.MgrDemo
         public static Task<string> CacheByKey()
         {
             return Kit.Rpc<string>(
-                "demo",
+                "lob",
                 "CrudDs.CacheByKey"
             );
         }

@@ -47,7 +47,7 @@ namespace Dt.UIDemo
 
         async void OnSnapshot(object sender, RoutedEventArgs e)
         {
-            var file = await _chart.SaveSnapshot();
+            var file = await _chart.SaveSnapFile();
             if (file != null)
                 Kit.Msg(string.Format("截图【{0}】保存成功！", file.Name));
         }

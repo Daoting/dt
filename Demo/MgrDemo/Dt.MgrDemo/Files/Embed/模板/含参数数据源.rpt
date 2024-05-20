@@ -1,0 +1,47 @@
+<Rpt cols="46,128,125,154,160">
+  <Params>
+    <Xaml><![CDATA[<a:CList ID="菜单组" SrcID="id" TgtID="parent_id">
+    <a:CList.Ex>
+Sql
+#select id,name from cm_menu where is_group=true and parent_id is null
+    </a:CList.Ex>
+</a:CList>
+]]></Xaml>
+    <List>
+      <Param name="菜单组" />
+      <Param name="parent_id" type="long" />
+    </List>
+  </Params>
+  <Data>
+    <Tbl name="data1" cols="id,parent_id,name,is_group,view_name,params,icon,note,dispidx,is_locked,ctime,mtime"><![CDATA[SELECT
+    *
+FROM
+    cm_menu
+WHERE
+    parent_id = @parent_id]]></Tbl>
+  </Data>
+  <Page />
+  <Header />
+  <Body rows="30,30">
+    <Table col="1" rowspan="2" colspan="4" tbl="data1">
+      <TColHeader>
+        <TRow>
+          <Text col="1" val="名称" background="#FFE0E0E0" horalign="Center" />
+          <Text col="2" val="视图名称" background="#FFE0E0E0" horalign="Center" />
+          <Text col="3" val="功能说明" background="#FFE0E0E0" horalign="Center" />
+          <Text col="4" val="创建时间" background="#FFE0E0E0" horalign="Center" />
+        </TRow>
+      </TColHeader>
+      <TBody>
+        <TRow>
+          <Text row="1" col="1" val=":Val(data1,name)" />
+          <Text row="1" col="2" val=":Val(data1,view_name)" />
+          <Text row="1" col="3" val=":Val(data1,note)" />
+          <Text row="1" col="4" val=":Val(data1,ctime)" />
+        </TRow>
+      </TBody>
+    </Table>
+  </Body>
+  <Footer />
+  <View />
+</Rpt>

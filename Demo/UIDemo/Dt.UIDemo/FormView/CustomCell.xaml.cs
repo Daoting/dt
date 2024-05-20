@@ -39,10 +39,28 @@ namespace Dt.UIDemo
 
         void OnToggleBar(object sender, RoutedEventArgs e)
         {
-            if (_bar.Content is Button)
-                _bar.Title = $"标题{++_cnt}";
+            int tp = _cnt % 4;
+            if (tp == 0)
+            {
+                _bar.Title = null;
+                _bar.Content = null;
+            }
+            else if (tp == 1)
+            {
+                _bar.Title = $"标题{_cnt}";
+                _bar.Content = null;
+            }
+            else if (tp == 2)
+            {
+                _bar.Title = null;
+                _bar.Content = new Button { Content = $"按钮{_cnt}" };
+            }
             else
-                _bar.Content = new Button { Content = $"按钮{++_cnt}" };
+            {
+                _bar.Title = $"标题{_cnt}";
+                _bar.Content = new Button { Content = $"按钮{_cnt}" };
+            }
+            _cnt++;
         }
     }
 }

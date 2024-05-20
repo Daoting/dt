@@ -41,12 +41,10 @@ namespace Dt.UIDemo
                 { "listint" },
                 { "listobj", typeof(Person) },
                 { "listrow" },
-                { "code" },
+                { "listrowid" },
                 { "sex", typeof(Gender) },
                 { "idstr", typeof(int) },
                 { "idstrdsp" },
-                { "degree" },
-                { "allusers" },
                 { "userroles" },
                 { "filter" },
                 { "order" },
@@ -64,8 +62,6 @@ namespace Dt.UIDemo
                 sex = Gender.女,
                 idstr = 0,
                 idstrdsp = "选项一",
-                code = "汉族",
-                degree = "大学",
             });
         }
         

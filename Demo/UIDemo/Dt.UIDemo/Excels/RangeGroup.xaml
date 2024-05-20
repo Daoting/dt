@@ -2,7 +2,8 @@
     x:Class="Dt.UIDemo.RangeGroup"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base">
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.UIDemo">
 
     <a:Main>
         <a:Tabs>
@@ -27,14 +28,9 @@
                     <CheckBox x:Name="_cbSort" Content="列间排序" />
                     <Button Content="升序 A->Z" Click="asc_Click" />
                     <Button Content="降序 Z->A" Click="desc_Click" />
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="导出Xls" Click="SaveExcelFile" />
-                        <Button Content="导出Xml" Click="SaveXmlFile" />
-                        <Button Content="另存为PDF" Click="SavePDFFile" />
-                    </StackPanel>
-                    <Button Content="打印" Click="OnPrintExcel" />
                 </a:Fv>
             </a:Tab>
+            <l:ExcelExpPrint Order="3" />
         </a:Tabs>
     </a:Pane>
 </a:Win>

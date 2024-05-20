@@ -2,7 +2,8 @@
     x:Class="Dt.UIDemo.Sparkline"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base">
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.UIDemo">
 
     <a:Main>
         <a:Tabs>
@@ -28,14 +29,9 @@
                         <Button Content="添加图表" Click="btnAddSparkline_Click" />
                         <Button Content="清除图表" Click="btnClearSparkline_Click" />
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="导出Xls" Click="SaveExcelFile" />
-                        <Button Content="导出Xml" Click="SaveXmlFile" />
-                        <Button Content="另存为PDF" Click="SavePDFFile" />
-                    </StackPanel>
-                    <Button Content="打印" Click="OnPrintExcel" />
                 </a:Fv>
             </a:Tab>
+            <l:ExcelExpPrint Order="3" />
         </a:Tabs>
     </a:Pane>
 </a:Win>

@@ -13,7 +13,7 @@
             <a:Col ID="xb" Title="性别" Call="LvItemStyleUI.性别头像" Width="50" />
             <a:Col ID="hunfou" Title="婚否" Width="50" />
             <a:Col ID="line" Title="身高曲线" Call="LvItemStyleUI.曲线" Width="150" />
-            <a:Col ID="bumen" Title="所属部门" Width="160" Background="Black" Foreground="White" />
+            <a:Col ID="bumen" Title="所属部门" Width="160" />
             <a:Col ID="shengao" Title="身高" Width="150" />
         </a:Cols>
 

@@ -52,7 +52,19 @@ namespace Dt.UIDemo
                 TextAlignment = TextAlignment.Center,
             };
             e.UI = tb;
-            e.Set += c => tb.Text = ((TvItem)c.ViewItem).Children.Count > 0 ? "\uE067" : "\uE002";
+            e.Set += c =>
+            {
+                var tbl = (ITreeData)c.Row.Table;
+                var child = tbl.GetTreeItemChildren(c.Row);
+                if (child != null && child.Any())
+                {
+                    tb.Text = "\uE067";
+                }
+                else
+                {
+                    tb.Text = "\uE002";
+                }
+            };
         }
     }
 }

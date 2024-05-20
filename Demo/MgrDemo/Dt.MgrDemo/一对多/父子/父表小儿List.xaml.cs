@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2024-02-01 创建
+* 日志: 2024-02-05 创建
 ******************************************************************************/
 #endregion
 
@@ -15,6 +15,11 @@ namespace Dt.MgrDemo
 {
     public partial class 父表小儿List : LvTab
     {
+        #region 变量
+        long _parentID;
+        父表小儿Form _form;
+        #endregion
+
         #region 构造
         public 父表小儿List()
         {
@@ -99,7 +104,7 @@ namespace Dt.MgrDemo
             {
                 await Refresh();
             }
-}
+        }
 
         父表小儿Form Form
         {
@@ -110,12 +115,6 @@ namespace Dt.MgrDemo
                 return _form;
             }
         }
-        #endregion
-
-        #region 内部
-        父表Win _win => OwnWin as 父表Win;
-        long _parentID;
-        父表小儿Form _form;
         #endregion
     }
 }

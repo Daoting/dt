@@ -29,6 +29,7 @@
 		<AndroidResource Include="..\..\Common\Android\Resources\values\*.xml" Link="Android\Resources\values\%(Filename).xml" />
 		<AndroidResource Include="..\..\Common\Android\Resources\xml\*.xml" Link="Android\Resources\xml\%(Filename).xml" />
 		<AndroidEnvironment Include="..\..\Common\Android\environment.conf" Link="Android/environment.conf" />
+		<AndroidAsset Include="..\..\Common\Android\Resources\values\*.xml" Link="Android\Assets\%(Filename).xml" Visible="False" />
     </ItemGroup>
     
     <ItemGroup>

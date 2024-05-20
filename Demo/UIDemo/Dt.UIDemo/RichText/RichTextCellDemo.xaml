@@ -1,0 +1,26 @@
+﻿<a:Win
+    x:Class="Dt.UIDemo.RichTextCellDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="格">
+                <a:Fv x:Name="_fv">
+                    <a:CHtml ID="html" Title="Html" />
+                    <a:CMarkdown ID="md" Title="Markdown" />
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv Data="{Binding ElementName=_fv}">
+                    <a:CBool Title="只读" ID="IsReadOnly" />
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

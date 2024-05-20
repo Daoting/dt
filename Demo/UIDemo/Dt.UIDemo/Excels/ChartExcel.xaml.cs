@@ -69,76 +69,80 @@ namespace Dt.UIDemo
             _cbTypes.SelectedItem = _selectedChart.ChartType.ToString();
         }
 
+        Worksheet Addsheet()
+        {
+            Worksheet ws = new Worksheet(50, 15);
+            _excel.Sheets.Add(ws);
+            return ws;
+        }
+        
         void InitChart()
         {
-            _excel.SheetCount = 9;
-
+            _excel.Sheets.Clear();
             object[,] values = {{"","North","South","East","West"},
                                 {"s1",50,25,55,30},
                                 {"s2",92,24,15,24},
                                 {"s3",65,26,70,60},
                                 {"s4",24,80,26,20} };
-            _excel.Sheets[0].SetArray(0, 0, values);
+            Worksheet ws = Addsheet();
+            ws.Name = "Column";
+            ws.SetArray(0, 0, values);
+            ws.AddChart("Chart1", SpreadChartType.ColumnClustered, "Column!$A$1:$E$5", 6, 0, 1, 0, 16, 0, 6, 0);
+            ws.AddChart("Chart2", SpreadChartType.ColumnStacked, "Column!$A$1:$E$5", 6, 0, 7, 0, 16, 0, 12, 0);
+            ws.AddChart("Chart3", SpreadChartType.ColumnStacked100pc, "Column!$A$1:$E$5", 17, 0, 1, 0, 27, 0, 6, 0);
 
-            _excel.Sheets[0].Name = "Column";
-            _excel.Sheets[0].AddChart("Chart1", SpreadChartType.ColumnClustered, "Column!$A$1:$E$5", 30, 120, 400, 290);
-            _excel.Sheets[0].AddChart("Chart2", SpreadChartType.ColumnStacked, "Column!$A$1:$E$5", 480, 120, 400, 290);
-            _excel.Sheets[0].AddChart("Chart3", SpreadChartType.ColumnStacked100pc, "Column!$A$1:$E$5", 30, 440, 400, 290);
+            ws = Addsheet();
+            ws.Name = "Line";
+            ws.SetArray(0, 0, values);
+            ws.AddChart("chart1", SpreadChartType.Line, "Line!$A$1:$E$5", 6, 0, 1, 0, 16, 0, 6, 0);
+            ws.AddChart("chart2", SpreadChartType.LineSmoothed, "Line!$A$1:$E$5", 6, 0, 7, 0, 16, 0, 12, 0);
+            ws.AddChart("chart3", SpreadChartType.LineStacked, "Line!$A$1:$E$5", 17, 0, 1, 0, 27, 0, 6, 0);
+            ws.AddChart("chart4", SpreadChartType.LineStacked100pc, "Line!$A$1:$E$5", 17, 0, 7, 0, 27, 0, 12, 0);
+            ws.AddChart("chart5", SpreadChartType.LineStacked100pcWithMarkers, "Line!$A$1:$E$5", 28, 0, 1, 0, 38, 0, 6, 0);
+            ws.AddChart("chart6", SpreadChartType.LineStackedWithMarkers, "Line!$A$1:$E$5", 28, 0, 7, 0, 38, 0, 12, 0);
+            ws.AddChart("chart7", SpreadChartType.LineWithMarkers, "Line!$A$1:$F$5", 39, 0, 1, 0, 49, 0, 6, 0);
+            ws.AddChart("chart8", SpreadChartType.LineWithMarkersSmoothed, "Line!$A$1:$E$5", 39, 0, 7, 0, 49, 0, 12, 0);
 
+            ws = Addsheet();
+            ws.Name = "Pie";
+            ws.SetArray(0, 0, values);
+            ws.AddChart("chart1", SpreadChartType.Pie, "Pie!$A$1:$E$5", 6, 0, 1, 0, 16, 0, 6, 0);
+            ws.AddChart("chart2", SpreadChartType.PieDoughnut, "Pie!$A$1:$E$5", 6, 0, 7, 0, 16, 0, 12, 0);
+            ws.AddChart("chart3", SpreadChartType.PieExploded, "Pie!$A$1:$E$5", 17, 0, 1, 0, 27, 0, 6, 0);
+            ws.AddChart("chart4", SpreadChartType.PieExplodedDoughnut, "Line!$A$1:$E$5", 17, 0, 7, 0, 27, 0, 12, 0);
 
-            _excel.Sheets[1].Name = "Line";
-            _excel.Sheets[1].SetArray(0, 0, values);
-            _excel.Sheets[1].AddChart("chart1", SpreadChartType.Line, "Line!$A$1:$E$5", 30, 120, 400, 290);
-            _excel.Sheets[1].AddChart("chart2", SpreadChartType.LineSmoothed, "Line!$A$1:$E$5", 480, 120, 400, 290);
-            _excel.Sheets[1].AddChart("chart3", SpreadChartType.LineStacked, "Line!$A$1:$E$5", 30, 440, 400, 290);
-            _excel.Sheets[1].AddChart("chart4", SpreadChartType.LineStacked100pc, "Line!$A$1:$E$5", 480, 440, 400, 290);
-            _excel.Sheets[1].AddChart("chart5", SpreadChartType.LineStacked100pcWithMarkers, "Line!$A$1:$E$5", 30, 760, 400, 290);
-            _excel.Sheets[1].AddChart("chart6", SpreadChartType.LineStackedWithMarkers, "Line!$A$1:$E$5", 480, 760, 400, 290);
-            _excel.Sheets[1].AddChart("chart7", SpreadChartType.LineWithMarkers, "Line!$A$1:$F$5", 30, 1080, 400, 290);
-            _excel.Sheets[1].AddChart("chart8", SpreadChartType.LineWithMarkersSmoothed, "Line!$A$1:$E$5", 480, 1080, 400, 290);
+            ws = Addsheet();
+            ws.Name = "Bar";
+            ws.SetArray(0, 0, values);
+            ws.AddChart("chart1", SpreadChartType.BarClustered, "Bar!$A$1:$E$5", 6, 0, 1, 0, 16, 0, 6, 0);
+            ws.AddChart("chart2", SpreadChartType.BarStacked, "Bar!$A$1:$E$5", 6, 0, 7, 0, 16, 0, 12, 0);
+            ws.AddChart("chart3", SpreadChartType.BarStacked100pc, "Bar!$A$1:$E$5", 17, 0, 1, 0, 27, 0, 6, 0);
 
-
-            _excel.Sheets[2].Name = "Pie";
-            _excel.Sheets[2].SetArray(0, 0, values);
-            _excel.Sheets[2].AddChart("chart1", SpreadChartType.Pie, "Pie!$A$1:$E$5", 30, 120, 400, 290);
-            _excel.Sheets[2].AddChart("chart2", SpreadChartType.PieDoughnut, "Pie!$A$1:$E$5", 480, 120, 400, 290);
-            _excel.Sheets[2].AddChart("chart3", SpreadChartType.PieExploded, "Pie!$A$1:$E$5", 30, 440, 400, 290);
-            _excel.Sheets[2].AddChart("chart4", SpreadChartType.PieExplodedDoughnut, "Line!$A$1:$E$5", 480, 760, 400, 290);
-
-
-            _excel.Sheets[3].Name = "Bar";
-            _excel.Sheets[3].SetArray(0, 0, values);
-            _excel.Sheets[3].AddChart("chart1", SpreadChartType.BarClustered, "Bar!$A$1:$E$5", 30, 120, 400, 290);
-            _excel.Sheets[3].AddChart("chart2", SpreadChartType.BarStacked, "Bar!$A$1:$E$5", 480, 120, 400, 290);
-            _excel.Sheets[3].AddChart("chart3", SpreadChartType.BarStacked100pc, "Bar!$A$1:$E$5", 30, 440, 400, 290);
-
-
-            _excel.Sheets[4].Name = "Area";
-            _excel.Sheets[4].SetArray(0, 0, values);
-            _excel.Sheets[4].AddChart("chart1", SpreadChartType.Area, "Area!$A$1:$E$5", 30, 120, 400, 290);
-            _excel.Sheets[4].AddChart("chart2", SpreadChartType.AreaStacked, "Area!$A$1:$E$5", 480, 120, 400, 290);
-            _excel.Sheets[4].AddChart("chart3", SpreadChartType.AreaStacked100pc, "Area!$A$1:$E$5", 30, 440, 400, 290);
-
+            ws = Addsheet();
+            ws.Name = "Area";
+            ws.SetArray(0, 0, values);
+            ws.AddChart("chart1", SpreadChartType.Area, "Area!$A$1:$E$5", 6, 0, 1, 0, 16, 0, 6, 0);
+            ws.AddChart("chart2", SpreadChartType.AreaStacked, "Area!$A$1:$E$5", 6, 0, 7, 0, 16, 0, 12, 0);
+            ws.AddChart("chart3", SpreadChartType.AreaStacked100pc, "Area!$A$1:$E$5", 17, 0, 1, 0, 27, 0, 6, 0);
 
             object[,] values1 = { { "", "North", "South", "East", "West", "Northeast" },
                                 { "s1", 384, 246, 549, 260, 260 },
                                 { "s2", 926, 146, 1501, 240, 650 },
                                 { "s3", 650, 260, 700, 600, 428 },
                                 { "s4", 240, 80, 260, 1100, 268 } };
+            ws = Addsheet();
+            ws.Name = "Scatter";
+            ws.SetArray(0, 0, values1);
+            ws.AddChart("chart1", SpreadChartType.Scatter, "Scatter!$A$1:$E$5", 6, 0, 1, 0, 16, 0, 6, 0);
+            ws.AddChart("chart2", SpreadChartType.ScatterLines, "Scatter!$A$1:$E$5", 6, 0, 7, 0, 16, 0, 12, 0);
+            ws.AddChart("chart3", SpreadChartType.ScatterLinesSmoothed, "Scatter!$A$1:$E$5", 17, 0, 1, 0, 27, 0, 6, 0);
+            ws.AddChart("chart4", SpreadChartType.ScatterLinesSmoothedWithMarkers, "Scatter!$A$1:$E$5", 17, 0, 7, 0, 27, 0, 12, 0);
+            ws.AddChart("chart5", SpreadChartType.ScatterLinesWithMarkers, "Scatter!$A$1:$E$5", 28, 0, 1, 0, 38, 0, 6, 0);
 
-            _excel.Sheets[5].Name = "Scatter";
-            _excel.Sheets[5].SetArray(0, 0, values1);
-            _excel.Sheets[5].AddChart("chart1", SpreadChartType.Scatter, "Scatter!$A$1:$E$5", 30, 120, 400, 290);
-            _excel.Sheets[5].AddChart("chart2", SpreadChartType.ScatterLines, "Scatter!$A$1:$E$5", 480, 120, 400, 290);
-            _excel.Sheets[5].AddChart("chart3", SpreadChartType.ScatterLinesSmoothed, "Scatter!$A$1:$E$5", 30, 440, 400, 290);
-            _excel.Sheets[5].AddChart("chart4", SpreadChartType.ScatterLinesSmoothedWithMarkers, "Scatter!$A$1:$E$5", 480, 440, 400, 290);
-            _excel.Sheets[5].AddChart("chart5", SpreadChartType.ScatterLinesWithMarkers, "Scatter!$A$1:$E$5", 30, 760, 400, 290);
-
-
-            _excel.Sheets[6].Name = "Bubble";
-            _excel.Sheets[6].SetArray(0, 0, values1);
-            _excel.Sheets[6].AddChart("chart1", SpreadChartType.Bubble, "Bubble!$A$1:$E$5", 30, 120, 380, 260);
-
+            ws = Addsheet();
+            ws.Name = "Bubble";
+            ws.SetArray(0, 0, values1);
+            ws.AddChart("chart1", SpreadChartType.Bubble, "Bubble!$A$1:$E$5", 6, 0, 1, 0, 16, 0, 6, 0);
 
             object[,] values2 = { { "", new DateTime(2013, 8, 1), new DateTime(2013, 8, 2), new DateTime(2013, 8, 3),
                                       new DateTime(2013, 8, 4), new DateTime(2013, 8, 5) },
@@ -146,19 +150,19 @@ namespace Dt.UIDemo
                                 { "High", 926, 612, 865, 562, 650 },
                                 { "Low", 380, 146, 501, 310, 260 },
                                 { "Close", 650, 560, 786, 486, 428 } };
+            ws = Addsheet();
+            ws.Name = "Stock";
+            ws.SetArray(0, 0, values2);
+            ws.Rows[0].Formatter = new GeneralFormatter("MM/DD");
+            ws.AddChart("chart1", SpreadChartType.StockHighLowOpenClose, "Stock!$A$1:$E$5", 6, 0, 1, 0, 16, 0, 6, 0);
 
-            _excel.Sheets[7].Name = "Stock";
-            _excel.Sheets[7].SetArray(0, 0, values2);
-            _excel.Sheets[7].Rows[0].Formatter = new GeneralFormatter("MM/DD");
-            _excel.Sheets[7].AddChart("chart1", SpreadChartType.StockHighLowOpenClose, "Stock!$A$1:$E$5", 30, 120, 400, 290);
-
-
-            _excel.Sheets[8].Name = "Radar";
-            _excel.Sheets[8].SetArray(0, 0, values);
-            _excel.Sheets[8].AddChart("chart1", SpreadChartType.Radar, "Radar!$A$1:$E$5", 30, 120, 400, 290);
-            _excel.Sheets[8].AddChart("chart2", SpreadChartType.RadarFilled, "Radar!$A$1:$E$5", 480, 120, 400, 290);
-            _excel.Sheets[8].AddChart("chart3", SpreadChartType.RadarWithMarkers, "Radar!$A$1:$E$5", 30, 440, 400, 290);
-
+            ws = Addsheet();
+            ws.Name = "Radar";
+            ws.SetArray(0, 0, values);
+            ws.AddChart("chart1", SpreadChartType.Radar, "Radar!$A$1:$E$5", 6, 0, 1, 0, 16, 0, 6, 0);
+            ws.AddChart("chart2", SpreadChartType.RadarFilled, "Radar!$A$1:$E$5", 6, 0, 7, 0, 16, 0, 12, 0);
+            ws.AddChart("chart3", SpreadChartType.RadarWithMarkers, "Radar!$A$1:$E$5", 17, 0, 1, 0, 27, 0, 6, 0);
+            
             _excel.ActiveSheetChanged += _excel_ActiveSheetChanged;
             _selectedChart = _excel.ActiveSheet.Charts[0];
         }
@@ -274,86 +278,6 @@ namespace Dt.UIDemo
                     break;
             }
             return list.ToArray();
-        }
-
-        async void SaveFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("Excel Files", new List<string>(new string[] { ".xlsx" }));
-            filePicker.FileTypeChoices.Add("Excel 97-2003 Files", new List<string>(new string[] { ".xls" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                var fileName = storageFile.FileType.ToUpperInvariant();
-                var fileFormat = ExcelFileFormat.XLS;
-                if (fileName.EndsWith(".XLSX"))
-                    fileFormat = ExcelFileFormat.XLSX;
-                else
-                    fileFormat = ExcelFileFormat.XLS;
-                await _excel.SaveExcel(stream, fileFormat, GetSaveFlag());
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        ExcelSaveFlags GetSaveFlag()
-        {
-            var flagText = (_saveFlags.SelectedItem as ComboBoxItem).Content.ToString();
-            var result = ExcelSaveFlags.NoFlagsSet;
-            Enum.TryParse<ExcelSaveFlags>(flagText, true, out result);
-            return result;
-        }
-
-        async void SavePDFFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("PDF文件", new List<string>(new string[] { ".pdf" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                await _excel.SavePdf(stream);
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        async void SaveCsvFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("CSV文件", new List<string>(new string[] { ".csv" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                await _excel.SaveCSV(_excel.ActiveSheetIndex, stream, TextFileSaveFlags.AsViewed);
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        async void SaveXmlFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("Xml文件", new List<string>(new string[] { ".xml" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                await _excel.SaveXmlAsync(stream);
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        void OnPrintExcel(object sender, RoutedEventArgs e)
-        {
-            _excel.Print();
         }
     }
 }

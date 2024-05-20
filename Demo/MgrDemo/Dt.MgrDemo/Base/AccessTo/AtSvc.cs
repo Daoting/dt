@@ -12,13 +12,13 @@
 namespace Dt.MgrDemo
 {
     /// <summary>
-    /// demo服务的数据访问
+    /// lob服务的数据访问
     /// </summary>
     public partial class AtSvc : AccessAgent<AtSvc.Info>
     {
         public class Info : AgentInfo
         {
-            public override string Name => "demo";
+            public override string Name => "lob";
         }
     }
 }

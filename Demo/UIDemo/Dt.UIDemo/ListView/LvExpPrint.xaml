@@ -1,0 +1,122 @@
+﻿<a:Win
+    x:Class="Dt.UIDemo.LvExpPrint"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Win.Resources>
+        <a:Cols x:Key="典型表格">
+            <a:Col ID="scale" Title="小数位" Format="n4" />
+            <a:Col ID="date" Title="日期时间" Format="yyyy-MM-dd HH:mm:ss" Width="180" />
+            <a:Col ID="Icon" Title="整数型图标" Call="Def.Icon" Width="100" />
+            <a:Col ID="CheckBox" Title="选择框" Call="Def.CheckBox" Width="80" />
+            <a:Col ID="AutoDate" Title="自适应时间" Call="Def.AutoDate,Def.小灰" Width="110" />
+            <a:Col ID="红白" Title="红白" Call="Def.红白" Width="110" />
+        </a:Cols>
+
+        <a:Cols x:Key="自定义单元格">
+            <a:Col ID="style" Title="样式" Call="LvCustomUI.ApplyStyle" Width="150" />
+            <a:Col ID="line" Title="曲线" Call="LvCustomUI.曲线" Width="150" />
+            <a:Col ID="shengao" Title="多次处理" Call="LvCustomUI.背景,LvCustomUI.前景" Width="100" />
+            <a:Col ID="Warning" Title="醒目提醒" Call="Def.Warning" Width="100" />
+        </a:Cols>
+
+        <a:Cols x:Key="自定义行样式">
+            <a:Col ID="xm" Title="姓名" />
+            <a:Col ID="bh" Title="编号" Width="80" />
+            <a:Col ID="chushengrq" Title="出生日期" />
+            <a:Col ID="xb" Title="性别" Call="LvItemStyleUI.性别头像" Width="50" />
+            <a:Col ID="hunfou" Title="婚否" Width="50" />
+            <a:Col ID="bumen" Title="所属部门" Width="160" />
+            <a:Col ID="shengao" Title="身高" Width="150" />
+        </a:Cols>
+
+        <DataTemplate x:Key="ListView">
+            <StackPanel Padding="10" Spacing="10">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <a:Dot ID="scale" Format="n4" />
+                    <a:Dot ID="date" Format="yyyy-MM-dd HH:mm:ss" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <a:Dot ID="Icon" Call="Def.Icon" />
+                    <a:Dot ID="CheckBox" Call="Def.CheckBox" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <a:Dot ID="AutoDate" Call="Def.AutoDate" />
+                    <a:Dot ID="红白" Call="Def.红白" />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+    </a:Win.Resources>
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="表格">
+                <a:Lv x:Name="_lv" ShowReportBtn="True" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="输出打印">
+                <a:Fv x:Name="_fv">
+                    <a:CBar Title="报表设置" />
+                    <a:CBool ID="ShowColHeader" Title="输出列头" ShowTitle="False" ColSpan="0.5" />
+                    <a:CBool ID="RowNO" Title="输出行序号" ShowTitle="False" ColSpan="0.5" />
+                    <a:CBool ID="OnlySelection" Title="只导出选择行数据" ShowTitle="False" />
+                    <a:CBool ID="EnableMultiColTbl" Title="列少时，启用单页并排输出多列表格" ShowTitle="False" />
+                    <a:CBool ID="RepeatColHeader" Title="垂直分页时在每页重复输出列头" ShowTitle="False" />
+                    <a:CNum ID="RepeatRowHeaderCols" Title="水平分页时在每页重复输出行头的列数" TitleWidth="300" Minimum="0" IsInteger="True" />
+
+                    <a:CBar Title="页面设置，尺寸单位：0.01英寸" />
+                    <a:CList ID="PaperName" Title="标准纸张" LoadData="OnLoadPaperName" AfterSelect="OnPaperChanged" TitleWidth="90" />
+                    <a:CNum ID="PageWidth" Title="页面宽度" Minimum="0" IsInteger="True" TitleWidth="90" ColSpan="0.5" />
+                    <a:CNum ID="PageHeight" Title="页面高度" Minimum="0" IsInteger="True" TitleWidth="90" ColSpan="0.5" />
+                    <a:CNum ID="PageLeftMargin" Title="左边距" Minimum="0" IsInteger="True" TitleWidth="90" ColSpan="0.5" />
+                    <a:CNum ID="PageTopMargin" Title="上边距" Minimum="0" IsInteger="True" TitleWidth="90" ColSpan="0.5" />
+                    <a:CNum ID="PageRightMargin" Title="右边距" Minimum="0" IsInteger="True" TitleWidth="90" ColSpan="0.5" />
+                    <a:CNum ID="PageBottomMargin" Title="下边距" Minimum="0" IsInteger="True" TitleWidth="90" ColSpan="0.5" />
+                    <a:CBool ID="PageLandScape" Title="纸张横向" ShowTitle="False" />
+                    <a:CBool ID="AutoPaperSize" Title="自动调整纸张大小，确保只一页" ShowTitle="False" />
+                    <a:CBool ID="DefaultPageHeader" Title="采用默认页眉：报表名称居中显示、带下划线" ShowTitle="False" />
+                    <a:CBool ID="DefaultPageFooter" Title="采用默认页脚：居中显示页码" ShowTitle="False" />
+
+                    <a:CBar Title="预览导出打印" />
+                    <CheckBox x:Name="_cbSetting" Content="预览导出打印前显示设置对话框" />
+                    <CheckBox x:Name="_cbPdf" Content="采用Pdf格式预览" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="对话框预览报表" Click="ShowReportDlg" />
+                        <Button Content="在新窗口预览" Click="ShowReportWin" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="导出Excel" Click="SaveExcel" />
+                        <Button Content="导出Excel流" Click="SaveExcelStream" />
+                        <Button Content="导出Pdf" Click="SavePdf" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="打印Excel" Click="PrintExcel" />
+                        <Button Content="打印Pdf" Click="PrintPdf" />
+                    </StackPanel>
+                </a:Fv>
+            </a:Tab>
+            <a:Tab Order="3" Title="Lv定义">
+                <a:Fv x:Name="_lvFv">
+                    <a:CBar Title="Lv定义" />
+                    <CheckBox x:Name="_cbDataSrc" Content="非Table数据源" />
+                    <a:CBool ID="ShowReportBtn" Title="表格视图左上脚显示报表按钮" ShowTitle="False" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="典型表格" Click="OnClassicTbl" />
+                        <Button Content="自定义单元格" Click="OnCustomTbl" />
+                        <Button Content="自定义行样式" Click="OnRowStyle" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="列表模式" Click="OnListMode" />
+                        <Button Content="磁贴模式" Click="OnTileMode" />
+                        <Button Content="空数据源" Click="OnEmpty" />
+                    </StackPanel>
+                    <a:CList Title="选择模式" ID="SelectionMode" />
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

@@ -3,6 +3,7 @@ using Windows.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI;
+using Microsoft.UI.Xaml;
 
 namespace Dt.UIDemo
 {
@@ -25,14 +26,12 @@ namespace Dt.UIDemo
         public NumericTicker()
         {
             InitializeComponent();
-            _arrow.Fill = null;
         }
 
         public void Apply(double p_curValue)
         {
             if (double.IsNaN(p_curValue))
             {
-                _root.Background = new SolidColorBrush(Colors.Transparent);
                 _arrow.Fill = null;
                 _txtChange.Foreground = _txtValue.Foreground;
                 return;

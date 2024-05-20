@@ -24,10 +24,11 @@ namespace Dt.MgrDemo
         public DemoMain()
         {
             InitializeComponent();
-            LoadData();
+            LoadBase();
+            LoadDomain();
         }
 
-        void LoadData()
+        void LoadBase()
         {
             var ds = new Nl<GroupData<Nav>>();
             var group = new GroupData<Nav>
@@ -48,13 +49,18 @@ namespace Dt.MgrDemo
                 new Nav("文件选择", typeof(FilePickerDemo), Icons.保存) { Desc = "文件类型过滤、单选、多选" },
                 new Nav("拍照录像", typeof(CameraCaptureDemo), Icons.保存) { Desc = "拍照、录像生成文件" },
                 new Nav("图像资源", typeof(ImgFileDemo), Icons.图片) { Desc = "不同类型图像资源的显示" },
+                new Nav("CList数据源", typeof(CListDemo), Icons.列表) { Desc = "CList通过Ex Sql属性定义数据源" },
+                new Nav("CPick数据源", typeof(CPickDemo), Icons.表格) { Desc = "CPick数据源sql过滤、本地过滤" },
             };
-            group.Title = "文件";
+            group.Title = "控件";
             ds.Add(group);
             _navBase.Data = ds;
-            
-            ds = new Nl<GroupData<Nav>>();
-            group = new GroupData<Nav>
+        }
+
+        void LoadDomain()
+        {
+            var ds = new Nl<GroupData<Nav>>();
+            var group = new GroupData<Nav>
             {
                 new Nav("实体基础", typeof(AccessDemo)) { Desc = "客户端实体增删改查，领域事件的定义、发布、处理，虚拟实体及父子实体的增删改查，实体缓存、领域服务等" },
                 new Nav("Sqlite实体", typeof(SqliteAccessDemo)) { Desc = "Sqlite实体除了无缓存和无序列外，其余功能都包括"},
@@ -87,7 +93,7 @@ namespace Dt.MgrDemo
             };
             group.Title = "多对多框架";
             ds.Add(group);
-            _navEntity.Data= ds;
+            _navEntity.Data = ds;
         }
     }
 }

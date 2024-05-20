@@ -54,107 +54,9 @@ namespace Dt.UIDemo
                 else
                     await _excel.OpenXml(stream);
             }
+            NaviTo("Excel,导出打印");
         }
-
-        async void SaveExcelFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("Excel Files", new List<string>(new string[] { ".xlsx" }));
-            filePicker.FileTypeChoices.Add("Excel 97-2003 Files", new List<string>(new string[] { ".xls" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                var fileName = storageFile.FileType.ToUpperInvariant();
-                var fileFormat = ExcelFileFormat.XLS;
-                if (fileName.EndsWith(".XLSX"))
-                    fileFormat = ExcelFileFormat.XLSX;
-                else
-                    fileFormat = ExcelFileFormat.XLS;
-                await _excel.SaveExcel(stream, fileFormat, ExcelSaveFlags.NoFlagsSet);
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        async void SavePDFFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("PDF文件", new List<string>(new string[] { ".pdf" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                await _excel.SavePdf(stream);
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        async void SaveXmlFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("Xml文件", new List<string>(new string[] { ".xml" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                await _excel.SaveXmlAsync(stream);
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        async void SaveCsvFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("Csv文件", new List<string>(new string[] { ".csv" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                await _excel.SaveCSV(_excel.ActiveSheetIndex, stream);
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        async void OpenFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileOpenPicker();
-            filePicker.FileTypeFilter.Add(".xlsx");
-            filePicker.FileTypeFilter.Add(".xml");
-            filePicker.FileTypeFilter.Add(".csv");
-            filePicker.FileTypeFilter.Add(".xls");
-            StorageFile storageFile = await filePicker.PickSingleFileAsync();
-            if (storageFile != null)
-            {
-                using (var stream = await storageFile.OpenStreamForReadAsync())
-                {
-                    switch (storageFile.FileType.ToLower())
-                    {
-                        case ".xml":
-                        case ".ssxml":
-                            await _excel.OpenXml(stream);
-                            break;
-
-                        case ".xlsx":
-                        case ".xls":
-                            await _excel.OpenExcel(stream);
-                            break;
-
-                        case ".csv":
-                            await _excel.OpenCSV(_excel.ActiveSheetIndex, stream);
-                            break;
-                    }
-                }
-            }
-        }
-
+        
         void OnConditionalFormat(object sender, RoutedEventArgs e)
         {
             using (_excel.Defer())
@@ -365,11 +267,6 @@ namespace Dt.UIDemo
                 sheet[e.Row, e.Column].Text = "☑";
             else if (sheet[e.Row, e.Column].Text == "☑")
                 sheet[e.Row, e.Column].Text = "☐";
-        }
-
-        void OnPrintExcel(object sender, RoutedEventArgs e)
-        {
-            _excel.Print();
         }
     }
 }

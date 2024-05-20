@@ -332,9 +332,9 @@ namespace Dt.UIDemo
         void OnMyFilter(object sender, RoutedEventArgs e)
         {
             var cfg = new FilterCfg();
-            cfg.MyFilter = (s) =>
+            cfg.MyFilter = (o, txt) =>
             {
-                _lv.Data = SampleData.CreatePersonsTbl(new Random().Next(100));
+                return true;
             };
             _lv.FilterCfg = cfg;
         }

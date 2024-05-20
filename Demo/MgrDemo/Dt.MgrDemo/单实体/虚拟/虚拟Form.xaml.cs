@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2024-02-01 创建
+* 日志: 2024-02-05 创建
 ******************************************************************************/
 #endregion
 
@@ -38,34 +38,13 @@ namespace Dt.MgrDemo
         {
             Data = await VirX<主表X, 扩展1X, 扩展2X>.GetByID(p_id);
         }
-
-        protected override async Task<bool> OnSave()
-        {
-            var d = Data;
-            if (await d.Save())
-            {
-                await _win?.List.Refresh(d.ID);
-                return true;
-            }
-            return false;
-        }
-
-        protected override async Task<bool> OnDel()
-        {
-            if (await Data.Delete())
-            {
-                Clear();
-                await _win?.List.Refresh(-1);
-                return true;
-            }
-            return false;
-        }
-
-        protected override void Clear()
-        {
-            Data = null;
-        }
         
-        虚拟Win _win => OwnWin as 虚拟Win;
+        protected override void RefreshList(long? p_id)
+        {
+            if (OwnWin is 虚拟Win win)
+            {
+                _ = win.List.Refresh(p_id);
+            }
+        }
     }
 }

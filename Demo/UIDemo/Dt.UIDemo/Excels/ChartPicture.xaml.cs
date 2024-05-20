@@ -32,6 +32,8 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Shapes;
 using Cell = Dt.Cells.Data.Cell;
+using Windows.Graphics.Imaging;
+using System.Runtime.InteropServices.WindowsRuntime;
 #endregion
 
 namespace Dt.UIDemo
@@ -52,37 +54,7 @@ namespace Dt.UIDemo
         {
             _chart.Data = _data.GetData((ChartType)e);
         }
-
-        async void SaveExcelFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("Excel Files", new List<string>(new string[] { ".xlsx" }));
-            filePicker.FileTypeChoices.Add("Excel 97-2003 Files", new List<string>(new string[] { ".xls" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                var fileName = storageFile.FileType.ToUpperInvariant();
-                var fileFormat = ExcelFileFormat.XLS;
-                if (fileName.EndsWith(".XLSX"))
-                    fileFormat = ExcelFileFormat.XLSX;
-                else
-                    fileFormat = ExcelFileFormat.XLS;
-                await _excel.SaveExcel(stream, fileFormat, GetSaveFlag());
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        ExcelSaveFlags GetSaveFlag()
-        {
-            var flagText = (_saveFlags.SelectedItem as ComboBoxItem).Content.ToString();
-            var result = ExcelSaveFlags.NoFlagsSet;
-            Enum.TryParse<ExcelSaveFlags>(flagText, true, out result);
-            return result;
-        }
-
+        
         async void OnAddChart(object sender, RoutedEventArgs e)
         {
             Worksheet sheet = _excel.ActiveSheet;
@@ -115,12 +87,24 @@ namespace Dt.UIDemo
 
             RenderTargetBitmap bmp = new RenderTargetBitmap();
             await bmp.RenderAsync(_chart);
-            sheet.AddPicture("pic" + sheet.Pictures.Count.ToString(), bmp, rc.Left, rc.Top, rc.Width, rc.Height);
-        }
 
-        void OnPrintExcel(object sender, RoutedEventArgs e)
-        {
-            _excel.Print();
+            var pixelBuffer = await bmp.GetPixelsAsync();
+            var ms = new MemoryStream();
+            var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, ms.AsRandomAccessStream());
+
+            // 换算成物理像素
+            float dpi = (float)XamlRoot.RasterizationScale * 96;
+            encoder.SetPixelData(
+                BitmapPixelFormat.Bgra8,
+                BitmapAlphaMode.Ignore,
+                (uint)bmp.PixelWidth,
+                (uint)bmp.PixelHeight,
+                dpi,
+                dpi,
+                pixelBuffer.ToArray());
+            await encoder.FlushAsync();
+            
+            sheet.AddPicture("pic" + sheet.Pictures.Count.ToString(), ms, rc.Left, rc.Top, rc.Width, rc.Height);
         }
     }
 }

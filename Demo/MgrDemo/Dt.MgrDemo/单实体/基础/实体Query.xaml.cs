@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2024-02-01 创建
+* 日志: 2024-02-05 创建
 ******************************************************************************/
 #endregion
 
@@ -29,22 +29,20 @@ namespace Dt.MgrDemo
             remove { _fv.Query -= value; }
         }
 
-        #region 初始化 
         protected override void OnFirstLoaded()
         {
             var row = new Row();
-            row.Add<int>("序列");
+            row.Add<int?>("序列");
             row.Add<string>("限长4");
             row.Add<string>("不重复");
-            row.Add<bool>("禁止选中");
-            row.Add<bool>("禁止保存");
-            row.Add<bool>("禁止删除");
+            row.Add<bool?>("禁止选中");
+            row.Add<bool?>("禁止保存");
+            row.Add<bool?>("禁止删除");
             row.Add<string>("值变事件");
-            row.Add<DateTime>("创建时间");
-            row.Add<DateTime>("修改时间");
+            row.Add<DateTime?>("创建时间");
+            row.Add<DateTime?>("修改时间");
 
             _fv.Data = row;
         }
-        #endregion
     }
 }

@@ -159,7 +159,10 @@ namespace Dt.UIDemo
 
             e.Set += c =>
             {
-                ticker.Apply(c.Row.Double("shengao"));
+                if (c.Data is Row row)
+                    ticker.Apply(row.Double("shengao"));
+                else if (c.Data is LvExpPrint.CustomItem custom)
+                    ticker.Apply(custom.Shengao);
             };
         }
 

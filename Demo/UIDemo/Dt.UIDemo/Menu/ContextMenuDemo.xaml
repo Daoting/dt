@@ -11,6 +11,7 @@
                 <a:Menu Placement="BottomLeft">
                     <a:Mi ID="保存" Icon="保存" ShowInPhone="Icon" />
                     <a:Mi ID="搜索" Icon="搜索" />
+                    <a:MiSplit />
                     <a:Mi ID="选择项" Icon="pos机" IsCheckable="True" />
                     <a:Mi ID="含子项" Icon="文件夹">
                         <a:Mi ID="修改" Icon="修改" />
@@ -32,6 +33,7 @@
                 <a:Menu TriggerEvent="RightTapped" Placement="TopRight">
                     <a:Mi ID="保存" Icon="保存" ShowInPhone="Icon" />
                     <a:Mi ID="搜索" Icon="搜索" />
+                    <a:MiSplit />
                     <a:Mi ID="选择项" Icon="pos机" IsCheckable="True" />
                     <a:Mi ID="含子项" Icon="文件夹">
                         <a:Mi ID="修改" Icon="修改" />

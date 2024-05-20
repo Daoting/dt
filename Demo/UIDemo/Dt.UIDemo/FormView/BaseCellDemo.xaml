@@ -16,7 +16,6 @@
                     <a:CText ID="tgtpy" Title="输出拼音码" IsReadOnly="True" />
                     <a:CNum ID="num" Title="数值" Decimals="4" Placeholder="填写数字" />
                     <a:CPassword ID="pwd" Title="密码" />
-                    <a:CHtml ID="html" Title="富文本" />
 
                     <a:CBar Title="日期格" />
                     <a:CDate ID="date" Title="日期"/>
@@ -65,6 +64,25 @@
                     <a:CTip ID="tipdate" Title="日期信息" />
                     <a:CTip ID="tipnum" Title="数字信息" Format="N2" />
                     <a:CTip ID="tipclick" Title="点击事件" Click="OnTipClick" />
+
+                    <a:CBar Title="分隔栏内容">
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                            <Button Content="操作1" />
+                            <Button Content="操作2" />
+                        </StackPanel>
+                    </a:CBar>
+                    <a:CBar Title="模拟标题栏">
+                        <a:Menu HorizontalAlignment="Right">
+                            <a:Mi ID="保存" Icon="保存" ShowInPhone="Icon" />
+                            <a:Mi ID="搜索" Icon="搜索" ShowInPhone="Icon" />
+                            <a:MiSplit />
+                            <a:Mi ID="含子项" Icon="文件夹">
+                                <a:Mi ID="修改" Icon="修改" />
+                                <a:Mi ID="复制" Icon="复制" />
+                            </a:Mi>
+                        </a:Menu>
+                    </a:CBar>
+                    <a:CBar Title="分隔栏&#10;第二行&#10;第三行" RowSpan="2" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

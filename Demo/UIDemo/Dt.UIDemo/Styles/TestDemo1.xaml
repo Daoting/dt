@@ -6,9 +6,7 @@
     xmlns:s="using:Dt.UIDemo">
 
     <StackPanel x:Name="_sp" Margin="10">
-        <Button Content="主线程 Kit.RunAsync" Click="OnTest1" />
-        <Button Content="Task中 Kit.RunAsync" Click="OnTest2" />
-        <Button Content="主线程 Kit.RunSync" Click="OnTest3" />
-        <Button Content="Task中 Kit.RunSync" Click="OnTest4" />
+        <Button Content="测试1" Click="OnTest1" />
+        <Button Content="测试2" Click="OnTest2" />
     </StackPanel>
 </a:Win>

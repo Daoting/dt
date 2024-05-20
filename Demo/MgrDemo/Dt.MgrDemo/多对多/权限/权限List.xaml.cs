@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2024-02-01 创建
+* 日志: 2024-02-05 创建
 ******************************************************************************/
 #endregion
 
@@ -15,6 +15,10 @@ namespace Dt.MgrDemo
 {
     public partial class 权限List : LvTab
     {
+        #region 变量
+        QueryClause _clause;
+        #endregion
+
         #region 构造
         public 权限List()
         {
@@ -53,35 +57,44 @@ namespace Dt.MgrDemo
         #region 交互
         async void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (_lv.SelectionMode != SelectionMode.Multiple)
+            if (_lv.SelectionMode != SelectionMode.Multiple
+                && OwnWin is 权限Win win)
             {
-                await _win.MainForm.Update(_lv.SelectedRow?.ID);
+                await win.MainForm.Update(_lv.SelectedRow?.ID);
             }
         }
 
         async void OnItemDbClick(object e)
         {
-            if (_lv.SelectionMode != SelectionMode.Multiple)
+            if (_lv.SelectionMode != SelectionMode.Multiple
+                && OwnWin is 权限Win win)
             {
-                await _win.MainForm.Open(_lv.SelectedRow?.ID);
+                await win.MainForm.Open(_lv.SelectedRow?.ID);
             }
         }
 
         async void OnAdd(Mi e)
         {
-            await _win.MainForm.Open(-1);
+            if (OwnWin is 权限Win win)
+            { 
+                await win.MainForm.Open(-1);
+            }
         }
 
         async void OnEdit(Mi e)
         {
-            await _win.MainForm.Open(e.Row?.ID);
+            if (OwnWin is 权限Win win)
+            { 
+                await win.MainForm.Open(e.Row?.ID);
+            }
         }
 
         void OnItemClick(ItemClickArgs e)
         {
-            if (_lv.SelectionMode != SelectionMode.Multiple)
+            if (_lv.SelectionMode != SelectionMode.Multiple
+                && OwnWin is 权限Win win)
             {
-                NaviTo(new List<Tab> { _win.角色List });
+                NaviTo(new List<Tab> { win.角色List });
             }
         }
 
@@ -99,11 +112,6 @@ namespace Dt.MgrDemo
                 await Refresh();
             }
         }
-        #endregion
-
-        #region 内部
-        权限Win _win => OwnWin as 权限Win;
-        QueryClause _clause;
         #endregion
     }
 }

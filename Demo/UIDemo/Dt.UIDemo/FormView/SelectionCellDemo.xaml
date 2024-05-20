@@ -11,10 +11,10 @@
                     <a:CBar Title="树形格" />
                     <a:CTree ID="tree" Title="普通树" LoadData="OnLoadTreeData" />
                     <a:CTree ID="treedata" Title="动态树" RefreshData="true" LoadData="OnLoadTreeData" />
-                    <a:CTree ID="treefill" Title="填充其它列值" SrcID="id" TgtID="treefillid" LoadData="OnLoadTreeData" />
+                    <a:CTree ID="treefill" Title="填充其它列值" SrcID="id#name" TgtID="treefillid#-" LoadData="OnLoadTreeData" />
 
                     <a:CBar Title="选择器" />
-                    <a:CPick ID="query" Title="只查询" Search="OnSearch" Placeholder="请输入姓名或拼音简码" SrcID="xm#bh" TgtID="query#hm">
+                    <a:CPick ID="query" Title="只查询" Search="OnSearch" Placeholder="请输入姓名或拼音简码" SrcID="xm#bh" TgtID="-#hm">
                         <a:Cols>
                             <a:Col ID="bh" Title="编号" Width="80" />
                             <a:Col ID="xm" Title="姓名" />
@@ -23,7 +23,7 @@
                         </a:Cols>
                     </a:CPick>
                     <a:CText ID="hm" Title="编号" />
-                    <a:CPick ID="valid" Title="验证选项" Search="OnSearch" Picking="OnPicking" Placeholder="禁止选择李姓人员" SrcID="xm#bh" TgtID="valid#hm">
+                    <a:CPick ID="valid" Title="验证选项" Search="OnSearch" Picking="OnPicking" Placeholder="禁止选择李姓人员" SrcID="xm#bh" TgtID="-#hm">
                         <a:Cols>
                             <a:Col ID="bh" Title="编号" Width="80" />
                             <a:Col ID="xm" Title="姓名" />
@@ -31,7 +31,7 @@
                             <a:Col ID="shenfenzh" Title="身份证号码" Width="200" />
                         </a:Cols>
                     </a:CPick>
-                    <a:CPick ID="custom" Title="自定义筛选" Search="OnSearch" ShowButton="True" BtnClick="OnBtnClick" Placeholder="请输入姓名或拼音简码" SrcID="xm#bh" TgtID="custom#hm">
+                    <a:CPick ID="custom" Title="自定义筛选" Search="OnSearch" ShowButton="True" BtnClick="OnBtnClick" Placeholder="请输入姓名或拼音简码" SrcID="xm#bh" TgtID="-#hm">
                         <a:Cols>
                             <a:Col ID="bh" Title="编号" Width="80" />
                             <a:Col ID="xm" Title="姓名" />

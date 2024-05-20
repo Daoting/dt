@@ -4,8 +4,6 @@
         <OutputType>Exe</OutputType>
         <TargetFrameworks>net8.0</TargetFrameworks>
 		<ImplicitUsings>disable</ImplicitUsings>
-        <!-- 使用Dt.BuildTools标志 -->
-        <UseWasmTools>true</UseWasmTools>
 		<AppType>wasm</AppType>
 		
         <!-- 必须sdk完整路径，避免总下载失败，实际文件名加后缀 -simd -->

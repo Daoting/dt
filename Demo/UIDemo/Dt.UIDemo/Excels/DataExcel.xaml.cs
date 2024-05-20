@@ -90,6 +90,7 @@ namespace Dt.UIDemo
             sheet.Columns[8].Width = 80;
             sheet.Columns[9].Width = 150;
             sheet.Columns[10].Width = 100;
+            sheet.Columns[10].IsVisible = false;
         }
 
         void gcSpreadSheet1_ValueChanged(object sender, CellEventArgs e)
@@ -165,63 +166,6 @@ namespace Dt.UIDemo
             sheet.Rows[sheet.ActiveRowIndex].Background = new SolidColorBrush(Color.FromArgb(30, 255, 0, 0));
             sheet.Rows[sheet.ActiveRowIndex].Tag = "Delete";
             _btnUpdate.IsEnabled = true;
-        }
-
-        async void SaveExcelFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("Excel Files", new List<string>(new string[] { ".xlsx" }));
-            filePicker.FileTypeChoices.Add("Excel 97-2003 Files", new List<string>(new string[] { ".xls" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                var fileName = storageFile.FileType.ToUpperInvariant();
-                var fileFormat = ExcelFileFormat.XLS;
-                if (fileName.EndsWith(".XLSX"))
-                    fileFormat = ExcelFileFormat.XLSX;
-                else
-                    fileFormat = ExcelFileFormat.XLS;
-                await _excel.SaveExcel(stream, fileFormat, ExcelSaveFlags.NoFlagsSet);
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        async void SavePDFFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("PDF文件", new List<string>(new string[] { ".pdf" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                await _excel.SavePdf(stream);
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        async void SaveXmlFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("Xml文件", new List<string>(new string[] { ".xml" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                await _excel.SaveXmlAsync(stream);
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        void OnPrintExcel(object sender, RoutedEventArgs e)
-        {
-            _excel.Print();
         }
     }
 }

@@ -100,7 +100,7 @@ namespace Dt.UIDemo
         {
             // uno 支持嵌入资源文件，但winui不支持
             //Uri uri = new Uri("embedded://Dt.UIDemo/Dt.UIDemo.Res.LottieLogo1.json");
-            Uri uri = new Uri($"ms-appx:///Dt.UIDemo/Assets/Lottie/{_names[_cur]}.json");
+            Uri uri = new Uri($"ms-appx:///Dt.UIDemo/Files/Content/Lottie/{_names[_cur]}.json");
 
             // 切换动画时改变_player.Source无效，只能重置UriSource！
             if (_player.Source == null)

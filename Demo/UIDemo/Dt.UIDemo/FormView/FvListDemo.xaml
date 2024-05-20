@@ -68,7 +68,7 @@
                     <a:CList ID="listrow" Title="模拟IDString" SrcID="id" TgtID="listrowid" LoadData="OnLoadDataTable" AfterSelect="OnSelectedRow" />
 
                     <a:CBar Title="筛选排序" />
-                    <a:CList ID="filter" Title="筛选" LoadData="OnLoadPerTbl" ValID="xm">
+                    <a:CList ID="filter" Title="筛选" LoadData="OnLoadPerTbl" SrcID="xm">
                         <a:CList.FilterCfg>
                             <a:FilterCfg EnablePinYin="True" IsRealtime="True" Placeholder="拼音简码或包含的文字" />
                         </a:CList.FilterCfg>
@@ -108,20 +108,6 @@
                             </a:Menu>
                         </a:CList.Toolbar>
                     </a:CList>
-                    
-                    <a:CBar Title="需先登录" />
-                    <a:CList ID="code" Title="民族" Ex="Option#民族" />
-                    <a:CList ID="degree" Title="学历" Ex="Option#学历" />
-                    <a:CList ID="allusers" Title="用户" ViewMode="Table" Ex="SqlKey#cm:用户-所有">
-                        <a:Cols>
-                            <a:Col ID="name" Title="姓名" Width="160" />
-                            <a:Col ID="phone" Title="手机号" Width="160" />
-                            <a:Col ID="sex" Title="性别" Width="60" />
-                            <a:Col ID="ctime" Title="创建时间" />
-                            <a:Col ID="mtime" Title="修改时间" />
-                        </a:Cols>
-                    </a:CList>
-                    
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

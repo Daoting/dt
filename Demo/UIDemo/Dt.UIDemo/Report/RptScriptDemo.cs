@@ -33,31 +33,38 @@ namespace Dt.UIDemo
         {
             return Task.Run(() =>
             {
-                using (var stream = typeof(RptDemo).Assembly.GetManifestResourceStream($"Dt.UIDemo.Report.数据源.{p_name}.json"))
+                using (var stream = typeof(RptHome).Assembly.GetManifestResourceStream($"Dt.UIDemo.Files.Embed.数据源.{p_name}.json"))
                 {
                     return Table.Create(stream);
                 }
             });
         }
     }
-
-    [RptScript]
-    public class RptSearchFormScript : DataRptScript
-    {
-        public override RptSearchTab GetSearchForm(RptInfo p_info)
-        {
-            return new CustomRptSearch(p_info);
-        }
-    }
-
+    
     [RptScript]
     public class MyRptScript : DataRptScript
     {
+        static Dict _curParams;
+        
+        public override void InitParams(Dict p_dict)
+        {
+            if (_curParams == null)
+            {
+                p_dict["parentid"] = "";
+                p_dict["parentname"] = "根菜单";
+            }
+            else
+            {
+                p_dict["parentid"] = _curParams["parentid"];
+                p_dict["parentname"] = _curParams["parentname"];
+            }
+        }
+        
         public override Task<Table> GetData(string p_name)
         {
             return Task.Run(() =>
             {
-                using (var stream = typeof(RptDemo).Assembly.GetManifestResourceStream($"Dt.UIDemo.Report.数据源.{p_name}.json"))
+                using (var stream = typeof(RptHome).Assembly.GetManifestResourceStream($"Dt.UIDemo.Files.Embed.数据源.{p_name}.json"))
                 {
                     var tbl = Table.Create(stream);
                     var tgt = Table.Clone(tbl);
@@ -73,7 +80,7 @@ namespace Dt.UIDemo
             });
         }
 
-        public override void RenderCell(Cells.Data.Cell p_cell, RptCellArgs p_args)
+        public override Task RenderCell(Cells.Data.Cell p_cell, RptCellArgs p_args)
         {
             if (p_args.Col == 1)
             {
@@ -101,6 +108,7 @@ namespace Dt.UIDemo
                     p_cell.Foreground = Res.RedBrush;
                 }
             }
+            return Task.CompletedTask;
         }
 
         public override void InitMenu(Menu p_menu)
@@ -108,7 +116,6 @@ namespace Dt.UIDemo
             Mi mi = new Mi { ID = "后退", Icon = Icons.向左 };
             mi.Click += OnBack;
             p_menu.Items.Insert(0, mi);
-            p_menu.Items.Add(new Mi { ID = "显示网格", IsCheckable = true, Cmd = View.CmdGridLine });
         }
 
         public override void OpenContextMenu(Menu p_contextMenu)
@@ -145,7 +152,12 @@ namespace Dt.UIDemo
             {
                 if (row.Bool("isgroup"))
                 {
-                    var info = new MyRptInfo { Name = "脚本", Params = new Dict { { "parentid", row.Str("id") }, { "parentname", row.Str("name") } } };
+                    var info = new RptInfo
+                    {
+                        Uri = "embedded://Dt.UIDemo/Dt.UIDemo.Files.Embed.模板.交互脚本.rpt",
+                    };
+                    _curParams = new Dict { { "parentid", row.Str("id") }, { "parentname", row.Str("name") } };
+                    
                     var ls = View.Tag as Stack<RptInfo>;
                     if (ls == null)
                     {
@@ -183,7 +195,11 @@ namespace Dt.UIDemo
         {
             var ls = View.Tag as Stack<RptInfo>;
             if (ls != null && ls.Count > 0)
-                View.LoadReport(ls.Pop());
+            {
+                var info = ls.Pop();
+                _curParams = info.Params;
+                View.LoadReport(info);
+            }
         }
 
         void OnDetail(Mi e)

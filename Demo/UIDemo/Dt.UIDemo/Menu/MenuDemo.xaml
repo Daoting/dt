@@ -18,6 +18,7 @@
                         <a:Mi ID="含子项" Icon="文件夹">
                             <a:Mi ID="修改" Icon="修改" />
                             <a:Mi ID="复制" Icon="复制" />
+                            <a:MiSplit />
                             <a:Mi ID="无图标" />
                             <a:Mi ID="打开" Icon="打开">
                                 <a:Mi ID="设置" Icon="设置" />

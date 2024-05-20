@@ -1,0 +1,41 @@
+﻿<a:Win
+    x:Class="Dt.UIDemo.PdfViewDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="Pdf浏览器">
+                <a:PdfView x:Name="_pdf" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv Data="{Binding ElementName=_pdf}">
+                    <a:CBar Title="加载" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="JS打开文件" Click="OnJsOpen" />
+                        <Button Content="加载内容" Click="OnOpenFile" />
+                    </StackPanel>
+                    <a:CBar Title="操作" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="打印" Click="OnPrint" />
+                        <Button Content="下载" Click="OnDownload" />
+                        <Button Content="清除内容" Click="OnClear" />
+                    </StackPanel>
+                    <a:CBar Title="页" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="首页" Click="OnFirstPage" />
+                        <Button Content="末页" Click="OnLastPage" />
+                        <Button Content="下页" Click="OnNextPage" />
+                        <Button Content="上页" Click="OnPrePage" />
+                        <Button Content="第二页" Click="OnGotoPage" />
+                    </StackPanel>
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

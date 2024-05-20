@@ -28,28 +28,17 @@ namespace Dt.UIDemo
 
         void OnTest1(object sender, RoutedEventArgs e)
         {
-            
+            var txt = ResKit.GetText("成绩.json");
+            Kit.Msg(txt);
         }
 
         void OnTest2(object sender, RoutedEventArgs e)
         {
-            Task.Run(() =>
+            using (var stream = ResKit.GetStream("成绩.json"))
+            using (var reader = new StreamReader(stream))
             {
-                Kit.RunAsync(() => _sp.Children.Add(new TextBlock { Text = "Task中 Kit.RunAsync" }));
-            });
-        }
-
-        void OnTest3(object sender, RoutedEventArgs e)
-        {
-            Kit.RunSync(() => _sp.Children.Add(new TextBlock { Text = "主线程 Kit.RunSync" }));
-        }
-
-        void OnTest4(object sender, RoutedEventArgs e)
-        {
-            Task.Run(() =>
-            {
-                Kit.RunSync(() => _sp.Children.Add(new TextBlock { Text = "Task中 Kit.RunSync" }));
-            });
+                Kit.Msg(reader.ReadToEnd());
+            }
         }
     }
 }

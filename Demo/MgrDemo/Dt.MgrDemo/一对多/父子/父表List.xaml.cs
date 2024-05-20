@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2024-02-01 创建
+* 日志: 2024-02-05 创建
 ******************************************************************************/
 #endregion
 
@@ -15,6 +15,10 @@ namespace Dt.MgrDemo
 {
     public partial class 父表List : LvTab
     {
+        #region 变量
+        QueryClause _clause;
+        #endregion
+
         #region 构造
         public 父表List()
         {
@@ -53,35 +57,44 @@ namespace Dt.MgrDemo
         #region 交互
         async void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (_lv.SelectionMode != SelectionMode.Multiple)
+            if (_lv.SelectionMode != SelectionMode.Multiple
+                && OwnWin is 父表Win win)
             {
-                await _win.ParentForm.Update(_lv.SelectedRow?.ID);
+                await win.ParentForm.Update(_lv.SelectedRow?.ID);
             }
         }
 
         async void OnItemDbClick(object e)
         {
-            if (_lv.SelectionMode != SelectionMode.Multiple)
+            if (_lv.SelectionMode != SelectionMode.Multiple
+                && OwnWin is 父表Win win)
             {
-                await _win.ParentForm.Open(_lv.SelectedRow?.ID);
+                await win.ParentForm.Open(_lv.SelectedRow?.ID);
             }
         }
 
         async void OnAdd(Mi e)
         {
-            await _win.ParentForm.Open(-1);
+            if (OwnWin is 父表Win win)
+            { 
+                await win.ParentForm.Open(-1);
+            }
         }
 
         async void OnEdit(Mi e)
         {
-            await _win.ParentForm.Open(e.Row?.ID);
+            if (OwnWin is 父表Win win)
+            { 
+                await win.ParentForm.Open(e.Row?.ID);
+            }
         }
 
         void OnItemClick(ItemClickArgs e)
         {
-            if (_lv.SelectionMode != SelectionMode.Multiple)
+            if (_lv.SelectionMode != SelectionMode.Multiple
+                && OwnWin is 父表Win win)
             {
-                NaviTo(new List<Tab> { _win.大儿List, _win.小儿List });
+                NaviTo(new List<Tab> { win.大儿List, win.小儿List });
             }
         }
 
@@ -99,11 +112,6 @@ namespace Dt.MgrDemo
                 await Refresh();
             }
         }
-        #endregion
-
-        #region 内部
-        父表Win _win => OwnWin as 父表Win;
-        QueryClause _clause;
         #endregion
     }
 }

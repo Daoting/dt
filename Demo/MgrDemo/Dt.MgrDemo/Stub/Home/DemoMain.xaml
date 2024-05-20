@@ -3,8 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.MgrDemo"
     Title="管理样例">
 
     <a:NavList x:Name="_navBase" Title="基础" Order="1" Icon="搬运工" To="NewWin" a:Ex.Dock="Left" />
-    <a:NavList x:Name="_navEntity" Title="实体" Order="2" Icon="词典" To="NewWin" a:Ex.Dock="Right" />
+    <l:RptHome Order="2" />
+    <a:NavList x:Name="_navEntity" Title="实体" Order="3" Icon="词典" To="NewWin" a:Ex.Dock="Right" />
 </a:Win>

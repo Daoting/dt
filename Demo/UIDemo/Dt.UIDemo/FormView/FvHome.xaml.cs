@@ -29,6 +29,7 @@ namespace Dt.UIDemo
                 new Nav("列表格", typeof(FvListDemo), Icons.公告) { Desc = "列表格" },
                 new Nav("选择格", typeof(SelectionCellDemo), Icons.分组) { Desc = "树形格、图标格、颜色格" },
                 new Nav("文件格", typeof(FileCellDemo), Icons.图片) { Desc = "文件格、图像格" },
+                new Nav("富文本格", typeof(RichTextCellDemo), Icons.词典) { Desc = "CHtml CMarkdown格" },
                 new Nav("自定义格值", typeof(FvCustomVal), Icons.Bug) { Desc = "自定义编辑器值与数据源值的转换" },
                 new Nav("查询面板", typeof(QueryFvDemo), Icons.搜索) { Desc = "通用查询面板" },
                 new Nav("数据操作", typeof(FvData), Icons.全选) { Desc = "对二维表格数据的增删改或对普通对象的修改" },

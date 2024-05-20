@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2024-02-01 创建
+* 日志: 2024-02-05 创建
 ******************************************************************************/
 #endregion
 
@@ -32,53 +32,27 @@ namespace Dt.MgrDemo
         protected override async Task OnAdd()
         {
             Data = await 用户X.New();
-            UpdateRelated(-1);
         }
 
         protected override async Task OnGet(long p_id)
         {
             Data = await 用户X.GetByID(p_id);
-            UpdateRelated(p_id);
         }
-
-        protected override async Task<bool> OnSave()
+        
+        protected override void RefreshList(long? p_id)
         {
-            var d = Data;
-            bool isNew = d.IsAdded;
-            if (await d.Save())
+            if (OwnWin is 用户Win win)
             {
-                if (isNew)
-                {
-                    UpdateRelated(d.ID);
-                }
-                await _win?.MainList.Refresh(d.ID);
-                return true;
+                _ = win.MainList.Refresh(p_id);
             }
-            return false;
-        }
-
-        protected override async Task<bool> OnDel()
-        {
-            if (await Data.Delete())
-            {
-                Clear();
-                await _win?.MainList.Refresh(-1);
-                return true;
-            }
-            return false;
-        }
-
-        protected override void Clear()
-        {
-            Data = null;
-            UpdateRelated(-1);
         }
 
         protected override void UpdateRelated(long p_id)
         {
-            _win.角色List.Update(p_id);
+            if (OwnWin is 用户Win win)
+            {
+                win.角色List.Update(p_id);
+            }
         }
-
-        用户Win _win => OwnWin as 用户Win;
     }
 }

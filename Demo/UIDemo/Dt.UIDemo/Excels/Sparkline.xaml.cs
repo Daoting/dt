@@ -92,55 +92,49 @@ namespace Dt.UIDemo
                 13,
                 0,
                 data,
-                DataOrientation.Vertical
-                , SparklineType.Line
-                , new SparklineSetting()
+                DataOrientation.Vertical,
+                SparklineType.Line,
+                new SparklineSetting()
                 {
                     ShowMarkers = true,
                     LineWeight = 3,
-                    DisplayXAxis = true
-                ,
-                    ShowFirst = true
-                ,
-                    ShowLast = true
-                ,
-                    ShowLow = true
-                ,
-                    ShowHigh = true
-                ,
+                    DisplayXAxis = true,
+                    ShowFirst = true,
+                    ShowLast = true,
+                    ShowLow = true,
+                    ShowHigh = true,
                     ShowNegative = true
-                }
-                );
+                });
 
             //column
             sheet.Cells["d14"].ColumnSpan = 3;
             sheet.Cells["d14"].RowSpan = 4;
-            sheet.SetSparkline(13, 3, data
-                , DataOrientation.Vertical
-                , SparklineType.Column
-                , new SparklineSetting()
+            sheet.SetSparkline(
+                13,
+                3,
+                data,
+                DataOrientation.Vertical,
+                SparklineType.Column,
+                new SparklineSetting()
                 {
-                    DisplayXAxis = true
-                    ,
-                    ShowFirst = true
-                    ,
-                    ShowLast = true
-                    ,
-                    ShowLow = true
-                    ,
-                    ShowHigh = true
-                    ,
+                    DisplayXAxis = true,
+                    ShowFirst = true,
+                    ShowLast = true,
+                    ShowLow = true,
+                    ShowHigh = true,
                     ShowNegative = true
-                }
-                );
+                });
 
             //winloss
             sheet.Cells["g14"].ColumnSpan = 3;
             sheet.Cells["g14"].RowSpan = 4;
-            sheet.SetSparkline(13, 6, data
-                , DataOrientation.Vertical
-                , SparklineType.Winloss
-                , new SparklineSetting()
+            sheet.SetSparkline(
+                13,
+                6,
+                data,
+                DataOrientation.Vertical,
+                SparklineType.Winloss,
+                new SparklineSetting()
                 {
                     DisplayXAxis = true,
                     ShowNegative = true
@@ -148,8 +142,7 @@ namespace Dt.UIDemo
                     //,ShowLast = true
                     //,ShowLow= true
                     //,ShowHigh = true
-                }
-                );
+                });
 
 
 
@@ -163,62 +156,59 @@ namespace Dt.UIDemo
             //line
             sheet.Cells["A20"].ColumnSpan = 3;
             sheet.Cells["A20"].RowSpan = 4;
-            sheet.SetSparkline(19, 0, data
-                , DataOrientation.Vertical
-                , SparklineType.Line
-                , dateAxis
-                , DataOrientation.Vertical
-                , new SparklineSetting()
+            sheet.SetSparkline(
+                19,
+                0,
+                data,
+                DataOrientation.Vertical,
+                SparklineType.Line,
+                dateAxis,
+                DataOrientation.Vertical,
+                new SparklineSetting()
                 {
                     ShowMarkers = true,
                     LineWeight = 3,
-                    DisplayXAxis = true
-                    ,
-                    ShowFirst = true
-                    ,
-                    ShowLast = true
-                    ,
-                    ShowLow = true
-                    ,
-                    ShowHigh = true
-                    ,
+                    DisplayXAxis = true,
+                    ShowFirst = true,
+                    ShowLast = true,
+                    ShowLow = true,
+                    ShowHigh = true,
                     ShowNegative = true
-                }
-                );
+                });
 
             //column
             sheet.Cells["d20"].ColumnSpan = 3;
             sheet.Cells["d20"].RowSpan = 4;
-            sheet.SetSparkline(19, 3, data
-                , DataOrientation.Vertical
-                , SparklineType.Column
-                , dateAxis
-                , DataOrientation.Vertical
-                , new SparklineSetting()
+            sheet.SetSparkline(
+                19,
+                3,
+                data
+                , DataOrientation.Vertical,
+                SparklineType.Column,
+                dateAxis,
+                DataOrientation.Vertical,
+                new SparklineSetting()
                 {
-                    DisplayXAxis = true
-                    ,
-                    ShowFirst = true
-                    ,
-                    ShowLast = true
-                    ,
-                    ShowLow = true
-                    ,
-                    ShowHigh = true
-                    ,
+                    DisplayXAxis = true,
+                    ShowFirst = true,
+                    ShowLast = true,
+                    ShowLow = true,
+                    ShowHigh = true,
                     ShowNegative = true
-                }
-                );
+                });
 
             //winloss
             sheet.Cells["g20"].ColumnSpan = 3;
             sheet.Cells["g20"].RowSpan = 4;
-            sheet.SetSparkline(19, 6, data
-                , DataOrientation.Vertical
-                , SparklineType.Winloss
-                , dateAxis
-                , DataOrientation.Vertical
-                , new SparklineSetting()
+            sheet.SetSparkline(
+                19,
+                6,
+                data,
+                DataOrientation.Vertical,
+                SparklineType.Winloss,
+                dateAxis,
+                DataOrientation.Vertical,
+                new SparklineSetting()
                 {
                     ShowNegative = true,
                     DisplayXAxis = true
@@ -226,8 +216,7 @@ namespace Dt.UIDemo
                     //,ShowLast = true
                     //,ShowLow = true
                     //,ShowHigh = true
-                }
-                );
+                });
 
             _excel.ActiveSheet.AddSelection(0, 0, 1, 1);
         }
@@ -289,63 +278,6 @@ namespace Dt.UIDemo
                 comboBox.Items.Add(property.ToString());
             }
             comboBox.SelectedIndex = 0;
-        }
-
-        async void SaveExcelFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("Excel Files", new List<string>(new string[] { ".xlsx" }));
-            filePicker.FileTypeChoices.Add("Excel 97-2003 Files", new List<string>(new string[] { ".xls" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                var fileName = storageFile.FileType.ToUpperInvariant();
-                var fileFormat = ExcelFileFormat.XLS;
-                if (fileName.EndsWith(".XLSX"))
-                    fileFormat = ExcelFileFormat.XLSX;
-                else
-                    fileFormat = ExcelFileFormat.XLS;
-                await _excel.SaveExcel(stream, fileFormat, ExcelSaveFlags.NoFlagsSet);
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        async void SavePDFFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("PDF文件", new List<string>(new string[] { ".pdf" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                await _excel.SavePdf(stream);
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        async void SaveXmlFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("Xml文件", new List<string>(new string[] { ".xml" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                await _excel.SaveXmlAsync(stream);
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        void OnPrintExcel(object sender, RoutedEventArgs e)
-        {
-            _excel.Print();
         }
     }
 }

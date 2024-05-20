@@ -20,30 +20,6 @@
                     <Button Content="矩形边框" Click="testButton_Click" />
                     <Button Content="选择边框" Click="selectButton_Click" />
                     <Button Content="划线" Click="lineButton_Click" />
-
-                    <a:CBar Title="保存为Excel" />
-                    <a:CFree Title="保存选项">
-                        <ComboBox x:Name="_saveFlags" SelectedIndex="0">
-                            <ComboBoxItem>NoFlagsSet</ComboBoxItem>
-                            <ComboBoxItem>NoFormulas</ComboBoxItem>
-                            <ComboBoxItem>SaveCustomRowHeaders</ComboBoxItem>
-                            <ComboBoxItem>SaveCustomColumnHeaders</ComboBoxItem>
-                            <ComboBoxItem>SaveAsFiltered</ComboBoxItem>
-                            <ComboBoxItem>SaveBothCustomRowAndColumnHeaders</ComboBoxItem>
-                            <ComboBoxItem>SaveAsViewed</ComboBoxItem>
-                            <ComboBoxItem>DataOnly</ComboBoxItem>
-                            <ComboBoxItem>AutoRowHeight</ComboBoxItem>
-                        </ComboBox>
-                    </a:CFree>
-                    <Button Content="保存" Click="SaveExcelFile" />
-
-                    <a:CBar Title="其它格式保存" />
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="保存为Xml" Click="SaveXmlFile" />
-                        <Button Content="保存为PDF" Click="SavePDFFile" />
-                        <Button Content="保存为CSV" Click="SaveCsvFile" />
-                    </StackPanel>
-                    <Button Content="打印" Click="OnPrintExcel" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

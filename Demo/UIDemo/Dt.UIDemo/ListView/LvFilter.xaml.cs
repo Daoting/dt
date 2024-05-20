@@ -86,9 +86,9 @@ namespace Dt.UIDemo
         void OnMyFilterCfg(object sender, RoutedEventArgs e)
         {
             var cfg = new FilterCfg();
-            cfg.MyFilter = (s) =>
+            cfg.MyFilter = (o, txt) =>
             {
-                _lv.Data = SampleData.CreatePersonXs(new Random().Next(30));
+                return true;
             };
             _lv.FilterCfg = cfg;
         }

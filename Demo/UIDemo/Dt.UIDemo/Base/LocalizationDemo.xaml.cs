@@ -8,7 +8,6 @@
 
 #region 引用命名
 using Dt.Base;
-using Microsoft.Extensions.Localization;
 using Microsoft.UI.Xaml;
 #endregion
 
@@ -23,19 +22,19 @@ namespace Dt.UIDemo
 
         void GetLocalStr(object sender, RoutedEventArgs e)
         {
-            string str = "Name".Loc();
-            str += "\r\n" + "LocBar.Title".Loc();
-            str += "\r\n" + "LocFormat".LocFormat(23, 99);
-            Kit.Msg(str);
+            //string str = "Name".Loc();
+            //str += "\r\n" + "LocBar.Title".Loc();
+            //str += "\r\n" + "LocFormat".LocFormat(23, 99);
+            //Kit.Msg(str);
         }
     }
     
-    static class Localizer
-    {
-        static readonly ResourceStringLocalizer _loc = new ResourceStringLocalizer(typeof(Localizer).Assembly.GetName().Name);
+    //static class Localizer
+    //{
+    //    static readonly ResourceStringLocalizer _loc = new ResourceStringLocalizer(typeof(Localizer).Assembly.GetName().Name);
 
-        public static LocalizedString Loc(this string p_key) => _loc[p_key];
+    //    public static LocalizedString Loc(this string p_key) => _loc[p_key];
 
-        public static LocalizedString LocFormat(this string p_name, params object[] p_args) => _loc[p_name, p_args];
-    }
+    //    public static LocalizedString LocFormat(this string p_name, params object[] p_args) => _loc[p_name, p_args];
+    //}
 }

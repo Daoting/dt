@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2024-02-01 创建
+* 日志: 2024-02-05 创建
 ******************************************************************************/
 #endregion
 
@@ -15,6 +15,10 @@ namespace Dt.MgrDemo
 {
     public partial class 实体List : LvTab
     {
+        #region 变量
+        QueryClause _clause;
+        #endregion
+
         #region 构造
         public 实体List()
         {
@@ -52,28 +56,36 @@ namespace Dt.MgrDemo
         #region 交互
         async void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (_lv.SelectionMode != SelectionMode.Multiple)
+            if (_lv.SelectionMode != SelectionMode.Multiple
+                && OwnWin is 实体Win win)
             {
-                await _win.Form.Update(_lv.SelectedRow?.ID);
+                await win.Form.Update(_lv.SelectedRow?.ID);
             }
         }
 
         async void OnItemDbClick(object e)
         {
-            if (_lv.SelectionMode != SelectionMode.Multiple)
+            if (_lv.SelectionMode != SelectionMode.Multiple
+                && OwnWin is 实体Win win)
             {
-                await _win.Form.Open(_lv.SelectedRow?.ID);
+                await win.Form.Open(_lv.SelectedRow?.ID);
             }
         }
 
         async void OnAdd(Mi e)
         {
-            await _win.Form.Open(-1);
+            if (OwnWin is 实体Win win)
+            {
+                await win.Form.Open(-1);
+            }
         }
 
         async void OnEdit(Mi e)
         {
-            await _win.Form.Open(e.Row?.ID);
+            if (OwnWin is 实体Win win)
+            {
+                await win.Form.Open(e.Row?.ID);
+            }
         }
 
         async void OnDel(Mi e)
@@ -101,11 +113,6 @@ namespace Dt.MgrDemo
                 }
             }
         }
-        #endregion
-
-        #region 内部
-        实体Win _win => OwnWin as 实体Win;
-        QueryClause _clause;
         #endregion
     }
 }

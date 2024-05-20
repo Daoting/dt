@@ -44,7 +44,6 @@ namespace Dt.UIDemo
                 { "tgtpy" },
                 { "num", typeof(double) },
                 { "pwd" },
-                { "html" },
 
                 { "date", typeof(DateTime) },
                 { "time", typeof(DateTime) },

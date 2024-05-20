@@ -163,5 +163,35 @@ namespace Dt.UIDemo
         {
             _tv.ScrollBottom();
         }
+        
+        void OnFilter(object sender, RoutedEventArgs e)
+        {
+            _tv.FilterCfg = new FilterCfg();
+        }
+
+        void OnCustFilter(object sender, RoutedEventArgs e)
+        {
+            _tv.FilterCfg = new FilterCfg
+            {
+                FilterCols = "name",
+                EnablePinYin = true,
+                IsRealtime = true,
+            };
+        }
+
+        void OnMyFilter(object sender, RoutedEventArgs e)
+        {
+            var cfg = new FilterCfg();
+            cfg.MyFilter = (o, txt) =>
+            {
+                return true;
+            };
+            _tv.FilterCfg = cfg;
+        }
+
+        void OnDelFilter(object sender, RoutedEventArgs e)
+        {
+            _tv.FilterCfg = null;
+        }
     }
 }

@@ -1,26 +1,20 @@
 ﻿<Project>
 	<!-- 所有项目引用 -->
-	<Choose>
-		<When Condition="$(SolutionFileName.Contains('Demo-'))">
-			<ItemGroup>
-				<!-- 调试需将dt源码放在 d:\Dt -->
-				<PackageReference Include="Dt.Client" Version="4.4.0" />
-			</ItemGroup>
-		</When>
-		<Otherwise>
-			<ItemGroup>
-				<ProjectReference Include="..\..\..\Client\Dt.Core\Dt.Core.csproj" />
-				<ProjectReference Include="..\..\..\Client\Dt.Base\Dt.Base.csproj" />
-				<ProjectReference Include="..\..\..\Client\Dt.Mgr\Dt.Mgr.csproj" />
-			</ItemGroup>
-		</Otherwise>
-	</Choose>
+	<ItemGroup>
+		<!-- 调试需将dt源码放在 d:\Dt -->
+		<PackageReference Include="Dt.Client" Version="4.5.1" />
+	</ItemGroup>
 
+	<!-- 非windows引用包 -->
+	<ItemGroup Condition="!$(IsWin)">
+		<PackageReference Include="Uno.WinUI" Version="5.2.119" />
+	</ItemGroup>
+	
 	<!-- 所有App引用 -->
 	<ItemGroup Condition="$(AppType) != ''">
-		<PackageReference Include="Dt.BuildTools" Version="1.3.11" />
+		<PackageReference Include="Dt.BuildTools" Version="1.4.1" PrivateAssets="none" />
 		<!-- 1.2 Splash不缩放 -->
-		<PackageReference Include="Uno.Resizetizer" Version="1.3.0-dev.25" />
+		<PackageReference Include="Uno.Resizetizer" Version="1.4.8" />
 	</ItemGroup>
 
 	<!-- App分类别引用，使用Choose无效 -->
@@ -35,22 +29,22 @@
 	</ItemGroup>
 	
 	<ItemGroup Condition="$(AppType) == 'gtk'">
-		<PackageReference Include="Uno.WinUI.Skia.Gtk" Version="5.1.31" />
-		<PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.7" />
-		<PackageReference Include="SkiaSharp.Skottie" Version="2.88.7" />
+		<PackageReference Include="Uno.WinUI.Skia.Gtk" Version="5.2.119" />
+		<PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.8" />
+		<PackageReference Include="SkiaSharp.Skottie" Version="2.88.8" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(AppType) == 'wpf'">
-		<PackageReference Include="Uno.WinUI.Skia.Wpf" Version="5.1.31" />
-		<PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.7" />
-		<PackageReference Include="SkiaSharp.Skottie" Version="2.88.7" />
+		<PackageReference Include="Uno.WinUI.Skia.Wpf" Version="5.2.119" />
+		<PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.8" />
+		<PackageReference Include="SkiaSharp.Skottie" Version="2.88.8" />
 	</ItemGroup>
 	
 	<ItemGroup Condition="$(AppType) == 'wasm'">
-		<PackageReference Include="Uno.Wasm.Bootstrap" Version="8.0.8" />
-		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="8.0.8" />
-		<PackageReference Include="Uno.WinUI.WebAssembly" Version="5.1.31" PrivateAssets="none" />
-		<PackageReference Include="Uno.WinUI.MediaPlayer.WebAssembly" Version="5.1.31" />
+		<PackageReference Include="Uno.Wasm.Bootstrap" Version="8.0.14" />
+		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="8.0.14" />
+		<PackageReference Include="Uno.WinUI.WebAssembly" Version="5.2.119" PrivateAssets="none" />
+		<PackageReference Include="Uno.WinUI.MediaPlayer.WebAssembly" Version="5.2.119" />
 		<PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.7" />
 		<!-- 不引用link出错 -->
 		<PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.0" />

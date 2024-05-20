@@ -102,7 +102,10 @@ namespace Dt.UIDemo
 
             e.Set += c =>
             {
-                tb.Text = c.Row.Str("xb") == "男" ? "\uE060" : "\uE0D9";
+                if (c.Data is Row row)
+                tb.Text = row.Str("xb") == "男" ? "\uE060" : "\uE0D9";
+                else if (c.Data is Person person)
+                    tb.Text = person.Xb == "男" ? "\uE060" : "\uE0D9";
             };
         }
 
@@ -113,7 +116,10 @@ namespace Dt.UIDemo
 
             e.Set += c =>
             {
-                ticker.Apply(c.Row.Double("shengao"));
+                if (c.Data is Row row)
+                    ticker.Apply(row.Double("shengao"));
+                else if (c.Data is Person person)
+                    ticker.Apply(person.Shengao);
             };
         }
     }

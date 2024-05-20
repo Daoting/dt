@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2024-02-01 创建
+* 日志: 2024-02-05 创建
 ******************************************************************************/
 #endregion
 
@@ -29,7 +29,6 @@ namespace Dt.MgrDemo
             remove { _fv.Query -= value; }
         }
 
-        #region 初始化 
         protected override void OnFirstLoaded()
         {
             var row = new Row();
@@ -37,6 +36,5 @@ namespace Dt.MgrDemo
 
             _fv.Data = row;
         }
-        #endregion
     }
 }

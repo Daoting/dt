@@ -1,0 +1,52 @@
+﻿<Rpt cols="65,103,202,240,140,167,102,151,80,137,80,142,78,112,98">
+	<Params />
+	<Data>
+		<Tbl name="多列档案" isscritp="True" cols="bh,xm,zhuzhi,hujidz,lianxidh,xiangzhenmc,cunweihmc,jddw,jdr,zerenysh,jiandangrq,xb,chushengrq,shenfenzh,gongzuodw,benrendh,lianxir,xuexing,wenhuacd,zhiye" />
+	</Data>
+	<Page autopapersize="True" />
+	<Header />
+	<Body rows="25,25">
+		<Table rowspan="2" colspan="15" tbl="多列档案" repeatrowheadercols="2">
+			<TColHeader>
+				<TRow>
+					<Text val="序号" background="#FFE0E0E0" />
+					<Text col="1" background="#FFE0E0E0" val="姓名" />
+					<Text col="2" background="#FFE0E0E0" val="编号" />
+					<Text col="3" background="#FFE0E0E0" val="户籍地址" />
+					<Text col="4" background="#FFE0E0E0" val="联系电话" />
+					<Text col="5" background="#FFE0E0E0" val="乡镇" />
+					<Text col="6" background="#FFE0E0E0" val="村" />
+					<Text col="7" background="#FFE0E0E0" val="ID" />
+					<Text col="8" background="#FFE0E0E0" val="建档人" />
+					<Text col="9" background="#FFE0E0E0" val="建档日期" />
+					<Text col="10" background="#FFE0E0E0" val="性别" />
+					<Text col="11" background="#FFE0E0E0" val="出生日期" />
+					<Text col="12" background="#FFE0E0E0" val="血型" />
+					<Text col="13" background="#FFE0E0E0" val="学历" />
+					<Text col="14" background="#FFE0E0E0" val="职业" />
+				</TRow>
+			</TColHeader>
+			<TBody>
+				<TRow>
+					<Text row="1" val=":Index(多列档案)" />
+					<Text row="1" col="1" val=":Val(多列档案,xm)" />
+					<Text row="1" col="2" val=":Val(多列档案,bh)" />
+					<Text row="1" col="3" val=":Val(多列档案,zhuzhi)" />
+					<Text row="1" col="4" val=":Val(多列档案,lianxidh)" />
+					<Text row="1" col="5" val=":Val(多列档案,xiangzhenmc)" />
+					<Text row="1" col="6" val=":Val(多列档案,cunweihmc)" />
+					<Text row="1" col="7" val=":Val(多列档案,jddw)" />
+					<Text row="1" col="8" val=":Val(多列档案,jdr)" />
+					<Text row="1" col="9" val=":Val(多列档案,jiandangrq)" />
+					<Text row="1" col="10" val=":Val(多列档案,xb)" />
+					<Text row="1" col="11" val=":Val(多列档案,chushengrq)" />
+					<Text row="1" col="12" val=":Val(多列档案,xuexing)" />
+					<Text row="1" col="13" val=":Val(多列档案,wenhuacd)" />
+					<Text row="1" col="14" val=":Val(多列档案,zhiye)" />
+				</TRow>
+			</TBody>
+		</Table>
+	</Body>
+	<Footer />
+	<View script="DataRptScript" />
+</Rpt>

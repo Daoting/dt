@@ -1,0 +1,16 @@
+﻿<a:Win
+    x:Class="Dt.UIDemo.PrintPdfDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Tab Title="打印">
+        <a:Fv>
+            <Button Content="打印内容文件" Click="OnPrintFile" />
+            <Button Content="打印本地文件" Click="OnPrintLocal" />
+            <Button Content="打印本地缓存文件" Click="OnPrintLocal2" />
+            <Button Content="打印流" Click="OnPrintStream" />
+            <Button Content="PdfPrinter打印" Click="OnDirectPrint" />
+        </a:Fv>
+    </a:Tab>
+</a:Win>

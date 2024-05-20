@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2024-02-01 创建
+* 日志: 2024-02-05 创建
 ******************************************************************************/
 #endregion
 
@@ -15,6 +15,8 @@ namespace Dt.MgrDemo
 {
     public sealed partial class 父表大儿Form : FvDlg
     {
+        long _parentID;
+
         public 父表大儿Form()
         {
             InitializeComponent();
@@ -45,40 +47,18 @@ namespace Dt.MgrDemo
             Data = await 大儿X.GetByID(p_id);
         }
 
-        protected override async Task<bool> OnSave()
+        protected override void RefreshList(long? p_id)
         {
-            var d = Data;
-            if (await d.Save())
+            if (OwnWin is 父表Win win)
             {
-                await _win?.大儿List.Refresh(d.ID);
-                return true;
+                _ = win.大儿List.Refresh(p_id);
             }
-            return false;
         }
 
-        protected override async Task<bool> OnDel()
-        {
-            if (await Data.Delete())
-            {
-                Clear();
-                await _win?.大儿List.Refresh(-1);
-                return true;
-            }
-            return false;
-        }
-
-        protected override void Clear()
-        {
-            Data = null;
-        }
-        
         大儿X Data
         {
             get { return _fv.Data.To<大儿X>(); }
             set { _fv.Data = value; }
         }
-
-        父表Win _win => OwnWin as 父表Win;
-        long _parentID;
     }
 }

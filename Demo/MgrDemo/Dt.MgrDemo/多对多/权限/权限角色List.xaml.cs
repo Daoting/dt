@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2024-02-01 创建
+* 日志: 2024-02-05 创建
 ******************************************************************************/
 #endregion
 
@@ -15,6 +15,10 @@ namespace Dt.MgrDemo
 {
     public partial class 权限角色List : LvTab
     {
+        #region 变量
+        long _releatedID;
+        #endregion
+        
         #region 构造
         public 权限角色List()
         {
@@ -94,11 +98,6 @@ namespace Dt.MgrDemo
                     await Refresh();
             }
         }
-        #endregion
-
-        #region 内部
-        权限Win _win => OwnWin as 权限Win;
-        long _releatedID;
         #endregion
     }
 }

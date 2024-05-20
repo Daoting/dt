@@ -1,0 +1,45 @@
+﻿<Rpt cols="131,99,74,132,80">
+	<Params />
+	<Data>
+		<Tbl name="网损情况" isscritp="True" cols="year,month,unit,val" />
+	</Data>
+	<Page />
+	<Header />
+	<Body rows="25,25,25,25,25">
+		<Table col="1" rowspan="5" colspan="4" tbl="网损情况">
+			<TColHeader>
+				<TRow>
+					<Text col="1" val="年度" background="#FFE0E0E0" horalign="Center" />
+					<Text col="2" val="月份" background="#FFE0E0E0" horalign="Center" />
+					<Text col="3" val="单位" background="#FFE0E0E0" horalign="Center" />
+					<Text col="4" val="值" background="#FFE0E0E0" horalign="Center" />
+				</TRow>
+			</TColHeader>
+			<TBody>
+				<TRow>
+					<Text row="4" col="1" val=":Val(网损情况,year)" hidetopdup="True" horalign="Center" />
+					<Text row="4" col="2" val=":Val(网损情况,month)" hidetopdup="True" horalign="Center" />
+					<Text row="4" col="3" val=":Val(网损情况,unit)" />
+					<Text row="4" col="4" val=":Val(网损情况,val)" />
+				</TRow>
+			</TBody>
+			<TGroup field="year">
+				<TRow>
+					<Text row="1" col="1" colspan="4" val=":Group(网损情况,year)&#xD;&#xA;|| 年度合计：&#xD;&#xA;|| :Sum(网损情况,val)" background="#FFE0E0E0" horalign="Center" />
+				</TRow>
+			</TGroup>
+			<TGroup field="month">
+				<TRow>
+					<Text row="2" col="1" val=":Group(网损情况,year)" hidetopdup="True" background="#00000000" horalign="Center" />
+					<Text row="2" col="2" colspan="3" val=":Group(网损情况,month)&#xD;&#xA;|| 月份合计：&#xD;&#xA;|| :Sum(网损情况,val)" background="#FFE0E0E0" />
+				</TRow>
+				<TRow>
+					<Text row="3" col="1" val=":Group(网损情况,year)" hidetopdup="True" background="#00000000" horalign="Center" />
+					<Text row="3" col="2" colspan="3" val=":Group(网损情况,month)&#xD;&#xA;|| 月份平均：&#xD;&#xA;|| :Avg(网损情况,val)" background="#FFE0E0E0" />
+				</TRow>
+			</TGroup>
+		</Table>
+	</Body>
+	<Footer />
+	<View script="DataRptScript" />
+</Rpt>

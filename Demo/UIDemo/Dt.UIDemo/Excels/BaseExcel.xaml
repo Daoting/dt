@@ -2,7 +2,8 @@
     x:Class="Dt.UIDemo.BaseExcel"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base">
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.UIDemo">
 
     <a:Main>
         <a:Tabs>
@@ -101,45 +102,9 @@
                     <a:CList ID="TabStripVisibility" Title="显示Tab面板" />
                     <a:CList ID="HorizontalScrollBarVisibility" Title="水平滚动栏" />
                     <a:CText ID="TabStripRatio" Title="水平栏占比例" />
-
-                    <a:CBar Title="打开文件" />
-                    <a:CFree Title="打开选项">
-                        <ComboBox x:Name="_openFlags" SelectedIndex="0">
-                            <ComboBoxItem Content="NoFlagsSet" />
-                            <ComboBoxItem Content="DataOnly" />
-                            <ComboBoxItem Content="DataAndFormulasOnly" />
-                            <ComboBoxItem Content="RowHeaders" />
-                            <ComboBoxItem Content="ColumnHeaders" />
-                            <ComboBoxItem Content="RowAndColumnHeaders" />
-                            <ComboBoxItem Content="DoNotRecalculateAfterLoad" />
-                        </ComboBox>
-                    </a:CFree>
-                    <Button Content="打开" Click="OpenFile" />
-
-                    <a:CBar Title="保存为Excel" />
-                    <a:CFree Title="保存选项">
-                        <ComboBox x:Name="_saveFlags" SelectedIndex="0">
-                            <ComboBoxItem>NoFlagsSet</ComboBoxItem>
-                            <ComboBoxItem>NoFormulas</ComboBoxItem>
-                            <ComboBoxItem>SaveCustomRowHeaders</ComboBoxItem>
-                            <ComboBoxItem>SaveCustomColumnHeaders</ComboBoxItem>
-                            <ComboBoxItem>SaveAsFiltered</ComboBoxItem>
-                            <ComboBoxItem>SaveBothCustomRowAndColumnHeaders</ComboBoxItem>
-                            <ComboBoxItem>SaveAsViewed</ComboBoxItem>
-                            <ComboBoxItem>DataOnly</ComboBoxItem>
-                            <ComboBoxItem>AutoRowHeight</ComboBoxItem>
-                        </ComboBox>
-                    </a:CFree>
-                    <Button Content="保存" Click="SaveExcelFile" />
-
-                    <a:CBar Title="其它格式保存" />
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="保存为Xml" Click="SaveXmlFile" />
-                        <Button Content="保存为PDF" Click="SavePDFFile" />
-                        <Button Content="保存为CSV" Click="SaveCsvFile" />
-                    </StackPanel>
                 </a:Fv>
             </a:Tab>
+            <l:ExcelExpPrint Order="3" />
         </a:Tabs>
     </a:Pane>
 </a:Win>

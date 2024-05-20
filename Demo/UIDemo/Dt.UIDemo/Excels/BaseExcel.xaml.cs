@@ -59,6 +59,7 @@ namespace Dt.UIDemo
             var sheet = _excel.ActiveSheet;
             sheet.AddSpanCell(1, 1, 1, 3);
             sheet.SetValue(1, 1, "Store");
+            
             sheet.AddSpanCell(1, 4, 1, 7);
             sheet.SetValue(1, 4, "Goods");
             sheet.AddSpanCell(2, 1, 1, 2);
@@ -774,109 +775,6 @@ namespace Dt.UIDemo
         void btnClear_Click(object sender, RoutedEventArgs e)
         {
             _excel.Sheets.Clear();
-        }
-        #endregion
-
-        #region 文件
-        async void OpenFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileOpenPicker();
-            filePicker.FileTypeFilter.Add(".xls");
-            filePicker.FileTypeFilter.Add(".xlsx");
-            filePicker.FileTypeFilter.Add(".xml");
-            StorageFile storageFile = await filePicker.PickSingleFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForReadAsync();
-                if (storageFile.FileType.ToLower() == ".xml")
-                    await _excel.OpenXml(stream);
-                else
-                    await _excel.OpenExcel(stream, GetOpenFlag());
-                stream.Dispose();
-            }
-        }
-
-        async void SaveExcelFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("Excel Files", new List<string>(new string[] { ".xlsx" }));
-            filePicker.FileTypeChoices.Add("Excel 97-2003 Files", new List<string>(new string[] { ".xls" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                var fileName = storageFile.FileType.ToUpperInvariant();
-                var fileFormat = ExcelFileFormat.XLS;
-                if (fileName.EndsWith(".XLSX"))
-                    fileFormat = ExcelFileFormat.XLSX;
-                else
-                    fileFormat = ExcelFileFormat.XLS;
-                await _excel.SaveExcel(stream, fileFormat, GetSaveFlag());
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        async void SavePDFFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("PDF文件", new List<string>(new string[] { ".pdf" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                await _excel.SavePdf(stream);
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        async void SaveCsvFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("CSV文件", new List<string>(new string[] { ".csv" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                await _excel.SaveCSV(_excel.ActiveSheetIndex, stream, TextFileSaveFlags.AsViewed);
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        async void SaveXmlFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileSavePicker();
-            filePicker.FileTypeChoices.Add("Xml文件", new List<string>(new string[] { ".xml" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                await _excel.SaveXmlAsync(stream);
-                stream.Dispose();
-                Kit.Msg("导出成功！");
-            }
-        }
-
-        ExcelOpenFlags GetOpenFlag()
-        {
-            var flagText = (_openFlags.SelectedItem as ComboBoxItem).Content.ToString();
-            var result = ExcelOpenFlags.NoFlagsSet;
-            Enum.TryParse<ExcelOpenFlags>(flagText, true, out result);
-            return result;
-        }
-
-        ExcelSaveFlags GetSaveFlag()
-        {
-            var flagText = (_saveFlags.SelectedItem as ComboBoxItem).Content.ToString();
-            var result = ExcelSaveFlags.NoFlagsSet;
-            Enum.TryParse<ExcelSaveFlags>(flagText, true, out result);
-            return result;
         }
         #endregion
     }

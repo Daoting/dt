@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2024-02-01 创建
+* 日志: 2024-02-05 创建
 ******************************************************************************/
 #endregion
 
@@ -39,33 +39,12 @@ namespace Dt.MgrDemo
             Data = await 基础X.GetByID(p_id);
         }
 
-        protected override async Task<bool> OnSave()
+        protected override void RefreshList(long? p_id)
         {
-            var d = Data;
-            if (await d.Save())
+            if (OwnWin is 实体Win win)
             {
-                await _win?.List.Refresh(d.ID);
-                return true;
+                _ = win.List.Refresh(p_id);
             }
-            return false;
         }
-
-        protected override async Task<bool> OnDel()
-        {
-            if (await Data.Delete())
-            {
-                Clear();
-                await _win?.List.Refresh(-1);
-                return true;
-            }
-            return false;
-        }
-
-        protected override void Clear()
-        {
-            Data = null;
-        }
-        
-        实体Win _win => OwnWin as 实体Win;
     }
 }

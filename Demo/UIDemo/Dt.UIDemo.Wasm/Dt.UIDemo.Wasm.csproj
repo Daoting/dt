@@ -2,10 +2,9 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFrameworks>net8.0</TargetFrameworks>
+		<!-- Uno.Wasm.Bootstrap无法启动，需都调整为net8.0 -->
+        <TargetFrameworks>net8.0-browser</TargetFrameworks>
 		<ImplicitUsings>disable</ImplicitUsings>
-        <!-- 使用Dt.BuildTools标志 -->
-        <UseWasmTools>true</UseWasmTools>
 		<AppType>wasm</AppType>
 		
         <!-- 必须sdk完整路径，避免总下载失败，实际文件名加后缀 -simd -->

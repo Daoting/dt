@@ -2,18 +2,19 @@
     x:Class="Dt.UIDemo.UseCase"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base">
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.UIDemo">
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="Excel">
+            <a:Tab Title="Excel">
                 <a:Excel x:Name="_excel" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Order="1" Title="属性">
                 <a:Fv>
                     <StackPanel Orientation="Horizontal">
                         <Button Content="月报xls" Tag="MonthProfit.xlsx" Click="OnLoadFile" />
@@ -40,17 +41,9 @@
                         <Button Content="汽车维修跟踪xls" Tag="CarRepair.xlsx" Click="OnLoadFile" />
                         <Button Content="汽车维修跟踪xml" Tag="CarRepair.ssxml" Click="OnLoadFile" />
                     </StackPanel>
-                    <a:CBar Title="导出" />
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="Xls" Click="SaveExcelFile" />
-                        <Button Content="Xml" Click="SaveXmlFile" />
-                        <Button Content="PDF" Click="SavePDFFile" />
-                        <Button Content="CSV" Click="SaveCsvFile" />
-                    </StackPanel>
-                    <Button Content="打开" Click="OpenFile" />
-                    <Button Content="打印" Click="OnPrintExcel" />
                 </a:Fv>
             </a:Tab>
+            <l:ExcelExpPrint />
         </a:Tabs>
     </a:Pane>
 </a:Win>

@@ -9,7 +9,7 @@
 
 	<ItemGroup>
 		<!-- 调试需将dt源码放在 d:\Dt -->
-		<PackageReference Include="Dt.Service" Version="4.4.0" />
+		<PackageReference Include="Dt.Service" Version="4.4.1" />
 	</ItemGroup>
 	
 	<ItemGroup>

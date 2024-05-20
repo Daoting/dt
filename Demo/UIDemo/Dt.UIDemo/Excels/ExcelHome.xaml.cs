@@ -32,13 +32,12 @@ namespace Dt.UIDemo
                 new Nav("迷你图", typeof(Sparkline), Icons.修改),                        
                 new Nav("过滤", typeof(FilterExcel), Icons.划卡),
                 new Nav("分组排序", typeof(RangeGroup), Icons.排列),
-                new Nav("浮动对象", typeof(FloatingObject), Icons.录音),
-                new Nav("触摸时选择", typeof(TouchExcel), Icons.点击),
                 new Nav("格式化", typeof(Formatter), Icons.全选),
-                new Nav("样式", typeof(ExcelTheme), Icons.日历),
                 new Nav("图片", typeof(ImgExcel), Icons.修改),
                 new Nav("图表图片", typeof(ChartPicture), Icons.划卡),
-                new Nav("打印", typeof(PrintExcel), Icons.打印) { Desc = "只支持Windows" },
+                new Nav("样式", typeof(ExcelTheme), Icons.日历),
+                new Nav("浮动对象", typeof(FloatingObject), Icons.录音),
+                new Nav("触摸时选择", typeof(TouchExcel), Icons.点击),
             };
         }
     }

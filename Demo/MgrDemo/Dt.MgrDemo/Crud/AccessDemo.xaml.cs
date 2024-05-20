@@ -47,7 +47,7 @@ namespace Dt.MgrDemo
 
         async void OnChangeSvc(object sender, RoutedEventArgs e)
         {
-            At.Svc = "demo";
+            At.Svc = "lob";
             
             var x = await UserX.First(null);
             x = await At.First<UserX>("select * from cm_user");

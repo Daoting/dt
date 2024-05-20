@@ -1,0 +1,116 @@
+<Rpt cols="80,142,223">
+  <Params>
+    <Xaml>
+	  <![CDATA[            <a:CBar Title="演示过滤菜单名，查询并取name列填充当前列" />
+            <a:CPick ID="menu" Title="菜单" Placeholder="请输入菜单名包含的文字">
+                <a:CPick.Sql>
+                    <a:Sql>
+SELECT
+	*
+FROM
+	cm_menu
+WHERE
+	name LIKE '%#input#%'
+                    </a:Sql>
+                </a:CPick.Sql>
+                <a:Cols>
+                    <a:Col ID="name" Title="名称" />
+                    <a:Col ID="icon" Title="图标" Call="MenuListUI.Icon" Width="60" />
+                    <a:Col ID="view_name" Title="视图名称" />
+                    <a:Col ID="params" Title="视图参数" />
+                    <a:Col ID="note" Title="功能说明" />
+                </a:Cols>
+            </a:CPick>
+
+            <a:CBar Title="演示多个CPick联动、sql变量赋值、占位符替换" />
+            <a:CPick ID="parent" Title="父亲" SrcID="父名#id#-#-" TgtID="-#parentid#child1#child2">
+                <a:CPick.Sql>
+                    <a:Sql>select * from demo_父表 where 父名 LIKE '%#input#%'</a:Sql>
+                </a:CPick.Sql>
+                <DataTemplate>
+                    <a:Dot ID="父名" Padding="10" />
+                </DataTemplate>
+            </a:CPick>
+            <a:CPick ID="child1" Title="大儿" SrcID="大儿名">
+                <a:CPick.Sql>
+                    <a:Sql>
+SELECT
+	大儿名
+FROM
+	demo_大儿
+WHERE
+	parent_id = @[parentid]
+    AND 大儿名 LIKE '%#input#%'
+                    </a:Sql>
+                </a:CPick.Sql>
+                <DataTemplate>
+                    <a:Dot ID="大儿名" Padding="10" />
+                </DataTemplate>
+            </a:CPick>
+            <a:CPick ID="child2" Title="小儿" SrcID="小儿名">
+                <a:CPick.Sql>
+                    <a:Sql>
+SELECT
+	小儿名
+FROM
+	demo_小儿
+WHERE
+	group_id = #[parentid]#
+    AND 小儿名 LIKE '%#input#%'
+                    </a:Sql>
+                </a:CPick.Sql>
+                <DataTemplate>
+                    <a:Dot ID="小儿名" Padding="10" />
+                </DataTemplate>
+            </a:CPick>
+
+            <a:CBar Title="演示本地库查询，除指定库名外其余相同" />
+            <a:CPick ID="localmenu" Title="菜单" Placeholder="请输入菜单名包含的文字">
+                <a:CPick.Sql>
+                    <a:Sql LocalDb="menu">
+SELECT
+	*
+FROM
+	OmMenu
+WHERE
+	name LIKE '%#input#%'                        
+                    </a:Sql>
+                </a:CPick.Sql>
+                <a:Cols>
+                    <a:Col ID="name" Title="名称" />
+                    <a:Col ID="icon" Title="图标" Call="MenuListUI.Icon" Width="60" />
+                    <a:Col ID="view_name" Title="视图名称" />
+                    <a:Col ID="params" Title="视图参数" />
+                    <a:Col ID="note" Title="功能说明" />
+                </a:Cols>
+            </a:CPick>]]></Xaml>
+    <List>
+      <Param name="menu" />
+      <Param name="role" />
+      <Param name="parentid" type="long" />
+      <Param name="parent" />
+      <Param name="child1" />
+      <Param name="child2" />
+      <Param name="localmenu" />
+    </List>
+  </Params>
+  <Data />
+  <Page />
+  <Header />
+  <Body rows="30,30,30,30,30,30,30">
+    <Text row="1" col="1" val="menu" />
+    <Text row="1" col="2" val=":Param(menu)" />
+    <Text row="2" col="1" val="parentid" />
+    <Text row="2" col="2" val=":Param(parentid)" />
+    <Text row="3" col="1" val="parent" />
+    <Text row="3" col="2" val=":Param(parent)" />
+    <Text row="4" col="1" val="child1" />
+    <Text row="4" col="2" val=":Param(child1)" />
+    <Text row="5" col="1" val="child2" />
+    <Text row="5" col="2" val=":Param(child2)" />
+    <Text row="6" col="1" val="localmenu" />
+    <Text row="6" col="2" val=":Param(localmenu)" />
+  </Body>
+  <Footer />
+  <View />
+</Rpt>
