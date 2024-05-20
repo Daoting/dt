@@ -47,20 +47,15 @@ namespace Dt.Core.Rpc
 #elif ANDROID || IOS
             _client = new HttpClient(new NativeMessageHandler());
 
-#elif DOTNET
-            if (Kit.AppType == AppType.Wasm)
+#elif WASM
+            _client = new HttpClient();
+#elif SKIA
+            // gtk wpf
+            _client = new HttpClient(new HttpClientHandler
             {
-                _client = new HttpClient();
-            }
-            else
-            {
-                // gtk wpf
-                _client = new HttpClient(new HttpClientHandler
-                {
-                    // 验证时服务端证书始终有效！
-                    ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
-                });
-            }
+                // 验证时服务端证书始终有效！
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+            });
 #endif
 
 
@@ -68,10 +63,9 @@ namespace Dt.Core.Rpc
             // 内部用户标识
             _client.DefaultRequestHeaders.Add("uid", "110");
 
-#elif DOTNET
+#elif WASM
             // 识别wasm客户端，允许跨域请求
-            if (Kit.AppType == AppType.Wasm)
-                _client.DefaultRequestHeaders.Add("dt-wasm", "");
+            _client.DefaultRequestHeaders.Add("dt-wasm", "");
 #endif
 
             // 默认使用http2协议，避免像 _client.GetAsync 方法使用 1.1

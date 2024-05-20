@@ -33,9 +33,12 @@ namespace Dt.Core
         /// <returns></returns>
         public static string GetMD5(string p_str)
         {
+#if WASM
+            // wasm不支持MD5
+            throw new Exception("wasm不支持MD5算法！");
+#else
             try
             {
-                // net8.0-wasm 不支持MD5算法
                 byte[] bytes = Encoding.UTF8.GetBytes(p_str);
                 MD5 md = MD5.Create();
                 byte[] data = md.ComputeHash(bytes);
@@ -60,6 +63,7 @@ namespace Dt.Core
             {
                 throw new Exception("不支持MD5算法");
             }
+#endif
         }
 
         /// <summary>
@@ -107,8 +111,13 @@ namespace Dt.Core
         public static byte[] GetMD5Bytes(string p_str)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(p_str);
+#if WASM
+            // wasm不支持MD5
+            throw new Exception("wasm不支持MD5算法！");
+#else
             MD5 md = MD5.Create();
             return md.ComputeHash(bytes);
+#endif
         }
 
         static string EncodeUnit(params byte[] unit)

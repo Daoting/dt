@@ -86,13 +86,10 @@ namespace Dt.Core
         public async Task SaveWithChild<TEntity>(TEntity p_entity)
             where TEntity : Entity
         {
-            if (p_entity == null)
-                return;
-
             if (p_entity.IsAdded || p_entity.IsChanged)
                 await Save(new List<TEntity> { p_entity });
 
-            var model = await EntitySchema.Get(typeof(TEntity));
+            var model = await EntitySchema.Get(p_entity.GetType());
             var children = await model.GetChildren();
             if (children.Count == 0)
                 return;
@@ -129,9 +126,13 @@ namespace Dt.Core
         {
             if (p_list == null)
                 return;
-
+            
+            var first = p_list.FirstOrDefault();
+            if (first == null)
+                return;
+            
             // 虚拟实体特殊处理
-            if (Entity.IsVirEntity(typeof(TEntity)))
+            if (Entity.IsVirEntity(first.GetType()))
             {
                 await SaveVirEntity(p_list);
                 return;
@@ -154,7 +155,7 @@ namespace Dt.Core
             if (ls.Count == 0)
                 return;
 
-            var model = await EntitySchema.Get(typeof(TEntity));
+            var model = await EntitySchema.Get(first.GetType());
             if (IsValidSvc(model))
             {
                 var dts = model.Schema.GetSaveSql(ls);
@@ -249,8 +250,11 @@ namespace Dt.Core
             if (p_list == null || p_list.Count == 0)
                 return;
 
+            // 实际类型
+            Type tp = p_list[0].GetType();
+            
             // 虚拟实体特殊处理
-            if (Entity.IsVirEntity(typeof(TEntity)))
+            if (Entity.IsVirEntity(tp))
             {
                 await DeleteVirEntity(p_list);
                 return;
@@ -270,7 +274,7 @@ namespace Dt.Core
                 }
             }
 
-            var model = await EntitySchema.Get(typeof(TEntity));
+            var model = await EntitySchema.Get(tp);
             if (IsValidSvc(model))
             {
                 Dict dt = model.Schema.GetDeleteSql(p_list);

@@ -34,6 +34,10 @@ namespace Dt.Core
                 ls.Add("API目录");
             ls.Add(GetTopbarHtml());
 
+            // 版本号
+            var ver = typeof(Admin).Assembly.GetName().Version.ToString(3);
+            ls.Add(ver);
+            
             // 不显示无Api的服务
             var stub = (from s in Kit.Stubs
                         where s is not DefaultStub

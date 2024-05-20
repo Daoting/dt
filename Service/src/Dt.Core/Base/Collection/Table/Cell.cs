@@ -32,6 +32,11 @@ namespace Dt.Core
         /// 属性 Val,IsChanged 变化事件
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Val 变化事件
+        /// </summary>
+        public event Action<Cell> Changed;
         #endregion
 
         #region 构造方法
@@ -445,6 +450,9 @@ namespace Dt.Core
             // 向上逐级更新IsChanged状态
             if (!p_initVal)
                 IsChanged = !object.Equals(_val, OriginalVal);
+
+            // 触发值变化事件
+            Changed?.Invoke(this);
 
             // 触发属性变化事件
             if (PropertyChanged != null)

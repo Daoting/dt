@@ -31,10 +31,12 @@ namespace Dt.Core
         public static async Task<bool> Save<TEntity>(this TEntity p_entity, bool p_isNotify = true)
             where TEntity : Entity
         {
+            if (p_entity == null)
+                Throw.Msg("实体不可为null");
 #if SERVER
             var ew = new EntityWriter(Kit.DataAccess);
 #else
-            var ew = new EntityWriter(await GetDa(typeof(TEntity)));
+            var ew = new EntityWriter(await GetDa(p_entity.GetType()));
 #endif
             await ew.Save(p_entity);
             return await ew.Commit(p_isNotify);
@@ -100,10 +102,12 @@ namespace Dt.Core
         public static async Task<bool> SaveWithChild<TEntity>(this TEntity p_entity, bool p_isNotify = true)
             where TEntity : Entity
         {
+            if (p_entity == null)
+                Throw.Msg("实体不可为null");
 #if SERVER
             var ew = new EntityWriter(Kit.DataAccess);
 #else
-            var ew = new EntityWriter(await GetDa(typeof(TEntity)));
+            var ew = new EntityWriter(await GetDa(p_entity.GetType()));
 #endif
             await ew.SaveWithChild(p_entity);
             return await ew.Commit(p_isNotify);
@@ -123,10 +127,12 @@ namespace Dt.Core
         public static async Task<bool> Delete<TEntity>(this TEntity p_entity, bool p_isNotify = true)
             where TEntity : Entity
         {
+            if (p_entity == null)
+                Throw.Msg("实体不可为null");
 #if SERVER
             var ew = new EntityWriter(Kit.DataAccess);
 #else
-            var ew = new EntityWriter(await GetDa(typeof(TEntity)));
+            var ew = new EntityWriter(await GetDa(p_entity.GetType()));
 #endif
             await ew.Delete(p_entity);
             return await ew.Commit(p_isNotify);
@@ -187,7 +193,7 @@ namespace Dt.Core
             if (p_entity == null || string.IsNullOrEmpty(p_colName))
                 Throw.Msg("清除实体缓存时列名不可为空！");
 
-            var model = await EntitySchema.Get(typeof(TEntity));
+            var model = await EntitySchema.Get(p_entity.GetType());
 #if !SERVER
             if (model.AccessInfo.Type == AccessType.Local)
                 Throw.Msg("本地Sqlite库实体不支持缓存！");

@@ -49,13 +49,10 @@ namespace Dt.Core.Rpc
                     // https://github.com/mono/mono/blob/a0d69a4e876834412ba676f544d447ec331e7c01/sdks/wasm/framework/src/System.Net.Http.WebAssemblyHttpHandler/WebAssemblyHttpHandler.cs#L149
                     //
                     // https://github.com/mono/mono/issues/18718
-#if DOTNET
-                    if (Kit.AppType == AppType.Wasm)
-                    {
+#if WASM
 #pragma warning disable CS0618
-                        request.Properties["WebAssemblyEnableStreamingResponse"] = true;
+                    request.Properties["WebAssemblyEnableStreamingResponse"] = true;
 #pragma warning restore CS0618
-                    }
 #endif
 
                     request.Content = content;

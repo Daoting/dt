@@ -11,14 +11,9 @@
   // 启动KestrelServer时的监听设置
   "KestrelListen": [
     {
-      "Scheme": "http",
-      "Address": "0.0.0.0",
-      "Port": "30001"
-    },
-    {
       "Scheme": "https",
       "Address": "0.0.0.0",
-      "Port": "20201"
+      "Port": "1001"
     }
   ]
 }

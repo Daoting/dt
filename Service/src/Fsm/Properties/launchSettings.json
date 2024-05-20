@@ -2,23 +2,27 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:30003"
+    },
     "iis": {
-      "applicationUrl": "http://localhost/dt-fsm",
-      "sslPort": 0
+      "applicationUrl": "http://localhost/dt-fsm"
     }
   },
   "profiles": {
-    "IIS": {
-      "commandName": "IIS"
-    },
     "Fsm": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": ".admin",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:20203/"
+      "applicationUrl": "https://localhost:1003/"
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": ".admin"
+    },
+    "IIS": {
+      "commandName": "IIS"
     }
   }
 }

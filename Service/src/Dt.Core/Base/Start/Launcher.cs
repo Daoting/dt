@@ -202,7 +202,7 @@ namespace Dt.Core
 
             // 单体不启用 RabbitMQ
             Kit.EnableRabbitMQ = Kit.Stubs.Length == 1;
-            Log.Information($"启动 {string.Join('+', Kit.SvcNames)} ...");
+            Log.Information($"启动 {string.Join('+', Kit.SvcNames)}，版本：{typeof(Launcher).Assembly.GetName().Version.ToString(3)}");
         }
 
         /// <summary>

@@ -79,7 +79,7 @@
                 <pre id="topbar"></pre>
                 <a onclick="toggleLog()" href="javascript:void(0);" class="aTitle">日志</a>
             </div>
-            <label>V4.2.2</label>
+            <label id="lblVer"></label>
         </div>
         <div style="padding: 0px 20px 20px 20px;">
             <pre id="content"></pre>
@@ -108,7 +108,8 @@
                     var dt = result[2];
                     document.title = dt[1];
                     $("topbar").innerHTML = dt[2];
-                    $("content").innerHTML = dt[3];
+                    $("lblVer").innerText = dt[3];
+                    $("content").innerHTML = dt[4];
                 }
                 else
                 {
