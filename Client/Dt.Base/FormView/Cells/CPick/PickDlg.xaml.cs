@@ -43,17 +43,17 @@ namespace Dt.Base
                     Width = _owner.CurrentWidth;
                 _tbBorder.Width = _owner.CurrentWidth - 2;
             }
-            
+
             bool suc = _tb.Focus(FocusState.Programmatic);
             _tb.SelectAll();
         }
-        
+
         protected override void OnClosed(bool p_result)
         {
             base.OnClosed(p_result);
             RemoveLv();
         }
-        
+
         void OnSelectOK(Mi e)
         {
             _owner.OnPicking();
@@ -64,28 +64,34 @@ namespace Dt.Base
             _owner.OnPicking();
         }
 
-        void OnKeyDown(object sender, KeyRoutedEventArgs e)
+        async void OnKeyDown(object sender, KeyRoutedEventArgs e)
         {
             var lv = _owner.Lv;
             switch (e.Key)
             {
                 case VirtualKey.Enter:
-                    if (_tb.Text.Trim() != "")
+                    var txt = _tb.Text.Trim();
+                    if (lv.Visibility == Visibility.Visible
+                        && lv.SelectionMode == SelectionMode.Single
+                        && lv.SelectedItem != null)
                     {
-                        if (lv.Visibility == Visibility.Visible
-                            && lv.SelectionMode == SelectionMode.Single
-                            && lv.SelectedItem != null)
+                        // 选择
+                        _owner.OnPicking();
+                    }
+                    else
+                    {
+                        // 查询
+                        LoadLv();
+                        if (_owner.Sql != null)
                         {
-                            // 选择
-                            _owner.OnPicking();
+                            // Sql属性定义的数据源
+                            lv.Data = await _owner.Sql.GetData(_owner.Owner.Data, txt);
                         }
                         else
                         {
-                            // 查询
-                            LoadLv();
-                            _owner.OnSearch(_tb.Text.Trim());
-                            bool suc = _tb.Focus(FocusState.Programmatic);
+                            _owner.OnSearch(txt);
                         }
+                        bool suc = _tb.Focus(FocusState.Programmatic);
                     }
                     break;
 
@@ -142,7 +148,7 @@ namespace Dt.Base
                 AllowRelayPress = false;
             }
         }
-        
+
         void LoadSearchBox()
         {
             _tb = new TextBox();
@@ -150,7 +156,7 @@ namespace Dt.Base
 
             // win上KeyUp事件有怪异：Tab跳两格、CList选择后跳两格
             // 手机上KeyDown事件不触发！！！
-#if WIN || DOTNET
+#if WIN || WASM || SKIA
             _tb.KeyDown += OnKeyDown;
 #else
             _tb.KeyUp += OnKeyDown;

@@ -18,11 +18,10 @@ using Microsoft.UI.Xaml.Controls;
 namespace Dt.Base
 {
     /// <summary>
-    /// 富文本格
+    /// Html富文本格
     /// </summary>
-    public partial class CHtml : FvCell, IHtmlEditHost
+    public partial class CHtml : FvCell
     {
-        
         #region 构造方法
         public CHtml()
         {
@@ -45,26 +44,13 @@ namespace Dt.Base
 
         void OnShowDlg(object sender, RoutedEventArgs e)
         {
-            if (ReadOnlyBinding)
+            var dlg = new HtmlEditDlg(this);
+            if (!Kit.IsPhoneUI)
             {
-                var dlg = new HtmlViewDlg();
-                if (!Kit.IsPhoneUI)
-                {
-                    dlg.Height = Kit.ViewHeight - 140;
-                    dlg.Width = Math.Min(800, Kit.ViewWidth - 200);
-                }
-                dlg.ShowDlg(this);
+                dlg.Height = Kit.ViewHeight - 140;
+                dlg.Width = Math.Min(900, Kit.ViewWidth - 200);
             }
-            else
-            {
-                var dlg = new HtmlEditDlg();
-                if (!Kit.IsPhoneUI)
-                {
-                    dlg.Height = Kit.ViewHeight - 140;
-                    dlg.Width = Math.Min(900, Kit.ViewWidth - 200);
-                }
-                dlg.ShowDlg(this);
-            }
+            dlg.ShowDlg();
         }
 
         internal void OnSaved()
@@ -72,8 +58,7 @@ namespace Dt.Base
             Saved?.Invoke(this);
         }
 
-        #region IHtmlEditHost
-        string IHtmlEditHost.CurrentHtml
+        internal string CurrentHtml
         {
             get
             {
@@ -83,12 +68,11 @@ namespace Dt.Base
             }
         }
 
-        Task<bool> IHtmlEditHost.SaveHtml(string p_html)
+        internal Task<bool> SaveHtml(string p_html)
         {
             Val = p_html;
             OnSaved();
             return Task.FromResult(true);
         }
-        #endregion
     }
 }

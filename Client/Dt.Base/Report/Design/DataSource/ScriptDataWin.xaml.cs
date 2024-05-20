@@ -26,32 +26,38 @@ namespace Dt.Base.Report
         {
             InitializeComponent();
             _info = p_info;
-            _info.TemplateChanged += (s, e) => LoadTbl();
-            _info.Saved += OnSaved;
             _lv.Filter = OnFilter;
-            LoadTbl();
+            _lv.Data = _info.Root.Data.DataSet;
+        }
+
+        public static void ShowDlg(RptDesignInfo p_info)
+        {
+            if (!Kit.IsPhoneUI)
+            {
+                Dlg dlg = new Dlg
+                {
+                    IsPinned = true,
+                    Width = 650,
+                    Height = 500,
+                };
+                dlg.LoadWin(new ScriptDataWin(p_info));
+                dlg.Show();
+            }
+            else
+            {
+                Kit.OpenWin(typeof(ScriptDataWin), null, Icons.U盘, p_info);
+            }
         }
 
         bool OnFilter(object obj)
         {
             return obj is Row row && row.Bool("isscritp");
         }
-
-        void OnSaved(object sender, EventArgs e)
-        {
-            _info.Root.Data.DataSet.AcceptChanges();
-        }
-
-        void LoadTbl()
-        {
-            _lv.Data = _info.Root.Data.DataSet;
-            _fv.Data = null;
-        }
-
+        
         void OnItemClick(ItemClickArgs e)
         {
             _fv.Data = e.Row;
-            SelectTab("编辑");
+            NaviTo("编辑");
         }
 
         protected override void OnInitPhoneTabs(PhoneTabs p_tabs)
@@ -63,12 +69,16 @@ namespace Dt.Base.Report
         void OnAdd(Mi e)
         {
             _fv.Data = _info.Root.Data.DataSet.AddRow(new { name = "新数据", isscritp = true });
+            NaviTo("编辑");
         }
 
-        void OnDel(Mi e)
+        async void OnDel(Mi e)
         {
-            _lv.Table.Remove(_fv.Row);
-            _fv.Data = null;
+            if (await Kit.Confirm("确认要删除吗？"))
+            {
+                _lv.Table.Remove(_fv.Row);
+                _fv.Data = null;
+            }
         }
     }
 }

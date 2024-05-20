@@ -96,12 +96,8 @@ namespace Dt.Base.Report
 
         public string GetExpression()
         {
-            var row = _lv.SelectedRow;
-            if (row == null)
-                return null;
-
             string dsName = _dataSets.SelectionBoxItem as string;
-            string colName = row.Str("name");
+            string colName = _lv.SelectedRow?.Str("name");
             switch (_func.SelectionBoxItem as string)
             {
                 case "数据":
@@ -118,13 +114,18 @@ namespace Dt.Base.Report
                     return $"Index({dsName})";
                 case "总数":
                     return $"Count({dsName})";
+                case "分组值":
+                    return $"Group({dsName},{colName})";
             }
             return null;
         }
 
         void OnSave(Mi e)
         {
-            if (_lv.SelectedItem == null)
+            var fun = _func.SelectionBoxItem as string;
+            if (_lv.SelectedItem == null
+                && fun != "序号"
+                && fun != "总数")
             {
                 Kit.Warn("请选择列名！");
             }

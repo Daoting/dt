@@ -21,7 +21,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 矩阵分层标题
     /// </summary>
-    internal class RptMtxSubtitle : RptItemBase
+    public class RptMtxSubtitle : RptItemBase
     {
         #region 私有变量
         readonly RptItemBase _parent;

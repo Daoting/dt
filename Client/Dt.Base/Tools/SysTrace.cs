@@ -27,7 +27,7 @@ namespace Dt.Base.Tools
         /// </summary>
         public static void ShowSysBox()
         {
-            var nav = new NavList { ViewMode = NavViewMode.Tile, Title = "系统", To = NavTarget.NewWin };
+            var nav = new NavList { ViewMode = NavViewMode.Tile, Title = "系统：Ctrl + 回车，实时日志：Ctrl + ←，本地目录：Ctrl + →", To = NavTarget.NewWin };
             nav.Data = new Nl<Nav>
             {
                 new Nav("实时日志", Icons.到今日) { Desc = "查看当前客户端正在输出的日志", Callback = (s, n) =>
@@ -43,13 +43,18 @@ namespace Dt.Base.Tools
                 new Nav("本地文件", typeof(LocalFileWin), Icons.文件) { Desc = "管理 LocalState 的所有文件" },
                 new Nav("更新缓存文件", typeof(RefreshSqliteWin), Icons.刷新) { Desc = "刷新服务端指定的 sqlite 缓存文件" },
 
+                new Nav("报表设计", Icons.Excel) { Desc = "报表模板设计", Callback = (s, n) =>
+                {
+                    _ = Rpt.ShowDesign(null);
+                    if (s is Dlg dlg)
+                        dlg.Close();
+                } },
                 new Nav("数据库初始化", Icons.数据库) { Desc = "初始化数据库表结构", Callback = (s, n) =>
                 {
                     ShowDbInit();
                     if (s is Dlg dlg)
                         dlg.Close();
                 } },
-                new Nav("快捷键") { Desc = "打开系统：Ctrl +回车\r\n实时日志：Ctrl + ←\r\n本地目录：Ctrl + →" },
                 new Nav("更多", Icons.等等) { Callback = (s, n) =>
                 {
                     nav.Forward(CreateMore());
@@ -67,7 +72,7 @@ namespace Dt.Base.Tools
                     HideTitleBar = true,
                     WinPlacement = DlgPlacement.FromTop,
                     Width = 490,
-                    Height = 450,
+                    Height = 410,
                     BorderThickness = new Thickness(4),
                     BorderBrush = Res.主蓝,
                 };
@@ -95,7 +100,7 @@ namespace Dt.Base.Tools
                         dlg.Close();
                 } },
                 
-#if WIN || DOTNET
+#if WIN || WASM || SKIA
                 new Nav("打开本地文件目录", Icons.文件夹) { Desc = "快捷键：Ctrl + →", Callback = (s, n) =>
                 {
                     OpenLocalPath();
@@ -116,7 +121,7 @@ namespace Dt.Base.Tools
             };
             return nav;
         }
-        
+
         public static void ShowDbInit()
         {
             var dlg = new Dlg

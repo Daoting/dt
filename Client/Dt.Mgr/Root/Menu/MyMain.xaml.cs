@@ -69,8 +69,7 @@ namespace Dt.Mgr.Home
         async void OnEditInfo()
         {
             var edit = new UserForm();
-            await edit.Update(Kit.UserID, false);
-            if (await Forward<bool>(edit))
+            if (await edit.Open(Kit.UserID, false))
             {
                 LoginDs.UpdateUserInfo(edit.Data);
                 LoadInfo();

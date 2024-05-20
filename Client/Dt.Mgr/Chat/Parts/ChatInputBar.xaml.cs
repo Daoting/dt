@@ -66,7 +66,7 @@ namespace Dt.Mgr.Chat
             var files = await Kit.PickFiles();
             if (files != null && files.Count > 0)
                 Owner.SendFiles(files);
-#elif DOTNET
+#elif WASM || SKIA
             if (_menu == null)
             {
                 _menu = new Menu { IsContextMenu = true };
@@ -136,7 +136,7 @@ namespace Dt.Mgr.Chat
                 Owner.SendFiles(files);
         }
 
-#if DOTNET
+#if WASM
         //async void OnWebRtc(Mi e)
         //{
         //    if (VideoCaller.Inst == null)

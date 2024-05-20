@@ -11,8 +11,8 @@
         <a:CText ID="phone" Title="手机号" Query="Editable" />
         <a:CText ID="name" Title="姓名" Query="Editable" />
         <a:CBool ID="expired" Title="是否停用" Query="Editable" />
-        <a:CDate ID="Ctime" Title="创建时间" Query="Editable" />
-        <a:CDate ID="Mtime" Title="修改时间" Query="Editable" />
+        <a:CDate ID="ctime" Title="创建时间" Query="Editable" />
+        <a:CDate ID="mtime" Title="修改时间" Query="Editable" />
         <CheckBox Content="筛选条件之间【与】关系" IsChecked="{Binding IsAnd,ElementName=_fv,Mode=TwoWay}" />
     </a:QueryFv>
 </a:Tab>

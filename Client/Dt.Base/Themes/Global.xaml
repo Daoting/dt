@@ -31,7 +31,7 @@
 
     <!-- 自定义字体库写法 https://platform.uno/docs/articles/features/custom-fonts.html -->
     <!-- 自定义图标字体库，从uno4.7统一写法 -->
-    <FontFamily x:Key="IconFont">ms-appx:///Dt.Base/Fonts/icon.ttf#DtIcon</FontFamily>
+    <FontFamily x:Key="IconFont">ms-appx:///icon.ttf#DtIcon</FontFamily>
 
     <!--
     *****************************************************************
@@ -193,6 +193,10 @@
     </Style>
     <Style TargetType="Button" BasedOn="{StaticResource DefaultButton}" />
 
+    <Style TargetType="CheckBox">
+        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
+    </Style>
+    
     <Style TargetType="PasswordBox">
         <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
         <Setter Property="Padding" Value="10,7,10,7"/>
@@ -220,6 +224,8 @@
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Padding" Value="10,9,10,9"/>
         <Setter Property="MinHeight" Value="40"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
     </Style>
 
     <!--**************************** Button ****************************-->

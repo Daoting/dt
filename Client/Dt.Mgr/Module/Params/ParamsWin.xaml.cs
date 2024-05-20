@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-14 创建
+* 日志: 2024-02-20 创建
 ******************************************************************************/
 #endregion
 
@@ -19,13 +19,14 @@ namespace Dt.Mgr.Module
         public ParamsWin()
         {
             InitializeComponent();
+            Form = new ParamsForm { OwnWin = this };
         }
 
         public ParamsList List => _list;
 
-        public ParamsForm Form => _form;
+        public ParamsForm Form { get; }
 
-        public FuzzySearch Search => _search;
+        public FuzzySearch Query => _query;
 
         void OnSearch(string e)
         {

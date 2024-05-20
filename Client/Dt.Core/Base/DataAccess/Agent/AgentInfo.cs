@@ -17,6 +17,14 @@ namespace Dt.Core
     /// </summary>
     public class AgentInfo
     {
+        public AgentInfo() { }
+        
+        public AgentInfo(AccessType p_type, string p_name)
+        {
+            Type = p_type;
+            Name = p_name;
+        }
+        
         /// <summary>
         /// 数据访问的种类：通过服务访问、直连数据库访问、本地sqlite库访问
         /// </summary>

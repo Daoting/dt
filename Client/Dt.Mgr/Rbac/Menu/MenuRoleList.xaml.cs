@@ -20,44 +20,63 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.Mgr.Rbac
 {
-    public sealed partial class MenuRoleList : Tab
+    public sealed partial class MenuRoleList : LvTab
     {
-        #region 构造方法
+        #region 变量
+        long _releatedID;
+        #endregion
+        
+        #region 构造
         public MenuRoleList()
         {
             InitializeComponent();
+            _lv.AddMultiSelMenu(Menu);
         }
         #endregion
 
         #region 公开
-        public void Update(long p_id)
+        public void Update(long p_releatedID)
         {
-            _id = p_id;
+            if (_releatedID == p_releatedID)
+                return;
+            
+            _releatedID = p_releatedID;
             Menu["添加"].IsEnabled = true;
-            Refresh();
+            _ = Refresh();
         }
 
         public void Clear()
         {
-            _id = -1;
+            _releatedID = -1;
             Menu["添加"].IsEnabled = false;
             _lv.Data = null;
         }
-
-        public async void Refresh()
-        {
-            _lv.Data = await RoleX.Query($"where exists (select role_id from cm_role_menu b where a.id=b.role_id and menu_id={_id})");
-        }
         #endregion
 
+        #region 重写
+        protected override Lv Lv => _lv;
+
+        protected override async Task Query()
+        {
+            if (_releatedID > 0)
+            {
+                _lv.Data = await RoleX.Query($"where exists (select role_id from cm_role_menu b where a.id=b.role_id and menu_id={_releatedID})");
+            }
+            else
+            {
+                _lv.Data = null;
+            }
+        }
+        #endregion
+        
         #region 交互
         async void OnAdd(Mi e)
         {
             var dlg = new Role4MenuDlg();
-            if (await dlg.Show(_id, e)
-                && await RbacDs.AddMenuRoles(_id, dlg.SelectedIDs))
+            if (await dlg.Show(_releatedID, e)
+                && await RbacDs.AddMenuRoles(_releatedID, dlg.SelectedIDs))
             {
-                Refresh();
+                await Refresh();
             }
         }
 
@@ -80,33 +99,9 @@ namespace Dt.Mgr.Rbac
                 roleIDs = new List<long> { e.Row.ID };
             }
 
-            if (await RbacDs.RemoveMenuRoles(_id, roleIDs))
-                Refresh();
+            if (await RbacDs.RemoveMenuRoles(_releatedID, roleIDs))
+                await Refresh();
         }
-        #endregion
-
-        #region 选择
-        void OnSelectAll(Mi e)
-        {
-            _lv.SelectAll();
-        }
-
-        void OnMultiMode(Mi e)
-        {
-            _lv.SelectionMode = Base.SelectionMode.Multiple;
-            Menu.HideExcept("删除", "全选", "取消");
-        }
-
-        void OnCancelMulti(Mi e)
-        {
-            _lv.SelectionMode = Base.SelectionMode.Single;
-            Menu.ShowExcept("删除", "全选", "取消");
-        }
-        #endregion
-
-        #region 内部
-        MenuWin _win => (MenuWin)OwnWin;
-        long _id;
         #endregion
     }
 }

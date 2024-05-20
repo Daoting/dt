@@ -6,6 +6,7 @@
 ******************************************************************************/
 #endregion
 
+/*
 #region 引用命名
 #if WIN
 using Microsoft.Windows.ApplicationModel.Resources;
@@ -113,4 +114,4 @@ namespace Dt.Core
             return new LocalizedString(name, value, resourceNotFound: notFound, searchedLocation: SearchLocation);
         }
     }
-}
+} */

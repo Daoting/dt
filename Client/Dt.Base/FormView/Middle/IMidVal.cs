@@ -24,7 +24,7 @@ namespace Dt.Base
         object Get(Mid m);
 
         /// <summary>
-        /// 将值写人数据源
+        /// 将值写入数据源
         /// </summary>
         /// <param name="m"></param>
         /// <returns></returns>

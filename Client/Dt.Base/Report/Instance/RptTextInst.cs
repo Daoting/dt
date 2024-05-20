@@ -27,7 +27,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 文本项实例
     /// </summary>
-    internal class RptTextInst : RptOutputInst
+    public class RptTextInst : RptOutputInst
     {
         #region 构造方法
         public RptTextInst(RptItemBase p_item)
@@ -85,6 +85,8 @@ namespace Dt.Base.Report
             if (!item.AutoHeight || _region.RowSpan > 1)
                 return;
 
+            // Kit.RunSync在wasm无法运行
+#if !WASM
             // 处理自动行高
             double height = 0;
             Kit.RunSync(() =>
@@ -92,8 +94,8 @@ namespace Dt.Base.Report
                 // 测量文本的实际高度
                 TextBlock tb = new TextBlock();
                 tb.TextWrapping = item.WordWrap ? TextWrapping.Wrap : TextWrapping.NoWrap;
-                tb.FontFamily = new FontFamily(item.FontFamily);
-                tb.FontSize = item.FontSize;
+                tb.FontFamily = new FontFamily(item.FontFamily == "" ? "SimSun" : item.FontFamily);
+                tb.FontSize = (item.FontSize > 0 ? item.FontSize : 15);
                 if (item.Bold)
                     tb.FontWeight = FontWeights.Bold;
                 if (item.Italic)
@@ -104,6 +106,7 @@ namespace Dt.Base.Report
                 height = Math.Ceiling(tb.ActualHeight) + 4;
             });
             root.SyncRowHeight(this, height);
+#endif
         }
 
         /// <summary>
@@ -116,16 +119,45 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取最终输出的字符串，替换总页数或页号占位符
+        /// 获取最终输出的值，替换总页数或页号占位符
         /// </summary>
         /// <returns></returns>
-        public string GetText()
+        public async Task<object> GetValue()
         {
-            if (((RptText)_item).ExistPlaceholder)
+            var ph = ((RptText)_item).Placeholder;
+
+            // 解析时已将页号、总页数转为标志符号
+            if ((ph & PlaceholderType.PageCount) == PlaceholderType.PageCount)
             {
-                // 解析时已将页号、总页数转为内置符号
-                Text = Text.Replace("$$", Inst.Pages.Count.ToString()).Replace("##", _page.PageNum);
+                // 替换总页数
+                Text = Text.Replace("$$", Inst.Pages.Count.ToString());
             }
+
+            if ((ph & PlaceholderType.PageNum) == PlaceholderType.PageNum)
+            {
+                // 替换页号
+                Text = Text.Replace("##", _page.PageNum);
+            }
+
+            if ((ph & PlaceholderType.Call) == PlaceholderType.Call)
+            {
+                // 调用外部方法取值
+                Match match = Regex.Match(Text, @"@@([^@]+)@@");
+                if (match.Success && match.Groups.Count > 1)
+                {
+                    for (int i = 1; i < match.Groups.Count; i++)
+                    {
+                        var call = match.Groups[i].Value;
+                        var str = await ValueCall.GetValue(call);
+                        // 用值替换标志
+                        Text = Text.Replace($"@@{call}@@", str == null ? "" : str.ToString());
+                    }
+                }
+            }
+            
+            // 转数字自动右对齐
+            if (double.TryParse(Text, out double dval))
+                return dval;
             return Text;
         }
 
@@ -198,7 +230,7 @@ namespace Dt.Base.Report
                         }
                     }
                 }
-                else if (exp.Func == RptExpFunc.Global)
+                else if (exp.Func == RptExpFunc.Var)
                 {
                     switch (col)
                     {
@@ -228,7 +260,20 @@ namespace Dt.Base.Report
                         case "日期时间":
                             sb.Append(DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
                             break;
+                        case "用户id":
+                            sb.Append(Kit.UserID);
+                            break;
+                        case "用户姓名":
+                            sb.Append(Kit.UserName);
+                            break;
                     }
+                }
+                else if (exp.Func == RptExpFunc.Call)
+                {
+                    // 等待最后渲染时调用外部方法取值，先做标记
+                    sb.Append("@@");
+                    sb.Append(col);
+                    sb.Append("@@");
                 }
                 else if (exp.Func == RptExpFunc.Unknown)
                 {
@@ -250,7 +295,7 @@ namespace Dt.Base.Report
                             break;
 
                         case RptExpFunc.Avg:
-                            sb.Append(GetRows(src.Data).Average((row) => row.Double(col)));
+                            sb.Append(Math.Round(GetRows(src.Data).Average((row) => row.Double(col)), 2));
                             break;
 
                         case RptExpFunc.Max:
@@ -262,15 +307,21 @@ namespace Dt.Base.Report
                             break;
 
                         case RptExpFunc.Sum:
-                            sb.Append(GetRows(src.Data).Sum((row) => row.Double(col)));
+                            sb.Append(Math.Round(GetRows(src.Data).Sum((row) => row.Double(col)), 2));
                             break;
 
                         case RptExpFunc.Count:
                             sb.Append(GetRows(src.Data).Count());
                             break;
 
+                        case RptExpFunc.Group:
+                            var row = GetGroupFirstRow(src.Data);
+                            if (row != null)
+                                sb.Append(row.Str(col));
+                            break;
+
                         case RptExpFunc.Index:
-                            sb.Append(src.Current);
+                            sb.Append(src.Current + 1);
                             break;
                     }
                 }
@@ -304,6 +355,28 @@ namespace Dt.Base.Report
                     rows.Add(dr);
             }
             return rows;
+        }
+
+        Core.Row GetGroupFirstRow(Table p_tbl)
+        {
+            if (Filter == null || Filter.Count == 0)
+                return null;
+
+            foreach (var dr in p_tbl)
+            {
+                bool isOk = true;
+                foreach (var filter in Filter)
+                {
+                    if (dr.Str(filter.Key) != filter.Value)
+                    {
+                        isOk = false;
+                        break;
+                    }
+                }
+                if (isOk)
+                    return dr;
+            }
+            return null;
         }
         #endregion
     }

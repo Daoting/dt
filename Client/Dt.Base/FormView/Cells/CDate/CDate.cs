@@ -9,7 +9,7 @@
 #region 引用命名
 using Dt.Base.FormView;
 using Dt.Core;
-using Dt.Core.Mask;
+using Dt.Toolkit.Mask;
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;

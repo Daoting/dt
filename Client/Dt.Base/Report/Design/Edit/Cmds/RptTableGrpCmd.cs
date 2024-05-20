@@ -35,12 +35,9 @@ namespace Dt.Base.Report
             {
                 table.Groups = new List<RptTblGroup>();
             }
-            RptTblPartRow row = new RptTblPartRow(args.Grp.Header);
-            InsertTableCmd.BuildCells(row,table.ColSpan);
-            args.Grp.Header.Rows.Add(row);
-            RptTblPartRow r = new RptTblPartRow(args.Grp.Footer);
-            InsertTableCmd.BuildCells(r,table.ColSpan);
-            args.Grp.Footer.Rows.Add(r);
+            RptTblPartRow row = new RptTblPartRow(args.Grp);
+            InsertTableCmd.BuildCells(row, table.ColSpan, true);
+            args.Grp.Rows.Add(row);
             args.Table.Groups.Add(args.Grp);
             args.Table.CalcRowSpan();
             args.Table.Update(false);
@@ -57,9 +54,32 @@ namespace Dt.Base.Report
     }
 
     /// <summary>
+    /// 删除分组
+    /// </summary>
+    internal class DelTblGrpCmd : RptCmdBase
+    {
+        public override object Execute(object p_args)
+        {
+            var args = (InsertTblGrpCmdArgs)p_args;
+            args.Table.Groups.Remove(args.Grp);
+            args.Table.CalcRowSpan();
+            args.Table.Update(true);
+            return null;
+        }
+
+        public override void Undo(object p_args)
+        {
+            var args = (InsertTblGrpCmdArgs)p_args;
+            args.Table.Groups.Add(args.Grp);
+            args.Table.CalcRowSpan();
+            args.Table.Update(false);
+        }
+    }
+
+    /// <summary>
     /// 清空表格分组
     /// </summary>
-    internal class ClearTblGrpCmd : RptCmdBase 
+    internal class ClearTblGrpCmd : RptCmdBase
     {
         public override object Execute(object p_args)
         {
@@ -92,9 +112,9 @@ namespace Dt.Base.Report
         public RptTable Table { get; }
     }
 
-    internal class ClearTblGrpCmdArgs 
+    internal class ClearTblGrpCmdArgs
     {
-        public ClearTblGrpCmdArgs(RptTable p_table, List<RptTblGroup> p_grps) 
+        public ClearTblGrpCmdArgs(RptTable p_table, List<RptTblGroup> p_grps)
         {
             Table = p_table;
             Grps = p_grps;
@@ -104,4 +124,4 @@ namespace Dt.Base.Report
 
         public List<RptTblGroup> Grps { get; }
     }
-} 
+}

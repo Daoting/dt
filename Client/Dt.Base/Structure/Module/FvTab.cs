@@ -17,8 +17,11 @@ namespace Dt.Base
     /// </summary>
     public abstract partial class FvTab : Tab, IFvHost
     {
-        #region 构造方法
+        #region 变量
         readonly FvLazy _lazy;
+        #endregion
+
+        #region 构造方法
         public FvTab()
         {
             _lazy = new FvLazy(this);
@@ -64,6 +67,11 @@ namespace Dt.Base
         protected FvBeforeAdd BeforeAdd { get => _lazy.BeforeAdd; set => _lazy.BeforeAdd = value; }
 
         /// <summary>
+        /// 切换数据源或关闭前是否检查、提示旧数据已修改
+        /// </summary>
+        protected bool CheckChanges { get => _lazy.CheckChanges; set => _lazy.CheckChanges = value; }
+        
+        /// <summary>
         /// 增加
         /// </summary>
         protected abstract Task OnAdd();
@@ -84,16 +92,26 @@ namespace Dt.Base
         /// 删除数据
         /// </summary>
         /// <returns></returns>
-        protected virtual Task OnDel()
+        protected virtual Task<bool> OnDel()
         {
-            return Task.CompletedTask;
+            return Task.FromResult(false);
         }
-        
+
         /// <summary>
         /// 清空数据源
         /// </summary>
-        protected abstract void Clear();
+        protected virtual void Clear()
+        {
+            Fv.Data = null;
+        }
 
+        /// <summary>
+        /// 更新列表
+        /// </summary>
+        /// <param name="p_id"></param>
+        protected virtual void RefreshList(long? p_id)
+        { }
+        
         /// <summary>
         /// 更新关联视图
         /// </summary>
@@ -126,14 +144,15 @@ namespace Dt.Base
         {
             _lazy.Delete();
         }
-        
+
         /// <summary>
-        /// 创建默认菜单
+        /// 添加默认菜单项，若提供Menu则添加默认项
         /// </summary>
+        /// <param name="p_menu">若提供Menu则添加默认项，否则创建新菜单</param>
         /// <returns></returns>
-        protected Menu CreateMenu()
+        protected Menu CreateMenu(Menu p_menu = null)
         {
-            return _lazy.CreateMenu();
+            return _lazy.CreateMenu(p_menu);
         }
         
         protected void ShowSetting()
@@ -149,14 +168,36 @@ namespace Dt.Base
         
         Task IFvHost.OnAdd() => OnAdd();
 
-        Task IFvHost.OnGet(long p_id) => OnGet(p_id);
+        async Task IFvHost.OnGet(long p_id)
+        {
+            await OnGet(p_id);
+            UpdateRelated(p_id);
+        }
 
         Task<bool> IFvHost.OnSave() => OnSave();
 
-        Task IFvHost.OnDel() => OnDel();
+        async Task<bool> IFvHost.OnDel()
+        {
+            bool suc = await OnDel();
+            if (suc)
+            {
+                Clear();
+                RefreshList(-1);
+            }
+            return suc;
+        }
 
-        void IFvHost.Clear() => Clear();
+        void IFvHost.Clear()
+        {
+            Clear();
+            UpdateRelated(-1);
+        }
 
+        void IFvHost.RefreshList(long? p_id, FvRefreshList p_fire)
+        {
+            RefreshList(p_id);
+        }
+        
         void IFvHost.UpdateRelated(long p_id) => UpdateRelated(p_id);
 
         //void IFvHost.OpenHost()

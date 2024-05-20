@@ -20,7 +20,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 矩阵数据行
     /// </summary>
-    internal class RptMtxRow : RptItemBase
+    public class RptMtxRow : RptItemBase
     {
         readonly RptMatrix _matrix;
 

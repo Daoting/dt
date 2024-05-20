@@ -20,7 +20,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 报表数据源定义
     /// </summary>
-    internal class RptDataSource
+    public class RptDataSource
     {
         public RptDataSource(RptRoot p_root)
         {
@@ -145,7 +145,7 @@ namespace Dt.Base.Report
         }
     }
 
-    internal class RptDataSourceItem
+    public class RptDataSourceItem
     {
         Row _row;
 

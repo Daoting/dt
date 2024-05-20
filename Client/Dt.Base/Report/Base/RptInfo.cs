@@ -9,10 +9,8 @@
 #region 命名空间
 using Dt.Base.Report;
 using Dt.Cells.Data;
-using Dt.Core;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Reflection;
+using Windows.Storage;
 #endregion
 
 namespace Dt.Base
@@ -22,9 +20,9 @@ namespace Dt.Base
     /// 提供报表模板三种方式优先级：
     /// 1. 直接提供RptRoot对象，内部使用，如报表编辑时预览
     /// 2. 重写 ReadTemplate 方法，模板在其他位置时
-    /// 3. 默认通过Name查询本地db数据加载模板
+    /// 3. 默认通过Uri查询模板，支持3种格式：local ms-appx embedded
     /// </summary>
-    public class RptInfo
+    public class RptInfo : RptInfoBase
     {
         #region 成员变量
         // 报表模板缓存
@@ -35,12 +33,7 @@ namespace Dt.Base
 
         #region 属性
         /// <summary>
-        /// 获取设置报表名称，作为唯一标识识别窗口用
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// 获取设置报表数据的查询参数，初始化时做为预输入参数
+        /// 最终报表查询时的参数值，初始化后始终存在，查询框的参数值、报表视图的参数值最终存入此处
         /// </summary>
         public Dict Params { get; set; }
 
@@ -48,18 +41,14 @@ namespace Dt.Base
         /// 是否缓存报表模板，默认true
         /// </summary>
         public bool CacheTemplate { get; set; } = true;
+
+        /// <summary>
+        /// 获取设置报表模板根节点
+        /// </summary>
+        public RptRoot Root { get; set; }
         #endregion
 
         #region 外部方法
-        /// <summary>
-        /// 读取模板内容，重写可自定义读取模板过程
-        /// </summary>
-        /// <returns></returns>
-        public virtual Task<string> ReadTemplate()
-        {
-            return Kit.GetRequiredService<IModelCallback>().GetReportTemplate(Name);
-        }
-
         /// <summary>
         /// 根据数据名称获取数据
         /// </summary>
@@ -100,27 +89,7 @@ namespace Dt.Base
             }
             return null;
         }
-
-        /// <summary>
-        /// 根据初始参数值生成Row，常用来给查询面板提供数据源
-        /// </summary>
-        /// <returns></returns>
-        public Core.Row BuildParamsRow()
-        {
-            Throw.IfNull(Root, "未初始化模板，无法生成初始参数值");
-            return Root.Params.BuildInitRow();
-        }
-
-        /// <summary>
-        /// 根据初始参数值生成查询参数字典
-        /// </summary>
-        /// <returns></returns>
-        public Dict BuildParamsDict()
-        {
-            Throw.IfNull(Root, "未初始化模板，无法生成查询参数");
-            return Root.Params.BuildInitDict();
-        }
-
+        
         /// <summary>
         /// 更新查询参数
         /// </summary>
@@ -139,51 +108,12 @@ namespace Dt.Base
             _dataSet.Clear();
             Sheet = null;
         }
-        #endregion
-
-        #region 内部属性
-        /// <summary>
-        /// 获取报表要输出的Sheet
-        /// </summary>
-        internal Worksheet Sheet { get; set; }
-
-        /// <summary>
-        /// 获取设置报表模板根节点
-        /// </summary>
-        internal RptRoot Root { get; set; }
-
-        /// <summary>
-        /// 获取设置报表实例
-        /// </summary>
-        internal RptRootInst Inst { get; set; }
-
-        /// <summary>
-        /// 脚本对象
-        /// </summary>
-        internal RptScript ScriptObj { get; private set; }
-
-        /// <summary>
-        /// 当前报表预览的工具栏菜单
-        /// </summary>
-        internal Menu ToolbarMenu { get; set; }
-
-        /// <summary>
-        /// 当前报表预览的上下文菜单
-        /// </summary>
-        internal Menu ContextMenu { get; set; }
-
-        /// <summary>
-        /// 当前报表预览的选中区域上下文菜单
-        /// </summary>
-        internal Menu SelectionMenu { get; set; }
-        #endregion
-
-        #region 内部方法
+        
         /// <summary>
         /// 初始化模板、脚本、参数默认值
         /// </summary>
         /// <returns></returns>
-        internal async Task<bool> Init()
+        public async Task<bool> Init()
         {
             if (_inited)
                 return Root != null;
@@ -192,11 +122,11 @@ namespace Dt.Base
             _inited = true;
             if (Root == null)
             {
-                if (string.IsNullOrEmpty(Name))
+                if (string.IsNullOrEmpty(_uri))
                 {
-                    Kit.Warn("未提供报表模板名称！");
+                    Throw.Msg("未提供报表模板路径！");
                 }
-                else if (CacheTemplate && _tempCache.TryGetValue(Name, out var temp))
+                else if (CacheTemplate && _tempCache.TryGetValue(_uri, out var temp))
                 {
                     // 允许缓存先查找缓存
                     // 通过名称加载模板，代码中写名称可读性比ID高！！！
@@ -212,12 +142,12 @@ namespace Dt.Base
                         if (CacheTemplate)
                         {
                             // 允许缓存，名称作为键
-                            _tempCache[Name] = Root;
+                            _tempCache[_uri] = Root;
                         }
                     }
                     catch (Exception ex)
                     {
-                        Kit.Warn("加载报表模板时异常！\r\n" + ex.Message);
+                        Throw.Msg("加载报表模板时异常！\r\n" + ex.Message);
                     }
                 }
 
@@ -239,12 +169,12 @@ namespace Dt.Base
                 }
             }
 
-            // 根据参数默认值创建初始查询参数（自动查询时用）
-            if (Root.ViewSetting.AutoQuery
-                && Params == null
-                && Root.Params.Data.Count > 0)
+            // 根据参数默认值创建初始查询参数
+            if (Root.Params.Data.Count > 0)
             {
-                Params = Root.Params.BuildInitDict();
+                Params = await Root.Params.BuildInitDict();
+                if (ScriptObj != null)
+                    ScriptObj.InitParams(Params);
             }
             return true;
         }
@@ -253,53 +183,53 @@ namespace Dt.Base
         /// 查询参数是否完备有效
         /// </summary>
         /// <returns></returns>
-        internal bool IsParamsValid()
+        public string IsParamsValid()
         {
             if (Root == null)
-                return false;
+                return "报表模板对象为空！";
 
             int count = Root.Params.Data.Count;
             Dict dt = Params;
 
             // 未提供查询参数
             if (dt == null || dt.Count == 0)
-                return count == 0;
+            {
+                if (count == 0)
+                    return null;
+                return "未提供报表查询参数！";
+            }
 
             // 参数个数不够
             if (dt.Count < count)
-                return false;
+                return $"报表查询参数{count}个，实际提供{dt.Count}个！";
 
             // 确保每个参数都包含
             foreach (var row in Root.Params.Data)
             {
                 if (!dt.ContainsKey(row.Str("name")))
                 {
-                    return false;
+                    return $"未提供参数【{row.Str("name")}】的值！";
                 }
             }
-            return true;
+            return null;
         }
         #endregion
+        
+        #region 内部属性
+        /// <summary>
+        /// 获取报表要输出的Sheet
+        /// </summary>
+        internal protected Worksheet Sheet { get; set; }
 
-        #region 比较
-        public override bool Equals(object obj)
-        {
-            if (obj == null || !(obj is RptInfo))
-                return false;
+        /// <summary>
+        /// 获取设置报表实例
+        /// </summary>
+        internal protected RptRootInst Inst { get; set; }
 
-            if (ReferenceEquals(this, obj))
-                return true;
-
-            // 只比较标识，识别窗口用
-            return Name == ((RptInfo)obj).Name;
-        }
-
-        public override int GetHashCode()
-        {
-            if (string.IsNullOrEmpty(Name))
-                return 0;
-            return Name.GetHashCode();
-        }
+        /// <summary>
+        /// 脚本对象
+        /// </summary>
+        internal protected RptScript ScriptObj { get; set; }
         #endregion
     }
 }

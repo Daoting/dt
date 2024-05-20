@@ -86,7 +86,7 @@ namespace Dt.Base
         /// <returns></returns>
         void DownloadFileWasm()
         {
-#if DOTNET
+#if WASM
             Kit.Download($"{At.GetSvcUrl("fsm")}/drv/{ID}", Title);
 #endif
         }

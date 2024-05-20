@@ -21,7 +21,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 矩阵行头列头基类
     /// </summary>
-    internal abstract class RptMtxHeader : RptItemBase
+    public abstract class RptMtxHeader : RptItemBase
     {
         #region 变量
         readonly RptMatrix _matrix;

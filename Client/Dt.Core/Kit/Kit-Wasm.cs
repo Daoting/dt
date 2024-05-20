@@ -1,4 +1,4 @@
-﻿#if DOTNET
+﻿#if WASM
 #region 文件描述
 /******************************************************************************
 * 创建: Daoting
@@ -19,7 +19,7 @@ using System.Text.RegularExpressions;
 namespace Dt.Core
 {
     /// <summary>
-    /// wasm gtk静态工具类
+    /// wasm静态工具类
     /// </summary>
     public partial class Kit
     {

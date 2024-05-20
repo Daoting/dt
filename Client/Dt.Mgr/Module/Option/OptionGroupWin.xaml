@@ -5,14 +5,11 @@
     xmlns:a="using:Dt.Base"
     xmlns:l="using:Dt.Mgr.Module">
 
-    <a:Pane>
-        <a:Tabs InitHeight="600">
-            <l:OptionGroupList x:Name="_parentList" Order="1" />
-        </a:Tabs>
-        <a:Tabs InitHeight="400">
-            <l:OptionGroupForm x:Name="_parentForm" />
-        </a:Tabs>
-    </a:Pane>
-    <l:OptionGroupOptionList x:Name="_optionList" />
-    <a:Tab x:Name="_childForm" Title="表单" a:Ex.Dock="Right" />
+    <a:FuzzySearch x:Name="_query" Search="OnSearch" a:Ex.Dock="Left" Order="1">
+        <x:String>全部</x:String>
+    </a:FuzzySearch>
+    <l:OptionGroupList x:Name="_parentList" />
+    <a:Tabs a:Ex.Dock="Bottom">
+        <l:OptionGroupOptionList x:Name="_optionList" a:Ex.Dock="Bottom" />
+    </a:Tabs>
 </a:Win>

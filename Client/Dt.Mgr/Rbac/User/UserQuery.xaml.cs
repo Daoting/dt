@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-06 创建
+* 日志: 2024-02-04 创建
 ******************************************************************************/
 #endregion
 
@@ -29,12 +29,11 @@ namespace Dt.Mgr.Rbac
             remove { _fv.Query -= value; }
         }
 
-        #region 初始化 
         protected override void OnFirstLoaded()
         {
             var row = new Row();
-            row.Add<string>("phone");
             row.Add<string>("acc");
+            row.Add<string>("phone");
             row.Add<string>("name");
             row.Add<bool>("expired");
             row.Add<DateTime>("ctime");
@@ -42,6 +41,5 @@ namespace Dt.Mgr.Rbac
 
             _fv.Data = row;
         }
-        #endregion
     }
 }

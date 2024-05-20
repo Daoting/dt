@@ -7,20 +7,23 @@
     <ScrollViewer>
         <StackPanel>
             <a:Fv x:Name="_fv">
-                <a:CBar Title="表格" />
+                <a:CBar Title="表格">
+                    <Button Content="删除表格" Click="OnDeleteTbl" HorizontalAlignment="Right" />
+                </a:CBar>
                 <a:CList ID="tbl" Title="数据源" />
-                <a:CNum ID="minrowcount" Title="最少行数，不够加空行" TitleWidth="200" Minimum="0" IsInteger="True" />
+                <a:CBar Title="分页时每页重复输出" />
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="_btnHeader" Click="OnToggleHeader" />
                     <Button x:Name="_btnFooter" Click="OnToggleFooter" />
-                    <Button Content="删除表格" Click="OnDeleteTbl" />
                 </StackPanel>
-                <a:CBool ID="repeatheader" Title="在每页重复表头" />
-                <a:CBool ID="repeatfooter" Title="在每页重复表尾" />
+                <a:CBool ID="repeatcolheader" Title="垂直分页时在每页重复输出列头" ShowTitle="False" />
+                <a:CNum ID="repeatrowheadercols" Title="水平分页时在每页重复输出行头的列数" TitleWidth="300" Minimum="0" IsInteger="True" />
+                <a:CBool ID="repeatcolfooter" Title="垂直分页时在每页重复输出列尾" ShowTitle="False" />
 
-                <a:CBar Title="多列布局，换列行数0表从不换列，-1表满页自动换列" />
-                <a:CNum ID="rowbreakcount" Title="换列时行数" Minimum="-1" IsInteger="True" />
-                <a:CNum ID="colbreakcount" Title="换行时列数" Minimum="1" IsInteger="True" />
+                <a:CBar Title="单页并排多列表格" />
+                <a:CNum ID="rowbreakcount" Title="换列时行数，0不换列，-1满页换列" TitleWidth="280" Minimum="-1" IsInteger="True" />
+                <a:CNum ID="colbreakcount" Title="换行时列数，换列行数非0时有效" TitleWidth="280" Minimum="1" IsInteger="True" />
+                <a:CNum ID="minrowcount" Title="每页固定行数，不够加空行" TitleWidth="280" Minimum="0" IsInteger="True" />
                 <a:CBar Title="行操作" />
                 <StackPanel Orientation="Horizontal">
                     <Button Content="之前插入行" Click="OnInsertRow" Tag="Before" />
@@ -37,10 +40,14 @@
             <a:Fv x:Name="_fvGrp">
                 <a:CBar Title="分组" />
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="插入分组" Click="OnInsertGrpClick" />
-                    <Button Content="清空分组" Click="OnClearGrpClick" />
+                    <Button Content="插入新分组" Click="OnInsertGrpClick" />
+                    <Button Content="清空所有分组" Click="OnClearGrpClick" />
                 </StackPanel>
                 <a:CList ID="field" Title="分组字段" />
+                <StackPanel x:Name="_pnlGrpRow" Orientation="Horizontal">
+                    <Button Content="添加分组行" Click="OnInsertGrpRow" />
+                    <Button Content="删除分组行" Click="OnDelGrpRow" />
+                </StackPanel>
             </a:Fv>
         </StackPanel>
     </ScrollViewer>

@@ -14,90 +14,128 @@ namespace Dt.Mgr.Rbac
     public partial class PermissionX
     {
         const string Sql用户具有的权限 = @"
-select id, name
-from
-	(
-    select distinct (b.id),b.name
-	from
-		cm_role_per a
-		left join cm_permission b on a.per_id = b.id 
-	where
-		exists (
-            select role_id from cm_user_role c
-		    where
-			    a.role_id = c.role_id 
-			    and user_id = {0}
-		    union
-            select role_id from cm_group_role d
-		    where
-			    a.role_id = d.role_id 
-			    and exists ( select group_id from cm_user_group e where d.group_id = e.group_id and e.user_id = {0} ) 
-		    ) 
-		    or a.role_id = 1 
-	    ) t 
-order by
-	id
+SELECT
+    id,
+    name
+FROM
+    (
+        SELECT
+            DISTINCT (b.id),
+            b.name
+        FROM
+            cm_role_per a
+            LEFT JOIN cm_permission b ON a.per_id = b.id
+        WHERE
+            EXISTS (
+                SELECT
+                    role_id
+                FROM
+                    cm_user_role c
+                WHERE
+                    a.role_id = c.role_id
+                    AND user_id = {0}
+                UNION
+                SELECT
+                    role_id
+                FROM
+                    cm_group_role d
+                WHERE
+                    a.role_id = d.role_id
+                    AND EXISTS (
+                        SELECT
+                            group_id
+                        FROM
+                            cm_user_group e
+                        WHERE
+                            d.group_id = e.group_id
+                            AND e.user_id = {0}
+                    )
+            )
+            OR a.role_id = 1
+    ) t
+ORDER BY
+    id
 ";
 
         const string Sql角色权限 = @"
-select
-	a.*,
-	b.name funcname,
-	c.name modname 
-from
-	cm_permission a,
-	cm_permission_func b,
-	cm_permission_module c 
-where
-	a.func_id = b.id 
-	and b.module_id = c.id 
-	and exists (
-	select
-		per_id 
-	from
-		cm_role_per d 
-	where
-		a.id = d.per_id 
-	and role_id = {0} 
-	)
+SELECT
+    a.*,
+    b.name funcname,
+    c.name modname
+FROM
+    cm_permission a,
+    cm_permission_func b,
+    cm_permission_module c
+WHERE
+    a.func_id = b.id
+    AND b.module_id = c.id
+    AND EXISTS (
+        SELECT
+            per_id
+        FROM
+            cm_role_per d
+        WHERE
+            a.id = d.per_id
+            AND role_id = {0}
+    )
 ";
 
         const string Sql用户具有的权限及所属 = @"
-select
-	per.*,
-	func.name funcname,
-	module.name modname
-from
-(
-select id, name, func_id
-from
-	(
-    select distinct (b.id),b.name,b.func_id
-	from
-		cm_role_per a
-		left join cm_permission b on a.per_id = b.id 
-	where
-		exists (
-            select role_id from cm_user_role c
-		    where
-			    a.role_id = c.role_id 
-			    and user_id = {0}
-		    union
-            select role_id from cm_group_role d
-		    where
-			    a.role_id = d.role_id 
-			    and exists ( select group_id from cm_user_group e where d.group_id = e.group_id and e.user_id = {0} ) 
-		    ) 
-		    or a.role_id = 1 
-	    ) t 
-order by
-	id
-) per,
-cm_permission_func func,
-cm_permission_module module 
-where
-	per.func_id = func.id 
-	and func.module_id = module.id
+SELECT
+    per.*,
+    func.name funcname,
+    MODULE.name modname
+FROM
+    (
+        SELECT
+            id,
+            name,
+            func_id
+        FROM
+            (
+                SELECT
+                    DISTINCT (b.id),
+                    b.name,
+                    b.func_id
+                FROM
+                    cm_role_per a
+                    LEFT JOIN cm_permission b ON a.per_id = b.id
+                WHERE
+                    EXISTS (
+                        SELECT
+                            role_id
+                        FROM
+                            cm_user_role c
+                        WHERE
+                            a.role_id = c.role_id
+                            AND user_id = {0}
+                        UNION
+                        SELECT
+                            role_id
+                        FROM
+                            cm_group_role d
+                        WHERE
+                            a.role_id = d.role_id
+                            AND EXISTS (
+                                SELECT
+                                    group_id
+                                FROM
+                                    cm_user_group e
+                                WHERE
+                                    d.group_id = e.group_id
+                                    AND e.user_id = {0}
+                            )
+                    )
+                    OR a.role_id = 1
+            ) t
+        ORDER BY
+            id
+    ) per,
+    cm_permission_func func,
+    cm_permission_module MODULE
+WHERE
+    per.func_id = func.id
+    AND func.module_id = MODULE.id
 ";
     }
 }

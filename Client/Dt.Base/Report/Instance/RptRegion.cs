@@ -15,7 +15,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 报表元素区域描述
     /// </summary>
-    internal class RptRegion
+    public class RptRegion
     {
         #region 构造方法
         public RptRegion()

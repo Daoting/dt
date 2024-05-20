@@ -76,27 +76,27 @@ namespace Dt.Base
         /// <summary>
         /// 设置选择结果
         /// </summary>
-        /// <param name="p_brush"></param>
-        public void SelectColor(SolidColorBrush p_brush)
+        /// <param name="p_color"></param>
+        public void SelectColor(Color p_color)
         {
             Type type = (Type)ValBinding.ConverterParameter;
             if (type == typeof(string))
             {
 #if WIN
-                Val = p_brush.Color.ToString();
+                Val = p_color.ToString();
 #else
-                Val = ColorToStr(p_brush.Color);
+                Val = ColorToStr(p_color);
 #endif
             }
             else if (type == typeof(Color))
             {
-                Val = p_brush.Color;
+                Val = p_color;
             }
             else if (type == typeof(SolidColorBrush) || type == typeof(Brush))
             {
-                Val = p_brush;
+                Val = new SolidColorBrush(p_color);
             }
-            LoadColorUI(p_brush);
+            LoadColorUI(new SolidColorBrush(p_color));
         }
 
         protected override void OnApplyCellTemplate()
@@ -132,7 +132,10 @@ namespace Dt.Base
                         }
                         catch { }
                     }
-                    LoadColorUI(Res.BlackBrush);
+                    else
+                    {
+                        LoadColorUI(Res.BlackBrush);
+                    }
                 }
                 else if (type == typeof(Color))
                 {
@@ -180,23 +183,14 @@ namespace Dt.Base
 
             if (_dlg == null)
             {
-                if (Kit.IsPhoneUI)
+                _dlg = new ColorDlg { Owner = this, Title = "选择颜色" };
+                if (!Kit.IsPhoneUI)
                 {
-                    _dlg = new ColorDlg { Owner = this, Title = "选择颜色" };
-                }
-                else
-                {
-                    _dlg = new ColorDlg
-                    {
-                        Owner = this,
-                        WinPlacement = DlgPlacement.TargetBottomLeft,
-                        PlacementTarget = _grid,
-                        ClipElement = _grid,
-                        HideTitleBar = true,
-                        Resizeable = false,
-                        Height = 300,
-                        Width = _grid.ActualWidth,
-                    };
+                    _dlg.WinPlacement = DlgPlacement.TargetBottomLeft;
+                    _dlg.PlacementTarget = _grid;
+                    _dlg.ClipElement = _grid;
+                    _dlg.Height = 300;
+                    _dlg.Width = 330;
                 }
                 // 不向下层对话框传递Press事件
                 _dlg.AllowRelayPress = false;

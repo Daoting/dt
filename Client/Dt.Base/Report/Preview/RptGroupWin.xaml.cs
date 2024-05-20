@@ -16,20 +16,20 @@ namespace Dt.Base.Report
     /// </summary>
     internal partial class RptGroupWin : Win
     {
-        public RptGroupWin(RptInfoList p_infos)
+        public RptGroupWin(RptGroupWinParams p_params)
         {
             InitializeComponent();
 
-            if (p_infos == null || p_infos.Count < 2)
+            if (p_params.Infos == null || p_params.Infos.Count < 2)
             {
                 Kit.Warn("浏览报表组时描述信息不完整！");
                 return;
             }
 
             var ls = new Nl<Nav>();
-            foreach (var info in p_infos)
+            foreach (var info in p_params.Infos)
             {
-                ls.Add(new Nav(info.Name, typeof(RptViewWin)) { Callback = OpenWin, Params = info });
+                ls.Add(new Nav(info.Name, typeof(RptWin)) { Callback = OpenWin, Params = new RptWinParams { Info = info, IsPdf = p_params.IsPdf } });
             }
             _nav.Data = ls;
             _nav.Select(0);
@@ -37,7 +37,7 @@ namespace Dt.Base.Report
 
         async void OpenWin(object p_owner, Nav p_nav)
         {
-            var info = p_nav.Params as RptInfo;
+            var info = ((RptWinParams)p_nav.Params).Info;
             if (await info.Init())
             {
                 var win = p_nav.GetCenter();
@@ -48,5 +48,11 @@ namespace Dt.Base.Report
                 Kit.Warn($"初始化报表模板[{info.Name}]出错！");
             }
         }
+    }
+
+    internal class RptGroupWinParams
+    {
+        public RptInfoList Infos { get; set; }
+        public bool IsPdf { get; set; }
     }
 }

@@ -460,6 +460,10 @@ namespace Dt.Base
                 if (ReadLocalValue(ValBindingProperty) != DependencyProperty.UnsetValue)
                 {
                     SetValBinding();
+
+                    // 初始修改状态背景色
+                    if (_panel != null && ValBinding.Source is ICell cell && cell.IsChanged)
+                        _panel.ToggleIsChanged(true);
                 }
                 else if (_panel != null && _panel.Child != null)
                 {

@@ -53,6 +53,7 @@ namespace Dt.Core
         /// 内容元素的容器
         /// </summary>
         static readonly Border _contentBorder;
+        
         #endregion
 
         #region 静态构造
@@ -89,6 +90,10 @@ namespace Dt.Core
             // 根Grid，背景为主题画刷
             RootGrid = new Grid { Background = bgBrush };
 
+            // 最低层，不可见，截图用
+            SnapBorder = new Border();
+            RootGrid.Children.Add(SnapBorder);
+            
             // 桌面层/页面层，容器为Border，首页加载快时不显示进度动画！
             _contentBorder = new Border();
             _contentBorder.Child = new ProgressRing
@@ -130,7 +135,7 @@ namespace Dt.Core
 #if WIN
             MainWin.SizeChanged += OnWindowSizeChanged;
             Kit.IsPhoneUI = MainWin.Bounds.Width < _maxPhoneUIWidth;
-#elif DOTNET
+#elif WASM || SKIA
             // gtk 和 wasm 上Window.Bounds初始为(0,0)
             // wasm 上 MainWin.SizeChanged 事件初次不触发，触发顺序：OnRootSizeChanged OnWindowSizeChanged
             // gtk 上 MainWin.SizeChanged 事件初次触发两次，第一次(1,1)，触发顺序：OnWindowSizeChanged OnRootSizeChanged
@@ -142,9 +147,6 @@ namespace Dt.Core
             MainWin.Content = RootGrid;
             MainWin.Activate();
             Kit.Debug("创建可视树");
-
-            // Excel控件中用到窗口句柄、UI线程同步异步调用等，如 Excel打印
-            Dt.Base.ExcelKit.MainWin = MainWin;
         }
 
         /// <summary>
@@ -164,6 +166,11 @@ namespace Dt.Core
         /// Window.Content内容，根Grid
         /// </summary>
         public static readonly Grid RootGrid;
+        
+        /// <summary>
+        /// 在最低层，不可见，截图用的Border容器
+        /// </summary>
+        public static readonly Border SnapBorder;
 
         /// <summary>
         /// 获取设置桌面层/页面层的内容元素，桌面、Frame、登录页面，在最底层
@@ -383,7 +390,7 @@ namespace Dt.Core
 
             MainWin.ExtendsContentIntoTitleBar = !isPhoneUI;
         }
-#elif DOTNET
+#elif WASM || SKIA
         static void OnRootSizeChanged(object sender, SizeChangedEventArgs e)
         {
             bool isPhoneUI = e.NewSize.Width < _maxPhoneUIWidth;

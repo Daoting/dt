@@ -1,8 +1,10 @@
-﻿<Params>
-  <Param name="参数名称"
+﻿<Params queryform="" autoxaml="true">
+  <Xaml><![CDATA[xaml内容]]></Xaml>
+  <List>
+    <Param name="参数名称"
          type="参数类型"
          val="缺省值"
-         note="备注">
-    <![CDATA[xaml内容]]>
-  </Param>
+         note="备注" />
+    <Param name="参数2" />
+  </List>
 </Params>

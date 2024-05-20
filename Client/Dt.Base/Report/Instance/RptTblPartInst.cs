@@ -14,7 +14,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 表格部分
     /// </summary>
-    internal class RptTblPartInst : RptItemPartInst
+    public class RptTblPartInst : RptItemPartInst
     {
         public RptTblPartInst(RptItemBase p_item)
             : base(p_item)
@@ -29,8 +29,21 @@ namespace Dt.Base.Report
             get { return Parent as RptTableInst; }
         }
 
-        public int Index { get; set; }
+        /// <summary>
+        /// 子元素列表
+        /// </summary>
+        public List<RptTextInst> Children => _children;
 
+        /// <summary>
+        /// 正在输出的子元素的索引
+        /// </summary>
+        public int OutputIndex { get; private set; }
+        
+        /// <summary>
+        /// 数据行索引
+        /// </summary>
+        public int Index { get; set; }
+        
         /// <summary>
         /// 输出子元素
         /// </summary>
@@ -40,9 +53,10 @@ namespace Dt.Base.Report
                 return;
 
             // 统一输出后才可统计占的行数，因输出过程位置在变
-            foreach (RptTextInst inst in _children)
+            for (int i = 0; i < _children.Count; i++)
             {
-                inst.Output();
+                OutputIndex = i;
+                _children[i].Output();
             }
 
             // 统计行跨度

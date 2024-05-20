@@ -18,7 +18,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 报表元素基类
     /// </summary>
-    internal abstract class RptItemBase
+    public abstract class RptItemBase
     {
         protected Row _data;
 
@@ -84,7 +84,7 @@ namespace Dt.Base.Report
                 int index = Col;
                 double[] cols = Root.Cols;
                 if (index + ColSpan > cols.Length)
-                    throw new Exception("位置超出列数！");
+                    Throw.Msg($"[{GetType().Name}]位置超出列数！");
 
                 double total = 0;
                 for (int i = 0; i < ColSpan; i++)
@@ -109,7 +109,7 @@ namespace Dt.Base.Report
                 int index = Row;
                 double[] rows = Root.Body.Rows;
                 if (rows == null || index + RowSpan > rows.Length)
-                    throw new Exception("位置超出行数！");
+                    Throw.Msg($"[{GetType().Name}]位置超出行数！");
 
                 double total = 0;
                 for (int i = 0; i < RowSpan; i++)
@@ -134,7 +134,7 @@ namespace Dt.Base.Report
             int index = Row + p_offset;
             double[] rows = Root.Body.Rows;
             if (rows == null || index >= rows.Length)
-                throw new Exception("位置超出行数！");
+                Throw.Msg($"[{GetType().Name}]位置超出行数！");
             return rows[index];
         }
 
@@ -148,7 +148,7 @@ namespace Dt.Base.Report
             double[] cols = Root.Cols;
             int index = Col + p_offset;
             if (cols == null || index >= cols.Length)
-                throw new Exception("位置超出列数！");
+                Throw.Msg($"[{GetType().Name}]位置超出列数！");
             return cols[index];
         }
 

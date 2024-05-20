@@ -2,96 +2,57 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-14 创建
+* 日志: 2024-02-20 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using Dt.Mgr.Rbac;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Mgr.Module
 {
-    public sealed partial class OptionGroupOptionForm : Tab
+    public sealed partial class OptionGroupOptionForm : FvDlg
     {
-        #region 构造方法
+        long _parentID;
+
         public OptionGroupOptionForm()
         {
             InitializeComponent();
+            Menu = CreateMenu();
         }
-        #endregion
 
-        #region 公开
-        public async Task Update(long p_id, long p_parentID)
+        public Task Update(long? p_id, long p_parentID)
         {
-            var d = Data;
-            if (d != null && d.ID == p_id)
-                return;
-
-            if (!await _fv.DiscardChanges())
-                return;
-
             _parentID = p_parentID;
-            if (p_id > 0)
-            {
-                Data = await OptionX.GetByID(p_id);
-            }
-            else
-            {
-                Create();
-            }
+            return Update(p_id);
         }
 
-        public void Clear()
+        public Task Open(long? p_id, long p_parentID)
         {
-            Data = null;
+            _parentID = p_parentID;
+            return Open(p_id);
         }
-        #endregion
 
-        #region 内部
-        async void Create()
+        protected override Fv Fv => _fv;
+
+        protected override async Task OnAdd()
         {
             Data = await OptionX.New(GroupID: _parentID);
         }
 
-        async void Save()
+        protected override async Task OnGet(long p_id)
         {
-            if (await Data.Save())
-            {
-                _win.OptionList.Refresh();
-            }
+            Data = await OptionX.GetByID(p_id);
         }
 
-        async void Delete()
+        protected override void RefreshList(long? p_id)
         {
-            var d = Data;
-            if (d == null)
-                return;
-
-            if (!await Kit.Confirm("确认要删除吗？"))
+            if (OwnWin is OptionGroupWin win)
             {
-                Kit.Msg("已取消删除！");
-                return;
+                _ = win.OptionList.Refresh(p_id);
             }
-
-            if (d.IsAdded)
-            {
-                Clear();
-                return;
-            }
-
-            if (await d.Delete())
-            {
-                Clear();
-                _win.OptionList.Refresh();
-            }
-        }
-
-        protected override Task<bool> OnClosing()
-        {
-            return _fv.DiscardChanges();
         }
 
         OptionX Data
@@ -99,9 +60,5 @@ namespace Dt.Mgr.Module
             get { return _fv.Data.To<OptionX>(); }
             set { _fv.Data = value; }
         }
-
-        OptionGroupWin _win => (OptionGroupWin)OwnWin;
-        long _parentID;
-        #endregion
     }
 }

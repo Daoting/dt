@@ -8,16 +8,13 @@
 
 #region 命名空间
 using Dt.Cells.Data;
-using System;
-using System.Collections.Generic;
+using Microsoft.UI.Text;
+using Microsoft.UI.Xaml.Media;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml;
 using Windows.UI;
 using Windows.UI.Text;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Text;
 #endregion
 
 namespace Dt.Base.Report
@@ -25,19 +22,21 @@ namespace Dt.Base.Report
     /// <summary>
     /// 文本项
     /// </summary>
-    internal class RptText : RptItem
+    public class RptText : RptItem
     {
         #region 成员变量
-        public const string DefaultFontName = "Segoe UI";
-        public const double DefaultFontSize = 16.0;
+        public const string DefaultFontName = "SimSun";
+        public const double DefaultFontSize = 15.0;
         public const string ScriptValue = "#script#";
         const string _defaultForeground = "#ff000000";
         const string _defaultBackground = "#00ffffff";
-        const string _defaultAlign = "Center";
+        const string _defaultHorAlign = "General";
+        const string _defaultVerAlign = "Center";
         const string _defaultBorder = "Thin";
         RptItemBase _parent;
         #endregion
 
+        #region 构造方法
         public RptText(RptPart p_owner)
             : base(p_owner)
         {
@@ -55,8 +54,8 @@ namespace Dt.Base.Report
             _data.Add<bool>("strikeout");
             _data.Add("foreground", _defaultForeground);
             _data.Add("background", _defaultBackground);
-            _data.Add("horalign", _defaultAlign);
-            _data.Add("veralign", _defaultAlign);
+            _data.Add("horalign", _defaultHorAlign);
+            _data.Add("veralign", _defaultVerAlign);
             _data.Add("margin", 0);
             _data.Add("lbc", _defaultForeground);
             _data.Add("tbc", _defaultForeground);
@@ -73,7 +72,9 @@ namespace Dt.Base.Report
         {
             _parent = p_parent;
         }
+        #endregion
 
+        #region 属性
         /// <summary>
         /// 获取父对象
         /// </summary>
@@ -142,7 +143,7 @@ namespace Dt.Base.Report
         public List<RptExpression> Expressions { get; set; }
 
         /// <summary>
-        /// 获取或设置字体
+        /// 获取或设置字体，默认 SimSun
         /// </summary>
         public string FontFamily
         {
@@ -151,7 +152,7 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 字体大小属性
+        /// 字体大小属性，默认 15
         /// </summary>
         public double FontSize
         {
@@ -160,7 +161,7 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取或设置是否应用加粗样式
+        /// 获取或设置是否应用加粗样式，默认false
         /// </summary>
         public bool Bold
         {
@@ -169,7 +170,7 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取或设置是否应用斜体样式
+        /// 获取或设置是否应用斜体样式，默认false
         /// </summary>
         public bool Italic
         {
@@ -178,7 +179,7 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取或设置是否应用下划线样式
+        /// 获取或设置是否应用下划线样式，默认false
         /// </summary>
         public bool UnderLine
         {
@@ -187,7 +188,7 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取或设置是否应用删除线样式
+        /// 获取或设置是否应用删除线样式，默认false
         /// </summary>
         public bool StrikeOut
         {
@@ -214,7 +215,7 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取或设置水平对齐方式
+        /// 获取或设置水平对齐方式，默认General：合并单元格时居中，数字居右，其它居左
         /// </summary>
         public CellHorizontalAlignment Horalign
         {
@@ -313,9 +314,9 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取是否包含总页数或页号占位符
+        /// 获取是否包含总页数、页号、外部调用等占位符
         /// </summary>
-        public bool ExistPlaceholder { get; set; }
+        public PlaceholderType Placeholder { get; set; }
 
         /// <summary>
         /// 是否通过脚本绘制单元格内容和样式
@@ -332,16 +333,9 @@ namespace Dt.Base.Report
             newOne.Data.Copy(_data);
             return newOne;
         }
+        #endregion
 
-        /// <summary>
-        /// 为克隆表格增加改写对象父对象的方法。
-        /// </summary>
-        /// <param name="p_parent"></param>
-        public void SetParentItem(RptItemBase p_parent)
-        {
-            _parent = p_parent;
-        }
-
+        #region 外部方法
         /// <summary>
         /// 构造报表项实例
         /// </summary>
@@ -366,41 +360,163 @@ namespace Dt.Base.Report
         /// <param name="p_cell"></param>
         public void ApplyStyle(Cells.Data.Cell p_cell)
         {
-            p_cell.WordWrap = WordWrap;
-            p_cell.FontFamily = new FontFamily(FontFamily);
-            p_cell.FontSize = FontSize;
-            p_cell.FontWeight = Bold ? FontWeights.Bold : FontWeights.Normal;
-            p_cell.FontStyle = Italic ? FontStyle.Italic : FontStyle.Normal;
-            p_cell.Underline = UnderLine;
-            p_cell.Strikethrough = StrikeOut;
-            p_cell.Foreground = HandleClick ? Dt.Base.Res.主蓝 : new SolidColorBrush(Foreground);
-            p_cell.Background = Background.A == 0 ? null : new SolidColorBrush(Background);
-            p_cell.HorizontalAlignment = Horalign;
-            p_cell.VerticalAlignment = Veralign;
-            p_cell.TextIndent = Margin;
+            if (p_cell.WordWrap != WordWrap)
+                p_cell.WordWrap = WordWrap;
 
-            if (p_cell.RowSpan > 1 || p_cell.ColumnSpan > 1)
+            if (FontFamily != DefaultFontName
+                || (p_cell.FontFamily != null && FontFamily != p_cell.FontFamily.Source))
+                p_cell.FontFamily = new FontFamily(FontFamily);
+
+            if (FontSize != DefaultFontSize
+                || (p_cell.FontSize != -1 && FontSize != p_cell.FontSize))
+                p_cell.FontSize = FontSize;
+
+            if ((Bold && p_cell.FontWeight != FontWeights.Bold)
+                || (!Bold && p_cell.FontWeight == FontWeights.Bold))
+                p_cell.FontWeight = Bold ? FontWeights.Bold : FontWeights.Normal;
+
+            if ((Italic && p_cell.FontStyle != FontStyle.Italic)
+                || (!Italic && p_cell.FontStyle == FontStyle.Italic))
+                p_cell.FontStyle = Italic ? FontStyle.Italic : FontStyle.Normal;
+
+            if (UnderLine != p_cell.Underline)
+                p_cell.Underline = UnderLine;
+
+            if (StrikeOut != p_cell.Strikethrough)
+                p_cell.Strikethrough = StrikeOut;
+
+            if (HandleClick)
+                p_cell.Foreground = Dt.Base.Res.主蓝;
+            else if (_data.Str("foreground") != _defaultForeground)
+                p_cell.Foreground = new SolidColorBrush(Foreground);
+            else if (p_cell.Foreground != null)
+                p_cell.Foreground = null;
+
+            if (_data.Str("background") != _defaultBackground)
+                p_cell.Background = new SolidColorBrush(Background);
+            else if (p_cell.Background != null)
+                p_cell.Background = null;
+
+            if (Horalign != p_cell.HorizontalAlignment)
+                p_cell.HorizontalAlignment = Horalign;
+
+            if (Veralign != p_cell.VerticalAlignment)
+                p_cell.VerticalAlignment = Veralign;
+
+            if (Margin != p_cell.TextIndent)
+                p_cell.TextIndent = Margin;
+
+            Worksheet sheet = p_cell.Worksheet;
+
+            // 超出异常
+            if (p_cell.RowSpan > 1
+                && p_cell.Row.Index + p_cell.RowSpan > sheet.Rows.Count)
+                p_cell.RowSpan = sheet.Rows.Count - p_cell.Row.Index;
+            if (p_cell.ColumnSpan > 1
+                && p_cell.Column.Index + p_cell.ColumnSpan > sheet.Columns.Count)
+                p_cell.ColumnSpan = sheet.Columns.Count - p_cell.Column.Index;
+
+            // 直接设置cell.BorderRight在合并单元格时不显示！
+            var range = new CellRange(p_cell.Row.Index, p_cell.Column.Index, p_cell.RowSpan, p_cell.ColumnSpan);
+            sheet.SetBorder(range, new BorderLine(LeftColor, LeftStyle), SetBorderOptions.Left);
+            sheet.SetBorder(range, new BorderLine(RightColor, RightStyle), SetBorderOptions.Right);
+            sheet.SetBorder(range, new BorderLine(TopColor, TopStyle), SetBorderOptions.Top);
+            sheet.SetBorder(range, new BorderLine(BottomColor, BottomStyle), SetBorderOptions.Bottom);
+        }
+
+        /// <summary>
+        /// 解析值：固定文本、脚本获取、表达式
+        /// </summary>
+        public void ParseVal()
+        {
+            Expressions = null;
+            IsScriptRender = false;
+
+            string val = _data.Str("val").Trim();
+            if (string.IsNullOrEmpty(val))
+                return;
+
+            // 连接符：||
+            string[] subs = val.Split("||");
+            char start = val[0];
+            if (subs.Length > 1 || start == ':' || start == '@')
             {
-                Worksheet sheet = p_cell.Worksheet;
-                for (int i = p_cell.Column.Index; i < p_cell.Column.Index + p_cell.ColumnSpan; i++)
+                // 解析表达式
+                Expressions = new List<RptExpression>();
+                foreach (string item in subs)
                 {
-                    sheet[p_cell.Row.Index, i].BorderTop = TopStyle == BorderLineStyle.None ? null : new BorderLine(TopColor, TopStyle);
-                    sheet[p_cell.Row.Index + p_cell.RowSpan - 1, i].BorderBottom = BottomStyle == BorderLineStyle.None ? null : new BorderLine(BottomColor, BottomStyle);
-                }
-                for (int i = p_cell.Row.Index; i < p_cell.Row.Index + p_cell.RowSpan; i++)
-                {
-                    sheet[i, p_cell.Column.Index].BorderLeft = LeftStyle == BorderLineStyle.None ? null : new BorderLine(LeftColor, LeftStyle);
-                    sheet[i, p_cell.Column.Index + p_cell.ColumnSpan - 1].BorderRight = RightStyle == BorderLineStyle.None ? null : new BorderLine(RightColor, RightStyle);
+                    string str = item.Trim();
+                    if (str == "")
+                        continue;
+
+                    var prefix = str[0];
+                    if (prefix == ':')
+                    {
+                        int end = str.IndexOf(')');
+                        if (end < 0)
+                            Throw.Msg("值表达式不正确：" + str);
+                        Expressions.Add(ParseExpression(str.Substring(1, end)));
+                    }
+                    else if (prefix == '@')
+                    {
+                        RptExpression exp = new RptExpression();
+                        exp.Func = RptExpFunc.Call;
+                        exp.VarName = str.ToLower().Substring(1);
+                        Placeholder |= PlaceholderType.Call;
+                        Expressions.Add(exp);
+                    }
+                    else
+                    {
+                        RptExpression exp = new RptExpression();
+                        exp.Func = RptExpFunc.Unknown;
+                        exp.VarName = str;
+                        Expressions.Add(exp);
+                    }
                 }
             }
             else
             {
-                p_cell.BorderLeft = LeftStyle == BorderLineStyle.None ? null : new BorderLine(LeftColor, LeftStyle);
-                p_cell.BorderTop = TopStyle == BorderLineStyle.None ? null : new BorderLine(TopColor, TopStyle);
-                p_cell.BorderRight = RightStyle == BorderLineStyle.None ? null : new BorderLine(RightColor, RightStyle);
-                p_cell.BorderBottom = BottomStyle == BorderLineStyle.None ? null : new BorderLine(BottomColor, BottomStyle);
+                IsScriptRender = (val.ToLower() == ScriptValue);
             }
         }
+
+        /// <summary>
+        /// 为克隆表格增加改写对象父对象的方法。
+        /// </summary>
+        /// <param name="p_parent"></param>
+        public void SetParentItem(RptItemBase p_parent)
+        {
+            _parent = p_parent;
+        }
+
+        /// <summary>
+        /// 设置边框
+        /// </summary>
+        /// <param name="p_noborder">true 无边框，false 默认边框</param>
+        public void SetBorder(bool p_noborder)
+        {
+            if (p_noborder)
+            {
+                _data["lbs"] = "None";
+                _data["lbs"] = "None";
+                _data["tbs"] = "None";
+                _data["rbs"] = "None";
+                _data["bbs"] = "None";
+            }
+            else
+            {
+                _data["lbs"] = _defaultBorder;
+                _data["tbs"] = _defaultBorder;
+                _data["rbs"] = _defaultBorder;
+                _data["bbs"] = _defaultBorder;
+            }
+
+            _data["lbc"] = _defaultForeground;
+            _data["tbc"] = _defaultForeground;
+            _data["rbc"] = _defaultForeground;
+            _data["bbc"] = _defaultForeground;
+        }
+        #endregion
 
         #region xml
         /// <summary>
@@ -409,28 +525,9 @@ namespace Dt.Base.Report
         /// <param name="p_reader"></param>
         public override void ReadXml(XmlReader p_reader)
         {
-            base.ReadXml(p_reader);
-
-            string val = _data.Str("val").Trim();
-            if (string.IsNullOrEmpty(val))
-                return;
-
-            if (!val.StartsWith(":"))
-            {
-                IsScriptRender = (val.ToLower() == ScriptValue);
-                return;
-            }
-
-            // 解析表达式
-            if (Expressions == null)
-                Expressions = new List<RptExpression>();
-            string[] subs = val.Substring(1).Split('+');
-            foreach (string item in subs)
-            {
-                string str = item.Trim();
-                if (str != "")
-                    Expressions.Add(ParseExpression(str));
-            }
+            _data.ReadXml(p_reader);
+            ParseVal();
+            p_reader.Read();
         }
 
         public override void WriteXml(XmlWriter p_writer)
@@ -469,10 +566,10 @@ namespace Dt.Base.Report
             if (val != _defaultBackground)
                 p_writer.WriteAttributeString("background", val);
             val = _data.Str("horalign");
-            if (val != _defaultAlign)
+            if (val != _defaultHorAlign)
                 p_writer.WriteAttributeString("horalign", val);
             val = _data.Str("veralign");
-            if (val != _defaultAlign)
+            if (val != _defaultVerAlign)
                 p_writer.WriteAttributeString("veralign", val);
             if (Margin != 0)
                 p_writer.WriteAttributeString("margin", _data.Str("margin"));
@@ -507,6 +604,7 @@ namespace Dt.Base.Report
         }
         #endregion
 
+        #region 解析
         /// <summary>
         /// 解析表达式
         /// </summary>
@@ -537,6 +635,9 @@ namespace Dt.Base.Report
                         break;
                     case "min":
                         exp.Func = RptExpFunc.Min;
+                        break;
+                    case "group":
+                        exp.Func = RptExpFunc.Group;
                         break;
                     default:
                         exp.Func = RptExpFunc.Unknown;
@@ -573,12 +674,14 @@ namespace Dt.Base.Report
                         exp.Func = RptExpFunc.Param;
                         exp.VarName = match.Groups[2].Value;
                         break;
-                    case "global":
-                        exp.Func = RptExpFunc.Global;
+                    case "var":
+                        exp.Func = RptExpFunc.Var;
                         string valName = match.Groups[2].Value;
                         exp.VarName = valName;
-                        if (valName == "总页数" || valName == "页号")
-                            ExistPlaceholder = true;
+                        if (valName == "总页数")
+                            Placeholder |= PlaceholderType.PageCount;
+                        else if (valName == "页号")
+                            Placeholder |= PlaceholderType.PageNum;
                         break;
                     default:
                         exp.Func = RptExpFunc.Unknown;
@@ -614,5 +717,6 @@ namespace Dt.Base.Report
             }
             return color;
         }
+        #endregion
     }
 }

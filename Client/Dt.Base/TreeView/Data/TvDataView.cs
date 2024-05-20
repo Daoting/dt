@@ -20,6 +20,7 @@ namespace Dt.Base.TreeViews
     {
         Tv _owner;
         ITreeData _data;
+        TvRootItems _rootItems;
 
         #region 构造方法
         public TvDataView(Tv p_owner, ITreeData p_data)
@@ -44,8 +45,8 @@ namespace Dt.Base.TreeViews
                 return;
             }
 
-            var rootItems = _owner.RootItems;
-            rootItems.Clear();
+            _rootItems = _owner.RootItems;
+            _rootItems.Clear();
             if (_owner.FixedRoot != null)
             {
                 // 固定根节点
@@ -64,7 +65,7 @@ namespace Dt.Base.TreeViews
                     fixedItem.ExpandedState = TvItemExpandedState.NotExpanded;
                 else
                     fixedItem.ExpandedState = TvItemExpandedState.Hide;
-                rootItems.Add(fixedItem);
+                _rootItems.Add(fixedItem);
             }
             else if (rootData != null)
             {
@@ -72,13 +73,13 @@ namespace Dt.Base.TreeViews
                 {
                     TvItem ti = new TvItem(_owner, item, null);
                     BuildChildren(ti);
-                    rootItems.Add(ti);
+                    _rootItems.Add(ti);
                 }
             }
 
             // 自动展开第一个节点
-            if (!_owner.IsDynamicLoading && rootItems[0].Children.Count > 0)
-                rootItems[0].IsExpanded = true;
+            if (!_owner.IsDynamicLoading && _rootItems[0].Children.Count > 0)
+                _rootItems[0].IsExpanded = true;
             _owner.LoadItems();
         }
 
@@ -88,6 +89,54 @@ namespace Dt.Base.TreeViews
         public void Unload()
         {
 
+        }
+
+        /// <summary>
+        /// 筛选
+        /// </summary>
+        public void ApplyFilterFlag()
+        {
+            if (_owner.FilterCfg == null || _owner.FilterCfg.IsFilterEmpty)
+            {
+                _owner.RootItems = _rootItems;
+                _owner.LoadItems();
+                return;
+            }
+
+            lock (_rootItems)
+            {
+                var root = new TvRootItems(_owner);
+                foreach (var ti in _rootItems)
+                {
+                    TvItem tiNew = new TvItem(_owner, ti.Data, null);
+                    if (IsLeave(ti, tiNew))
+                    {
+                        tiNew.IsExpanded = true;
+                        root.Add(tiNew);
+                    }
+                }
+                _owner.RootItems = root;
+                root.Invalidate();
+            }
+        }
+
+        bool IsLeave(TvItem p_parent, TvItem p_new)
+        {
+            bool leave = false;
+            if (_owner.FilterCfg.DoFilter(p_parent.Data))
+                leave = true;
+
+            foreach (var ti in p_parent.Children)
+            {
+                TvItem tiNew = new TvItem(_owner, ti.Data, p_new);
+                if (IsLeave(ti, tiNew))
+                {
+                    tiNew.IsExpanded = true;
+                    p_new.Children.Add(tiNew);
+                    leave = true;
+                }
+            }
+            return leave;
         }
 
         /// <summary>

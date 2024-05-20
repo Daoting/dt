@@ -137,7 +137,7 @@ namespace Dt.Base.Tools
             var file = e.Data.To<LocalFileItem>();
             await Kit.ShareFile(file.Info.FullName);
         }
-#elif DOTNET
+#elif WASM
         async void OnSaveAs(Mi e)
         {
             var fi = e.Data.To<LocalFileItem>();
@@ -152,36 +152,47 @@ namespace Dt.Base.Tools
             StorageFile file = await picker.PickSaveFileAsync();
             if (file == null)
                 return;
-            
-            if (Kit.AppType == AppType.Wasm)
-            {
-                var data = File.ReadAllBytes(fi.Info.FullName);
-                //Log.Debug($"长度：{data.Length}");
-                //Log.Debug($"路径：{file.Path}");
 
-                try
-                {
-                    using (var stream = await file.OpenStreamForWriteAsync())
-                    {
-                        stream.Write(data, 0, data.Length);
-                    }
-                    Kit.Msg("文件保存成功！");
-                }
-                catch
-                {
-                    Kit.Warn("文件保存失败！");
-                }
-            }
-            else
+            var data = File.ReadAllBytes(fi.Info.FullName);
+            //Log.Debug($"长度：{data.Length}");
+            //Log.Debug($"路径：{file.Path}");
+
+            try
             {
-                // gtk wpf
-                var folder = await StorageFolder.GetFolderFromPathAsync(fi.Info.DirectoryName);
-                var temp = await folder.TryGetItemAsync(fi.Name) as StorageFile;
-                if (temp != null)
+                using (var stream = await file.OpenStreamForWriteAsync())
                 {
-                    await temp.CopyAndReplaceAsync(file);
-                    Kit.Msg("文件保存成功！");
+                    stream.Write(data, 0, data.Length);
                 }
+                Kit.Msg("文件保存成功！");
+            }
+            catch
+            {
+                Kit.Warn("文件保存失败！");
+            }
+        }
+#elif SKIA
+        async void OnSaveAs(Mi e)
+        {
+            var fi = e.Data.To<LocalFileItem>();
+            var picker = Kit.GetFileSavePicker();
+            picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            string ext = ".txt";
+            int index = fi.Name.LastIndexOf('.');
+            if (index > -1)
+                ext = fi.Name.Substring(index);
+            picker.FileTypeChoices.Add("文件", new List<string>() { ext });
+            picker.SuggestedFileName = fi.Name;
+            StorageFile file = await picker.PickSaveFileAsync();
+            if (file == null)
+                return;
+
+            // gtk wpf
+            var folder = await StorageFolder.GetFolderFromPathAsync(fi.Info.DirectoryName);
+            var temp = await folder.TryGetItemAsync(fi.Name) as StorageFile;
+            if (temp != null)
+            {
+                await temp.CopyAndReplaceAsync(file);
+                Kit.Msg("文件保存成功！");
             }
         }
 #endif

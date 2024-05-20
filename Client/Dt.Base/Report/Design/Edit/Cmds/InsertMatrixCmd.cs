@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections;
 using System.Collections.ObjectModel;
+using Windows.UI;
 
 #endregion
 
@@ -52,12 +53,16 @@ namespace Dt.Base.Report
             mat.RowHeader = rowheader;
             RptMtxLevel level2 = new RptMtxLevel(rowheader);
             level2.Item.Val = "level2";
+            level2.Item.Horalign = CellHorizontalAlignment.Center;
+            level2.Item.Background = Color.FromArgb(0xff, 0xE0, 0xE0, 0xE0);
             rowheader.Levels.Add(level2);
 
             RptMtxColHeader colheader = new RptMtxColHeader(mat);
             mat.ColHeader = colheader;
             RptMtxLevel level1 = new RptMtxLevel(colheader);
             level1.Item.Val = "level1";
+            level1.Item.Horalign = CellHorizontalAlignment.Center;
+            level1.Item.Background = Color.FromArgb(0xff, 0xE0, 0xE0, 0xE0);
             colheader.Levels.Add(level1);
 
             RptMtxRow row = new RptMtxRow(mat);

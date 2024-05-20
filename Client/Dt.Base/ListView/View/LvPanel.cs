@@ -438,7 +438,7 @@ namespace Dt.Base.ListView
         {
             if (_owner.IsVir)
                 return _rowHeight;
-            
+
             if (p_index >= 0 && p_index < _dataRows.Count)
                 return _dataRows[p_index].DesiredSize.Height;
             return 0;
@@ -452,7 +452,7 @@ namespace Dt.Base.ListView
         {
             return 0;
         }
-        
+
         /// <summary>
         /// 设置为输入焦点
         /// </summary>
@@ -848,8 +848,17 @@ namespace Dt.Base.ListView
             {
                 _filterBox = _owner.FilterCfg.FilterBox;
                 _filterBox.TextChanged += OnTextChanged;
-                // android只支持KeyUp，只在enter时触发！
+
+                // 使用KeyUp原因：
+                // 1. android只支持KeyUp，只在enter时触发！
+                // 2. 避免和Lv回车触发ItemClick事件冲突
+#if ANDROID || IOS
                 _filterBox.KeyUp += OnTextKeyUp;
+#else
+                _filterBox.KeyUp += OnTextKeyUp;
+                // 直接处理Lv快捷键，否则被ScrollView处理！如：上下移动键
+                _filterBox.KeyDown += OnTextKeyDown;
+#endif
                 Children.Add(_filterBox);
             }
         }
@@ -861,6 +870,7 @@ namespace Dt.Base.ListView
             {
                 _filterBox.TextChanged -= OnTextChanged;
                 _filterBox.KeyUp -= OnTextKeyUp;
+                _filterBox.KeyDown -= OnTextKeyDown;
                 if (_filterTimer != null)
                 {
                     _filterTimer.Stop();
@@ -891,29 +901,25 @@ namespace Dt.Base.ListView
         void OnTimerTick(object sender, object e)
         {
             _filterTimer.Stop();
-            OnSearch();
+            _owner.Refresh();
         }
 
         void OnTextKeyUp(object sender, KeyRoutedEventArgs e)
         {
-            // android只支持KeyUp，只在enter时触发！
+            // 使用KeyUp原因：
+            // 1. android只支持KeyUp，只在enter时触发！
+            // 2. 避免和Lv回车触发ItemClick事件冲突
             if (e.Key == VirtualKey.Enter)
             {
                 e.Handled = true;
-                OnSearch();
-            }
-        }
-
-        void OnSearch()
-        {
-            if (_owner.FilterCfg.MyFilter != null)
-            {
-                _owner.FilterCfg.MyFilter(_filterBox.Text);
-            }
-            else
-            {
                 _owner.Refresh();
             }
+        }
+        
+        void OnTextKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            // 直接处理快捷键，否则被ScrollView处理！
+            OnKeyDown(sender, e);
         }
         #endregion
 

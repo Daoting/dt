@@ -55,6 +55,7 @@ namespace Dt.Base
         string _id;
         bool _isInit;
         Action<CallArgs> _set;
+        object _data;
         #endregion
 
         #region 构造方法
@@ -63,6 +64,15 @@ namespace Dt.Base
             // 系统默认大小14，uwp初次测量结果偏小
             FontSize = _defaultFontSize;
             DataContextChanged += OnDataContextChanged;
+        }
+        
+        /// <summary>
+        /// Lv导出报表用
+        /// </summary>
+        /// <param name="p_data"></param>
+        internal Dot(Row p_data)
+        {
+            _data = p_data;
         }
         #endregion
 
@@ -123,6 +133,11 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 获取当前行数据
+        /// </summary>
+        public object Data => _data;
+        
+        /// <summary>
         /// 切换Dot显示隐藏
         /// </summary>
         /// <param name="p_isEmpty"></param>
@@ -145,7 +160,7 @@ namespace Dt.Base
 
         void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs e)
         {
-            ViewItem vi = e.NewValue as ViewItem;
+            var vi = e.NewValue as ViewItem;
             if (vi == null)
             {
                 // 生成列表视图的列头用
@@ -157,9 +172,11 @@ namespace Dt.Base
                         Text = string.IsNullOrEmpty(Title) ? ID : Title,
                     };
                 }
+                _data = null;
                 return;
             }
 
+            _data = vi.Data;
             if (!_isInit)
             {
                 _isInit = true;
@@ -172,10 +189,10 @@ namespace Dt.Base
                 /*****************************************************************************************/
 
                 // 构造内部元素
-                Content = GetCellUI(vi);
+                Content = GetCellUI();
 
                 // 设置初始值
-                _set?.Invoke(new CallArgs(vi, this));
+                _set?.Invoke(new CallArgs(this));
 
                 // 优先级：直接设置 > ViewItem属性，未直接设置的绑定ViewItem中的行样式
                 if (vi.Host.IsCustomItemStyle)
@@ -194,7 +211,7 @@ namespace Dt.Base
             }
             else
             {
-                _set?.Invoke(new CallArgs(vi, this));
+                _set?.Invoke(new CallArgs(this));
             }
         }
 

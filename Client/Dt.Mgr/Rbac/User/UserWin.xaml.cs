@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-06 创建
+* 日志: 2024-02-04 创建
 ******************************************************************************/
 #endregion
 
@@ -19,15 +19,26 @@ namespace Dt.Mgr.Rbac
         public UserWin()
         {
             InitializeComponent();
+            MainForm = new UserForm { OwnWin = this };
         }
 
         public UserList MainList => _mainList;
 
-        public UserForm MainForm => _mainForm;
+        public UserForm MainForm { get; }
 
         public UserGroupList GroupList => _groupList;
 
         public UserRoleList RoleList => _roleList;
 
+        public UserMenuList MenuList => _menuList;
+
+        public UserPerList PerList => _perList;
+
+        public UserQuery Query => _query;
+
+        void OnQuery(QueryClause e)
+        {
+            _mainList.OnSearch(e);
+        }
     }
 }

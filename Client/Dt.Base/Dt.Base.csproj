@@ -4,7 +4,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="Fonts\**" />
         <EmbeddedResource Include="Controls\Policy\Privacy.txt" />
         <EmbeddedResource Include="Controls\Policy\Agreement.txt" />
         <EmbeddedResource Include="..\..\Service\src\Dt.Core\Internal\InitMode\InitSql\mysql-init.sql" Link="Tools\DbInit\Sql\mysql-init.sql" />

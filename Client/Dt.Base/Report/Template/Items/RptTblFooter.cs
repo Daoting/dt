@@ -15,9 +15,9 @@ using System.Xml;
 namespace Dt.Base.Report
 {
     /// <summary>
-    /// 表尾
+    /// 表格列尾
     /// </summary>
-    internal class RptTblFooter : RptTblPart
+    public class RptTblFooter : RptTblPart
     {
         public RptTblFooter(RptTable p_table)
             : base(p_table)
@@ -30,9 +30,9 @@ namespace Dt.Base.Report
         public override Task Build()
         {
             RptRootInst inst = Root.Inst;
-            RptTblFooterInst footer = new RptTblFooterInst(this);
+            RptTblColFooterInst footer = new RptTblColFooterInst(this);
             if (inst.CurrentTable != null)
-                inst.CurrentTable.Footer = footer;
+                inst.CurrentTable.ColFooter = footer;
             inst.CurrentParent = footer;
             return BuildChild();
         }

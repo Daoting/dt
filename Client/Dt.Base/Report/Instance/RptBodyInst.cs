@@ -16,7 +16,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 内容实例
     /// </summary>
-    internal class RptBodyInst
+    public class RptBodyInst
     {
         #region 成员变量
         readonly RptPart _item;

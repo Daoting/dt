@@ -21,8 +21,6 @@ namespace Dt.Core
     /// </summary>
     public partial class Table : ITreeData, INotifyList
     {
-        public string TableName = ""; //fifo 26.38.7
-
         #region INotifyList
         /// <summary>
         /// 在末尾批量添加数据，统一触发 NotifyCollectionChangedAction.Add
@@ -230,8 +228,9 @@ namespace Dt.Core
             if (parent != null && parent.Contains("id"))
             {
                 // id, parentid类型可以为long, string等
+                string id = parent.Str("id");
                 return from row in this
-                       where row.Str(parentID) == parent.Str("id")
+                       where row.Str(parentID) == id
                        select row;
             }
             return null;

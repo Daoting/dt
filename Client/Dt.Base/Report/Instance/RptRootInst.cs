@@ -18,7 +18,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 报表模板根元素
     /// </summary>
-    internal class RptRootInst
+    public class RptRootInst
     {
         #region 成员变量
         /// <summary>
@@ -117,7 +117,7 @@ namespace Dt.Base.Report
         public List<PageDefine> Cols { get; }
 
         /// <summary>
-        /// 获取当前正在构造的容器对象，如表格表头
+        /// 获取当前正在构造的容器对象，如表格列头
         /// </summary>
         public RptItemPartInst CurrentParent { get; set; }
 
@@ -127,7 +127,7 @@ namespace Dt.Base.Report
         public RptTableInst CurrentTable { get; set; }
 
         /// <summary>
-        /// 获取当前表尾的高度
+        /// 获取当前列尾的高度
         /// </summary>
         public double TblFooterHeight { get; set; }
 
@@ -151,8 +151,16 @@ namespace Dt.Base.Report
             // 页面固定尺寸
             HeaderHeight = root.Header.ActualHeight;
             FooterHeight = root.Footer.ActualHeight;
-            BodyHeight = root.PageSetting.ValidHeight - HeaderHeight - FooterHeight - PageGap;
-            BodyWidth = root.PageSetting.ValidWidth - PageGap;
+            if (root.PageSetting.AutoPaperSize)
+            {
+                BodyHeight = double.MaxValue;
+                BodyWidth = double.MaxValue;
+            }
+            else
+            {
+                BodyHeight = root.PageSetting.ValidHeight - HeaderHeight - FooterHeight - PageGap;
+                BodyWidth = root.PageSetting.ValidWidth - PageGap;
+            }
 
             // 输出成页，页眉页脚在创建页时输出
             CreatePage(0, 0);
@@ -162,7 +170,7 @@ namespace Dt.Base.Report
             // 渲染
             Info.Inst = this;
             RptRender render = new RptRender(Info);
-            render.Render();
+            await render.Render();
             return true;
         }
 

@@ -19,6 +19,7 @@ namespace Dt.Base
 {
     public partial class ListDlg : Dlg
     {
+        const string _error = " 单元格填充时源列表、目标列表列个数不一致！";
         CList _owner;
         string[] _srcIDs;
         string[] _tgtIDs;
@@ -48,6 +49,11 @@ namespace Dt.Base
             {
                 // 外部自定义数据源
             }
+            else if (_owner.Sql != null)
+            {
+                // Sql属性定义的数据源
+                lv.Data = await _owner.Sql.GetData(_owner.Owner.Data, null);
+            }
             else if (_ex != null)
             {
                 // 功能扩展提供的数据源
@@ -69,12 +75,40 @@ namespace Dt.Base
                     lv.Data = CreateEnumData(tp);
             }
 
+            // 未设置源、目标填充列时，设置默认
+            if (_srcIDs == null)
+            {
+                if (lv.Data is Table tbl)
+                {
+                    // 取name列 或 第一列作为源列名
+                    _srcIDs = new string[] { tbl.Columns.Contains("name") ? "name" : tbl.Columns[0].ID };
+                    _tgtIDs = new string[] { _owner.ID };
+                }
+                else if (lv.Data.Count > 0
+                    && lv.Data[0].GetType().GetProperty("name", BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance) is PropertyInfo pi)
+                {
+                    _srcIDs = new string[] { "name" };
+                    _tgtIDs = new string[] { _owner.ID };
+                }
+                else
+                {
+                    Throw.Msg(_owner.ID + " 单元格未设置源、目标填充列！");
+                }
+            }
+
             if (lv.View == null)
             {
                 lv.ShowItemBorder = false;
-                string xaml = (lv.Data is Table) ?
-                    $"<DataTemplate><a:Dot ID=\"{_owner.ValID}\" Margin=\"10,0,10,0\" /></DataTemplate>"
-                    : "<DataTemplate><a:Dot Margin=\"10,0,10,0\" /></DataTemplate>";
+                string xaml;
+                if (lv.Data is Table tbl)
+                {
+                    var colName = tbl.Columns.Contains("name") ? "name" : tbl.Columns[0].ID;
+                    xaml = $"<DataTemplate><a:Dot ID=\"{colName}\" Margin=\"10,0,10,0\" /></DataTemplate>";
+                }
+                else
+                {
+                    xaml = "<DataTemplate><a:Dot Margin=\"10,0,10,0\" /></DataTemplate>";
+                }
                 lv.View = Kit.LoadXaml<DataTemplate>(xaml);
             }
 
@@ -123,64 +157,93 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnSingleClick(ItemClickArgs e)
         {
-            if (e.Data is Row srcRow)
+            if (_srcIDs != null)
             {
-                _owner.Value = srcRow[_owner.ValID];
-                if (_srcIDs != null)
+                // 同步填充
+                if (e.Data is Row srcRow)
                 {
-                    // 同步填充
                     object tgtObj = _owner.Owner.Data;
                     Row tgtRow = tgtObj as Row;
                     for (int i = 0; i < _srcIDs.Length; i++)
                     {
                         string srcID = _srcIDs[i];
-                        string tgtID = _tgtIDs[i];
-                        if (srcRow.Contains(srcID))
+                        // - 代表当前列值
+                        string tgtID = _tgtIDs[i] == "-" ? _owner.ID : _tgtIDs[i];
+
+                        if (srcRow.Contains(srcID) || srcID == "-")
                         {
+                            object tgtVal = null;
+                            if (srcRow.Contains(srcID))
+                                tgtVal = srcRow[srcID];
+
                             if (tgtRow != null)
                             {
                                 if (tgtRow.Contains(tgtID))
-                                    tgtRow[tgtID] = srcRow[srcID];
+                                    tgtRow[tgtID] = tgtVal;
                             }
                             else
                             {
                                 var pi = tgtObj.GetType().GetProperty(tgtID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                                 if (pi != null)
-                                    pi.SetValue(tgtObj, srcRow[srcID]);
+                                    pi.SetValue(tgtObj, tgtVal);
+                            }
+
+                            // 对于联动的CList CPick CTree，清空其下拉数据源
+                            if (srcID == "-")
+                            {
+                                var cell = _owner.Owner[tgtID];
+                                if (cell is CList cl)
+                                    cl.Data = null;
+                                else if (cell is CPick cp)
+                                    cp.Data = null;
+                                else if (cell is CTree ct)
+                                    ct.Data = null;
                             }
                         }
                     }
                 }
-            }
-            else
-            {
-                _owner.Value = e.Data;
-                if (_srcIDs != null)
+                else
                 {
-                    // 同步填充
                     object tgtObj = _owner.Owner.Data;
                     Row tgtRow = tgtObj as Row;
                     for (int i = 0; i < _srcIDs.Length; i++)
                     {
-                        var srcPi = e.Data.GetType().GetProperty(_srcIDs[i], BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-                        if (srcPi != null)
+                        string srcID = _srcIDs[i];
+                        PropertyInfo srcPi = null;
+                        if (srcID == "-"
+                            || (srcPi = e.Data.GetType().GetProperty(srcID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance)) != null)
                         {
-                            string tgtID = _tgtIDs[i];
+                            string tgtID = _tgtIDs[i] == "-" ? _owner.ID : _tgtIDs[i];
+                            object tgtVal = srcPi == null ? null : srcPi.GetValue(e.Data);
+
                             if (tgtRow != null)
                             {
                                 if (tgtRow.Contains(tgtID))
-                                    tgtRow[tgtID] = srcPi.GetValue(e.Data);
+                                    tgtRow[tgtID] = tgtVal;
                             }
                             else
                             {
                                 var tgtPi = tgtObj.GetType().GetProperty(tgtID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                                 if (tgtPi != null)
-                                    tgtPi.SetValue(tgtObj, srcPi.GetValue(e.Data));
+                                    tgtPi.SetValue(tgtObj, tgtVal);
+                            }
+
+                            // 对于联动的CList CPick CTree，清空其下拉数据源
+                            if (srcID == "-")
+                            {
+                                var cell = _owner.Owner[tgtID];
+                                if (cell is CList cl)
+                                    cl.Data = null;
+                                else if (cell is CPick cp)
+                                    cp.Data = null;
+                                else if (cell is CTree ct)
+                                    ct.Data = null;
                             }
                         }
                     }
                 }
             }
+
             Close();
             _owner.OnSelected(e.Data);
         }
@@ -191,30 +254,34 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnMultipleOK(Mi e)
         {
-            // 暂未实现同步填充！
             List<object> ls = new List<object>();
-            StringBuilder sb = new StringBuilder();
-            if (_owner.Lv.Data is Table tbl)
+            if (_srcIDs != null)
             {
-                foreach (var row in _owner.Lv.SelectedItems.Cast<Row>())
+                // 暂未实现同步填充！
+                StringBuilder sb = new StringBuilder();
+                if (_owner.Lv.Data is Table tbl)
                 {
-                    if (sb.Length > 0)
-                        sb.Append("#");
-                    sb.Append(row.Str(_owner.ValID));
-                    ls.Add(row);
+                    foreach (var row in _owner.Lv.SelectedItems.Cast<Row>())
+                    {
+                        if (sb.Length > 0)
+                            sb.Append("#");
+                        sb.Append(row.Str(_srcIDs[0]));
+                        ls.Add(row);
+                    }
                 }
-            }
-            else
-            {
-                foreach (var obj in _owner.Lv.SelectedItems)
+                else
                 {
-                    if (sb.Length > 0)
-                        sb.Append("#");
-                    sb.Append(obj.ToString());
-                    ls.Add(obj);
+                    foreach (var obj in _owner.Lv.SelectedItems)
+                    {
+                        if (sb.Length > 0)
+                            sb.Append("#");
+                        sb.Append(obj.ToString());
+                        ls.Add(obj);
+                    }
                 }
+                _owner.Value = sb.ToString();
             }
-            _owner.Value = sb.ToString();
+
             Close();
             _owner.OnSelected(ls);
         }
@@ -267,15 +334,30 @@ namespace Dt.Base
             }
 
             // 拆分填充列
-            if (!string.IsNullOrEmpty(_owner.SrcID) && !string.IsNullOrEmpty(_owner.TgtID))
+            if (!string.IsNullOrEmpty(_owner.SrcID))
             {
                 _srcIDs = _owner.SrcID.Split(new string[] { "#" }, StringSplitOptions.RemoveEmptyEntries);
-                _tgtIDs = _owner.TgtID.Split(new string[] { "#" }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (!string.IsNullOrEmpty(_owner.TgtID))
+                {
+                    _tgtIDs = _owner.TgtID.Split(new string[] { "#" }, StringSplitOptions.RemoveEmptyEntries);
+                }
+                else if (_srcIDs.Length == 1)
+                {
+                    // 默认填充当前列
+                    _tgtIDs = new string[] { _owner.ID };
+                }
+                else
+                {
+                    _srcIDs = null;
+                    Throw.Msg(_owner.ID + _error);
+                }
+
                 if (_srcIDs.Length != _tgtIDs.Length)
                 {
                     _srcIDs = null;
                     _tgtIDs = null;
-                    Kit.Error("数据填充：源列表、目标列表列个数不一致！");
+                    Throw.Msg(_owner.ID + _error);
                 }
             }
         }
@@ -289,18 +371,22 @@ namespace Dt.Base
             int index = _owner.Ex.IndexOf("#");
             if (index != -1)
             {
-                cls = _owner.Ex.Substring(0, index);
-                pars = _owner.Ex.Substring(index + 1);
+                cls = _owner.Ex.Substring(0, index).Trim();
+                pars = _owner.Ex.Substring(index + 1).Trim();
             }
             else
             {
-                cls = _owner.Ex;
+                cls = _owner.Ex.Trim();
             }
             var tp = Kit.GetTypeByAlias(typeof(CListExAttribute), cls);
             if (tp != null && tp.IsSubclassOf(typeof(CListEx)))
             {
                 _ex = Activator.CreateInstance(tp) as CListEx;
                 _ex.Init(_owner, this, pars);
+            }
+            else
+            {
+                Kit.Warn("未找到CList.Ex：" + _owner.Ex);
             }
         }
     }

@@ -17,17 +17,41 @@ namespace Dt.Base.Report
     /// <summary>
     /// 页眉
     /// </summary>
-    internal class RptHeader : RptPart
+    public class RptHeader : RptPart
     {
-        double _height = 40.0;
-
+        public const double DefaultHeight = 25;
+        double _height = DefaultHeight;
+        bool _defaultHeader;
+        
         public RptHeader(RptRoot p_root)
             : base(p_root)
         {
         }
 
         /// <summary>
-        /// 获取高度
+        /// 采用默认页眉变化事件
+        /// </summary>
+        public event Action DefaultHeaderChanged;
+        
+        /// <summary>
+        /// 是否采用默认页眉：报表名称居中显示、带下划线
+        /// </summary>
+        public bool DefaultHeader
+        {
+            get { return _defaultHeader; }
+            set
+            {
+                if (_defaultHeader != value)
+                {
+                    _defaultHeader = value;
+                    Items.Clear();
+                    DefaultHeaderChanged?.Invoke();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取高度，默认25
         /// </summary>
         public override double Height
         {
@@ -35,11 +59,16 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
+        /// 与报表内容的间距，默认25
+        /// </summary>
+        public double BodySpacing { get; set; } = DefaultHeight;
+
+        /// <summary>
         /// 实际高度，头无子元素时认为高度为0.
         /// </summary>
         public double ActualHeight
         {
-            get { return Items.Count > 0 ? _height : 0; }
+            get { return Items.Count > 0 ? _height + BodySpacing : 0; }
         }
 
         /// <summary>
@@ -64,7 +93,14 @@ namespace Dt.Base.Report
                 if (id == "height")
                 {
                     _height = Convert.ToDouble(p_reader.Value);
-                    break;
+                }
+                else if (id == "bodyspacing")
+                {
+                    BodySpacing = Convert.ToDouble(p_reader.Value);
+                }
+                else if (id == "defaultheader")
+                {
+                    _defaultHeader = "True".Equals(p_reader.Value, StringComparison.OrdinalIgnoreCase);
                 }
             }
             base.ReadXml(p_reader);
@@ -78,9 +114,18 @@ namespace Dt.Base.Report
         public override void WriteXml(XmlWriter p_writer)
         {
             p_writer.WriteStartElement("Header");
-            if (_height != 40)
-                p_writer.WriteAttributeString("height", _height.ToString());
-            base.WriteXml(p_writer);
+            if (_defaultHeader)
+            {
+                p_writer.WriteAttributeString("defaultheader", "True");
+            }
+            else
+            {
+                if (_height != DefaultHeight)
+                    p_writer.WriteAttributeString("height", _height.ToString());
+                if (BodySpacing != DefaultHeight)
+                    p_writer.WriteAttributeString("bodyspacing", BodySpacing.ToString());
+                base.WriteXml(p_writer);
+            }
             p_writer.WriteEndElement();
         }
 
@@ -89,7 +134,24 @@ namespace Dt.Base.Report
         /// </summary>
         public Task Build()
         {
-            if (Items.Count > 0)
+            if (_defaultHeader)
+            {
+                Inst.Header = new RptHeaderInst(this);
+
+                // 采用默认页眉：报表名称居中显示、带下划线
+                var rt = new RptText(this);
+                rt.Val = ":Var(报表名称)";
+                rt.Horalign = Cells.Data.CellHorizontalAlignment.Center;
+                rt.LeftStyle = Cells.Data.BorderLineStyle.None;
+                rt.TopStyle = Cells.Data.BorderLineStyle.None;
+                rt.RightStyle = Cells.Data.BorderLineStyle.None;
+                rt.ParseVal();
+
+                Items.Clear();
+                Items.Add(rt);
+                rt.Build();
+            }
+            else if (Items.Count > 0)
             {
                 Inst.Header = new RptHeaderInst(this);
                 return BuildChild();
@@ -114,7 +176,7 @@ namespace Dt.Base.Report
         public override double GetRowHeight(int p_index)
         {
             if (p_index != 0)
-                throw new Exception("报表头只包含一行！");
+                Throw.Msg("报表头只包含一行！");
             return _height;
         }
     }

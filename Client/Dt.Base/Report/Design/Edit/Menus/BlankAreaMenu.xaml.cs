@@ -7,16 +7,10 @@
 #endregion
 
 #region 命名空间
-using Dt.Base;
 using Dt.Cells.Data;
-using Dt.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using System.Text;
+using System.Xml;
 
 #endregion
 
@@ -24,12 +18,13 @@ namespace Dt.Base.Report
 {
     public sealed partial class BlankAreaMenu : Menu
     {
-        RptDesignWin _owner;
+        RptDesignHome _owner;
 
-        public BlankAreaMenu(RptDesignWin p_owner)
+        public BlankAreaMenu(RptDesignHome p_owner)
         {
             InitializeComponent();
             _owner = p_owner;
+            Opening += OnOpening;
         }
 
         void OnInsertText(Mi e)
@@ -75,9 +70,46 @@ namespace Dt.Base.Report
             _owner.UpdateSelection();
         }
 
+        void OnInsertImage(Mi e)
+        {
+            _owner.Excel.DecorationRange = null;
+            CellRange range = _owner.Excel.ActiveSheet.Selections[0];
+            var item = new RptImage(_owner.GetContainer());
+            _owner.Info.ExecuteCmd(RptCmds.InsertImage, new InsertCmdArgs(item, range));
+            _owner.UpdateSelection();
+            item.SelectImage();
+        }
+
+        void OnInsertSparkline(Mi e)
+        {
+            _owner.Excel.DecorationRange = null;
+            CellRange range = _owner.Excel.ActiveSheet.Selections[0];
+            var item = new RptSparkline(_owner.GetContainer());
+            _owner.Info.ExecuteCmd(RptCmds.InsertSparkline, new InsertCmdArgs(item, range));
+            _owner.UpdateSelection();
+        }
+
         void OnInsertCopy(Mi e)
         {
+            CellRange range = _owner.Excel.ActiveSheet.Selections[0];
+            _owner.Info.ExecuteCmd(RptCmds.PasteItem, new PasteCmdArgs(_owner.GetContainer(), range));
+            _owner.UpdateSelection();
+        }
 
+        void OnOpening(Menu menu, AsyncCancelArgs args)
+        {
+            _miCopy.Visibility = string.IsNullOrEmpty(PasteItemCmd.PasteItemXml) ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        internal static void CopyItem(RptItem p_item)
+        {
+            StringBuilder sb = new StringBuilder();
+            using (var writer = XmlWriter.Create(sb, new XmlWriterSettings() { OmitXmlDeclaration = true, Indent = true }))
+            {
+                p_item.WriteXml(writer);
+                writer.Flush();
+            }
+            PasteItemCmd.PasteItemXml = sb.ToString();
         }
     }
 }

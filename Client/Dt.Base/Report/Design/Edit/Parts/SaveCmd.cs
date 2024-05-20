@@ -25,7 +25,7 @@ namespace Dt.Base.Report
 
         protected override void DoExecute(object p_parameter)
         {
-            _owner.SaveTemplate();
+            _ = _owner.SaveTemplate();
         }
 
         void UpdateAllowExecute()

@@ -211,14 +211,16 @@ namespace Dt.Core
                 RunLoop();
         }
 
-#elif DOTNET
-
+#elif WASM
+        static void AttachUnhandledException()
+        {
+            AppDomain.CurrentDomain.UnhandledException += (s, e) => OnUnhandledException(e.ExceptionObject as Exception);
+        }
+#else
         static void AttachUnhandledException()
         {
             // wpf已处理DispatcherUnhandledException事件
             // gtk已在内部处理，无需在dt中处理
-            if (AppType == AppType.Wasm)
-                AppDomain.CurrentDomain.UnhandledException += (s, e) => OnUnhandledException(e.ExceptionObject as Exception);
         }
 #endif
 

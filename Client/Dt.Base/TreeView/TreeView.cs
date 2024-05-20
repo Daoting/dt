@@ -107,6 +107,12 @@ namespace Dt.Base
             typeof(Tv),
             new PropertyMetadata(false));
 
+        public static readonly DependencyProperty FilterCfgProperty = DependencyProperty.Register(
+            "FilterCfg",
+            typeof(FilterCfg),
+            typeof(Tv),
+            new PropertyMetadata(null, OnFilterCfgChanged));
+        
         static void OnDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Tv tv = (Tv)d;
@@ -182,6 +188,13 @@ namespace Dt.Base
                 }
                 tv._panel.Reload();
             }
+        }
+
+        static void OnFilterCfgChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Tv tv = (Tv)d;
+            if (tv._isLoaded)
+                tv._panel.Reload();
         }
         #endregion
 
@@ -339,6 +352,15 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 获取设置筛选框配置，默认null
+        /// </summary>
+        public FilterCfg FilterCfg
+        {
+            get { return (FilterCfg)GetValue(FilterCfgProperty); }
+            set { SetValue(FilterCfgProperty, value); }
+        }
+
+        /// <summary>
         /// 获取当前选择的节点列表
         /// </summary>
         public IEnumerable<object> SelectedItems
@@ -445,7 +467,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取根节点集合
         /// </summary>
-        internal TvRootItems RootItems { get; }
+        internal TvRootItems RootItems { get; set; }
 
         internal ScrollViewer Scroll { get; set; }
 
@@ -916,7 +938,8 @@ namespace Dt.Base
         /// 单选模式点击时切换选择
         /// </summary>
         /// <param name="p_item"></param>
-        internal void OnToggleSelected(TvItem p_item)
+        /// <param name="p_fireEvent">是否触发选择变化事件</param>
+        internal void OnToggleSelected(TvItem p_item, bool p_fireEvent = true)
         {
             List<object> removes = new List<object>();
             try
@@ -938,9 +961,23 @@ namespace Dt.Base
             {
                 _selectedRows.CollectionChanged += OnSelectedItemsChanged;
             }
-            SelectionChanged?.Invoke(this, new SelectionChangedEventArgs(removes, new List<object> { p_item.Data }));
+            
+            if (p_fireEvent && SelectionChanged != null)
+                SelectionChanged?.Invoke(this, new SelectionChangedEventArgs(removes, new List<object> { p_item.Data }));
         }
 
+        /// <summary>
+        /// 触发清空选择事件
+        /// </summary>
+        internal void OnClearSelection()
+        {
+            if (SelectionChanged != null)
+            {
+                var removals = new List<object>();
+                SelectionChanged(this, new SelectionChangedEventArgs(removals, removals));
+            }
+        }
+        
         /// <summary>
         /// 多选模式时级联调整选择状态
         /// </summary>
@@ -1221,6 +1258,13 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 内部方法
+        internal void ApplyFilterFlag()
+        {
+            if (_dataView != null)
+                _dataView.ApplyFilterFlag();
+        }
+        #endregion
         #region 触发事件
         /// <summary>
         /// 触发单击行事件

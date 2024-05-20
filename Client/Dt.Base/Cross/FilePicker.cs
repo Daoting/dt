@@ -1,4 +1,4 @@
-﻿#if WIN || DOTNET
+﻿#if WIN || WASM || SKIA
 #region 文件描述
 /******************************************************************************
 * 创建: Daoting
@@ -161,16 +161,11 @@ namespace Dt.Base
 #if WIN
             string id = StorageApplicationPermissions.FutureAccessList.Add(p_file);
             fd = new FileData(id, p_file.Name, (await p_file.GetBasicPropertiesAsync()).Size);
+#elif WASM
+            fd = new FileData(p_file.Name, p_file.Name, (await p_file.GetBasicPropertiesAsync()).Size);
+            fd.FileStream = await p_file.OpenStreamForReadAsync();
 #else
-            if (Kit.AppType == AppType.Wasm)
-            {
-                fd = new FileData(p_file.Name, p_file.Name, (await p_file.GetBasicPropertiesAsync()).Size);
-                fd.FileStream = await p_file.OpenStreamForReadAsync();
-            }
-            else
-            {
-                fd = new FileData(p_file.Path, p_file.Name, (await p_file.GetBasicPropertiesAsync()).Size);
-            }
+            fd = new FileData(p_file.Path, p_file.Name, (await p_file.GetBasicPropertiesAsync()).Size);
 #endif
             string ext = fd.Ext;
             bool existThumb = false;

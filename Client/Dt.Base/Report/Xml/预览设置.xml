@@ -1,8 +1,11 @@
-﻿<View script="Dt.Base.MyScript,Dt.Base"
-      showsearchform="False"
+﻿<View script="[RptScript]"
       autoquery="False"
       showcolheader="False"
       showrowheader="False"
       showgridline="False"
       showmenu="False"
-      showcontextmenu="False" />
+      showcontextmenu="False"
+      showselectionmenu="False"
+      showexport="true"
+      showtoggleview="true"
+      showprint="true" />

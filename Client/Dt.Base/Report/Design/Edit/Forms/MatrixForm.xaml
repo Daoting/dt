@@ -5,14 +5,15 @@
     xmlns:a="using:Dt.Base">
 
     <a:Fv x:Name="_fv">
-        <a:CBar Title="矩阵" />
+        <a:CBar Title="矩阵">
+            <Button Content="删除矩阵" Click="OnDelMtx" HorizontalAlignment="Right" />
+        </a:CBar>
         <a:CList ID="tbl" Title="数据源" />
-        <a:CBool ID="hiderowheader" Title="隐藏行头" />
-        <a:CBool ID="repeatrowheader" Title="在每页重复行头" />
-        <a:CBool ID="hidecolheader" Title="隐藏列头" />
-        <a:CBool ID="repeatcolheader" Title="在每页重复列头" />
+        <a:CBool ID="hiderowheader" Title="隐藏行头" ShowTitle="False" />
+        <a:CBool ID="repeatrowheader" Title="在每页重复行头" ShowTitle="False" />
+        <a:CBool ID="hidecolheader" Title="隐藏列头" ShowTitle="False" />
+        <a:CBool ID="repeatcolheader" Title="在每页重复列头" ShowTitle="False" />
         <a:CText ID="rowsort" Title="行排序表达式" />
         <a:CText ID="colsort" Title="列排序表达式" />
-        <Button Content="删除矩阵" Click="OnDelMtx" />
     </a:Fv>
 </UserControl>

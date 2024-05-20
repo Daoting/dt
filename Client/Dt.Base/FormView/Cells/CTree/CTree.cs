@@ -46,12 +46,6 @@ namespace Dt.Base
             typeof(string),
             typeof(CTree),
             new PropertyMetadata(null));
-
-        public readonly static DependencyProperty ValIDProperty = DependencyProperty.Register(
-            "ValID",
-            typeof(string),
-            typeof(CTree),
-            new PropertyMetadata("name"));
         
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
             "Text",
@@ -148,6 +142,8 @@ namespace Dt.Base
 
         /// <summary>
         /// 获取设置源属性列表，用'#'隔开
+        /// <para>1. 当为目标列填充null时，用'-'标志，如：SrcID="id#-#-"</para>
+        /// <para>2. SrcID空时默认取name列 或 数据源第一列的列名</para>
         /// </summary>
         [CellParam("源属性列表")]
         public string SrcID
@@ -158,6 +154,8 @@ namespace Dt.Base
 
         /// <summary>
         /// 获取设置目标属性列表，用'#'隔开
+        /// <para>1. TgtID空时默认取当前列名</para>
+        /// <para>2. '#'隔开多列时可用'-'代表当前列名，如：TgtID="-#child1#child2"，也可以直接写当前列名</para>
         /// </summary>
         [CellParam("目标属性列表")]
         public string TgtID
@@ -166,16 +164,6 @@ namespace Dt.Base
             set { SetValue(TgtIDProperty, value); }
         }
         
-        /// <summary>
-        /// 获取设置当前值对应的数据源列名，默认name
-        /// </summary>
-        [CellParam("对应源列名")]
-        public string ValID
-        {
-            get { return (string)GetValue(ValIDProperty); }
-            set { SetValue(ValIDProperty, value); }
-        }
-
         /// <summary>
         /// 获取设置当前值
         /// </summary>

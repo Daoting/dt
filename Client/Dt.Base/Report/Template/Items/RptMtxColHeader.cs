@@ -20,7 +20,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 矩阵列头
     /// </summary>
-    internal class RptMtxColHeader : RptMtxHeader
+    public class RptMtxColHeader : RptMtxHeader
     {
         public RptMtxColHeader(RptMatrix p_matrix)
             : base(p_matrix)

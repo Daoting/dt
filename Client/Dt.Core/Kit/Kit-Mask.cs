@@ -7,17 +7,8 @@
 #endregion
 
 #region 引用命名
-using Dt.Core.Mask;
-using System;
-using System.Collections.Generic;
+using Dt.Toolkit.Mask;
 using System.Globalization;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Xml;
-using Windows.UI.Core;
-using Windows.UI.Notifications;
 #endregion
 
 namespace Dt.Core

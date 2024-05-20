@@ -23,21 +23,8 @@
                         <a:Dot Foreground="{StaticResource 主蓝}" HorizontalAlignment="Center" />
                     </DataTemplate>
                 </a:Lv>
-                <a:CBar Margin="0,10,0,0">
-                    <Grid Background="{StaticResource 浅灰1}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
-                            <TextBlock Text="&#xE02D;"
-                                       FontFamily="{StaticResource IconFont}"
-                                       VerticalAlignment="Center"
-                                       Margin="0, 0, 4, 0" />
-                            <TextBlock Text="搜索历史" VerticalAlignment="Center" TextWrapping="NoWrap" />
-                        </StackPanel>
-                        <Button Content="&#xE00A;" Click="OnClearHis" Style="{StaticResource 字符按钮}" Margin="0,0,10,0" Grid.Column="1" />
-                    </Grid>
+                <a:CBar Margin="0,10,0,0" Title="搜索历史">
+                    <Button Content="&#xE00A;" Click="OnClearHis" Style="{StaticResource 字符按钮}" HorizontalAlignment="Right" />
                 </a:CBar>
                 <a:Lv x:Name="_lvHis" ItemClick="OnHisClick">
                     <DataTemplate>

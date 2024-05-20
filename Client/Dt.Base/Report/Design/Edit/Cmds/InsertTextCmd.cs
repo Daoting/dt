@@ -27,7 +27,6 @@ namespace Dt.Base.Report
             txt.Col = range.Column;
             txt.RowSpan = range.RowCount;
             txt.ColSpan = range.ColumnCount;
-            txt.Val = "文本";
             txt.LeftStyle = BorderLineStyle.None;
             txt.TopStyle = BorderLineStyle.None;
             txt.RightStyle = BorderLineStyle.None;

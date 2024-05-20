@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-14 创建
+* 日志: 2024-02-20 创建
 ******************************************************************************/
 #endregion
 
@@ -19,14 +19,20 @@ namespace Dt.Mgr.Module
         public OptionGroupWin()
         {
             InitializeComponent();
+            ParentForm = new OptionGroupForm { OwnWin = this };
         }
 
         public OptionGroupList ParentList => _parentList;
 
-        public OptionGroupForm ParentForm => _parentForm;
+        public OptionGroupForm ParentForm { get; }
 
         public OptionGroupOptionList OptionList => _optionList;
 
-        public Tab ChildForm => _childForm;
+        public FuzzySearch Query => _query;
+
+        void OnSearch(string e)
+        {
+            _parentList.OnSearch(new QueryClause(e));
+        }
     }
 }

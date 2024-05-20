@@ -25,7 +25,7 @@ namespace Dt.Core.Rpc
     /// <param name="p_totalBytesToSend">总字节数</param>
     public delegate void ProgressDelegate(long p_bytesStep, long p_bytesSent, long p_totalBytesToSend);
 
-    public class ProgressStreamContent : StreamContent
+    public partial class ProgressStreamContent : StreamContent
     {
         public ProgressStreamContent(Stream stream, CancellationToken token)
             : this(new ProgressStream(stream, token))
@@ -104,7 +104,7 @@ namespace Dt.Core.Rpc
             return result;
         }
 
-        class ProgressStream : Stream
+        partial class ProgressStream : Stream
         {
             CancellationToken token;
 

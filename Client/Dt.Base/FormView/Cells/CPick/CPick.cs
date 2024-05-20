@@ -24,6 +24,12 @@ namespace Dt.Base
     public partial class CPick : FvCell
     {
         #region 静态内容
+        public readonly static DependencyProperty SqlProperty = DependencyProperty.Register(
+            "Sql",
+            typeof(Sql),
+            typeof(CPick),
+            new PropertyMetadata(null, OnClearData));
+
         public readonly static DependencyProperty SrcIDProperty = DependencyProperty.Register(
             "SrcID",
             typeof(string),
@@ -48,6 +54,12 @@ namespace Dt.Base
             typeof(CPick),
             new PropertyMetadata(null));
 
+        static void OnClearData(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var ls = (CPick)d;
+            if (ls._dlg != null)
+                ls._lv.ClearValue(Lv.DataProperty);
+        }
         #endregion
 
         #region 成员变量
@@ -91,7 +103,36 @@ namespace Dt.Base
 
         #region 属性
         /// <summary>
+        /// 获取设置数据源Sql属性，方便在xaml中设置，select语句可包含变量或占位符，变量以@开头，占位符首尾添加#，它们内容格式相同，分两类：
+        /// <para>1. 内部表达式取值：</para>
+        /// <para>   userid：当前登录ID</para>
+        /// <para>   username：当前登录名</para>
+        /// <para>   input：CPick中输入的过滤串</para>
+        /// <para>   [列名]：当前Fv数据源的列值</para>
+        /// 
+        /// <para>2. 调用外部方法取值： 外部类名.方法(参数)，如RptValueCall.GetMaxID(demo_父表)</para>
+        /// <para>
+        /// SELECT
+        /// 	大儿名
+        /// FROM
+        /// 	demo_大儿
+        /// WHERE
+        /// 	parent_id = @[parentid]
+        ///     AND name LIKE '#input#%'
+        ///     AND id = @RptValueCall.GetMaxID(demo_大儿)
+        ///     AND owner = @userid
+        /// </para>
+        /// </summary>
+        public Sql Sql
+        {
+            get { return (Sql)GetValue(SqlProperty); }
+            set { SetValue(SqlProperty, value); }
+        }
+
+        /// <summary>
         /// 获取设置源属性列表，用'#'隔开
+        /// <para>1. 当为目标列填充null时，用'-'标志，如：SrcID="id#-#-"</para>
+        /// <para>2. SrcID空时默认取name列 或 数据源第一列的列名</para>
         /// </summary>
         [CellParam("源属性列表")]
         public string SrcID
@@ -102,6 +143,8 @@ namespace Dt.Base
 
         /// <summary>
         /// 获取设置目标属性列表，用'#'隔开
+        /// <para>1. TgtID空时默认取当前列名</para>
+        /// <para>2. '#'隔开多列时可用'-'代表当前列名，如：TgtID="-#child1#child2"，也可以直接写当前列名</para>
         /// </summary>
         [CellParam("目标属性列表")]
         public string TgtID
@@ -264,10 +307,13 @@ namespace Dt.Base
         /// <param name="p_selectedItem"></param>
         public void FillCells(object p_selectedItem)
         {
-            // 无需要填充的
-            if (_srcIDs == null || p_selectedItem == null)
-                return;
+            // 拆分填充列
+            if (_srcIDs == null)
+                SplitIDs();
 
+            if (_srcIDs == null)
+                return;
+            
             // 同步填充
             if (p_selectedItem is Row srcRow)
             {
@@ -276,19 +322,37 @@ namespace Dt.Base
                 for (int i = 0; i < _srcIDs.Length; i++)
                 {
                     string srcID = _srcIDs[i];
-                    string tgtID = _tgtIDs[i];
-                    if (srcRow.Contains(srcID))
+                    // - 代表当前列值
+                    string tgtID = _tgtIDs[i] == "-" ? ID : _tgtIDs[i];
+
+                    if (srcRow.Contains(srcID) || srcID == "-")
                     {
+                        object tgtVal = null;
+                        if (srcRow.Contains(srcID))
+                            tgtVal = srcRow[srcID];
+                        
                         if (tgtRow != null)
                         {
                             if (tgtRow.Contains(tgtID))
-                                tgtRow[tgtID] = srcRow[srcID];
+                                tgtRow[tgtID] = tgtVal;
                         }
                         else
                         {
                             var pi = tgtObj.GetType().GetProperty(tgtID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                             if (pi != null)
-                                pi.SetValue(tgtObj, srcRow[srcID]);
+                                pi.SetValue(tgtObj, tgtVal);
+                        }
+
+                        // 对于联动的CList CPick CTree，清空其下拉数据源
+                        if (srcID == "-")
+                        {
+                            var cell = Owner[tgtID];
+                            if (cell is CList cl)
+                                cl.Data = null;
+                            else if (cell is CPick cp)
+                                cp.Data = null;
+                            else if (cell is CTree ct)
+                                ct.Data = null;
                         }
                     }
                 }
@@ -299,25 +363,92 @@ namespace Dt.Base
                 Row tgtRow = tgtObj as Row;
                 for (int i = 0; i < _srcIDs.Length; i++)
                 {
-                    var srcPi = p_selectedItem.GetType().GetProperty(_srcIDs[i], BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-                    if (srcPi != null)
+                    string srcID = _srcIDs[i];
+                    PropertyInfo srcPi = null;
+                    if (srcID == "-"
+                        || (srcPi = p_selectedItem.GetType().GetProperty(srcID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance)) != null)
                     {
-                        string tgtID = _tgtIDs[i];
+                        string tgtID = _tgtIDs[i] == "-" ? ID : _tgtIDs[i];
+                        object tgtVal = srcPi == null ? null : srcPi.GetValue(p_selectedItem);
+
                         if (tgtRow != null)
                         {
                             if (tgtRow.Contains(tgtID))
-                                tgtRow[tgtID] = srcPi.GetValue(p_selectedItem);
+                                tgtRow[tgtID] = tgtVal;
                         }
                         else
                         {
                             var tgtPi = tgtObj.GetType().GetProperty(tgtID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                             if (tgtPi != null)
-                                tgtPi.SetValue(tgtObj, srcPi.GetValue(p_selectedItem));
+                                tgtPi.SetValue(tgtObj, tgtVal);
+                        }
+
+                        // 对于联动的CList CPick CTree，清空其下拉数据源
+                        if (srcID == "-")
+                        {
+                            var cell = Owner[tgtID];
+                            if (cell is CList cl)
+                                cl.Data = null;
+                            else if (cell is CPick cp)
+                                cp.Data = null;
+                            else if (cell is CTree ct)
+                                ct.Data = null;
                         }
                     }
                 }
             }
         }
+        
+        void SplitIDs()
+        {
+            if (!string.IsNullOrEmpty(SrcID))
+            {
+                _srcIDs = SrcID.Split(new string[] { "#" }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (!string.IsNullOrEmpty(TgtID))
+                {
+                    _tgtIDs = TgtID.Split(new string[] { "#" }, StringSplitOptions.RemoveEmptyEntries);
+                }
+                else if (_srcIDs.Length == 1)
+                {
+                    // 默认填充当前列
+                    _tgtIDs = new string[] { ID };
+                }
+                else
+                {
+                    _srcIDs = null;
+                    Throw.Msg(ID + _error);
+                }
+
+                if (_srcIDs.Length != _tgtIDs.Length)
+                {
+                    _srcIDs = null;
+                    _tgtIDs = null;
+                    Throw.Msg(ID + _error);
+                }
+            }
+            else
+            {
+                if (_lv.Data is Table tbl)
+                {
+                    // 取name列 或 第一列作为源列名
+                    _srcIDs = new string[] { tbl.Columns.Contains("name") ? "name" : tbl.Columns[0].ID };
+                    _tgtIDs = new string[] { ID };
+                }
+                else if (_lv.Data.Count > 0
+                    && _lv.Data[0].GetType().GetProperty("name", BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance) is PropertyInfo pi)
+                {
+                    _srcIDs = new string[] { "name" };
+                    _tgtIDs = new string[] { ID };
+                }
+                else
+                {
+                    Throw.Msg(ID + _error);
+                }
+            }
+        }
+
+        const string _error = " 单元格填充时源列表、目标列表列个数不一致！";
         #endregion
     }
 }

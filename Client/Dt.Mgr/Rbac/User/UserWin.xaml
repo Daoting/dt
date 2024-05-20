@@ -5,10 +5,12 @@
     xmlns:a="using:Dt.Base"
     xmlns:l="using:Dt.Mgr.Rbac">
 
-    <l:UserList x:Name="_mainList" Order="1" a:Ex.Dock="Left" />
-    <l:UserForm x:Name="_mainForm" />
+    <l:UserQuery x:Name="_query" Query="OnQuery" a:Ex.Dock="Left" Order="1" />
+    <l:UserList x:Name="_mainList" />
     <a:Tabs a:Ex.Dock="Right">
         <l:UserGroupList x:Name="_groupList" />
         <l:UserRoleList x:Name="_roleList" />
+        <l:UserMenuList x:Name="_menuList" />
+        <l:UserPerList x:Name="_perList" />
     </a:Tabs>
 </a:Win>

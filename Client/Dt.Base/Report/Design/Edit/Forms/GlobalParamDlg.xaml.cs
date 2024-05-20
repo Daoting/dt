@@ -40,7 +40,7 @@ namespace Dt.Base.Report
 
         public string GetExpression()
         {
-            return $"Global({_lv.SelectedRow.Str("name")})";
+            return $"Var({_lv.SelectedRow.Str("name")})";
         }
 
         void OnSave(Mi e)
@@ -66,6 +66,8 @@ namespace Dt.Base.Report
             tbl.AddRow(new { name = "日期" });
             tbl.AddRow(new { name = "时间" });
             tbl.AddRow(new { name = "日期时间" });
+            tbl.AddRow(new { name = "用户id" });
+            tbl.AddRow(new { name = "用户姓名" });
             _lv.Data = tbl;
         }
 

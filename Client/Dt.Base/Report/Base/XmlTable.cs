@@ -67,7 +67,8 @@ namespace Dt.Base.Report
                 p_reader.Read();
                 if (p_reader.NodeType == XmlNodeType.CDATA)
                 {
-                    row.Cells[p_cdataCol].InitVal(p_reader.Value);
+                    if (p_cdataCol != null)
+                        row.Cells[p_cdataCol].InitVal(p_reader.Value);
                     p_reader.Read();
                     p_reader.Read();
                 }

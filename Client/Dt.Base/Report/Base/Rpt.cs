@@ -31,50 +31,110 @@ namespace Dt.Base
         /// 打开新窗口显示报表
         /// </summary>
         /// <param name="p_info">报表描述信息</param>
+        /// <param name="p_isPdf">报表是否采用Pdf格式</param>
         /// <param name="p_winTitle"></param>
         /// <param name="p_icon">图标</param>
-        public static async void Show(RptInfo p_info, string p_winTitle = null, Icons p_icon = Icons.折线图)
+        public static async void Show(RptInfo p_info, bool p_isPdf = false, string p_winTitle = null, Icons p_icon = Icons.折线图)
         {
             Throw.IfNull(p_info, _assertMsg);
 
             if (await p_info.Init())
-                Kit.OpenWin(typeof(RptViewWin), string.IsNullOrEmpty(p_winTitle) ? p_info.Name : p_winTitle, p_icon, p_info);
+            {
+                Kit.OpenWin(
+                    typeof(RptWin),
+                    string.IsNullOrEmpty(p_winTitle) ? p_info.Name : p_winTitle,
+                    p_icon,
+                    new RptWinParams { Info = p_info, IsPdf = p_isPdf });
+            }
             else
+            {
                 Kit.Warn($"初始化报表模板[{p_info.Name}]出错！");
+            }
+        }
+
+        /// <summary>
+        /// 显示报表对话框
+        /// </summary>
+        /// <param name="p_info">报表描述信息</param>
+        /// <param name="p_isPdf">报表是否采用Pdf格式</param>
+        /// <param name="p_title"></param>
+        /// <returns>对话框</returns>
+        public static async Task<Dlg> ShowDlg(RptInfo p_info, bool p_isPdf = false, string p_title = null)
+        {
+            Throw.IfNull(p_info, _assertMsg);
+
+            if (await p_info.Init())
+            {
+                var dlg = new Dlg
+                {
+                    IsPinned = true,
+                    Title = string.IsNullOrEmpty(p_title) ? p_info.Name : p_title,
+                };
+                if (!Kit.IsPhoneUI)
+                {
+                    dlg.Width = 1000;
+                    dlg.Height = Kit.ViewHeight - 200;
+                }
+
+                RptTab rpt = new RptTab();
+                if (p_isPdf)
+                    rpt.IsPdf = true;
+                dlg.LoadTab(rpt);
+                // 释放
+                dlg.Closed += (s, e) => rpt.Close();
+                dlg.Show();
+                rpt.LoadReport(p_info);
+                return dlg;
+            }
+            else
+            {
+                Kit.Warn($"初始化报表模板[{p_info.Name}]出错！");
+            }
+            return null;
         }
 
         /// <summary>
         /// 打开新窗口显示报表组
         /// </summary>
         /// <param name="p_infos">报表组描述信息</param>
+        /// <param name="p_isPdf">报表是否采用Pdf格式</param>
         /// <param name="p_winTitle">窗口标题</param>
         /// <param name="p_icon">图标</param>
-        public static void Show(IList<RptInfo> p_infos, string p_winTitle = null, Icons p_icon = Icons.折线图)
+        public static void Show(IList<RptInfo> p_infos, bool p_isPdf = false, string p_winTitle = null, Icons p_icon = Icons.折线图)
         {
             Throw.If(!IsValid(p_infos), _assertMsg);
             if (p_infos.Count == 1)
             {
-                Show(p_infos[0], p_winTitle, p_icon);
+                Show(p_infos[0], p_isPdf, p_winTitle, p_icon);
             }
             else
             {
                 // 使用 RptInfoList 只为识别窗口用
                 var ls = new RptInfoList();
                 ls.AddRange(p_infos);
-                Kit.OpenWin(typeof(RptGroupWin), string.IsNullOrEmpty(p_winTitle) ? "无标题" : p_winTitle, p_icon, ls);
+                Kit.OpenWin(
+                    typeof(RptGroupWin),
+                    string.IsNullOrEmpty(p_winTitle) ? "无标题" : p_winTitle,
+                    p_icon,
+                    new RptGroupWinParams { Infos = ls, IsPdf = p_isPdf });
             }
         }
 
         /// <summary>
         /// 打开报表设计窗口
         /// </summary>
-        /// <param name="p_info">报表设计描述信息</param>
+        /// <param name="p_info">报表设计描述信息，null时使用临时空模板</param>
         /// <param name="p_winTitle">窗口标题，null时使用报表名称</param>
         /// <param name="p_icon">窗口图标</param>
         /// <returns></returns>
         public static async Task<bool> ShowDesign(RptDesignInfo p_info, string p_winTitle = null, Icons p_icon = Icons.Excel)
         {
-            Throw.IfNull(p_info, _assertMsg);
+            if (p_info == null)
+            {
+                Kit.OpenWin(typeof(RptDesignHome), p_winTitle, p_icon);
+                return true;
+            }
+
             if (await p_info.InitTemplate())
             {
                 Kit.OpenWin(typeof(RptDesignHome), string.IsNullOrEmpty(p_winTitle) ? p_info.Name : p_winTitle, p_icon, p_info);
@@ -108,7 +168,7 @@ namespace Dt.Base
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception(string.Format("反序列化报表模板时异常：{0}", ex.Message));
+                        Throw.Msg(string.Format("反序列化报表模板时异常：{0}", ex.Message));
                     }
                 }
                 return root;
@@ -139,13 +199,13 @@ namespace Dt.Base
         /// <summary>
         /// 查询报表数据
         /// </summary>
-        /// <param name="p_srv">服务名称</param>
+        /// <param name="p_svc">服务名称</param>
         /// <param name="p_sql">Sql语句</param>
         /// <param name="p_params">参数字典</param>
         /// <returns></returns>
-        internal static Task<Table> Query(string p_srv, string p_sql, Dict p_params)
+        internal static Task<Table> Query(string p_svc, string p_sql, Dict p_params)
         {
-            Throw.If(string.IsNullOrEmpty(p_srv) || string.IsNullOrEmpty(p_sql), "查询报表数据时服务名称和Sql不可为空！");
+            Throw.If(string.IsNullOrEmpty(p_sql), "查询报表数据时Sql不可为空！");
 
             // 按参数位置顺序整理查询参数
             Dict sqlDt = new Dict();
@@ -166,11 +226,11 @@ namespace Dt.Base
 
             // 参数值替换占位符
             string sql = p_sql;
-            reg = new Regex(@"#[^\s,]+");
+            reg = new Regex(@"#[^\s#,]+#");
             matches = reg.Matches(p_sql);
             foreach (Match match in matches)
             {
-                string name = match.Value.Substring(1);
+                string name = match.Value.Trim('#');
                 if (p_params != null && p_params.TryGetValue(name, out var val))
                 {
                     sql = sql.Replace(match.Value, val == null ? "" : val.ToString());
@@ -182,7 +242,7 @@ namespace Dt.Base
             }
 
             return Kit.Rpc<Table>(
-                p_srv,
+                string.IsNullOrEmpty(p_svc) ? At.Svc : p_svc,
                 "Da.Query",
                 sql,
                 sqlDt

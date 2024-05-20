@@ -768,13 +768,25 @@ namespace Dt.Base.ListView
             }
             else
             {
-                _topLeft = new Border
+                var bd = new Border
                 {
                     Background = Res.浅灰1,
                     BorderBrush = Res.浅灰2,
                     BorderThickness = new Thickness(0, 0, 1, 1),
-                    IsHitTestVisible = false,
                 };
+
+                if (_owner.ShowReportBtn)
+                {
+                    Button btn = new Button
+                    {
+                        Style = Res.字符按钮,
+                        Content = "\uE0E6",
+                    };
+                    ToolTipService.SetToolTip(btn, "导出打印");
+                    btn.Click += ShowReportMenu;
+                    bd.Child = btn;
+                }
+                _topLeft = bd;
             }
         }
 
@@ -785,6 +797,34 @@ namespace Dt.Base.ListView
             _colHeader.Arrange(new Rect(_topLeftWidth, top, _owner.Cols.TotalWidth, _colHeader.DesiredSize.Height));
             // 测量时DesiredSize(0,0)
             _topLeft.Arrange(new Rect(-_deltaX, top, _topLeftWidth, _colHeader.DesiredSize.Height));
+        }
+        #endregion
+
+        #region 左上角报表菜单
+        Menu _rptMenu;
+        
+        void ShowReportMenu(object sender, RoutedEventArgs e)
+        {
+            if (_rptMenu == null)
+            {
+                _rptMenu = new Menu { IsContextMenu = true, Placement = MenuPosition.TopRight };
+                var item = new Mi { ID = "预览报表", Icon = Icons.折线图 };
+                item.Call += () => _owner.ShowReport(null, false, true);
+                _rptMenu.Items.Add(item);
+
+                item = new Mi { ID = "导出Excel", Icon = Icons.Excel };
+                item.Call += () => _ = _owner.ExportExcel(null, null, true);
+                _rptMenu.Items.Add(item);
+
+                item = new Mi { ID = "导出Pdf", Icon = Icons.Pdf };
+                item.Call += () => _ = _owner.ExportPdf(null, null, true);
+                _rptMenu.Items.Add(item);
+
+                item = new Mi { ID = "打印", Icon = Icons.打印 };
+                item.Call += () => _owner.Print(null, true);
+                _rptMenu.Items.Add(item);
+            }
+            _ = _rptMenu.OpenContextMenu((Button)sender);
         }
         #endregion
     }

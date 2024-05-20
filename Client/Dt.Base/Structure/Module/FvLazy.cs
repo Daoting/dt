@@ -30,7 +30,7 @@ namespace Dt.Base
         {
             _host = p_host;
         }
-        
+
         #region 外部方法
         public async Task OnUpdate(long? p_id)
         {
@@ -79,7 +79,7 @@ namespace Dt.Base
                 if (d.ID == _lastID)
                     return;
 
-                if (d.IsChanged)
+                if (d.IsChanged && CheckChanges)
                 {
                     // 屏蔽多次弹框
                     _toggling = true;
@@ -113,7 +113,7 @@ namespace Dt.Base
                 _toggling = false;
             }
         }
-        
+
         public async void OnOpen()
         {
             // 切换到可见时更新数据
@@ -126,8 +126,12 @@ namespace Dt.Base
 
         public Task<bool> OnClose()
         {
-            // 提示是否放弃修改
-            return _host.Fv.DiscardChanges();
+            if (CheckChanges)
+            {
+                // 提示是否放弃修改
+                return _host.Fv.DiscardChanges();
+            }
+            return Task.FromResult(true);
         }
         #endregion
 
@@ -150,10 +154,13 @@ namespace Dt.Base
                             // 保存失败，放弃增加
                             return;
                         }
+                        // 刷新列表
+                        _host.RefreshList(-1, FvRefreshList.Saved);
                     }
                 }
             }
             await _host.OnAdd();
+            _host.UpdateRelated(-1);
         }
 
         /// <summary>
@@ -161,7 +168,17 @@ namespace Dt.Base
         /// </summary>
         public async void Save()
         {
-            await _host.OnSave();
+            bool suc = await _host.OnSave();
+            if (suc)
+            {
+                IsSaved = true;
+                var d = _host.Fv.Row;
+                if (d != null)
+                {
+                    _host.UpdateRelated(d.ID);
+                    _host.RefreshList(d.ID, FvRefreshList.Saved);
+                }
+            }
         }
 
         /// <summary>
@@ -183,16 +200,22 @@ namespace Dt.Base
                 _host.Clear();
                 return;
             }
-            await _host.OnDel();
+            bool suc = await _host.OnDel();
+            if (suc)
+            { 
+                IsDeleted = true;
+                _host.Clear();
+                _host.RefreshList(-1, FvRefreshList.Deleted);
+            }
         }
 
         /// <summary>
         /// 创建默认菜单
         /// </summary>
         /// <returns></returns>
-        public Menu CreateMenu()
+        public Menu CreateMenu(Menu p_menu)
         {
-            Menu menu = new Menu();
+            Menu menu = p_menu?? new Menu();
             Mi mi = new Mi
             {
                 ID = "增加",
@@ -224,7 +247,7 @@ namespace Dt.Base
             };
             mi.Call += Delete;
             menu.Items.Add(mi);
-            
+
             return menu;
         }
 
@@ -261,15 +284,30 @@ namespace Dt.Base
                 dlg.Close();
             };
             sp.Children.Add(btn);
-            
+
             dlg.Content = sp;
             dlg.Show();
         }
 
         /// <summary>
+        /// 是否曾经保存成功
+        /// </summary>
+        public bool IsSaved { get; set; }
+
+        /// <summary>
+        /// 是否曾经删除成功
+        /// </summary>
+        public bool IsDeleted { get; set; }
+
+        /// <summary>
         /// 增加前选项：自动保存已修改的数据、提示、不检查
         /// </summary>
         public FvBeforeAdd BeforeAdd { get; set; }
+
+        /// <summary>
+        /// 切换数据源或关闭前是否检查、提示旧数据已修改
+        /// </summary>
+        public bool CheckChanges { get; set; } = true;
         #endregion
     }
 }

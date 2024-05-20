@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     xmlns:l="using:Dt.Mgr.Rbac">
 
-    <l:MenuList x:Name="_list" Order="1" a:Ex.Dock="Left" />
-    <l:MenuForm x:Name="_form" />
+    <l:MenuTree x:Name="_tree" Order="1" a:Ex.Dock="Left" />
+    <l:MenuList x:Name="_list" />
     <l:MenuRoleList x:Name="_roleList" a:Ex.Dock="Right" />
 </a:Win>

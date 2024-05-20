@@ -26,9 +26,8 @@ namespace Dt.Base
         /// <summary>
         /// 获取单元格界面元素，提供给Dot.Content用
         /// </summary>
-        /// <param name="p_vi"></param>
         /// <returns></returns>
-        UIElement GetCellUI(ViewItem p_vi)
+        internal UIElement GetCellUI()
         {
             UIElement elem = null;
             List<MethodInfo> methods;
@@ -37,7 +36,7 @@ namespace Dt.Base
                 && (methods = GetAllCellUIMethods(Call)).Count > 0)
             {
                 // 自定义单元格UI，支持多个方法顺序调用，方法原型：static void Fun(Env e)
-                var args = new Env(p_vi, this);
+                var args = new Env(this);
                 methods.ForEach((mi) => mi.Invoke(null, new object[] { args }));
 
                 // 未创建UI时使用默认UI，如：只设置背景色
@@ -53,7 +52,7 @@ namespace Dt.Base
             }
             else
             {
-                elem = CreateDefaultUI(p_vi);
+                elem = CreateDefaultUI();
             }
             return elem;
         }
@@ -62,7 +61,7 @@ namespace Dt.Base
         #endregion
 
         #region 默认UI
-        internal UIElement CreateDefaultUI(ViewItem p_vi)
+        internal UIElement CreateDefaultUI()
         {
             // ID为null或空对应数据对象本身，直接输出对象
             if (string.IsNullOrEmpty(ID))
@@ -79,7 +78,7 @@ namespace Dt.Base
 
             // 根据数据类型生成可视元素
             Type tp = null;
-            if (p_vi.Data is Row dr && dr.Contains(ID))
+            if (_data is Row dr && dr.Contains(ID))
             {
                 // 从Row取
                 tp = dr.Cells[ID].Type;
@@ -90,13 +89,13 @@ namespace Dt.Base
             else
             {
                 // 输出对象属性
-                var pi = p_vi.Data.GetType().GetProperty(ID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                var pi = _data.GetType().GetProperty(ID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                 if (pi != null)
                 {
                     tp = pi.PropertyType;
                     // 界面元素直接返回
                     if (tp.IsSubclassOf(typeof(UIElement)))
-                        return (UIElement)pi.GetValue(p_vi.Data);
+                        return (UIElement)pi.GetValue(_data);
                 }
             }
 
@@ -265,7 +264,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_method">方法名，形如：Def.Icon,Def.小灰</param>
         /// <returns></returns>
-        static List<MethodInfo> GetAllCellUIMethods(string p_method)
+        internal static List<MethodInfo> GetAllCellUIMethods(string p_method)
         {
             List<MethodInfo> ls = new List<MethodInfo>();
 

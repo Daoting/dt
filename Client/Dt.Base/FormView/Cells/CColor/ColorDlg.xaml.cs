@@ -15,13 +15,15 @@ using Windows.System;
 using Windows.UI;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml;
+using System.Globalization;
 #endregion
 
 namespace Dt.Base.FormView
 {
     public sealed partial class ColorDlg : Dlg
     {
-        static Nl<ColorItem> _colors;
+        static Table _colors;
 
         public ColorDlg()
         {
@@ -34,22 +36,22 @@ namespace Dt.Base.FormView
 
         void OnItemClick(ItemClickArgs e)
         {
-            Owner.SelectColor(((ColorItem)e.Data).Brush);
+            Owner.SelectColor((Color)e.Row[0]);
             Close();
         }
 
-        static Nl<ColorItem> GetColorList()
+        static Table GetColorList()
         {
             if (_colors == null)
             {
+                _colors = new Table { { "color", typeof(Color) } };
+                _colors.AddRow(new { color = new Color() });
                 Type type = typeof(Microsoft.UI.Colors);
-                _colors = new Nl<ColorItem>();
-                _colors.Add(new ColorItem(new Color(), "无"));
                 foreach (PropertyInfo info in type.GetProperties(BindingFlags.Static | BindingFlags.Public))
                 {
                     if (info.GetValue(type) is Color color)
                     {
-                        _colors.Add(new ColorItem(color, $"{info.Name} ({color})"));
+                        _colors.AddRow(new { color = color });
                     }
                 }
             }
@@ -61,24 +63,48 @@ namespace Dt.Base.FormView
             // 回车跳下一格
             if (e.Key == VirtualKey.Enter)
             {
+                if (e.OriginalSource == _tb && !ApplyColor())
+                    return;
+
                 Owner.Owner.GotoNextCell(Owner);
                 e.Handled = true;
                 if (IsOpened)
                     Close();
             }
         }
-    }
 
-    public class ColorItem
-    {
-        public ColorItem(Color p_color, string p_name)
+        void OnCustom(object sender, RoutedEventArgs e)
         {
-            Brush = new SolidColorBrush(p_color);
-            Name = p_name;
+            if (ApplyColor())
+                Close();
         }
-
-        public SolidColorBrush Brush { get; set; }
-
-        public string Name { get; set; }
+        
+        bool ApplyColor()
+        {
+            string strColor = _tb.Text.Trim();
+            if (strColor.StartsWith("#") && strColor.Length == 9)
+            {
+                try
+                {
+                    Color color = Color.FromArgb(
+                        byte.Parse(strColor.Substring(1, 2), NumberStyles.HexNumber),
+                        byte.Parse(strColor.Substring(3, 2), NumberStyles.HexNumber),
+                        byte.Parse(strColor.Substring(5, 2), NumberStyles.HexNumber),
+                        byte.Parse(strColor.Substring(7, 2), NumberStyles.HexNumber));
+                    Owner.SelectColor(color);
+                    
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Kit.Warn("颜色不正确！" + ex.Message);
+                }
+            }
+            else
+            {
+                Kit.Warn(strColor + " 颜色格式不正确！");
+            }
+            return false;
+        }
     }
 }

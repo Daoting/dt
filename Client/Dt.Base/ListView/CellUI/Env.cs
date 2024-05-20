@@ -18,14 +18,12 @@ namespace Dt.Base
     public class Env
     {
         #region 成员变量
-        ViewItem _item;
         Dot _dot;
         #endregion
 
         #region 构造方法
-        internal Env(ViewItem p_item, Dot p_dot)
+        internal Env(Dot p_dot)
         {
-            _item = p_item;
             _dot = p_dot;
         }
         #endregion
@@ -61,7 +59,7 @@ namespace Dt.Base
         /// <returns></returns>
         public UIElement CreateDefaultUI()
         {
-            var elem = _dot.CreateDefaultUI(_item);
+            var elem = _dot.CreateDefaultUI();
             if (_dot.SetCallback != null)
                 Set += _dot.SetCallback;
             return elem;

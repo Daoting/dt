@@ -15,12 +15,12 @@ namespace Dt.Base.Report
     /// <summary>
     /// 表格实例
     /// </summary>
-    internal class RptTableInst : RptItemInst
+    public class RptTableInst : RptItemInst
     {
         #region 成员变量
         protected readonly List<RptTblPartInst> _rows;
-        protected RptTblHeaderInst _header;
-        protected RptTblFooterInst _footer;
+        protected RptTblColHeaderInst _colHeader;
+        protected RptTblColFooterInst _colFooter;
         protected RptData _data;
         RptTblPartInst _curPart;
         #endregion
@@ -44,15 +44,15 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取设置表头
+        /// 获取设置列头
         /// </summary>
-        public RptTblHeaderInst Header
+        public RptTblColHeaderInst ColHeader
         {
-            get { return _header; }
+            get { return _colHeader; }
             set
             {
-                _header = value;
-                _header.Parent = this;
+                _colHeader = value;
+                _colHeader.Parent = this;
             }
         }
 
@@ -65,15 +65,15 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取设置表尾
+        /// 获取设置列尾
         /// </summary>
-        public RptTblFooterInst Footer
+        public RptTblColFooterInst ColFooter
         {
-            get { return _footer; }
+            get { return _colFooter; }
             set
             {
-                _footer = value;
-                _footer.Parent = value;
+                _colFooter = value;
+                _colFooter.Parent = value;
             }
         }
         #endregion
@@ -101,104 +101,210 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 输出单列表头表尾可重复表格布局
+        /// 输出单列表格布局，列头、列尾、行头可重复
         /// </summary>
         void OutputTable()
         {
             _region.RowSpan = 0;
-            _data.Current = 0;
             RptRootInst root = Inst;
             RptRegion region;
 
-            if (_header != null)
+            root.VerPageBegin += OnVerPageBegin;
+            root.VerPageEnd += OnPageEnd;
+            // 输出列头时可能出现水平分页
+            root.HorPageBegin += OnHorPageBegin;
+
+            if (_colHeader != null)
             {
-                _header.Output();
-                region = _header.Region;
+                _colHeader.Output();
+                region = _colHeader.Region;
                 _region.RowSpan = region.Row + region.RowSpan - _region.Row;
             }
 
-            root.VerPageBegin += OnPageBegin;
-            root.VerPageEnd += OnPageEnd;
             RptTable tbl = _item as RptTable;
-            if (tbl.Footer != null && tbl.RepeatFooter)
-                root.TblFooterHeight = tbl.Footer.Height;
+            if (tbl.ColFooter != null && tbl.RepeatColFooter)
+                root.TblFooterHeight = tbl.ColFooter.Height;
 
-            foreach (RptTblPartInst inst in _rows)
+            if (_data != null && _rows.Count > 0)
             {
-                _curPart = inst;
-                RptItemBase item = inst.Item;
-                region = new RptRegion(
-                    _region.Row + _region.RowSpan,
-                    _region.Col,
-                    item.RowSpan,
-                    item.ColSpan);
-                inst.Region = region;
-                inst.Output();
-                _region.RowSpan = region.Row + region.RowSpan - _region.Row;
+                _data.Current = 0;
+                foreach (RptTblPartInst inst in _rows)
+                {
+                    _curPart = inst;
+                    RptItemBase item = inst.Item;
+                    region = new RptRegion(
+                        _region.Row + _region.RowSpan,
+                        _region.Col,
+                        item.RowSpan,
+                        item.ColSpan);
+                    inst.Region = region;
+                    inst.Output();
+                    _region.RowSpan = region.Row + region.RowSpan - _region.Row;
+                }
+                _data.Current = 0;
             }
 
             _curPart = null;
             root.TblFooterHeight = 0.0;
-            root.VerPageBegin -= OnPageBegin;
+            root.VerPageBegin -= OnVerPageBegin;
             root.VerPageEnd -= OnPageEnd;
+            root.HorPageBegin -= OnHorPageBegin;
 
-            if (_footer != null)
+            if (_colFooter != null)
             {
-                RptItemBase item = _footer.Item;
+                RptItemBase item = _colFooter.Item;
                 region = new RptRegion(
                     _region.Row + _region.RowSpan,
                     _region.Col,
                     item.RowSpan,
                     item.ColSpan);
-                _footer.Region = region;
-                _footer.Output();
+                _colFooter.Region = region;
+                _colFooter.Output();
                 _region.RowSpan = region.Row + region.RowSpan - _region.Row;
             }
-            _data.Current = 0;
         }
 
         /// <summary>
-        /// 切换页面时在新页重复表头
+        /// 垂直分页时在新页重复列头
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnPageBegin(object sender, RptPage e)
+        void OnVerPageBegin(object sender, RptPage e)
         {
-            if (_header != null && (_item as RptTable).RepeatHeader)
+            if (_colHeader == null || !((RptTable)_item).RepeatColHeader)
+                return;
+
+            int index = _data.Current;
+            RptTblColHeaderInst inst = _colHeader.Clone() as RptTblColHeaderInst;
+
+            RptRegion region = new RptRegion(
+                e.Rows.Start,
+                _region.Col,
+                inst.Item.RowSpan,
+                inst.Item.ColSpan);
+            inst.Region = region;
+
+            // 复制子项区域
+            for (int i = 0; i < _colHeader.Children.Count; i++)
             {
-                int index = _data.Current;
-                RptTblHeaderInst inst = _header.Clone() as RptTblHeaderInst;
-                
-                RptRegion region = new RptRegion(
+                var r = _colHeader.Children[i].Region;
+                inst.Children[i].Region = new RptRegion(
                     e.Rows.Start,
-                    _region.Col,
-                    inst.Item.RowSpan,
-                    inst.Item.ColSpan);
-                inst.Region = region;
-
-                double height = _item.Part.GetRowHeight(region.Row + region.RowSpan - e.Rows.Start);
-                if (e.Rows.Size.Count > 0 && height != e.Rows.Size[0])
-                    e.Rows.Size[0] = height;
-                inst.Output();
-                _data.Current = index;
-
-                // 顺次下移
-                if (_curPart != null)
-                    _curPart.Region.Row = region.Row + region.RowSpan;
+                    r.Col,
+                    r.RowSpan,
+                    r.ColSpan);
             }
+            
+            double height = _item.Part.GetRowHeight(region.Row + region.RowSpan - e.Rows.Start);
+            if (e.Rows.Size.Count > 0 && height != e.Rows.Size[0])
+                e.Rows.Size[0] = height;
+            inst.Output();
+            _data.Current = index;
+
+            // 顺次下移
+            if (_curPart != null)
+                _curPart.Region.Row = region.Row + region.RowSpan;
         }
 
         /// <summary>
-        /// 切换页面时在旧页重复表尾
+        /// 水平分页时重复输出行头
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        void OnHorPageBegin(object sender, RptPage e)
+        {
+            var tbl = _item as RptTable;
+            if (tbl.RepeatRowHeaderCols <= 0 || e.IsColHasDefine())
+                return;
+
+            // 只在第一排水平分页时处理
+            
+            // 首次分页时，取第一页定义添加到当前页定义
+            RptRootInst root = sender as RptRootInst;
+            var firstPage = root.Cols[0];
+            for (int i = 0; i < tbl.RepeatRowHeaderCols; i++)
+            {
+                e.Cols.Size.Insert(i, firstPage.Size[tbl.Col + i]);
+            }
+
+            // 当前分页的起始列索引
+            int start = _colHeader != null ? _colHeader.OutputIndex : _rows[0].OutputIndex;
+
+            // 重复输出列头的列
+            if (_colHeader != null)
+            {
+                // 将后续列头的位置顺次后移
+                for (int i = start; i < _colHeader.Children.Count; i++)
+                {
+                    var item = _colHeader.Children[i];
+                    if (item.Region == null)
+                        item.RefreshPosition();
+                    item.Region.Col += tbl.RepeatRowHeaderCols;
+                }
+
+                // 插入行头
+                int insert = start;
+                for (int i = 0; i < tbl.RepeatRowHeaderCols; i++)
+                {
+                    // 列头可能多行
+                    for (int j = 0; j < _colHeader.OutputIndex; j++)
+                    {
+                        var item = _colHeader.Children[j];
+                        if (item.Region == null || item.Region.Col > i)
+                            break;
+
+                        if (item.Region.Col == i)
+                        {
+                            var newItem = item.Clone();
+                            newItem.Region = new RptRegion(item.Region.Row, e.Cols.Start + item.Region.Col, item.Region.RowSpan, item.Region.ColSpan);
+                            _colHeader.InsertChild(insert++, newItem);
+                            newItem.Output();
+                        }
+                    }
+                }
+                _colHeader.Region.ColSpan += tbl.RepeatRowHeaderCols;
+            }
+
+            // 重复输出数据行的行头列
+            foreach (var row in _rows)
+            {
+                // 后续列顺次后移
+                for (int i = start; i < row.Children.Count; i++)
+                {
+                    var item = row.Children[i];
+                    if (item.Region != null)
+                        item.Region.Col += tbl.RepeatRowHeaderCols;
+                    else
+                        item.OffsetX += tbl.RepeatRowHeaderCols;
+                }
+
+                // 重复输出
+                int insert = start;
+                for (int i = 0; i < tbl.RepeatRowHeaderCols; i++)
+                {
+                    var item = row.Children[i];
+                    var newItem = item.Clone();
+                    newItem.OffsetX = e.Cols.Start;
+                    row.InsertChild(insert++, newItem);
+                }
+            }
+
+            // 增加列跨度
+            _region.ColSpan += tbl.RepeatRowHeaderCols;
+        }
+
+        /// <summary>
+        /// 切换页面时在旧页重复列尾
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         void OnPageEnd(object sender, PageDefine e)
         {
-            if (_footer != null && (_item as RptTable).RepeatFooter)
+            if (_colFooter != null && (_item as RptTable).RepeatColFooter)
             {
                 int index = _data.Current;
-                RptTblFooterInst inst = _footer.Clone() as RptTblFooterInst;
+                RptTblColFooterInst inst = _colFooter.Clone() as RptTblColFooterInst;
                 RptRegion region = new RptRegion(
                     e.Start + e.Count,
                     _region.Col,
@@ -215,7 +321,7 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 输出单列布局
+        /// 输出多列表格布局
         /// </summary>
         void OutputList()
         {
@@ -225,10 +331,10 @@ namespace Dt.Base.Report
             RptRegion region = new RptRegion(_region.Row, _region.Col, 0, _item.ColSpan);
             regions.Add(region);
 
-            if (_header != null)
+            if (_colHeader != null)
             {
-                _header.Output();
-                region.RowSpan += _header.Region.RowSpan;
+                _colHeader.Output();
+                region.RowSpan += _colHeader.Region.RowSpan;
             }
 
             RptTable tbl = _item as RptTable;
@@ -306,10 +412,10 @@ namespace Dt.Base.Report
                         regions.Add(region);
                     }
 
-                    // 输出表头
-                    if (_header != null)
+                    // 输出列头
+                    if (_colHeader != null)
                     {
-                        RptTblHeaderInst header = _header.Clone() as RptTblHeaderInst;
+                        RptTblColHeaderInst header = _colHeader.Clone() as RptTblColHeaderInst;
                         header.Region = region.Clone() as RptRegion;
                         header.Region.RowSpan = header.Item.RowSpan;
                         header.Output();
@@ -342,29 +448,29 @@ namespace Dt.Base.Report
                 rowNum++;
             }
 
-            if (_footer != null)
+            if (_colFooter != null)
             {
                 region = _region;
                 if (regions.Count > 0)
                 {
                     region = regions[regions.Count - 1];
                 }
-                tempItem = _footer.Item;
-                _footer.Region = new RptRegion(
+                tempItem = _colFooter.Item;
+                _colFooter.Region = new RptRegion(
                     region.Row + region.RowSpan,
                     region.Col,
                     tempItem.RowSpan,
                     tempItem.ColSpan);
-                _footer.Output();
+                _colFooter.Output();
 
-                if (((_footer.Region.Row + _footer.Region.RowSpan) - _region.Row) > _region.RowSpan)
+                if (((_colFooter.Region.Row + _colFooter.Region.RowSpan) - _region.Row) > _region.RowSpan)
                 {
-                    _region.RowSpan = (_footer.Region.Row + _footer.Region.RowSpan) - _region.Row;
+                    _region.RowSpan = (_colFooter.Region.Row + _colFooter.Region.RowSpan) - _region.Row;
                 }
 
-                if (((_footer.Region.Col + _footer.Region.ColSpan) - _region.Col) > _region.ColSpan)
+                if (((_colFooter.Region.Col + _colFooter.Region.ColSpan) - _region.Col) > _region.ColSpan)
                 {
-                    _region.ColSpan = (_footer.Region.Col + _footer.Region.ColSpan) - _region.Col;
+                    _region.ColSpan = (_colFooter.Region.Col + _colFooter.Region.ColSpan) - _region.Col;
                 }
             }
         }

@@ -19,7 +19,7 @@ using Dt.Mgr;
 using Dt.Mgr.Workflow;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Mgr
 {
     /// <summary>
     /// 查看日志

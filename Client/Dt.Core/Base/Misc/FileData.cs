@@ -134,7 +134,7 @@ namespace Dt.Core
         {
             return Task.FromResult((Stream)new FileStream(FilePath, FileMode.Open, FileAccess.Read));
         }
-#elif DOTNET
+#elif WASM
         /// <summary>
         /// web上选择文件后即读取文件流，安全原因无法获取文件路径
         /// </summary>
@@ -146,8 +146,15 @@ namespace Dt.Core
         /// <returns></returns>
         public Task<Stream> GetStream()
         {
-            if (Kit.AppType == AppType.Wasm)
-                return Task.FromResult(FileStream);
+            return Task.FromResult(FileStream);
+        }
+#else
+        /// <summary>
+        /// 获取文件流
+        /// </summary>
+        /// <returns></returns>
+        public Task<Stream> GetStream()
+        {
             // gtk wpf
             return Task.FromResult((Stream)new FileStream(FilePath, FileMode.Open, FileAccess.Read));
         }

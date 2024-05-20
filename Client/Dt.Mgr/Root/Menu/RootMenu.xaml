@@ -21,7 +21,7 @@
         </a:Ex.Menu>
         <DataTemplate>
             <Grid Padding="10" ColumnDefinitions="Auto,*" MinHeight="60">
-                <a:Dot ID="Icon" Call="Def.Icon" FontSize="30" Foreground="{StaticResource 主蓝}" Margin="0,0,10,0" VerticalAlignment="Center" />
+                <a:Dot ID="Icon" Call="RootMenuUI.Icon" FontSize="30" Foreground="{StaticResource 主蓝}" Margin="0,0,10,0" VerticalAlignment="Center" />
                 <StackPanel VerticalAlignment="Center" Grid.Column="1">
                     <a:Dot ID="Name" VerticalAlignment="Center" />
                     <a:Dot ID="Note" Call="Def.小灰" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" />

@@ -18,16 +18,19 @@ namespace Dt.Base.Report
     /// <summary>
     /// 表格
     /// </summary>
-    internal class RptTable : RptItem
+    public class RptTable : RptItem
     {
         public RptTable(RptPart p_owner)
             : base(p_owner)
         {
             // 数据源名称
             _data.Add<string>("tbl");
-            // 在每页重复表头表尾
-            _data.Add<bool>("repeatheader");
-            _data.Add<bool>("repeatfooter");
+            // 垂直分页时在每页重复输出列头
+            _data.Add("repeatcolheader", true);
+            // 水平分页时在每页重复输出行头的列数
+            _data.Add("repeatrowheadercols", 0);
+            // 垂直分页时在每页重复输出列尾
+            _data.Add("repeatcolfooter", true);
             // 最少行数
             _data.Add("minrowcount", 0);
             // 多列显示
@@ -36,39 +39,50 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取设置表头
+        /// 表格列头
         /// </summary>
-        public RptTblHeader Header { get; set; }
+        public RptTblColHeader ColHeader { get; set; }
 
         /// <summary>
-        /// 获取设置数据行
+        /// 数据行
         /// </summary>
         public RptTblRow Body { get; set; }
 
         /// <summary>
-        /// 获取设置表尾
+        /// 表格列尾
         /// </summary>
-        public RptTblFooter Footer { get; set; }
+        public RptTblFooter ColFooter { get; set; }
 
         /// <summary>
-        /// 获取设置所有分组
+        /// 所有分组
         /// </summary>
         public List<RptTblGroup> Groups { get; set; }
 
         /// <summary>
-        /// 获取设置是否重复表头
+        /// 垂直分页时在每页重复输出列头，默认true
         /// </summary>
-        public bool RepeatHeader
+        public bool RepeatColHeader
         {
-            get { return _data.Bool("repeatheader"); }
+            get { return _data.Bool("repeatcolheader"); }
+            set { _data["repeatcolheader"] = value; }
         }
 
         /// <summary>
-        /// 获取设置是否重复表尾
+        /// 水平分页时在每页重复输出行头的列数，默认0
         /// </summary>
-        public bool RepeatFooter
+        public int RepeatRowHeaderCols
         {
-            get { return _data.Bool("repeatfooter"); }
+            get { return _data.Int("repeatrowheadercols"); }
+            set { _data["repeatrowheadercols"] = value; }
+        }
+
+        /// <summary>
+        /// 垂直分页时在每页重复输出列尾，默认true
+        /// </summary>
+        public bool RepeatColFooter
+        {
+            get { return _data.Bool("repeatcolfooter"); }
+            set { _data["repeatcolfooter"] = value; }
         }
 
         /// <summary>
@@ -80,6 +94,7 @@ namespace Dt.Base.Report
         public int RowBreakCount
         {
             get { return _data.Int("rowbreakcount"); }
+            set { _data["rowbreakcount"] = value; }
         }
 
         /// <summary>
@@ -88,6 +103,7 @@ namespace Dt.Base.Report
         public int ColBreakCount
         {
             get { return _data.Int("colbreakcount"); }
+            set { _data["colbreakcount"] = value; }
         }
 
         /// <summary>
@@ -96,6 +112,7 @@ namespace Dt.Base.Report
         public int MinRowCount
         {
             get { return _data.Int("minrowcount"); }
+            set { _data["minrowcount"] = value; }
         }
 
         /// <summary>
@@ -104,6 +121,7 @@ namespace Dt.Base.Report
         public string Tbl
         {
             get { return _data.Str("tbl"); }
+            set { _data["tbl"] = value; }
         }
 
         /// <summary>
@@ -116,23 +134,23 @@ namespace Dt.Base.Report
             if (string.IsNullOrEmpty(tblName))
                 return;
 
+            inst.CurrentParent = null;
+            RptTableInst tbl = new RptTableInst(this);
+            inst.Body.AddChild(tbl);
+            inst.CurrentTable = tbl;
+
+            if (ColHeader != null && ColHeader.Rows.Count > 0)
+                await ColHeader.Build();
+
             // 使用时再加载数据
             var rptData = await inst.Info.GetData(tblName);
             if (rptData == null)
                 return;
 
-            inst.CurrentParent = null;
-            RptTableInst tbl = new RptTableInst(this);
-            inst.Body.AddChild(tbl);
-            inst.CurrentTable = tbl;
             tbl.Data = rptData;
-            Table data = tbl.Data.Data;
-
-            if (Header != null && Header.Rows.Count > 0)
-                await Header.Build();
-
             if (Body != null)
             {
+                Table data = tbl.Data.Data;
                 for (int num = 0; num < data.Count; num++)
                 {
                     RptTblGroup group;
@@ -157,42 +175,17 @@ namespace Dt.Base.Report
                                 for (int j = i; j < Groups.Count; j++)
                                 {
                                     group = Groups[j];
-                                    if (group.Header != null && group.Header.Rows.Count > 0)
+                                    if (group.Rows.Count > 0)
                                     {
                                         Dictionary<string, string> dict = GetFilters(j, curRow);
-                                        await group.Header.Build(dict);
+                                        await group.Build(dict);
                                     }
                                 }
                                 break;
                             }
                         }
                     }
-
                     await Body.Build();
-
-                    // 分组尾
-                    if (Groups != null)
-                    {
-                        for (int i = 0; i < Groups.Count; i++)
-                        {
-                            group = Groups[i];
-                            string field = group.Field;
-                            if (!string.IsNullOrEmpty(field)
-                                && (nextRow == null || curRow.Str(field) != nextRow.Str(field)))
-                            {
-                                for (int j = Groups.Count - 1; j >= i; j--)
-                                {
-                                    group = Groups[j];
-                                    if (group.Footer != null && group.Footer.Rows.Count > 0)
-                                    {
-                                        Dictionary<string, string> dict = GetFilters(j, curRow);
-                                        await group.Footer.Build(dict);
-                                    }
-                                }
-                                break;
-                            }
-                        }
-                    }
                 }
 
                 // 未达到最少行数时增加空行
@@ -207,8 +200,8 @@ namespace Dt.Base.Report
                 }
             }
 
-            if (Footer != null && Footer.Rows.Count > 0)
-                await Footer.Build();
+            if (ColFooter != null && ColFooter.Rows.Count > 0)
+                await ColFooter.Build();
         }
 
         /// <summary>
@@ -221,10 +214,10 @@ namespace Dt.Base.Report
         {
             if (Contains(p_row, p_col, 1, 1))
             {
-                if (Header != null)
+                if (ColHeader != null)
                 {
-                    int headerRow = Header.Row;
-                    if (headerRow <= p_row && p_row < headerRow + Header.RowSpan)
+                    int headerRow = ColHeader.Row;
+                    if (headerRow <= p_row && p_row < headerRow + ColHeader.RowSpan)
                     {
                         return TblRangeType.Header;
                     }
@@ -237,10 +230,10 @@ namespace Dt.Base.Report
                         return TblRangeType.Body;
                     }
                 }
-                if (Footer != null)
+                if (ColFooter != null)
                 {
-                    int footerRow = Footer.Row;
-                    if (footerRow <= p_row && p_row < footerRow + Footer.RowSpan)
+                    int footerRow = ColFooter.Row;
+                    if (footerRow <= p_row && p_row < footerRow + ColFooter.RowSpan)
                     {
                         return TblRangeType.Footer;
                     }
@@ -263,26 +256,23 @@ namespace Dt.Base.Report
             {
                 case TblRangeType.Header:
                     {
-                        return Header.Rows[p_row - Header.Row].Cells[p_col - Col];
+                        return ColHeader.Rows[p_row - ColHeader.Row].Cells[p_col - Col];
                     }
                 case TblRangeType.Group:
                     {
                         foreach (RptTblGroup grp in Groups)
                         {
-                            if (grp.Header != null)
+                            int hRow = grp.Row;
+                            if (hRow <= p_row && p_row < hRow + grp.RowSpan)
                             {
-                                int hRow = grp.Header.Row;
-                                if (hRow <= p_row && p_row < hRow + grp.Header.RowSpan)
+                                var row = grp.Rows[p_row - hRow];
+                                int totalSpan = 0;
+                                for (int i = 0; i < row.Cells.Count; i++)
                                 {
-                                    return grp.Header.Rows[p_row - hRow].Cells[p_col - Col];
-                                }
-                            }
-                            if (grp.Footer != null)
-                            {
-                                int fRow = grp.Footer.Row;
-                                if (fRow <= p_row && p_row < fRow + grp.Footer.RowSpan)
-                                {
-                                    return grp.Footer.Rows[p_row - fRow].Cells[p_col - Col];
+                                    var cell = row.Cells[i];
+                                    totalSpan += cell.ColSpan;
+                                    if (totalSpan > p_col - Col)
+                                        return cell;
                                 }
                             }
                         }
@@ -294,7 +284,7 @@ namespace Dt.Base.Report
                     }
                 case TblRangeType.Footer:
                     {
-                        return Footer.Rows[p_row - Footer.Row].Cells[p_col - Col];
+                        return ColFooter.Rows[p_row - ColFooter.Row].Cells[p_col - Col];
                     }
                 case TblRangeType.Outer:
                 default:
@@ -305,30 +295,23 @@ namespace Dt.Base.Report
         public void CalcRowSpan()
         {
             int count = 0;
-            if (Header != null)
+            if (ColHeader != null)
             {
-                count += Header.Rows.Count;
+                count += ColHeader.Rows.Count;
             }
             if (Body != null)
             {
                 count += Body.Rows.Count;
             }
-            if (Footer != null)
+            if (ColFooter != null)
             {
-                count += Footer.Rows.Count;
+                count += ColFooter.Rows.Count;
             }
             if (Groups != null)
             {
                 foreach (RptTblGroup grp in Groups)
                 {
-                    if (grp.Header != null)
-                    {
-                        count += grp.Header.Rows.Count;
-                    }
-                    if (grp.Footer != null)
-                    {
-                        count += grp.Footer.Rows.Count;
-                    }
+                    count += grp.Rows.Count;
                 }
             }
             Data["rowspan"] = count;
@@ -352,15 +335,15 @@ namespace Dt.Base.Report
             int rowCount = 0;
             RptTblPartRow tmpRow = null;
 
-            if (p_source.Header != null && (rowCount = p_source.Header.Rows.Count) > 0)
+            if (p_source.ColHeader != null && (rowCount = p_source.ColHeader.Rows.Count) > 0)
             {
-                RptTblHeader header = new RptTblHeader(p_dest);
+                RptTblColHeader header = new RptTblColHeader(p_dest);
                 for (int i = 0; i < rowCount; i++)
                 {
                     tmpRow = new RptTblPartRow(header);
-                    header.Rows.Add(CopyTableRow(this.Header.Rows[i], tmpRow));
+                    header.Rows.Add(CopyTableRow(this.ColHeader.Rows[i], tmpRow));
                 }
-                p_dest.Header = header;
+                p_dest.ColHeader = header;
             }
 
             if (p_source.Body != null && (rowCount = p_source.Body.Rows.Count) > 0)
@@ -374,26 +357,22 @@ namespace Dt.Base.Report
                 p_dest.Body = body;
             }
 
-            if (p_source.Footer != null && (rowCount = p_source.Footer.Rows.Count) > 0)
+            if (p_source.ColFooter != null && (rowCount = p_source.ColFooter.Rows.Count) > 0)
             {
                 RptTblFooter foot = new RptTblFooter(p_dest);
                 for (int i = 0; i < rowCount; i++)
                 {
                     tmpRow = new RptTblPartRow(foot);
-                    foot.Rows.Add(CopyTableRow(this.Footer.Rows[i], tmpRow));
+                    foot.Rows.Add(CopyTableRow(this.ColFooter.Rows[i], tmpRow));
                 }
-                p_dest.Footer = foot;
+                p_dest.ColFooter = foot;
             }
 
             int grpCount = 0;
             if (p_source.Groups != null && (grpCount = p_source.Groups.Count) > 0)
             {
                 RptTblGroup grp = null;
-                RptTblGroupHeader grpHeader = null;
-                RptTblGroupFooter grpFooter = null;
                 RptTblGroup newGrp = null;
-                RptTblGroupHeader newGrpHeader = null;
-                RptTblGroupFooter newGrpFooter = null;
                 if (p_dest.Groups == null)
                 {
                     p_dest.Groups = new List<RptTblGroup>();
@@ -405,26 +384,13 @@ namespace Dt.Base.Report
                     newGrp = new RptTblGroup(p_dest);
                     p_dest.Groups.Add(newGrp);
                     newGrp.Field = grp.Field;
-                    if ((grpHeader = grp.Header) != null && (rowCount = grpHeader.Rows.Count) > 0)
+                    if (grp.Rows.Count > 0)
                     {
-                        newGrpHeader = new RptTblGroupHeader(p_dest);
-                        for (int i = 0; i < rowCount; i++)
+                        for (int i = 0; i < grp.Rows.Count; i++)
                         {
-                            tmpRow = new RptTblPartRow(newGrpHeader);
-                            newGrpHeader.Rows.Add(CopyTableRow(grpHeader.Rows[i], tmpRow));
+                            tmpRow = new RptTblPartRow(newGrp);
+                            newGrp.Rows.Add(CopyTableRow(grp.Rows[i], tmpRow));
                         }
-                        newGrp.Header = newGrpHeader;
-                    }
-
-                    if ((grpFooter = grp.Footer) != null && (rowCount = grpFooter.Rows.Count) > 0)
-                    {
-                        newGrpFooter = new RptTblGroupFooter(p_dest);
-                        for (int i = 0; i < rowCount; i++)
-                        {
-                            tmpRow = new RptTblPartRow(grpFooter);
-                            newGrpFooter.Rows.Add(CopyTableRow(grpFooter.Rows[i], tmpRow));
-                        }
-                        newGrp.Footer = newGrpFooter;
                     }
                 }
             }
@@ -467,17 +433,17 @@ namespace Dt.Base.Report
         {
             switch (p_reader.Name)
             {
-                case "THeader":
-                    Header = new RptTblHeader(this);
-                    Header.ReadXml(p_reader);
+                case "TColHeader":
+                    ColHeader = new RptTblColHeader(this);
+                    ColHeader.ReadXml(p_reader);
                     break;
                 case "TBody":
                     Body = new RptTblRow(this);
                     Body.ReadXml(p_reader);
                     break;
                 case "TFooter":
-                    Footer = new RptTblFooter(this);
-                    Footer.ReadXml(p_reader);
+                    ColFooter = new RptTblFooter(this);
+                    ColFooter.ReadXml(p_reader);
                     break;
                 case "TGroup":
                     if (Groups == null)
@@ -499,10 +465,13 @@ namespace Dt.Base.Report
             string val = _data.Str("tbl");
             if (val != "")
                 p_writer.WriteAttributeString("tbl", val);
-            if (RepeatHeader)
-                p_writer.WriteAttributeString("repeatheader", "True");
-            if (RepeatFooter)
-                p_writer.WriteAttributeString("repeatfooter", "True");
+            if (!RepeatColHeader)
+                p_writer.WriteAttributeString("repeatcolheader", "False");
+            val = _data.Str("repeatrowheadercols");
+            if (val != "0")
+                p_writer.WriteAttributeString("repeatrowheadercols", val);
+            if (!RepeatColFooter)
+                p_writer.WriteAttributeString("repeatcolfooter", "False");
             val = _data.Str("minrowcount");
             if (val != "0")
                 p_writer.WriteAttributeString("minrowcount", val);
@@ -513,12 +482,12 @@ namespace Dt.Base.Report
             if (val != "1")
                 p_writer.WriteAttributeString("colbreakcount", val);
 
-            if (Header != null)
-                Header.WriteXml(p_writer);
+            if (ColHeader != null)
+                ColHeader.WriteXml(p_writer);
             if (Body != null)
                 Body.WriteXml(p_writer);
-            if (Footer != null)
-                Footer.WriteXml(p_writer);
+            if (ColFooter != null)
+                ColFooter.WriteXml(p_writer);
             if (Groups != null)
             {
                 foreach (RptTblGroup group in Groups)
@@ -537,7 +506,7 @@ namespace Dt.Base.Report
     public enum TblRangeType
     {
         /// <summary>
-        /// 表头
+        /// 列头
         /// </summary>
         Header,
 
@@ -552,7 +521,7 @@ namespace Dt.Base.Report
         Body,
 
         /// <summary>
-        /// 表尾
+        /// 列尾
         /// </summary>
         Footer,
 

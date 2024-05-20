@@ -26,12 +26,16 @@ namespace Dt.Base.Report
     {
         public static readonly InsertTextCmd InsertText = new InsertTextCmd();
 
+        public static readonly InsertImageCmd InsertImage = new InsertImageCmd();
+        
         public static readonly InsertTableCmd InsertTable = new InsertTableCmd();
 
         public static readonly InsertMatrixCmd InsertMatrix = new InsertMatrixCmd();
 
         public static readonly InsertChartCmd InsertChart = new InsertChartCmd();
 
+        public static readonly InsertSparklineCmd InsertSparkline = new InsertSparklineCmd();
+        
         public static readonly ValueChangedCmd ValueChanged = new ValueChangedCmd();
 
         public static readonly InsertTblRowCmd InsertTblRow = new InsertTblRowCmd();
@@ -39,6 +43,12 @@ namespace Dt.Base.Report
         public static readonly DeleTblRowCmd DeleTblRow = new DeleTblRowCmd();
 
         public static readonly InsertTblGrpCmd InsertTblGrp = new InsertTblGrpCmd();
+
+        public static readonly DelTblGrpCmd DelTblGrp = new DelTblGrpCmd();
+
+        public static readonly InsertTblGrpRowCmd InsertTblGrpRow = new InsertTblGrpRowCmd();
+
+        public static readonly DelTblGrpRowCmd DelTblGrpRow = new DelTblGrpRowCmd();
 
         public static readonly HideMatrixHeaderCmd HideMtxHeader = new HideMatrixHeaderCmd();
 
@@ -75,5 +85,13 @@ namespace Dt.Base.Report
         public static readonly RemoveHeadOrFootCmd RemHeadOrFoot = new RemoveHeadOrFootCmd();
 
         public static readonly CopyItemCmd CopyItem = new CopyItemCmd();
+
+        public static readonly MergeTblGrpCellCmd MergeTblGrpCell = new MergeTblGrpCellCmd();
+
+        public static readonly SplitTblGrpCellCmd SplitTblGrpCell = new SplitTblGrpCellCmd();
+
+        public static readonly PasteItemCmd PasteItem = new PasteItemCmd();
+
+        public static readonly MoveItemsCmd MoveItems = new MoveItemsCmd();
     }
 }

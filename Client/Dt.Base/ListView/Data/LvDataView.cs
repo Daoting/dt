@@ -56,7 +56,7 @@ namespace Dt.Base.ListView
                 && (!string.IsNullOrEmpty(_owner.Where)
                     || (_owner.SortDesc != null && !string.IsNullOrEmpty(_owner.SortDesc.ID))
                     || _owner.Filter != null
-                    || _owner.ExistDefaultFilterCfg))
+                    || _owner.ExistFilterCfg))
             {
                 rows = GetTransformedList();
             }
@@ -106,7 +106,7 @@ namespace Dt.Base.ListView
                 && _owner.SortDesc == null
                 && string.IsNullOrEmpty(_owner.GroupName)
                 && _owner.Filter == null
-                && !_owner.ExistDefaultFilterCfg)
+                && !_owner.ExistFilterCfg)
             {
                 if (args.Action == NotifyCollectionChangedAction.Add)
                 {
@@ -156,10 +156,10 @@ namespace Dt.Base.ListView
             }
 
             // 3. 最后筛选框过滤
-            if (_owner.ExistDefaultFilterCfg)
+            if (_owner.ExistFilterCfg)
             {
                 ls = from item in ls
-                     where _owner.FilterCfg.DoDefaultFilter(item)
+                     where _owner.FilterCfg.DoFilter(item)
                      select item;
             }
 

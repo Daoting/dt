@@ -18,6 +18,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.ObjectModel;
+using Windows.UI;
 
 #endregion
 
@@ -34,7 +35,7 @@ namespace Dt.Base.Report
             RptTable tbl = args.RptItem as RptTable;
             RptPart con = tbl.Part;
             //通过重做重新加载table，不用处理
-            if (tbl.Header != null || tbl.Body != null || tbl.Footer != null)
+            if (tbl.ColHeader != null || tbl.Body != null || tbl.ColFooter != null)
             {
                 con.Items.Add(tbl);
                 return tbl;
@@ -52,46 +53,47 @@ namespace Dt.Base.Report
                     tbl.Body = new RptTblRow(tbl);
                     tblRow = new RptTblPartRow(tbl.Body);
                     tbl.Body.Rows.Add(tblRow);
-                    BuildCells(tblRow,tbl.ColSpan);
+                    BuildCells(tblRow, tbl.ColSpan, false);
                     break;
                 case 2:
-                    tbl.Header = new RptTblHeader(tbl);
-                    tblRow = new RptTblPartRow(tbl.Header);
-                    tbl.Header.Rows.Add(tblRow);
-                    BuildCells(tblRow,tbl.ColSpan);
+                    tbl.ColHeader = new RptTblColHeader(tbl);
+                    tblRow = new RptTblPartRow(tbl.ColHeader);
+                    tbl.ColHeader.Rows.Add(tblRow);
+                    BuildCells(tblRow, tbl.ColSpan, true);
                     tbl.Body = new RptTblRow(tbl);
                     tblRow = new RptTblPartRow(tbl.Body);
                     tbl.Body.Rows.Add(tblRow);
-                    BuildCells(tblRow,tbl.ColSpan);
+                    BuildCells(tblRow, tbl.ColSpan, false);
                     break;
                 default:
-                    tbl.Header = new RptTblHeader(tbl);
-                    tblRow = new RptTblPartRow(tbl.Header);
-                    tbl.Header.Rows.Add(tblRow);
-                    BuildCells(tblRow,tbl.ColSpan);
+                    tbl.ColHeader = new RptTblColHeader(tbl);
+                    tblRow = new RptTblPartRow(tbl.ColHeader);
+                    tbl.ColHeader.Rows.Add(tblRow);
+                    BuildCells(tblRow, tbl.ColSpan, true);
                     tbl.Body = new RptTblRow(tbl);
                     for (int i = 0; i < tbl.RowSpan - 2; i++)
                     {
                         tblRow = new RptTblPartRow(tbl.Body);
                         tbl.Body.Rows.Add(tblRow);
-                        BuildCells(tblRow,tbl.ColSpan);
+                        BuildCells(tblRow, tbl.ColSpan, false);
                     }
-                    tbl.Footer = new RptTblFooter(tbl);
-                    tblRow = new RptTblPartRow(tbl.Footer);
-                    tbl.Footer.Rows.Add(tblRow);
-                    BuildCells(tblRow,tbl.ColSpan);
+                    tbl.ColFooter = new RptTblFooter(tbl);
+                    tblRow = new RptTblPartRow(tbl.ColFooter);
+                    tbl.ColFooter.Rows.Add(tblRow);
+                    BuildCells(tblRow, tbl.ColSpan, true);
                     break;
             }
             con.Items.Add(tbl);
             return tbl;
         }
-      
+
         /// <summary>
         /// 构建table的单元格。
         /// </summary>
         /// <param name="p_tblRow"></param>
         /// <param name="p_colSpan"></param>
-        internal static void BuildCells(RptTblPartRow p_tblRow,int p_colSpan)
+        /// <param name="p_isTitle">标题时启用：默认背景色、居中</param>
+        internal static void BuildCells(RptTblPartRow p_tblRow, int p_colSpan, bool p_isTitle)
         {
             RptText txt;
             for (int i = 0; i < p_colSpan; i++)
@@ -99,6 +101,11 @@ namespace Dt.Base.Report
                 txt = new RptText(p_tblRow);
                 txt.RowSpan = 1;
                 txt.ColSpan = 1;
+                if (p_isTitle)
+                {
+                    txt.Horalign = CellHorizontalAlignment.Center;
+                    txt.Background = Color.FromArgb(0xff, 0xE0, 0xE0, 0xE0);
+                }
                 p_tblRow.Cells.Add(txt);
             }
         }

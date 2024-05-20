@@ -486,7 +486,7 @@ namespace Dt.Base
         /// <summary>
         /// 是否存在默认筛选框过滤
         /// </summary>
-        internal bool ExistDefaultFilterCfg => FilterCfg != null && FilterCfg.MyFilter == null;
+        internal bool ExistFilterCfg => FilterCfg != null;
         #endregion
 
         #region 外部方法

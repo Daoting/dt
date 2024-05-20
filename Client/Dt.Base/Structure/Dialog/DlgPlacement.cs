@@ -122,6 +122,11 @@ namespace Dt.Base
         TargetOuterTop,
 
         /// <summary>
+        /// 对话框的右上角与目标元素的右下角重叠
+        /// </summary>
+        TargetOuterBottomRight,
+        
+        /// <summary>
         /// 对话框与目标元素完全重叠，大小及位置都相同
         /// </summary>
         TargetOverlap,

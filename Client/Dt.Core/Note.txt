@@ -6,7 +6,9 @@
             throw new NotImplementedException();
 #elif ANDROID
             throw new NotImplementedException();
-#elif DOTNET
+#elif WASM
+            throw new NotImplementedException();
+#elif SKIA
             throw new NotImplementedException();
 #endif
 

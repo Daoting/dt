@@ -1,0 +1,14 @@
+﻿<a:LvTab
+    x:Class="Dt.Mgr.Rbac.UserPerList"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="权限">
+
+    <a:Lv x:Name="_lv" GroupName="modname">
+        <a:Cols>
+            <a:Col ID="funcname" Title="功能" />
+            <a:Col ID="name" Title="权限" Width="160" />
+        </a:Cols>
+    </a:Lv>
+</a:LvTab>

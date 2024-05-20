@@ -42,8 +42,10 @@ namespace Dt.Core
                 return AppType.iOS;
 #elif ANDROID
                 return AppType.Android;
-#elif DOTNET
-                return Stub.AppType == "wasm" ? AppType.Wasm : (Stub.AppType == "gtk" ? AppType.Gtk : AppType.Wpf);
+#elif WASM
+                return AppType.Wasm;
+#else
+                return Stub.AppType == "gtk" ? AppType.Gtk : AppType.Wpf;
 #endif
             }
         }

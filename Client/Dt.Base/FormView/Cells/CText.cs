@@ -206,43 +206,40 @@ namespace Dt.Base
     /// </summary>
     class TextValConverter : IFvCall
     {
+        /// <summary>
+        /// 从数据源取值
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
         public object Get(Mid m)
         {
             return m.Val;
         }
 
+        /// <summary>
+        /// 将值写入数据源，返回值为待写入值
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
         public object Set(Mid m)
         {
-            if (!((CText)m.Cell).AcceptsReturn || m.Val == null)
-                return m.Val;
-
+            // *****************************
+            // 数据源中保存的换行符始终只是 \n
+            // *****************************
+            
             // TextBox支持多行时：
             // windows换行符只有\r，每次向TextBox赋值时 \r\n 或 \n 都被强制替换为 \r
             // 其它平台换行符只有 \n，wasm每次向TextBox赋值时 \r\n 被强制替换为 \n，ios android不强制替换
 
-            // 此处为统一：将单独的\r 或 \n 替换成 \r\n
-            // 未使用正则表达式，效率更高些
-            char[] chars = m.Str.ToCharArray();
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < chars.Length; i++)
-            {
-                char c = chars[i];
-                if (c == '\r'
-                    && (i == chars.Length - 1 || chars[i + 1] != '\n'))
-                {
-                    sb.Append("\r\n");
-                }
-                else if (c == '\n'
-                    && (i == 0 || chars[i - 1] != '\r'))
-                {
-                    sb.Append("\r\n");
-                }
-                else
-                {
-                    sb.Append(c);
-                }
-            }
-            return sb.ToString();
+#if WIN || SKIA
+            if (!((CText)m.Cell).AcceptsReturn || m.Val == null)
+                return m.Val;
+
+            // 此处为统一：将 \r 替换成 \n
+            return m.Str.Replace('\r', '\n');
+#else
+            return m.Val;
+#endif
         }
     }
 }

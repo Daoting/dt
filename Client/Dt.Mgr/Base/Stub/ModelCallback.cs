@@ -66,19 +66,6 @@ namespace Dt.Mgr
             }
             return schema;
         }
-
-        /// <summary>
-        /// 读取模板内容，默认取模型库的 OmReport
-        /// </summary>
-        /// <param name="p_rptName">报表名称</param>
-        /// <returns></returns>
-        public async Task<string> GetReportTemplate(string p_rptName)
-        {
-            string define = await AtReport.GetScalar<string>("select define from OmReport where name=@name", new Dict { { "name", p_rptName } });
-            if (string.IsNullOrEmpty(define))
-                Kit.Warn($"未找到报表模板【{p_rptName}】！");
-            return define;
-        }
     }
 
     class OmTable : Entity

@@ -16,13 +16,15 @@
         <IsWin>false</IsWin>
         <IsAndroid>false</IsAndroid>
         <IsIOS>false</IsIOS>
-        <IsNet>false</IsNet>
+        <IsWasm>false</IsWasm>
+        <IsSkia>false</IsSkia>
         <!-- 目标框架，任意组合，如 SlnName-win-android-skia.sln -->
         <TargetFrameworks Condition="$(SolutionFileName.Contains('-win'))">$(TargetFrameworks);net8.0-windows10.0.19041</TargetFrameworks>
         <TargetFrameworks Condition="$(SolutionFileName.Contains('-android'))">$(TargetFrameworks);net8.0-android</TargetFrameworks>
         <TargetFrameworks Condition="$(SolutionFileName.Contains('-ios'))">$(TargetFrameworks);net8.0-ios</TargetFrameworks>
-        <TargetFrameworks Condition="$(SolutionFileName.Contains('-wasm')) or $(SolutionFileName.Contains('-skia'))">$(TargetFrameworks);net8.0</TargetFrameworks>
-        <TargetFrameworks Condition="$(TargetFrameworks) == ''">net8.0-windows10.0.19041;net8.0-android;net8.0-ios;net8.0</TargetFrameworks>
+        <TargetFrameworks Condition="$(SolutionFileName.Contains('-wasm'))">$(TargetFrameworks);net8.0-browser</TargetFrameworks>
+        <TargetFrameworks Condition="$(SolutionFileName.Contains('-skia'))">$(TargetFrameworks);net8.0</TargetFrameworks>
+        <TargetFrameworks Condition="$(TargetFrameworks) == ''">net8.0-windows10.0.19041;net8.0-android;net8.0-ios;net8.0-browser;net8.0</TargetFrameworks>
     </PropertyGroup>
 
     <!-- 平台常量 -->
@@ -65,11 +67,17 @@
                 <ProjectCapability Include="MauiCore" />
             </ItemGroup>
         </When>
+        <When Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'browser'">
+            <PropertyGroup>
+                <IsWasm>true</IsWasm>
+                <DefineConstants>$(DefineConstants);WASM;ENABLECURSOR</DefineConstants>
+            </PropertyGroup>
+        </When>
         <Otherwise>
             <PropertyGroup>
-                <!-- gtk wasm wpf -->
-                <IsNet>true</IsNet>
-                <DefineConstants>$(DefineConstants);DOTNET;ENABLECURSOR</DefineConstants>
+                <!-- gtk wpf -->
+                <IsSkia>true</IsSkia>
+                <DefineConstants>$(DefineConstants);SKIA;ENABLECURSOR</DefineConstants>
             </PropertyGroup>
         </Otherwise>
     </Choose>
@@ -81,8 +89,8 @@
         <Using Include="System.Threading.Tasks" />
     </ItemGroup>
     
-    <!--win预览xaml用，生成前嵌入，否则xaml页面后台代码的智能失效-->
-    <Target Name="EmbeddedXaml" BeforeTargets="PrepareForBuild" Condition="$(IsWin)">
+    <!--win预览xaml用，生成前嵌入，否则xaml页面后台代码的智能失效，最晚ResolveReferences-->
+    <Target Name="EmbeddedXaml" BeforeTargets="ResolveReferences" Condition="$(IsWin)">
         <ItemGroup>
             <EmbeddedResource Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
         </ItemGroup>
@@ -99,4 +107,34 @@
     
     <!-- 包引用，独立文件方便升级 -->
     <Import Project="References.props" Condition="exists('References.props')" />
+
+    <!--
+    Microsoft.Common.CurrentVersion.targets 中定义了系统Targets及顺序：
+    BeforeBuild;
+    
+    BuildOnlySettings;
+    PrepareForBuild;
+    PreBuildEvent;
+    ResolveReferences;
+    PrepareResources;
+    ResolveKeySource;
+    Compile;
+    ExportWindowsMDFile;
+    UnmanagedUnregistration;
+    GenerateSerializationAssemblies;
+    CreateSatelliteAssemblies;
+    GenerateManifests;
+    GetTargetPath;
+    PrepareForRun;
+    UnmanagedRegistration;
+    IncrementalClean;
+    PostBuildEvent;
+      
+    AfterBuild;
+    
+    BeforeRebuild;
+    Clean;
+    Build;
+    AfterRebuild;
+    -->
 </Project>

@@ -26,15 +26,13 @@ namespace Dt.Base
         /// <param name="p_img"></param>
         public Task LoadImage(string p_path, Image p_img)
         {
-#if DOTNET
-            if (Kit.AppType == AppType.Wasm)
-                return LoadImageWasm(p_path, p_img);
-            return LoadImageNative(p_path, p_img);
+#if WASM
+            return LoadImageWasm(p_path, p_img);
 #else
             return LoadImageNative(p_path, p_img);
 #endif
         }
-        
+
         Task LoadImageWasm(string p_path, Image p_img)
         {
             if (string.IsNullOrEmpty(p_path))
@@ -112,7 +110,18 @@ namespace Dt.Base
                 return null;
 
             BitmapImage bmp = new BitmapImage();
-#if WIN || DOTNET
+
+#if ANDROID
+            using (var stream = System.IO.File.OpenRead(path))
+            {
+                await bmp.SetSourceAsync(stream);
+            }
+#elif IOS
+            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                await bmp.SetSourceAsync(stream);
+            }
+#else
             StorageFile sf = await StorageFile.GetFileFromPathAsync(path);
             if (sf != null)
             {
@@ -124,16 +133,6 @@ namespace Dt.Base
                     }
                 }
                 catch { }
-            }
-#elif ANDROID
-            using (var stream = System.IO.File.OpenRead(path))
-            {
-                await bmp.SetSourceAsync(stream);
-            }
-#elif IOS
-            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
-            {
-                await bmp.SetSourceAsync(stream);
             }
 #endif
             return bmp;

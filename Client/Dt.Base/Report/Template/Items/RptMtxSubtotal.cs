@@ -18,7 +18,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 矩阵分层小计
     /// </summary>
-    internal class RptMtxSubtotal : RptItemBase
+    public class RptMtxSubtotal : RptItemBase
     {
         #region 私有变量
         readonly RptItemBase _parent;

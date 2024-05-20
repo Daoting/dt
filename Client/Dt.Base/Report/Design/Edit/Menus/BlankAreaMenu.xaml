@@ -9,6 +9,8 @@
     <a:Mi ID="插入表格" Icon="田字格" Click="OnInsertTbl" />
     <a:Mi ID="插入矩阵" Icon="大图标" Click="OnInsertMtx" />
     <a:Mi ID="插入图表" Icon="对比图" Click="OnInsertChart" />
-    <a:Mi ID="克隆插入" Icon="复制" Click="OnInsertCopy" />
+    <a:Mi ID="插入图片" Icon="图片" Click="OnInsertImage" />
+    <a:Mi ID="插入迷你图" Icon="折线图" Click="OnInsertSparkline" />
+    <a:Mi x:Name="_miCopy" ID="粘贴" Icon="粘贴" Click="OnInsertCopy" />
 </a:Menu>
 

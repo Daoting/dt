@@ -23,6 +23,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Windows.Storage.Streams;
 #endregion
 
 namespace Dt.Base
@@ -315,35 +316,35 @@ namespace Dt.Base
         #endregion
 
         #region 截图
-        ///// <summary>
-        ///// 获取当前界面元素的截图，uno不支持RenderTargetBitmap，废弃
-        ///// </summary>
-        ///// <param name="p_element"></param>
-        ///// <returns></returns>
-        //public static async Task<RenderTargetBitmap> GetSnapshot(this UIElement p_element)
-        //{
-        //    if (p_element == null)
-        //        return null;
+        /// <summary>
+        /// 获取当前界面元素的截图
+        /// </summary>
+        /// <param name="p_element"></param>
+        /// <returns></returns>
+        public static async Task<RenderTargetBitmap> GetSnapBitmap(this UIElement p_element)
+        {
+            if (p_element == null)
+                return null;
 
-        //    var parent = VisualTreeHelper.GetParent(p_element);
-        //    if (parent == null)
-        //        UITree.InvisibleGrid.Children.Add(p_element);
-        //    RenderTargetBitmap bmp = new RenderTargetBitmap();
-        //    await bmp.RenderAsync(p_element);
-        //    if (parent == null)
-        //        UITree.InvisibleGrid.Children.Remove(p_element);
-        //    return bmp;
-        //}
+            var parent = VisualTreeHelper.GetParent(p_element);
+            if (parent == null)
+                UITree.SnapBorder.Child = p_element;
+            RenderTargetBitmap bmp = new RenderTargetBitmap();
+            await bmp.RenderAsync(p_element);
+            if (parent == null)
+                UITree.SnapBorder.Child = null;
+            return bmp;
+        }
 
         /// <summary>
-        /// 保存当前界面元素的png截图，只支持 Windows
+        /// 保存当前界面元素的png截图
         /// </summary>
         /// <param name="p_element">要截图的界面元素</param>
         /// <param name="p_fileName">要保存的文件名</param>
         /// <param name="p_autoSave">false显示文件对话框，true且p_fileName不为空时自动保存</param>
         /// <param name="p_bounds">裁剪区域</param>
         /// <returns></returns>
-        public static async Task<StorageFile> SaveSnapshot(
+        public static async Task<StorageFile> SaveSnapFile(
             this UIElement p_element,
             string p_fileName = null,
             bool p_autoSave = false,
@@ -351,10 +352,6 @@ namespace Dt.Base
         {
             if (p_element == null)
                 return null;
-
-            RenderTargetBitmap bmp = new RenderTargetBitmap();
-            await bmp.RenderAsync(p_element);
-            var pixelBuffer = await bmp.GetPixelsAsync();
 
             string fileName;
             StorageFile saveFile;
@@ -388,36 +385,69 @@ namespace Dt.Base
                 if (saveFile == null)
                     return null;
             }
-
+            
             using (var fileStream = await saveFile.OpenAsync(FileAccessMode.ReadWrite))
             {
-                // 换算成物理像素
-                double raw = p_element.XamlRoot.RasterizationScale;
-                var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
-
-                // 含裁剪区域
-                if (p_bounds.Width > 0 && p_bounds.Height > 0)
-                {
-                    BitmapBounds bb = new BitmapBounds();
-                    bb.X = (uint)Math.Ceiling(p_bounds.Left * raw);
-                    bb.Y = (uint)Math.Ceiling(p_bounds.Top * raw);
-                    bb.Width = (uint)Math.Floor(p_bounds.Width * raw);
-                    bb.Height = (uint)Math.Floor(p_bounds.Height * raw);
-                    encoder.BitmapTransform.Bounds = bb;
-                }
-
-                float dpi = (float)raw * 96;
-                encoder.SetPixelData(
-                    BitmapPixelFormat.Bgra8,
-                    BitmapAlphaMode.Ignore,
-                    (uint)bmp.PixelWidth,
-                    (uint)bmp.PixelHeight,
-                    dpi,
-                    dpi,
-                    pixelBuffer.ToArray());
-                await encoder.FlushAsync();
+                await WriteSnap(p_element, fileStream, p_bounds);
             }
             return saveFile;
+        }
+
+        /// <summary>
+        /// 获取当前界面元素截图的流
+        /// </summary>
+        /// <param name="p_element"></param>
+        /// <returns></returns>
+        public static async Task<Stream> GetSnapStream(this UIElement p_element)
+        {
+            if (p_element == null)
+                return null;
+            
+            MemoryStream ms = new MemoryStream();
+            await WriteSnap(p_element, ms.AsRandomAccessStream());
+            return ms;
+        }
+
+        static async Task WriteSnap(UIElement p_element, IRandomAccessStream p_stream, Rect p_bounds = default(Rect))
+        {
+            var parent = VisualTreeHelper.GetParent(p_element);
+            
+            if (parent == null)
+                UITree.SnapBorder.Child = p_element;
+            
+            RenderTargetBitmap bmp = new RenderTargetBitmap();
+            await bmp.RenderAsync(p_element);
+            var pixelBuffer = await bmp.GetPixelsAsync();
+
+            // 换算成物理像素
+            double raw = p_element.XamlRoot.RasterizationScale;
+            
+            if (parent == null)
+                UITree.SnapBorder.Child = null;
+            
+            var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, p_stream);
+
+            // 含裁剪区域
+            if (p_bounds.Width > 0 && p_bounds.Height > 0)
+            {
+                BitmapBounds bb = new BitmapBounds();
+                bb.X = (uint)Math.Ceiling(p_bounds.Left * raw);
+                bb.Y = (uint)Math.Ceiling(p_bounds.Top * raw);
+                bb.Width = (uint)Math.Floor(p_bounds.Width * raw);
+                bb.Height = (uint)Math.Floor(p_bounds.Height * raw);
+                encoder.BitmapTransform.Bounds = bb;
+            }
+            
+            float dpi = (float)raw * 96;
+            encoder.SetPixelData(
+                BitmapPixelFormat.Bgra8,
+                BitmapAlphaMode.Ignore,
+                (uint)bmp.PixelWidth,
+                (uint)bmp.PixelHeight,
+                dpi,
+                dpi,
+                pixelBuffer.ToArray());
+            await encoder.FlushAsync();
         }
         #endregion
 

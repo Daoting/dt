@@ -27,10 +27,10 @@ namespace Dt.Base
     /// 数据源优先级：
     /// 1. 外部直接设置Data
     /// 2. 通过LoadData事件加载数据
+    /// 3. 设置`Sql`属性，该属性定义了select语句(sql可包含参数、占位符)、服务名或本地库名，主要方便在xaml中设置
     /// 3. 设置`Ex`属性，该属性是`类名#参数`的字符串，类需要继承自`CListEx`，重写方法可控制下拉对话框和数据源。
     /// 4. 外部(xaml中)定义的对象列表
     /// 5. 格的数据源类型为枚举时，自动生成Enum数据
-    /// 数据源为Table时，通过 ValID 设置对应的数据源列名，默认name，确保列存在
     /// 为普通对象时，直接将对象赋值！
     /// </summary>
     [ContentProperty(Name = nameof(View))]
@@ -40,6 +40,12 @@ namespace Dt.Base
         public readonly static DependencyProperty ExProperty = DependencyProperty.Register(
             "Ex",
             typeof(string),
+            typeof(CList),
+            new PropertyMetadata(null, OnClearData));
+
+        public readonly static DependencyProperty SqlProperty = DependencyProperty.Register(
+            "Sql",
+            typeof(Sql),
             typeof(CList),
             new PropertyMetadata(null, OnClearData));
 
@@ -66,12 +72,6 @@ namespace Dt.Base
             typeof(bool),
             typeof(CList),
             new PropertyMetadata(false, OnIsEditableChanged));
-
-        public readonly static DependencyProperty ValIDProperty = DependencyProperty.Register(
-            "ValID",
-            typeof(string),
-            typeof(CList),
-            new PropertyMetadata("name"));
         
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
             "Value",
@@ -125,6 +125,33 @@ namespace Dt.Base
 
         #region 属性
         /// <summary>
+        /// 获取设置数据源Sql属性，方便在xaml中设置，select语句可包含变量或占位符，变量以@开头，占位符首尾添加#，它们内容格式相同，分两类：
+        /// <para>1. 内部表达式取值：</para>
+        /// <para>   userid：当前登录ID</para>
+        /// <para>   username：当前登录名</para>
+        /// <para>   input：CPick中输入的过滤串</para>
+        /// <para>   [列名]：当前Fv数据源的列值</para>
+        /// 
+        /// <para>2. 调用外部方法取值： 外部类名.方法(参数)，如RptValueCall.GetMaxID(demo_父表)</para>
+        /// <para>
+        /// SELECT
+        /// 	大儿名
+        /// FROM
+        /// 	demo_大儿
+        /// WHERE
+        /// 	parent_id = @[parentid]
+        ///     AND name LIKE '#input#%'
+        ///     AND id = @RptValueCall.GetMaxID(demo_大儿)
+        ///     AND owner = @userid
+        /// </para>
+        /// </summary>
+        public Sql Sql
+        {
+            get { return (Sql)GetValue(SqlProperty); }
+            set { SetValue(SqlProperty, value); }
+        }
+
+        /// <summary>
         /// 获取设置扩展CList功能的类名和参数，用于控制下拉对话框和数据源，类名和参数之间用#隔开，如：
         /// <para>EnumData#Dt.Base.DlgPlacement,Dt.Base</para>
         /// <para>Option#民族</para>
@@ -151,6 +178,8 @@ namespace Dt.Base
 
         /// <summary>
         /// 获取设置源属性列表，用'#'隔开
+        /// <para>1. 当为目标列填充null时，用'-'标志，如：SrcID="id#-#-"</para>
+        /// <para>2. SrcID空时默认取name列 或 数据源第一列的列名</para>
         /// </summary>
         [CellParam("源属性列表")]
         public string SrcID
@@ -161,6 +190,8 @@ namespace Dt.Base
 
         /// <summary>
         /// 获取设置目标属性列表，用'#'隔开
+        /// <para>1. TgtID空时默认取当前列名</para>
+        /// <para>2. '#'隔开多列时可用'-'代表当前列名，如：TgtID="-#child1#child2"，也可以直接写当前列名</para>
         /// </summary>
         [CellParam("目标属性列表")]
         public string TgtID
@@ -188,16 +219,6 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(IsEditableProperty); }
             set { SetValue(IsEditableProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置当前值对应的数据源列名，默认name
-        /// </summary>
-        [CellParam("对应源列名")]
-        public string ValID
-        {
-            get { return (string)GetValue(ValIDProperty); }
-            set { SetValue(ValIDProperty, value); }
         }
         
         /// <summary>
@@ -243,7 +264,20 @@ namespace Dt.Base
         protected override bool SetFocus()
         {
             if (_grid != null)
-                OnShowDlg(null, null);
+            {
+                if (IsEditable && !ReadOnlyBinding)
+                {
+                    if (_grid.Children[_grid.Children.Count - 1] is TextBox tb)
+                    {
+                        tb.SelectAll();
+                        tb.Focus(FocusState.Programmatic);
+                    }
+                }
+                else
+                {
+                    OnShowDlg(null, null);
+                }
+            }
             return true;
         }
         #endregion
@@ -252,6 +286,10 @@ namespace Dt.Base
         void OnShowDlg(object sender, TappedRoutedEventArgs e)
         {
             if (ReadOnlyBinding)
+                return;
+
+            // 可编辑时只有点击右侧的下拉才显示选择框
+            if (IsEditable && e != null && e.OriginalSource is not TextBlock)
                 return;
 
             if (_dlg != null && _dlg.IsOpened)

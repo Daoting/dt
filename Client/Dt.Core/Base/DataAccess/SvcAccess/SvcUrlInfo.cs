@@ -55,7 +55,7 @@ namespace Dt.Core
             }
             else if (!string.IsNullOrWhiteSpace(_url))
             {
-                var match = Regex.Match(_url, @"^http[s]?://[^\s/]+");
+                var match = Regex.Match(_url, @"^http[s]?://[^\s:/]+");
                 string prefix = "";
                 if (match.Success)
                     prefix = match.Value;
@@ -64,7 +64,7 @@ namespace Dt.Core
                 foreach (var item in p_svcUrls)
                 {
                     var url = item.Value as string;
-                    if (url.StartsWith("*/"))
+                    if (url.StartsWith("*"))
                         url = prefix + url.Substring(1).TrimEnd('\\');
                     _urlDict[item.Key] = url;
                 }

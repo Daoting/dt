@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-06 创建
+* 日志: 2024-02-04 创建
 ******************************************************************************/
 #endregion
 
@@ -13,13 +13,19 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Mgr.Rbac
 {
-    public partial class UserList : Tab
+    public partial class UserList : LvTab
     {
-        #region 构造方法
+        #region 变量
+        QueryClause _clause;
+        #endregion
+
+        #region 构造
         public UserList()
         {
             InitializeComponent();
-			_lv.ItemStyle = (e) =>
+            if (Kit.IsPhoneUI)
+                _lv.ItemClick += OnItemClick;
+            _lv.ItemStyle = (e) =>
             {
                 if (e.Data.To<UserX>().Expired)
                 {
@@ -31,48 +37,73 @@ namespace Dt.Mgr.Rbac
         #endregion
 
         #region 公开
-        public async void Update()
+        public void OnSearch(QueryClause p_clause)
         {
-            if (Clause == null)
+            _clause = p_clause;
+            NaviTo(this);
+            _ = Refresh();
+        }
+        #endregion
+
+        #region 重写
+        protected override Lv Lv => _lv;
+
+        protected override async Task Query()
+        {
+            if (_clause == null)
             {
                 _lv.Data = await UserX.Query(null);
             }
             else
             {
-                var par = await Clause.Build<UserX>();
+                var par = await _clause.Build<UserX>();
                 _lv.Data = await UserX.Query(par.Sql, par.Params);
             }
         }
         #endregion
 
-        #region 初始化 
-        protected override void OnFirstLoaded()
-        {
-            Update();
-        }
-        #endregion
-
         #region 交互
-        async void OnAdd(Mi e)
+        async void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            NaviToChild();
-            await _win.MainForm.Update(-1);
-        }
-
-        async void OnItemClick(ItemClickArgs e)
-        {
-            if (_lv.SelectionMode != Base.SelectionMode.Multiple)
+            if (_lv.SelectionMode != SelectionMode.Multiple
+                && OwnWin is UserWin win)
             {
-                NaviToChild();
-                if (e.IsChanged)
-                    await _win.MainForm.Update(e.Row.ID);
+                await win.MainForm.Update(_lv.SelectedRow?.ID);
             }
         }
 
-        void NaviToChild()
+        async void OnItemDbClick(object e)
         {
-            if (Kit.IsPhoneUI)
-                NaviTo(new List<Tab> { _win.MainForm, _win.GroupList, _win.RoleList });
+            if (_lv.SelectionMode != SelectionMode.Multiple
+                && OwnWin is UserWin win)
+            {
+                await win.MainForm.Open(_lv.SelectedRow?.ID);
+            }
+        }
+
+        async void OnAdd(Mi e)
+        {
+            if (OwnWin is UserWin win)
+            {
+                await win.MainForm.Open(-1);
+            }
+        }
+
+        async void OnEdit(Mi e)
+        {
+            if (OwnWin is UserWin win)
+            {
+                await win.MainForm.Open(e.Row?.ID);
+            }
+        }
+
+        void OnItemClick(ItemClickArgs e)
+        {
+            if (_lv.SelectionMode != SelectionMode.Multiple
+                && OwnWin is UserWin win)
+            {
+                NaviTo(new List<Tab> { win.GroupList, win.RoleList, win.MenuList, win.PerList });
+            }
         }
 
         async void OnResetPwd(Mi e)
@@ -92,7 +123,7 @@ namespace Dt.Mgr.Rbac
             {
                 Kit.Msg("密码为4个1，无需重置！");
             }
-            else if(await user.Save(false))
+            else if (await user.Save(false))
             {
                 Kit.Msg("密码已重置为4个1！");
             }
@@ -118,7 +149,7 @@ namespace Dt.Mgr.Rbac
             if (await user.Save(false))
             {
                 Kit.Msg($"账号[{e.Row.Str("acc")}]已{act}！");
-                Update();
+                await Refresh();
             }
             else
             {
@@ -128,89 +159,18 @@ namespace Dt.Mgr.Rbac
 
         async void OnDel(Mi e)
         {
-            var user = e.Data.To<UserX>();
-            if (!await Kit.Confirm($"确认要删除[{user.Acc}]吗？\r\n删除后不可恢复，请谨慎删除！"))
+            var d = e.Data.To<UserX>();
+            if (!await Kit.Confirm($"确认要删除[{d.Acc}]吗？\r\n删除后不可恢复，请谨慎删除！"))
             {
                 Kit.Msg("已取消删除！");
                 return;
             }
 
-            if (await user.Delete())
+            if (await d.Delete())
             {
-                Update();
-                if (user == _win.MainForm.Data)
-                    _win.MainForm.Clear();
+                await Refresh();
             }
         }
-
-        void OnUserMenu(Mi e)
-        {
-            new UserMenuListDlg().Show(e.Row.ID);
-        }
-
-        void OnUserPrv(Mi e)
-        {
-            new UserPerListDlg().Show(e.Row.ID);
-        }
-        #endregion
-
-        #region 搜索
-        /// <summary>
-        /// 查询参数
-        /// </summary>
-        public QueryClause Clause { get; set; }
-
-        void OnToSearch(Mi e)
-        {
-            if (_dlgQuery == null)
-                CreateQueryDlg();
-            _dlgQuery.Show();
-        }
-
-        void CreateQueryDlg()
-        {
-            var tabs = new List<Tab>();
-            var fs = new FuzzySearch();
-            fs.Fixed.Add("全部");
-            fs.CookieID = _win.GetType().FullName;
-            fs.Search += (e) =>
-            {
-                Clause = new QueryClause(e);
-                Update();
-                _dlgQuery.Close();
-            };
-            tabs.Add(fs);
-
-            var qs = new UserQuery();
-            qs.Query += (e) =>
-            {
-                Clause = e;
-                Update();
-                _dlgQuery.Close();
-            };
-            tabs.Add(qs);
-
-            _dlgQuery = new Dlg
-            {
-                Title = "搜索",
-                IsPinned = true
-            };
-
-            if (!Kit.IsPhoneUI)
-            {
-                _dlgQuery.WinPlacement = DlgPlacement.CenterScreen;
-                _dlgQuery.Width = Kit.ViewWidth / 4;
-                _dlgQuery.Height = Kit.ViewHeight - 100;
-                _dlgQuery.ShowVeil = true;
-            }
-            _dlgQuery.LoadTabs(tabs);
-        }
-
-        Dlg _dlgQuery;
-        #endregion
-
-        #region 内部
-        UserWin _win => (UserWin)OwnWin;
         #endregion
     }
 }

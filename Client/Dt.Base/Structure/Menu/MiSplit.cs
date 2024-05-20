@@ -20,11 +20,15 @@ namespace Dt.Base
         public MiSplit()
         {
             DefaultStyleKey = typeof(MiSplit);
+            MinHeight = 0;
         }
 
         protected override void UpdateRoleState()
         {
-            VisualStateManager.GoToState(this, ParentMi == null ? "TopSplit" : "SubSplit", true);
+            if (ParentMi != null || Owner.IsContextMenu)
+                VisualStateManager.GoToState(this, "SubSplit", true);
+            else
+                VisualStateManager.GoToState(this, "TopSplit", true);
         }
     }
 }

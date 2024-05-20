@@ -16,7 +16,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 表格数据行部分
     /// </summary>
-    internal class RptTblRow : RptTblPart
+    public class RptTblRow : RptTblPart
     {
         public RptTblRow(RptTable p_table)
             : base(p_table)

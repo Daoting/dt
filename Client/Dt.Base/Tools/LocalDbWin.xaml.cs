@@ -104,7 +104,7 @@ namespace Dt.Base.Tools
         {
             ShareFile(e);
         }
-#elif DOTNET
+#elif WASM
         async void OnBackup(Mi e)
         {
             var row = e.Row;
@@ -116,40 +116,48 @@ namespace Dt.Base.Tools
             StorageFile file = await picker.PickSaveFileAsync();
             if (file == null)
                 return;
-            
-            if (Kit.AppType == AppType.Wasm)
+
+            var dbFile = Path.Combine(Kit.DataPath, row.Str("name") + ".db");
+            var data = File.ReadAllBytes(dbFile);
+            //Log.Debug($"长度：{data.Length}");
+            //Log.Debug($"路径：{file.Path}");
+
+            // 此方法无法正常保存
+            //File.WriteAllBytes(file.Path, data);
+
+            try
             {
-                var dbFile = Path.Combine(Kit.DataPath, row.Str("name") + ".db");
-                var data = File.ReadAllBytes(dbFile);
-                //Log.Debug($"长度：{data.Length}");
-                //Log.Debug($"路径：{file.Path}");
-
-                // 此方法无法正常保存
-                //File.WriteAllBytes(file.Path, data);
-
-                try
+                using (var stream = await file.OpenStreamForWriteAsync())
                 {
-                    using (var stream = await file.OpenStreamForWriteAsync())
-                    {
-                        stream.Write(data, 0, data.Length);
-                    }
-                    Kit.Msg("文件保存成功！");
+                    stream.Write(data, 0, data.Length);
                 }
-                catch
-                {
-                    Kit.Warn("文件保存失败！");
-                }
+                Kit.Msg("文件保存成功！");
             }
-            else
+            catch
             {
-                // gtk wpf
-                var folder = await StorageFolder.GetFolderFromPathAsync(Kit.DataPath);
-                var temp = await folder.TryGetItemAsync(fileName) as StorageFile;
-                if (temp != null)
-                {
-                    await temp.CopyAndReplaceAsync(file);
-                    Kit.Msg("文件备份成功！");
-                }
+                Kit.Warn("文件保存失败！");
+            }
+        }
+#elif SKIA
+        async void OnBackup(Mi e)
+        {
+            var row = e.Row;
+            var picker = Kit.GetFileSavePicker();
+            picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            picker.FileTypeChoices.Add("sqlite文件", new List<string>() { ".db" });
+            var fileName = row.Str("name") + ".db";
+            picker.SuggestedFileName = fileName;
+            StorageFile file = await picker.PickSaveFileAsync();
+            if (file == null)
+                return;
+
+            // gtk wpf
+            var folder = await StorageFolder.GetFolderFromPathAsync(Kit.DataPath);
+            var temp = await folder.TryGetItemAsync(fileName) as StorageFile;
+            if (temp != null)
+            {
+                await temp.CopyAndReplaceAsync(file);
+                Kit.Msg("文件备份成功！");
             }
         }
 #endif

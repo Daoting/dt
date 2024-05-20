@@ -72,26 +72,41 @@ namespace Dt.Base
         public bool EnablePinYin { get; set; }
 
         /// <summary>
-        /// 自定义筛选，外部重置数据源的方式
+        /// 外部自定义筛选
         /// </summary>
-        public Action<string> MyFilter { get; set; }
+        public Func<object, string, bool> MyFilter { get; set; }
 
+        internal bool IsFilterEmpty => _tb.Text.Trim() == "";
+        
         /// <summary>
         /// 默认过滤方法
         /// </summary>
         /// <param name="p_obj"></param>
         /// <returns></returns>
-        internal bool DoDefaultFilter(object p_obj)
+        internal bool DoFilter(object p_obj)
         {
             var txt = _tb.Text.Trim();
             if (txt == "")
                 return true;
 
+            if (MyFilter != null)
+                return MyFilter(p_obj, txt);
+            return DoDefaultFilter(p_obj, txt);
+        }
+
+        /// <summary>
+        /// 默认过滤方法
+        /// </summary>
+        /// <param name="p_obj"></param>
+        /// <param name="p_txt"></param>
+        /// <returns></returns>
+        bool DoDefaultFilter(object p_obj, string p_txt)
+        {
             // 启用拼音简码
             _pinyin = EnablePinYin;
             if (_pinyin)
             {
-                foreach (char vChar in txt)
+                foreach (char vChar in p_txt)
                 {
                     if ((vChar >= 'a' && vChar <= 'z')
                         || (vChar >= 'A' && vChar <= 'Z')

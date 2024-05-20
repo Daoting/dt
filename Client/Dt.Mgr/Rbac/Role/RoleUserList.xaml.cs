@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-09 创建
+* 日志: 2024-02-05 创建
 ******************************************************************************/
 #endregion
 
@@ -13,24 +13,36 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Mgr.Rbac
 {
-    public partial class RoleUserList : Tab
+    public partial class RoleUserList : LvTab
     {
-        #region 构造方法
+        #region 变量
+        long _releatedID;
+        #endregion
+        
+        #region 构造
         public RoleUserList()
         {
             InitializeComponent();
+            _lv.AddMultiSelMenu(Menu);
         }
         #endregion
 
         #region 公开
         public void Update(long p_releatedID)
         {
+            if (_releatedID == p_releatedID)
+                return;
+            
             _releatedID = p_releatedID;
             Menu["添加"].IsEnabled = _releatedID > 0;
-            Refresh();
+            _ = Refresh();
         }
+        #endregion
 
-        public async void Refresh()
+        #region 重写
+        protected override Lv Lv => _lv;
+
+        protected override async Task Query()
         {
             if (_releatedID > 0)
             {
@@ -46,14 +58,14 @@ namespace Dt.Mgr.Rbac
         #region 交互
         async void OnAdd(Mi e)
         {
-            var dlg = new User4RoleDlg();
+            var dlg = new User4Role();
             if (await dlg.Show(_releatedID, e)
                 && await RbacDs.AddRoleUsers(_releatedID, dlg.SelectedIDs))
             {
-                Refresh();
+                await Refresh();
             }
         }
-
+        
         async void OnDel(Mi e)
         {
             if (!await Kit.Confirm("确认要删除关联吗？"))
@@ -74,32 +86,8 @@ namespace Dt.Mgr.Rbac
             }
 
             if (await RbacDs.RemoveRoleUsers(_releatedID, ids))
-                Refresh();
+                await Refresh();
         }
-        #endregion
-
-        #region 选择
-        void OnSelectAll(Mi e)
-        {
-            _lv.SelectAll();
-        }
-
-        void OnMultiMode(Mi e)
-        {
-            _lv.SelectionMode = Base.SelectionMode.Multiple;
-            Menu.HideExcept("删除", "全选", "取消");
-        }
-
-        void OnCancelMulti(Mi e)
-        {
-            _lv.SelectionMode = Base.SelectionMode.Single;
-            Menu.ShowExcept("删除", "全选", "取消");
-        }
-        #endregion
-
-        #region 内部
-        RoleWin _win => (RoleWin)OwnWin;
-        long _releatedID;
         #endregion
     }
 }

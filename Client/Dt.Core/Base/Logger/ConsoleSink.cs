@@ -24,7 +24,7 @@ namespace Dt.Core
             using (var buffer = new StringWriter())
             {
                 _formatter.Format(logEvent, buffer);
-#if DOTNET
+#if WASM || SKIA
                 Console.WriteLine(buffer.ToString().Trim());
 #else
                 System.Diagnostics.Debug.WriteLine(buffer.ToString().Trim());

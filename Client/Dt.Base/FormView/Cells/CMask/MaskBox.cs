@@ -8,7 +8,7 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Mask;
+using Dt.Toolkit.Mask;
 using System;
 using System.ComponentModel;
 using System.Globalization;

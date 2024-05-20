@@ -10,7 +10,7 @@
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.UI.Notifications;
-#if !DOTNET
+#if WIN || ANDROID || IOS
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.ApplicationModel.DataTransfer;
 using Microsoft.Maui.Storage;
@@ -31,7 +31,7 @@ namespace Dt.Core
         /// <param name="p_filePath">文件完整路径</param>
         public static Task OpenFile(string p_filePath)
         {
-#if DOTNET
+#if WASM || SKIA
             return Task.CompletedTask;
 #else
             // 默认关联程序打开
@@ -67,28 +67,27 @@ namespace Dt.Core
         /// <returns></returns>
         public static Task ShareText(string p_content, string p_title = null, string p_uri = null)
         {
-#if DOTNET
-            if (AppType == AppType.Wasm)
+#if WASM
+            // https://platform.uno/docs/articles/features/windows-applicationmodel-datatransfer.html?q=ShareUI
+
+            var dtm = DataTransferManager.GetForCurrentView();
+            TypedEventHandler<DataTransferManager, DataRequestedEventArgs> handler = null;
+            handler = delegate (DataTransferManager sender, DataRequestedEventArgs args)
             {
-                // https://platform.uno/docs/articles/features/windows-applicationmodel-datatransfer.html?q=ShareUI
+                args.Request.Data.Properties.Title = string.IsNullOrEmpty(p_title) ? "分享内容" : p_title;
+                //args.Request.Data.Properties.Description = "分享内容";
 
-                var dtm = DataTransferManager.GetForCurrentView();
-                TypedEventHandler<DataTransferManager, DataRequestedEventArgs> handler = null;
-                handler = delegate (DataTransferManager sender, DataRequestedEventArgs args)
-                {
-                    args.Request.Data.Properties.Title = string.IsNullOrEmpty(p_title) ? "分享内容" : p_title;
-                    //args.Request.Data.Properties.Description = "分享内容";
+                args.Request.Data.SetText(p_content);
+                if (!string.IsNullOrEmpty(p_uri))
+                    args.Request.Data.SetWebLink(new Uri(p_uri));
 
-                    args.Request.Data.SetText(p_content);
-                    if (!string.IsNullOrEmpty(p_uri))
-                        args.Request.Data.SetWebLink(new Uri(p_uri));
+                dtm.DataRequested -= handler;
+            };
+            dtm.DataRequested += handler;
 
-                    dtm.DataRequested -= handler;
-                };
-                dtm.DataRequested += handler;
-
-                DataTransferManager.ShowShareUI();
-            }
+            DataTransferManager.ShowShareUI();
+            return Task.CompletedTask;
+#elif SKIA
             return Task.CompletedTask;
 #else
             var request = new ShareTextRequest
@@ -110,7 +109,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Task ShareFile(string p_filePath, string p_title = null)
         {
-#if DOTNET
+#if WASM || SKIA
             return Task.CompletedTask;
 #else
             return Share.RequestAsync(new ShareFileRequest
@@ -131,7 +130,7 @@ namespace Dt.Core
         /// <param name="p_startInfo">点击通知的启动参数</param>
         public static void Toast(string p_title, string p_content, AutoStartInfo p_startInfo = null)
         {
-#if !DOTNET
+#if WIN || ANDROID || IOS
             BgJob.Toast(p_title, p_content, p_startInfo);
 #endif
         }
@@ -155,11 +154,7 @@ namespace Dt.Core
                 nodes.Item(i).InnerText = p_msgs[i];
             }
             TileUpdateManager.CreateTileUpdaterForApplication().Update(new TileNotification(xml));
-#elif IOS
-            throw new NotImplementedException();
-#elif ANDROID
-            throw new NotImplementedException();
-#elif DOTNET
+#else
             throw new NotImplementedException();
 #endif
         }
@@ -175,11 +170,7 @@ namespace Dt.Core
             Windows.Data.Xml.Dom.XmlNodeList nodes = xml.GetElementsByTagName("text");
             nodes.Item(0).InnerText = p_num.ToString();
             TileUpdateManager.CreateTileUpdaterForApplication().Update(new TileNotification(xml));
-#elif IOS
-            throw new NotImplementedException();
-#elif ANDROID
-            throw new NotImplementedException();
-#elif DOTNET
+#else
             throw new NotImplementedException();
 #endif
         }

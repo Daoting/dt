@@ -31,7 +31,7 @@ namespace Dt.Base.Report
         {
             InsertTblRowCmdArgs args = (InsertTblRowCmdArgs)p_args;
             RptTblPartRow row = new RptTblPartRow(args.Part);
-            InsertTableCmd.BuildCells(row,args.Part.Table.ColSpan);
+            InsertTableCmd.BuildCells(row, args.Part.Table.ColSpan, false);
             args.Part.Rows.Insert(args.Index, row);
             RptTable tbl = args.Part.Table;
             tbl.CalcRowSpan();
@@ -75,25 +75,25 @@ namespace Dt.Base.Report
     }
 
     /// <summary>
-    /// 包含表头或表尾
+    /// 包含列头或列尾
     /// </summary>
-    internal class ContainHeadOrFootCmd : RptCmdBase 
+    internal class ContainHeadOrFootCmd : RptCmdBase
     {
         public override object Execute(object p_args)
         {
             ContainHeadOrFootCmdArgs args = (ContainHeadOrFootCmdArgs)p_args;
             RptTblPart part = null;
             if (args.Flag == "Header")
-                part = new RptTblHeader(args.Table);
+                part = new RptTblColHeader(args.Table);
             else
                 part = new RptTblFooter(args.Table);
             RptTblPartRow row = new RptTblPartRow(part);
-            InsertTableCmd.BuildCells(row, args.Table.ColSpan);
+            InsertTableCmd.BuildCells(row, args.Table.ColSpan, true);
             part.Rows.Add(row);
             if (args.Flag == "Header")
-                args.Table.Header = (RptTblHeader)part;
+                args.Table.ColHeader = (RptTblColHeader)part;
             else
-                args.Table.Footer = (RptTblFooter)part;
+                args.Table.ColFooter = (RptTblFooter)part;
             args.Table.CalcRowSpan();
             args.Table.Update(false);
             return null;
@@ -103,26 +103,26 @@ namespace Dt.Base.Report
         {
             ContainHeadOrFootCmdArgs args = (ContainHeadOrFootCmdArgs)p_args;
             if (args.Flag == "Header")
-                args.Table.Header = null;
+                args.Table.ColHeader = null;
             else
-                args.Table.Footer = null;
+                args.Table.ColFooter = null;
             args.Table.CalcRowSpan();
             args.Table.Update(true);
         }
     }
 
     /// <summary>
-    /// 移除表头或表尾
+    /// 移除列头或列尾
     /// </summary>
-    internal class RemoveHeadOrFootCmd : RptCmdBase 
+    internal class RemoveHeadOrFootCmd : RptCmdBase
     {
         public override object Execute(object p_args)
         {
             RemoveHeadOrFootCmdArgs args = (RemoveHeadOrFootCmdArgs)p_args;
             if (args.Flag == "Header")
-                args.Table.Header = null;
+                args.Table.ColHeader = null;
             else
-                args.Table.Footer = null;
+                args.Table.ColFooter = null;
             args.Table.CalcRowSpan();
             args.Table.Update(true);
             return null;
@@ -133,17 +133,17 @@ namespace Dt.Base.Report
             RemoveHeadOrFootCmdArgs args = (RemoveHeadOrFootCmdArgs)p_args;
             RptTblPart part = null;
             if (args.Flag == "Header")
-                part = new RptTblHeader(args.Table);
+                part = new RptTblColHeader(args.Table);
             else
                 part = new RptTblFooter(args.Table);
-            foreach (RptTblPartRow row in args.Rows) 
+            foreach (RptTblPartRow row in args.Rows)
             {
                 part.Rows.Add(row);
             }
             if (args.Flag == "Header")
-                args.Table.Header = (RptTblHeader)part;
+                args.Table.ColHeader = (RptTblColHeader)part;
             else
-                args.Table.Footer = (RptTblFooter)part;
+                args.Table.ColFooter = (RptTblFooter)part;
             args.Table.CalcRowSpan();
             args.Table.Update(false);
         }
@@ -175,9 +175,9 @@ namespace Dt.Base.Report
         public RptTblPartRow Row { get; }
     }
 
-    internal class ContainHeadOrFootCmdArgs 
+    internal class ContainHeadOrFootCmdArgs
     {
-        public ContainHeadOrFootCmdArgs(string p_flag, RptTable p_table) 
+        public ContainHeadOrFootCmdArgs(string p_flag, RptTable p_table)
         {
             Flag = p_flag;
             Table = p_table;
@@ -188,9 +188,9 @@ namespace Dt.Base.Report
         public RptTable Table { get; }
     }
 
-    internal class RemoveHeadOrFootCmdArgs 
+    internal class RemoveHeadOrFootCmdArgs
     {
-        public RemoveHeadOrFootCmdArgs(string p_flag, RptTable p_table, RptTblPartRow[] p_rows) 
+        public RemoveHeadOrFootCmdArgs(string p_flag, RptTable p_table, RptTblPartRow[] p_rows)
         {
             Flag = p_flag;
             Table = p_table;
@@ -203,4 +203,4 @@ namespace Dt.Base.Report
 
         public RptTblPartRow[] Rows { get; }
     }
-} 
+}

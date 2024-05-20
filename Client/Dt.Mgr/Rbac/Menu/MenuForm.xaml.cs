@@ -8,12 +8,19 @@
 
 #region 引用命名
 using Dt.Base;
+using Dt.Mgr.Module;
+using Microsoft.UI.Xaml;
+using System.DirectoryServices.Protocols;
 #endregion
 
 namespace Dt.Mgr.Rbac
 {
-    public sealed partial class MenuForm : Tab
+    public sealed partial class MenuForm : FvDlg
     {
+        #region 变量
+        bool _isAddGroup;
+        #endregion
+        
         #region 构造方法
         public MenuForm()
         {
@@ -21,115 +28,78 @@ namespace Dt.Mgr.Rbac
         }
         #endregion
 
-        #region 公开
-        public async void Update(long p_id)
+        public void OpenAdd(bool p_isGroup)
         {
-            var d = Data;
-            if (d != null && d.ID == p_id)
-                return;
-
-            if (!await _fv.DiscardChanges())
-                return;
-
-            if (p_id > 0)
-            {
-                _curItem = await MenuX.GetWithParentName(p_id);
-                Data = _curItem;
-                UpdateRelated(_curItem);
-            }
-            else
-            {
-                Clear();
-            }
+            _isAddGroup = p_isGroup;
+            _ = Open(-1);
         }
-
-        public void Clear()
-        {
-            _curItem = null;
-            Data = null;
-            ClearRelated();
-        }
-
+        
         public MenuX Data
         {
             get { return _fv.Data.To<MenuX>(); }
             private set { _fv.Data = value; }
         }
-        #endregion
 
-        #region 交互
-        void AddMi()
-        {
-            AddMenu(false);
-        }
+        protected override Fv Fv => _fv;
 
-        void AddGroup()
-        {
-            AddMenu(true);
-        }
-
-        async void AddMenu(bool p_isGroup)
+        protected override async Task OnAdd()
         {
             MenuX parent = null;
-            if (_curItem != null)
+            if (OwnWin is MenuWin win
+                && win.Tree.SelectedMenu is MenuX mx
+                && mx.ID > 0)
             {
-                if (_curItem.IsGroup)
-                {
-                    parent = _curItem;
-                }
-                else if (_curItem.ParentID.HasValue)
-                {
-                    parent = await MenuX.GetWithParentName(_curItem.ParentID.Value);
-                }
+                parent = await MenuX.GetWithParentName(mx.ID);
             }
 
             MenuX m = await MenuX.New(
-                Name: p_isGroup ? "新组" : "新菜单",
-                Icon: p_isGroup ? "文件夹" : "文件",
-                IsGroup: p_isGroup,
+                Name: _isAddGroup ? "新组" : "新菜单",
+                Icon: _isAddGroup ? null : "文件",
+                IsGroup: _isAddGroup,
                 ParentID: parent != null ? (long?)parent.ID : null,
                 Ctime: Kit.Now,
                 Mtime: Kit.Now);
             m.Add("parentname", parent?.Name);
             Data = m;
-            ClearRelated();
+            UpdateRelated(-1);
         }
-
-        async void Save()
+        
+        protected override async Task OnGet(long p_id)
         {
-            var d = Data;
-            if (await d.Save())
-            {
-                _win.List.Update();
-                UpdateRelated(d);
-            }
+            Data = await MenuX.GetWithParentName(p_id);
         }
 
-        async void Delete()
+        protected override async void RefreshList(long? p_id)
         {
-            var d = Data;
-            if (d == null)
-                return;
-
-            if (!await Kit.Confirm("确认要删除吗？"))
+            if (OwnWin is MenuWin win)
             {
-                Kit.Msg("已取消删除！");
-                return;
-            }
-
-            if (d.IsAdded)
-            {
-                Clear();
-                return;
-            }
-
-            if (await d.Delete())
-            {
-                Clear();
-                _win.List.Update();
+                if (Data != null && Data.IsGroup)
+                    await win.Tree.Refresh(null);
+                await win.List.Refresh(p_id);
             }
         }
 
+        protected override void UpdateRelated(long p_id)
+        {
+            if (OwnWin is MenuWin win)
+            {
+                win.RoleList.Update(p_id);
+            }
+        }
+        
+        #region 交互
+        void AddMi()
+        {
+            _isAddGroup = false;
+            Add();
+        }
+
+        void AddGroup()
+        {
+            _isAddGroup = true;
+            Add();
+        }
+        
         void OnOpen()
         {
             if (Data == null
@@ -157,47 +127,50 @@ namespace Dt.Mgr.Rbac
                 arg1.Data = await MenuX.Query("where is_group='1' order by dispidx");
             }
         }
-        #endregion
-
-        #region 内部
-        protected override Task<bool> OnClosing()
-        {
-            return _fv.DiscardChanges();
-        }
-
+        
         void OnFvDataChanged(object e)
         {
             var m = e as MenuX;
-            if (m == null)
+            if (m != null && m.IsGroup)
             {
-                // 根节点
-                _fv.HideExcept("name", "icon", "parentname");
-            }
-            else if (m.IsGroup)
-            {
-                _fv.HideExcept("name", "icon", "parentname");
+                _fv.HideExcept("name", "parentname");
             }
             else
             {
                 _fv.ShowExcept();
             }
         }
-
-        void UpdateRelated(MenuX p_mi)
+        
+        void OnLoadViewName(CList p_list, AsyncArgs p_args)
         {
-            if (p_mi.IsGroup)
-                _win.RoleList.Clear();
+            string prefix = "View-";
+            var tbl = new Table { { "alias" }, { "types" } };
+            foreach (var item in Kit.AllAliasTypes)
+            {
+                if (!item.Key.StartsWith(prefix))
+                    continue;
+
+                var r = tbl.AddRow();
+                r.InitVal("alias", item.Key.Substring(prefix.Length));
+                r.InitVal("types", item.Value.FullName);
+            }
+            p_list.Data = tbl;
+        }
+        
+        async void OnEditParam(object sender, RoutedEventArgs e)
+        {
+            if (Data.ViewName == "报表")
+            {
+                var result = await RptViewParamsDlg.ShowDlg(Data.Params);
+                if (!string.IsNullOrEmpty(result))
+                    Data.Params = result;
+            }
             else
-                _win.RoleList.Update(p_mi.ID);
+            {
+                _fv.GotoCell("params");
+                Kit.Msg($"[{Data.ViewName}] 未提供参数编辑器，请直接填写！");
+            }
         }
-
-        void ClearRelated()
-        {
-            _win.RoleList.Clear();
-        }
-
-        MenuWin _win => (MenuWin)OwnWin;
-        MenuX _curItem;
         #endregion
     }
 }

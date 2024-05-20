@@ -24,6 +24,7 @@ namespace Dt.Mgr.Module
         {
             _rpt = p_rpt;
             Name = p_rpt.Name;
+            ShowSave = true;
         }
 
         public override Task<string> ReadTemplate()
@@ -31,7 +32,7 @@ namespace Dt.Mgr.Module
             return At.GetScalar<string>($"select define from cm_rpt where id={_rpt.ID}");
         }
 
-        public override async void SaveTemplate(string p_xml)
+        public override async Task<bool> SaveTemplate(string p_xml)
         {
             if (!_rpt.Contains("define"))
                 _rpt.Add<string>("define");
@@ -46,7 +47,7 @@ namespace Dt.Mgr.Module
                 _rpt["mtime"] = Kit.Now;
             }
 
-            await _rpt.Save();
+            return await _rpt.Save();
         }
     }
 }

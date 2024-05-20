@@ -14,6 +14,7 @@ using Microsoft.UI.Xaml.Markup;
 using System.Text;
 using System.Text.RegularExpressions;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
 using Windows.UI.Core;
 #endregion
 
@@ -42,6 +43,9 @@ namespace Dt.Core
         {
             // uno4.4 已实现 Window.DispatcherQueue
             var dispatcher = UITree.MainWin.DispatcherQueue;
+            if (dispatcher == null)
+                return;
+
             if (dispatcher.HasThreadAccess)
             {
                 p_action();
@@ -59,6 +63,9 @@ namespace Dt.Core
         public static void RunSync(Action p_action)
         {
             var dispatcher = UITree.MainWin.DispatcherQueue;
+            if (dispatcher == null)
+                return;
+
             if (dispatcher.HasThreadAccess)
             {
                 p_action();
@@ -81,8 +88,11 @@ namespace Dt.Core
         /// <param name="p_action"></param>
         public static void RunInQueue(Action p_action)
         {
-            // uno4.4 已实现 Window.DispatcherQueue
-            UITree.MainWin.DispatcherQueue.TryEnqueue(new DispatcherQueueHandler(p_action));
+            if (UITree.MainWin.DispatcherQueue is DispatcherQueue dispatcher)
+            {
+                // uno4.4 已实现 Window.DispatcherQueue
+                dispatcher.TryEnqueue(new DispatcherQueueHandler(p_action));
+            }
         }
         #endregion
 
@@ -94,7 +104,7 @@ namespace Dt.Core
         public static void Debug(string p_msg)
         {
 #if DEBUG
-#if DOTNET
+#if WASM || SKIA
             Console.WriteLine(p_msg);
 #else
             System.Diagnostics.Debug.WriteLine(p_msg);
@@ -113,6 +123,11 @@ namespace Dt.Core
         /// Window.Content内容，根Grid
         /// </summary>
         public static Grid RootGrid => UITree.RootGrid;
+
+        /// <summary>
+        /// 在最低层，不可见，截图用的Border容器
+        /// </summary>
+        public static Border SnapBorder => UITree.SnapBorder;
 
         /// <summary>
         /// 桌面层/页面层的内容元素
@@ -197,6 +212,48 @@ namespace Dt.Core
                 Log.Error(ex, "xaml内容错误");
             }
             return default(T);
+        }
+        #endregion
+
+        #region 打印Pdf
+        /// <summary>
+        /// 打印Pdf文件
+        /// </summary>
+        /// <param name="p_filePath">如：ms-appx:///Dt.UIDemo/Assets/dt.pdf</param>
+        public static async void PrintPdf(string p_filePath)
+        {
+            if (string.IsNullOrEmpty(p_filePath))
+                Throw.Msg("待打印的Pdf文件路径为空！");
+
+            StorageFile file = null;
+            try
+            {
+                if (p_filePath.StartsWith("ms-appx:///"))
+                {
+                    file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(p_filePath));
+                }
+                else
+                {
+                    file = await StorageFile.GetFileFromPathAsync(p_filePath);
+                }
+            }
+            catch { }
+            if (file == null)
+                Throw.Msg("未找到待打印的Pdf文件：\r\n" + p_filePath);
+
+            Stream stream = await file.OpenStreamForReadAsync();
+            PdfPrinter printer = new PdfPrinter();
+            printer.Print(stream, file.Name);
+        }
+
+        /// <summary>
+        /// 打印Pdf
+        /// </summary>
+        /// <param name="p_inputStream"></param>
+        /// <param name="p_fileName"></param>
+        public static void PrintPdf(Stream p_inputStream, string p_fileName)
+        {
+            new PdfPrinter().Print(p_inputStream, p_fileName);
         }
         #endregion
 
@@ -351,6 +408,23 @@ namespace Dt.Core
                     count++;
             }
             return count;
+        }
+
+        /// <summary>
+        /// 是否为中文
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsChiness(string p_txt)
+        {
+            if (string.IsNullOrEmpty(p_txt))
+                return false;
+
+            foreach (char vChar in p_txt)
+            {
+                if (vChar > 255)
+                    return true;
+            }
+            return false;
         }
         #endregion
 

@@ -16,6 +16,7 @@ using System.Collections.Specialized;
 using Windows.Foundation;
 using Windows.UI;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Input;
 #endregion
 
 namespace Dt.Base.Report
@@ -25,18 +26,22 @@ namespace Dt.Base.Report
     /// </summary>
     internal class SelectionClerk
     {
-        RptDesignWin _owner;
+        RptDesignHome _owner;
         RptItem _drgItem;
         BlankAreaMenu _menuBlank;
         HeaderFooterMenu _menuHeader;
-
-        public SelectionClerk(RptDesignWin p_owner)
+        RptItemContextMenu _menuItemContext;
+        
+        public SelectionClerk(RptDesignHome p_owner)
         {
             _owner = p_owner;
             Excel excel = _owner.Excel;
             excel.SelectionChanged += (s, e) => UpdateSelection();
             excel.ItemStartDrag += OnItemStartDrag;
             excel.ItemDropped += OnItemDropped;
+            excel.RightTapped += OnRightTapped;
+            // 左键点击图片时选择所在区域
+            excel.PointerPressed += OnPointerPressed;
         }
 
         /// <summary>
@@ -47,8 +52,6 @@ namespace Dt.Base.Report
             CellRange range;
             Excel excel = _owner.Excel;
             Worksheet sheet = excel.ActiveSheet;
-            RptItem curItem = null;
-            RptPart container = _owner.GetContainer();
             excel.DecorationRange = null;
 
             // 无选择及选择整行整列 : 返回。无选择可能是选中浮动对象造成的，现不在此处处理。
@@ -61,6 +64,8 @@ namespace Dt.Base.Report
             }
 
             // 三种情况，在已有对象内部、相交、空白区域
+            RptItem curItem = null;
+            RptPart container = _owner.GetContainer();
             foreach (RptItem item in container.Items)
             {
                 // 选择区域在报表项内
@@ -77,7 +82,47 @@ namespace Dt.Base.Report
                 }
             }
 
-            if (curItem == null)
+            if (curItem != null)
+            {
+                // 在对象内部
+                excel.DecorationRange = new CellRange(curItem.Row, curItem.Col, curItem.RowSpan, curItem.ColSpan);
+                _owner.LoadForms(curItem, range);
+            }
+        }
+
+        /// <summary>
+        /// 显示右键菜单
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void OnRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            CellRange range;
+            Excel excel = _owner.Excel;
+            Worksheet sheet = excel.ActiveSheet;
+
+            // 无选择及选择整行整列 : 返回。无选择可能是选中浮动对象造成的，现不在此处处理。
+            if (sheet.Selections.Count == 0
+                || (range = sheet.Selections[0]).Row == -1
+                || range.Column == -1)
+            {
+                return;
+            }
+
+            // 三种情况，在已有对象内部、相交、空白区域
+            List<RptItem> items = new List<RptItem>();
+            RptPart container = _owner.GetContainer();
+            foreach (RptItem item in container.Items)
+            {
+                // 在报表项内 相交，无操作，返回
+                if (item.Contains(range)
+                    || range.Intersects(item.Row, item.Col, item.RowSpan, item.ColSpan))
+                {
+                    items.Add(item);
+                }
+            }
+
+            if (items.Count == 0)
             {
                 // 在空白区域
                 if (container.PartType == RptPartType.Body)
@@ -97,9 +142,11 @@ namespace Dt.Base.Report
             }
             else
             {
-                // 在对象内部
-                excel.DecorationRange = new CellRange(curItem.Row, curItem.Col, curItem.RowSpan, curItem.ColSpan);
-                _owner.LoadForms(curItem, range);
+                // 报表项上下文菜单
+                if (_menuItemContext == null)
+                    _menuItemContext = new RptItemContextMenu(_owner);
+                _menuItemContext.TargetItems = items;
+                ShowMenu(_menuItemContext, range);
             }
         }
 
@@ -171,6 +218,28 @@ namespace Dt.Base.Report
             MoveRptItemArgs moveAgs = new MoveRptItemArgs(_drgItem, e);
             _owner.Info.ExecuteCmd(RptCmds.MoveRptItemCmd, moveAgs);
             _drgItem = null;
+        }
+
+        /// <summary>
+        /// 左键点击图片时选择所在区域
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            var curPoint = e.GetCurrentPoint(_owner.Excel);
+            if (!curPoint.Properties.IsLeftButtonPressed)
+                return;
+
+            var pos = curPoint.Position;
+            var hi = _owner.Excel.HitTest(pos.X, pos.Y);
+            if (hi.HitTestType == HitTestType.FloatingObject
+                && hi.FloatingObjectInfo != null
+                && hi.FloatingObjectInfo.FloatingObject is Picture pic)
+            {
+                _owner.Excel.SetSelection(pic.StartRow, pic.StartColumn, pic.EndRow - pic.StartRow, pic.EndColumn - pic.StartColumn);
+                UpdateSelection();
+            }
         }
     }
 }

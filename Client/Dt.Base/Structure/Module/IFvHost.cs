@@ -47,13 +47,20 @@ namespace Dt.Base
         /// 删除数据
         /// </summary>
         /// <returns></returns>
-        Task OnDel();
+        Task<bool> OnDel();
         
         /// <summary>
         /// 清空数据源
         /// </summary>
         void Clear();
 
+        /// <summary>
+        /// 更新列表
+        /// </summary>
+        /// <param name="p_id"></param>
+        /// <param name="p_fire"></param>
+        void RefreshList(long? p_id, FvRefreshList p_fire);
+        
         /// <summary>
         /// 更新关联视图
         /// </summary>

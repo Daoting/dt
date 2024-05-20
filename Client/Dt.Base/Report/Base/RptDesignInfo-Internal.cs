@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Windows.Storage;
 #endregion
 
 namespace Dt.Base
@@ -23,11 +24,11 @@ namespace Dt.Base
     /// <summary>
     /// 报表设计的描述信息
     /// </summary>
-    public abstract partial class RptDesignInfo
+    public partial class RptDesignInfo : RptInfoBase
     {
         #region 成员变量
         internal readonly RptCmdHistory History = new RptCmdHistory();
-
+        StorageFile _curFile;
         #endregion
 
         /// <summary>
@@ -50,7 +51,7 @@ namespace Dt.Base
         /// </summary>
         internal event EventHandler PageSettingChanged;
 
-        internal RptRoot Root { get; private set; }
+        internal RptRoot Root { get; set; }
 
         internal bool IsDirty { get; private set; }
 
@@ -88,20 +89,27 @@ namespace Dt.Base
             Root = await Rpt.DeserializeTemplate(p_define);
             AttachRootEvent();
             TemplateChanged?.Invoke(this, new TemplateChangedArgs { NewRoot = Root, OldRoot = old });
+            History.Clear();
         }
 
         /// <summary>
         /// 保存报表模板
         /// </summary>
-        internal void SaveTemplate()
+        internal async Task<bool> SaveTemplate()
         {
+            bool suc = true;
             if (Root != null && Root.IsValid())
             {
-                SaveTemplate(Rpt.SerializeTemplate(Root));
-                History.Clear();
-                Saved?.Invoke(this, EventArgs.Empty);
-                OnCellValueChanged(this, EventArgs.Empty);
+                suc = await SaveTemplate(Rpt.SerializeTemplate(Root));
+                if (suc)
+                {
+                    History.Clear();
+                    Saved?.Invoke(this, EventArgs.Empty);
+                    OnCellValueChanged(this, EventArgs.Empty);
+                    Root.AcceptChanges();
+                }
             }
+            return suc;
         }
         #endregion
 
@@ -149,13 +157,13 @@ namespace Dt.Base
         #endregion
 
         #region 事件
-        void AttachRootEvent()
+        internal void AttachRootEvent()
         {
             Root.ItemValueChanged += OnItemValueChanged;
             Root.CellValueChanged += OnCellValueChanged;
         }
 
-        void DetachRootEvent()
+        internal void DetachRootEvent()
         {
             Root.ItemValueChanged -= OnItemValueChanged;
             Root.CellValueChanged -= OnCellValueChanged;
@@ -190,27 +198,6 @@ namespace Dt.Base
                 IsDirty = isDirty;
                 DirtyChanged?.Invoke(this, IsDirty);
             }
-        }
-        #endregion
-
-        #region 比较
-        public override bool Equals(object obj)
-        {
-            if (obj == null || !(obj is RptDesignInfo))
-                return false;
-
-            if (ReferenceEquals(this, obj))
-                return true;
-
-            // 只比较标识，识别窗口用
-            return Name == ((RptDesignInfo)obj).Name;
-        }
-
-        public override int GetHashCode()
-        {
-            if (string.IsNullOrEmpty(Name))
-                return 0;
-            return Name.GetHashCode();
         }
         #endregion
     }

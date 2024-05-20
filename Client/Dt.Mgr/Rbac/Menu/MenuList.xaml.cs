@@ -7,24 +7,19 @@
 #endregion
 
 #region 引用命名
-using Dt.Mgr;
-using Dt.Base;
-using Dt.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using Dt.Base.Tools;
+using Microsoft.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Mgr.Rbac
 {
-    public partial class MenuList : Tab
+    public partial class MenuList : LvTab
     {
-        #region 构造方法
+        #region 变量
+        long? _parentID;
+        #endregion
+
+        #region 构造
         public MenuList()
         {
             InitializeComponent();
@@ -32,21 +27,152 @@ namespace Dt.Mgr.Rbac
         #endregion
 
         #region 公开
-        public async void Update()
+        public void Update(long? p_parentID)
         {
-            // 记录已选择的节点
-            var m = _tv.Selected<MenuX>();
-            long id = m == null ? -1 : m.ID;
-            _tv.Data = await MenuX.Query("where 1=1 order by dispidx");
+            _parentID = p_parentID;
+            _ = Refresh();
+        }
+        #endregion
 
-            object select = null;
-            if (id > 0)
+        #region 重写
+        protected override Lv Lv => _lv;
+
+        protected override async Task Query()
+        {
+            if (_parentID == null)
             {
-                select = (from row in (Table)_tv.Data
-                          where row.ID == id
-                          select row).FirstOrDefault();
+                _lv.Data = null;
             }
-            _tv.SelectedItem = (select == null) ? _tv.FixedRoot : select;
+            else if (_parentID > 0)
+            {
+                _lv.Data = await MenuX.Query($"where parent_id={_parentID} order by dispidx");
+            }
+            else
+            {
+                _lv.Data = await MenuX.Query("where parent_id is null order by dispidx");
+            }
+        }
+        #endregion
+
+        #region 交互
+        async void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (OwnWin is MenuWin win)
+            {
+                await win.Form.Update(_lv.SelectedRow?.ID);
+            }
+        }
+
+        async void OnItemDbClick(object e)
+        {
+            if (OwnWin is MenuWin win)
+            {
+                var m = e.To<MenuX>();
+                if (m.IsGroup)
+                {
+                    win.Tree.SelectByID(m.ID);
+                }
+                else
+                {
+                    await win.Form.Open(m.ID);
+                }
+            }
+        }
+
+        void AddMi()
+        {
+            if (OwnWin is MenuWin win)
+            {
+                win.Form.OpenAdd(false);
+            }
+        }
+
+        void AddGroup()
+        {
+            if (OwnWin is MenuWin win)
+            {
+                win.Form.OpenAdd(true);
+            }
+        }
+
+        async void OnEdit(Mi e)
+        {
+            if (OwnWin is MenuWin win)
+            {
+                await win.Form.Open(e.Row?.ID);
+            }
+        }
+
+        async void OnDel(Mi e)
+        {
+            var d = e.Data.To<MenuX>();
+            if (!await Kit.Confirm($"确认要删除【{d.Name}】吗？\r\n删除后不可恢复，请谨慎删除！"))
+            {
+                Kit.Msg("已取消删除！");
+                return;
+            }
+
+            if (await d.Delete())
+            {
+                if (d.IsGroup && OwnWin is MenuWin win)
+                    await win.Tree.Refresh(null);
+                await Refresh();
+            }
+        }
+
+        void OnOpen(Mi e)
+        {
+            if (OwnWin is MenuWin win)
+            {
+                var m = e.Data.To<MenuX>();
+                if (m.IsGroup)
+                {
+                    win.Tree.SelectByID(m.ID);
+                }
+                else
+                {
+                    OmMenu menu = new OmMenu(
+                        ID: m.ID,
+                        Name: m.Name,
+                        Icon: m.Icon,
+                        ViewName: m.ViewName,
+                        Params: m.Params);
+                    MenuDs.OpenMenu(menu);
+                }
+            }
+        }
+
+        void OnMoveUp(Mi e)
+        {
+            var src = e.Data.To<MenuX>();
+            int index = _lv.Data.IndexOf(src);
+            if (index > 0)
+                Exchange(src, (MenuX)_lv.Data[index - 1]);
+        }
+
+        void OnMoveDown(Mi e)
+        {
+            var src = e.Data.To<MenuX>();
+            int index = _lv.Data.IndexOf(src);
+            if (index < _lv.Data.Count - 1)
+                Exchange(src, (MenuX)_lv.Data[index + 1]);
+        }
+
+        async void Exchange(MenuX src, MenuX tgt)
+        {
+            if (await ExchangeDispidx(src, tgt))
+            {
+                await Refresh();
+            }
+            else
+            {
+                Kit.Warn("菜单调序失败！");
+            }
+        }
+
+        void OnRefresh(Mi e)
+        {
+            RefreshSqliteWin.UpdateSqliteFile("menu");
         }
 
         /// <summary>
@@ -71,68 +197,6 @@ namespace Dt.Mgr.Rbac
 
             return tbl.Save(false);
         }
-        #endregion
-
-        #region 初始化 
-        protected override void OnFirstLoaded()
-        {
-            MenuX m = new MenuX(ID: 0, Name: "菜单", IsGroup: true, Icon: "主页");
-            m.Add("parentname", "");
-            _tv.FixedRoot = m;
-
-            Update();
-        }
-        #endregion
-
-        #region 交互
-        void OnItemClick(ItemClickArgs e)
-        {
-            _win.Form.Update(e.Row.ID);
-            NaviTo(new List<Tab> { _win.Form, _win.RoleList, });
-        }
-
-        void OnMoveUp(Mi e)
-        {
-            var src = e.Data.To<MenuX>();
-            if (src.ID == 0)
-                return;
-
-            var tgt = _tv.GetTopBrother(src) as MenuX;
-            if (tgt != null)
-                Exchange(src, tgt);
-        }
-
-        void OnMoveDown(Mi e)
-        {
-            var src = e.Data.To<MenuX>();
-            if (src.ID == 0)
-                return;
-
-            var tgt = _tv.GetFollowingBrother(src) as MenuX;
-            if (tgt != null)
-                Exchange(src, tgt);
-        }
-
-        async void Exchange(MenuX src, MenuX tgt)
-        {
-            if (await ExchangeDispidx(src, tgt))
-            {
-                Update();
-            }
-            else
-            {
-                Kit.Warn("菜单调序失败！");
-            }
-        }
-
-        void OnRefresh(Mi e)
-        {
-            RefreshSqliteWin.UpdateSqliteFile("menu");
-        }
-        #endregion
-
-        #region 内部
-        MenuWin _win => (MenuWin)OwnWin;
         #endregion
     }
 }

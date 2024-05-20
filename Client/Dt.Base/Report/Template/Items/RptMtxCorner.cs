@@ -7,7 +7,9 @@
 #endregion
 
 #region 命名空间
+using Dt.Cells.Data;
 using System.Xml;
+using Windows.UI;
 
 #endregion
 
@@ -16,7 +18,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 矩阵角
     /// </summary>
-    internal class RptMtxCorner : RptItemBase
+    public class RptMtxCorner : RptItemBase
     {
         readonly RptMatrix _matrix;
 
@@ -24,6 +26,8 @@ namespace Dt.Base.Report
         {
             _matrix = p_matrix;
             Item = new RptText(this);
+            Item.Horalign = CellHorizontalAlignment.Center;
+            Item.Background = Color.FromArgb(0xff, 0xE0, 0xE0, 0xE0);
         }
 
         /// <summary>

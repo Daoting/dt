@@ -15,11 +15,12 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media;
 #endregion
 
 namespace Dt.Base.Report
 {
-    internal class RptRender
+    public class RptRender
     {
         readonly RptInfo _info;
         Worksheet _ws;
@@ -32,11 +33,12 @@ namespace Dt.Base.Report
         /// <summary>
         /// 渲染输出
         /// </summary>
-        public void Render()
+        public async Task Render()
         {
             int start;
             RptRootInst inst = _info.Inst;
             List<double> rows = new List<double>();
+            var pageSetting = _info.Root.PageSetting;
 
             // 填充空行空列，统计所有行高列宽
             foreach (PageDefine page in inst.Rows)
@@ -48,9 +50,12 @@ namespace Dt.Base.Report
                 start = rows.Count;
                 page.Offset = start;
 
-                // 页眉行
+                // 页眉行，两行，一行作为与报表内容的间距
                 if (inst.HeaderHeight > 0)
-                    rows.Add(inst.HeaderHeight);
+                {
+                    rows.Add(_info.Root.Header.Height);
+                    rows.Add(_info.Root.Header.BodySpacing);
+                }
 
                 // 内容行
                 double total = 0;
@@ -61,12 +66,15 @@ namespace Dt.Base.Report
                 }
 
                 // 填充空行
-                if (total < inst.BodyHeight)
+                if (total < inst.BodyHeight && !pageSetting.AutoPaperSize)
                     rows.Add(inst.BodyHeight - total);
 
-                // 页脚行
+                // 页脚行，两行，一行作为与报表内容的间距
                 if (inst.FooterHeight > 0)
-                    rows.Add(inst.FooterHeight);
+                {
+                    rows.Add(_info.Root.Footer.BodySpacing);
+                    rows.Add(_info.Root.Footer.Height);
+                }
                 page.Total = rows.Count - start;
             }
 
@@ -88,7 +96,7 @@ namespace Dt.Base.Report
                 }
 
                 // 填充空列
-                if (total < inst.BodyWidth)
+                if (total < inst.BodyWidth && !pageSetting.AutoPaperSize)
                     cols.Add(inst.BodyWidth - total);
                 page.Total = cols.Count - start;
             }
@@ -106,14 +114,35 @@ namespace Dt.Base.Report
             _info.Sheet = _ws;
 
             // 初始化行高列宽
+            double totalHeight = 0;
+            double totalWidth = 0;
             for (int i = 0; i < rows.Count; i++)
             {
                 _ws.Rows[i].Height = rows[i];
+                totalHeight += rows[i];
             }
             for (int i = 0; i < cols.Count; i++)
             {
                 _ws.Columns[i].Width = cols[i];
+                totalWidth += cols[i];
             }
+
+            // 页面设置，输出Pdf和打印时有效
+            var pi = _ws.PrintInfo;
+            if (pageSetting.AutoPaperSize)
+            {
+                pi.PaperSize = new PaperSize(
+                    Math.Round(totalWidth / 0.96) + pageSetting.LeftMargin + pageSetting.RightMargin + 4,
+                    Math.Round(totalHeight / 0.96) + pageSetting.TopMargin + pageSetting.BottomMargin + 4);
+            }
+            else
+            {
+                pi.PaperSize = pageSetting.PaperSize;
+            }
+            pi.Margin = pageSetting.PageMargins;
+            pi.Orientation = pageSetting.Landscape ? PrintPageOrientation.Landscape : PrintPageOrientation.Portrait;
+            pi.ShowBorder = false;
+            pi.PageOrder = PrintPageOrder.OverThenDown;
 
             // 输出所有项
             foreach (RptPage page in _info.Inst.Pages)
@@ -122,7 +151,7 @@ namespace Dt.Base.Report
                 int startRow = define.Start;
                 int offsetRow = define.Offset;
                 int rowTotal = define.Total;
-                int offsetBody = offsetRow + (page.HeaderItems.Count > 0 ? 1 : 0);
+                int offsetBody = offsetRow + (page.HeaderItems.Count > 0 ? 2 : 0);
                 define = page.Cols;
                 int startCol = define.Start;
                 int offsetCol = define.Offset;
@@ -131,19 +160,32 @@ namespace Dt.Base.Report
                 // 页眉
                 if (page.HeaderItems.Count > 0)
                 {
-                    foreach (RptTextInst item in page.HeaderItems)
+                    // 采用默认页眉页脚时，动态调整占的列数，每页的列数可能不同！
+                    if (_info.Root.Header.DefaultHeader)
                     {
-                        // 不渲染超出的列
+                        var item = page.HeaderItems[0];
                         int tempCol = offsetCol + item.Item.Col;
                         if (tempCol < cols.Count)
-                            RenderText(item, offsetRow, tempCol);
+                        {
+                            // 占用当前页的所有列
+                            await RenderText(item, offsetRow, tempCol, -1, page.Cols.Total);
+                        }
+                    }
+                    else
+                    {
+                        foreach (RptTextInst item in page.HeaderItems)
+                        {
+                            // 不渲染超出的列
+                            int tempCol = offsetCol + item.Item.Col;
+                            if (tempCol < cols.Count)
+                                await RenderText(item, offsetRow, tempCol);
+                        }
                     }
                 }
 
                 // 内容
                 foreach (RptOutputInst item in page.Items)
                 {
-                    RptChartInst chart;
                     int row = item.Region.Row - startRow + offsetBody;
                     int col = item.Region.Col - startCol + offsetCol;
                     RptTextInst txt = item as RptTextInst;
@@ -153,7 +195,7 @@ namespace Dt.Base.Report
                         CellRange range;
                         RptText text = txt.Item as RptText;
                         var dataRow = (txt.Item as RptText).Data;
-                        var renderCell = RenderText(txt, row, col);
+                        var renderCell = await RenderText(txt, row, col);
 
                         if (row > startRow && dataRow.Bool("hidetopdup"))
                         {
@@ -174,7 +216,7 @@ namespace Dt.Base.Report
                         {
                             tmpCell = _ws[row, col - 1];
                             if (tmpCell.Tag != null
-                               && txt.Item.Data.Bool("hidetopdup")
+                               && txt.Item.Data.Bool("hideleftdup")
                                && tmpCell.Text == renderCell.Text)
                             {
                                 range = _ws.GetSpanCell(row, col - 1);
@@ -185,21 +227,43 @@ namespace Dt.Base.Report
                             }
                         }
                     }
-                    else if ((chart = (item as RptChartInst)) != null)
+                    else if (item is RptChartInst chart)
                     {
                         ((RptChart)chart.Item).Render(_ws, row, col);
+                    }
+                    else if (item is RptImageInst img)
+                    {
+                        ((RptImage)img.Item).Render(_ws, row, col);
+                    }
+                    else if (item is RptSparklineInst spark)
+                    {
+                        ((RptSparkline)spark.Item).Render(_ws, row, col);
                     }
                 }
 
                 // 页脚
                 if (page.FooterItems.Count > 0)
                 {
-                    foreach (RptTextInst item in page.FooterItems)
+                    // 采用默认页眉页脚时，动态调整占的列数，每页的列数可能不同！
+                    if (_info.Root.Footer.DefaultFooter)
                     {
-                        // 不渲染超出的列
+                        var item = page.FooterItems[0];
                         int tempCol = offsetCol + item.Item.Col;
                         if (tempCol < cols.Count)
-                            RenderText(item, offsetRow + rowTotal - 1, tempCol);
+                        {
+                            // 占用当前页的所有列
+                            await RenderText(item, offsetRow + rowTotal - 1, tempCol, -1, page.Cols.Total);
+                        }
+                    }
+                    else
+                    {
+                        foreach (RptTextInst item in page.FooterItems)
+                        {
+                            // 不渲染超出的列
+                            int tempCol = offsetCol + item.Item.Col;
+                            if (tempCol < cols.Count)
+                                await RenderText(item, offsetRow + rowTotal - 1, tempCol);
+                        }
                     }
                 }
             }
@@ -211,41 +275,27 @@ namespace Dt.Base.Report
         /// <param name="p_txt"></param>
         /// <param name="p_row"></param>
         /// <param name="p_col"></param>
-        Cells.Data.Cell RenderText(RptTextInst p_txt, int p_row, int p_col)
+        /// <param name="p_rowSpan"></param>
+        /// <param name="p_colSpan"></param>
+        async Task<Cells.Data.Cell> RenderText(RptTextInst p_txt, int p_row, int p_col, int p_rowSpan = -1, int p_colSpan = -1)
         {
-            var cell = _ws[p_row, p_col];
             var item = p_txt.Item as RptText;
-            cell.ColumnSpan = item.ColSpan;
-            cell.RowSpan = item.RowSpan;
+            var cell = _ws[p_row, p_col];
+            cell.ColumnSpan = p_colSpan > 0 ? p_colSpan : item.ColSpan;
+            cell.RowSpan = p_rowSpan > 0 ? p_rowSpan : item.RowSpan;
             cell.Tag = p_txt;
             item.ApplyStyle(cell);
 
             if (item.IsScriptRender && _info.ScriptObj != null)
             {
                 // 脚本绘制
-                _info.ScriptObj.RenderCell(cell, new RptCellArgs(p_txt));
+                await _info.ScriptObj.RenderCell(cell, new RptCellArgs(p_txt));
             }
             else
             {
-                cell.Value = p_txt.GetText();
+                cell.Value = await p_txt.GetValue();
             }
             return cell;
-        }
-
-        /// <summary>
-        /// 输出图片
-        /// </summary>
-        /// <param name="p_img"></param>
-        /// <param name="p_row"></param>
-        /// <param name="p_col"></param>
-        void RenderImage(RptTextInst p_img, int p_row, int p_col)
-        {
-            RptText item = p_img.Item as RptText;
-            Kit.RunSync(() =>
-            {
-                Rect rc = _ws.GetRangeLocation(new CellRange(p_row, p_col, item.RowSpan, item.ColSpan));
-                _ws.AddPicture(_ws.Pictures.Count.ToString(), new Uri(item.Val), rc.Left, rc.Top, rc.Width, rc.Height);
-            });
         }
     }
 }

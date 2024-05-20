@@ -25,7 +25,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 报表输出页面，输出时布局用
     /// </summary>
-    internal class RptPage
+    public class RptPage
     {
         RptRootInst _root;
 

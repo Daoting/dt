@@ -18,7 +18,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 模板内容
     /// </summary>
-    internal class RptBody : RptPart
+    public class RptBody : RptPart
     {
         public RptBody(RptRoot p_root)
             : base(p_root)
@@ -128,7 +128,7 @@ namespace Dt.Base.Report
         public override double GetRowHeight(int p_index)
         {
             if (p_index < 0 || p_index >= Rows.Length)
-                throw new Exception("获取行高的位置超出范围！");
+                Throw.Msg("RptBody获取行高的位置超出范围！");
             return Rows[p_index];
         }
     }

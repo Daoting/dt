@@ -7,8 +7,10 @@
 #endregion
 
 #region 引用命名
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using System.Reflection;
 #endregion
 
@@ -137,6 +139,41 @@ namespace Dt.Mgr.Home
                     await MenuDs.LoadFavMenus();
                 }
             }
+        }
+    }
+
+    [LvCall]
+    public class RootMenuUI
+    {
+        public static void Icon(Env e)
+        {
+            var tb = new TextBlock
+            {
+                Style = Res.LvTextBlock,
+                FontFamily = Res.IconFont,
+                TextAlignment = TextAlignment.Center,
+            };
+            e.UI = tb;
+
+            e.Set += c =>
+            {
+                var val = c.CellVal;
+                string txt = null;
+                if (c.Data is OmMenu m && m.IsGroup)
+                {
+                    txt = Res.GetIconChar(Icons.文件夹);
+                    tb.Foreground = Res.深黄;
+                }
+                else if (val != null)
+                {
+                    if (val is int || val is byte)
+                        txt = Res.GetIconChar((Icons)val);
+                    else
+                        txt = Res.ParseIconChar(val.ToString());
+                }
+                tb.Text = string.IsNullOrEmpty(txt) ? "" : txt;
+                c.Dot.ToggleVisible(string.IsNullOrEmpty(txt));
+            };
         }
     }
 }

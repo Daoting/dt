@@ -15,7 +15,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 表达式描述列
     /// </summary>
-    internal class RptExpression
+    public class RptExpression
     {
         /// <summary>
         /// 获取设置功能种类
@@ -36,7 +36,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 表达式功能种类
     /// </summary>
-    internal enum RptExpFunc
+    public enum RptExpFunc
     {
         /// <summary>
         /// 取值
@@ -69,6 +69,11 @@ namespace Dt.Base.Report
         Count,
 
         /// <summary>
+        /// 分组内的列值
+        /// </summary>
+        Group,
+
+        /// <summary>
         /// 当前行数
         /// </summary>
         Index,
@@ -81,11 +86,24 @@ namespace Dt.Base.Report
         /// <summary>
         /// 取全局变量值
         /// </summary>
-        Global,
+        Var,
 
+        /// <summary>
+        /// 调用外部方法取值，和自定义参数缺省值相同格式
+        /// </summary>
+        Call,
+        
         /// <summary>
         /// 未知
         /// </summary>
         Unknown
+    }
+
+    public enum PlaceholderType
+    {
+        None = 0,
+        PageNum = 1,
+        PageCount = 2,
+        Call = 4
     }
 }

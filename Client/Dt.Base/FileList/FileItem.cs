@@ -30,7 +30,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-#if !DOTNET
+#if WIN || ANDROID || IOS
 using Microsoft.Maui.ApplicationModel;
 #endif
 #endregion
@@ -357,12 +357,9 @@ namespace Dt.Base
             if (State != FileItemState.None || string.IsNullOrEmpty(ID))
                 return;
 
-            if (Kit.AppType == AppType.Wasm)
-            {
-                await OpenFileWasm();
-                return;
-            }
-
+#if WASM
+            await OpenFileWasm();
+#else
             // 打开本地文件
             string fileName = Path.Combine(Kit.CachePath, GetFileName());
             if (!File.Exists(fileName))
@@ -391,6 +388,7 @@ namespace Dt.Base
             }
 
             _owner.OnOpenedFile(this);
+#endif
         }
 
         /// <summary>
@@ -445,31 +443,7 @@ namespace Dt.Base
                     return;
             }
 
-#if WIN || DOTNET
-            if (Kit.AppType == AppType.Wasm)
-            {
-                SaveAsWasm();
-            }
-            else
-            {
-                var picker = Kit.GetFileSavePicker();
-                picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-                picker.FileTypeChoices.Add(GetSaveDesc(), new List<string>() { GetExtName() });
-                picker.SuggestedFileName = _itemInfo.FileName;
-                StorageFile file = await picker.PickSaveFileAsync();
-                if (file != null)
-                {
-                    var folder = await StorageFolder.GetFolderFromPathAsync(Kit.CachePath);
-                    var temp = await folder.TryGetItemAsync(GetFileName()) as StorageFile;
-                    if (temp != null)
-                    {
-                        await temp.CopyAndReplaceAsync(file);
-                        Kit.Msg("文件另存成功！");
-                        return;
-                    }
-                }
-            }
-#elif ANDROID
+#if ANDROID
             //string savePath;
             //string msg;
             //if (FileType == FileItemType.Image)
@@ -537,6 +511,25 @@ namespace Dt.Base
                 // 普通文件以共享方式保存
                 await ShareFile();
             }
+#elif WASM
+            SaveAsWasm();
+#else
+            var picker = Kit.GetFileSavePicker();
+            picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            picker.FileTypeChoices.Add(GetSaveDesc(), new List<string>() { GetExtName() });
+            picker.SuggestedFileName = _itemInfo.FileName;
+            StorageFile file = await picker.PickSaveFileAsync();
+            if (file != null)
+            {
+                var folder = await StorageFolder.GetFolderFromPathAsync(Kit.CachePath);
+                var temp = await folder.TryGetItemAsync(GetFileName()) as StorageFile;
+                if (temp != null)
+                {
+                    await temp.CopyAndReplaceAsync(file);
+                    Kit.Msg("文件另存成功！");
+                    return;
+                }
+            }
 #endif
         }
 
@@ -545,11 +538,8 @@ namespace Dt.Base
         /// </summary>
         public void DownloadFile()
         {
-#if DOTNET
-            if (Kit.AppType == AppType.Wasm)
-                DownloadFileWasm();
-            else
-                _ = Download();
+#if WASM
+            DownloadFileWasm();
 #else
             _ = Download();
 #endif
@@ -557,10 +547,8 @@ namespace Dt.Base
 
         internal Task<string> EnsureFileExists()
         {
-#if DOTNET
-            if (Kit.AppType == AppType.Wasm)
-                return EnsureFileExistsWasm();
-            return EnsureFileExistsCommon();
+#if WASM
+            return EnsureFileExistsWasm();
 #else
             return EnsureFileExistsCommon();
 #endif
@@ -641,7 +629,7 @@ namespace Dt.Base
                 Kit.Warn("删除文件失败！");
             return suc;
         }
-        #endregion
+#endregion
 
         #region IUploadUI 上传过程
         /// <summary>
@@ -672,27 +660,24 @@ namespace Dt.Base
             if (FileType == FileItemType.Image || FileType == FileItemType.Video)
             {
                 BitmapImage bmp = new BitmapImage();
-#if WIN || DOTNET
-                if (Kit.AppType != AppType.Wasm)
+#if WIN || SKIA || WASM
+                StorageFile sf = null;
+                if (!string.IsNullOrEmpty(p_file.ThumbPath))
                 {
-                    StorageFile sf = null;
-                    if (!string.IsNullOrEmpty(p_file.ThumbPath))
-                    {
-                        // 缩略图
-                        sf = await StorageFile.GetFileFromPathAsync(p_file.ThumbPath);
-                    }
-                    else if (FileType == FileItemType.Image)
-                    {
-                        // 原始图
-                        sf = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(p_file.FilePath);
-                    }
+                    // 缩略图
+                    sf = await StorageFile.GetFileFromPathAsync(p_file.ThumbPath);
+                }
+                else if (FileType == FileItemType.Image)
+                {
+                    // 原始图
+                    sf = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(p_file.FilePath);
+                }
 
-                    if (sf != null)
+                if (sf != null)
+                {
+                    using (var stream = await sf.OpenAsync(FileAccessMode.Read))
                     {
-                        using (var stream = await sf.OpenAsync(FileAccessMode.Read))
-                        {
-                            await bmp.SetSourceAsync(stream);
-                        }
+                        await bmp.SetSourceAsync(stream);
                     }
                 }
 #elif ANDROID
@@ -991,10 +976,11 @@ namespace Dt.Base
                 && !string.IsNullOrEmpty(ID)
                 && Bitmap == null)
             {
-                if (Kit.AppType != AppType.Wasm)
-                    await LoadImage();
-                else
-                    await LoadImageWasm();
+#if WASM
+                await LoadImageWasm();
+#else
+                await LoadImage();
+#endif
             }
 
             // 控件中的尽可能避免使用设置DataContext方式！！！
@@ -1032,7 +1018,7 @@ namespace Dt.Base
             if (!string.IsNullOrEmpty(path))
                 Bitmap = new BitmapImage(new Uri(path));
         }
-        #endregion
+#endregion
 
         #region 更新UI
         /// <summary>

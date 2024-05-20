@@ -26,13 +26,15 @@ namespace Dt.Mgr.Rbac
         public MenuWin()
         {
             InitializeComponent();
+            Form = new MenuForm { OwnWin = this };
         }
 
+        public MenuTree Tree => _tree;
+        
         public MenuList List => _list;
 
-        public MenuForm Form => _form;
+        public MenuForm Form { get; }
 
         public MenuRoleList RoleList => _roleList;
-
     }
 }

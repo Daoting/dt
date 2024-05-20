@@ -22,9 +22,9 @@ namespace Dt.Base.Report
     /// </summary>
     internal class ExcelClerk
     {
-        RptDesignWin _owner;
+        RptDesignHome _owner;
 
-        public ExcelClerk(RptDesignWin p_owner)
+        public ExcelClerk(RptDesignHome p_owner)
         {
             _owner = p_owner;
         }
@@ -37,6 +37,7 @@ namespace Dt.Base.Report
             p_root.ItemsChanged += OnItemsChanged;
             p_root.TextChanged += OnTextChanged;
             p_root.Updated += OnUpdated;
+            p_root.ImageChanged += OnImageChanged;
         }
 
         /// <summary>
@@ -48,6 +49,7 @@ namespace Dt.Base.Report
             p_root.ItemsChanged -= OnItemsChanged;
             p_root.TextChanged -= OnTextChanged;
             p_root.Updated -= OnUpdated;
+            p_root.ImageChanged -= OnImageChanged;
         }
 
         /// <summary>
@@ -64,6 +66,10 @@ namespace Dt.Base.Report
                 LoadMatrix(mtx);
             else if (p_item is RptChart ct)
                 LoadChart(ct);
+            else if (p_item is RptImage img)
+                LoadImage(img);
+            else if (p_item is RptSparkline spark)
+                LoadSparkline(spark);
         }
 
         #region 事件处理
@@ -97,7 +103,7 @@ namespace Dt.Base.Report
 
                 // 页眉页脚报表项变化时刷新分割线
                 if (sender != _owner.Info.Root.Body)
-                    _owner.RefreshSpliter();
+                    _owner.RefreshPaperSize();
             });
         }
 
@@ -109,6 +115,36 @@ namespace Dt.Base.Report
         void OnTextChanged(object sender, Core.Cell e)
         {
             Invoke(() => { LoadText((RptText)sender); });
+        }
+
+        /// <summary>
+        /// 图片变化事件
+        /// </summary>
+        /// <param name="p_item"></param>
+        void OnImageChanged(RptImage p_item)
+        {
+            Invoke(() =>
+            {
+                Worksheet ws = _owner.Excel.Sheets[(int)p_item.Part.PartType];
+                try
+                {
+                    _owner.Excel.SuspendEvent();
+                    foreach (var pic in ws.Pictures)
+                    {
+                        if (pic.StartColumn == p_item.Col && pic.StartRow == p_item.Row)
+                        {
+                            ws.Pictures.Remove(pic);
+                            break;
+                        }
+                    }
+                    LoadImage(p_item);
+                }
+                finally
+                {
+                    _owner.Excel.ResumeEvent();
+                    _owner.Excel.RefreshPictures();
+                }
+            });
         }
 
         /// <summary>
@@ -169,13 +205,13 @@ namespace Dt.Base.Report
             int colIndex = p_tbl.Col;
             RptTblPartRow tblRow;
 
-            //加载表头。
-            if (p_tbl.Header != null)
+            // 加载列头
+            if (p_tbl.ColHeader != null)
             {
-                rowCount = p_tbl.Header.Rows.Count;
+                rowCount = p_tbl.ColHeader.Rows.Count;
                 for (int i = 0; i < rowCount; i++)
                 {
-                    tblRow = p_tbl.Header.Rows[i];
+                    tblRow = p_tbl.ColHeader.Rows[i];
                     LoadTblRow(tblRow, rowIndex, colIndex);
                     rowIndex += tblRow.RowSpan == 0 ? 1 : tblRow.RowSpan;
                 }
@@ -186,10 +222,10 @@ namespace Dt.Base.Report
             {
                 for (int i = 0; i < grpCount; i++)
                 {
-                    rowCount = listGrp[i].Header == null ? 0 : listGrp[i].Header.Rows.Count;
+                    rowCount = listGrp[i] == null ? 0 : listGrp[i].Rows.Count;
                     for (int j = 0; j < rowCount; j++)
                     {
-                        tblRow = listGrp[i].Header.Rows[j];
+                        tblRow = listGrp[i].Rows[j];
                         LoadTblRow(tblRow, rowIndex, colIndex);
                         rowIndex += tblRow.RowSpan == 0 ? 1 : tblRow.RowSpan;
                     }
@@ -208,28 +244,13 @@ namespace Dt.Base.Report
                 }
             }
 
-            //添加分组尾
-            if (grpCount > 0)
+            //加载列尾
+            if (p_tbl.ColFooter != null)
             {
-                for (int i = grpCount; i > 0; i--)
-                {
-                    rowCount = listGrp[i - 1].Footer == null ? 0 : listGrp[i - 1].Footer.Rows.Count;
-                    for (int j = 0; j < rowCount; j++)
-                    {
-                        tblRow = listGrp[i - 1].Footer.Rows[j];
-                        LoadTblRow(tblRow, rowIndex, colIndex);
-                        rowIndex += tblRow.RowSpan == 0 ? 1 : tblRow.RowSpan;
-                    }
-                }
-            }
-
-            //加载表尾。
-            if (p_tbl.Footer != null)
-            {
-                rowCount = p_tbl.Footer.Rows.Count;
+                rowCount = p_tbl.ColFooter.Rows.Count;
                 for (int i = 0; i < rowCount; i++)
                 {
-                    tblRow = p_tbl.Footer.Rows[i];
+                    tblRow = p_tbl.ColFooter.Rows[i];
                     LoadTblRow(tblRow, rowIndex, colIndex);
                     rowIndex += tblRow.RowSpan == 0 ? 1 : tblRow.RowSpan;
                 }
@@ -245,12 +266,63 @@ namespace Dt.Base.Report
             Dt.Cells.Data.Cell chartCell = _owner.Excel.Sheets[0].Cells[p_chart.Row, p_chart.Col];
             chartCell.RowSpan = p_chart.RowSpan;
             chartCell.ColumnSpan = p_chart.ColSpan;
-            chartCell.Background = new SolidColorBrush(Color.FromArgb(0XCC,0XFF,0XFD,0XC5));
+            chartCell.Background = new SolidColorBrush(Color.FromArgb(0XCC, 0XFF, 0XFD, 0XC5));
             chartCell.VerticalAlignment = CellVerticalAlignment.Center;
             chartCell.HorizontalAlignment = CellHorizontalAlignment.Center;
             chartCell.FontFamily = Res.IconFont;
             chartCell.FontSize = 40;
             chartCell.Text = "\uE08D";
+        }
+
+        /// <summary>
+        /// 加载图片
+        /// </summary>
+        /// <param name="p_img"></param>
+        void LoadImage(RptImage p_img)
+        {
+            Dt.Cells.Data.Cell cell = _owner.Excel.Sheets[(int)p_img.Part.PartType].Cells[p_img.Row, p_img.Col];
+            cell.RowSpan = p_img.RowSpan;
+            cell.ColumnSpan = p_img.ColSpan;
+            cell.Background = new SolidColorBrush(Color.FromArgb(0XFF, 0XE0, 0XE0, 0XE0));
+            cell.VerticalAlignment = CellVerticalAlignment.Center;
+            cell.HorizontalAlignment = CellHorizontalAlignment.Center;
+            cell.FontFamily = Res.IconFont;
+            cell.FontSize = 40;
+            cell.Text = "\uE08A";
+
+            if (p_img.ImgData != null && p_img.ImgData.Length > 0)
+            {
+                var pic = _owner.Excel.Sheets[(int)p_img.Part.PartType].AddPicture(
+                    Guid.NewGuid().ToString().Substring(0, 6),
+                    new MemoryStream(p_img.ImgData),
+                    p_img.Row,
+                    0,
+                    p_img.Col,
+                    0,
+                    p_img.Row + p_img.RowSpan,
+                    0,
+                    p_img.Col + p_img.ColSpan,
+                    0);
+                // 锁定禁止拖动缩放
+                pic.Locked = true;
+            }
+        }
+
+        /// <summary>
+        /// 加载迷你图
+        /// </summary>
+        /// <param name="p_spark"></param>
+        void LoadSparkline(RptSparkline p_spark)
+        {
+            Dt.Cells.Data.Cell cell = _owner.Excel.Sheets[0].Cells[p_spark.Row, p_spark.Col];
+            cell.RowSpan = p_spark.RowSpan;
+            cell.ColumnSpan = p_spark.ColSpan;
+            cell.Background = Res.浅蓝;
+            cell.VerticalAlignment = CellVerticalAlignment.Center;
+            cell.HorizontalAlignment = CellHorizontalAlignment.Center;
+            cell.FontFamily = Res.IconFont;
+            cell.FontSize = 40;
+            cell.Text = "\uE08C";
         }
 
         /// <summary>
@@ -264,14 +336,24 @@ namespace Dt.Base.Report
             int colIdx = p_colIdx;
             Worksheet ws = _owner.Excel.Sheets[0];
 
+            // 分组行中有合并单元格，先拆分
+            for (int i = 0; i < p_tblRow.ColSpan; i++)
+            {
+                Dt.Cells.Data.Cell cell = ws[p_rowIdx, i];
+                if (cell.ColumnSpan != 1)
+                    cell.ColumnSpan = 1;
+            }
+
             for (int i = 0; i < p_tblRow.Cells.Count; i++)
             {
                 RptText txt = p_tblRow.Cells[i];
                 txt.Row = p_rowIdx;
-                txt.Col = colIdx++;
+                txt.Col = colIdx;
 
                 Dt.Cells.Data.Cell cell = ws[txt.Row, txt.Col];
                 cell.Value = txt.Data.Str("val");
+                cell.ColumnSpan = txt.ColSpan;
+                colIdx += txt.ColSpan;
                 txt.ApplyStyle(cell);
             }
         }
@@ -284,6 +366,22 @@ namespace Dt.Base.Report
         {
             CellRange range = GetRptItemRange(p_item);
             ClearRange(_owner.Excel.Sheets[(int)p_item.Part.PartType], range);
+            
+            // 删除对应的图片
+            if (p_item is RptImage img
+                && img.ImgData != null
+                && img.ImgData.Length > 0)
+            {
+                Worksheet ws = _owner.Excel.Sheets[0];
+                foreach (var pic in ws.Pictures)
+                {
+                    if (pic.StartColumn == p_item.Col && pic.StartRow == p_item.Row)
+                    {
+                        ws.Pictures.Remove(pic);
+                        break;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -291,7 +389,7 @@ namespace Dt.Base.Report
         /// </summary>
         /// <param name="p_sheet"></param>
         /// <param name="p_range"></param>
-        void ClearRange(Worksheet p_sheet, CellRange p_range)
+        public void ClearRange(Worksheet p_sheet, CellRange p_range)
         {
             // 清空内容
             p_sheet.Clear(p_range.Row, p_range.Column, p_range.RowCount, p_range.ColumnCount);

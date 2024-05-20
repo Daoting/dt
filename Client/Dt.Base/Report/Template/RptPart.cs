@@ -23,7 +23,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 容器项，页眉、页脚、模板内容基类
     /// </summary>
-    internal abstract class RptPart
+    public abstract class RptPart
     {
         public RptPart(RptRoot p_root)
         {
@@ -137,6 +137,12 @@ namespace Dt.Base.Report
                         break;
                     case "Chart":
                         item = new RptChart(this);
+                        break;
+                    case "Image":
+                        item = new RptImage(this);
+                        break;
+                    case "Sparkline":
+                        item = new RptSparkline(this);
                         break;
                     default:
                         if (item == null)

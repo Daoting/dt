@@ -8,7 +8,7 @@
 
 #region 引用命名
 using Microsoft.UI.Xaml;
-#if !DOTNET
+#if WIN || ANDROID || IOS
 using Microsoft.Maui.ApplicationModel;
 #endif
 #endregion
@@ -170,7 +170,7 @@ namespace Dt.Base
                 return null;
             }
 
-#if !DOTNET
+#if WIN || ANDROID || IOS
             try
             {
                 await Permissions.RequestAsync<Permissions.Microphone>();

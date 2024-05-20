@@ -29,7 +29,7 @@ namespace Dt.Base
     {
         static readonly AsyncLocker _locker;
         static readonly HttpClient _client;
-        
+
         static Downloader()
         {
             _locker = new AsyncLocker();
@@ -39,20 +39,15 @@ namespace Dt.Base
                 // 验证时服务端证书始终有效！
                 ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
             });
-#elif DOTNET
-            if (Kit.AppType == AppType.Wasm)
+#elif WASM
+            _client = new HttpClient();
+#elif SKIA
+            // gtk wpf
+            _client = new HttpClient(new HttpClientHandler
             {
-                _client = new HttpClient();
-            }
-            else
-            {
-                // gtk wpf
-                _client = new HttpClient(new HttpClientHandler
-                {
-                    // 验证时服务端证书始终有效！
-                    ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
-                });
-            }
+                // 验证时服务端证书始终有效！
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+            });
 #else
             _client = new HttpClient(new NativeMessageHandler());
 #endif

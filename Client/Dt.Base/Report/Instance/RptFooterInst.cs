@@ -15,7 +15,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 页脚实例
     /// </summary>
-    internal class RptFooterInst
+    public class RptFooterInst
     {
         readonly RptPart _item;
         readonly List<RptTextInst> _children;

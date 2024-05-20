@@ -107,7 +107,7 @@ namespace Dt.Core
             return System.IO.File.OpenRead(FilePath);
 #elif IOS
             return new FileStream(FilePath, FileMode.Open, FileAccess.Read);
-#elif DOTNET
+#else
             return null;
 #endif
         }
@@ -123,7 +123,7 @@ namespace Dt.Core
                 _shareOperation.ReportCompleted();
                 _shareOperation = null;
             }
-#elif DOTNET
+#elif WASM || SKIA
 
 #else
             Application.Current.Exit();

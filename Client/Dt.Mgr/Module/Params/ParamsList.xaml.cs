@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-14 创建
+* 日志: 2024-02-20 创建
 ******************************************************************************/
 #endregion
 
@@ -13,51 +13,78 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Mgr.Module
 {
-    public partial class ParamsList : Tab
+    public partial class ParamsList : LvTab
     {
-        #region 构造方法
+        #region 变量
+        QueryClause _clause;
+        #endregion
+
+        #region 构造
         public ParamsList()
         {
             InitializeComponent();
+            _lv.AddMultiSelMenu(Menu);
         }
         #endregion
 
         #region 公开
-        public async void Update()
+        public void OnSearch(QueryClause p_clause)
         {
-            if (Clause == null)
+            _clause = p_clause;
+            NaviTo(this);
+            _ = Refresh();
+        }
+        #endregion
+
+        #region 重写
+        protected override Lv Lv => _lv;
+
+        protected override async Task Query()
+        {
+            if (_clause == null)
             {
                 _lv.Data = await ParamsX.Query(null);
             }
             else
             {
-                var par = await Clause.Build<ParamsX>();
+                var par = await _clause.Build<ParamsX>();
                 _lv.Data = await ParamsX.Query(par.Sql, par.Params);
             }
         }
         #endregion
 
-        #region 初始化 
-        protected override void OnFirstLoaded()
-        {
-            Update();
-        }
-        #endregion
-
         #region 交互
+        async void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_lv.SelectionMode != SelectionMode.Multiple
+                && OwnWin is ParamsWin win)
+            {
+                await win.Form.Update(_lv.SelectedRow?.ID);
+            }
+        }
+
+        async void OnItemDbClick(object e)
+        {
+            if (_lv.SelectionMode != SelectionMode.Multiple
+                && OwnWin is ParamsWin win)
+            {
+                await win.Form.Open(_lv.SelectedRow?.ID);
+            }
+        }
+
         async void OnAdd(Mi e)
         {
-            NaviTo(_win.Form);
-            await _win.Form.Update(-1);
+            if (OwnWin is ParamsWin win)
+            {
+                await win.Form.Open(-1);
+            }
         }
 
-        async void OnItemClick(ItemClickArgs e)
+        async void OnEdit(Mi e)
         {
-            if (_lv.SelectionMode != Base.SelectionMode.Multiple)
+            if (OwnWin is ParamsWin win)
             {
-                NaviTo(_win.Form);
-                if (e.IsChanged)
-                    await _win.Form.Update(e.Row.ID);
+                await win.Form.Open(e.Row?.ID);
             }
         }
 
@@ -69,24 +96,12 @@ namespace Dt.Mgr.Module
                 return;
             }
 
-            if (_lv.SelectionMode == Base.SelectionMode.Multiple)
+            if (_lv.SelectionMode == SelectionMode.Multiple)
             {
                 var ls = _lv.SelectedItems.Cast<ParamsX>().ToList();
                 if (await ls.Delete())
                 {
-                    Update();
-                    var d = _win.Form.Data;
-                    if (d != null)
-                    {
-                        foreach (var item in ls)
-                        {
-                            if (item == d)
-                            {
-                                _win.Form.Clear();
-                                break;
-                            }
-                        }
-                    }
+                    await Refresh();
                 }
             }
             else
@@ -94,54 +109,10 @@ namespace Dt.Mgr.Module
                 var d = e.Data.To<ParamsX>();
                 if (await d.Delete())
                 {
-                    Update();
-                    if (d == _win.Form.Data)
-                        _win.Form.Clear();
+                    await Refresh();
                 }
             }
         }
-        #endregion
-
-        #region 搜索
-        /// <summary>
-        /// 获取设置查询内容
-        /// </summary>
-        public QueryClause Clause { get; set; }
-
-        public void OnSearch(QueryClause p_clause)
-        {
-            Clause = p_clause;
-            Update();
-            NaviTo(this);
-        }
-
-        void OnToSearch(Mi e)
-        {
-            NaviTo(_win.Search);
-        }
-        #endregion
-
-        #region 选择
-        void OnSelectAll(Mi e)
-        {
-            _lv.SelectAll();
-        }
-
-        void OnMultiMode(Mi e)
-        {
-            _lv.SelectionMode = Base.SelectionMode.Multiple;
-            Menu.HideExcept("删除", "全选", "取消");
-        }
-
-        void OnCancelMulti(Mi e)
-        {
-            _lv.SelectionMode = Base.SelectionMode.Single;
-            Menu.ShowExcept("删除", "全选", "取消");
-        }
-        #endregion
-
-        #region 内部
-        ParamsWin _win => (ParamsWin)OwnWin;
         #endregion
     }
 }

@@ -19,7 +19,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 报表模板根元素
     /// </summary>
-    internal class RptRoot
+    public class RptRoot
     {
         #region 构造方法
         public RptRoot()
@@ -69,6 +69,11 @@ namespace Dt.Base.Report
         /// 模板中值变化事件
         /// </summary>
         public event EventHandler CellValueChanged;
+
+        /// <summary>
+        /// 图片变化事件
+        /// </summary>
+        public event Action<RptImage> ImageChanged;
         #endregion
 
         #region 属性
@@ -135,7 +140,7 @@ namespace Dt.Base.Report
         public void ReadXml(XmlReader p_reader)
         {
             if (p_reader == null || p_reader.IsEmptyElement || p_reader.Name != "Rpt")
-                throw new Exception("加载报表模板根节点时出错！");
+                Throw.Msg("加载报表模板根节点时出错！");
 
             // 报表列宽
             Cols = RptPart.SplitSize(p_reader.GetAttribute("cols"));
@@ -283,6 +288,27 @@ namespace Dt.Base.Report
                 Updated(p_item, e);
                 p_item.Data.AcceptChanges();
             }
+        }
+
+        /// <summary>
+        /// 提交所有改变
+        /// </summary>
+        public void AcceptChanges()
+        {
+            Params.Data.AcceptChanges();
+            Params.XamlRow.AcceptChanges();
+            Data.DataSet.AcceptChanges();
+            PageSetting.Data.AcceptChanges();
+            ViewSetting.Data.AcceptChanges(); ;
+        }
+
+        /// <summary>
+        /// 触发图片变化事件
+        /// </summary>
+        /// <param name="p_item"></param>
+        public void OnImageChanged(RptImage p_item)
+        {
+            ImageChanged?.Invoke(p_item);
         }
         #endregion
     }

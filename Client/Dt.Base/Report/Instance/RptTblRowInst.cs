@@ -15,7 +15,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 表格数据行实例
     /// </summary>
-    internal class RptTblRowInst : RptTblPartInst
+    public class RptTblRowInst : RptTblPartInst
     {
         public RptTblRowInst(RptItemBase p_item)
             : base(p_item)

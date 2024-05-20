@@ -1,4 +1,4 @@
-﻿#if DOTNET
+﻿#if WASM || SKIA
 #region 文件描述
 /******************************************************************************
 * 创建: Daoting
@@ -38,24 +38,21 @@ namespace Dt.Base
         static Uploader()
         {
             _locker = new AsyncLocker();
-            
-            if (Kit.AppType == AppType.Wasm)
+
+#if WASM
+            _client = new HttpClient();
+            // 识别wasm客户端，允许跨域请求
+            _client.DefaultRequestHeaders.Add("dt-wasm", "");
+#elif SKIA
+            // gtk wpf
+            _client = new HttpClient(new HttpClientHandler
             {
-                _client = new HttpClient();
-                // 识别wasm客户端，允许跨域请求
-                _client.DefaultRequestHeaders.Add("dt-wasm", "");
-            }
-            else
-            {
-                // gtk wpf
-                _client = new HttpClient(new HttpClientHandler
-                {
-                    // 验证时服务端证书始终有效！
-                    ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
-                });
-            }
+                // 验证时服务端证书始终有效！
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+            });
+#endif
         }
-        
+
         /// <summary>
         /// 执行上传
         /// </summary>

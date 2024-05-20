@@ -437,6 +437,10 @@ namespace Dt.Base
                 ShowInCanvas();
                 return true;
             }
+            else if (Canvas.GetZIndex(_canvas) != _currentZIndex)
+            {
+                Canvas.SetZIndex(_canvas, ++_currentZIndex);
+            }
             return false;
         }
 
@@ -451,6 +455,10 @@ namespace Dt.Base
                 _taskSrc = new TaskCompletionSource<bool>();
                 ShowInCanvas();
                 return _taskSrc.Task;
+            }
+            else if (Canvas.GetZIndex(_canvas) != _currentZIndex)
+            {
+                Canvas.SetZIndex(_canvas, ++_currentZIndex);
             }
             return Task.FromResult(false);
         }
@@ -1000,6 +1008,21 @@ namespace Dt.Base
                     }
                     break;
 
+                case DlgPlacement.TargetOuterBottomRight:
+                    rcTarget = PlacementTarget.GetBounds();
+                    left = rcTarget.Right - actWidth;
+                    if (AutoAdjustPosition)
+                    {
+                        Left = left < 0 ? 0 : (left + actWidth > maxWidth ? maxWidth - actWidth : left);
+                        Top = rcTarget.Bottom < 0 ? 0 : (rcTarget.Bottom + actHeight > maxHeight ? maxHeight - actHeight : rcTarget.Bottom);
+                    }
+                    else
+                    {
+                        Left = left;
+                        Top = rcTarget.Bottom;
+                    }
+                    break;
+                    
                 case DlgPlacement.TargetOverlap:
                     rcTarget = PlacementTarget.GetBounds();
                     Left = rcTarget.Left;

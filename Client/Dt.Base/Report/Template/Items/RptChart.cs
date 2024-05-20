@@ -22,7 +22,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 图表
     /// </summary>
-    internal class RptChart : RptItem
+    public class RptChart : RptItem
     {
         public RptChart(RptPart p_owner)
             : base(p_owner)

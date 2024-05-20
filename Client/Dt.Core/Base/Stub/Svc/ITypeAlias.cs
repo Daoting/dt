@@ -40,6 +40,13 @@ namespace Dt.Core
         List<Type> GetTypeListByAlias(Type p_attrType, string p_alias);
 
         /// <summary>
+        /// 返回标签类型标记的所有类型列表
+        /// </summary>
+        /// <param name="p_attrType">标签类型</param>
+        /// <returns></returns>
+        IEnumerable<Type> GetAllTypesByAttrType(Type p_attrType);
+        
+        /// <summary>
         /// 所有类型别名
         /// </summary>
         IReadOnlyDictionary<string, Type> AllAliasTypes { get; }

@@ -9,6 +9,7 @@
 #region 引用命名
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Windows.Foundation;
 #endregion
 
 namespace Dt.Base
@@ -26,7 +27,7 @@ namespace Dt.Base
         /**********************************************************************************************************************************************************/
         // 不同平台主事件调用顺序
         // 
-        // WIN：
+        // win：
         // ApplyTemplate(父子) -> OnLoadTemplate(父子) -> MeasureOverride(父子) -> ArrangeOverride(父子) -> SizeChanged(父子) -> Loaded(父子) -> OnFirstLoaded(父子)
         // 
         // Android：
@@ -38,7 +39,14 @@ namespace Dt.Base
         // wasm:
         // ApplyTemplate(父子) -> Loaded(父子) -> OnLoadTemplate(父子) -> OnFirstLoaded(父子) -> MeasureOverride(父子) -> ArrangeOverride(父子) -> SizeChanged(子父)
         //
-        // WIN的OnApplyTemplate时控件已在可视树上，可查询父元素；uno此时不在可视树上，只能在Loaded时查询父元素！！！
+        // skia(wpf gtk):
+        // ApplyTemplate(父子) -> OnLoadTemplate(父子) -> Loaded(父子) -> OnFirstLoaded(父子)             -> SizeChanged(子父)
+        //                                            -> MeasureOverride(父子) -> ArrangeOverride(父子)
+        //
+        // 1. win和skia的OnApplyTemplate时控件已在可视树上，可查询父元素；
+        // 2. skia的Loaded事件和MeasureOverride并行调用，无法区分先后；
+        // 3. 其他平台OnApplyTemplate时不在可视树上，只能在Loaded时查询父元素；
+        // 因此为确保多平台的一致性，请重新 OnLoadTemplate 查询父元素！！！
         /***********************************************************************************************************************************************************/
 
 
@@ -54,8 +62,8 @@ namespace Dt.Base
 
 
         /// <summary>
-        /// WIN：OnApplyTemplate时调用
-        /// uno：只在第一次Loaded事件时调用
+        /// win和skia：OnApplyTemplate时调用
+        /// 其他：只在第一次Loaded事件时调用
         /// </summary>
         protected virtual void OnLoadTemplate()
         {
@@ -68,18 +76,18 @@ namespace Dt.Base
         {
         }
 
-#if WIN
+#if WIN || SKIA
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
             OnLoadTemplate();
         }
 #endif
-
+        
         void OnLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnLoaded;
-#if !WIN
+#if !WIN && !SKIA
             OnLoadTemplate();
 #endif
             OnFirstLoaded();

@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-08 创建
+* 日志: 2024-02-05 创建
 ******************************************************************************/
 #endregion
 
@@ -13,40 +13,12 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Mgr.Rbac
 {
-    public sealed partial class GroupForm : Tab
+    public sealed partial class GroupForm : FvDlg
     {
-        #region 构造方法
         public GroupForm()
         {
             InitializeComponent();
-        }
-        #endregion
-
-        #region 公开
-        public async Task Update(long p_id)
-        {
-            var d = Data;
-            if (d != null && d.ID == p_id)
-                return;
-
-            if (!await _fv.DiscardChanges())
-                return;
-
-            if (p_id > 0)
-            {
-                Data = await GroupX.GetByID(p_id);
-                UpdateRelated(p_id);
-            }
-            else
-            {
-                Create();
-            }
-        }
-
-        public void Clear()
-        {
-            Data = null;
-            UpdateRelated(-1);
+            Menu = CreateMenu();
         }
 
         public GroupX Data
@@ -54,66 +26,34 @@ namespace Dt.Mgr.Rbac
             get { return _fv.Data.To<GroupX>(); }
             private set { _fv.Data = value; }
         }
-        #endregion
 
-        #region 内部
-        async void Create()
+        protected override Fv Fv => _fv;
+
+        protected override async Task OnAdd()
         {
             Data = await GroupX.New();
-            UpdateRelated(-1);
         }
 
-        async void Save()
+        protected override async Task OnGet(long p_id)
         {
-            var d = Data;
-            bool isNew = d.IsAdded;
-            if (await d.Save())
+            Data = await GroupX.GetByID(p_id);
+        }
+        
+        protected override void RefreshList(long? p_id)
+        {
+            if (OwnWin is GroupWin win)
             {
-                _win.MainList.Update();
-                if (isNew)
-                {
-                    UpdateRelated(d.ID);
-                }
+                _ = win.MainList.Refresh(p_id);
             }
         }
 
-        async void Delete()
+        protected override void UpdateRelated(long p_id)
         {
-            var d = Data;
-            if (d == null)
-                return;
-
-            if (!await Kit.Confirm("确认要删除吗？"))
+            if (OwnWin is GroupWin win)
             {
-                Kit.Msg("已取消删除！");
-                return;
-            }
-
-            if (d.IsAdded)
-            {
-                Clear();
-                return;
-            }
-
-            if (await d.Delete())
-            {
-                Clear();
-                _win.MainList.Update();
+                win.UserList.Update(p_id);
+                win.RoleList.Update(p_id);
             }
         }
-
-        void UpdateRelated(long p_id)
-        {
-            _win.RoleList.Update(p_id);
-            _win.UserList.Update(p_id);
-        }
-
-        protected override Task<bool> OnClosing()
-        {
-            return _fv.DiscardChanges();
-        }
-
-        GroupWin _win => (GroupWin)OwnWin;
-        #endregion
     }
 }

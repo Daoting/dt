@@ -33,8 +33,8 @@
                               Height="{StaticResource RowOuterHeight}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
-                                <!--标题和菜单平分-->
-                                <ColumnDefinition Width="*" />
+                                <!--标题和菜单-->
+                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <!--关闭-->
@@ -48,7 +48,8 @@
                                        VerticalAlignment="Center"
                                        TextTrimming="CharacterEllipsis"
                                        TextWrapping="NoWrap"
-                                       Margin="10,0,10,0"
+                                       MaxWidth="120"
+                                       Margin="4,0,0,0"
                                        Grid.Column="1" />
                             <!--菜单-->
                             <ContentPresenter Content="{TemplateBinding Menu}"

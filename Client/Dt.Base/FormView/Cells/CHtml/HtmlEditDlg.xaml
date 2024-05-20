@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    Title="编辑内容"
+    Title="内容"
     IsPinned="True">
 
     <a:Dlg.Menu>
@@ -14,5 +14,5 @@
         </a:Menu>
     </a:Dlg.Menu>
 
-    <WebView2 x:Name="_wv" />
+    <a:HtmlBox x:Name="_box" />
 </a:Dlg>

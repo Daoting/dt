@@ -13,6 +13,8 @@ using System.Linq;
 using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Windows.System;
 #endregion
 
 namespace Dt.Base.TreeViews
@@ -35,6 +37,21 @@ namespace Dt.Base.TreeViews
         /// 面板最大尺寸，宽高始终不为无穷大！
         /// </summary>
         Size _maxSize = Size.Empty;
+
+        /// <summary>
+        /// 以滚动栏为参照物，面板与滚动栏的水平距离，面板在右侧时为正数
+        /// </summary>
+        double _deltaX;
+
+        /// <summary>
+        /// 以滚动栏为参照物，面板与滚动栏的垂直距离，面板在下方时为正数
+        /// </summary>
+        double _deltaY;
+        
+        /// <summary>
+        /// 数据与顶部的间距，因为筛选框、工具栏占用
+        /// </summary>
+        double _topMargin;
         #endregion
 
         public TvPanel(Tv p_owner)
@@ -153,21 +170,57 @@ namespace Dt.Base.TreeViews
         #region 测量布局
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (Children.Count == 0)
+            if (_owner.View == null)
                 return new Size();
 
-            return _owner.IsVirtualized ? MeasureVirRows() : MeasureRealRows();
+            // 虚拟行/真实行
+            Size size = _owner.IsVirtualized ? MeasureVirRows() : MeasureRealRows();
+
+            // 筛选框工具栏
+            _topMargin = 0;
+            if (_filterBox != null)
+            {
+                _filterBox.Measure(_maxSize);
+                _topMargin = _filterBox.DesiredSize.Height;
+                size.Height += _topMargin;
+            }
+            return size;
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            if (Children.Count == 0)
+            if (_owner.View == null)
                 return finalSize;
 
+            if (!_owner.IsInnerScroll)
+            {
+                // 外部有ScrollViewer时
+                // 面板与ScrollViewer的相对距离，以滚动栏为参照物，面板在右下方时为正数
+                // uno4.1.8 后和WinUI一致！！！之前uno中面板与Scroll的相对距离始终为滚动栏未移动时之间的距离！
+                if (_owner.Scroll.ActualHeight > 0)
+                {
+                    // 当切换win时，再次显示Scroll时ActualHeight为0，计算相对位置错误！采用切换前的相对位置
+                    var pt = TransformToVisual(_owner.Scroll).TransformPoint(new Point());
+                    _deltaX = pt.X;
+                    _deltaY = pt.Y;
+                }
+            }
+            else
+            {
+                // 内置滚动栏时，垂直距离始终 <= 0
+                _deltaX = -_owner.Scroll.HorizontalOffset;
+                _deltaY = -_owner.Scroll.VerticalOffset;
+            }
+            
             if (_owner.IsVirtualized)
                 ArrangeVirRows(finalSize);
             else
                 ArrangeRealRows(finalSize);
+
+            // 宽度采用_maxSize.Width，若finalSize.Width造成iOS上死循环！
+            double top = _deltaY > 0 ? 0 : -_deltaY;
+            if (_filterBox != null)
+                _filterBox.Arrange(new Rect(-_deltaX, top, _maxSize.Width, _filterBox.DesiredSize.Height));
             return finalSize;
         }
         #endregion
@@ -186,34 +239,20 @@ namespace Dt.Base.TreeViews
 
         void ArrangeVirRows(Size p_finalSize)
         {
-            double deltaY = 0;
-            if (!_owner.IsInnerScroll)
-            {
-                // 外部有ScrollViewer时
-                // 面板与ScrollViewer的相对距离，以滚动栏为参照物，面板在右下方时为正数
-                // uno4.1.8 后和WinUI一致！！！之前uno中面板与Scroll的相对距离始终为滚动栏未移动时之间的距离！
-                if (_owner.Scroll.ActualHeight > 0)
-                {
-                    // 当切换win时，再次显示Scroll时ActualHeight为0，计算相对位置错误！采用切换前的相对位置
-                    var pt = TransformToVisual(_owner.Scroll).TransformPoint(new Point());
-                    deltaY = pt.Y;
-                }
-            }
-            else
-            {
-                // 内置滚动栏时，垂直距离始终 <= 0
-                deltaY = -_owner.Scroll.VerticalOffset;
-            }
-
+            int rowCount = Children.Count;
+            if (_filterBox != null)
+                rowCount--;
+            
             // 无数据时，也要重新布局
             if (_owner.RootItems.Count == 0
                 || _rowHeight == 0
-                || deltaY >= _maxSize.Height       // 面板在滚动栏下方外部
-                || deltaY <= -p_finalSize.Height)  // 面板在滚动栏上方外部
+                || _deltaY >= _maxSize.Height       // 面板在滚动栏下方外部
+                || _deltaY <= -p_finalSize.Height)  // 面板在滚动栏上方外部
             {
-                foreach (var elem in Children)
+                // 避免把_filterBox隐藏
+                for (int i = 0; i < rowCount; i++)
                 {
-                    ((UIElement)elem).Arrange(Res.HideRect);
+                    ((UIElement)Children[i]).Arrange(Res.HideRect);
                 }
                 return;
             }
@@ -222,19 +261,19 @@ namespace Dt.Base.TreeViews
             bool hasNext = true;
 
             // 面板可见，在滚动栏下方，按正常顺序布局
-            if (deltaY >= 0 && deltaY < _maxSize.Height)
+            if (_deltaY >= 0 && _deltaY < _maxSize.Height)
             {
-                int iDataRow = Children.Count;
+                int iDataRow = rowCount;
                 tvItems = _owner.RootItems.GetExpandedItems().GetEnumerator();
-                for (int i = 0; i < Children.Count; i++)
+                for (int i = 0; i < rowCount; i++)
                 {
                     var item = (TvPanelItem)Children[i];
-                    double top = i * _rowHeight;
+                    double top = i * _rowHeight + _topMargin;
                     if (hasNext)
                         hasNext = tvItems.MoveNext();
 
                     // 数据行已结束 或 剩下行不可见，结束布局
-                    if (deltaY + top > _maxSize.Height || !hasNext)
+                    if (_deltaY + top > _maxSize.Height || !hasNext)
                     {
                         iDataRow = i;
                         break;
@@ -247,9 +286,9 @@ namespace Dt.Base.TreeViews
                 tvItems.Dispose();
 
                 // 将剩余的虚拟行布局到空区域
-                if (iDataRow < Children.Count)
+                if (iDataRow < rowCount)
                 {
-                    for (int i = iDataRow; i < Children.Count; i++)
+                    for (int i = iDataRow; i < rowCount; i++)
                     {
                         ((UIElement)Children[i]).Arrange(Res.HideRect);
                     }
@@ -261,17 +300,17 @@ namespace Dt.Base.TreeViews
             // 面板顶部超出滚动栏 并且 没有整个面板都超出，此时deltaY为负数
 
             // 页面偏移量
-            double offset = deltaY % _pageHeight;
+            double offset = _deltaY % _pageHeight;
             // 最顶部的数据行索引
-            int iRow = (int)Math.Floor(-deltaY / _rowHeight);
+            int iRow = (int)Math.Floor(-_deltaY / _rowHeight);
             // 最顶部的虚拟行索引
-            int iVirRow = iRow % Children.Count;
+            int iVirRow = iRow % rowCount;
             // 页面顶部偏移
-            double deltaTop = -deltaY + offset;
+            double deltaTop = -_deltaY + offset + _topMargin;
             // 跳过不显示的节点
             tvItems = _owner.RootItems.GetExpandedItems().Skip(iRow).GetEnumerator();
 
-            for (int i = 0; i < Children.Count; i++)
+            for (int i = 0; i < rowCount; i++)
             {
                 var item = (TvPanelItem)Children[iVirRow];
                 if (hasNext)
@@ -291,7 +330,7 @@ namespace Dt.Base.TreeViews
                 }
 
                 iVirRow++;
-                if (iVirRow >= Children.Count)
+                if (iVirRow >= rowCount)
                 {
                     // 虚拟行放入下页
                     deltaTop += _pageHeight;
@@ -357,6 +396,7 @@ namespace Dt.Base.TreeViews
         {
             ArrangeInfo info = new ArrangeInfo();
             info.FinalSize = p_finalSize;
+            info.Top = _topMargin;
             foreach (var item in _owner.RootItems)
             {
                 var elem = (UIElement)Children[info.Index];
@@ -403,6 +443,76 @@ namespace Dt.Base.TreeViews
         }
         #endregion
 
+        #region FilterBox
+        TextBox _filterBox;
+        DispatcherTimer _filterTimer;
+
+        void LoadFilterBox()
+        {
+            if (_owner.FilterCfg == null)
+                return;
+
+            if (_filterBox == null)
+            {
+                _filterBox = _owner.FilterCfg.FilterBox;
+                _filterBox.TextChanged += OnTextChanged;
+                // android只支持KeyUp，只在enter时触发！
+                _filterBox.KeyUp += OnTextKeyUp;
+                Children.Add(_filterBox);
+            }
+        }
+
+        void RemoveFilterBox()
+        {
+            // 非虚拟行或有分组时数据变化会清除所以元素
+            if (_filterBox != null)
+            {
+                _filterBox.TextChanged -= OnTextChanged;
+                _filterBox.KeyUp -= OnTextKeyUp;
+                if (_filterTimer != null)
+                {
+                    _filterTimer.Stop();
+                    _filterTimer.Tick -= OnTimerTick;
+                    _filterTimer = null;
+                }
+                _filterBox = null;
+            }
+        }
+
+        void OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_owner.FilterCfg.IsRealtime)
+                StartTimer();
+        }
+
+        void StartTimer()
+        {
+            if (_filterTimer == null)
+            {
+                _filterTimer = new DispatcherTimer();
+                _filterTimer.Interval = TimeSpan.FromMilliseconds(300);
+                _filterTimer.Tick += OnTimerTick;
+            }
+            _filterTimer.Start();
+        }
+
+        void OnTimerTick(object sender, object e)
+        {
+            _filterTimer.Stop();
+            _owner.ApplyFilterFlag();
+        }
+
+        void OnTextKeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            // android只支持KeyUp，只在enter时触发！
+            if (e.Key == VirtualKey.Enter)
+            {
+                e.Handled = true;
+                _owner.ApplyFilterFlag();
+            }
+        }
+        #endregion
+
         #region 内部方法
         /// <summary>
         /// 加载虚拟模式的所有行
@@ -442,6 +552,8 @@ namespace Dt.Base.TreeViews
                 }
             }
             _initVirRow = true;
+
+            LoadFilterBox();
         }
 
         /// <summary>
@@ -457,6 +569,7 @@ namespace Dt.Base.TreeViews
                     Children.Add(new TvPanelItem(_owner, item));
                     AddChildRows(item);
                 }
+                LoadFilterBox();
             }
         }
 
@@ -478,6 +591,7 @@ namespace Dt.Base.TreeViews
         void ClearAllRows()
         {
             Children.Clear();
+            RemoveFilterBox();
             _initVirRow = false;
         }
 

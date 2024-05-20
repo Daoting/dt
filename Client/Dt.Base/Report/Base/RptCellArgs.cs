@@ -56,5 +56,15 @@ namespace Dt.Base
         {
             get { return _inst.Text; }
         }
+        
+        /// <summary>
+        /// 当前文本项实例
+        /// </summary>
+        public RptTextInst ItemInst => _inst;
+
+        /// <summary>
+        /// 当前文本项模板
+        /// </summary>
+        public RptText Item => (RptText)_inst.Item;
     }
 }

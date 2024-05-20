@@ -17,7 +17,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 表格容器内的行
     /// </summary>
-    internal class RptTblPartRow : RptItemBase
+    public class RptTblPartRow : RptItemBase
     {
         public RptTblPartRow(RptTblPart p_part)
         {

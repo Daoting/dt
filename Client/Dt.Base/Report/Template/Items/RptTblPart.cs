@@ -15,9 +15,9 @@ using System.Xml;
 namespace Dt.Base.Report
 {
     /// <summary>
-    /// 表格容器基类，表头、表体、表尾、分组头尾
+    /// 表格容器基类，列头、表体、列尾、分组头尾
     /// </summary>
-    internal abstract class RptTblPart : RptItemBase
+    public abstract class RptTblPart : RptItemBase
     {
         public RptTblPart(RptTable p_table)
         {
@@ -56,25 +56,22 @@ namespace Dt.Base.Report
         {
             get
             {
-                if (this is RptTblHeader)
+                if (this is RptTblColHeader)
                 {
                     return Table.Row;
                 }
                 else if (this is RptTblRow)
                 {
                     int count = 0;
-                    if (Table.Header != null)
+                    if (Table.ColHeader != null)
                     {
-                        count += Table.Header.Rows.Count;
+                        count += Table.ColHeader.Rows.Count;
                     }
                     if (Table.Groups != null)
                     {
                         foreach (RptTblGroup grp in Table.Groups)
                         {
-                            if (grp.Header != null)
-                            {
-                                count += grp.Header.Rows.Count;
-                            }
+                            count += grp.Rows.Count;
                         }
                     }
                     return Table.Row + count;
@@ -82,22 +79,15 @@ namespace Dt.Base.Report
                 else if (this is RptTblFooter)
                 {
                     int count = 0;
-                    if (Table.Header != null)
+                    if (Table.ColHeader != null)
                     {
-                        count += Table.Header.Rows.Count;
+                        count += Table.ColHeader.Rows.Count;
                     }
                     if (Table.Groups != null)
                     {
                         foreach (RptTblGroup grp in Table.Groups)
                         {
-                            if (grp.Header != null)
-                            {
-                                count += grp.Header.Rows.Count;
-                            }
-                            if (grp.Footer != null)
-                            {
-                                count += grp.Footer.Rows.Count;
-                            }
+                            count += grp.Rows.Count;
                         }
                     }
                     if (Table.Body != null)
@@ -106,54 +96,25 @@ namespace Dt.Base.Report
                     }
                     return Table.Row + count;
                 }
-                else if (this is RptTblGroupHeader)
+                else if (this is RptTblGroup)
                 {
                     int count = 0;
-                    if (Table.Header != null)
+                    if (Table.ColHeader != null)
                     {
-                        count += Table.Header.Rows.Count;
+                        count += Table.ColHeader.Rows.Count;
                     }
                     foreach (RptTblGroup grp in Table.Groups) 
                     {
-                        if (grp.Header == this)
+                        if (grp == this)
                             break;
-                        if (grp.Header != null) 
+                        if (grp != null) 
                         {
-                            count += grp.Header.Rows.Count;
+                            count += grp.Rows.Count;
                         }
                     }
                     return Table.Row + count;
                 }
-                else
-                {
-                    int count = 0;
-                    if (Table.Header != null)
-                    {
-                        count += Table.Header.Rows.Count;
-                    }
-                    foreach (RptTblGroup grp in Table.Groups)
-                    {
-                        if (grp.Header != null)
-                        {
-                            count += grp.Header.Rows.Count;
-                        }
-                    }
-                    if (Table.Body != null)
-                    {
-                        count += Table.Body.Rows.Count;
-                    }
-                    for (int i = Table.Groups.Count - 1; i >= 0; i--) 
-                    {
-                        RptTblGroup grp = Table.Groups[i];
-                        if (grp.Footer == this)
-                            break;
-                        if (grp.Footer != null) 
-                        {
-                            count += grp.Footer.Rows.Count;
-                        }
-                    }
-                        return Table.Row + count;
-                }
+                return Table.Row;
             }
             set { }
         }

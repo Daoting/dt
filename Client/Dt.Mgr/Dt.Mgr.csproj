@@ -6,6 +6,7 @@
 
     <ItemGroup>
         <Using Include="Dt.Base" />
+        <Using Include="Dt.Base.SelectionMode" Alias="SelectionMode" />
     </ItemGroup>
     
     <!-- 停止wasm的WebRtc -->
@@ -29,5 +30,6 @@
     <ItemGroup>
         <Content Remove="Chat\WebRTC\WebRTC通信流程.png" />
         <Content Remove="Rbac\Domain\rbac.png" />
+        <None Include="Rbac\Domain\rbac.png" />
     </ItemGroup>
 </Project>

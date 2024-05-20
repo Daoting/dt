@@ -870,11 +870,17 @@ namespace Dt.Base
             Tabs tabs = (Tabs)GetValue(MainTabsProperty);
             if (tabs != null)
             {
-                // 上次内容为Tab时不需清除内容
-                if (tabs.Items.Count > 0 && tabs.Tag != _mainTabFlag)
+                if (tabs.Items.Count > 0)
                 {
-                    // 清除内容，以便下次再添加
-                    tabs.Items[0].Content = null;
+                    // 上次内容为相同的Tab时无需增加
+                    if (tabs.Tag == _mainTabFlag && tabs.Items[0] == p_tab)
+                        return;
+                    
+                    if (tabs.Tag != _mainTabFlag)
+                    {
+                        // 清除内容，以便下次再添加
+                        tabs.Items[0].Content = null;
+                    }
                 }
                 CenterItem.Items.Remove(tabs);
                 tabs.Items.Clear();

@@ -19,7 +19,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 矩阵行头列头的层次
     /// </summary>
-    internal class RptMtxLevel : RptItemBase
+    public class RptMtxLevel : RptItemBase
     {
         #region 内部属性
         readonly RptMtxHeader _header;

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI;
 #endregion
 
 namespace Dt.Base.Report
@@ -26,26 +27,36 @@ namespace Dt.Base.Report
         public override void Undo(object p_args)
         {
             InsertRptTblColCmdArgs args = (InsertRptTblColCmdArgs)p_args;
-            RptTable rptTab = args.Table;           
+            RptTable rptTab = args.Table;
             int index = args.Index;
             RmvTblCells(rptTab, index);
             rptTab.Data["colspan"] = rptTab.ColSpan - 1;
             rptTab.Update(true);
         }
 
-        void BuildCells(RptTblPart p_part, int p_index)
+        public static void BuildCells(RptTblPart p_part, int p_index, bool p_isTitle)
         {
-            if (p_part != null)
+            if (p_part == null)
+                return;
+
+            foreach (RptTblPartRow r in p_part.Rows)
             {
-                foreach (RptTblPartRow r in p_part.Rows)
+                RptText txt = new RptText(r);
+                txt.Row = r.Row;
+                txt.RowSpan = 1;
+                txt.Col = p_index;
+                txt.ColSpan = 1;
+
+                if (p_isTitle)
                 {
-                    RptText txt = new RptText(r);
-                    txt.Row = r.Row;
-                    txt.RowSpan = 1;
-                    txt.Col = p_index;
-                    txt.ColSpan = 1;
-                    r.Cells.Insert(p_index, txt);
+                    txt.Horalign = CellHorizontalAlignment.Center;
+                    txt.Background = Color.FromArgb(0xff, 0xE0, 0xE0, 0xE0);
                 }
+
+                if (p_index >= r.Cells.Count)
+                    r.Cells.Add(txt);
+                else
+                    r.Cells.Insert(p_index, txt);
             }
         }
 
@@ -65,15 +76,14 @@ namespace Dt.Base.Report
             if (p_table == null)
                 return;
 
-            BuildCells(p_table.Header, p_index);
-            BuildCells(p_table.Body, p_index);
-            BuildCells(p_table.Footer, p_index);
+            BuildCells(p_table.ColHeader, p_index, true);
+            BuildCells(p_table.Body, p_index, false);
+            BuildCells(p_table.ColFooter, p_index, true);
             if (p_table.Groups != null && p_table.Groups.Count > 0)
             {
                 foreach (RptTblGroup grp in p_table.Groups)
                 {
-                    BuildCells(grp.Header, p_index);
-                    BuildCells(grp.Footer, p_index);
+                    BuildCells(grp, p_index, true);
                 }
             }
         }
@@ -83,17 +93,16 @@ namespace Dt.Base.Report
             if (p_table == null)
                 return;
 
-            RemoveCells(p_table.Header, p_index);
+            RemoveCells(p_table.ColHeader, p_index);
             if (p_table.Groups != null && p_table.Groups.Count > 0)
             {
                 foreach (RptTblGroup grp in p_table.Groups)
                 {
-                    RemoveCells(grp.Header, p_index);
-                    RemoveCells(grp.Footer, p_index);
+                    RemoveCells(grp, p_index);
                 }
             }
             RemoveCells(p_table.Body, p_index);
-            RemoveCells(p_table.Footer, p_index);
+            RemoveCells(p_table.ColFooter, p_index);
         }
     }
 
@@ -103,9 +112,7 @@ namespace Dt.Base.Report
         {
             DeleRptTblColCmdArgs args = (DeleRptTblColCmdArgs)p_args;
             RptTable rptTab = args.Table;
-            int index = args.Index;
-            args.Dict.Clear();
-            RmvTblCells(rptTab, index, args.Dict);
+            RmvTblCells(rptTab, args.Index);
             rptTab.Data["colspan"] = rptTab.ColSpan - 1;
             rptTab.Update(true);
             return null;
@@ -115,67 +122,62 @@ namespace Dt.Base.Report
         {
             DeleRptTblColCmdArgs args = (DeleRptTblColCmdArgs)p_args;
             RptTable rptTab = args.Table;
-            int index = args.Index;
-            InsertTblCells(rptTab, index, args.Dict);
+            InsertTblCells(rptTab, args.Index);
             rptTab.Data["colspan"] = rptTab.ColSpan + 1;
             rptTab.Update(false);
         }
 
-        void RemoveCells(RptTblPart p_part, int p_index, Dictionary<string, RptText> p_dict, string p_pre)
+        void RemoveCells(RptTblPart p_part, int p_index)
         {
-            if (p_part != null)
+            if (p_part == null)
+                return;
+
+            for (int i = 0; i < p_part.Rows.Count; i++)
             {
-                for (int i = 0; i < p_part.Rows.Count; i++)
+                var row = p_part.Rows[i];
+                int cur = 0;
+                for (int j = 0; j < row.Cells.Count; j++)
                 {
-                    RptText text = p_part.Rows[i].Cells[p_index];
-                    p_dict.Add(p_pre + i.ToString(), text);
-                    p_part.Rows[i].Cells.RemoveAt(p_index);
+                    RptText text = row.Cells[j];
+                    cur += text.ColSpan;
+                    if (cur > p_index)
+                    {
+                        if (text.ColSpan == 1)
+                            row.Cells.RemoveAt(j);
+                        else
+                            text.ColSpan--;
+                        break;
+                    }
                 }
             }
         }
 
-        void InsertCells(RptTblPart p_part, int p_index, Dictionary<string, RptText> p_dict, string p_pre)
+        void RmvTblCells(RptTable p_table, int p_index)
         {
-            if (p_part != null)
-            {
-                for (int i = 0; i < p_part.Rows.Count; i++)
-                {
-                    RptText text = p_dict[p_pre + i.ToString()];
-                    p_part.Rows[i].Cells.Insert(p_index, text);
-                }
-            }
-        }
-        
-        void RmvTblCells(RptTable p_table, int p_index, Dictionary<string, RptText> p_dict)
-        {
-            RemoveCells(p_table.Header, p_index, p_dict, "header");
+            RemoveCells(p_table.ColHeader, p_index);
             if (p_table.Groups != null && p_table.Groups.Count > 0)
             {
                 for (int i = 0; i < p_table.Groups.Count; i++)
                 {
-                    RptTblGroup grp = p_table.Groups[i];
-                    RemoveCells(grp.Header, p_index, p_dict, "grpHeader" + i.ToString());
-                    RemoveCells(grp.Footer, p_index, p_dict, "grpFooter" + i.ToString());
+                    RemoveCells(p_table.Groups[i], p_index);
                 }
             }
-            RemoveCells(p_table.Body, p_index, p_dict, "body");
-            RemoveCells(p_table.Footer, p_index, p_dict, "footer");
+            RemoveCells(p_table.Body, p_index);
+            RemoveCells(p_table.ColFooter, p_index);
         }
 
-        void InsertTblCells(RptTable p_table, int p_index, Dictionary<string, RptText> p_dict)
+        void InsertTblCells(RptTable p_table, int p_index)
         {
-            InsertCells(p_table.Header, p_index, p_dict, "header");
+            InsertTblColCmd.BuildCells(p_table.ColHeader, p_index, true);
             if (p_table.Groups != null && p_table.Groups.Count > 0)
             {
                 for (int i = 0; i < p_table.Groups.Count; i++)
                 {
-                    RptTblGroup grp = p_table.Groups[i];
-                    InsertCells(grp.Header, p_index, p_dict, "grpHeader" + i.ToString());
-                    InsertCells(grp.Footer, p_index, p_dict, "grpFooter" + i.ToString());
+                    InsertTblColCmd.BuildCells(p_table.Groups[i], p_index, true);
                 }
             }
-            InsertCells(p_table.Body, p_index, p_dict, "body");
-            InsertCells(p_table.Footer, p_index, p_dict, "footer");
+            InsertTblColCmd.BuildCells(p_table.Body, p_index, false);
+            InsertTblColCmd.BuildCells(p_table.ColFooter, p_index, true);
         }
     }
 
@@ -195,14 +197,11 @@ namespace Dt.Base.Report
 
     internal class DeleRptTblColCmdArgs
     {
-        public DeleRptTblColCmdArgs(RptTable p_table, int p_index, Dictionary<string, RptText> p_dict)
+        public DeleRptTblColCmdArgs(RptTable p_table, int p_index)
         {
-            Dict = p_dict;
             Index = p_index;
             Table = p_table;
         }
-
-        public Dictionary<string, RptText> Dict { get; }
 
         public int Index { get; }
 

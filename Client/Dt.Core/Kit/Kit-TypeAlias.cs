@@ -120,6 +120,16 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 返回标签类型标记的所有类型列表
+        /// </summary>
+        /// <param name="p_attrType">标签类型</param>
+        /// <returns></returns>
+        public static IEnumerable<Type> GetAllTypesByAttrType(Type p_attrType)
+        {
+            return _typeAlias.GetAllTypesByAttrType(p_attrType);
+        }
+        
+        /// <summary>
         /// 发布本地事件
         /// </summary>
         /// <param name="p_event">事件对象，禁止事件为泛型</param>

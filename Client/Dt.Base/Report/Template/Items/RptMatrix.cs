@@ -19,7 +19,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 矩阵
     /// </summary>
-    internal class RptMatrix : RptItem
+    public class RptMatrix : RptItem
     {
         #region 构造
         public RptMatrix(RptPart p_owner)

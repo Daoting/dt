@@ -20,7 +20,7 @@ using Microsoft.UI.Xaml.Media;
 
 namespace Dt.Base.Report
 {
-    internal abstract class RptOutputInst : RptItemInst
+    public abstract class RptOutputInst : RptItemInst
     {
         protected RptPage _page;
 

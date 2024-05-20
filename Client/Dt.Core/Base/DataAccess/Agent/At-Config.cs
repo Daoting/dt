@@ -130,14 +130,10 @@ namespace Dt.Core
 
         internal static void InitConfig()
         {
-#if DOTNET
+#if WASM
             // wasm不支持直连数据库，不使用Config.json，在Config.js配置
-            if (Kit.AppType == AppType.Wasm)
-            {
-                InitWasmConfig();
-                return;
-            }
-#endif
+            InitWasmConfig();
+#else
 
             string config;
 #if ANDROID
@@ -262,11 +258,12 @@ namespace Dt.Core
             string fw = _originAI == null ? "单机架构" : (_originAI.Type == AccessType.Service ? "多层服务架构" : $"两层架构({((DbAccessInfo)_originAI).DbType})");
             Kit.Debug(fw);
 #endif
+#endif
         }
 
         static void InitWasmConfig()
         {
-#if DOTNET
+#if WASM
             // wasm不支持直连数据库，因启动时读取配置，不使用Config.json，使用Config.js
             // UnoAppManifest.displayName 在AppManifest.js中设置
             // DtConfig.server 在Config.js配置，AppManifest.js每次会动态生成，无法在其设置

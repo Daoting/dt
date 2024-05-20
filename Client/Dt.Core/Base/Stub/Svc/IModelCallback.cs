@@ -23,12 +23,5 @@ namespace Dt.Core
         /// <param name="p_tblAttr">实体类属性标签</param>
         /// <returns></returns>
         Task<TableSchema> GetTableSchema(TblAttribute p_tblAttr);
-
-        /// <summary>
-        /// 读取模板内容，默认取模型库的 OmReport
-        /// </summary>
-        /// <param name="p_rptName">报表名称</param>
-        /// <returns></returns>
-        Task<string> GetReportTemplate(string p_rptName);
     }
 }

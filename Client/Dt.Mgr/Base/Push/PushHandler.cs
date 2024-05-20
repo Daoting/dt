@@ -11,7 +11,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using Dt.Mgr.Chat;
-#if !DOTNET
+#if WIN || ANDROID || IOS
 using Microsoft.Maui.Devices;
 #endif
 #endregion
@@ -48,16 +48,7 @@ namespace Dt.Mgr
                 return;
             }
 
-#if DOTNET
-            Dict dt = new Dict
-            {
-                { "sessionid", _sessionID },
-                { "model", Kit.AppType.ToString() },
-                { "name", "DtApp" },
-                { "platform", Kit.AppType.ToString() },
-                { "version", "11.0" },
-            };
-#else
+#if WIN || ANDROID || IOS
             Dict dt = new Dict
             {
                 { "sessionid", _sessionID },
@@ -65,6 +56,15 @@ namespace Dt.Mgr
                 { "name", DeviceInfo.Name },
                 { "platform", DeviceInfo.Platform.ToString() },
                 { "version", DeviceInfo.VersionString },
+            };
+#else
+            Dict dt = new Dict
+            {
+                { "sessionid", _sessionID },
+                { "model", Kit.AppType.ToString() },
+                { "name", "DtApp" },
+                { "platform", Kit.AppType.ToString() },
+                { "version", "11.0" },
             };
 #endif
 

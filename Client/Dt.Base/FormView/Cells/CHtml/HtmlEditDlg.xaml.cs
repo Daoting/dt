@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Core;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using System;
@@ -20,48 +21,51 @@ namespace Dt.Base.FormView
     {
         const string _insertVideo = "<video src=\"../../{0}\" poster=\"../../{1}\" preload=\"none\" width=\"640\" height=\"360\" controls=\"controls\"></video>";
         const string _insertImg = "../../{0}";
-        IHtmlEditHost _host;
+        CHtml _owner;
         bool _saved;
 
-        public HtmlEditDlg()
+        public HtmlEditDlg(CHtml p_owner)
         {
             InitializeComponent();
-
+            _owner = p_owner;
             if (Type.GetType(FileItem.SelectFileDlgType) == null)
             {
                 _menu.Hide("图片", "视频");
             }
         }
 
-        public void ShowDlg(IHtmlEditHost p_host)
+        public void ShowDlg()
         {
-            _host = p_host;
             if (!Kit.IsPhoneUI)
             {
                 Height = Kit.ViewHeight - 140;
                 Width = Math.Min(900, Kit.ViewWidth - 200);
                 ShowVeil = true;
             }
-            Show();
 
-            _wv.Source = new Uri($"{At.GetSvcUrl("fsm")}/drv/editor/html/default.html");
-            _wv.NavigationCompleted += OnNavigationCompleted;
+            if (_owner.ReadOnlyBinding)
+            {
+                Menu.Visibility = Visibility.Collapsed;
+                _box.IsReadOnly = true;
+            }
+            else
+            {
+                Menu.Visibility = Visibility.Visible;
+                _box.IsReadOnly = false;
+            }
+            Show();
+            _box.SetHtml(_owner.CurrentHtml);
         }
 
-        async void OnNavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
+        protected override void OnClosed(bool p_result)
         {
-            _wv.NavigationCompleted -= OnNavigationCompleted;
-            if (!string.IsNullOrEmpty(_host.CurrentHtml))
-            {
-                // 初始化html
-                await _wv.InvokeScriptAsync("setHtml", new string[] { _host.CurrentHtml });
-            }
+            _box.Close();
         }
 
         async void OnSave(Mi e)
         {
-            var html = await _wv.InvokeScriptAsync("getHtml", null);
-            bool suc = await _host.SaveHtml(html);
+            var html = await _box.GetHtml();
+            bool suc = await _owner.SaveHtml(html);
             if (suc)
             {
                 _saved = true;
@@ -78,7 +82,7 @@ namespace Dt.Base.FormView
                 {
                     int index = file.IndexOf("\",");
                     if (index > 2)
-                        await _wv.InvokeScriptAsync("insertImage", new string[] { string.Format(_insertImg, file.Substring(2, index - 2)) });
+                        await _box.InsertImg(string.Format(_insertImg, file.Substring(2, index - 2)));
                 }
             }
         }
@@ -95,7 +99,7 @@ namespace Dt.Base.FormView
                     {
                         string id = file.Substring(2, index - 2);
                         string thumb = id + "-t.jpg";
-                        await _wv.InvokeScriptAsync("insertVideo", new string[] { string.Format(_insertVideo, id, thumb) });
+                        await _box.InsertVideo(string.Format(_insertVideo, id, thumb));
                     }
                 }
             }
@@ -105,8 +109,8 @@ namespace Dt.Base.FormView
         {
             if (!_saved)
             {
-                var html = await _wv.InvokeScriptAsync("getHtml", null);
-                if (_host.CurrentHtml == html)
+                var html = await _box.GetHtml();
+                if (_owner.CurrentHtml == html)
                     return true;
 
                 return await Kit.Confirm("关闭将丢失已修改的内容，确认要关闭？");

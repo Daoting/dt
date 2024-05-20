@@ -15,9 +15,9 @@ namespace Dt.Base.Report
 {
     public sealed partial class HeaderFooterMenu : Menu
     {
-        RptDesignWin _owner;
+        RptDesignHome _owner;
 
-        public HeaderFooterMenu(RptDesignWin p_owner)
+        public HeaderFooterMenu(RptDesignHome p_owner)
         {
             InitializeComponent();
             _owner = p_owner;

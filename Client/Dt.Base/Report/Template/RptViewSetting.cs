@@ -17,14 +17,13 @@ namespace Dt.Base.Report
     /// <summary>
     /// 默认报表预览窗口的设置
     /// </summary>
-    internal class RptViewSetting
+    public class RptViewSetting
     {
         public RptViewSetting(RptRoot p_root)
         {
             Root = p_root;
             var row = new Row();
             row.Add<string>("script");
-            row.Add("showsearchform", true);
             row.Add<bool>("autoquery");
 
             row.Add<bool>("showcolheader");
@@ -35,8 +34,8 @@ namespace Dt.Base.Report
             row.Add<bool>("showcontextmenu");
             row.Add<bool>("showselectionmenu");
 
-            row.Add<bool>("showquery");
             row.Add("showexport", true);
+            row.Add("showtoggleview", true);
             row.Add("showprint", true);
             row.Add<bool>("colheaderitem");
             row.Add<bool>("rowheaderitem");
@@ -64,16 +63,7 @@ namespace Dt.Base.Report
             get { return Data.Str("script"); }
             set { Data["script"] = value; }
         }
-
-        /// <summary>
-        /// 获取设置是否显示报表查询面板，默认true
-        /// </summary>
-        public bool ShowSearchForm
-        {
-            get { return Data.Bool("showsearchform"); }
-            set { Data["showsearchform"] = value; }
-        }
-
+        
         /// <summary>
         /// 获取设置初次加载时是否自动执行查询，前提是Params参数值提供完备，默认false
         /// </summary>
@@ -136,16 +126,7 @@ namespace Dt.Base.Report
             get { return Data.Bool("showselectionmenu"); }
             set { Data["showselectionmenu"] = value; }
         }
-
-        /// <summary>
-        /// 是否显示查询菜单项，默认false
-        /// </summary>
-        public bool ShowQuery
-        {
-            get { return Data.Bool("showquery"); }
-            set { Data["showquery"] = value; }
-        }
-
+        
         /// <summary>
         /// 是否显示导出菜单项，默认true
         /// </summary>
@@ -153,6 +134,15 @@ namespace Dt.Base.Report
         {
             get { return Data.Bool("showexport"); }
             set { Data["showexport"] = value; }
+        }
+
+        /// <summary>
+        /// 是否显示切换报表格式菜单项，默认true
+        /// </summary>
+        public bool ShowToggleView
+        {
+            get { return Data.Bool("showtoggleview"); }
+            set { Data["showtoggleview"] = value; }
         }
 
         /// <summary>
@@ -203,10 +193,9 @@ namespace Dt.Base.Report
             string val = Data.Str("script");
             if (!string.IsNullOrEmpty(val))
                 p_writer.WriteAttributeString("script", val);
-            if (!ShowSearchForm)
-                p_writer.WriteAttributeString("showsearchform", "False");
             if (AutoQuery)
                 p_writer.WriteAttributeString("autoquery", "True");
+
             if (ShowColHeader)
                 p_writer.WriteAttributeString("showcolheader", "True");
             if (ShowRowHeader)
@@ -221,10 +210,10 @@ namespace Dt.Base.Report
             if (ShowSelectionMenu)
                 p_writer.WriteAttributeString("showselectionmenu", "True");
 
-            if (ShowQuery)
-                p_writer.WriteAttributeString("showquery", "True");
             if (!ShowExport)
                 p_writer.WriteAttributeString("showexport", "False");
+            if (!ShowToggleView)
+                p_writer.WriteAttributeString("showtoggleview", "False");
             if (!ShowPrint)
                 p_writer.WriteAttributeString("showprint", "False");
             if (ShowColHeaderItem)

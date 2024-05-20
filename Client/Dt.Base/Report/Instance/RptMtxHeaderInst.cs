@@ -21,7 +21,7 @@ using System.Linq;
 
 namespace Dt.Base.Report
 {
-    internal class RptMtxHeaderInst : RptItemInst
+    public class RptMtxHeaderInst : RptItemInst
     {
         public RptMtxHeaderInst(RptItemBase p_item)
             : base(p_item)

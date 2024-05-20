@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Microsoft.UI.Xaml.Media;
+using System.Reflection;
 using Windows.UI.Text;
 #endregion
 
@@ -19,14 +20,12 @@ namespace Dt.Base
     public class CallArgs
     {
         #region 成员变量
-        ViewItem _item;
         Dot _dot;
         #endregion
 
         #region 构造方法
-        internal CallArgs(ViewItem p_item, Dot p_dot)
+        internal CallArgs(Dot p_dot)
         {
-            _item = p_item;
             _dot = p_dot;
         }
         #endregion
@@ -35,12 +34,12 @@ namespace Dt.Base
         /// <summary>
         /// 获取行的数据源
         /// </summary>
-        public object Data => _item.Data;
+        public object Data => _dot.Data;
 
         /// <summary>
         /// 获取Row数据源
         /// </summary>
-        public Row Row => _item.Row;
+        public Row Row => _dot.Data as Row;
 
         /// <summary>
         /// 列名(字段名)
@@ -92,7 +91,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取当前单元格的值
         /// </summary>
-        public object CellVal => _item[_dot.ID];
+        public object CellVal => GetColVal(_dot.ID);
 
         /// <summary>
         /// 获取当前行某列的值
@@ -102,7 +101,25 @@ namespace Dt.Base
         /// <returns>指定类型的值</returns>
         public T GetVal<T>(string p_id)
         {
-            return ObjectEx.To<T>(_item[p_id]);
+            return ObjectEx.To<T>(GetColVal(p_id));
+        }
+
+        object GetColVal(string p_colName)
+        {
+            object val = null;
+            if (_dot.Data is Row dr && dr.Contains(p_colName))
+            {
+                // 从Row取
+                val = dr[p_colName];
+            }
+            else
+            {
+                // 对象属性
+                var pi = _dot.Data.GetType().GetProperty(p_colName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                if (pi != null)
+                    val = pi.GetValue(_dot.Data);
+            }
+            return val;
         }
         #endregion
 
@@ -111,12 +128,7 @@ namespace Dt.Base
         /// 当前单元格的Dot
         /// </summary>
         public Dot Dot => _dot;
-
-        /// <summary>
-        /// 当前行视图
-        /// </summary>
-        public ViewItem ViewItem => _item;
-
+        
         /// <summary>
         /// 获取设置单元格前景画刷
         /// </summary>
@@ -160,6 +172,68 @@ namespace Dt.Base
         {
             get { return _dot.FontSize; }
             set { _dot.FontSize = value; }
+        }
+        #endregion
+
+        #region 异步等待
+        List<Task> _tasks;
+
+        /// <summary>
+        /// 异步等待
+        /// using (e.Wait())
+        /// {
+        ///     await Fun();
+        /// }
+        /// </summary>
+        /// <returns></returns>
+        public IDisposable Wait()
+        {
+            return new Deferral(this);
+        }
+
+        /// <summary>
+        /// 等待外部处理的所有任务都结束，触发事件时内部用
+        /// </summary>
+        public Task EnsureAllCompleted()
+        {
+            if (_tasks == null || _tasks.Count == 0)
+                return Task.CompletedTask;
+            if (_tasks.Count == 1)
+                return _tasks[0];
+            return Task.WhenAll(_tasks);
+        }
+
+        /// <summary>
+        /// 附加多个处理时可能有多个异步等待
+        /// </summary>
+        /// <param name="p_task"></param>
+        void AddTask(Task p_task)
+        {
+            if (_tasks == null)
+                _tasks = new List<Task>();
+            _tasks.Add(p_task);
+        }
+
+        class Deferral : IDisposable
+        {
+            CallArgs _owner;
+            TaskCompletionSource<bool> _taskSrc;
+
+            public Deferral(CallArgs p_owner)
+            {
+                _owner = p_owner;
+                _taskSrc = new TaskCompletionSource<bool>();
+                _owner.AddTask(_taskSrc.Task);
+            }
+
+            public void Dispose()
+            {
+                if (_taskSrc != null && !_taskSrc.Task.IsCompleted)
+                {
+                    _taskSrc.SetResult(true);
+                    _taskSrc = null;
+                }
+            }
         }
         #endregion
     }

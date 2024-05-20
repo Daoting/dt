@@ -9,6 +9,7 @@
 #region 引用命名
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Dt.Base;
 using Dt.Core;
@@ -20,6 +21,7 @@ namespace Dt.Base.Report
 {
     public sealed partial class TextForm : UserControl
     {
+        const string _prefix = ":";
         RptText _item;
         DataSourceDlg _dlgData;
         GlobalParamDlg _dlgGlobal;
@@ -36,6 +38,9 @@ namespace Dt.Base.Report
             {
                 _item = p_item;
                 _fv.Data = _item.Data;
+                var cell = _item.Data.Cells["val"];
+                cell.Changed -= OnValChanged;
+                cell.Changed += OnValChanged;
             }
         }
 
@@ -50,7 +55,7 @@ namespace Dt.Base.Report
                 _dlgData = new DataSourceDlg();
             if (await _dlgData.Show((Button)sender, _item))
             {
-                SaveExpression(_dlgData.GetExpression());
+                SaveExpression(_prefix + _dlgData.GetExpression());
             }
         }
 
@@ -60,7 +65,7 @@ namespace Dt.Base.Report
                 _dlgParam = new ParamSelectionDlg();
             if (await _dlgParam.Show((Button)sender, _item))
             {
-                SaveExpression(_dlgParam.GetExpression());
+                SaveExpression(_prefix + _dlgParam.GetExpression());
             }
         }
 
@@ -70,7 +75,7 @@ namespace Dt.Base.Report
                 _dlgGlobal = new GlobalParamDlg();
             if (await _dlgGlobal.Show((Button)sender))
             {
-                SaveExpression(_dlgGlobal.GetExpression());
+                SaveExpression(_prefix + _dlgGlobal.GetExpression());
             }
         }
 
@@ -80,10 +85,38 @@ namespace Dt.Base.Report
             {
                 string val = _fv.Row.Str("val");
                 if (val == "" || val == RptText.ScriptValue)
-                    _fv.Row["val"] = ":" + exp;
+                    _fv.Row["val"] = exp;
                 else
-                    _fv.Row["val"] = $"{val}\r\n+ {exp}";
+                    _fv.Row["val"] = $"{val}\r\n|| {exp}";
             }
+        }
+
+        void OnValChanged(Cell cell)
+        {
+            _item.ParseVal();
+        }
+
+        async void OnIconVal(object sender, RoutedEventArgs e)
+        {
+            RptIconDlg dlg = new RptIconDlg();
+            if (await dlg.ShowAsync())
+            {
+                var icon = dlg.SelectIcon;
+                _fv.Row["fontfamily"] = "ms-appx:///icon.ttf#DtIcon";
+                _fv.Row["val"] = Res.GetIconChar(icon);
+            }
+        }
+
+        async void OnCallVal(object sender, RoutedEventArgs e)
+        {
+            var val = await ValueCallsDlg.ShowDlg((Button)sender);
+            if (!string.IsNullOrEmpty(val))
+                SaveExpression(val);
+        }
+
+        void OnClearVal(object sender, RoutedEventArgs e)
+        {
+            _item.Val = "";
         }
     }
 }

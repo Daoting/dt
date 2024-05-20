@@ -220,18 +220,9 @@ namespace Dt.Core.Sqlite
             };
 
 
-#if DOTNET
+#if WASM
             // wasm÷– BeginTransaction “Ï≥££°
-            if (Kit.AppType == AppType.Wasm)
-            {
-                await exec();
-            }
-            else
-            {
-                bool suc = await ExecTransaction(exec);
-                if (!suc)
-                    cnt = 0;
-            }
+            await exec();
 #else
             bool suc = await ExecTransaction(exec);
             if (!suc)

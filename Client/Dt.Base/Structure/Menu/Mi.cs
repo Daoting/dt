@@ -598,6 +598,10 @@ namespace Dt.Base
                     ChangeState(MenuItemState.PointerOver);
                 }
             }
+            catch (KnownException)
+            {
+                // 放过 KnownException 类型的异常
+            }
             catch (Exception ex)
             {
                 throw new Exception(string.Format("执行菜单项时异常：{0}", ex.Message));

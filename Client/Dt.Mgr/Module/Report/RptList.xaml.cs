@@ -1,89 +1,128 @@
-#region 文件描述
+﻿#region 文件描述
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2021-09-16 创建
+* 日志: 2024-02-20 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using Dt.Mgr;
-using Dt.Base;
-using Dt.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Dt.Base.Tools;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Dt.Mgr.Rbac;
-using Dt.Base.Tools;
 #endregion
 
 namespace Dt.Mgr.Module
 {
-    public partial class RptList : Tab
+    public partial class RptList : LvTab
     {
+        #region 变量
         string _query;
+        #endregion
 
+        #region 构造
         public RptList()
         {
             InitializeComponent();
         }
+        #endregion
 
+        #region 公开
         public void OnSearch(string p_txt)
         {
-            if (!string.IsNullOrEmpty(p_txt))
-            {
-                _query = p_txt;
-                Title = "报表列表 - " + p_txt;
-                Update();
-            }
-
+            _query = p_txt;
+            Title = string.IsNullOrEmpty(p_txt) ? "所有报表" : "报表列表 - " + p_txt;
             NaviTo(this);
+            _ = Refresh();
         }
+        #endregion
 
-        public async void Update()
+        #region 重写
+        protected override Lv Lv => _lv;
+
+        protected override async Task Query()
         {
             if (string.IsNullOrEmpty(_query) || _query == "#全部")
             {
-                _lv.Data = await RptX.Query(null);
+                _lv.Data = await RptX.Query("select id,name,note,ctime,mtime from cm_rpt order by name");
             }
             else
             {
-                _lv.Data = await RptX.Query($"where name like '%{_query}%'");
+                _lv.Data = await RptX.Query($"select id,name,note,ctime,mtime from cm_rpt where name like '%{_query}%' order by name");
+            }
+        }
+        #endregion
+
+        #region 交互
+        async void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_lv.SelectionMode != SelectionMode.Multiple
+                && OwnWin is RptWin win)
+            {
+                await win.Form.Update(_lv.SelectedRow?.ID);
             }
         }
 
-        protected override void OnFirstLoaded()
+        async void OnItemDbClick(object e)
         {
-            Update();
+            if (_lv.SelectionMode != SelectionMode.Multiple
+                && e is RptX rpt)
+            {
+                await Rpt.ShowDesign(new AppRptDesignInfo(rpt));
+            }
         }
 
-        void OnNaviToSearch(Mi e)
+        async void OnAdd(Mi e)
         {
-            NaviTo(_win.Search);
+            if (OwnWin is RptWin win)
+            {
+                await win.Form.Open(-1);
+            }
         }
 
-        void OnAdd(Mi e)
+        async void OnEdit(Mi e)
         {
-            _win.Form.Update(-1);
-            NaviTo(_win.Form);
+            if (OwnWin is RptWin win)
+            {
+                await win.Form.Open(e.Row?.ID);
+            }
         }
 
-        void OnItemClick(ItemClickArgs e)
+        async void OnDel(Mi e)
         {
-            if (e.IsChanged)
-                _win.Form.Update(e.Row.ID);
-            NaviTo(_win.Form);
+            if (!await Kit.Confirm("确认要删除吗？\r\n做个报表不容易，请慎重删除！"))
+            {
+                Kit.Msg("已取消删除！");
+                return;
+            }
+
+            if (_lv.SelectionMode == SelectionMode.Multiple)
+            {
+                var ls = _lv.SelectedItems.Cast<RptX>().ToList();
+                if (await ls.Delete())
+                {
+                    await Refresh();
+                }
+            }
+            else
+            {
+                var d = e.Data.To<RptX>();
+                if (await d.Delete())
+                {
+                    await Refresh();
+                }
+            }
         }
 
+        async void OnEditTemp(Mi e)
+        {
+            await Rpt.ShowDesign(new AppRptDesignInfo(e.Data.To<RptX>()));
+        }
+        
         void OnRefresh(Mi e)
         {
             RefreshSqliteWin.UpdateSqliteFile("report");
         }
-
-        RptWin _win => (RptWin)OwnWin;
+        #endregion
     }
 }

@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2023-03-06 创建
+* 日志: 2024-02-04 创建
 ******************************************************************************/
 #endregion
 
@@ -13,24 +13,36 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Mgr.Rbac
 {
-    public partial class UserGroupList : Tab
+    public partial class UserGroupList : LvTab
     {
-        #region 构造方法
+        #region 变量
+        long _releatedID;
+        #endregion
+        
+        #region 构造
         public UserGroupList()
         {
             InitializeComponent();
+            _lv.AddMultiSelMenu(Menu);
         }
         #endregion
 
         #region 公开
         public void Update(long p_releatedID)
         {
+            if (_releatedID == p_releatedID)
+                return;
+            
             _releatedID = p_releatedID;
             Menu["添加"].IsEnabled = _releatedID > 0;
-            Refresh();
+            _ = Refresh();
         }
+        #endregion
 
-        public async void Refresh()
+        #region 重写
+        protected override Lv Lv => _lv;
+
+        protected override async Task Query()
         {
             if (_releatedID > 0)
             {
@@ -46,14 +58,14 @@ namespace Dt.Mgr.Rbac
         #region 交互
         async void OnAdd(Mi e)
         {
-            var dlg = new Group4UserDlg();
+            var dlg = new Group4User();
             if (await dlg.Show(_releatedID, e)
                 && await RbacDs.AddUserGroups(_releatedID, dlg.SelectedIDs))
             {
-                Refresh();
+                await Refresh();
             }
         }
-
+        
         async void OnDel(Mi e)
         {
             if (!await Kit.Confirm("确认要删除关联吗？"))
@@ -61,45 +73,25 @@ namespace Dt.Mgr.Rbac
                 Kit.Msg("已取消删除！");
                 return;
             }
-
-            List<long> groupIDs;
-            if (_lv.SelectionMode == Base.SelectionMode.Multiple)
+            
+            if (_lv.SelectionMode == SelectionMode.Multiple)
             {
-                groupIDs = (from row in _lv.SelectedRows
-                            select row.ID).ToList();
+                var ls = new List<UserGroupX>();
+                foreach (var row in _lv.SelectedRows)
+                {
+                    var x = new UserGroupX(GroupID: row.ID, UserID: _releatedID);
+                    ls.Add(x);
+                }
+                if (ls.Count > 0 && await ls.Delete())
+                    await Refresh();
             }
             else
             {
-                groupIDs = new List<long> { e.Row.ID };
+                var x = new UserGroupX(GroupID: e.Row.ID, UserID: _releatedID);
+                if (await x.Delete())
+                    await Refresh();
             }
-
-            if (await RbacDs.RemoveUserGroups(_releatedID, groupIDs))
-                Refresh();
         }
-        #endregion
-
-        #region 选择
-        void OnSelectAll(Mi e)
-        {
-            _lv.SelectAll();
-        }
-
-        void OnMultiMode(Mi e)
-        {
-            _lv.SelectionMode = Base.SelectionMode.Multiple;
-            Menu.HideExcept("删除", "全选", "取消");
-        }
-
-        void OnCancelMulti(Mi e)
-        {
-            _lv.SelectionMode = Base.SelectionMode.Single;
-            Menu.ShowExcept("删除", "全选", "取消");
-        }
-        #endregion
-
-        #region 内部
-        UserWin _win => (UserWin)OwnWin;
-        long _releatedID;
         #endregion
     }
 }

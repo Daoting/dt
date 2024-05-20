@@ -43,7 +43,7 @@ namespace Dt.Base.FormView
             FrameworkElement con = (FrameworkElement)e.OldValue;
             if (con != null)
             {
-#if WIN || DOTNET
+#if WIN || WASM || SKIA
                 con.KeyDown -= pnl.OnKeyDown;
 #else
                 con.KeyUp -= pnl.OnKeyDown;
@@ -56,7 +56,7 @@ namespace Dt.Base.FormView
             {
                 // win上KeyUp事件有怪异：Tab跳两格、CList选择后跳两格
                 // 手机上KeyDown事件不触发！！！
-#if WIN || DOTNET
+#if WIN || WASM || SKIA
                 con.KeyDown += pnl.OnKeyDown;
 #else
                 con.KeyUp += pnl.OnKeyDown;
@@ -179,7 +179,7 @@ namespace Dt.Base.FormView
             }
 
             // 内容外框
-            _rcChild.Measure(new Size(conWidth > 0 ? conWidth : 0, height));
+            _rcChild?.Measure(new Size(conWidth > 0 ? conWidth : 0, height));
             return new Size(width, height);
         }
 
@@ -219,7 +219,7 @@ namespace Dt.Base.FormView
                 child.Arrange(conWidth > 1 ? new Rect(left + 1, 1, conWidth - 1, height - 1) : Res.HideRect);
 
             // 内容外框
-            _rcChild.Arrange(conWidth > 0 ? new Rect(left, 0, conWidth, height) : Res.HideRect);
+            _rcChild?.Arrange(conWidth > 0 ? new Rect(left, 0, conWidth, height) : Res.HideRect);
             return finalSize;
         }
 

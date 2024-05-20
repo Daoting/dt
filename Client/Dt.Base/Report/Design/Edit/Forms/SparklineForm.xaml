@@ -1,0 +1,12 @@
+﻿<UserControl
+    x:Class="Dt.Base.Report.SparklineForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CList ID="type" Title="迷你图类型" Ex="EnumData#Dt.Cells.Data.SparklineType,Dt.Cells.Data" />
+        <a:CList ID="tbl" Title="数据源" />
+        <a:CList ID="field" Title="Double值列名" />
+    </a:Fv>
+</UserControl>

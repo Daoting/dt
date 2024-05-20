@@ -21,7 +21,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 报表项基类
     /// </summary>
-    internal abstract class RptItem : RptItemBase
+    public abstract class RptItem : RptItemBase
     {
         protected RptPart _part;
 

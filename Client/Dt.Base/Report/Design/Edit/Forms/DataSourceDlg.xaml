@@ -52,6 +52,7 @@
                 <ComboBoxItem Content="平均" />
                 <ComboBoxItem Content="序号" />
                 <ComboBoxItem Content="总数" />
+                <ComboBoxItem Content="分组值" />
             </ComboBox>
         </Grid>
 

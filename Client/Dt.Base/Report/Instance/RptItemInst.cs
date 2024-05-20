@@ -24,7 +24,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 报表元素基类
     /// </summary>
-    internal abstract class RptItemInst
+    public abstract class RptItemInst
     {
         #region 成员变量
         protected RptItemBase _item;
@@ -108,6 +108,11 @@ namespace Dt.Base.Report
         {
             get { return _outputted; }
         }
+        
+        /// <summary>
+        /// 正常位置的水平偏移量，如表格重复行头水平分页时，水平非0页的元素都有偏移量
+        /// </summary>
+        public int OffsetX { get; set; }
         #endregion
 
         #region 外部方法
@@ -136,7 +141,7 @@ namespace Dt.Base.Report
         /// <summary>
         /// 计算元素的位置信息
         /// </summary>
-        void RefreshPosition()
+        internal void RefreshPosition()
         {
             if (_region != null)
                 return;
@@ -205,7 +210,7 @@ namespace Dt.Base.Report
             }
             else if (_parent != null)
             {
-                _region.Col = _parent.Region.Col + (_item.Col - _parent.Item.Col);
+                _region.Col = _parent.Region.Col + (_item.Col - _parent.Item.Col) + OffsetX;
             }
             else
             {

@@ -15,7 +15,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 单个页面行列定义描述
     /// </summary>
-    internal class PageDefine
+    public class PageDefine
     {
         public PageDefine()
         {

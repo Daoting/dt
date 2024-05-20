@@ -11,6 +11,7 @@ using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
+using Dt.Base.FormView;
 #endregion
 
 namespace Dt.Base
@@ -22,6 +23,14 @@ namespace Dt.Base
     public partial class CBar : DtControl, IFvCell
     {
         #region 静态成员
+        const string _prefix = "🔶 ";
+
+        public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
+            "Title",
+            typeof(string),
+            typeof(CBar),
+            new PropertyMetadata(null, OnContentPropertyChanged));
+        
         public static readonly DependencyProperty ColSpanProperty = DependencyProperty.Register(
             "ColSpan",
             typeof(double),
@@ -86,8 +95,8 @@ namespace Dt.Base
         /// </summary>
         public string Title
         {
-            get { return GetValue(ContentProperty) as string; }
-            set { SetValue(ContentProperty, value); }
+            get { return (string)GetValue(TitleProperty); }
+            set { SetValue(TitleProperty, value); }
         }
 
         /// <summary>
@@ -129,27 +138,68 @@ namespace Dt.Base
                 return;
 
             // 为uno节省一级ContentPresenter！
-            if (root.Children.Count > 1)
-                root.Children.RemoveAt(0);
-
-            if (Content is FrameworkElement con)
+            while (root.Children.Count > 1)
             {
+                root.Children.RemoveAt(0);
+            }
+
+            string title = Title;
+            if (Content == null && string.IsNullOrEmpty(title))
+            {
+                // 不绘制任何内容，做空行使用
+            }
+            else if (Content == null)
+            {
+                // 只标题
+                title = _prefix + title.Replace("\n", "\n" + _prefix);
+                TextBlock tb = new TextBlock
+                {
+                    Text = title,
+                    Margin = new Thickness(10, 6, 10, 6),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    TextWrapping = TextWrapping.NoWrap,
+                };
+                Grid.SetColumnSpan(tb, 2);
+                root.Children.Insert(0, tb);
+            }
+            else if (string.IsNullOrEmpty(title))
+            {
+                // 只内容
+                var con = Content as FrameworkElement;
                 CFree.ApplyCellStyle(con);
                 // 左上空出边线
                 var margin = con.Margin;
                 con.Margin = new Thickness(margin.Left + 1, margin.Top + 1, margin.Right, margin.Bottom);
+                Grid.SetColumnSpan(con, 2);
                 root.Children.Insert(0, con);
             }
-            else if (Content != null)
+            else
             {
-                StackPanel sp = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(10) };
-                TextBlock tb = new TextBlock { FontFamily = Res.IconFont, Text = "\uE02D", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 4, 0) };
-                sp.Children.Add(tb);
-                tb = new TextBlock { Text = Content.ToString(), TextWrapping = TextWrapping.NoWrap, VerticalAlignment = VerticalAlignment.Center };
-                sp.Children.Add(tb);
-                root.Children.Insert(0, sp);
+                // 标题 + 内容
+                title = _prefix + title.Replace("\n", "\n" + _prefix);
+                TextBlock tb = new TextBlock
+                {
+                    Text = title,
+                    Margin = new Thickness(10, 6, 10, 6),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    TextWrapping = TextWrapping.NoWrap,
+                };
+                root.Children.Insert(0, tb);
+                
+                var con = Content as FrameworkElement;
+                CFree.ApplyCellStyle(con);
+                // 左上空出边线
+                var margin = con.Margin;
+                con.Margin = new Thickness(margin.Left + 1, margin.Top + 1, margin.Right, margin.Bottom);
+                Grid.SetColumn(con, 1);
+                root.Children.Insert(1, con);
             }
-            // Content == null不绘制任何内容，做空行使用
+            
+            if (this.GetParent() is not FormPanel)
+            {
+                // 独立使用时右下边框
+                Margin = new Thickness(0, 0, 1, 1);
+            }
         }
     }
 }
