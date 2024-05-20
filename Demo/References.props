@@ -2,7 +2,7 @@
 	<!-- 所有项目引用 -->
 	<ItemGroup>
 		<!-- 调试需将dt源码放在 d:\Dt -->
-		<PackageReference Include="Dt.Client" Version="4.5.1" />
+		<PackageReference Include="Dt.Client" Version="4.5.0" />
 	</ItemGroup>
 
 	<!-- 非windows引用包 -->
