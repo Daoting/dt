@@ -354,3 +354,8 @@ Publish/
 Doc/
 Tools/
 gitconfig.txt
+
+Client/
+Demo/
+Service/
+README.md
