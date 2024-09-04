@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<Description>Excel模型库(搬运工客户端)</Description>
+	</PropertyGroup>
+    <Import Project="..\DelXmlFiles.props" />
+	<ItemGroup>
+		<ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" />
+		<ProjectReference Include="..\Dt.Xls\Dt.Xls.csproj" />
+		<ProjectReference Include="..\Dt.Pdf\Dt.Pdf.csproj" />
+		<ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" />
+	</ItemGroup>
+</Project>

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net8.0-android</TargetFrameworks>
+        <SingleProject>true</SingleProject>
+        <OutputType>Exe</OutputType>
+        <UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
+        <IsUnoHead>true</IsUnoHead>
+        <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
+    </PropertyGroup>
+
+    <Import Project="..\RefAll.props" />
+
+    <ItemGroup>
+        <PackageReference Include="Xamarin.Google.Android.Material" Version="1.10.0.2" />
+        <PackageReference Include="Xamarin.AndroidX.SwipeRefreshLayout" Version="1.1.0.17" />
+    </ItemGroup>
+</Project>

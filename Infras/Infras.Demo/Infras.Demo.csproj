@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <ItemGroup>
+        <EmbeddedResource Include="Res\**" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" />
+        <ProjectReference Include="..\Dt.Xls\Dt.Xls.csproj" />
+        <ProjectReference Include="..\Dt.Pdf\Dt.Pdf.csproj" />
+        <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" />
+        <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj" />
+        <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj" />
+    </ItemGroup>
+</Project>

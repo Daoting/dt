@@ -1,0 +1,6 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<Description>Excel计算引擎(搬运工客户端)</Description>
+	</PropertyGroup>
+    <Import Project="..\DelXmlFiles.props" />
+</Project>

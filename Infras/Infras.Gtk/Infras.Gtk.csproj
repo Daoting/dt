@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType Condition="'$(Configuration)'=='Release'">WinExe</OutputType>
+        <OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
+        <TargetFrameworks>net8.0</TargetFrameworks>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <IsGtk>true</IsGtk>
+    </PropertyGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Package.appxmanifest" />
+        <Manifest Include="$(ApplicationManifest)" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Uno.WinUI.Skia.Gtk" Version="5.2.119" />
+        <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.8" />
+        <PackageReference Include="SkiaSharp.Skottie" Version="2.88.8" />
+    </ItemGroup>
+
+    <Import Project="..\RefAll.props" />
+
+</Project>

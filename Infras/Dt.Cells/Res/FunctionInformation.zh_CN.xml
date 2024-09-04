@@ -1,0 +1,331 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Functions>
+  <Function Name="ABS" Param="value" Description="返回数字的绝对值。"/>
+  <Function Name="ACCRINT" Param="issue,first,settle,rate,par,frequency,basis" Description="返回定期支付利息的债券的应计利息。"/>
+  <Function Name="ACCRINTM" Param="issue,maturity,rate,par,basis" Description="返回在到期日支付利息的债券的应计利息。"/>
+  <Function Name="ACOS" Param="value" Description="返回数字的反余弦值。"/>
+  <Function Name="ACOSH" Param="value" Description="返回数字的反双曲余弦值。"/>
+  <Function Name="ADDRESS" Param="row,column,absnum,a1style,sheettext" Description="以文本形式将引用值返回到工作表的单个单元格。"/>
+  <Function Name="AMORDEGRC" Param="cost,datepurchased,firstperiod,salvage,period,drate,basis" Description="返回使用折旧系数的每个记帐期的折旧值。"/>
+  <Function Name="AMORLINC" Param="cost,datepurchased,firstperiod,salvage,period,drate,basis" Description="返回每个记帐期的折旧值。"/>
+  <Function Name="AND" Param="logical1,logical2" Description="如果其所有参数均为 TRUE，则返回 TRUE。"/>
+  <Function Name="ASIN" Param="value" Description="返回数字的反正弦值。"/>
+  <Function Name="ASINH" Param="value" Description="返回数字的反双曲正弦值。"/>
+  <Function Name="ATAN" Param="value" Description="返回数字的反正切值。"/>
+  <Function Name="ATAN2" Param="x,y" Description="返回 X 和 Y 坐标的反正切值。"/>
+  <Function Name="ATANH" Param="value" Description="返回数字的反双曲正切值。"/>
+  <Function Name="AVEDEV" Param="value1,value2,..." Description="返回数据点与它们的平均值的绝对偏差平均值。"/>
+  <Function Name="AVERAGE" Param="value1,value2,..." Description="返回其参数的平均值。"/>
+  <Function Name="AVERAGEA" Param="value1,value2,..." Description="返回其参数的平均值，包括数字、文本和逻辑值。"/>
+  <Function Name="AVERAGEIF" Param="value1,value2,...,condition" Description="返回区域中满足给定条件的所有单元格的平均值（算术平均值）。"/>
+  <Function Name="AVERAGEIFS" Param="value1,condition1,value2,...,condition2..." Description="返回满足多个条件的所有单元格的平均值（算术平均值）。"/>
+  <Function Name="BESSELI" Param="value,order" Description="返回修正的贝赛耳函数 In(x)。"/>
+  <Function Name="BESSELJ" Param="value,order" Description="返回贝赛耳函数 Jn(x)。"/>
+  <Function Name="BESSELK" Param="value,order" Description="返回修正的贝赛耳函数 Kn(x)。"/>
+  <Function Name="BESSELY" Param="value,order" Description="返回贝赛耳函数 Yn(x)。"/>
+  <Function Name="BETADIST" Param="x,alpha,beta,lower,upper" Description="返回 Beta 累积分布函数。"/>
+  <Function Name="BETAINV" Param="prob,alpha,beta,lower,upper" Description="返回指定 Beta 分布的累积分布函数的反函数。"/>
+  <Function Name="BIN2DEC" Param="number" Description="将二进制数转换为十进制数。"/>
+  <Function Name="BIN2HEX" Param="number,places" Description="将二进制数转换为十六进制数。"/>
+  <Function Name="BIN2OCT" Param="number,places" Description="将二进制数转换为八进制数。"/>
+  <Function Name="BINOMDIST" Param="x,n,p,cumulative" Description="返回二项式分布的概率值。"/>
+  <Function Name="CEILING" Param="value,signif" Description="将数字舍入为最接近的整数或最接近的指定基数的倍数。"/>
+  <Function Name="CHAR" Param="value" Description="返回由代码数字指定的字符。"/>
+  <Function Name="CHIDIST" Param="value,deg" Description="返回 χ2 分布的单尾概率。"/>
+  <Function Name="CHIINV" Param="prob,deg" Description="返回 χ2 分布的单尾概率的反函数。"/>
+  <Function Name="CHITEST" Param="obs_array,exp_array" Description="返回独立性检验值。"/>
+  <Function Name="CHOOSE" Param="index,value1,value2,..." Description="从值的列表中选择值。"/>
+  <Function Name="CLEAN" Param="text" Description="删除文本中所有非打印字符。"/>
+  <Function Name="CODE" Param="text" Description="返回文本字符串中第一个字符的数字代码。"/>
+  <Function Name="COLUMN" Param="reference" Description="返回引用的列号。"/>
+  <Function Name="COLUMNS" Param="array" Description="返回引用中包含的列数。"/>
+  <Function Name="COMBIN" Param="k,n" Description="返回给定数目对象的组合数。"/>
+  <Function Name="COMPLEX" Param="realcoeff,imagcoeff,suffix" Description="将实系数和虚系数转换为复数。"/>
+  <Function Name="CONCATENATE" Param="text1,text2,...." Description="将几个文本项合并为一个文本项。"/>
+  <Function Name="CONFIDENCE" Param="alpha,stdev,size" Description="返回总体平均值的置信区间。"/>
+  <Function Name="CONVERT" Param="number,from-unit,to-unit" Description="将数字从一种度量系统转换为另一种度量系统。"/>
+  <Function Name="CORREL" Param="array1,array2" Description="返回两个数据集之间的相关系数。"/>
+  <Function Name="COS" Param="angle" Description="返回数字的余弦值。"/>
+  <Function Name="COSH" Param="value" Description="返回数字的双曲余弦值。"/>
+  <Function Name="COUNT" Param="value1,value2,..." Description="计算参数列表中数字的个数。"/>
+  <Function Name="COUNTA" Param="value1,value2,..." Description="计算参数列表中值的个数。"/>
+  <Function Name="COUNTBLANK" Param="cellrange" Description="计算区域内空白单元格的数量。"/>
+  <Function Name="COUNTIF" Param="cellrange,condition" Description="计算区域内符合给定条件的单元格的数量。"/>
+  <Function Name="COUNTIFS" Param="cellrange,condition" Description="计算区域内符合多个条件的单元格的数量。"/>
+  <Function Name="COUPDAYBS" Param="settlement,maturity,frequency,basis" Description="返回从付息期开始到结算日之间的天数。"/>
+  <Function Name="COUPDAYS" Param="settlement,maturity,frequency,basis" Description="返回包含结算日的付息期天数。"/>
+  <Function Name="COUPDAYSNC" Param="settlement,maturity,frequency,basis" Description="返回从结算日到下一付息日之间的天数。"/>
+  <Function Name="COUPNCD" Param="settlement,maturity,frequency,basi" Description="返回结算日之后的下一个付息日。"/>
+  <Function Name="COUPNUM" Param="settlement,maturity,frequency,basis" Description="返回结算日和到期日之间的应付利息次数。"/>
+  <Function Name="COUPPCD" Param="settlement,maturity,frequency,basis" Description="返回结算日之前的上一付息日。"/>
+  <Function Name="COVAR" Param="array1,array2" Description="返回协方差（成对偏差乘积的平均值）。"/>
+  <Function Name="CRITBINOM" Param="n,p,alpha" Description="返回使累积二项式分布小于或等于临界值的最小值。"/>
+  <Function Name="CUMIPMT" Param="rate,nper,pval,startperiod,endperiod,paytype" Description="返回两个付款期之间累积支付的利息。"/>
+  <Function Name="CUMPRINC" Param="rate,nper,pval,startperiod,endperiod,paytype" Description="返回两个付款期之间为贷款累积支付的本金。"/>
+  <Function Name="DATE" Param="year,month,day" Description="返回特定日期的序列号。"/>
+  <Function Name="DATEDIF" Param="date1,date2,outputcode" Description="返回两日期相差的天数、月数和年数。"/>
+  <Function Name="DATEVALUE" Param="date_string" Description="将文本格式的日期转换为序列号。"/>
+  <Function Name="DAVERAGE" Param="database, field, criteria" Description="返回所选数据库条目的平均值。"/>
+  <Function Name="DAY" Param="date" Description="将序列号转换为月份日期。"/>
+  <Function Name="DAYS360" Param="startdate,enddate,method" Description="以一年 360 天为基准计算两个日期间的天数。"/>
+  <Function Name="DB" Param="cost,salvage,life,period,month" Description="使用固定余额递减法，返回一笔资产在给定期间内的折旧值。"/>
+  <Function Name="DCOUNT" Param="database, field, criteria" Description="计算数据库中包含数字的单元格的数量。"/>
+  <Function Name="DCOUNTA" Param="database, field, criteria" Description="计算数据库中非空单元格的数量。"/>
+  <Function Name="DDB" Param="cost,salvage,life,period,factor" Description="使用双倍余额递减法或其他指定方法，返回一笔资产在给定期间内的折旧值。"/>
+  <Function Name="DEC2BIN" Param="number,places" Description="将十进制数转换为二进制数。"/>
+  <Function Name="DEC2HEX" Param="number,places" Description="将十进制数转换为十六进制数。"/>
+  <Function Name="DEC2OCT" Param="number,places" Description="将十进制数转换为八进制数。"/>
+  <Function Name="DEGREES" Param="angle" Description="将弧度转换为度。"/>
+  <Function Name="DELTA" Param="value1,value2" Description="检验两个值是否相等。"/>
+  <Function Name="DEVSQ" Param="value1,value2, ..." Description="返回偏差的平方和。"/>
+  <Function Name="DGET" Param="database, field, criteria" Description="从数据库提取符合指定条件的单个记录。"/>
+  <Function Name="DISC" Param="settle,mature,pricep,redeem,basis" Description="返回债券的贴现率。"/>
+  <Function Name="DMAX" Param="database, field, criteria" Description="返回所选数据库条目的最大值。"/>
+  <Function Name="DMIN" Param="database, field, criteria" Description="返回所选数据库条目的最小值。"/>
+  <Function Name="DOLLAR" Param="value,digits" Description="使用 $（美元）货币格式将数字转换为文本。"/>
+  <Function Name="DOLLARDE" Param="fractionaldollar,fraction" Description="将以分数表示的价格转换为以小数表示的价格。"/>
+  <Function Name="DOLLARFR" Param="decimaldollar,fraction" Description="将以小数表示的价格转换为以分数表示的价格。"/>
+  <Function Name="DPRODUCT" Param="database, field, criteria" Description="将数据库中符合条件的记录的特定字段中的值相乘。"/>
+  <Function Name="DSTDEV" Param="database, field, criteria" Description="基于所选数据库条目的样本估算标准偏差。"/>
+  <Function Name="DSTDEVP" Param="database, field, criteria" Description="基于所选数据库条目的样本总体计算标准偏差。"/>
+  <Function Name="DSUM" Param="database, field, criteria" Description="对数据库中符合条件的记录的字段列中的数字求和。"/>
+  <Function Name="DURATION" Param="settlement,maturity,coupon,yield,frequency,basis" Description="返回定期支付利息的债券的每年期限。"/>
+  <Function Name="DVAR" Param="database, field, criteria" Description="基于所选数据库条目的样本估算方差。"/>
+  <Function Name="DVARP" Param="database, field, criteria" Description="基于所选数据库条目的样本总体计算方差。"/>
+  <Function Name="EDATE" Param="startdate,months" Description="返回用于表示开始日期之前或之后月数的日期的序列号。"/>
+  <Function Name="EFFECT" Param="nomrate,comper" Description="返回年有效利率。"/>
+  <Function Name="EOMONTH" Param="startdate,months" Description="返回指定月数之前或之后的月份的最后一天的序列号。"/>
+  <Function Name="ERF" Param="limit,upperlimit" Description="返回误差函数。"/>
+  <Function Name="ERFC" Param="lowerlimit" Description="返回互补误差函数。"/>
+  <Function Name="ERROR.TYPE" Param="errorvalue" Description="返回对应于错误类型的数字。"/>
+  <Function Name="EURO" Param="code" Description="返回一欧元相当于基于ISO货币代码数。"/>
+  <Function Name="EUROCONVERT" Param="currency,source,target,fullprecision,triangulation" Description="将数字转换为欧元形式，将数字由欧元形式转换为欧盟成员国货币形式，或利用欧元作为中间货币将数字由某一欧盟成员国货币转化为另一欧盟成员国货币的形式（三角转换关系）。。"/>
+  <Function Name="EVEN" Param="value" Description="将数字向上舍入到最接近的偶数。"/>
+  <Function Name="EXACT" Param="text1,text2" Description="检查两个文本值是否相同。"/>
+  <Function Name="EXP" Param="value" Description="返回 e 的 n 次方。"/>
+  <Function Name="EXPONDIST" Param="value,lambda,cumulative" Description="返回指数分布。"/>
+  <Function Name="FACT" Param="number" Description="返回数字的阶乘。"/>
+  <Function Name="FACTDOUBLE" Param="number" Description="返回数字的双倍阶乘。"/>
+  <Function Name="FALSE" Param="" Description="返回逻辑值 FALSE。"/>
+  <Function Name="FDIST" Param="value,degnum,degden" Description="返回 F 概率分布。"/>
+  <Function Name="FIND" Param="findtext,intext,start" Description="在一个文本值中查找另一个文本值（区分大小写）。"/>
+  <Function Name="FINV" Param="p,degnum,degden" Description="返回 F 概率分布的反函数。"/>
+  <Function Name="FISHER" Param="value" Description="返回 Fisher 变换值。"/>
+  <Function Name="FISHERINV" Param="value" Description="返回 Fisher 变换的反函数。"/>
+  <Function Name="FIXED" Param="num,digits,notcomma" Description="将数字格式设置为具有固定小数位数的文本。"/>
+  <Function Name="FLOOR" Param="value,signif" Description="向绝对值减小的方向舍入数字。"/>
+  <Function Name="FORECAST" Param="value,Yarray,Xarray" Description="返回沿线性趋势的值。"/>
+  <Function Name="FREQUENCY" Param="dataarray,binarray" Description="以垂直数组的形式返回频率分布。"/>
+  <Function Name="FTEST" Param="array1,array2" Description="返回 F 检验的结果。"/>
+  <Function Name="FV" Param="rate,numper,paymt,pval,type" Description="返回一笔投资的未来值。"/>
+  <Function Name="FVSCHEDULE" Param="principal,schedule" Description="返回应用一系列复利率计算的初始本金的未来值。"/>
+  <Function Name="GAMMADIST" Param="x,alpha,beta,cumulative" Description="返回 γ 分布。"/>
+  <Function Name="GAMMAINV" Param="p,alpha,beta" Description="返回 γ 累积分布函数的反函数。"/>
+  <Function Name="GAMMALN" Param="value" Description="返回 γ 函数的自然对数，Γ(x)。"/>
+  <Function Name="GCD" Param="number1,number2" Description="返回最大公约数。"/>
+  <Function Name="GEOMEAN" Param="value1,value2,..." Description="返回几何平均值。"/>
+  <Function Name="GESTEP" Param="number,step" Description="检验数字是否大于阈值。"/>
+  <Function Name="GROWTH" Param="y,x,newx,constant" Description="返回沿指数趋势的值。"/>
+  <Function Name="HARMEAN" Param="value1,value2,..." Description="返回调和平均值。"/>
+  <Function Name="HEX2BIN" Param="number, places" Description="将十六进制数转换为二进制数。"/>
+  <Function Name="HEX2DEC" Param="number" Description="将十六进制数转换为十进制数。"/>
+  <Function Name="HEX2OCT" Param="number, places" Description="将十六进制数转换为八进制数。"/>
+  <Function Name="HLOOKUP" Param="value,array,row,approx" Description="查找数组的首行，并返回指定单元格的值。"/>
+  <Function Name="HOUR" Param="time" Description="将序列号转换为小时。"/>
+  <Function Name="HYPGEOMDIST" Param="x,n,M,N" Description="返回超几何分布。"/>
+  <Function Name="IF" Param="valueTest,valueTrue,valueFalse" Description="指定要执行的逻辑检测。"/>
+  <Function Name="IFERROR" Param="value,error" Description="如果公式的计算结果错误，则返回您指定的值；否则返回公式的结果。"/>
+  <Function Name="IMABS" Param="complexnum" Description="返回复数的绝对值（模数）。"/>
+  <Function Name="IMAGINARY" Param="complexnum" Description="返回复数的虚系数。"/>
+  <Function Name="IMARGUMENT" Param="complexnum" Description="返回参数 theta，即以弧度表示的角。"/>
+  <Function Name="IMCONJUGATE" Param="complexnum" Description="返回复数的共轭复数。"/>
+  <Function Name="IMCOS" Param="complexnum" Description="返回复数的余弦。"/>
+  <Function Name="IMDIV" Param="complexnum,complexdenom" Description="返回两个复数的商。"/>
+  <Function Name="IMEXP" Param="complexnum" Description="返回复数的指数。"/>
+  <Function Name="IMLN" Param="complexnum" Description="返回复数的自然对数。"/>
+  <Function Name="IMLOG2" Param="complexnum" Description="返回复数的以 2 为底的对数。"/>
+  <Function Name="IMLOG10" Param="complexnum" Description="返回复数的以 10 为底的对数。"/>
+  <Function Name="IMPOWER" Param="complexnum,powernum" Description="返回复数的整数幂。"/>
+  <Function Name="IMPRODUCT" Param="complexnum1,complexnum2, ..." Description="返回多个复数的乘积。"/>
+  <Function Name="IMREAL" Param="complexnum" Description="返回复数的实系数。"/>
+  <Function Name="IMSIN" Param="complexnum" Description="返回复数的正弦。"/>
+  <Function Name="IMSQRT" Param="complexnum" Description="返回复数的平方根。"/>
+  <Function Name="IMSUB" Param="complexnum1,complexnum2" Description="返回两个复数的差。"/>
+  <Function Name="IMSUM" Param="complexnum1,complexnum2, ..." Description="返回多个复数的和。"/>
+  <Function Name="INDEX" Param="return,row,col,area" Description="使用索引从引用或数组中选择值。"/>
+  <Function Name="INT" Param="value" Description="将数字向下舍入到最接近的整数。"/>
+  <Function Name="INTERCEPT" Param="dependent,independent" Description="返回线性回归线的截距。"/>
+  <Function Name="INTRATE" Param="settle,mature,invest,redeem,basis" Description="返回完全投资型债券的利率。"/>
+  <Function Name="IPMT" Param="rate,per,nper,pval,fval,type" Description="返回一笔投资在给定期间内支付的利息。"/>
+  <Function Name="IRR" Param="arrayvals,estimate" Description="返回一系列现金流的内部收益率。"/>
+  <Function Name="ISBLANK" Param="cellreference" Description="如果值为空，则返回 TRUE。"/>
+  <Function Name="ISERR" Param="cellreference" Description="如果值为除 #N/A 以外的任何错误值，则返回 TRUE。"/>
+  <Function Name="ISERROR" Param="cellreference" Description="如果值为任何错误值，则返回 TRUE。"/>
+  <Function Name="ISEVEN" Param="cellreference" Description="如果数字为偶数，则返回 TRUE。"/>
+  <Function Name="ISLOGICAL" Param="cellreference" Description="如果值为逻辑值，则返回 TRUE。"/>
+  <Function Name="ISNA" Param="cellreference" Description="如果值为错误值 #N/A，则返回 TRUE。"/>
+  <Function Name="ISNONTEXT" Param="cellreference" Description="如果值不是文本，则返回 TRUE。"/>
+  <Function Name="ISNUMBER" Param="cellreference" Description="如果值为数字，则返回 TRUE。"/>
+  <Function Name="ISODD" Param="cellreference" Description="如果数字为奇数，则返回 TRUE。"/>
+  <Function Name="ISPMT" Param="rate,per,nper,pv" Description="计算特定投资期内要支付的利息。"/>
+  <Function Name="ISREF" Param="cellreference" Description="如果值为引用值，则返回 TRUE。"/>
+  <Function Name="ISTEXT" Param="cellreference" Description="如果值为文本，则返回 TRUE。"/>
+  <Function Name="KURT" Param="value1,value2,value3,value4,..." Description="返回数据集的峰值。"/>
+  <Function Name="LARGE" Param="array,n" Description="返回数据集中第 k 个最大值。"/>
+  <Function Name="LCM" Param="number1,number2" Description="返回最小公倍数。"/>
+  <Function Name="LEFT" Param="mytext,num_chars" Description="返回文本值中最左边的字符。"/>
+  <Function Name="LEN" Param="value" Description="返回文本字符串中的字符个数。"/>
+  <Function Name="LINEST" Param="y,x,constant,stats" Description="返回线性趋势的参数。"/>
+  <Function Name="LN" Param="value" Description="返回数字的自然对数。"/>
+  <Function Name="LOG" Param="number,base" Description="返回数字的以指定底为底的对数。"/>
+  <Function Name="LOG10" Param="value" Description="返回数字的以 10 为底的对数。"/>
+  <Function Name="LOGEST" Param="y,x,constant,stats" Description="返回指数趋势的参数。"/>
+  <Function Name="LOGINV" Param="prob,mean,stdev" Description="返回对数累积分布的反函数。"/>
+  <Function Name="LOGNORMDIST" Param="x,mean,stdev" Description="返回对数累积分布函数。"/>
+  <Function Name="LOOKUP" Param="lookupvalue,lookupvector,resultvector" Description="在向量或数组中查找值。"/>
+  <Function Name="LOWER" Param="string" Description="将文本转换为小写。"/>
+  <Function Name="MATCH" Param="value1,array,type" Description="在引用或数组中查找值。"/>
+  <Function Name="MAX" Param="value1,value2,..." Description="返回参数列表中的最大值。"/>
+  <Function Name="MAXA" Param="value1,value2,..." Description="返回参数列表中的最大值，包括数字、文本和逻辑值。"/>
+  <Function Name="MDETERM" Param="array" Description="返回数组的矩阵行列式的值。"/>
+  <Function Name="MDURATION" Param="settlement,maturity,coupon,yield,frequency,basis" Description="返回假设面值为 ￥100 的有价证券的 Macauley 修正期限。"/>
+  <Function Name="MEDIAN" Param="value1,value2,..." Description="返回给定数值集合的中值。"/>
+  <Function Name="MID" Param="text,start_num,num_chars" Description="从文本字符串中的指定位置起返回特定个数的字符。"/>
+  <Function Name="MIN" Param="value1,value2,..." Description="返回参数列表中的最小值。"/>
+  <Function Name="MINA" Param="value1,value2,..." Description="返回参数列表中的最小值，包括数字、文本和逻辑值。"/>
+  <Function Name="MINUTE" Param="time" Description="将序列号转换为分钟。"/>
+  <Function Name="MINVERSE" Param="array" Description="返回数组的逆矩阵。"/>
+  <Function Name="MIRR" Param="arrayvals,payment_int,income_int" Description="返回正和负现金流以不同利率进行计算的内部收益率。"/>
+  <Function Name="MMULT" Param="array1,array2" Description="返回两个数组的矩阵乘积。"/>
+  <Function Name="MOD" Param="dividend,divisor" Description="返回除法的余数。"/>
+  <Function Name="MODE" Param="value1,value2,..." Description="返回在数据集内出现次数最多的值。"/>
+  <Function Name="MONTH" Param="date" Description="将序列号转换为月。"/>
+  <Function Name="MROUND" Param="number,multiple" Description="返回一个舍入到所需倍数的数字。"/>
+  <Function Name="MULTINOMIAL" Param="value1,value2,..." Description="返回一组数字的多项式。"/>
+  <Function Name="N" Param="value" Description="返回转换为数字的值。"/>
+  <Function Name="NA" Param="" Description="返回错误值 #N/A。"/>
+  <Function Name="NEGBINOMDIST" Param="x,r,p" Description="返回负二项式分布。"/>
+  <Function Name="NETWORKDAYS" Param="startdate,enddate,holidays" Description="返回两个日期间的完整工作日的天数。"/>
+  <Function Name="NOMINAL" Param="effrate,comper" Description="返回年度的名义利率。"/>
+  <Function Name="NORMDIST" Param="x,mean,stdev,cumulative" Description="返回正态累积分布。"/>
+  <Function Name="NORMINV" Param="prob,mean,stdev" Description="返回标准正态累积分布的反函数。"/>
+  <Function Name="NORMSDIST" Param="value" Description="返回标准正态累积分布。"/>
+  <Function Name="NORMSINV" Param="prob" Description="返回标准正态累积分布函数的反函数。"/>
+  <Function Name="NOT" Param="value" Description="对其参数的逻辑求反。"/>
+  <Function Name="NOW" Param="" Description="返回当前日期和时间的序列号。"/>
+  <Function Name="NPER" Param="rate,paymt,pval,fval,type" Description="返回投资的期数。"/>
+  <Function Name="NPV" Param="discount,value1,value2,..." Description="返回基于一系列定期的现金流和贴现率计算的投资的净现值。"/>
+  <Function Name="OCT2BIN" Param="number,places" Description="将八进制数转换为二进制数。"/>
+  <Function Name="OCT2DEC" Param="number" Description="将八进制数转换为十进制数。"/>
+  <Function Name="OCT2HEX" Param="number,places" Description="将八进制数转换为十六进制数。"/>
+  <Function Name="ODD" Param="value" Description="将数字向上舍入为最接近的奇数。"/>
+  <Function Name="ODDFPRICE" Param="settle,maturity,issue,first,rate,yield,redeem,freq,basis" Description="返回每张票面为 ￥100 且第一期为奇数的债券的现价。"/>
+  <Function Name="ODDFYIELD" Param="settle,maturity,issue,first,rate,price,redeem,freq,basis" Description="返回第一期为奇数的债券的收益。"/>
+  <Function Name="ODDLPRICE" Param="settle,maturity,last,rate,yield,redeem,freq,basis" Description="返回每张票面为 ￥100 且最后一期为奇数的债券的现价。"/>
+  <Function Name="ODDLYIELD" Param="settle,maturity,last,rate,price,redeem,freq,basis" Description="返回最后一期为奇数的债券的收益。"/>
+  <Function Name="OFFSET" Param="reference,rows,cols,height,width" Description="从给定引用中返回引用偏移量。"/>
+  <Function Name="OR" Param="argument1,argument2..." Description="如果任一参数为 TRUE，则返回 TRUE。"/>
+  <Function Name="PEARSON" Param="array_ind,array_dep" Description="返回 Pearson 乘积矩相关系数。"/>
+  <Function Name="PERCENTILE" Param="array,n" Description="返回区域中数值的第 k 个百分点的值。"/>
+  <Function Name="PERCENTRANK" Param="array,n,sigdig" Description="返回数据集中值的百分比排位。"/>
+  <Function Name="PERMUT" Param="k,n" Description="返回给定数目对象的排列数。"/>
+  <Function Name="PI" Param="" Description="返回 pi 的值。"/>
+  <Function Name="PMT" Param="rate,nper,pval,fval,type" Description="返回年金的定期支付金额。"/>
+  <Function Name="POISSON" Param="nevents,mean,cumulative" Description="返回泊松分布。"/>
+  <Function Name="POWER" Param="number,power" Description="返回数的乘幂。"/>
+  <Function Name="PPMT" Param="rate,per,nper,pval,fval,type" Description="返回一笔投资在给定期间内偿还的本金。"/>
+  <Function Name="PRICE" Param="settlement,maturity,rate,yield,redeem,frequency,basis" Description="返回每张票面为 ￥100 且定期支付利息的债券的现价。"/>
+  <Function Name="PRICEDISC" Param="settle,mature,discount,redeem,basis" Description="返回每张票面为 ￥100 的已贴现债券的现价。"/>
+  <Function Name="PRICEMAT" Param="settle,mature,issue,rate,yield,basis" Description="返回每张票面为 ￥100 且在到期日支付利息的债券的现价。"/>
+  <Function Name="PROB" Param="array,probs,lower,upper" Description="返回区域中的数值落在指定区间内的概率。"/>
+  <Function Name="PRODUCT" Param="value1,value2,..." Description="将其参数相乘。"/>
+  <Function Name="PROPER" Param="text" Description="将文本值的每个字的首字母大写。"/>
+  <Function Name="PV" Param="rate,numper,paymt,fval,type" Description="返回投资的现值。"/>
+  <Function Name="QUARTILE" Param="array,quart" Description="返回一组数据的四分位点。"/>
+  <Function Name="QUOTIENT" Param="numerator,denominator" Description="返回除法的整数部分。"/>
+  <Function Name="RADIANS" Param="value" Description="将度转换为弧度。"/>
+  <Function Name="RADIANS" Param="value" Description="将度转换为弧度。"/>
+  <Function Name="RAND" Param="" Description="返回 0 和 1 之间的一个随机数。"/>
+  <Function Name="RANDBETWEEN" Param="lower,upper" Description="返回位于两个指定数之间的一个随机数。"/>
+  <Function Name="RANK" Param="number,array,order" Description="返回一列数字的数字排位。"/>
+  <Function Name="RATE" Param="nper,pmt,pval,fval,type,guess" Description="返回年金的各期利率。"/>
+  <Function Name="RECEIVED" Param="settle,mature,invest,discount,basis" Description="返回完全投资型债券在到期日收回的金额。"/>
+  <Function Name="REPLACE" Param="old_text,start_char,num_chars,new_text" Description="替换文本中的字符。"/>
+  <Function Name="REPT" Param="text,number" Description="按给定次数重复文本。"/>
+  <Function Name="RIGHT" Param="text,num_chars" Description="返回文本值中最右边的字符。"/>
+  <Function Name="ROMAN" Param="number,style" Description="将阿拉伯数字转换为文本式罗马数字。"/>
+  <Function Name="ROUND" Param="value,places" Description="将数字按指定位数舍入。"/>
+  <Function Name="ROUNDDOWN" Param="value,places" Description="向绝对值减小的方向舍入数字。"/>
+  <Function Name="ROUNDUP" Param="value,places" Description="向绝对值增大的方向舍入数字。"/>
+  <Function Name="ROW" Param="reference" Description="返回引用的行号。"/>
+  <Function Name="ROWS" Param="array" Description="返回引用中的行数。"/>
+  <Function Name="RSQ" Param="array_dep,array_ind" Description="返回 Pearson 乘积矩相关系数的平方。"/>
+  <Function Name="SEARCH" Param="string1,string2" Description="在一个文本值中查找另一个文本值（不区分大小写）。"/>
+  <Function Name="SECOND" Param="time" Description="将序列号转换为秒。"/>
+  <Function Name="SERIESSUM" Param="x,n,m,coeff" Description="返回基于公式的幂级数的和。"/>
+  <Function Name="SIGN" Param="cellreference" Description="返回数字的符号。"/>
+  <Function Name="SIN" Param="angle" Description="返回给定角度的正弦值。"/>
+  <Function Name="SINH" Param="value" Description="返回数字的双曲正弦值。"/>
+  <Function Name="SKEW" Param="number1,number2,..." Description="返回分布的不对称度。"/>
+  <Function Name="SLN" Param="cost,salvage,life" Description="返回固定资产的每期线性折旧费。"/>
+  <Function Name="SLOPE" Param="array_dep,array_ind" Description="返回线性回归线的斜率。"/>
+  <Function Name="SMALL" Param="array,n" Description="返回数据集中的第 k 个最小值。"/>
+  <Function Name="SQRT" Param="value" Description="返回正平方根。"/>
+  <Function Name="SQRTPI" Param="multiple" Description="返回某数与 pi 的乘积的平方根。"/>
+  <Function Name="STANDARDIZE" Param="x,mean,stdev" Description="返回正态化数值。"/>
+  <Function Name="STDEVA" Param="value1,value2,..." Description="基于样本（包括数字、文本和逻辑值）估算标准偏差。"/>
+  <Function Name="STDEVP" Param="value1,value2,..." Description="基于整个样本总体计算标准偏差。"/>
+  <Function Name="STDEVPA" Param="value1,value2,..." Description="基于总体（包括数字、文本和逻辑值）计算标准偏差。"/>
+  <Function Name="STEYX" Param="array_dep,array_ind" Description="返回通过线性回归法预测每个 x 的 y 值时所产生的标准误差。"/>
+  <Function Name="SUBSTITUTE" Param="text,old_piece,new_piece,instance" Description="在文本字符串中用新文本替换旧文本。"/>
+  <Function Name="SUBTOTAL" Param="functioncode,value1,value2,..." Description="返回列表或数据库中的分类汇总。"/>
+  <Function Name="SUM" Param="value1,value2,..." Description="求参数的和。"/>
+  <Function Name="SUMIF" Param="array,condition,sumrange" Description="按给定条件对指定单元格求和。"/>
+  <Function Name="SUMIFS" Param="array,conditionarray,condition,..." Description="在区域中添加满足多个条件的单元格。"/>
+  <Function Name="SUMPRODUCT" Param="array1,array2,..." Description="返回对应的数组元素的乘积和。"/>
+  <Function Name="SUMSQ" Param="value1,value2,..." Description="返回参数的平方和。"/>
+  <Function Name="SUMX2MY2" Param="array_x,array_y" Description="返回两数组中对应值平方差之和。"/>
+  <Function Name="SUMX2PY2" Param="array_x,array_y" Description="返回两数组中对应值的平方和之和。"/>
+  <Function Name="SUMXMY2" Param="array_x,array_y" Description="返回两个数组中对应值差的平方和。"/>
+  <Function Name="SYD" Param="cost,salvage,life,period" Description="返回某项固定资产按年限总和折旧法计算的每期折旧金额。"/>
+  <Function Name="T" Param="value" Description="将参数转换为文本。"/>
+  <Function Name="TAN" Param="angle" Description="返回数字的正切值。"/>
+  <Function Name="TANH" Param="value" Description="返回数字的双曲正切值。"/>
+  <Function Name="TBILLEQ" Param="settle,mature,discount" Description="返回国库券的等价债券收益。"/>
+  <Function Name="TBILLPRICE" Param="settle,mature,discount" Description="返回面值 ￥100 的国库券的价格。"/>
+  <Function Name="TBILLYIELD" Param="settle,mature,priceper" Description="返回国库券的收益率。"/>
+  <Function Name="TDIST" Param="x,deg,tails" Description="返回学生的 t 分布。"/>
+  <Function Name="TEXT" Param="value,text" Description="设置数字格式并将其转换为文本。"/>
+  <Function Name="TIME" Param="hour,minutes,seconds" Description="返回特定时间的序列号。"/>
+  <Function Name="TIMEVALUE" Param="time_string" Description="将文本格式的时间转换为序列号。"/>
+  <Function Name="TINV" Param="prog,deg" Description="返回学生的 t 分布的反函数。"/>
+  <Function Name="TODAY" Param="" Description="返回今天日期的序列号。"/>
+  <Function Name="TRANSPOSE" Param="array" Description="返回数组的转置。"/>
+  <Function Name="TREND" Param="y,x,newx,constant" Description="返回沿线性趋势的值。"/>
+  <Function Name="TRIM" Param="text" Description="删除文本中的空格。"/>
+  <Function Name="TRIMMEAN" Param="array,percent" Description="返回数据集的内部平均值。"/>
+  <Function Name="TRUE" Param="" Description="返回逻辑值 TRUE。"/>
+  <Function Name="TRUNC" Param="value,precision" Description="将数字截尾取整。"/>
+  <Function Name="TTEST" Param="array1,array2,tails,type" Description="返回与学生的 t 检验相关的概率。"/>
+  <Function Name="TYPE" Param="value" Description="返回表示值的数据类型的数字。"/>
+  <Function Name="UPPER" Param="string" Description="将文本转换为大写形式。"/>
+  <Function Name="VALUE" Param="text" Description="将文本参数转换为数字。"/>
+  <Function Name="VAR" Param="value1,value2,..." Description="基于样本估算方差。"/>
+  <Function Name="VARA" Param="value1,value2,..." Description="基于样本（包括数字、文本和逻辑值）估算方差。"/>
+  <Function Name="VARP" Param="value1,value2,..." Description="计算基于样本总体的方差。"/>
+  <Function Name="VARPA" Param="value1,value2,..." Description="计算基于总体（包括数字、文本和逻辑值）的标准偏差。"/>
+  <Function Name="VDB" Param="cost,salvage,life,start,end,factor,switchnot" Description="使用余额递减法，返回一笔资产在给定期间或部分期间内的折旧值。"/>
+  <Function Name="VLOOKUP" Param="value,array,colindex,approx" Description="在数组第一列中查找，然后在行之间移动以返回单元格的值。"/>
+  <Function Name="WEEKDAY" Param="date,type" Description="将序列号转换为星期日期。"/>
+  <Function Name="WEEKNUM" Param="date,weektype" Description="将序列号转换为代表该星期为一年中第几周的数字。"/>
+  <Function Name="WEIBULL" Param="x,alpha,beta,cumulative" Description="计算基于总体（包括数字、文本和逻辑值）的标准偏差。"/>
+  <Function Name="WORKDAY" Param="startdate,numdays,holidays" Description="返回指定的若干个工作日之前或之后的日期的序列号。"/>
+  <Function Name="XIRR" Param="values,dates,guess" Description="返回一组现金流的内部收益率，这些现金流不一定定期发生。"/>
+  <Function Name="XNPV" Param="rate,values,dates" Description="返回一组现金流的净现值，这些现金流不一定定期发生。"/>
+  <Function Name="YEAR" Param="date" Description="将序列号转换为年。"/>
+  <Function Name="YEARFRAC" Param="startdate,enddate,basis" Description="返回代表 start_date 和 end_date 之间整天天数的年分数。"/>
+  <Function Name="YIELD" Param="settle,maturity,rate,price,redeem,frequency,basis" Description="返回定期支付利息的债券的收益。"/>
+  <Function Name="YIELDDISC" Param="settle,maturity,price,redeem,basis" Description="返回已贴现债券的年收益；例如，短期国库券。"/>
+  <Function Name="YIELDMAT" Param="settle,maturity,issue,issrate,price,basis" Description="返回在到期日支付利息的债券的年收益。"/>
+  <Function Name="ZTEST" Param="array,x,sigma" Description="返回 z 检验的单尾概率值。"/>
+</Functions>

@@ -1,0 +1,22 @@
+﻿<Page
+    x:Class="Infras.Demo.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <StackPanel Background="White" Spacing="20" Margin="0,70,0,0">
+        <StackPanel Orientation="Horizontal" Spacing="20">
+            <Button Click="OnBlank" Content="空内容" FontFamily="Microsoft YaHei UI" />
+            <Button Click="OnChart" Content="图表" />
+            <Button Content="xls" Tag="MonthProfit.xlsx" Click="OnLoadFile" />
+            <Button Content="xml" Tag="MonthProfit.ssxml" Click="OnLoadFile" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="20">
+            <Button Click="OnMutiTab" Content="分组排序" />
+            <Button Click="OnSparkline" Content="迷你图" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="20">
+            <Button Click="OnPieStacked" Content="饼图" />
+            <Button Click="OnExportPdf" Content="导出打印" />
+        </StackPanel>
+    </StackPanel>
+</Page>

@@ -1,0 +1,10 @@
+<Project ToolsVersion="Current">
+
+    <!-- android始终生成xml文件，太大无用，不打包 -->
+    <Target Name="DelXmlFiles" AfterTargets="Build">
+        <ItemGroup>
+            <_FilesToDelete Include="$(OutputPath)**\*.xml"/>
+        </ItemGroup>
+        <Delete Files="@(_FilesToDelete)" />
+    </Target>
+</Project>
