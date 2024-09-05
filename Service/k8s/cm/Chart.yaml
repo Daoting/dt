@@ -1,0 +1,5 @@
+apiVersion: v1
+appVersion: "1.0"
+description: Core Model 内核模型服务
+name: baisui-cm
+version: 0.1.0

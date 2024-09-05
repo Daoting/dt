@@ -1,0 +1,73 @@
+
+        #region 死信队列
+        /*
+        static string _retryExchangeName = $"{Kit.AppName}.Retry";
+
+        IModel CreateDeadChannel(string p_eventName)
+        {
+            var channel = _conn.CreateModel();
+
+            // 定义队列属性
+            Dictionary<String, Object> args = new Dictionary<String, Object>();
+            // 消息因超时、被拒绝、超出最大长度时被删除，然后推动到指定的死信交换机中
+            args.Add("x-dead-letter-exchange", _retryExchangeName);
+            // 再根据routingkey推到queue中
+            args.Add("x-dead-letter-routing-key", p_eventName);
+            // 队列中的消息超过30秒会被删除
+            args.Add("x-message-ttl", 30000);
+
+            // 声明消息队列
+            // exclusive：是否为排他队列，若排他则只首次连接可见，连接断开时删除
+            // autoDelete：true时若没有任何订阅者的话，该队列会被自动删除，这种队列适用于临时队列
+            // durable：是否持久化
+            channel.QueueDeclare(p_eventName, durable: true, exclusive: false, autoDelete: false, arguments: args);
+
+            var consumer = new EventingBasicConsumer(channel);
+            consumer.Received += async (s, e) =>
+            {
+                await ProcessEvent(e);
+                channel.BasicAck(e.DeliveryTag, false);
+            };
+
+            // 限流的设置
+            // 参数一： 0表消息的大小不做任何限制
+            // 参数二： 1表服务器给的最大的消息数，这里是一条一条的消费，如果消费者没有确认消费，将不会接受新消息
+            // 参数三： false级别为consumer 
+            channel.BasicQos(0, 1, false);
+
+            // 要想做限流必须将autoAck设置为false
+            channel.BasicConsume(queue: p_eventName, autoAck: false, consumer: consumer);
+
+            channel.CallbackException += (s, e) =>
+            {
+                //_consumerChannels[p_eventName].Dispose();
+                //_consumerChannels[p_eventName] = CreateNormalChannel(p_queueName, p_routeKey);
+            };
+            return channel;
+        }
+
+        IModel CreateRetryChannel(string p_queueName)
+        {
+            var channel = _conn.CreateModel();
+            // 声明消息队列
+            channel.QueueDeclare(p_queueName, durable: true, exclusive: false, autoDelete: false);
+
+            var consumer = new EventingBasicConsumer(channel);
+            consumer.Received += async (s, e) =>
+            {
+                await ProcessEvent(e);
+                channel.BasicAck(e.DeliveryTag, false);
+            };
+
+            // 限流的设置
+            channel.BasicQos(0, 1, false);
+
+            // 要想做限流必须将autoAck设置为false
+            channel.BasicConsume(queue: p_queueName, autoAck: false, consumer: consumer);
+            channel.CallbackException += (s, e) =>
+            {
+
+            };
+            return channel;
+        }*/
+        #endregion

@@ -1,0 +1,22 @@
+﻿{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/dt",
+      "sslPort": 0
+    }
+  },
+  "profiles": {
+    "Boot": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:1004"
+    },
+    "IIS": {
+      "commandName": "IIS",
+      "launchBrowser": true
+    }
+  }
+}

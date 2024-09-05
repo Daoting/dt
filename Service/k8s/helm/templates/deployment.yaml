@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "svc.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "svc.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    helm.sh/chart: {{ include "svc.chart" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "svc.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "svc.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: https
+              containerPort: 443
+              protocol: TCP
+          # 挂载数据卷
+          volumeMounts:
+            # 服务的配置文件，支持热更新
+            - name: config-volume
+              mountPath: /app/etc/config
+            # 日志存储到宿主机
+            - name: log-volume
+              mountPath: /app/etc/log
+          # 开发时不启用探针
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+              # 第一次执行probe之前要的等待5秒钟
+          #   initialDelaySeconds: 120
+              # 每次执行探针间隔的秒数
+          #   periodSeconds: 120
+              # 探测超时时间，默认1秒
+          #   timeoutSeconds: 120
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          #   initialDelaySeconds: 120
+          #   periodSeconds: 120
+          #   timeoutSeconds: 120
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: "{{ include "svc.fullname" . }}-cfg"
+        # 在宿主机上指定一个目录，挂载到Pod的容器中，存储日志文件
+        - name: log-volume
+          hostPath:
+            path: /home/dt/log
+            type: DirectoryOrCreate
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

@@ -1,0 +1,24 @@
+》目录结构
+helm  ----所有服务的公共chart文件
+    templates   ----chart模板文件，所有服务文件相同
+        configmap.yaml  
+        deployment.yaml
+        ingress.yaml
+        pod.yaml
+        service.yaml
+    .helmignore ----生成chart包时忽略的文件
+    values.yaml ----模板值
+cm  ----以服务名区分的配置文件
+    config  ----服务配置文件，json格式，以卷的形式挂载进Pod的/app/etc/config目录
+    Chart.yaml  ----各服务之间不同，Chart.Name格式：app-svc
+debug.ps1   ----脚本，生成docker镜像、通过helm部署服务
+global.json ----应用级的全局参数
+
+
+》在k8s中调试服务时launch.json中需要指定pod的名称，若采用depoyment方式部署，则每次都需要修改pod名称，也无法将build task作为前置任务。
+解决方法：使用pod资源模板，需要在helm的.helmignore文件中忽略deployment.yaml
+
+
+》服务名目录下的config文件如何加载到 /app/etc/config 的？
+部署时通过脚本将config整个目录复制到helm下，在configmap.yaml中配置成configmap，资源名称为"svc.fullname"-cfg，
+在pod.yaml或deployment.yaml中作为volume挂载进容器的/app/etc/config目录

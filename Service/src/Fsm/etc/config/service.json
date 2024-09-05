@@ -1,0 +1,16 @@
+﻿{
+  "DbKey": "pgdt",
+  "TraceSql": false,
+  "TraceRpc": false,
+
+  "KestrelListen": [
+    {
+      "Scheme": "https",
+      "Address": "0.0.0.0",
+      "Port": "1003"
+    }
+  ],
+
+  "FixedVolume": "photo;editor;g;chat",
+  "MaxRequestBodySize": 1073741824
+}

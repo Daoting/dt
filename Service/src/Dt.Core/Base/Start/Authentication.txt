@@ -1,0 +1,203 @@
+******************************************************************************
+.UseAuthentication时注册的认证中间件
+
+public class AuthenticationMiddleware
+{
+    private readonly RequestDelegate _next;
+
+    public AuthenticationMiddleware(RequestDelegate next, IAuthenticationSchemeProvider schemes)
+    {
+        if (next == null)
+        {
+            throw new ArgumentNullException(nameof(next));
+        }
+        if (schemes == null)
+        {
+            throw new ArgumentNullException(nameof(schemes));
+        }
+
+        _next = next;
+        Schemes = schemes;
+    }
+
+	// 单例，类型为AuthenticationSchemeProvider，在AddAuthenticationCore时注入
+    public IAuthenticationSchemeProvider Schemes { get; set; }
+
+    public async Task Invoke(HttpContext context)
+    {
+		// 后面重定向时用
+        context.Features.Set<IAuthenticationFeature>(new AuthenticationFeature
+        {
+            OriginalPath = context.Request.Path,
+            OriginalPathBase = context.Request.PathBase
+        });
+
+		// 远程认证，如：OAuth, OIDC等
+        var handlers = context.RequestServices.GetRequiredService<IAuthenticationHandlerProvider>();
+        foreach (var scheme in await Schemes.GetRequestHandlerSchemesAsync())
+        {
+			// AuthenticationHandlerProvider内部查询Schemes，创建Handler对象
+            var handler = await handlers.GetHandlerAsync(context, scheme.Name) as IAuthenticationRequestHandler;
+            if (handler != null && await handler.HandleRequestAsync())
+            {
+                return;
+            }
+        }
+
+		// 本地认证
+        var defaultAuthenticate = await Schemes.GetDefaultAuthenticateSchemeAsync();
+        if (defaultAuthenticate != null)
+        {
+            var result = await context.AuthenticateAsync(defaultAuthenticate.Name);
+            if (result?.Principal != null)
+            {
+                context.User = result.Principal;
+            }
+        }
+
+        await _next(context);
+    }
+}
+
+public class AuthenticationSchemeProvider : IAuthenticationSchemeProvider
+{
+    private readonly AuthenticationOptions _options;
+    private readonly object _lock = new object();
+
+    private readonly IDictionary<string, AuthenticationScheme> _schemes;
+    private readonly List<AuthenticationScheme> _requestHandlers;
+    // Used as a safe return value for enumeration apis
+    private IEnumerable<AuthenticationScheme> _schemesCopy = Array.Empty<AuthenticationScheme>();
+    private IEnumerable<AuthenticationScheme> _requestHandlersCopy = Array.Empty<AuthenticationScheme>();
+
+	public AuthenticationSchemeProvider(IOptions<AuthenticationOptions> options)
+            : this(options, new Dictionary<string, AuthenticationScheme>(StringComparer.Ordinal))
+    {
+    }
+
+    protected AuthenticationSchemeProvider(IOptions<AuthenticationOptions> options, IDictionary<string, AuthenticationScheme> schemes)
+    {
+        _options = options.Value;
+
+        _schemes = schemes ?? throw new ArgumentNullException(nameof(schemes));
+        _requestHandlers = new List<AuthenticationScheme>();
+
+        foreach (var builder in _options.Schemes)
+        {
+            var scheme = builder.Build();
+            AddScheme(scheme);
+        }
+    }
+
+	private Task<AuthenticationScheme> GetDefaultSchemeAsync()
+		=> _options.DefaultScheme != null
+		? GetSchemeAsync(_options.DefaultScheme)
+		: Task.FromResult<AuthenticationScheme>(null);
+
+	public virtual Task<AuthenticationScheme> GetDefaultAuthenticateSchemeAsync()
+		=> _options.DefaultAuthenticateScheme != null
+		? GetSchemeAsync(_options.DefaultAuthenticateScheme)
+		: GetDefaultSchemeAsync();
+
+	public virtual Task<IEnumerable<AuthenticationScheme>> GetRequestHandlerSchemesAsync()
+        => Task.FromResult(_requestHandlersCopy);
+
+	public virtual void AddScheme(AuthenticationScheme scheme)
+    {
+        if (_schemes.ContainsKey(scheme.Name))
+        {
+            throw new InvalidOperationException("Scheme already exists: " + scheme.Name);
+        }
+        lock (_lock)
+        {
+            if (_schemes.ContainsKey(scheme.Name))
+            {
+                throw new InvalidOperationException("Scheme already exists: " + scheme.Name);
+            }
+            if (typeof(IAuthenticationRequestHandler).IsAssignableFrom(scheme.HandlerType))
+            {
+                _requestHandlers.Add(scheme);
+                _requestHandlersCopy = _requestHandlers.ToArray();
+            }
+            _schemes[scheme.Name] = scheme;
+            _schemesCopy = _schemes.Values.ToArray();
+        }
+    }
+}
+
+
+******************************************************************************
+.AddAuthentication注入认证服务
+public static AuthenticationBuilder AddAuthentication(this IServiceCollection services)
+{
+    if (services == null)
+    {
+        throw new ArgumentNullException(nameof(services));
+    }
+
+    services.AddAuthenticationCore();
+    services.AddDataProtection();
+    services.AddWebEncoders();
+    services.TryAddSingleton<ISystemClock, SystemClock>();
+    return new AuthenticationBuilder(services);
+}
+
+public static AuthenticationBuilder AddAuthentication(this IServiceCollection services, string defaultScheme)
+    => services.AddAuthentication(o => o.DefaultScheme = defaultScheme);
+
+public static AuthenticationBuilder AddAuthentication(this IServiceCollection services, Action<AuthenticationOptions> configureOptions)
+{
+    if (services == null)
+    {
+        throw new ArgumentNullException(nameof(services));
+    }
+
+    if (configureOptions == null)
+    {
+        throw new ArgumentNullException(nameof(configureOptions));
+    }
+
+    var builder = services.AddAuthentication();
+    services.Configure(configureOptions);
+    return builder;
+}
+
+
+public static IServiceCollection AddAuthenticationCore(this IServiceCollection services)
+{
+    services.TryAddScoped<IAuthenticationService, AuthenticationService>();
+    services.TryAddSingleton<IClaimsTransformation, NoopClaimsTransformation>(); // Can be replaced with scoped ones that use DbContext
+    services.TryAddScoped<IAuthenticationHandlerProvider, AuthenticationHandlerProvider>();
+    services.TryAddSingleton<IAuthenticationSchemeProvider, AuthenticationSchemeProvider>();
+    return services;
+}
+
+
+******************************************************************************
+AuthenticationBuilder调用扩展方法AddCookie、AddOpenIdConnect、AddJwtBearer时，内部实际增加一个AuthenticationScheme
+如：AddJwtBearer->AddScheme<JwtBearerOptions, JwtBearerHandler>
+private AuthenticationBuilder AddSchemeHelper<TOptions, THandler>(string authenticationScheme, string displayName, Action<TOptions> configureOptions)
+    where TOptions : class, new()
+    where THandler : class, IAuthenticationHandler
+{
+    Services.Configure<AuthenticationOptions>(o =>
+    {
+        o.AddScheme(authenticationScheme, scheme => {
+            scheme.HandlerType = typeof(THandler);
+            scheme.DisplayName = displayName;
+        });
+    });
+    if (configureOptions != null)
+    {
+        Services.Configure(authenticationScheme, configureOptions);
+    }
+    Services.AddTransient<THandler>();
+    return this;
+}
+
+public class AuthenticationScheme
+{
+    public string Name { get; }
+    public string DisplayName { get; }
+    public Type HandlerType { get; }
+}

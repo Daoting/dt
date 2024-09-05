@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="..\..\..\Tools\File\ServicePkg.props" Condition="exists('..\..\..\Tools\File\ServicePkg.props')" />
+	
+	<ItemGroup>
+		<!--PrivateAssets避免引用项目的 nuget 包-->
+		<ProjectReference Include="..\Dt.Cm\Dt.Cm.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\Dt.Fsm\Dt.Fsm.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\Dt.Msg\Dt.Msg.csproj" PrivateAssets="all" />
+	</ItemGroup>
+
+	<Import Project="..\References.props" />
+
+</Project>

@@ -1,0 +1,24 @@
+<Project ToolsVersion="Current">
+	<PropertyGroup>
+		<Version>4.6.0</Version>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<NoWarn>1701;1702;1705;1591</NoWarn>
+		<DefineConstants>$(DefineConstants);TRACE;SERVER</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<!-- 和Deterministic配合，调试程序时使用github源文件，不使用本地源文件 -->
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+		<Deterministic>true</Deterministic>
+		<!-- .nuspec和.pdb文件增加源代码地址 -->
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<!-- .net8.0后其它设置不再需要，也不需Microsoft.SourceLink.GitHub包 -->
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<Using Include="Dt.Core" />
+		<Using Include="Serilog" />
+	</ItemGroup>
+</Project>

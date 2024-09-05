@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<DebugType>portable</DebugType>
+		<DebugSymbols>True</DebugSymbols>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+	</ItemGroup>
+</Project>

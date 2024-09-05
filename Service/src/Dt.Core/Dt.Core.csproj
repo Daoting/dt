@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<DebugType>portable</DebugType>
+		<DebugSymbols>True</DebugSymbols>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<EmbeddedResource Include="Res\*.*" />
+		<EmbeddedResource Include="Internal\InitMode\InitSql\*.*" />
+	</ItemGroup>
+
+	<Import Project="..\References.props" />
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+</Project>
