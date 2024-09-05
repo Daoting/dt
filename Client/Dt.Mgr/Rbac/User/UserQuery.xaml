@@ -1,0 +1,14 @@
+﻿<a:Tab
+    x:Class="Dt.Mgr.Rbac.UserQuery"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="查询"
+    Icon="漏斗">
+
+    <a:QueryFv x:Name="_fv">
+        <a:CText ID="acc" Title="账号" Query="Editable" QueryFlag="Equal" />
+        <a:CText ID="phone" Title="手机号" Query="Editable" QueryFlag="Equal" />
+        <a:CText ID="name" Title="姓名" Query="Editable" QueryFlag="Contains" />
+    </a:QueryFv>
+</a:Tab>

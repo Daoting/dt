@@ -1,0 +1,12 @@
+﻿<a:Form
+    x:Class="Dt.Mgr.Rbac.PerForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="权限">
+
+    <a:Fv x:Name="_fv" Save="Save" Create="Add">
+        <a:CText ID="Name" Title="权限名称" />
+        <a:CText ID="Note" Title="权限描述" />
+    </a:Fv>
+</a:Form>

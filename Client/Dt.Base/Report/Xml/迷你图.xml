@@ -1,0 +1,9 @@
+﻿<Sparkline row="2"
+           col="1"
+           rowspan="5"
+           colspan="4"
+           
+           type="3种类型"
+           
+           tbl="数据源名称"
+           field="数值字段名" />

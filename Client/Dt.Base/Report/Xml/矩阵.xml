@@ -1,0 +1,54 @@
+﻿<Matrix row="2"
+        col="1"
+        rowspan="5"
+        colspan="4"
+        
+        tbl="数据源名称"
+        hiderowheader="False"
+        hidecolheader="False"
+        repeatcolheader="False"
+        repeatrowheader="False"
+        rowsort="行排序表达式"
+        colsort="列排序表达式">
+  <Corner>
+    <Text />
+  </Corner>
+  <RowHeader>
+    <Level field="字段名">
+      <Text />
+      <Subtotal beforelevel="1" span="1">
+        <Text />
+        <Subtotal beforelevel="1" span="1">
+          <Text />
+        </Subtotal>
+      </Subtotal>
+      <Subtitle span="1">
+        <Text />
+        <Subtitle span="1">
+          <Text />
+        </Subtitle>
+      </Subtitle>
+    </Level>
+    <Level field="字段名">
+      <Text />
+      <Subtotal beforelevel="1" span="1">
+        <Text />
+        <Subtotal beforelevel="1" span="1">
+          <Text />
+        </Subtotal>
+      </Subtotal>
+      <Subtitle>
+        <Text />
+        <Subtitle>
+          <Text />
+        </Subtitle>
+      </Subtitle>
+    </Level>
+  </RowHeader>
+  <ColHeader>
+    
+  </ColHeader>
+  <MRow>
+    <Text />
+  </MRow>
+</Matrix>

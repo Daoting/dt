@@ -1,0 +1,45 @@
+﻿<a:Dlg
+    x:Class="Dt.Mgr.Module.RptViewParamsDlg"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="视图参数编辑">
+
+    <a:Dlg.Menu>
+        <a:Menu>
+            <a:Mi ID="确定" Icon="保存" Call="OnOk" />
+        </a:Menu>
+    </a:Dlg.Menu>
+    
+    <Grid RowDefinitions="40,170,40,*">
+        <a:CBar Title="报表列表">
+            <Button Content="添加" Click="OnAddRpt" HorizontalAlignment="Right" />
+        </a:CBar>
+        <a:Lv x:Name="_lvRpt" SelectionChanged="OnRptSelectionChanged" ItemDoubleClick="OnRptDoubleClick" Grid.Row="1">
+            <a:Ex.Menu>
+                <a:Menu>
+                    <a:Mi ID="编辑" Icon="编辑" Click="OnEditRpt" />
+                    <a:Mi ID="删除" Icon="删除" Click="OnDelRpt" />
+                </a:Menu>
+            </a:Ex.Menu>
+            <a:Cols>
+                <a:Col ID="uri" Title="报表模板Uri" Width="*" />
+            </a:Cols>
+        </a:Lv>
+        <a:CBar Title="参数列表" Grid.Row="2">
+            <Button Content="添加" Click="OnAddParams" HorizontalAlignment="Right" />
+        </a:CBar>
+        <a:Lv x:Name="_lvParams" SelectionChanged="OnParamsSelectionChanged" ItemDoubleClick="OnParamsDoubleClick" Grid.Row="3">
+            <a:Ex.Menu>
+                <a:Menu>
+                    <a:Mi ID="编辑" Icon="编辑" Click="OnEditParams" />
+                    <a:Mi ID="删除" Icon="删除" Click="OnDelParams" />
+                </a:Menu>
+            </a:Ex.Menu>
+            <a:Cols>
+                <a:Col ID="name" Title="参数名" Width="200" />
+                <a:Col ID="val" Title="值" Width="*" />
+            </a:Cols>
+        </a:Lv>
+    </Grid>
+</a:Dlg>

@@ -1,0 +1,8 @@
+﻿<Data>
+  <Tbl name="数据名称"
+       isscritp="False"
+       srv="服务名称"
+       cols="id,name,address">
+    <![CDATA[select * from dual]]>
+  </Tbl>
+</Data>

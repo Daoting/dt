@@ -1,0 +1,30 @@
+﻿<a:Win
+    x:Class="Dt.Mgr.Workflow.WorkflowDesign"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="流程图">
+                <a:Tab.Menu>
+                    <a:Menu x:Name="_menu" DataContext="{Binding ElementName=_sketch}">
+                        <a:Mi ID="保存" Icon="保存" Click="OnSave" />
+                        <a:Mi ID="撤消" Icon="撤消" Cmd="{Binding CmdUndo}"/>
+                        <a:Mi ID="重做" Icon="重做" Cmd="{Binding CmdRedo}"/>
+                    </a:Menu>
+                </a:Tab.Menu>
+                <a:Sketch x:Name="_sketch"
+                          ShowGridLine="True"
+                          ShowHorRuler="True"
+                          ShowVerRuler="True"
+                          IsReadOnly="False" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab x:Name="_tab" Order="2" Title="属性" />
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

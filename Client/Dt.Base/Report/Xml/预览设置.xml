@@ -1,0 +1,11 @@
+﻿<View script="[RptScript]"
+      autoquery="False"
+      showcolheader="False"
+      showrowheader="False"
+      showgridline="False"
+      showmenu="False"
+      showcontextmenu="False"
+      showselectionmenu="False"
+      showexport="true"
+      showtoggleview="true"
+      showprint="true" />

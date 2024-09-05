@@ -1,0 +1,29 @@
+﻿<a:Tab
+    x:Class="Dt.Base.Tools.DbInit"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="数据库操作">
+
+    <a:Fv x:Name="_fv">
+        <a:CText ID="NewDb" Title="库名" />
+        <a:CText ID="NewUser" Title="用户名" />
+        <a:CPassword ID="NewPwd" Title="密码" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button x:Name="_btnCreate" Content="创　建　新　库" Click="OnCreate" Background="{StaticResource 主蓝}" Style="{StaticResource 浅色按钮}" HorizontalAlignment="Stretch" />
+            <Button x:Name="_btnDel" Content="删　　除　　库" Click="OnDelete" Background="Red" Style="{StaticResource 浅色按钮}" HorizontalAlignment="Stretch" Grid.Column="1" />
+        </Grid>
+        <Button x:Name="_btnConn" Content="连　接　库　导　入" Click="OnConnect" Background="Green" Style="{StaticResource 浅色按钮}" HorizontalAlignment="Stretch" />
+        <a:CFree RowSpan="3" ColSpan="0" ShowTitle="False">
+            <TextBox x:Name="_tbInfo"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     ScrollViewer.VerticalScrollMode="Enabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        </a:CFree>
+    </a:Fv>
+</a:Tab>

@@ -1,0 +1,11 @@
+﻿<a:Form
+    x:Class="Dt.Mgr.Module.OptionGroupOptionForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="编辑选项">
+
+    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+        <a:CText ID="name" Title="选项名称" />
+    </a:Fv>
+</a:Form>

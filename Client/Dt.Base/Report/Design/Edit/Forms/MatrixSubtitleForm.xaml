@@ -1,0 +1,19 @@
+﻿<UserControl
+    x:Class="Dt.Base.Report.MatrixSubtitleForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:rpt="using:Dt.Base.Report">
+
+    <ScrollViewer>
+        <StackPanel>
+            <rpt:MatrixForm x:Name="_fvMtx" />
+            <a:Fv x:Name="_fv">
+                <a:CBar Title="静态标题" />
+                <a:CNum ID="span" Title="标题跨度" Minimum="1" IsInteger="True" />
+                <Button Content="新建子标题" Click="OnAddTitle" />
+                <Button Content="删除标题" Click="OnDelTitle" />
+            </a:Fv>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

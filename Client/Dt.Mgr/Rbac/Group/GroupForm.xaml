@@ -1,0 +1,12 @@
+﻿<a:Form
+    x:Class="Dt.Mgr.Rbac.GroupForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="编辑分组">
+
+    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+        <a:CText ID="name" Title="组名" />
+        <a:CText ID="note" Title="组描述" />
+    </a:Fv>
+</a:Form>

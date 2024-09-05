@@ -1,0 +1,15 @@
+﻿<a:List
+    x:Class="Dt.Mgr.Workflow.WfdPrcWfdTrsList"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="迁移列表">
+    
+    <a:Lv x:Name="_lv">
+        <a:Cols>
+            <a:Col ID="src_atv" Title="起始活动" />
+            <a:Col ID="tgt_atv" Title="目标活动" />
+            <a:Col ID="is_rollback" Title="回退迁移" />
+        </a:Cols>
+    </a:Lv>
+</a:List>

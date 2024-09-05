@@ -1,0 +1,13 @@
+﻿<a:Dlg
+    x:Class="Dt.Mgr.Rbac.Role4Group"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="选择角色">
+
+    <a:Lv x:Name="_lv" SelectionMode="Multiple">
+        <DataTemplate>
+            <a:Dot ID="Name" Padding="10" />
+        </DataTemplate>
+    </a:Lv>
+</a:Dlg>

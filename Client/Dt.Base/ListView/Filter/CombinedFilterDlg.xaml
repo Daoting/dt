@@ -1,0 +1,9 @@
+﻿<a:Dlg
+    x:Class="Dt.Base.ListView.CombinedFilterDlg"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="组合筛选">
+
+    <a:QueryFv x:Name="_fv" />
+</a:Dlg>

@@ -1,0 +1,16 @@
+﻿<UserControl
+    x:Class="Dt.Base.Tray"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid x:Name="_grid" Background="Transparent">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock x:Name="_tbIcon" FontFamily="{StaticResource IconFont}" FontSize="20" VerticalAlignment="Center" TextAlignment="Center">
+                <TextBlock.RenderTransform>
+                    <RotateTransform x:Name="_rotate" CenterX="10" CenterY="10" Angle="0" />
+                </TextBlock.RenderTransform>
+            </TextBlock>
+            <ContentPresenter x:Name="_pre" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="-8,0,0,0" />
+        </StackPanel>
+    </Grid>
+</UserControl>

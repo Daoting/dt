@@ -1,0 +1,16 @@
+﻿<a:List
+    x:Class="Dt.Mgr.Rbac.RoleList"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="角色列表">
+
+    <a:Lv x:Name="_lv">
+        <DataTemplate>
+            <StackPanel Padding="10">
+                <a:Dot ID="Name" />
+                <a:Dot ID="Note" Call="Def.小灰" />
+            </StackPanel>
+        </DataTemplate>
+    </a:Lv>
+</a:List>

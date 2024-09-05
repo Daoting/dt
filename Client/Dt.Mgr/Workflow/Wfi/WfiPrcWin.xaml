@@ -1,0 +1,18 @@
+﻿<a:Win
+    x:Class="Dt.Mgr.Workflow.WfiPrcWin"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.Mgr.Workflow">
+
+    <l:WfiPrcQuery x:Name="_query" a:Ex.Dock="Left" Order="1" />
+    <l:WfiPrcList x:Name="_parentList" />
+    <a:Pane Pos="Right" InitWidth="600">
+        <a:Tabs>
+            <l:WfiPrcWfiAtvList x:Name="_wfiAtvList" />
+        </a:Tabs>
+        <a:Tabs>
+            <l:WfiItemList x:Name="_wfiItemList" />
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

@@ -1,0 +1,16 @@
+﻿<a:Win
+    x:Class="Dt.Mgr.Rbac.UserWin"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Dt.Mgr.Rbac">
+
+    <l:UserQuery x:Name="_query" a:Ex.Dock="Left" Order="1" />
+    <l:UserList x:Name="_mainList" />
+    <a:Tabs a:Ex.Dock="Right">
+        <l:UserGroupList x:Name="_groupList" />
+        <l:UserRoleList x:Name="_roleList" />
+        <l:UserMenuList x:Name="_menuList" />
+        <l:UserPerList x:Name="_perList" />
+    </a:Tabs>
+</a:Win>

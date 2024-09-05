@@ -1,0 +1,20 @@
+﻿<a:Tab
+    x:Class="Dt.Mgr.Workflow.WfdPrcQuery"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="查询"
+    Icon="漏斗">
+
+    <a:QueryFv x:Name="_fv">
+        <a:CText ID="name" Title="流程名称" Query="Editable" QueryFlag="Contains" />
+        <a:CBool ID="is_locked" Title="已锁定不能创建流程实例" ShowTitle="False" Query="ReadOnly" QueryFlag="Equal" />
+        <a:CBool ID="singleton" Title="同一时刻只允许有一个激活的流程实例" ShowTitle="False" Query="ReadOnly" QueryFlag="Equal" />
+        <a:CBar Title="创建时间" />
+        <a:CDate ID="ctime_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate ID="ctime_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CBar Title="最后修改时间" />
+        <a:CDate ID="mtime_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate ID="mtime_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+    </a:QueryFv>
+</a:Tab>

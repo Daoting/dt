@@ -1,0 +1,26 @@
+﻿<a:Dlg
+    x:Class="Dt.Base.FormView.ColorDlg"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="_tb" PlaceholderText="自定义，如：#FF1BA1E2" />
+            <Button Content="确定" Click="OnCustom" Grid.Column="1" />
+        </Grid>
+        <a:Lv x:Name="_lv" ViewMode="Tile" MinItemWidth="40" Grid.Row="1">
+            <DataTemplate>
+                <a:Dot ID="color" Width="40" Height="40" />
+            </DataTemplate>
+        </a:Lv>
+    </Grid>
+</a:Dlg>

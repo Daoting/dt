@@ -1,0 +1,15 @@
+﻿<a:List
+    x:Class="Dt.Mgr.Workflow.WfiPrcWfiAtvList"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="活动实例">
+    
+    <a:Lv x:Name="_lv">
+        <a:Cols>
+            <a:Col ID="Status" Title="状态" Width="60" />
+            <a:Col ID="Name" Title="活动名称" Width="200" />
+            <a:Col ID="inst_count" Title="工作项数" Width="100" />
+        </a:Cols>
+    </a:Lv>
+</a:List>
