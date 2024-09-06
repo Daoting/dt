@@ -1,0 +1,11 @@
+﻿<a:Win
+    x:Class="Demo.Lob.入出Win"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Demo.Lob">
+
+    <l:入出Query x:Name="_query" a:Ex.Dock="Left" Order="1" />
+    <l:入出List x:Name="_parentList" />
+    <l:入出详单List x:Name="_详单List" a:Ex.Dock="Bottom" />
+</a:Win>

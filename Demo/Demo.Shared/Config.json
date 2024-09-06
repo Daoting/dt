@@ -1,0 +1,27 @@
+﻿{
+  "Title": "搬运工",
+
+  // cm服务地址 或 直连数据库的键名
+  "Server": "https://10.10.1.16:1234",
+  //"Server": "pgdt",
+
+  // 可直连数据库列表
+  "Database": {
+    "mydt": {
+      "ConnStr": "Server=10.10.1.2;Port=3306;Database=dt;Uid=dt;Pwd=dt;",
+      "DbType": "mysql"
+    },
+    "orcldt": {
+      "ConnStr": "User Id=dt;Password=dt;Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.10.1.2)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=sec)(SERVER=dedicated)))",
+      "DbType": "oracle"
+    },
+    "sqldt": {
+      "ConnStr": "Data Source=10.10.1.2,1433;Initial Catalog=dt;User ID=dt;Password=dt;Encrypt=True;TrustServerCertificate=True;",
+      "DbType": "sqlserver"
+    },
+    "pgdt": {
+      "ConnStr": "Host=10.10.1.2;Port=5432;Database=dt;Username=dt;Password=dt;",
+      "DbType": "postgresql"
+    }
+  }
+}

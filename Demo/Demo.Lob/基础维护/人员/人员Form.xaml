@@ -1,0 +1,20 @@
+﻿<a:Form
+    x:Class="Demo.Lob.人员Form"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="人员">
+
+    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+        <a:CText ID="姓名" />
+        <a:CDate ID="出生日期" />
+        <a:CList ID="性别" />
+        <a:CDate ID="工作日期" />
+        <a:CText ID="办公室电话" />
+        <a:CText ID="电子邮件" />
+        <a:CTip ID="建档时间" />
+        <a:CTip ID="撤档时间" />
+        <a:CTip ID="撤档原因" />
+        <a:CTip ID="账号" />
+    </a:Fv>
+</a:Form>

@@ -1,0 +1,14 @@
+﻿<a:List
+    x:Class="Demo.Lob.人员部门List"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="所属部门">
+
+    <a:Lv x:Name="_lv">
+        <a:Cols>
+            <a:Col ID="名称" />
+            <a:Col ID="缺省" />
+        </a:Cols>
+    </a:Lv>
+</a:List>

@@ -1,0 +1,8 @@
+﻿<a:Win
+    x:Class="Demo.UI.ProgressDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <ProgressRing IsActive="True" Height="60" Width="60" HorizontalAlignment="Left" />
+</a:Win>

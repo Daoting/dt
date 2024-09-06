@@ -1,0 +1,14 @@
+﻿<a:Win
+    x:Class="Demo.Crud.普通Win"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Demo.Crud">
+
+    <l:普通Query x:Name="_query" a:Ex.Dock="Left" Order="1" />
+    <l:普通List x:Name="_parentList" />
+    <a:Tabs a:Ex.Dock="Bottom">
+        <l:普通大儿List x:Name="_大儿List" />
+        <l:普通小儿List x:Name="_小儿List" />
+    </a:Tabs>
+</a:Win>

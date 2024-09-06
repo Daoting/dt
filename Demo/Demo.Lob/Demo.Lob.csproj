@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<ItemGroup>
+		<ProjectReference Include="..\Demo.Base\Demo.Base.csproj" />
+		<Using Include="Demo.Base" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="基础维护\物资目录\" />
+	</ItemGroup>
+</Project>

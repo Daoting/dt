@@ -1,0 +1,12 @@
+﻿<Rpt cols="80,80,80,80,80">
+  <Params />
+  <Data />
+  <Page height="322" width="392" />
+  <Header />
+  <Body rows="25,25,25,25,25,25,25,25,25,25">
+    <Text row="2" col="1" val="文本1" />
+    <Text row="2" col="3" colspan="2" val="文本占两列文本占两列" />
+    <Text row="9" col="2" val="自动行高长文本，此处长文本应该换页" wordwrap="True" autoheight="True" />
+  </Body>
+  <Footer />
+</Rpt>

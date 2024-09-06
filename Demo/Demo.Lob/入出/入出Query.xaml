@@ -1,0 +1,31 @@
+﻿<a:Tab
+    x:Class="Demo.Lob.入出Query"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="查询"
+    Icon="漏斗">
+
+    <a:QueryFv x:Name="_fv">
+        <a:CTree ID="部门名称" SrcID="id#名称" TgtID="部门id#部门名称">
+            <a:CTree.Sql>
+                <a:Sql>select * from 部门 order by 编码</a:Sql>
+            </a:CTree.Sql>
+            <DataTemplate>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="&#xE067;" FontFamily="{StaticResource IconFont}" Margin="4,0,4,0" VerticalAlignment="Center" />
+                    <a:Dot ID="编码" />
+                    <a:Dot ID="名称" />
+                </StackPanel>
+            </DataTemplate>
+        </a:CTree>
+        <a:CTip ID="部门id" Query="ReadOnly" QueryFlag="Equal" Visibility="Collapsed" />
+        <a:CBar Title="填制日期" />
+        <a:CDate ID="填制日期_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate ID="填制日期_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CBar Title="审核日期" />
+        <a:CDate ID="审核日期_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate ID="审核日期_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CList ID="状态" Query="Editable" QueryFlag="Ignore" />
+    </a:QueryFv>
+</a:Tab>

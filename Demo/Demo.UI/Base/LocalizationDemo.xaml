@@ -1,0 +1,14 @@
+﻿<a:Win
+    x:Class="Demo.UI.LocalizationDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CBar x:Uid="LocBar" />
+        <TextBlock x:Uid="LocBlock" />
+        <Button x:Uid="LocButton" />
+        <a:CText x:Uid="LocCText" />
+        <Button Content="获取本地串" Click="GetLocalStr" />
+    </a:Fv>
+</a:Win>

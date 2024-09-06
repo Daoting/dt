@@ -1,0 +1,13 @@
+﻿<a:List
+    x:Class="Demo.Crud.普通List"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="普通列表">
+
+    <a:Lv x:Name="_lv">
+        <a:Cols>
+            <a:Col ID="父名" />
+        </a:Cols>
+    </a:Lv>
+</a:List>

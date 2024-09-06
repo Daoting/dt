@@ -1,0 +1,22 @@
+﻿<a:Form
+    x:Class="Demo.Lob.供应商Form"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="表单">
+
+    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+        <a:CText ID="名称" />
+        <a:CText ID="执照号" />
+        <a:CDate ID="执照效期" />
+        <a:CText ID="税务登记号" />
+        <a:CText ID="地址" />
+        <a:CText ID="电话" />
+        <a:CText ID="开户银行" />
+        <a:CText ID="帐号" />
+        <a:CText ID="联系人" />
+        <a:CText ID="备注" />
+        <a:CTip ID="建档时间" />
+        <a:CTip ID="撤档时间" />
+    </a:Fv>
+</a:Form>

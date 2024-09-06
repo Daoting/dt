@@ -1,0 +1,11 @@
+﻿<a:Form
+    x:Class="Demo.Lob.物资分类Form"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="表单">
+
+    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+        <a:CText ID="名称" />
+    </a:Fv>
+</a:Form>

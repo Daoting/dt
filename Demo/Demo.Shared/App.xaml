@@ -1,0 +1,20 @@
+﻿<a:AppBase
+    x:Class="Demo.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:AppBase.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- WinUI库的默认样式，不添加造成部分控件异常，如ProgressRing -->
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+                <!-- Dt默认样式 -->
+                <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Global.xaml"/>
+                <!-- App样式，可覆盖以上样式 -->
+                <ResourceDictionary Source="ms-appx:///Demo.Entry/Stub/Global.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </a:AppBase.Resources>
+    
+</a:AppBase>

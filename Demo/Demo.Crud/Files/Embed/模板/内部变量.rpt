@@ -1,0 +1,94 @@
+<Rpt cols="79,179,242">
+	<Params autoxaml="true">
+		<List>
+			<Param name="用户id" val=":UserID" />
+			<Param name="用户姓名" val=":UserName" />
+			<Param name="新Guid" val=":Guid" />
+			<Param name="当前时间" val=":Now" />
+			<Param name="上一年年份" val=":LastYear" />
+			<Param name="当前年份" val=":Year" />
+			<Param name="明年年份" val=":NextYear" />
+			<Param name="上个季度" val=":LastQuarter" />
+			<Param name="当前季度" val=":Quarter" />
+			<Param name="下个季度" val=":NextQuarter" />
+			<Param name="上个月月份" val=":LastMonth" />
+			<Param name="当前月份" val=":Month" />
+			<Param name="下个月月份" val=":NextMonth" />
+			<Param name="昨天" val=":Yesterday" />
+			<Param name="今天" val=":Today" />
+			<Param name="明天" val=":Tomorrow" />
+			<Param name="今天开始时间" val=":StartOfToday" />
+			<Param name="今天结束时间" val=":EndOfToday" />
+			<Param name="昨天开始时间" val=":StartOfYesterday" />
+			<Param name="昨天结束时间" val=":EndOfYesterday" />
+			<Param name="当月第一天" val=":FirstDayOfMonth" />
+			<Param name="当月最后一天" val=":LastDayOfMonth" />
+			<Param name="上个月第一天" val=":FirstDayOfLastMonth" />
+			<Param name="上个月最后一天" val=":LastDayOfLastMonth" />
+			<Param name="本年第一天" val=":FirstDayOfYear" />
+			<Param name="上季度第一天" val=":FirstDayOfLastQuarter" />
+			<Param name="上季度最后一天" val=":LastDayOfLastQuarter" />
+		</List>
+	</Params>
+	<Data />
+	<Page />
+	<Header />
+	<Body rows="30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30">
+		<Text col="1" val="用户id" />
+		<Text col="2" val=":Param(用户id)" />
+		<Text row="1" col="1" val="用户姓名" />
+		<Text row="1" col="2" val=":Param(用户姓名)" />
+		<Text row="2" col="1" val="新Guid" />
+		<Text row="2" col="2" val=":Param(新Guid)" />
+		<Text row="3" col="1" val="当前时间" />
+		<Text row="3" col="2" val=":Param(当前时间)" />
+		<Text row="4" col="1" val="上一年年份" />
+		<Text row="4" col="2" val=":Param(上一年年份)" />
+		<Text row="5" col="1" val="当前年份" />
+		<Text row="5" col="2" val=":Param(当前年份)" />
+		<Text row="6" col="1" val="明年年份" />
+		<Text row="6" col="2" val=":Param(明年年份)" />
+		<Text row="7" col="1" val="上个季度" />
+		<Text row="7" col="2" val=":Param(上个季度)" />
+		<Text row="8" col="1" val="当前季度" />
+		<Text row="8" col="2" val=":Param(当前季度)" />
+		<Text row="9" col="1" val="下个季度" />
+		<Text row="9" col="2" val=":Param(下个季度)" />
+		<Text row="10" col="1" val="上个月月份" />
+		<Text row="10" col="2" val=":Param(上个月月份)" />
+		<Text row="11" col="1" val="当前月份" />
+		<Text row="11" col="2" val=":Param(当前月份)" />
+		<Text row="12" col="1" val="下个月月份" />
+		<Text row="12" col="2" val=":Param(下个月月份)" />
+		<Text row="13" col="1" val="昨天" />
+		<Text row="13" col="2" val=":Param(昨天)" />
+		<Text row="14" col="1" val="今天" />
+		<Text row="14" col="2" val=":Param(今天)" />
+		<Text row="15" col="1" val="明天" />
+		<Text row="15" col="2" val=":Param(明天)" />
+		<Text row="16" col="1" val="今天开始时间" />
+		<Text row="16" col="2" val=":Param(今天开始时间)" />
+		<Text row="17" col="1" val="今天结束时间" />
+		<Text row="17" col="2" val=":Param(今天结束时间)" />
+		<Text row="18" col="1" val="昨天开始时间" />
+		<Text row="18" col="2" val=":Param(昨天开始时间)" />
+		<Text row="19" col="1" val="昨天结束时间" />
+		<Text row="19" col="2" val=":Param(昨天结束时间)" />
+		<Text row="20" col="1" val="当月第一天" />
+		<Text row="20" col="2" val=":Param(当月第一天)" />
+		<Text row="21" col="1" val="当月最后一天" />
+		<Text row="21" col="2" val=":Param(当月最后一天)" />
+		<Text row="22" col="1" val="上个月第一天" />
+		<Text row="22" col="2" val=":Param(上个月第一天)" />
+		<Text row="23" col="1" val="上个月最后一天" />
+		<Text row="23" col="2" val=":Param(上个月最后一天)" />
+		<Text row="24" col="1" val="本年第一天" />
+		<Text row="24" col="2" val=":Param(本年第一天)" />
+		<Text row="25" col="1" val="上季度第一天" />
+		<Text row="25" col="2" val=":Param(上季度第一天)" />
+		<Text row="26" col="1" val="上季度最后一天" />
+		<Text row="26" col="2" val=":Param(上季度最后一天)" />
+	</Body>
+	<Footer />
+	<View />
+</Rpt>

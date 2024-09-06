@@ -1,0 +1,11 @@
+﻿<a:Win
+    x:Class="Demo.UI.RptNotice"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Demo.UI">
+
+    <Grid>
+        <TextBlock Text="涉及服务连接，请参考Dt.MgrDemo项目中的报表部分！" VerticalAlignment="Center" HorizontalAlignment="Center" />
+    </Grid>
+</a:Win>

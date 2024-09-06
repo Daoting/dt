@@ -1,0 +1,10 @@
+﻿<a:Win
+    x:Class="Demo.Lob.供应商Win"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Demo.Lob">
+
+    <l:供应商Query x:Name="_query" a:Ex.Dock="Left" Order="1" />
+    <l:供应商List x:Name="_list" />
+</a:Win>

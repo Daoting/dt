@@ -1,0 +1,35 @@
+﻿<a:Win
+    x:Class="Demo.Crud.ExceptionDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CBar Title="客户端同步异常" />
+        <Button Content="业务条件异常" Click="ThrowIfSync" />
+        <Button Content="业务null异常" Click="ThrowIfNullSync" />
+        <Button Content="业务字符串空异常" Click="ThrowIfEmptySync" />
+        <Button Content="直接业务异常消息" Click="ThrowMsgSync" />
+        <Button Content="显示异常位置方法名" Click="ThrowMethod" />
+        <Button Content="未处理异常" Click="ThrowUnhandleSync" />
+        
+        <a:CBar Title="客户端异步异常" />
+        <Button Content="主线程异步业务异常" Click="ThrowAsync" />
+        <Button Content="显示主线程异步异常位置方法名" Click="ThrowMethodAsync" />
+        <Button Content="Task内同步业务异常" Click="ThrowTaskSync" />
+        <Button Content="Task内异步业务异常" Click="ThrowTaskAsync" />
+        <Button Content="Task内显示异常位置方法名" Click="ThrowTaskMethod" />
+        <Button Content="主线程异步未处理异常" Click="ThrowUnhandleAsync" />
+        <Button Content="Task内同步未处理异常" Click="ThrowUnhandleTaskSync" />
+        <Button Content="Task内异步未处理异常" Click="ThrowUnhandleTaskAsync" />
+        
+        <a:CBar Title="服务端" />
+        <Button Content="服务端普通异常" Click="TestException" />
+        <Button Content="服务端业务异常消息" Click="TestRpcException" />
+        <Button Content="服务端业务异常位置" Click="TestPosException" />
+
+        <a:CBar Title="Toast通知" />
+        <Button Content="普通Toast通知" Click="OnCommonToast" Margin="0,20,0,0" />
+        <Button Content="带自启动的Toast通知" Click="OnParamsToast" />
+    </a:Fv>
+</a:Win>

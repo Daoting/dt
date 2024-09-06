@@ -1,0 +1,13 @@
+﻿<a:Tree
+    x:Class="Demo.Crud.树形Tree"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="树">
+
+    <a:Tv x:Name="_tv">
+        <DataTemplate>
+            <a:Dot ID="id" />
+        </DataTemplate>
+    </a:Tv>
+</a:Tree>

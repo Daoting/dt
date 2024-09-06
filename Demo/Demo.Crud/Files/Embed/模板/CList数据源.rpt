@@ -1,0 +1,161 @@
+<Rpt cols="80,142,223">
+  <Params>
+    <Xaml>
+	  <![CDATA[            <a:CBar Title="演示静态选项，通过基础选项增删并缓存到本地库" />
+            <a:CList ID="code" Title="民族" Ex="Option#民族" />
+            <a:CList ID="degree" Title="学历" Ex="Option#学历" />
+            
+            <a:CBar Title="演示sql查询并取name列填充当前列" />
+            <a:CList ID="menu" Title="菜单">
+                <a:CList.Sql>
+                    <a:Sql>select * from cm_menu</a:Sql>
+                </a:CList.Sql>
+                <a:Cols>
+                    <a:Col ID="name" Title="名称" />
+                    <a:Col ID="icon" Title="图标" Call="MenuListUI.Icon" Width="60" />
+                    <a:Col ID="view_name" Title="视图名称" />
+                    <a:Col ID="params" Title="视图参数" />
+                    <a:Col ID="note" Title="功能说明" />
+                </a:Cols>
+            </a:CList>
+
+            <a:CBar Title="演示使用指定服务sql查询，传递userid变量值" />
+            <a:CList ID="role" Title="角色">
+                <a:CList.Sql>
+                    <a:Sql Svc="fsm">
+SELECT
+    *
+FROM
+    cm_role
+WHERE
+    ID IN (
+        SELECT
+            role_id
+        FROM
+            cm_user_role
+        WHERE
+            user_id = @userid
+    )
+                    </a:Sql>
+                </a:CList.Sql>
+                <DataTemplate>
+                    <StackPanel Padding="10">
+                        <a:Dot ID="Name" />
+                        <a:Dot ID="Note" Call="Def.小灰" />
+                    </StackPanel>
+                </DataTemplate>
+            </a:CList>
+
+            <a:CBar Title="演示多个CList联动、sql变量赋值、占位符替换" />
+            <a:CList ID="parent" Title="父亲" SrcID="父名#id#-#-" TgtID="-#parentid#child1#child2">
+                <a:CList.Sql>
+                    <a:Sql>select * from demo_父表</a:Sql>
+                </a:CList.Sql>
+                <DataTemplate>
+                    <a:Dot ID="父名" Padding="10" />
+                </DataTemplate>
+            </a:CList>
+            <a:CList ID="child1" Title="大儿" SrcID="大儿名">
+                <a:CList.Sql>
+                    <a:Sql>
+SELECT
+	大儿名
+FROM
+	demo_大儿
+WHERE
+	parent_id = @[parentid]
+                    </a:Sql>
+                </a:CList.Sql>
+                <DataTemplate>
+                    <a:Dot ID="大儿名" Padding="10" />
+                </DataTemplate>
+            </a:CList>
+            <a:CList ID="child2" Title="小儿" SrcID="小儿名">
+                <a:CList.Sql>
+                    <a:Sql>
+SELECT
+	小儿名
+FROM
+	demo_小儿
+WHERE
+	group_id = #[parentid]#
+                    </a:Sql>
+                </a:CList.Sql>
+                <DataTemplate>
+                    <a:Dot ID="小儿名" Padding="10" />
+                </DataTemplate>
+            </a:CList>
+
+            <a:CBar Title="演示调用外部方法获取sql变量值" />
+            <a:CList ID="maxparent" Title="ID最大行" SrcID="父名">
+                <a:CList.Sql>
+                    <a:Sql>
+SELECT
+	*
+FROM
+	demo_父表
+WHERE
+	id = @RptValueCall.GetMaxID(demo_父表)
+                    </a:Sql>
+                </a:CList.Sql>
+                <DataTemplate>
+                    <a:Dot ID="父名" Padding="10" />
+                </DataTemplate>
+            </a:CList>
+            
+            <a:CBar Title="演示本地库查询，除指定库名外其余相同" />
+            <a:CList ID="localmenu" Title="菜单">
+                <a:CList.Sql>
+                    <a:Sql LocalDb="menu">
+                        select * from OmMenu
+                    </a:Sql>
+                </a:CList.Sql>
+                <a:Cols>
+                    <a:Col ID="name" Title="名称" />
+                    <a:Col ID="icon" Title="图标" Call="MenuListUI.Icon" Width="60" />
+                    <a:Col ID="view_name" Title="视图名称" />
+                    <a:Col ID="params" Title="视图参数" />
+                    <a:Col ID="note" Title="功能说明" />
+                </a:Cols>
+            </a:CList>]]></Xaml>
+    <List>
+      <Param name="code" val="汉族" />
+      <Param name="degree" val="本科" />
+      <Param name="menu" />
+      <Param name="role" />
+      <Param name="parentid" type="long" />
+      <Param name="parent" />
+      <Param name="child1" />
+      <Param name="child2" />
+      <Param name="maxparent" />
+      <Param name="localmenu" />
+    </List>
+  </Params>
+  <Data />
+  <Page />
+  <Header />
+  <Body rows="30,30,30,30,30,30,30,30,30,30,30">
+    <Text row="1" col="1" val="code" />
+    <Text row="1" col="2" val=":Param(code)" />
+    <Text row="2" col="1" val="degree" />
+    <Text row="2" col="2" val=":Param(degree)" />
+    <Text row="3" col="1" val="menu" />
+    <Text row="3" col="2" val=":Param(menu)" />
+    <Text row="4" col="1" val="role" />
+    <Text row="4" col="2" val=":Param(role)" />
+    <Text row="5" col="1" val="parentid" />
+    <Text row="5" col="2" val=":Param(parentid)" />
+    <Text row="6" col="1" val="parent" />
+    <Text row="6" col="2" val=":Param(parent)" />
+    <Text row="7" col="1" val="child1" />
+    <Text row="7" col="2" val=":Param(child1)" />
+    <Text row="8" col="1" val="child2" />
+    <Text row="8" col="2" val=":Param(child2)" />
+    <Text row="9" col="1" val="maxparent" />
+    <Text row="9" col="2" val=":Param(maxparent)" />
+    <Text row="10" col="1" val="localmenu" />
+    <Text row="10" col="2" val=":Param(localmenu)" />
+  </Body>
+  <Footer />
+  <View />
+</Rpt>

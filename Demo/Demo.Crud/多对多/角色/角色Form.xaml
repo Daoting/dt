@@ -1,0 +1,12 @@
+﻿<a:Form
+    x:Class="Demo.Crud.角色Form"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="角色表单">
+
+    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+        <a:CText ID="角色名称" />
+        <a:CText ID="角色描述" />
+    </a:Fv>
+</a:Form>

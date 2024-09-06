@@ -1,0 +1,23 @@
+﻿<a:Form
+    x:Class="Demo.Crud.基础Form"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="表单">
+
+    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+        <a:CNum ID="parent_id" Title="上级id，演示树状结构" />
+        <a:CNum ID="序列" IsInteger="True" />
+        <a:CText ID="名称" />
+        <a:CText ID="限长4" />
+        <a:CText ID="不重复" />
+        <a:CBool ID="禁止选中" />
+        <a:CBool ID="禁止保存" />
+        <a:CBool ID="禁止删除" />
+        <a:CText ID="值变事件" />
+        <a:CBool ID="发布插入事件" />
+        <a:CBool ID="发布删除事件" />
+        <a:CDate ID="创建时间" />
+        <a:CDate ID="修改时间" />
+    </a:Fv>
+</a:Form>

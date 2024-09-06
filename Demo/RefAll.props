@@ -1,0 +1,18 @@
+<Project ToolsVersion="Current">
+	<ItemGroup>
+		<ProjectReference Include="..\Demo.Base\Demo.Base.csproj" />
+		<ProjectReference Include="..\Demo.UI\Demo.UI.csproj" />
+		<ProjectReference Include="..\Demo.Crud\Demo.Crud.csproj" />
+		<ProjectReference Include="..\Demo.Lob\Demo.Lob.csproj" />
+		<ProjectReference Include="..\Demo.Entry\Demo.Entry.csproj" />
+	</ItemGroup>
+	<Import Project="Demo.Shared\Shared.props" />
+
+	<!-- 确保使用github源码调试dt包 -->
+	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
+		<!-- 将包中的pdb文件复制到输出目录，默认不复制 -->
+		<CopyDebugSymbolFilesFromPackages>true</CopyDebugSymbolFilesFromPackages>
+		<!-- 将输出目录的pdb文件复制到Appx，默认不复制，只WinUI有效 -->
+		<AppxPackageIncludePrivateSymbols>true</AppxPackageIncludePrivateSymbols>
+	</PropertyGroup>
+</Project>

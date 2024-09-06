@@ -1,0 +1,14 @@
+﻿<a:Dlg
+    x:Class="Demo.Crud.角色4用户"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="选择角色">
+
+    <a:Lv x:Name="_lv" SelectionMode="Multiple">
+        <a:Cols>
+            <a:Col ID="角色名称" />
+            <a:Col ID="角色描述" />
+        </a:Cols>
+    </a:Lv>
+</a:Dlg>

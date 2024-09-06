@@ -1,0 +1,32 @@
+﻿<a:Tab
+    x:Class="Demo.Crud.RptHome"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="报表">
+
+	<a:Fv x:Name="_fv">
+        <CheckBox x:Name="_cb" Content="打开模板编辑窗口" />
+        <a:CBar Title="报表参数" />
+		<StackPanel Orientation="Horizontal">
+            <Button Content="内部变量" />
+            <Button Content="外部方法取值" />
+		</StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="内部定义查询面板" />
+            <Button Content="外部定义查询面板" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="CList数据源" />
+            <Button Content="CPick数据源" />
+            <Button Content="外部定义查询面板" />
+        </StackPanel>
+        <a:CBar Title="报表数据源" />
+		<StackPanel Orientation="Horizontal">
+            <Button Content="无参数数据源" />
+            <Button Content="含参数数据源" />
+            <Button Content="参数占位符数据源" />
+		</StackPanel>
+        <Button Content="测试" Click="OnTest" />
+    </a:Fv>
+</a:Tab>

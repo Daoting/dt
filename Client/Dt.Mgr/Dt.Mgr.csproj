@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="..\..\Tools\File\ClientPkg.props" Condition="exists('..\..\Tools\File\ClientPkg.props')" />
+    <Import Project="..\..\..\Tools\File\ClientPkg.props" Condition="exists('..\..\..\Tools\File\ClientPkg.props')" />
 
     <ItemGroup>
         <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" PrivateAssets="all" />

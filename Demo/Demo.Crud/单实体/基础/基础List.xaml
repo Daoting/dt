@@ -1,0 +1,25 @@
+﻿<a:List
+    x:Class="Demo.Crud.基础List"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="列表">
+
+    <a:Lv x:Name="_lv">
+        <a:Cols>
+            <a:Col ID="parent_id" Title="上级id，演示树状结构" />
+            <a:Col ID="序列" />
+            <a:Col ID="名称" />
+            <a:Col ID="限长4" />
+            <a:Col ID="不重复" />
+            <a:Col ID="禁止选中" />
+            <a:Col ID="禁止保存" />
+            <a:Col ID="禁止删除" />
+            <a:Col ID="值变事件" />
+            <a:Col ID="发布插入事件" />
+            <a:Col ID="发布删除事件" />
+            <a:Col ID="创建时间" />
+            <a:Col ID="修改时间" />
+        </a:Cols>
+    </a:Lv>
+</a:List>

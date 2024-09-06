@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<Import Project="..\..\..\Tools\File\ServicePkg.props" Condition="exists('..\..\..\Tools\File\ServicePkg.props')" />
+	<Import Project="..\..\..\..\Tools\File\ServicePkg.props" Condition="exists('..\..\..\..\Tools\File\ServicePkg.props')" />
 	
 	<ItemGroup>
 		<!--PrivateAssets避免引用项目的 nuget 包-->

@@ -1,0 +1,34 @@
+﻿<a:Tab
+    x:Class="Demo.Crud.字段类型Query"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="查询"
+    Icon="漏斗">
+
+    <a:QueryFv x:Name="_fv">
+        <a:CText ID="字符串" Query="Editable" QueryFlag="Contains" />
+        <a:CBar Title="整型" />
+        <a:CNum ID="整型_min" IsInteger="True" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
+        <a:CNum ID="整型_max" IsInteger="True" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CBar Title="可空整型" />
+        <a:CNum ID="可空整型_min" IsInteger="True" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
+        <a:CNum ID="可空整型_max" IsInteger="True" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CBool ID="布尔" Query="Editable" QueryFlag="Equal" />
+        <a:CBool ID="可空布尔" Query="Editable" QueryFlag="Equal" />
+        <a:CBar Title="日期时间" />
+        <a:CDate ID="日期时间_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate ID="日期时间_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CBar Title="可空时间" />
+        <a:CDate ID="可空时间_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate ID="可空时间_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CList ID="枚举" Query="Editable" QueryFlag="Equal" />
+        <a:CList ID="可空枚举" Query="Editable" QueryFlag="Equal" />
+        <a:CBar Title="单精度" />
+        <a:CNum ID="单精度_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
+        <a:CNum ID="单精度_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CBar Title="可空单精度" />
+        <a:CNum ID="可空单精度_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
+        <a:CNum ID="可空单精度_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+    </a:QueryFv>
+</a:Tab>

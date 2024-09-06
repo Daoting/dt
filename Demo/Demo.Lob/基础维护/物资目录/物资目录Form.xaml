@@ -1,0 +1,23 @@
+﻿<a:Form
+    x:Class="Demo.Lob.物资目录Form"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="表单">
+
+    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+        <a:CList ID="物资分类" SrcID="id#名称" TgtID="分类id#物资分类">
+            <a:CList.Sql>
+                <a:Sql>select 名称,id from 物资分类</a:Sql>
+            </a:CList.Sql>
+        </a:CList>
+        <a:CText ID="名称" />
+        <a:CText ID="规格" />
+        <a:CText ID="产地" />
+        <a:CText ID="成本价" />
+        <a:CList ID="核算方式" />
+        <a:CNum ID="摊销月数" IsInteger="True" />
+        <a:CDate ID="建档时间" />
+        <a:CDate ID="撤档时间" />
+    </a:Fv>
+</a:Form>

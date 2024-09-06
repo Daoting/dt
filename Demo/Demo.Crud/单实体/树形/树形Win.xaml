@@ -1,0 +1,13 @@
+﻿<a:Win
+    x:Class="Demo.Crud.树形Win"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Demo.Crud">
+
+    <a:Tabs a:Ex.Dock="Left">
+        <l:树形Tree x:Name="_tree" Order="1" />
+        <l:树形Query x:Name="_query" Order="2" />
+    </a:Tabs>
+    <l:树形List x:Name="_list" />
+</a:Win>

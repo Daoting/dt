@@ -1,0 +1,11 @@
+﻿<Rpt cols="80,80,80,80,80,80,80,80">
+	<Params />
+	<Data />
+	<Page />
+	<Header />
+	<Body rows="30,30">
+		<Text row="1" colspan="8" val="工具栏" fontsize="20" bold="True" italic="True" strikeout="True" horalign="Center" lbs="None" tbs="None" rbs="None" bbs="None" />
+	</Body>
+	<Footer />
+	<View showmenu="False" />
+</Rpt>

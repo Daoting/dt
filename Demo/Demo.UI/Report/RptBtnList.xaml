@@ -1,0 +1,62 @@
+﻿<a:Tab
+    x:Class="Demo.UI.RptBtnList"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Demo.UI"
+    Title="功能列表">
+
+	<a:Fv x:Name="_fv">
+		<CheckBox x:Name="_cbPdf" Content="采用Pdf格式预览" />
+		<a:CBar Title="基础" />
+		<StackPanel Orientation="Horizontal">
+			<Button Content="文本布局" />
+			<Button Content="值表达式" />
+			<Button Content="图标和图片" />
+			<Button Content="综合" />
+		</StackPanel>
+		<a:CBar Title="页面" />
+		<StackPanel Orientation="Horizontal">
+			<Button Content="默认纸张边距页眉页脚" />
+			<Button Content="自定义纸张边距页眉页脚" />
+		</StackPanel>
+		<a:CBar Title="表格" />
+		<StackPanel Orientation="Horizontal">
+			<Button Content="完整表格" />
+			<Button Content="最少行表格" />
+			<Button Content="分组表格" />
+			<Button Content="含头尾表格" />
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Button Content="跨页表格" />
+			<Button Content="并排多列表格" />
+			<Button Content="固定行数多列表格" />
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Button Content="重复多列行头表格" />
+			<Button Content="不分页表格" />
+		</StackPanel>
+		<a:CBar Title="矩阵" />
+		<StackPanel Orientation="Horizontal">
+			<Button Content="完整矩阵" />
+			<Button Content="两层矩阵" />
+			<Button Content="含小计矩阵" />
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Button Content="含标题矩阵" />
+			<Button Content="跨页矩阵" />
+		</StackPanel>
+		<a:CBar Title="图表" />
+		<StackPanel Orientation="Horizontal">
+			<Button Content="图表矩阵" />
+			<Button Content="图表表格" />
+			<Button Content="迷你图" />
+		</StackPanel>
+		<a:CBar Title="Excel报表" />
+		<StackPanel Orientation="Horizontal">
+			<Button Content="右键菜单" />
+			<Button Content="选择区域菜单" />
+			<Button Content="交互脚本" />
+		</StackPanel>
+	</a:Fv>
+</a:Tab>

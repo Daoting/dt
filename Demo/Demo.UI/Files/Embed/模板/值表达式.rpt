@@ -1,0 +1,60 @@
+<Rpt cols="179,153,267">
+  <Params>
+    <List />
+  </Params>
+  <Data />
+  <Page />
+  <Header />
+  <Body rows="30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30">
+    <Text colspan="3" val="单元格值表达式" fontsize="20" bold="True" horalign="Center" lbs="None" tbs="None" rbs="None" bbs="None" />
+    <Text row="1" rowspan="8" val="数据源" horalign="Center" />
+    <Text row="1" col="1" val="获取数据" />
+    <Text row="1" col="2" val="Val(数据源名,列名)" />
+    <Text row="2" col="1" val="列合计" />
+    <Text row="2" col="2" val="Sum(数据源名,列名)" />
+    <Text row="3" col="1" val="列最大值" />
+    <Text row="3" col="2" val="Max(数据源名,列名)" />
+    <Text row="4" col="1" val="列最小值" />
+    <Text row="4" col="2" val="Min(数据源名,列名)" />
+    <Text row="5" col="1" val="列平均值" />
+    <Text row="5" col="2" val="Avg(数据源名,列名)" />
+    <Text row="6" col="1" val="行号" />
+    <Text row="6" col="2" val="Index(数据源名)" />
+    <Text row="7" col="1" val="总行数" />
+    <Text row="7" col="2" val="Count(数据源名)" />
+    <Text row="8" col="1" val="分组内值" />
+    <Text row="8" col="2" val="Group(数据源名,列名)" />
+    <Text row="9" val="参数" horalign="Center" />
+    <Text row="9" col="1" val="获取参数值" />
+    <Text row="9" col="2" val="Param(参数名)" />
+    <Text row="10" val="外部方法" horalign="Center" />
+    <Text row="10" col="1" val="[RptVal]" />
+    <Text row="10" col="2" val="类名.方法(参数)" />
+    <Text row="11" val="脚本赋值" horalign="Center" />
+    <Text row="11" col="1" val="重新方法" />
+    <Text row="11" col="2" val="RptScript.RenderCell" />
+    <Text row="12" rowspan="10" val="变量" horalign="Center" />
+    <Text row="12" col="1" val="页号" />
+    <Text row="12" col="2" val="Var(页号)" />
+    <Text row="13" col="1" val="总页数" />
+    <Text row="13" col="2" val="Var(总页数)" />
+    <Text row="14" col="1" val="水平页号" />
+    <Text row="14" col="2" val="Var(水平页号)" />
+    <Text row="15" col="1" val="垂直页号" />
+    <Text row="15" col="2" val="Var(垂直页号)" />
+    <Text row="16" col="1" val="报表名称" />
+    <Text row="16" col="2" val="Var(报表名称)" />
+    <Text row="17" col="1" val="日期" />
+    <Text row="17" col="2" val="Var(日期)" />
+    <Text row="18" col="1" val="时间" />
+    <Text row="18" col="2" val="Var(时间)" />
+    <Text row="19" col="1" val="日期时间" />
+    <Text row="19" col="2" val="Var(日期时间)" />
+    <Text row="20" col="1" val="用户id" />
+    <Text row="20" col="2" val="Var(用户id)" />
+    <Text row="21" col="1" val="用户姓名" />
+    <Text row="21" col="2" val="Var(用户姓名)" />
+  </Body>
+  <Footer />
+  <View />
+</Rpt>

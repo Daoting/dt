@@ -1,0 +1,23 @@
+﻿<b:WfList
+    x:Class="Demo.Lob.入出List"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:b="using:Dt.Mgr"
+    Title="入出列表">
+
+    <a:Lv x:Name="_lv">
+        <a:Cols>
+            <a:Col ID="单号" />
+            <a:Col ID="状态" />
+            <a:Col ID="供应商" Width="200" />
+            <a:Col ID="金额" />
+            <a:Col ID="发票金额" />
+            <a:Col ID="填制人" />
+            <a:Col ID="填制日期" />
+            <a:Col ID="审核人" />
+            <a:Col ID="审核日期" />
+            <a:Col ID="摘要" Width="*" />
+        </a:Cols>
+    </a:Lv>
+</b:WfList>

@@ -1,0 +1,33 @@
+﻿<a:Win
+    x:Class="Demo.UI.ChartExcel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Demo.UI">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="Excel">
+                <a:Excel x:Name="_excel" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv Data="{Binding ElementName=_excel}">
+                    <a:CFree Title="图表类型">
+                        <ComboBox x:Name="_cbTypes" />
+                    </a:CFree>
+                    <a:CFree Title="样式主题">
+                        <ComboBox x:Name="_cbTheme" />
+                    </a:CFree>
+                    <Button Content="添加图表" Click="AddNewChart" />
+                    <a:CBool ID="LockCell" Title="格只读图可动" />
+                    <a:CBool ID="Protect" Title="只读" />
+                </a:Fv>
+            </a:Tab>
+            <l:ExcelExpPrint Order="3" />
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

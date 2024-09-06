@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType Condition="'$(Configuration)'=='Release'">WinExe</OutputType>
+		<OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
+		<TargetFrameworks>net8.0</TargetFrameworks>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<AppType>gtk</AppType>
+	</PropertyGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Package.appxmanifest" />
+		<Manifest Include="$(ApplicationManifest)" />
+	</ItemGroup>
+
+	<Import Project="..\RefAll.props" />
+
+</Project>

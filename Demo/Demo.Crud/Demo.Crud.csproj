@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<ItemGroup>
+		<ProjectReference Include="..\Demo.Base\Demo.Base.csproj" />
+		<Using Include="Demo.Base" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Files\Content\**" />
+		<EmbeddedResource Include="Files\Embed\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="一对多\普通表单\" />
+	  <Folder Include="一对多\父子表单\" />
+	  <Folder Include="单实体\基础\" />
+	  <Folder Include="单实体\字段类型\" />
+	  <Folder Include="单实体\树形\" />
+	  <Folder Include="单实体\虚拟\" />
+	  <Folder Include="多对多\权限\" />
+	  <Folder Include="多对多\用户\" />
+	  <Folder Include="多对多\角色\" />
+	</ItemGroup>
+
+</Project>

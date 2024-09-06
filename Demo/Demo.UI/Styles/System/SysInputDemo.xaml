@@ -1,0 +1,29 @@
+﻿<a:Win
+    x:Class="Demo.UI.SysInputDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <ScrollViewer HorizontalScrollMode="Disabled"
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollMode="Auto"
+                  VerticalScrollBarVisibility="Auto"
+                  ZoomMode="Disabled">
+        <StackPanel Margin="20" Spacing="20">
+            <TextBox x:Name="_tb" Text="默认编辑框" PlaceholderText="默认编辑框" />
+            <NumberBox Header="NumberBox" Value="1" SpinButtonPlacementMode="Inline" SmallChange="10" LargeChange="100" />
+            <NumberBox Header="NumberBox自动计算" Value="NaN" PlaceholderText="1 + 2^2" AcceptsExpression="True" />
+            <CheckBox Content="选择项" />
+            <PasswordBox PlaceholderText="密码框" />
+            <ComboBox PlaceholderText="选择颜色" Width="200">
+                <x:String>Blue</x:String>
+                <x:String>Green</x:String>
+                <x:String>红</x:String>
+                <x:String>Yellow</x:String>
+            </ComboBox>
+            <RatingControl IsClearEnabled="False" IsReadOnly="False" Caption="312 ratings" HorizontalAlignment="Left" />
+            <Slider Width="300" Minimum="500" Maximum="1000" StepFrequency="10" SmallChange="10" LargeChange="100" Value="800" HorizontalAlignment="Left" />
+            <ToggleSwitch />
+        </StackPanel>
+    </ScrollViewer>
+</a:Win>

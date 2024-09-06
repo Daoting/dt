@@ -1,0 +1,43 @@
+<Rpt cols="80,150,206">
+  <Params>
+    <Xaml><![CDATA[<a:CText ID="普通文本" />
+<a:CBool ID="选择" />
+<a:CNum ID="数值" />
+<a:CDate ID="今天" />
+<a:CList ID="下拉选择">
+<a:CList.Items>
+    <x:String>选项一</x:String>
+    <x:String>选项二</x:String>
+    <x:String>选项三</x:String>
+    <x:String>选项四</x:String>
+    <x:String>选项五</x:String>
+    <x:String>选项六</x:String>
+</a:CList.Items>
+</a:CList>]]></Xaml>
+    <List>
+      <Param name="普通文本" />
+      <Param name="选择" type="bool" val="true" />
+      <Param name="数值" type="double" val="23" />
+      <Param name="今天" type="date" val=":Now" />
+      <Param name="下拉选择" />
+    </List>
+  </Params>
+  <Data />
+  <Page />
+  <Header />
+  <Body rows="30,30,30,30,30,30">
+    <Text col="1" colspan="2" val="参数值" fontsize="20" bold="True" horalign="Center" lbs="None" tbs="None" rbs="None" bbs="None" />
+    <Text row="1" col="1" val="普通文本" />
+    <Text row="1" col="2" val=":Param(普通文本)" />
+    <Text row="2" col="1" val="选择" />
+    <Text row="2" col="2" val=":Param(选择)" />
+    <Text row="3" col="1" val="数值" />
+    <Text row="3" col="2" val=":Param(数值)" />
+    <Text row="4" col="1" val="今天" />
+    <Text row="4" col="2" val=":Param(今天)" />
+    <Text row="5" col="1" val="下拉选择" />
+    <Text row="5" col="2" val=":Param(下拉选择)" />
+  </Body>
+  <Footer />
+  <View />
+</Rpt>

@@ -1,0 +1,14 @@
+﻿<a:Tab
+    x:Class="Demo.Crud.用户Query"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="查询"
+    Icon="漏斗">
+
+    <a:QueryFv x:Name="_fv">
+        <a:CText ID="手机号" Query="Editable" QueryFlag="Contains" />
+        <a:CText ID="姓名" Query="Editable" QueryFlag="Contains" />
+        <a:CText ID="密码" Query="Editable" QueryFlag="Contains" />
+    </a:QueryFv>
+</a:Tab>

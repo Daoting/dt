@@ -1,0 +1,25 @@
+﻿<a:Win
+    x:Class="Demo.UI.RptTabDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:RptTab x:Name="_rpt" Title="RptTab" Order="1" />
+    <a:Tab Order="2" Title="属性" a:Ex.Dock="Right">
+        <a:Fv Data="{Binding ElementName=_rpt}">
+            <a:CBool Title="报表采用Pdf格式" ID="IsPdf" ShowTitle="False" />
+            <a:CBar Title="报表模板位置" />
+            <StackPanel Orientation="Horizontal">
+                <Button Content="本地库" Click="OnLocal" />
+                <Button Content="内容文件" Click="OnContent" />
+                <Button Content="嵌入资源文件" Click="OnEmbedded" />
+            </StackPanel>
+            <a:CBar Title="报表模板控制工具栏" />
+            <StackPanel Orientation="Horizontal">
+                <Button Content="无工具栏" Click="OnNoMenu" />
+                <Button Content="Excel报表右键菜单" Click="OnContextMenu" />
+                <Button Content="自定义工具栏" Click="OnCustomMenu" />
+            </StackPanel>
+        </a:Fv>
+    </a:Tab>
+</a:Win>

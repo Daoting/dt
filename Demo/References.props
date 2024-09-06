@@ -1,0 +1,66 @@
+﻿<Project>
+	<!-- 所有项目引用 -->
+	<Choose>
+		<When Condition="$(SolutionFileName.Contains('Demo-'))">
+			<ItemGroup>
+				<PackageReference Include="Dt.Client" Version="4.6.0" />
+			</ItemGroup>
+		</When>
+		<Otherwise>
+			<ItemGroup>
+				<ProjectReference Include="..\..\Client\Dt.Core\Dt.Core.csproj" />
+				<ProjectReference Include="..\..\Client\Dt.Base\Dt.Base.csproj" />
+				<ProjectReference Include="..\..\Client\Dt.Mgr\Dt.Mgr.csproj" />
+			</ItemGroup>
+		</Otherwise>
+	</Choose>
+
+	<!-- 非windows引用包 -->
+	<ItemGroup Condition="!$(IsWin)">
+		<PackageReference Include="Uno.WinUI" Version="5.2.119" />
+	</ItemGroup>
+	
+	<!-- 所有App引用 -->
+	<ItemGroup Condition="$(AppType) != ''">
+		<PackageReference Include="Dt.BuildTools" Version="1.4.1" PrivateAssets="none" />
+		<!-- 1.2 Splash不缩放 -->
+		<PackageReference Include="Uno.Resizetizer" Version="1.4.8" />
+	</ItemGroup>
+	
+	<!-- App分类别引用，使用Choose无效 -->
+	<ItemGroup Condition="$(AppType) == 'win'">
+		<PackageReference Include="Dt.Tasks" Version="3.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(AppType) == 'android'">
+		<PackageReference Include="Xamarin.Google.Android.Material" Version="1.10.0.2" />
+		<!-- uno5.1.31提示缺 -->
+		<PackageReference Include="Xamarin.AndroidX.SwipeRefreshLayout" Version="1.1.0.17" />
+	</ItemGroup>
+	
+	<ItemGroup Condition="$(AppType) == 'gtk'">
+		<PackageReference Include="Uno.WinUI.Skia.Gtk" Version="5.2.119" />
+		<PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.8" />
+		<PackageReference Include="SkiaSharp.Skottie" Version="2.88.8" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(AppType) == 'wpf'">
+		<PackageReference Include="Uno.WinUI.Skia.Wpf" Version="5.2.119" />
+		<PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.8" />
+		<PackageReference Include="SkiaSharp.Skottie" Version="2.88.8" />
+	</ItemGroup>
+	
+	<ItemGroup Condition="$(AppType) == 'wasm'">
+		<PackageReference Include="Uno.Wasm.Bootstrap" Version="8.0.14" />
+		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="8.0.14" />
+		<PackageReference Include="Uno.WinUI.WebAssembly" Version="5.2.119" PrivateAssets="none" />
+		<PackageReference Include="Uno.WinUI.MediaPlayer.WebAssembly" Version="5.2.119" />
+		<PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.7" />
+		<!-- 不引用link出错 -->
+		<PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.0" />
+		<!-- 生成后替换dotnet.native.js、dotnet.native.wasm的方法已不可行 -->
+		<PackageReference Include="Uno.sqlite-wasm" Version="3.40.0.2" />
+		<!-- Oracle.ManagedDataAccess.Core隐式引用 -->
+		<PackageReference Include="Kerberos.NET" Version="4.6.50" />
+	</ItemGroup>
+</Project>

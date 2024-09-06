@@ -1,0 +1,46 @@
+﻿<a:Form
+    x:Class="Demo.Crud.父表Form"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="父表表单">
+
+    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+        <a:CText ID="父名" />
+    </a:Fv>
+
+    <a:Form.Items>
+        <a:Fi Title="大儿">
+            <a:Fi.Lv>
+                <a:Lv x:Name="_lv大儿">
+                    <a:Cols>
+                        <a:Col ID="parent_id" />
+                        <a:Col ID="大儿名" />
+                    </a:Cols>
+                </a:Lv>
+            </a:Fi.Lv>
+            <a:Fi.Fv>
+                <a:Fv x:Name="_fv大儿">
+                    <a:CNum ID="parent_id" />
+                    <a:CText ID="大儿名" />
+                </a:Fv>
+            </a:Fi.Fv>
+        </a:Fi>
+        <a:Fi Title="小儿">
+            <a:Fi.Lv>
+                <a:Lv x:Name="_lv小儿">
+                    <a:Cols>
+                        <a:Col ID="group_id" />
+                        <a:Col ID="小儿名" />
+                    </a:Cols>
+                </a:Lv>
+            </a:Fi.Lv>
+            <a:Fi.Fv>
+                <a:Fv x:Name="_fv小儿">
+                    <a:CNum ID="group_id" />
+                    <a:CText ID="小儿名" />
+                </a:Fv>
+            </a:Fi.Fv>
+        </a:Fi>
+    </a:Form.Items>
+</a:Form>

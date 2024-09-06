@@ -1,0 +1,10 @@
+﻿<a:Win
+    x:Class="Demo.Lob.部门Win"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Demo.Lob">
+
+    <l:部门Tree x:Name="_tree" a:Ex.Dock="Left" Order="1" />
+    <l:部门List x:Name="_mainList" />
+</a:Win>

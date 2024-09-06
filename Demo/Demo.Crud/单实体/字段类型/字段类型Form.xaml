@@ -1,0 +1,22 @@
+﻿<a:Form
+    x:Class="Demo.Crud.字段类型Form"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="表单">
+
+    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+        <a:CText ID="字符串" />
+        <a:CNum ID="整型" IsInteger="True" />
+        <a:CNum ID="可空整型" IsInteger="True" />
+        <a:CNum ID="长整型" />
+        <a:CBool ID="布尔" />
+        <a:CBool ID="可空布尔" />
+        <a:CDate ID="日期时间" />
+        <a:CDate ID="可空时间" />
+        <a:CList ID="枚举" />
+        <a:CList ID="可空枚举" />
+        <a:CText ID="单精度" />
+        <a:CText ID="可空单精度" />
+    </a:Fv>
+</a:Form>

@@ -1,0 +1,89 @@
+﻿<Rpt cols="80,86,95,115,97,80,80,80,80,80,80,80,80,80">
+	<Params />
+	<Data>
+		<Tbl name="综合_表格" isscritp="True" cols="xm,year,subject,score" />
+		<Tbl name="综合_矩阵" isscritp="True" cols="xm,year,subject,score" />
+		<Tbl name="图表矩阵" isscritp="True" cols="xm,subject,score" />
+		<Tbl name="迷你图" isscritp="True" cols="year,score" />
+		<Tbl name="盈亏" isscritp="True" cols="month,score" />
+	</Data>
+	<Page />
+	<Header />
+	<Body rows="30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30">
+		<Text col="2" colspan="2" val="表格" fontsize="20" bold="True" horalign="Center" lbs="None" tbs="None" rbs="None" bbs="None" />
+		<Text col="10" val="矩阵" fontsize="20" bold="True" horalign="Center" lbs="None" tbs="None" rbs="None" bbs="None" />
+		<Table row="1" col="1" rowspan="4" colspan="4" tbl="综合_表格">
+			<TColHeader>
+				<TRow>
+					<Text row="1" col="1" val="学期" background="#FFE0E0E0" horalign="Center" />
+					<Text row="1" col="2" val="课程" background="#FFE0E0E0" horalign="Center" />
+					<Text row="1" col="3" val="姓名" background="#FFE0E0E0" horalign="Center" />
+					<Text row="1" col="4" val="成绩" background="#FFE0E0E0" horalign="Center" />
+				</TRow>
+			</TColHeader>
+			<TBody>
+				<TRow>
+					<Text row="4" col="1" val=":Val(综合_表格,year)" hidetopdup="True" horalign="Center" />
+					<Text row="4" col="2" val=":Val(综合_表格,subject)" hidetopdup="True" horalign="Center" />
+					<Text row="4" col="3" val=":Val(综合_表格,xm)" />
+					<Text row="4" col="4" val=":Val(综合_表格,score)" />
+				</TRow>
+			</TBody>
+			<TGroup field="year">
+				<TRow>
+					<Text row="2" col="1" colspan="4" val=":Group(综合_表格,year)&#xD;&#xA;|| 年度总分：&#xD;&#xA;|| :Sum(综合_表格,score)" background="#FFE0E0E0" horalign="Center" />
+				</TRow>
+			</TGroup>
+			<TGroup field="subject">
+				<TRow>
+					<Text row="3" col="1" val=":Group(综合_表格,year)" hidetopdup="True" background="#00000000" horalign="Center" />
+					<Text row="3" col="2" colspan="3" val=":Group(综合_表格,subject)&#xD;&#xA;|| 平均：&#xD;&#xA;|| :Avg(综合_表格,score)" background="#FFE0E0E0" horalign="Center" />
+				</TRow>
+			</TGroup>
+		</Table>
+		<Matrix row="1" col="8" rowspan="3" colspan="4" tbl="综合_矩阵" repeatrowheader="True" repeatcolheader="True" rowsort="xm,year">
+			<Corner>
+				<Text row="1" col="8" colspan="2" val="姓名\成绩" background="#FFE0E0E0" horalign="Center" />
+			</Corner>
+			<RowHeader>
+				<Level field="xm">
+					<Text row="2" col="8" val=":Val(综合_矩阵,xm)" hidetopdup="True" background="#FFE0E0E0" horalign="Center" />
+				</Level>
+				<Level field="year">
+					<Text row="3" col="9" val=":Val(综合_矩阵,year)" background="#FFE0E0E0" horalign="Center" />
+					<Subtotal>
+						<Text row="2" col="9" val="小计" background="#FF9ACCFF" horalign="Center" />
+					</Subtotal>
+				</Level>
+			</RowHeader>
+			<ColHeader>
+				<Level field="subject">
+					<Text row="1" col="10" val=":Val(综合_矩阵,subject)" background="#FFE0E0E0" horalign="Center" />
+					<Subtotal beforelevel="0">
+						<Text row="1" col="11" val="总计" background="#FF9ACCFF" horalign="Center" />
+					</Subtotal>
+				</Level>
+			</ColHeader>
+			<MRow>
+				<Text row="2" col="10" val=":Sum(综合_矩阵,score)" />
+				<Text row="2" col="11" val=":Sum(综合_矩阵,score)" />
+			</MRow>
+			<MRow>
+				<Text row="3" col="10" val=":Val(综合_矩阵,score)" />
+				<Text row="3" col="11" val=":Sum(综合_矩阵,score)" />
+			</MRow>
+		</Matrix>
+		<Text row="9" col="10" val="迷你图" fontsize="20" bold="True" horalign="Center" lbs="None" tbs="None" rbs="None" bbs="None" />
+		<Sparkline row="10" col="8" rowspan="3" colspan="6" tbl="迷你图" field="score" />
+		<Text row="11" col="2" colspan="2" val="图表" fontsize="20" bold="True" horalign="Center" lbs="None" tbs="None" rbs="None" bbs="None" />
+		<Chart row="12" col="1" rowspan="11" colspan="5" title="成绩一览表" titlex="姓名" titley="成绩" tbl="图表矩阵" fieldseries="subject" fieldx="xm" fieldy="score" />
+		<Sparkline row="14" col="8" rowspan="4" colspan="6" type="Column" tbl="迷你图" field="score" />
+		<Sparkline row="19" col="8" rowspan="4" colspan="6" type="Winloss" tbl="盈亏" field="score" />
+		<Chart row="24" col="1" rowspan="11" colspan="5" type="Line" title="成绩折线" titlex="姓名" titley="成绩" tbl="图表矩阵" fieldseries="subject" fieldx="xm" fieldy="score" />
+		<Text row="26" col="10" colspan="2" val="图片图标" fontsize="20" bold="True" horalign="Center" lbs="None" tbs="None" rbs="None" bbs="None" />
+		<Image row="28" col="8" rowspan="4" colspan="2">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G5bPXMqOn76Yn/rPJwAITAAgMAGAwAQAAhMACEwAIDABgMAEAAITAAhMACAwAYDABnUvwLnL07/DrEsO7pvNZmfyw4Si/8zK3lo8tHsBBhWAof3jlHXq2HzpN/TiiVfzZ/F4j7kEgNAEAAITAAhMACAwAYDABAACEwAITAAgMAGAwAQAAhMACEwAIDABgMAEAAITAAhMACAwAYDABAACEwAITAAgMAGAwAQAAhMACEwAIDABgMAEAAITAAhMACAwAYDABAACEwAITAAgMAGAwAQAAhMACEwAIDABgMAEAAITAAhMACAwAYDABAACEwAITAAgMAGAwAQAAhMACEwAIDABgMAEAAITAAhMACAwAYDABAACEwAITAAgMAGAwAQAAhMACEwAIDABgMAEAAKbWVg+u5I/75Slxb3Z8pH9+WkyZ965kZ1641p+imdpcU+2ODebnyazfOZS/iyexbmdq++zMtLP6/jpi/mp/wYVAGjb0ALgEgACEwAITAAgMAGAwAQAAhMACEwAIDABgMAEAAITAAhMACCwzt4LkJS9UQPaduHqrezlC9fzU/91OgBAu1wCQGACAIEJAAQmABCYAEBgAgCBCQAEJgAQmABAYAIAgQkABCYAEJgAQGACAIEJAAQmABCYAEBgAgCBCQAEJgAQmABAYAIAgQkABCYAEJgAQGACAIEJAAQmABCYAEBgAgCBCQAEJgAQmABAYAIAgQkABCYAEJgAQFhZ9n+zPA2MtLkRWQAAAABJRU5ErkJggg==</Image>
+		<Text row="28" col="11" rowspan="3" colspan="2" val="" fontfamily="ms-appx:///icon.ttf#DtIcon" fontsize="40" foreground="#FFFF0000" horalign="Center" />
+	</Body>
+	<Footer defaultfooter="True" />
+	<View script="DataRptScript" />
+</Rpt>

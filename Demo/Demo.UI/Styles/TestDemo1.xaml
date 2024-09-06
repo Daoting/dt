@@ -1,0 +1,12 @@
+﻿<a:Win
+    x:Class="Demo.UI.TestDemo1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:s="using:Demo.UI">
+
+    <StackPanel x:Name="_sp" Margin="10">
+        <Button Content="测试1" Click="OnTest1" />
+        <Button Content="测试2" Click="OnTest2" />
+    </StackPanel>
+</a:Win>

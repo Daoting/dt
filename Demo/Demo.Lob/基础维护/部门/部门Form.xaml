@@ -1,0 +1,14 @@
+﻿<a:Form
+    x:Class="Demo.Lob.部门Form"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="部门表单">
+
+    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+        <a:CText ID="编码" />
+        <a:CText ID="名称" />
+        <a:CText ID="说明" />
+        <a:CTip ID="上级部门" />
+    </a:Fv>
+</a:Form>

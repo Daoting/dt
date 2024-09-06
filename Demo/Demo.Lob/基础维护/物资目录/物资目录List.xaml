@@ -1,0 +1,21 @@
+﻿<a:List
+    x:Class="Demo.Lob.物资目录List"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="物资目录">
+
+    <a:Lv x:Name="_lv">
+        <a:Cols>
+            <a:Col ID="物资分类" />
+            <a:Col ID="名称" />
+            <a:Col ID="规格" />
+            <a:Col ID="产地" />
+            <a:Col ID="成本价" />
+            <a:Col ID="核算方式" />
+            <a:Col ID="摊销月数" />
+            <a:Col ID="建档时间" />
+            <a:Col ID="撤档时间" />
+        </a:Cols>
+    </a:Lv>
+</a:List>

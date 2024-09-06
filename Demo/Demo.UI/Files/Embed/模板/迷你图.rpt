@@ -1,0 +1,49 @@
+﻿<Rpt cols="71,230,201">
+	<Params />
+	<Data>
+		<Tbl name="迷你图" isscritp="True" cols="year,score" />
+		<Tbl name="盈亏" isscritp="True" cols="month,score" />
+	</Data>
+	<Page />
+	<Header />
+	<Body rows="25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,30,30,30,30,30,30,30,30">
+		<Text col="1" colspan="2" val="折线图" lbs="None" tbs="None" rbs="None" bbs="None" />
+		<Sparkline row="1" col="1" rowspan="3" colspan="2" tbl="迷你图" field="score" />
+		<Text row="5" col="1" val="柱形图" lbs="None" tbs="None" rbs="None" bbs="None" />
+		<Sparkline row="6" col="1" rowspan="4" colspan="2" type="Column" tbl="迷你图" field="score" />
+		<Text row="11" col="1" val="盈亏图" lbs="None" tbs="None" rbs="None" bbs="None" />
+		<Sparkline row="12" col="1" rowspan="4" colspan="2" type="Winloss" tbl="盈亏" field="score" />
+		<Text row="17" col="1" val="附" lbs="None" tbs="None" rbs="None" bbs="None" />
+		<Table row="18" col="1" rowspan="2" colspan="2" tbl="迷你图">
+			<TColHeader>
+				<TRow>
+					<Text row="18" col="1" val="年度" background="#FFE0E0E0" horalign="Center" />
+					<Text row="18" col="2" val="平均成绩" background="#FFE0E0E0" horalign="Center" />
+				</TRow>
+			</TColHeader>
+			<TBody>
+				<TRow>
+					<Text row="19" col="1" val=":Val(迷你图,year)" horalign="Center" />
+					<Text row="19" col="2" val=":Val(迷你图,score)" background="#33FFFF00" />
+				</TRow>
+			</TBody>
+		</Table>
+		<Text row="21" col="1" val="盈亏数据" lbs="None" tbs="None" rbs="None" bbs="None" />
+		<Table row="22" col="1" rowspan="2" colspan="2" tbl="盈亏">
+			<TColHeader>
+				<TRow>
+					<Text row="22" col="1" val="月份" background="#FFE0E0E0" horalign="Center" />
+					<Text row="22" col="2" val="值" background="#FFE0E0E0" horalign="Center" />
+				</TRow>
+			</TColHeader>
+			<TBody>
+				<TRow>
+					<Text row="23" col="1" val=":Val(盈亏,month)" horalign="Center" />
+					<Text row="23" col="2" val=":Val(盈亏,score)" background="#33FFFF00" />
+				</TRow>
+			</TBody>
+		</Table>
+	</Body>
+	<Footer />
+	<View script="DataRptScript" />
+</Rpt>

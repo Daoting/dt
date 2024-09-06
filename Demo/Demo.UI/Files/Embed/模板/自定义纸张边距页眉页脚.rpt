@@ -1,0 +1,39 @@
+﻿<Rpt cols="90,130,100,100">
+  <Params />
+  <Data>
+    <Tbl name="个人成绩" isscritp="True" cols="xm,year,subject,score" />
+  </Data>
+	<Page height="400" width="560" leftmargin="30" topmargin="10" rightmargin="30" bottommargin="10" />
+  <Header height="40">
+    <Text colspan="2" val=":Var(报表名称) " fontsize="20" bold="True" underline="True" lbs="None" tbs="None" rbs="None" bbs="None" />
+    <Text col="3" val=":Var(页号)&#xD;|| /&#xD;|| :Var(总页数) " lbs="None" tbs="None" rbs="None" bbs="None" />
+  </Header>
+  <Body rows="25,25,25">
+    <Matrix rowspan="3" colspan="2" tbl="个人成绩" repeatrowheader="True" repeatcolheader="True" rowsort="name" colsort="year,subject">
+      <Corner>
+        <Text rowspan="2" val="姓名\成绩" background="#FFE0E0E0" />
+      </Corner>
+      <RowHeader>
+        <Level field="xm">
+          <Text row="2" val=":Val(个人成绩,xm) " background="#FFE0E0E0" />
+        </Level>
+      </RowHeader>
+      <ColHeader>
+        <Level field="year">
+          <Text col="1" val=":Val(个人成绩,year) " hideleftdup="True" background="#FFE0E0E0" />
+        </Level>
+        <Level field="subject">
+          <Text row="1" col="1" val=":Val(个人成绩,subject) " background="#FFE0E0E0" />
+        </Level>
+      </ColHeader>
+      <MRow>
+        <Text row="2" col="1" val=":Val(个人成绩,score) " />
+      </MRow>
+    </Matrix>
+  </Body>
+  <Footer height="40">
+    <Text colspan="2" val=":Var(日期时间)" lbs="None" tbs="None" rbs="None" bbs="None" />
+    <Text col="3" val="【&#xD;|| :Var(水平页号) &#xD;|| -&#xD;|| :Var(垂直页号) &#xD;||】" lbs="None" tbs="None" rbs="None" bbs="None" />
+  </Footer>
+  <View script="DataRptScript" />
+</Rpt>

@@ -1,0 +1,13 @@
+﻿<a:Form
+    x:Class="Demo.Lob.入出类别Form"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="表单">
+
+    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+        <a:CText ID="名称" />
+        <a:CText ID="系数" />
+        <a:CText ID="单号前缀" />
+    </a:Fv>
+</a:Form>

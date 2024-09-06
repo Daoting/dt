@@ -1,0 +1,87 @@
+﻿<b:WfForm
+    x:Class="Demo.Lob.入出Form"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:b="using:Dt.Mgr"
+    Title="入出表单">
+
+    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+        <a:CTip ID="单号" />
+        <a:CTip ID="部门名称" />
+        <a:CList ID="供应商" SrcID="id#名称" TgtID="供应商id#供应商" ViewMode="Table">
+            <a:CList.Sql>
+                <a:Sql>select * from 供应商</a:Sql>
+            </a:CList.Sql>
+            <a:Cols>
+                <a:Col ID="名称" />
+                <a:Col ID="执照号" />
+                <a:Col ID="电话" />
+                <a:Col ID="开户银行" />
+                <a:Col ID="帐号" />
+                <a:Col ID="联系人" />
+            </a:Cols>
+        </a:CList>
+        <a:CText ID="摘要" />
+        <a:CTip ID="金额" />
+        <a:CTip ID="发票金额" />
+        <a:CTip ID="填制人" />
+        <a:CTip ID="填制日期" />
+        <a:CTip ID="审核人" />
+        <a:CTip ID="审核日期" />
+    </a:Fv>
+
+    <a:Form.Items>
+        <a:Fi x:Name="_fi详单" Title="详单">
+            <a:Fi.Lv>
+                <a:Lv x:Name="_lv详单">
+                    <a:Cols>
+                        <a:Col ID="物资名称" />
+                        <a:Col ID="规格" />
+                        <a:Col ID="产地" />
+                        <a:Col ID="批次" />
+                        <a:Col ID="数量" />
+                        <a:Col ID="单价" />
+                        <a:Col ID="金额" />
+                        
+                        <a:Col ID="随货单号" />
+                        <a:Col ID="发票号" />
+                        <a:Col ID="发票日期" />
+                        <a:Col ID="发票金额" />
+                        <a:Col ID="盘点时间" />
+                        <a:Col ID="盘点金额" />
+                    </a:Cols>
+                </a:Lv>
+            </a:Fi.Lv>
+            <a:Fi.Fv>
+                <a:Fv x:Name="_fv详单">
+                    <a:CList ID="物资名称" GroupName="物资分类" SrcID="id#名称#规格#产地" TgtID="物资id#物资名称#规格#产地">
+                        <a:CList.Sql>
+                            <a:Sql>select * from v_物资目录</a:Sql>
+                        </a:CList.Sql>
+                        <a:Cols>
+                            <a:Col ID="物资分类" />
+                            <a:Col ID="名称" />
+                            <a:Col ID="规格" />
+                            <a:Col ID="产地" />
+                            <a:Col ID="成本价" />
+                        </a:Cols>
+                    </a:CList>
+                    <a:CTip ID="规格" />
+                    <a:CTip ID="产地" />
+                    <a:CText ID="批次" />
+                    <a:CNum ID="数量" />
+                    <a:CNum ID="单价" />
+                    <a:CNum ID="金额" />
+                    
+                    <a:CText ID="随货单号" />
+                    <a:CText ID="发票号" />
+                    <a:CDate ID="发票日期" />
+                    <a:CText ID="发票金额" />
+                    <a:CDate ID="盘点时间" />
+                    <a:CText ID="盘点金额" />
+                </a:Fv>
+            </a:Fi.Fv>
+        </a:Fi>
+    </a:Form.Items>
+</b:WfForm>
