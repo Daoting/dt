@@ -3,7 +3,7 @@
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
     </PropertyGroup>
     
-    <Import Project="..\..\Tools\File\InfrasPkg.props" Condition="exists('..\..\Tools\File\InfrasPkg.props')" />
+    <Import Project="..\..\..\Tools\File\InfrasPkg.props" Condition="exists('..\..\..\Tools\File\InfrasPkg.props')" />
 
     <ItemGroup>
         <EmbeddedResource Include="Icons\AutoFillIndicator.png" />
