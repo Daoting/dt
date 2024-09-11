@@ -24,7 +24,6 @@
         <When Condition="$(IsWin)">
             <!-- windows引用包 -->
             <ItemGroup>
-                <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240802000" PrivateAssets="none" />
                 <!-- Lottie动画已正常，Microsoft.Graphics.Win2D需1.2.0以上版本，Microsoft.Maui.Essentials已间接引用 -->
                 <PackageReference Include="CommunityToolkit.WinUI.Lottie" Version="8.1.240821" />
             </ItemGroup>

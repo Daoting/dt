@@ -20,12 +20,12 @@
         <IsWasm>false</IsWasm>
         <IsSkia>false</IsSkia>
         <!-- 目标框架，任意组合，如 SlnName-win-android-skia.sln -->
-        <TargetFrameworks Condition="$(SolutionFileName.Contains('-win'))">$(TargetFrameworks);net8.0-windows10.0.19041</TargetFrameworks>
+        <TargetFrameworks Condition="$(SolutionFileName.Contains('-win'))">$(TargetFrameworks);net8.0-windows10.0.22621</TargetFrameworks>
         <TargetFrameworks Condition="$(SolutionFileName.Contains('-android'))">$(TargetFrameworks);net8.0-android</TargetFrameworks>
         <TargetFrameworks Condition="$(SolutionFileName.Contains('-ios'))">$(TargetFrameworks);net8.0-ios</TargetFrameworks>
         <TargetFrameworks Condition="$(SolutionFileName.Contains('-wasm'))">$(TargetFrameworks);net8.0-browser</TargetFrameworks>
         <TargetFrameworks Condition="$(SolutionFileName.Contains('-skia'))">$(TargetFrameworks);net8.0</TargetFrameworks>
-        <TargetFrameworks Condition="$(TargetFrameworks) == ''">net8.0-windows10.0.19041;net8.0-android;net8.0-ios;net8.0-browser;net8.0</TargetFrameworks>
+        <TargetFrameworks Condition="$(TargetFrameworks) == ''">net8.0-windows10.0.22621;net8.0-android;net8.0-ios;net8.0-browser;net8.0</TargetFrameworks>
     </PropertyGroup>
 
     <!-- 平台常量 -->
@@ -33,6 +33,7 @@
         <!-- GetTargetPlatformIdentifier无法区分wpf -->
         <When Condition="$(TargetFramework.Contains('windows10'))">
             <PropertyGroup>
+                <WinAppSdkVersion>1.5.240802000</WinAppSdkVersion>
                 <IsWin>true</IsWin>
                 <!--ENABLECURSOR 启用光标，winui赋值时容易锁死-->
                 <DefineConstants>$(DefineConstants);WIN;ENABLECURSOR</DefineConstants>
