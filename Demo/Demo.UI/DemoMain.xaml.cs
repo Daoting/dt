@@ -67,10 +67,10 @@ namespace Demo.UI
                 new Nav("树", typeof(TvHome)) { Desc = "传统树，自定义节点样式、节点内容" },
                 new Nav("菜单", typeof(MenuHome)) { Desc = "菜单、工具栏、上下文菜单" },
                 new Nav("Excel", typeof(ExcelHome)) { Desc = "模拟Excel的常用功能" },
-                new Nav("Pdf", typeof(PdfHome)) { Desc = "Pdf预览、导入、导出、打印" },
                 new Nav("报表", typeof(RptHome)) { Desc = "报表模板设计、预览、导出、打印" },
-                new Nav("图表", typeof(ChartHome)) { Desc = "柱线饼等9大类40种不同图表" },
-                new Nav("富文本", typeof(RichTextHome)) { Desc = "支持Html、Markdown两种格式的富文本编辑及浏览" },
+                new Nav("图表1", typeof(ChartHome)) { Desc = "柱线饼等9大类40种不同图表，支持嵌入Excel" },
+                new Nav("图表2", typeof(Chart2Home)) { Desc = "ScottPlot开源图表，高性能、交互性强" },
+                new Nav("Pdf及富文本", typeof(PdfHome)) { Desc = "Pdf预览、导入、导出、打印，Html、Markdown格式的编辑及浏览" },
                 new Nav("杂项", typeof(MiscHome)) { Desc = "分隔栏、可停靠面板等" },
             };
             group.Title = "基础控件";

@@ -1,0 +1,139 @@
+﻿#region 文件描述
+/******************************************************************************
+* 创建: Daoting
+* 摘要: 
+* 日志: 2024-09-13 创建
+******************************************************************************/
+#endregion
+
+#region 引用命名
+using Microsoft.UI.Xaml.Controls;
+using ScottPlot;
+using ScottPlot.Control;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
+#endregion
+
+namespace Dt.Base
+{
+    /// <summary>
+    /// 图表上下文菜单
+    /// </summary>
+    public class ChartMenu : IPlotMenu
+    {
+        readonly Chart2 _chart;
+        readonly List<ContextMenuItem> _menuItems;
+
+        public ChartMenu(Chart2 p_chart)
+        {
+            _chart = p_chart;
+            _menuItems = new List<ContextMenuItem>();
+            Reset();
+        }
+
+        public MenuFlyout GetContextMenu(IPlotControl plotControl)
+        {
+            MenuFlyout menu = new();
+            foreach (var curr in _menuItems)
+            {
+                if (curr.IsSeparator)
+                {
+                    menu.Items.Add(new MenuFlyoutSeparator());
+                }
+                else
+                {
+                    var menuItem = new MenuFlyoutItem { Text = curr.Label };
+                    menuItem.Click += (s, e) => curr.OnInvoke(plotControl);
+                    menu.Items.Add(menuItem);
+                }
+            }
+            return menu;
+        }
+
+        public void ShowContextMenu(Pixel pixel)
+        {
+            MenuFlyout flyout = GetContextMenu(_chart);
+            Windows.Foundation.Point pt = new(pixel.X, pixel.Y);
+            flyout.ShowAt(_chart, pt);
+        }
+
+        public void Reset()
+        {
+            Clear();
+            AddDefaultItems();
+        }
+
+        public void Clear()
+        {
+            _menuItems.Clear();
+        }
+
+        public void Add(string Label, Action<IPlotControl> action)
+        {
+            _menuItems.Add(new ContextMenuItem() { Label = Label, OnInvoke = action });
+        }
+
+        public void AddSeparator()
+        {
+            _menuItems.Add(new ContextMenuItem() { IsSeparator = true });
+        }
+
+        void AddDefaultItems()
+        {
+            _menuItems.Add(new() { Label = "保存图像", OnInvoke = OpenSaveImageDialog });
+            _menuItems.Add(new() { Label = "复制图像", OnInvoke = CopyImageToClipboard });
+            _menuItems.Add(new() { Label = "自动缩放", OnInvoke = Autoscale });
+        }
+
+        async void OpenSaveImageDialog(IPlotControl plotControl)
+        {
+            FileSavePicker dialog = new()
+            {
+                SuggestedFileName = "图表.png"
+            };
+            dialog.FileTypeChoices.Add("PNG 文件", new List<string>() { ".png" });
+            dialog.FileTypeChoices.Add("JPEG 文件", new List<string>() { ".jpg", ".jpeg" });
+            dialog.FileTypeChoices.Add("BMP 文件", new List<string>() { ".bmp" });
+            dialog.FileTypeChoices.Add("WebP 文件", new List<string>() { ".webp" });
+            dialog.FileTypeChoices.Add("SVG 文件", new List<string>() { ".svg" });
+
+#if WIN
+            // 绑定Window句柄，操
+            IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(Kit.MainWin);
+            WinRT.Interop.InitializeWithWindow.Initialize(dialog, hWnd);
+#endif
+
+            var file = await dialog.PickSaveFileAsync();
+
+            if (file != null)
+            {
+                ImageFormat format = ImageFormats.FromFilename(file.Name);
+                PixelSize lastRenderSize = plotControl.Plot.RenderManager.LastRender.FigureRect.Size;
+                plotControl.Plot.Save(file.Path, (int)lastRenderSize.Width, (int)lastRenderSize.Height, format);
+                Kit.Msg("保存成功！");
+            }
+        }
+
+        void CopyImageToClipboard(IPlotControl plotControl)
+        {
+            PixelSize lastRenderSize = plotControl.Plot.RenderManager.LastRender.FigureRect.Size;
+            byte[] bytes = plotControl.Plot.GetImage((int)lastRenderSize.Width, (int)lastRenderSize.Height).GetImageBytes();
+
+            var stream = new InMemoryRandomAccessStream();
+            stream.AsStreamForWrite().Write(bytes);
+
+            var content = new DataPackage();
+            content.SetBitmap(RandomAccessStreamReference.CreateFromStream(stream));
+
+            Clipboard.SetContent(content);
+            Kit.Msg("图像已复制到剪贴板！");
+        }
+
+        void Autoscale(IPlotControl plotControl)
+        {
+            plotControl.Plot.Axes.AutoScale();
+            plotControl.Refresh();
+        }
+    }
+}

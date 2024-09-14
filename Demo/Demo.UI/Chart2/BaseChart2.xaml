@@ -1,0 +1,37 @@
+﻿<a:Win
+    x:Class="Demo.UI.BaseChart2"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表样例">
+                <a:Chart2 x:Name="_c" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <ScrollViewer>
+                    <StackPanel>
+                        <CheckBox x:Name="_cbReset" Content="清空重绘" IsChecked="True" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="散点图" Click="OnScatter" />
+                            <Button Content="散点样式" Click="OnPlottable" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="信号图" Click="OnSignal" />
+                            <Button Content="百万数据点" Click="OnSignalPer" />
+                        </StackPanel>
+                        <!--<StackPanel Orientation="Horizontal">
+                            <Button Content="坐标轴标签" Click="OnXYTitle" />
+                            <Button Content="百万数据点" Click="OnSignalPer" />
+                        </StackPanel>-->
+                    </StackPanel>
+                </ScrollViewer>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

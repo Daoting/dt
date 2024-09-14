@@ -2,6 +2,7 @@
     <!-- 公共引用包 -->
     <ItemGroup>
         <PackageReference Include="Dt.Infras" Version="4.0.2" />
+        <PackageReference Include="ScottPlot" Version="5.0.39" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.4" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
         <PackageReference Include="Serilog" Version="3.1.1" />
@@ -24,6 +25,8 @@
         <When Condition="$(IsWin)">
             <!-- windows引用包 -->
             <ItemGroup>
+                <!-- ScottPlot需要 -->
+                <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.8" />
                 <!-- Lottie动画已正常，Microsoft.Graphics.Win2D需1.2.0以上版本，Microsoft.Maui.Essentials已间接引用 -->
                 <PackageReference Include="CommunityToolkit.WinUI.Lottie" Version="8.1.240821" />
             </ItemGroup>
@@ -32,6 +35,8 @@
             <!-- 非windows引用包 -->
             <ItemGroup>
                 <PackageReference Include="Uno.WinUI" Version="5.2.119" PrivateAssets="none" />
+                <!-- ScottPlot需要 -->
+                <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.8" />
                 <!-- 对应CommunityToolkit.WinUI.Lottie库，渲染Adobe AfterEffects json动画，内部引用SkiaSharp包实现LottieVisualSource -->
                 <PackageReference Include="Uno.WinUI.Lottie" Version="5.2.119" />
             </ItemGroup>

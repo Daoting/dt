@@ -39,8 +39,6 @@ namespace Dt.Base
 
         /// <summary>
         /// 延迟刷新数据和视图
-        /// </summary>
-        /// <returns></returns>
         /// <example>
         /// <code>
         /// using (_lv.Defer())
@@ -55,6 +53,8 @@ namespace Dt.Base
         /// }
         /// </code>
         /// </example>
+        /// </summary>
+        /// <returns></returns>
         public IDisposable Defer()
         {
             return new InternalCls(this);
