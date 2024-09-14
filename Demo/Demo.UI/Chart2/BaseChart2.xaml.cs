@@ -70,53 +70,22 @@ namespace Demo.UI
                     double[] data = Generate.RandomWalk(1_000_000);
                     _c.Add.Signal(data);
                 }
-                //_c.Title("5百万数据点信号图");
+                _c.Title = "5百万数据点信号图";
             }
         }
 
-        //void OnXYTitle(object sender, RoutedEventArgs e)
-        //{
-        //    using (_chart.Defer(out var p, false))
-        //    {
-        //        p.XTitle("横坐标");
-        //        p.YTitle("纵坐标Title");
-        //        p.Title("标题");
-        //    }
-        //}
+        void OnXYTitle(object sender, RoutedEventArgs e)
+        {
+            using (_c.Defer(IsReset))
+            {
+                _c.XTitle = "横坐标";
+                _c.XStyle.ForeColor = Colors.Red;
+                _c.XStyle.FontSize = 30;
+                _c.XStyle.Italic = true;
+
+                _c.YTitle = "纵坐标Title";
+                _c.Title = "标题";
+            }
+        }
     }
-    
-    //public static class ScottPlotEx
-    //{
-    //    public static void XTitle(this Plot p_plot, string p_title, float? p_size = null)
-    //    {
-    //        SetTitle(p_plot.Axes.Bottom.Label, p_title, p_size);
-
-    //    }
-
-    //    public static void YTitle(this Plot p_plot, string p_title, float? p_size = null)
-    //    {
-    //        SetTitle(p_plot.Axes.Left.Label, p_title, p_size);
-    //    }
-
-    //    public static void Title(this Plot p_plot, string p_title, float? p_size = null)
-    //    {
-    //        SetTitle(p_plot.Axes.Title.Label, p_title, p_size);
-    //    }
-
-    //    static void SetTitle(LabelStyle p_label, string p_title, float? p_size = null)
-    //    {
-    //        p_label.Text = p_title;
-    //        if (p_size.HasValue)
-    //            p_label.FontSize = p_size.Value;
-    //        p_label.FontName = GetFontName();
-    //    }
-
-    //    static string _fontName;
-    //    static string GetFontName()
-    //    {
-    //        if (_fontName == null)
-    //            _fontName = Fonts.Detect("字");
-    //        return _fontName;
-    //    }
-    //}
 }

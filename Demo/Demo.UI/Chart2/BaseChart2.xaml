@@ -25,10 +25,10 @@
                             <Button Content="信号图" Click="OnSignal" />
                             <Button Content="百万数据点" Click="OnSignalPer" />
                         </StackPanel>
-                        <!--<StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
                             <Button Content="坐标轴标签" Click="OnXYTitle" />
                             <Button Content="百万数据点" Click="OnSignalPer" />
-                        </StackPanel>-->
+                        </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
             </a:Tab>

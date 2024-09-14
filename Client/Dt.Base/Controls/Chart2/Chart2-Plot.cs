@@ -23,6 +23,12 @@ namespace Dt.Base
     /// </summary>
     public partial class Chart2
     {
+        static Chart2()
+        {
+            // 设置支持中文的默认字体，ScottPlot中默认字体乱码
+            Fonts.Default = Fonts.Detect("字");
+        }
+        
         #region Plot属性
         /// <summary>
         /// 添加绘图元素
@@ -48,6 +54,60 @@ namespace Dt.Base
         /// </summary>
         public BackgroundStyle DataBackground => _plot.DataBackground;
 
+        /// <summary>
+        /// 标题
+        /// </summary>
+        public string Title
+        {
+            get => _plot.Axes.Title.Label.Text;
+            set
+            {
+                _plot.Axes.Title.Label.Text = value;
+                _plot.Axes.Title.IsVisible = !string.IsNullOrWhiteSpace(value);
+            }
+        }
+
+        /// <summary>
+        /// 标题样式
+        /// </summary>
+        public LabelStyle TitleStyle => _plot.Axes.Title.Label;
+
+        /// <summary>
+        /// x轴标题
+        /// </summary>
+        public string XTitle
+        {
+            get => _plot.Axes.Bottom.Label.Text;
+            set
+            {
+                _plot.Axes.Bottom.Label.Text = value;
+                _plot.Axes.Bottom.IsVisible = !string.IsNullOrWhiteSpace(value);
+            }
+        }
+
+        /// <summary>
+        /// x轴样式
+        /// </summary>
+        public LabelStyle XStyle => _plot.Axes.Bottom.Label;
+        
+        /// <summary>
+        /// y轴标题
+        /// </summary>
+        public string YTitle
+        {
+            get => _plot.Axes.Left.Label.Text;
+            set
+            {
+                _plot.Axes.Left.Label.Text = value;
+                _plot.Axes.Left.IsVisible = !string.IsNullOrWhiteSpace(value);
+            }
+        }
+
+        /// <summary>
+        /// y轴样式
+        /// </summary>
+        public LabelStyle YStyle => _plot.Axes.Left.Label;
+        
         public IZoomRectangle ZoomRectangle { get; set; }
         public double ScaleFactor { get => _plot.ScaleFactor; set => _plot.ScaleFactor = (float)value; }
 
@@ -68,43 +128,7 @@ namespace Dt.Base
         /// </summary>
         public object Sync => _plot.Sync;
         #endregion
-        
-        #region 标题
-        /// <summary>
-        /// Shortcut to set text of the <see cref="TitlePanel"/> Label.
-        /// Assign properties of <see cref="TitlePanel"/> Label to customize size, color, font, etc.
-        /// </summary>
-        public void Title(string text, float? size = null)
-        {
-            Axes.Title.Label.Text = text;
-            Axes.Title.IsVisible = !string.IsNullOrWhiteSpace(text);
-            if (size.HasValue)
-                Axes.Title.Label.FontSize = size.Value;
-        }
-
-        /// <summary>
-        /// Shortcut to set text of the <see cref="BottomAxis"/> Label
-        /// Assign properties of <see cref="BottomAxis"/> Label to customize size, color, font, etc.
-        /// </summary>
-        public void XLabel(string label, float? size = null)
-        {
-            Axes.Bottom.Label.Text = label;
-            if (size.HasValue)
-                Axes.Bottom.Label.FontSize = size.Value;
-        }
-
-        /// <summary>
-        /// Shortcut to set text of the <see cref="BottomAxis"/> Label
-        /// Assign properties of <see cref="BottomAxis"/> Label to customize size, color, font, etc.
-        /// </summary>
-        public void YLabel(string label, float? size = null)
-        {
-            Axes.Left.Label.Text = label;
-            if (size.HasValue)
-                Axes.Left.Label.FontSize = size.Value;
-        }
-        #endregion
-        
+                
         #region 像素坐标转换
         /// <summary>
         /// Return the location on the screen (pixel) for a location on the plot (coordinates) on the default axes.

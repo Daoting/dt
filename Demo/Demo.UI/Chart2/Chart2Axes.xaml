@@ -1,0 +1,53 @@
+﻿<a:Win
+    x:Class="Demo.UI.Chart2Axes"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表">
+                <a:Chart2 x:Name="_c" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <ScrollViewer>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="坐标轴标题" Click="OnXYTitle" />
+                            <Button Content="轴子标题" Click="OnSubTitle" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="坐标轴范围" Click="OnAxisLimits" />
+                            <Button Content="自动缩放轴" Click="OnAutoScale" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="倒置轴刻度" Click="OnInvertedAxis" />
+                            <Button Content="两轴自动1:1" Click="OnSquareUnits" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="轴抗锯齿" Click="OnAntiAlias" />
+                            <Button Content="隐藏轴及刻度" Click="OnHideAxis" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="隐藏网格" Click="OnHideGrid" />
+                            <Button Content="网格自定义" Click="OnCustomGrid" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="分别定义横纵网格" Click="OnSpecificGrid" />
+                            <Button Content="网格在顶层" Click="OnAboveGrid" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="x轴在顶部" Click="OnTopGrid" />
+                            <Button Content="网格背景" Click="OnFillColors" />
+                            <Button Content="暗黑网格" Click="OnFillDark" />
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>
