@@ -23,12 +23,6 @@ namespace Dt.Base
     /// </summary>
     public partial class Chart2
     {
-        static Chart2()
-        {
-            // 设置支持中文的默认字体，ScottPlot中默认字体乱码
-            Fonts.Default = Fonts.Detect("字");
-        }
-        
         #region Plot属性
         /// <summary>
         /// 添加绘图元素

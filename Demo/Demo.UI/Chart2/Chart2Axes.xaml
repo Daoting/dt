@@ -16,6 +16,7 @@
             <a:Tab Order="2" Title="属性">
                 <ScrollViewer>
                     <StackPanel>
+                        <a:CBar Title="基础" />
                         <StackPanel Orientation="Horizontal">
                             <Button Content="坐标轴标题" Click="OnXYTitle" />
                             <Button Content="轴子标题" Click="OnSubTitle" />
@@ -32,8 +33,10 @@
                             <Button Content="轴抗锯齿" Click="OnAntiAlias" />
                             <Button Content="隐藏轴及刻度" Click="OnHideAxis" />
                         </StackPanel>
+                        <a:CBar Title="网格" />
                         <StackPanel Orientation="Horizontal">
                             <Button Content="隐藏网格" Click="OnHideGrid" />
+                            <Button Content="隐藏网格线" Click="OnHideGrid2" />
                             <Button Content="网格自定义" Click="OnCustomGrid" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
@@ -44,6 +47,43 @@
                             <Button Content="x轴在顶部" Click="OnTopGrid" />
                             <Button Content="网格背景" Click="OnFillColors" />
                             <Button Content="暗黑网格" Click="OnFillDark" />
+                        </StackPanel>
+                        <a:CBar Title="轴刻度" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="轴刻度" Click="OnCustomTick" />
+                            <Button Content="时间刻度" Click="OnDateTimeTick" />
+                            <Button Content="刻度大小" Click="OnNumericFixed" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="文字刻度" Click="OnSetTicks" />
+                            <Button Content="刻度位置" Click="OnTickPositions" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="旋转刻度标签1" Click="OnRotatedTick" />
+                            <Button Content="旋转刻度标签2" Click="OnRotatedLongTick" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="最小刻度间距" Click="OnMiniTick" />
+                            <Button Content="刻度密度" Click="OnTickDensity" />
+                            <Button Content="刻度个数" Click="OnTickCount" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="次刻度密度" Click="OnMinorTickDensity" />
+                            <Button Content="对数刻度线" Click="OnLogScale" />
+                        </StackPanel>
+                        <a:CBar Title="时间轴" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="时间刻度" Click="OnDateTimeTick" />
+                            <Button Content="时间轴值" Click="OnDateTimeAxis" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="日期时间格式" Click="OnDateTimeFormat" />
+                            <Button Content="时间轴固定间隔刻度" Click="OnDateTimeFixedTick" />
+                        </StackPanel>
+                        <a:CBar Title="多轴" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="右侧轴" Click="OnRightAxis" />
+                            <Button Content="多轴" Click="OnMultiAxis" />
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>

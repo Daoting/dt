@@ -17,7 +17,7 @@ namespace Dt.Base
     public partial class Chart2
     {
         /// <summary>
-        /// 延时刷新或清空重绘
+        /// 延时刷新或清空重绘，默认清空重绘
         /// <example>
         /// <code>
         /// using (_c.Defer(true))
@@ -27,9 +27,9 @@ namespace Dt.Base
         /// </code>
         /// </example>
         /// </summary>
-        /// <param name="p_reset">是否清空重绘</param>
+        /// <param name="p_reset">是否清空重绘，默认true清空重绘</param>
         /// <returns></returns>
-        public IDisposable Defer(bool p_reset)
+        public IDisposable Defer(bool p_reset = true)
         {
             if (p_reset)
                 Reset();
