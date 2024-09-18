@@ -33,6 +33,10 @@
                             <Button Content="轴抗锯齿" Click="OnAntiAlias" />
                             <Button Content="隐藏轴及刻度" Click="OnHideAxis" />
                         </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="右侧轴" Click="OnRightAxis" />
+                            <Button Content="多轴" Click="OnMultiAxis" />
+                        </StackPanel>
                         <a:CBar Title="网格" />
                         <StackPanel Orientation="Horizontal">
                             <Button Content="隐藏网格" Click="OnHideGrid" />
@@ -80,10 +84,23 @@
                             <Button Content="日期时间格式" Click="OnDateTimeFormat" />
                             <Button Content="时间轴固定间隔刻度" Click="OnDateTimeFixedTick" />
                         </StackPanel>
-                        <a:CBar Title="多轴" />
+                        <a:CBar Title="图例" />
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="右侧轴" Click="OnRightAxis" />
-                            <Button Content="多轴" Click="OnMultiAxis" />
+                            <Button Content="默认图例" Click="OnLegend" />
+                            <Button Content="手动构建图例" Click="OnManLegend" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="直接设置Legend对象" Click="OnSetLegend" />
+                            <Button Content="图例方向" Click="OnLegendOri" />
+                            <Button Content="图例自动换行" Click="OnLegendLine" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="多个图例" Click="OnMutiLegend" />
+                            <Button Content="数据区域外显示图例" Click="OnEdageLegend" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="自定义图例字体" Click="OnLegendFont" />
+                            <Button Content="图例字体2" Click="OnLegendFont2" />
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>

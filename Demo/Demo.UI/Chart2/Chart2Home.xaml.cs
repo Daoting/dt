@@ -25,7 +25,7 @@ namespace Demo.UI
             InitializeComponent();
             _nav.Data = new Nl<Nav>
             {
-                new Nav("坐标轴及图例", typeof(Chart2Axes), Icons.折线图) { Desc =  "X轴、Y轴、标题面板、网格、图例等设置" },
+                new Nav("坐标轴及图例", typeof(Chart2Axes), Icons.折线图) { Desc =  "X轴、Y轴、标题、网格、图例等设置" },
                 new Nav("图表预览", typeof(BaseChart2), Icons.汉堡) { Desc =  "图表类型、X轴、Y轴、调色板、图例等设置" },
                 
             };

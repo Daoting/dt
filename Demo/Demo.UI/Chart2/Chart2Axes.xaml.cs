@@ -14,6 +14,8 @@ using ScottPlot.TickGenerators;
 using ScottPlot.TickGenerators.TimeUnits;
 using SkiaSharp;
 using System.Data;
+using Windows.ApplicationModel;
+using Windows.Storage;
 #endregion
 
 namespace Demo.UI
@@ -610,6 +612,191 @@ namespace Demo.UI
                 sig2.Axes.XAxis = _c.Axes.Bottom; // standard X axis
                 sig2.Axes.YAxis = yAxis2; // custom Y axis
                 yAxis2.LabelText = "Secondary Y Axis";
+            }
+        }
+
+        void OnLegend(object sender, RoutedEventArgs e)
+        {
+            using (_c.Defer())
+            {
+                var sig1 = _c.Add.Signal(Generate.Sin(51));
+                sig1.LegendText = "Sin";
+
+                var sig2 = _c.Add.Signal(Generate.Cos(51));
+                sig2.LegendText = "Cos";
+
+                _c.ShowLegend();
+            }
+        }
+
+        void OnManLegend(object sender, RoutedEventArgs e)
+        {
+            using (_c.Defer())
+            {
+                _c.Add.Signal(Generate.Sin(51));
+                _c.Add.Signal(Generate.Cos(51));
+                _c.Legend.IsVisible = true;
+
+                LegendItem item1 = new()
+                {
+                    LineColor = Colors.Magenta,
+                    MarkerFillColor = Colors.Magenta,
+                    MarkerLineColor = Colors.Magenta,
+                    LineWidth = 2,
+                    LabelText = "Alpha"
+                };
+
+                LegendItem item2 = new()
+                {
+                    LineColor = Colors.Green,
+                    MarkerFillColor = Colors.Green,
+                    MarkerLineColor = Colors.Green,
+                    LineWidth = 4,
+                    LabelText = "Beta"
+                };
+
+                LegendItem[] items = { item1, item2 };
+                _c.ShowLegend(items);
+            }
+        }
+
+        void OnSetLegend(object sender, RoutedEventArgs e)
+        {
+            using (_c.Defer())
+            {
+                var sig1 = _c.Add.Signal(Generate.Sin(51));
+                sig1.LegendText = "Sin";
+
+                var sig2 = _c.Add.Signal(Generate.Cos(51));
+                sig2.LegendText = "Cos";
+
+                _c.Legend.IsVisible = true;
+                _c.Legend.Alignment = Alignment.UpperCenter;
+
+                _c.Legend.OutlineColor = Colors.Navy;
+                _c.Legend.OutlineWidth = 5;
+                _c.Legend.BackgroundColor = Colors.LightBlue;
+
+                _c.Legend.ShadowColor = Colors.Blue.WithOpacity(.2);
+                _c.Legend.ShadowOffset = new(10, 10);
+
+                _c.Legend.FontSize = 32;
+                _c.Legend.FontName = Fonts.Serif;
+            }
+        }
+
+        void OnLegendOri(object sender, RoutedEventArgs e)
+        {
+            using (_c.Defer())
+            {
+                var sig1 = _c.Add.Signal(Generate.Sin(51, phase: .2));
+                var sig2 = _c.Add.Signal(Generate.Sin(51, phase: .4));
+                var sig3 = _c.Add.Signal(Generate.Sin(51, phase: .6));
+
+                sig1.LegendText = "Signal 1";
+                sig2.LegendText = "Signal 2";
+                sig3.LegendText = "Signal 3";
+
+                _c.ShowLegend(Alignment.UpperLeft, Orientation.Horizontal);
+            }
+        }
+
+        void OnLegendLine(object sender, RoutedEventArgs e)
+        {
+            using (_c.Defer())
+            {
+                for (int i = 1; i <= 10; i++)
+                {
+                    double[] data = Generate.Sin(51, phase: .02 * i);
+                    var sig = _c.Add.Signal(data);
+                    sig.LegendText = $"#{i}";
+                }
+
+                _c.Legend.IsVisible = true;
+                _c.Legend.Orientation = Orientation.Horizontal;
+            }
+        }
+
+        void OnMutiLegend(object sender, RoutedEventArgs e)
+        {
+            using (_c.Defer())
+            {
+                for (int i = 1; i <= 5; i++)
+                {
+                    double[] data = Generate.Sin(51, phase: .02 * i);
+                    var sig = _c.Add.Signal(data);
+                    sig.LegendText = $"Signal #{i}";
+                    sig.LineWidth = 2;
+                }
+
+                // default legend
+                var leg1 = _c.ShowLegend();
+                leg1.Alignment = Alignment.LowerRight;
+                leg1.Orientation = Orientation.Vertical;
+
+                // additional legend
+                var leg2 = _c.Add.Legend();
+                leg2.Alignment = Alignment.UpperCenter;
+                leg2.Orientation = Orientation.Horizontal;
+            }
+        }
+
+        void OnEdageLegend(object sender, RoutedEventArgs e)
+        {
+            using (_c.Defer())
+            {
+                var sig1 = _c.Add.Signal(Generate.Sin());
+                var sig2 = _c.Add.Signal(Generate.Cos());
+
+                sig1.LegendText = "Sine";
+                sig2.LegendText = "Cosine";
+
+                _c.ShowLegend(Edge.Right);
+            }
+        }
+
+        void OnLegendFont(object sender, RoutedEventArgs e)
+        {
+            using (_c.Defer())
+            {
+                Fonts.AddFontFile("DtIcon", Path.Combine(Package.Current.InstalledPath, "icon.ttf"));
+
+                var sig1 = _c.Add.Signal(Generate.Sin(51));
+                sig1.LegendText = "\uE001";
+
+                var sig2 = _c.Add.Signal(Generate.Cos(51));
+                sig2.LegendText = "\uE002";
+
+                _c.Legend.FontName = "DtIcon";
+                _c.Legend.FontSize = 36;
+                _c.Legend.FontColor = Colors.Red;
+
+                _c.ShowLegend();
+            }
+        }
+        
+        void OnLegendFont2(object sender, RoutedEventArgs e)
+        {
+            using (_c.Defer())
+            {
+                Fonts.AddFontFile("DtIcon", Path.Combine(Package.Current.InstalledPath, "icon.ttf"));
+
+                var sig1 = _c.Add.Signal(Generate.Sin(51));
+                sig1.LegendText = "Sin";
+
+                var sig2 = _c.Add.Signal(Generate.Cos(51));
+                sig2.LegendText = "Cos";
+
+                _c.Legend.ManualItems.Add(new LegendItem()
+                {
+                    LabelText = "\uE001",
+                    LabelFontName = "DtIcon",
+                    LabelFontSize = 18,
+                    LabelFontColor = Colors.Magenta,
+                    LinePattern = LinePattern.Dotted,
+                    LineWidth = 2,
+                    LineColor = Colors.Magenta,
+                });
             }
         }
     }
