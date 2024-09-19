@@ -16,18 +16,29 @@
             <a:Tab Order="2" Title="属性">
                 <ScrollViewer>
                     <StackPanel>
-                        <CheckBox x:Name="_cbReset" Content="清空重绘" IsChecked="True" />
+                        <a:CBar Title="注释" />
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="散点图" Click="OnScatter" />
-                            <Button Content="散点样式" Click="OnPlottable" />
+                            <Button Content="默认注释" Click="OnDefAnnotation" />
+                            <Button Content="注释自定义" Click="OnCustomAnnotation" />
+                            <Button Content="注释位置" Click="OnAnnotationPos" />
+                        </StackPanel>
+                        <Button Content="箭头" Click="OnArrow" />
+                        <a:CBar Title="轴线" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="垂直水平轴线" Click="OnHorAxes" />
+                            <Button Content="轴线标签" Click="OnAxesLable" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="信号图" Click="OnSignal" />
-                            <Button Content="百万数据点" Click="OnSignalPer" />
+                            <Button Content="轴线标签定位" Click="OnAxesPos" />
+                            <Button Content="轴线类型" Click="OnAxesType" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="坐标轴标签" Click="OnXYTitle" />
-                            <Button Content="百万数据点" Click="OnSignalPer" />
+                            <Button Content="图例中的轴线" Click="OnAxesLegend" />
+                            <Button Content="自动缩放时忽略" Click="OnAxesIgnore" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="轴线跨度" Click="OnAxisSpan" />
+                            <Button Content="轴线跨度样式" Click="OnAxisSpanStyle" />
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
