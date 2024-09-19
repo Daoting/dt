@@ -1,0 +1,54 @@
+﻿<a:Win
+    x:Class="Demo.UI.Chart2Style"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表">
+                <a:Chart2 x:Name="_c" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <ScrollViewer>
+                    <StackPanel>
+                        <a:CBar Title="样式" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="设置颜色" Click="OnColor" />
+                            <Button Content="自定义轴标签刻度线框架" Click="OnCustom" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="调色板" Click="OnPalette" />
+                            <Button Content="箭头形状" Click="OnArrow" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="线条样式" Click="OnLineStyle" />
+                            <Button Content="缩放整个图表" Click="OnScaleFactor" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="放大时启用细线模式" Click="OnHairline" />
+                            <Button Content="深色模式" Click="OnDark" />
+                        </StackPanel>
+                        <Button Content="离散颜色集合" Click="OnColormap" />
+                        <a:CBar Title="高级样式" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="数据区背景图像" Click="OnDataBackground" />
+                            <Button Content="背景图像" Click="OnBackground" />
+                            <Button Content="颜色插值" Click="OnRgb" />
+                        </StackPanel>
+                        <a:CBar Title="布局" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="无坐标轴" Click="OnNoAxes" />
+                            <Button Content="固定边距" Click="OnPadding" />
+                            <Button Content="固定矩形区域" Click="OnRect" />
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>
