@@ -27,8 +27,10 @@ namespace Demo.UI
             {
                 new Nav("坐标轴及图例", typeof(Chart2Axes), Icons.折线图) { Desc =  "X轴、Y轴、标题、网格、图例等设置" },
                 new Nav("图表样式及布局", typeof(Chart2Style), Icons.汉堡) { Desc =  "图表样式设置" },
-                new Nav("基础图元", typeof(BaseChart2), Icons.汉堡) { Desc =  "注释、箭头、轴线、轴跨度设置" },
-                
+                new Nav("基础图元", typeof(BaseChart2), Icons.汉堡) { Desc =  "注释、箭头、轴线、轴跨度、标注设置" },
+                new Nav("条形图", typeof(Chart2Bar), Icons.汉堡),
+                new Nav("箱形图", typeof(Chart2Box), Icons.汉堡),
+                new Nav("饼图", typeof(Chart2Coxcomb), Icons.汉堡),
             };
         }
     }

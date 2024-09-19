@@ -284,5 +284,23 @@ namespace Demo.UI
                 hs.FillStyle.Color = Colors.Magenta.WithAlpha(.2);
             }
         }
+
+        void OnCallout(object sender, RoutedEventArgs e)
+        {
+            using (_c.Defer())
+            {
+                double[] xs = Generate.Consecutive(15);
+                double[] ys = Generate.Sin(15);
+                _c.Add.Scatter(xs, ys);
+
+                _c.Add.Callout("Hello",
+                    textLocation: new(7.5, .8),
+                    tipLocation: new(xs[6], ys[6]));
+
+                _c.Add.Callout("World",
+                    textLocation: new(10, 0),
+                    tipLocation: new(xs[13], ys[13]));
+            }
+        }
     }
 }

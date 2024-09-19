@@ -1,0 +1,45 @@
+﻿<a:Win
+    x:Class="Demo.UI.Chart2Bar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表样例">
+                <a:Chart2 x:Name="_c" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <ScrollViewer>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="条形图" Click="OnDef" />
+                            <Button Content="带图例条形图" Click="OnLegend" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="带值标签条形图" Click="OnLabels" />
+                            <Button Content="水平带值标签条形图" Click="OnHorLabels" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="定位" Click="OnPosition" />
+                            <Button Content="带误差线" Click="OnError" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="带标记条形图" Click="OnLabeled" />
+                            <Button Content="重叠放置" Click="OnStacked" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="分组条形图" Click="OnGrouped" />
+                            <Button Content="水平条形图" Click="OnHor" />
+                        </StackPanel>
+                        <Button Content="分组堆叠条形图" Click="OnHorGrouped" />
+                    </StackPanel>
+                </ScrollViewer>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

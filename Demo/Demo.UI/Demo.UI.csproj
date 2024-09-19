@@ -6,4 +6,23 @@
 		<EmbeddedResource Include="appsettings.json" />
 		<PRIResource Include="Strings\**\*.resw" />
 	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="Chart2\Chart2Bar.xaml" />
+	  <None Remove="Chart2\Chart2Box.xaml" />
+	  <None Remove="Chart2\Chart2Coxcomb.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="Chart2\Chart2Coxcomb.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
+	  <Page Update="Chart2\Chart2Box.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
+	  <Page Update="Chart2\Chart2Bar.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
+	</ItemGroup>
 </Project>

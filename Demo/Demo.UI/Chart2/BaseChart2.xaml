@@ -40,6 +40,7 @@
                             <Button Content="轴线跨度" Click="OnAxisSpan" />
                             <Button Content="轴线跨度样式" Click="OnAxisSpanStyle" />
                         </StackPanel>
+                        <Button Content="标注" Click="OnCallout" />
                     </StackPanel>
                 </ScrollViewer>
             </a:Tab>
