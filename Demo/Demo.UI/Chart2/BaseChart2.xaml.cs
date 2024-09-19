@@ -302,5 +302,33 @@ namespace Demo.UI
                     tipLocation: new(xs[13], ys[13]));
             }
         }
+
+        void OnCrosshair(object sender, RoutedEventArgs e)
+        {
+            using (_c.Defer())
+            {
+                _c.Add.Signal(Generate.Sin());
+                _c.Add.Signal(Generate.Cos());
+
+                _c.Add.Crosshair(13, .25);
+
+            }
+        }
+
+        void OnCustomCrosshair(object sender, RoutedEventArgs e)
+        {
+            using (_c.Defer())
+            {
+                _c.Add.Signal(Generate.Sin());
+                _c.Add.Signal(Generate.Cos());
+
+                var cross = _c.Add.Crosshair(13, .25);
+
+                cross.LineWidth = 2;
+                cross.LineColor = Colors.Magenta;
+
+                cross.HorizontalLine.LinePattern = LinePattern.Dotted;
+            }
+        }
     }
 }

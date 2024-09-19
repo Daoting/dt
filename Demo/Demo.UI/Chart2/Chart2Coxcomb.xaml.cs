@@ -19,31 +19,21 @@ namespace Demo.UI
         public Chart2Coxcomb()
         {
             InitializeComponent();
-        }
 
-        void OnDefAnnotation(object sender, RoutedEventArgs e)
-        {
-            using (_c.Defer())
+            List<PieSlice> slices = new()
             {
-                
-            }
-        }
+                new() { Value = 5, Label = "Red", FillColor = Colors.Red },
+                new() { Value = 2, Label = "Orange", FillColor = Colors.Orange },
+                new() { Value = 8, Label = "Gold", FillColor = Colors.Gold },
+                new() { Value = 4, Label = "Green", FillColor = Colors.Green.WithOpacity(0.5) },
+                new() { Value = 8, Label = "Blue",  FillColor = Colors.Blue.WithOpacity(0.5) },
+            };
 
-        void OnCustomAnnotation(object sender, RoutedEventArgs e)
-        {
-            using (_c.Defer())
-            {
-                
-            }
-        }
+            _c.Add.Coxcomb(slices);
 
-        void OnAnnotationPos(object sender, RoutedEventArgs e)
-        {
-            using (_c.Defer())
-            {
-                
-            }
+            _c.Axes.Frameless();
+            _c.ShowLegend();
+            _c.HideGrid();
         }
-        
     }
 }

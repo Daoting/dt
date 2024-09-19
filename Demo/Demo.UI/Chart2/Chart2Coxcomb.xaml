@@ -14,17 +14,7 @@
     <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab Order="2" Title="属性">
-                <ScrollViewer>
-                    <StackPanel>
-                        <a:CBar Title="注释" />
-                        <StackPanel Orientation="Horizontal">
-                            <Button Content="默认注释" Click="OnDefAnnotation" />
-                            <Button Content="注释自定义" Click="OnCustomAnnotation" />
-                            <Button Content="注释位置" Click="OnAnnotationPos" />
-                        </StackPanel>
-                        
-                    </StackPanel>
-                </ScrollViewer>
+                <a:CBar Title="切片的角度是恒定的，半径是值" />
             </a:Tab>
         </a:Tabs>
     </a:Pane>

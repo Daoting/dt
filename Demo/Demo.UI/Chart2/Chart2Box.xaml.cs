@@ -21,29 +21,50 @@ namespace Demo.UI
             InitializeComponent();
         }
 
-        void OnDefAnnotation(object sender, RoutedEventArgs e)
+        void OnDef(object sender, RoutedEventArgs e)
         {
             using (_c.Defer())
             {
-                
+                Box box = new()
+                {
+                    Position = 5,
+                    BoxMin = 81,
+                    BoxMax = 93,
+                    WhiskerMin = 76,
+                    WhiskerMax = 107,
+                    BoxMiddle = 84,
+                };
+
+                _c.Add.Box(box);
+
+                _c.Axes.SetLimits(0, 10, 70, 110);
             }
         }
 
-        void OnCustomAnnotation(object sender, RoutedEventArgs e)
+        void OnGroup(object sender, RoutedEventArgs e)
         {
             using (_c.Defer())
             {
-                
-            }
-        }
+                List<ScottPlot.Box> boxes1 = new() {
+                    Generate.RandomBox(1),
+                    Generate.RandomBox(2),
+                    Generate.RandomBox(3),
+                };
 
-        void OnAnnotationPos(object sender, RoutedEventArgs e)
-        {
-            using (_c.Defer())
-            {
-                
+                List<ScottPlot.Box> boxes2 = new() {
+                    Generate.RandomBox(5),
+                    Generate.RandomBox(6),
+                    Generate.RandomBox(7),
+                };
+
+                var bp1 = _c.Add.Boxes(boxes1);
+                bp1.LegendText = "Group 1";
+
+                var bp2 = _c.Add.Boxes(boxes2);
+                bp2.LegendText = "Group 2";
+
+                _c.ShowLegend(Alignment.UpperRight);
             }
         }
-        
     }
 }
