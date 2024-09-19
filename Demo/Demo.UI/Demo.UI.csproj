@@ -10,6 +10,8 @@
 	  <None Remove="Chart2\Chart2Bar.xaml" />
 	  <None Remove="Chart2\Chart2Box.xaml" />
 	  <None Remove="Chart2\Chart2Coxcomb.xaml" />
+	  <None Remove="Chart2\Chart2ErrorBars.xaml" />
+	  <None Remove="Chart2\Chart2FillY.xaml" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Page Update="Chart2\Chart2Coxcomb.xaml">
@@ -21,6 +23,14 @@
 	    <SubType>Designer</SubType>
 	  </Page>
 	  <Page Update="Chart2\Chart2Bar.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
+	  <Page Update="Chart2\Chart2FillY.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
+	  <Page Update="Chart2\Chart2ErrorBars.xaml">
 	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 	    <SubType>Designer</SubType>
 	  </Page>

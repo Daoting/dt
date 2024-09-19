@@ -32,6 +32,8 @@ namespace Demo.UI
                 new Nav("箱形图", typeof(Chart2Box), Icons.汉堡),
                 new Nav("饼图", typeof(Chart2Coxcomb), Icons.汉堡),
                 new Nav("椭圆", typeof(Chart2Ellipse), Icons.汉堡),
+                new Nav("误差线", typeof(Chart2ErrorBars), Icons.汉堡),
+                new Nav("Y填充图", typeof(Chart2FillY), Icons.汉堡),
             };
         }
     }

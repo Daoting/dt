@@ -1,0 +1,26 @@
+﻿<a:Win
+    x:Class="Demo.UI.Chart2FillY"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表样例">
+                <a:Chart2 x:Name="_c" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <StackPanel>
+                    <Button Content="Y填充图" Click="OnFillY" />
+                    <Button Content="散点构造Y填充图" Click="OnValues" />
+                    <Button Content="从任何类型的数据创建Y填充图" Click="OnCustom" />
+                    <Button Content="绘图样式" Click="OnStyle" />
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>
