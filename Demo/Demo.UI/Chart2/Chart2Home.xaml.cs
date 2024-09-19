@@ -35,6 +35,7 @@ namespace Demo.UI
                 new Nav("误差线", typeof(Chart2ErrorBars), Icons.汉堡),
                 new Nav("Y填充图", typeof(Chart2FillY), Icons.汉堡),
                 new Nav("财务图", typeof(Chart2Financial), Icons.汉堡),
+                new Nav("函数线图", typeof(Chart2Func), Icons.汉堡),
             };
         }
     }

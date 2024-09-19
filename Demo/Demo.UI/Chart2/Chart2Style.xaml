@@ -38,8 +38,9 @@
                         <StackPanel Orientation="Horizontal">
                             <Button Content="数据区背景图像" Click="OnDataBackground" />
                             <Button Content="背景图像" Click="OnBackground" />
-                            <Button Content="颜色插值" Click="OnRgb" />
+                            <Button Content="矩形区图像" Click="OnRectImg" />
                         </StackPanel>
+                        <Button Content="颜色插值" Click="OnRgb" />
                         <a:CBar Title="布局" />
                         <StackPanel Orientation="Horizontal">
                             <Button Content="无坐标轴" Click="OnNoAxes" />

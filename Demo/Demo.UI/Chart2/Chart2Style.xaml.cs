@@ -279,6 +279,16 @@ namespace Demo.UI
             }
         }
 
+        void OnRectImg(object sender, RoutedEventArgs e)
+        {
+            using (_c.Defer())
+            {
+                Image img = ScottPlot.SampleImages.MonaLisa();
+                CoordinateRect rect = new(left: 0, right: img.Width, bottom: 0, top: img.Height);
+                _c.Add.ImageRect(img, rect);
+            }
+        }
+
         void OnRgb(object sender, RoutedEventArgs e)
         {
             using (_c.Defer())
@@ -294,7 +304,7 @@ namespace Demo.UI
                 }
             }
         }
-        
+
         void OnNoAxes(object sender, RoutedEventArgs e)
         {
             using (_c.Defer())
