@@ -47,6 +47,7 @@ namespace Demo.UI
                 new Nav("散点图", typeof(Chart2Scatter), Icons.汉堡) { Desc = "在坐标空间中的 X/Y 位置显示点" },
                 new Nav("几何图形", typeof(Chart2Shape), Icons.汉堡) { Desc =  "可以添加到绘图的基本形状" },
                 new Nav("信号图", typeof(Chart2Signal), Icons.汉堡) { Desc = "显示均匀分布的数据" },
+                new Nav("SignalXY图", typeof(Chart2SignalXY), Icons.汉堡) { Desc = "一种高性能绘图类型，针对 X 值始终升序的 X/Y 对进行了优化。对于大型数据集，SignalXY 图的性能比散点图（允许无序的 X 点）高得多，但不如信号图（需要 X 点之间的固定间距）的性能" },
 
             };
         }

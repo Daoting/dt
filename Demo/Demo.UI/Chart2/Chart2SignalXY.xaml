@@ -1,0 +1,30 @@
+﻿<a:Win
+    x:Class="Demo.UI.Chart2SignalXY"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表样例">
+                <a:Chart2 x:Name="_c" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <StackPanel>
+                    <Button Content="SignalXY" Click="OnSignalXY" />
+                    <Button Content="部分渲染" Click="OnPart" />
+                    <Button Content="固定偏移" Click="OnOffset" />
+                    <Button Content="SignalXY缩放" Click="OnScale" />
+                    <Button Content="垂直SignalXY" Click="OnVer" />
+                    <Button Content="倒置X轴" Click="OnReverseX" />
+                    <Button Content="倒置Y轴" Click="OnReverseY" />
+                    <Button Content="带标记的SignalXY" Click="OnMarker" />
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>
