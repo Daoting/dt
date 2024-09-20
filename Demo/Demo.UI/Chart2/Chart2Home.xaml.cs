@@ -44,6 +44,8 @@ namespace Demo.UI
                 new Nav("总体图", typeof(Chart2Population), Icons.汉堡),
                 new Nav("雷达图", typeof(Chart2Radar), Icons.汉堡),
                 new Nav("仪表图", typeof(Chart2Radial), Icons.汉堡),
+                new Nav("散点图", typeof(Chart2Scatter), Icons.汉堡),
+                new Nav("几何图形", typeof(Chart2Shape), Icons.汉堡),
 
             };
         }

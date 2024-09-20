@@ -1,0 +1,64 @@
+﻿<a:Win
+    x:Class="Demo.UI.Chart2Scatter"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表样例">
+                <a:Chart2 x:Name="_c" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="散点图" Click="OnDef" />
+                        <Button Content="坐标点集合" Click="OnCoor" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="点数据类型" Click="OnDataType" />
+                        <Button Content="List集合" Click="OnList" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="散点线" Click="OnLine" />
+                        <Button Content="散点" Click="OnPoints" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="散点图样式" Click="OnStyle" />
+                        <Button Content="散点线图案" Click="OnMode" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="散点日期时间" Click="OnDate" />
+                        <Button Content="阶梯图" Click="OnStep" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="带间隙的分散" Click="OnGap" />
+                        <Button Content="带平滑线的散点图" Click="OnSmooth" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="平滑线条张力" Click="OnTension" />
+                        <Button Content="平滑线半点路径" Click="OnRadio" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="限制索引范围" Click="OnMinMax" />
+                        <Button Content="带填充的散点图" Click="OnFill" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="自定义填充" Click="OnCustomFill" />
+                        <Button Content="上方下方填充" Click="OnFillTop" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="颜色渐变填充" Click="OnFillColor" />
+                        <Button Content="水平或垂直移动" Click="OnScale" />
+                    </StackPanel>
+                    <Button Content="堆积填充线图" Click="OnStack" />
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>
