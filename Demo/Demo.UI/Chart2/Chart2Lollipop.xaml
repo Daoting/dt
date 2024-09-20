@@ -1,0 +1,26 @@
+﻿<a:Win
+    x:Class="Demo.UI.Chart2Lollipop"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表样例">
+                <a:Chart2 x:Name="_c" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <StackPanel>
+                    <Button Content="棒棒糖图" Click="OnDef" />
+                    <Button Content="棒棒糖位置" Click="OnPosition" />
+                    <Button Content="自定义绘图" Click="OnCustom" />
+                    <Button Content="水平棒棒糖图" Click="OnHor" />
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>
