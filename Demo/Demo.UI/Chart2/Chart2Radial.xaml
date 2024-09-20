@@ -1,0 +1,56 @@
+﻿<a:Win
+    x:Class="Demo.UI.Chart2Radial"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表样例">
+                <a:Chart2 x:Name="_c" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="径向仪表图" Click="OnDef" />
+                        <Button Content="仪表颜色" Click="OnColor" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="正值和负值" Click="OnVal" />
+                        <Button Content="顺序仪表" Click="OnSequential" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="自定义仪表顺序" Click="OnOrder" />
+                        <Button Content="单仪表模式" Click="OnSingle" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="仪表方向" Click="OnOri" />
+                        <Button Content="标距尺寸" Click="OnSize" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="仪表起始角度" Click="OnStartingAngle" />
+                        <Button Content="角度范围" Click="OnMaximumAngle" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="隐藏值" Click="OnShowLevel" />
+                        <Button Content="仪表标签位置" Click="OnPositionFraction" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="标签字体百分比" Click="OnFontSizeFraction" />
+                        <Button Content="仪表标签颜色" Click="OnFontColor" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="仪表图例" Click="OnLegend" />
+                        <Button Content="透明环" Click="OnTransparent" />
+                    </StackPanel>
+                        <Button Content="非圆形仪表" Click="OnCircular" />
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>
