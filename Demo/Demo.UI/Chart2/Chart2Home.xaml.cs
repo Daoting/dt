@@ -26,7 +26,7 @@ namespace Demo.UI
             _nav.Data = new Nl<Nav>
             {
                 new Nav("坐标轴及图例", typeof(Chart2Axes), Icons.折线图) { Desc =  "X轴、Y轴、标题、网格、图例等设置" },
-                new Nav("图表样式及布局", typeof(Chart2Style), Icons.汉堡) { Desc =  "图表样式设置" },
+                new Nav("图表样式及布局", typeof(Chart2Style), Icons.汉堡) { Desc =  "样式、背景图像、颜色插值、布局区域" },
                 new Nav("基础图元", typeof(BaseChart2), Icons.汉堡) { Desc =  "注释、箭头、轴线、轴跨度、标注、十字准线" },
                 new Nav("条形图", typeof(Chart2Bar), Icons.汉堡),
                 new Nav("箱形图", typeof(Chart2Box), Icons.汉堡),
@@ -36,6 +36,7 @@ namespace Demo.UI
                 new Nav("Y填充图", typeof(Chart2FillY), Icons.汉堡),
                 new Nav("财务图", typeof(Chart2Financial), Icons.汉堡),
                 new Nav("函数线图", typeof(Chart2Func), Icons.汉堡),
+                new Nav("热图", typeof(Chart2Heatmap), Icons.汉堡),
             };
         }
     }
