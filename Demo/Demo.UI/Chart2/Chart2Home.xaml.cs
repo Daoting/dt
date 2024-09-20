@@ -41,6 +41,8 @@ namespace Demo.UI
                 new Nav("棒棒糖图", typeof(Chart2Lollipop), Icons.汉堡),
                 new Nav("标记", typeof(Chart2Marker), Icons.汉堡),
                 new Nav("极坐标图", typeof(Chart2Polar), Icons.汉堡),
+                new Nav("总体图", typeof(Chart2Population), Icons.汉堡),
+                new Nav("雷达图", typeof(Chart2Radar), Icons.汉堡),
 
             };
         }

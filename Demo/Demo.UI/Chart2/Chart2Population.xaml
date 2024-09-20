@@ -1,0 +1,30 @@
+﻿<a:Win
+    x:Class="Demo.UI.Chart2Population"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表样例">
+                <a:Chart2 x:Name="_c" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <StackPanel>
+                    <Button Content="总体图" Click="OnDef" />
+                    <Button Content="总体箱图" Click="OnBox" />
+                    <Button Content="总体箱图值" Click="OnBoxVal" />
+                    <Button Content="条形图样式" Click="OnBarStyle" />
+                    <Button Content="箱图样式" Click="OnBoxStyle" />
+                    <Button Content="总体图的标记样式" Click="OnMarkStyle" />
+                    <Button Content="数据点布局位置" Click="OnDotPos" />
+                    <Button Content="自定义位置、颜色、轴标签和图例" Click="OnCustom" />
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

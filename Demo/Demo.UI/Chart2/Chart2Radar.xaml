@@ -1,0 +1,29 @@
+﻿<a:Win
+    x:Class="Demo.UI.Chart2Radar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表样例">
+                <a:Chart2 x:Name="_c" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <StackPanel>
+                    <Button Content="雷达图" Click="OnDef" />
+                    <Button Content="多维雷达图" Click="OnArray" />
+                    <Button Content="雷达图例" Click="OnLang" />
+                    <Button Content="定制雷达系列" Click="OnRadarSeries" />
+                    <Button Content="辐条标签" Click="OnSpokeLabel" />
+                    <Button Content="刻度标签" Click="OnPolarAxis" />
+                    <Button Content="直线雷达" Click="OnStraightLine" />
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>
