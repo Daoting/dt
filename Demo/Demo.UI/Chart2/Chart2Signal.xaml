@@ -1,0 +1,39 @@
+﻿<a:Win
+    x:Class="Demo.UI.Chart2Signal"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表样例">
+                <a:Chart2 x:Name="_c" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="信号图" Click="OnDef" />
+                        <Button Content="信号图样式" Click="OnStyle" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="信号偏移" Click="OnOffset" />
+                        <Button Content="信号缩放" Click="OnScale" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="信号标记大小" Click="OnMarker" />
+                        <Button Content="部分渲染" Click="OnRange" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="double性能最高" Click="OnDouble" />
+                        <Button Content="日期时间轴" Click="OnDate" />
+                    </StackPanel>
+                    <Button Content="大型数据集信号图" Click="OnSignalConst" />
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>
