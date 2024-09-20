@@ -1,0 +1,26 @@
+﻿<a:Win
+    x:Class="Demo.UI.Chart2Text"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表样例">
+                <a:Chart2 x:Name="_c" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <StackPanel>
+                    <Button Content="文本" Click="OnDef" />
+                    <Button Content="文本格式" Click="OnFormat" />
+                    <Button Content="行高" Click="OnHeight" />
+                    <Button Content="文本偏移" Click="OnOffset" />
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>
