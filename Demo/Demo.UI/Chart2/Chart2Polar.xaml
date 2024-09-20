@@ -1,0 +1,42 @@
+﻿<a:Win
+    x:Class="Demo.UI.Chart2Polar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表样例">
+                <a:Chart2 x:Name="_c" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="极轴" Click="OnDef" />
+                        <Button Content="极轴旋转" Click="OnRotate" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="带箭头的极轴" Click="OnPolarAxis" />
+                        <Button Content="极轴样式" Click="OnStyle" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="极轴辐条标签" Click="OnSpoke" />
+                        <Button Content="极轴刻度标签" Click="OnTick" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="极轴线定制" Click="OnCircle" />
+                        <Button Content="极轴雷达图" Click="OnRata" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="相量线图" Click="OnPhasorDef" />
+                        <Button Content="带标签的相量图" Click="OnPhasorLineStyle" />
+                    </StackPanel>
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

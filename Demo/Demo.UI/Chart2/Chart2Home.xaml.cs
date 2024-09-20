@@ -30,7 +30,7 @@ namespace Demo.UI
                 new Nav("基础图元", typeof(BaseChart2), Icons.汉堡) { Desc =  "注释、箭头、轴线、轴跨度、标注、十字准线" },
                 new Nav("条形图", typeof(Chart2Bar), Icons.汉堡),
                 new Nav("箱形图", typeof(Chart2Box), Icons.汉堡),
-                new Nav("饼图", typeof(Chart2Coxcomb), Icons.汉堡),
+                new Nav("饼图", typeof(Chart2Pie), Icons.汉堡),
                 new Nav("椭圆", typeof(Chart2Ellipse), Icons.汉堡),
                 new Nav("误差线", typeof(Chart2ErrorBars), Icons.汉堡),
                 new Nav("Y填充图", typeof(Chart2FillY), Icons.汉堡),
@@ -40,7 +40,7 @@ namespace Demo.UI
                 new Nav("线图", typeof(Chart2Line), Icons.汉堡),
                 new Nav("棒棒糖图", typeof(Chart2Lollipop), Icons.汉堡),
                 new Nav("标记", typeof(Chart2Marker), Icons.汉堡),
-                new Nav("相量图", typeof(Chart2Phasor), Icons.汉堡),
+                new Nav("极坐标图", typeof(Chart2Polar), Icons.汉堡),
 
             };
         }

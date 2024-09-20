@@ -1,5 +1,5 @@
 ﻿<a:Win
-    x:Class="Demo.UI.Chart2Phasor"
+    x:Class="Demo.UI.Chart2Pie"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
@@ -15,8 +15,12 @@
         <a:Tabs>
             <a:Tab Order="2" Title="属性">
                 <StackPanel>
-                    <Button Content="相量线图" Click="OnDef" />
-                    <Button Content="带标签的相量图" Click="OnLineStyle" />
+                    <Button Content="饼图" Click="OnDef" />
+                    <Button Content="从PieSlice集合创建饼图" Click="OnList" />
+                    <Button Content="中心圆环的饼图" Click="OnDonutFraction" />
+                    <Button Content="饼图旋转" Click="OnRotation" />
+                    <Button Content="饼图切片标签" Click="OnLabel" />
+                    <Button Content="切片的角度是恒定的，半径是值" Click="OnCoxcomb" />
                 </StackPanel>
             </a:Tab>
         </a:Tabs>
