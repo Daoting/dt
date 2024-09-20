@@ -39,6 +39,9 @@ namespace Demo.UI
                 new Nav("热图", typeof(Chart2Heatmap), Icons.汉堡),
                 new Nav("线图", typeof(Chart2Line), Icons.汉堡),
                 new Nav("棒棒糖图", typeof(Chart2Lollipop), Icons.汉堡),
+                new Nav("标记", typeof(Chart2Marker), Icons.汉堡),
+                new Nav("相量图", typeof(Chart2Phasor), Icons.汉堡),
+
             };
         }
     }

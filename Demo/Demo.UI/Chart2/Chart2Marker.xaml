@@ -1,0 +1,28 @@
+﻿<a:Win
+    x:Class="Demo.UI.Chart2Marker"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="图表样例">
+                <a:Chart2 x:Name="_c" />
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <StackPanel>
+                    <Button Content="标记" Click="OnDef" />
+                    <Button Content="标记的形状" Click="OnPosition" />
+                    <Button Content="标记图例" Click="OnCustom" />
+                    <Button Content="许多标记" Click="OnHor" />
+                    <Button Content="颜色图的标记" Click="OnColor" />
+                    <Button Content="图像标记" Click="OnImg" />
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>
