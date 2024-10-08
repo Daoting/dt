@@ -57,14 +57,16 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
-        readonly object _data;
+        readonly WeakReference _data;
         bool _isInit;
         #endregion
 
         #region 构造方法
         public ViewItem(object p_data)
         {
-            _data = p_data ?? throw new Exception("视图项数据不可为空！");
+            if (p_data == null)
+                throw new Exception("视图项数据不可为空！");
+            _data = new WeakReference(p_data);
         }
         #endregion
 
@@ -74,7 +76,7 @@ namespace Dt.Base
         /// </summary>
         public object Data
         {
-            get { return _data; }
+            get { return _data.Target; }
         }
 
         /// <summary>
@@ -82,7 +84,7 @@ namespace Dt.Base
         /// </summary>
         public Row Row
         {
-            get { return _data as Row; }
+            get { return _data.Target as Row; }
         }
 
         /// <summary>
@@ -140,17 +142,17 @@ namespace Dt.Base
             get
             {
                 object val = null;
-                if (_data is Row dr && dr.Contains(p_colName))
+                if (_data.Target is Row dr && dr.Contains(p_colName))
                 {
                     // 从Row取
                     val = dr[p_colName];
                 }
-                else
+                else if (_data.Target is object obj)
                 {
                     // 对象属性
-                    var pi = _data.GetType().GetProperty(p_colName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                    var pi = obj.GetType().GetProperty(p_colName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                     if (pi != null)
-                        val = pi.GetValue(_data);
+                        val = pi.GetValue(obj);
                 }
                 return val;
             }
@@ -191,9 +193,9 @@ namespace Dt.Base
 
             _isInit = true;
             Host.SetItemStyle(this);
-            if (_data is Row row)
+            if (_data.Target is Row row)
                 row.Changed += (s, e) => OnValueChanged();
-            else if (_data is INotifyPropertyChanged pro)
+            else if (_data.Target is INotifyPropertyChanged pro)
                 pro.PropertyChanged += (s, e) => OnValueChanged();
         }
 
