@@ -759,7 +759,7 @@ namespace Demo.UI
         {
             using (_c.Defer())
             {
-                Fonts.AddFontFile("DtIcon", Path.Combine(Package.Current.InstalledPath, "icon.ttf"));
+                Fonts.AddFontFile("DtIcon", Path.Combine(Package.Current.InstalledLocation.Path, "icon.ttf"));
 
                 var sig1 = _c.Add.Signal(Generate.Sin(51));
                 sig1.LegendText = "\uE001";
@@ -779,7 +779,7 @@ namespace Demo.UI
         {
             using (_c.Defer())
             {
-                Fonts.AddFontFile("DtIcon", Path.Combine(Package.Current.InstalledPath, "icon.ttf"));
+                Fonts.AddFontFile("DtIcon", Path.Combine(Package.Current.InstalledLocation.Path, "icon.ttf"));
 
                 var sig1 = _c.Add.Signal(Generate.Sin(51));
                 sig1.LegendText = "Sin";
