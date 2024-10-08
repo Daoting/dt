@@ -255,7 +255,7 @@ namespace Dt.Base.ListView
                     bool isRowLast = (i + 1) % _colCount == 0;
                     double left = i % _colCount * _itemWidth;
                     item.Arrange(new Rect(left, top, isRowLast ? _itemWidth + 1 : _itemWidth, _rowHeight));
-                    item.SetViewRow(_owner.Rows[i], true);
+                    item.SetViewRow(_owner.Rows[i]);
                 }
 
                 // 将剩余的虚拟行布局到空区域
@@ -289,7 +289,7 @@ namespace Dt.Base.ListView
                     // 行末尾项宽度加1为隐藏右边框
                     bool isRowLast = (iVirRow + 1) % _colCount == 0;
                     item.Arrange(new Rect(left, top, isRowLast ? _itemWidth + 1 : _itemWidth, _rowHeight));
-                    item.SetViewRow(_owner.Rows[iRow + i], true);
+                    item.SetViewRow(_owner.Rows[iRow + i]);
                 }
                 else
                 {
@@ -384,7 +384,7 @@ namespace Dt.Base.ListView
                         // 行末尾项宽度加1为隐藏右边框
                         bool isRowLast = (indexInGroup + 1) % _colCount == 0;
                         row.Arrange(new Rect(indexInGroup % _colCount * _itemWidth, totalHeight, isRowLast ? _itemWidth + 1 : _itemWidth, _rowHeight));
-                        row.SetViewRow(_owner.Rows[i - iGrpRow], true);
+                        row.SetViewRow(_owner.Rows[i - iGrpRow]);
 
                         if (isRowLast)
                         {
@@ -524,7 +524,7 @@ namespace Dt.Base.ListView
                     // 行末尾项宽度加1为隐藏右边框
                     bool isRowLast = (indexInGroup + 1) % _colCount == 0;
                     row.Arrange(new Rect(indexInGroup % _colCount * _itemWidth, totalHeight, isRowLast ? _itemWidth + 1 : _itemWidth, _rowHeight));
-                    row.SetViewRow(_owner.Rows[i - iGrpRow], true);
+                    row.SetViewRow(_owner.Rows[i - iGrpRow]);
 
                     if (isRowLast)
                     {

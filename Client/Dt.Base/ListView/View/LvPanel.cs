@@ -720,7 +720,7 @@ namespace Dt.Base.ListView
         {
             var row = new TableRow(_owner);
             if (p_item != null)
-                row.SetViewRow(p_item, false);
+                row.SetViewRow(p_item);
             return row;
         }
 
@@ -733,7 +733,7 @@ namespace Dt.Base.ListView
         {
             var row = new ListFormRow(_owner);
             if (p_item != null)
-                row.SetViewRow(p_item, false);
+                row.SetViewRow(p_item);
             return row;
         }
 
@@ -746,7 +746,7 @@ namespace Dt.Base.ListView
         {
             var row = new TileFormRow(_owner);
             if (p_item != null)
-                row.SetViewRow(p_item, false);
+                row.SetViewRow(p_item);
             return row;
         }
 
@@ -759,7 +759,7 @@ namespace Dt.Base.ListView
         {
             var row = new ListRow(_owner, (DataTemplate)_owner.View);
             if (p_item != null)
-                row.SetViewRow(p_item, false);
+                row.SetViewRow(p_item);
             return row;
         }
 
@@ -772,7 +772,7 @@ namespace Dt.Base.ListView
         {
             var row = new TileRow(_owner, (DataTemplate)_owner.View);
             if (p_item != null)
-                row.SetViewRow(p_item, false);
+                row.SetViewRow(p_item);
             return row;
         }
 
@@ -789,7 +789,7 @@ namespace Dt.Base.ListView
 
             var row = new ListRow(_owner, temp);
             if (p_item != null)
-                row.SetViewRow(p_item, false);
+                row.SetViewRow(p_item);
             return row;
         }
 
@@ -806,7 +806,7 @@ namespace Dt.Base.ListView
 
             var row = new TileRow(_owner, temp);
             if (p_item != null)
-                row.SetViewRow(p_item, false);
+                row.SetViewRow(p_item);
             return row;
         }
 
@@ -819,7 +819,7 @@ namespace Dt.Base.ListView
         {
             var row = new ListRow(_owner, (IRowView)_owner.View, p_item);
             if (p_item != null)
-                row.SetViewRow(p_item, false);
+                row.SetViewRow(p_item);
             return row;
         }
 
@@ -832,7 +832,7 @@ namespace Dt.Base.ListView
         {
             var row = new TileRow(_owner, (IRowView)_owner.View, p_item);
             if (p_item != null)
-                row.SetViewRow(p_item, false);
+                row.SetViewRow(p_item);
             return row;
         }
         #endregion

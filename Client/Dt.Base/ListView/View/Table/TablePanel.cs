@@ -223,7 +223,7 @@ namespace Dt.Base.ListView
                     }
 
                     item.Arrange(new Rect(0, top, p_finalSize.Width, _rowHeight));
-                    item.SetViewRow(_owner.Rows[i], true);
+                    item.SetViewRow(_owner.Rows[i]);
                 }
 
                 // 将剩余的虚拟行布局到空区域
@@ -232,7 +232,7 @@ namespace Dt.Base.ListView
                     for (int i = iDataRow; i < _dataRows.Count; i++)
                     {
                         _dataRows[i].Arrange(Res.HideRect);
-                        _dataRows[i].SetViewRow(null, false);
+                        _dataRows[i].SetViewRow(null);
                     }
                 }
                 return;
@@ -258,7 +258,7 @@ namespace Dt.Base.ListView
                     // 布局虚拟行
                     double top = iVirRow * _rowHeight + deltaTop;
                     item.Arrange(new Rect(0, top, _finalWidth, _rowHeight));
-                    item.SetViewRow(_owner.Rows[iRow + i], true);
+                    item.SetViewRow(_owner.Rows[iRow + i]);
                 }
                 else
                 {
@@ -345,7 +345,7 @@ namespace Dt.Base.ListView
                         // 布局数据行
                         var row = _dataRows[iDataRow];
                         row.Arrange(new Rect(0, totalHeight, p_finalSize.Width, _rowHeight));
-                        row.SetViewRow(_owner.Rows[i - iGrpRow], true);
+                        row.SetViewRow(_owner.Rows[i - iGrpRow]);
                         totalHeight += _rowHeight;
 
                         // 虚拟行都已布局时退出
@@ -448,7 +448,7 @@ namespace Dt.Base.ListView
                 {
                     var row = _dataRows[iDataRow];
                     row.Arrange(new Rect(0, totalHeight, _finalWidth, _rowHeight));
-                    row.SetViewRow(_owner.Rows[i - iGrpRow], true);
+                    row.SetViewRow(_owner.Rows[i - iGrpRow]);
                     totalHeight += _rowHeight;
 
                     iDataRow++;

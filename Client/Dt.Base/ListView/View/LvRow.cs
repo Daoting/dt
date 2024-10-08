@@ -43,8 +43,7 @@ namespace Dt.Base.ListView
         /// 设置对应的视图行
         /// </summary>
         /// <param name="p_row"></param>
-        /// <param name="p_isAsync">是否异步设置DataContext</param>
-        public void SetViewRow(LvItem p_row, bool p_isAsync)
+        public void SetViewRow(LvItem p_row)
         {
             if (_row == p_row)
                 return;
