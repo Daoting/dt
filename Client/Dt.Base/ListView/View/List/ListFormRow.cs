@@ -23,10 +23,24 @@ namespace Dt.Base.ListView
     /// </summary>
     public partial class ListFormRow : LvRow
     {
+        Button _btnMenu;
+        
         public ListFormRow(Lv p_owner) : base(p_owner)
         {
             LoadCols();
             AttachEvent();
+        }
+
+        /// <summary>
+        /// 卸载行
+        /// </summary>
+        protected override void OnUnload()
+        {
+            if (_btnMenu != null)
+            {
+                _btnMenu.Click -= OnMenuBtnClick;
+                _btnMenu = null;
+            }
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -108,11 +122,12 @@ namespace Dt.Base.ListView
                 // 上下文菜单
                 if (menu != null)
                 {
-                    var btnMenu = AttachContextMenu(menu);
-                    if (btnMenu != null)
+                    _btnMenu = AttachContextMenu(menu);
+                    if (_btnMenu != null)
                     {
-                        btnMenu.HorizontalAlignment = HorizontalAlignment.Right;
-                        grid.Children.Add(btnMenu);
+                        _btnMenu.Click += OnMenuBtnClick;
+                        _btnMenu.HorizontalAlignment = HorizontalAlignment.Right;
+                        grid.Children.Add(_btnMenu);
                     }
                 }
                 root.Children.Add(grid);

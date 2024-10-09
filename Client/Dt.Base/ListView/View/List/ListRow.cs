@@ -37,6 +37,18 @@ namespace Dt.Base.ListView
             AttachEvent();
         }
 
+        /// <summary>
+        /// 卸载行
+        /// </summary>
+        protected override void OnUnload()
+        {
+            if (_btnMenu != null)
+            {
+                _btnMenu.Click -= OnMenuBtnClick;
+                _btnMenu = null;
+            }
+        }
+
         protected override Size MeasureOverride(Size availableSize)
         {
             double height = Res.RowOuterHeight;
@@ -143,7 +155,10 @@ namespace Dt.Base.ListView
             {
                 _btnMenu = AttachContextMenu(menu);
                 if (_btnMenu != null)
+                {
+                    _btnMenu.Click += OnMenuBtnClick;
                     Children.Add(_btnMenu);
+                }
             }
 
             // 分割线及选择背景

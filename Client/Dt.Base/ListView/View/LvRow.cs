@@ -26,6 +26,7 @@ namespace Dt.Base.ListView
     /// </summary>
     public partial class LvRow : Panel
     {
+        #region 成员变量
         protected const double _flagWidth = 40;
 
         protected Lv _owner;
@@ -33,7 +34,8 @@ namespace Dt.Base.ListView
         protected Rectangle _rcPointer;
         bool _menuOpened;
         Point _ptStart;
-
+        #endregion
+        
         public LvRow(Lv p_owner)
         {
             _owner = p_owner;
@@ -69,6 +71,35 @@ namespace Dt.Base.ListView
             //    DataContext = _row;
         }
 
+        /// <summary>
+        /// 卸载行
+        /// </summary>
+        public void Unload()
+        {
+            Children.Clear();
+            if (_row != null)
+            {
+                _row.ValueChanged = null;
+                _row = null;
+                DataContext = null;
+            }
+            
+            PointerPressed -= OnPointerPressed;
+            PointerReleased -= OnPointerReleased;
+            PointerEntered -= OnPointerEntered;
+            PointerExited -= OnPointerExited;
+            PointerCaptureLost -= OnPointerCaptureLost;
+            DoubleTapped -= OnDoubleTapped;
+
+            Tapped -= OnTapped;
+            RightTapped -= OnRightTapped;
+            OnUnload();
+        }
+
+        protected virtual void OnUnload()
+        {
+        }
+        
         /// <summary>
         /// Col属性复制到Dot
         /// </summary>
@@ -117,71 +148,13 @@ namespace Dt.Base.ListView
             // 参见 Dt.Core\Note.txt 中的事件顺序
             // _btnMenu附加Click事件时，点击Button仍能接收到Tapped事件！
             //Tapped += (s, e) => _row.OnClick();
-            DoubleTapped += (s, e) => _row.OnDoubleClick();
+            DoubleTapped += OnDoubleTapped;
 
             // 新版uno在PointerCaptureLost中处理
             // android上快速滑动时未触发PointerMoved！
             //#if ANDROID
             //            _owner.Scroll.ViewChanged += (s, e) => _rcPointer.Fill = null;
             //#endif
-        }
-
-        /// <summary>
-        /// 附加上下文菜单触发事件
-        /// </summary>
-        /// <param name="p_menu"></param>
-        /// <returns></returns>
-        protected Button AttachContextMenu(Menu p_menu)
-        {
-            Button _btnMenu = null;
-            var trigger = p_menu.TriggerEvent;
-            if (Kit.IsPhoneUI)
-            {
-                if (!p_menu.ExistLocalValue(Menu.TriggerEventProperty)
-                    || trigger == TriggerEvent.Custom)
-                {
-                    // 因 长按 和 ItemClick 同时触发无法区分，phone模式默认为按钮
-                    _btnMenu = CreateMenuButton(p_menu);
-                }
-                else if (trigger == TriggerEvent.RightTapped)
-                {
-                    RightTapped += (s, e) => OpenContextMenu(e.GetPosition(null));
-                }
-                else if (trigger == TriggerEvent.LeftTapped)
-                {
-                    Tapped += (s, e) => OpenContextMenu(e.GetPosition(null));
-                }
-            }
-            else
-            {
-                if (trigger == TriggerEvent.RightTapped)
-                    RightTapped += (s, e) => OpenContextMenu(e.GetPosition(null));
-                else if (trigger == TriggerEvent.LeftTapped)
-                    Tapped += (s, e) => OpenContextMenu(e.GetPosition(null));
-                else
-                    _btnMenu = CreateMenuButton(p_menu);
-            }
-            return _btnMenu;
-        }
-
-        /// <summary>
-        /// 显示上下文菜单
-        /// </summary>
-        /// <param name="p_pos"></param>
-        /// <param name="p_tgt"></param>
-        protected async void OpenContextMenu(Point p_pos, FrameworkElement p_tgt = null)
-        {
-            Menu menu = Ex.GetMenu(_owner);
-            if (menu == null)
-                return;
-
-            menu.TargetData = _row.Data;
-            menu.Closed += OnMenuClosed;
-            if (await menu.OpenContextMenu(p_pos, p_tgt))
-            {
-                _menuOpened = true;
-                _rcPointer.Fill = Res.深黄遮罩;
-            }
         }
 
         void OnPointerPressed(object sender, PointerRoutedEventArgs e)
@@ -236,22 +209,9 @@ namespace Dt.Base.ListView
             _rcPointer.Fill = null;
         }
 
-        Button CreateMenuButton(Menu p_menu)
+        void OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
-            // 自定义按钮触发
-            var btn = new Button { Content = "\uE178", Style = Res.字符按钮, Foreground = Res.中灰1 };
-            btn.Click += (s, e) => OpenContextMenu(new Point(), (Button)s);
-            if (!Kit.IsPhoneUI)
-                p_menu.Placement = MenuPosition.OuterLeftTop;
-            return btn;
-        }
-
-        void OnMenuClosed(Menu obj)
-        {
-            // 关闭上下文菜单时移除行醒目颜色
-            obj.Closed -= OnMenuClosed;
-            _rcPointer.Fill = null;
-            _menuOpened = false;
+            _row.OnDoubleClick();
         }
 
         void OnValueChanged()
@@ -273,8 +233,100 @@ namespace Dt.Base.ListView
         {
         }
 
+        #region 上下文菜单
         /// <summary>
-        /// 滚动时异步设置DataContext，提高流畅性
+        /// 附加上下文菜单触发事件
+        /// </summary>
+        /// <param name="p_menu"></param>
+        /// <returns></returns>
+        protected Button AttachContextMenu(Menu p_menu)
+        {
+            Button _btnMenu = null;
+            var trigger = p_menu.TriggerEvent;
+            if (Kit.IsPhoneUI)
+            {
+                if (!p_menu.ExistLocalValue(Menu.TriggerEventProperty)
+                    || trigger == TriggerEvent.Custom)
+                {
+                    // 因 长按 和 ItemClick 同时触发无法区分，phone模式默认为按钮
+                    _btnMenu = CreateMenuButton(p_menu);
+                }
+                else if (trigger == TriggerEvent.RightTapped)
+                {
+                    RightTapped += OnRightTapped;
+                }
+                else if (trigger == TriggerEvent.LeftTapped)
+                {
+                    Tapped += OnTapped;
+                }
+            }
+            else
+            {
+                if (trigger == TriggerEvent.RightTapped)
+                    RightTapped += OnRightTapped;
+                else if (trigger == TriggerEvent.LeftTapped)
+                    Tapped += OnTapped;
+                else
+                    _btnMenu = CreateMenuButton(p_menu);
+            }
+            return _btnMenu;
+        }
+
+        protected void OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            OpenContextMenu(e.GetPosition(null));
+        }
+
+        protected void OnRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            OpenContextMenu(e.GetPosition(null));
+        }
+
+        protected void OnMenuBtnClick(object sender, RoutedEventArgs e)
+        {
+            OpenContextMenu(new Point(), (Button)sender);
+        }
+
+        /// <summary>
+        /// 显示上下文菜单
+        /// </summary>
+        /// <param name="p_pos"></param>
+        /// <param name="p_tgt"></param>
+        async void OpenContextMenu(Point p_pos, FrameworkElement p_tgt = null)
+        {
+            Menu menu = Ex.GetMenu(_owner);
+            if (menu == null)
+                return;
+
+            menu.TargetData = _row.Data;
+            menu.Closed += OnMenuClosed;
+            if (await menu.OpenContextMenu(p_pos, p_tgt))
+            {
+                _menuOpened = true;
+                _rcPointer.Fill = Res.深黄遮罩;
+            }
+        }
+
+        Button CreateMenuButton(Menu p_menu)
+        {
+            // 自定义按钮触发
+            var btn = new Button { Content = "\uE178", Style = Res.字符按钮, Foreground = Res.中灰1 };
+            if (!Kit.IsPhoneUI)
+                p_menu.Placement = MenuPosition.OuterLeftTop;
+            return btn;
+        }
+
+        void OnMenuClosed(Menu obj)
+        {
+            // 关闭上下文菜单时移除行醒目颜色
+            obj.Closed -= OnMenuClosed;
+            _rcPointer.Fill = null;
+            _menuOpened = false;
+        }
+        #endregion
+
+        /// <summary>
+        /// 滚动时异步设置DataContext，提高流畅性，停用！
         /// </summary>
         void SetDataContextAsync()
         {

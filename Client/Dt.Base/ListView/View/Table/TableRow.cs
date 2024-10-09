@@ -36,13 +36,9 @@ namespace Dt.Base.ListView
             _cells = new Dictionary<Col, UIElement>();
 
             Cols cols = _owner.Cols;
-            cols.ColWidthChanged += () => InvalidateMeasure();
+            cols.ColWidthChanged += OnColWidthChanged;
             cols.Reloading += OnColsReloading;
-            _owner.Scroll.ViewChanged += (s, e) =>
-            {
-                _rcPointer.Fill = null;
-                InvalidateArrange();
-            };
+            _owner.Scroll.ViewChanged += OnViewChanged;
 
             // 背景
             SetBinding(BackgroundProperty, new Binding { Path = new PropertyPath("Background") });
@@ -52,6 +48,18 @@ namespace Dt.Base.ListView
         }
         #endregion
 
+        /// <summary>
+        /// 卸载行
+        /// </summary>
+        protected override void OnUnload()
+        {
+            _cells.Clear();
+            var cols = _owner.Cols;
+            cols.ColWidthChanged -= OnColWidthChanged;
+            cols.Reloading -= OnColsReloading;
+            _owner.Scroll.ViewChanged -= OnViewChanged;
+        }
+        
         protected override Size MeasureOverride(Size availableSize)
         {
             // 行最小高度41
@@ -200,9 +208,9 @@ namespace Dt.Base.ListView
             {
                 // 不支持自定义按钮！
                 if (menu.TriggerEvent == TriggerEvent.LeftTapped)
-                    Tapped += (s, e) => OpenContextMenu(e.GetPosition(null));
+                    Tapped += OnTapped;
                 else
-                    RightTapped += (s, e) => OpenContextMenu(e.GetPosition(null));
+                    RightTapped += OnRightTapped;
             }
         }
 
@@ -211,6 +219,17 @@ namespace Dt.Base.ListView
             Children.Clear();
             _cells.Clear();
             LoadCells();
+        }
+
+        void OnColWidthChanged()
+        {
+            InvalidateMeasure();
+        }
+
+        void OnViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            _rcPointer.Fill = null;
+            InvalidateArrange();
         }
     }
 }

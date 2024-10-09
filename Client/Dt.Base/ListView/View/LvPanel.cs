@@ -258,6 +258,7 @@ namespace Dt.Base.ListView
                 {
                     int index = (int)p_items[i];
                     Children.RemoveAt(index);
+                    _dataRows[index].Unload();
                     _dataRows.RemoveAt(index);
                 }
                 // 确保数据变化后可立即访问行UI
@@ -623,7 +624,11 @@ namespace Dt.Base.ListView
         {
             if (Children.Count > 0)
                 Children.Clear();
-            _dataRows.Clear();
+            while (_dataRows.Count > 0)
+            {
+                _dataRows[0].Unload();
+                _dataRows.RemoveAt(0);
+            }
             RemoveToolbar();
             RemoveFilterUI();
         }
