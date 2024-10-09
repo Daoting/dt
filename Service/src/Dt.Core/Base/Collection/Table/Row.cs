@@ -30,6 +30,7 @@ namespace Dt.Core
         protected readonly CellList _cells;
         bool _delayCheckChanges;
         bool _isChanged;
+        readonly WeakReference _tbl = new WeakReference(null);
         #endregion
 
         #region 构造方法
@@ -206,7 +207,11 @@ namespace Dt.Core
         /// <summary>
         /// 当前行所属父集合
         /// </summary>
-        public Table Table { get; internal set; }
+        public Table Table
+        {
+            get => _tbl.Target as Table;
+            internal set => _tbl.Target = value;
+        }
 
         /// <summary>
         /// 获取设置用于存储与此对象相关的任意对象值

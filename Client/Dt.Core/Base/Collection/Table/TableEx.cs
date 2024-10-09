@@ -125,6 +125,7 @@ namespace Dt.Core
             for (int i = p_count - 1; i >= 0; i--)
             {
                 ls.Insert(0, p_index + i);
+                this[p_index + i].Table = null;
                 base.RemoveAt(p_index + i);
             }
             CheckChanges();

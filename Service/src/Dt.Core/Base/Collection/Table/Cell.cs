@@ -25,6 +25,7 @@ namespace Dt.Core
     {
         #region 成员变量
         const string _outLengthErr = "已超出最大长度！";
+        readonly WeakReference _row;
         object _val;
         bool _isChanged = false;
 
@@ -49,12 +50,12 @@ namespace Dt.Core
         /// <param name="p_value">初始值，null时取default值</param>
         internal Cell(Row p_row, string p_cellName, Type p_cellType, object p_value = null)
         {
-            Row = p_row;
+            _row = new WeakReference(p_row);
             ID = p_cellName;
             Type = p_cellType;
             // 保留原始值，不把null字符串转为Empty！！！
             _val = OriginalVal = GetValInternal(p_value, Type, false);
-            Row.Cells.Add(this);
+            p_row.Cells.Add(this);
         }
         #endregion
 
@@ -91,13 +92,12 @@ namespace Dt.Core
 
                 _isChanged = value;
                 // 将状态更改通知到Row
-                if (_isChanged)
+                if (_row.Target is Row r)
                 {
-                    Row.IsChanged = true;
-                }
-                else
-                {
-                    Row.CheckChanges();
+                    if (_isChanged)
+                        r.IsChanged = true;
+                    else
+                        r.CheckChanges();
                 }
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsChanged"));
             }
@@ -115,7 +115,7 @@ namespace Dt.Core
         /// <summary>
         /// 获取当前列所属的行
         /// </summary>
-        public Row Row { get; }
+        public Row Row => _row.Target as Row;
 
         /// <summary>
         /// 获取或设置用于存储与此对象相关的任意对象值
@@ -400,7 +400,7 @@ namespace Dt.Core
                         }
                     }
                 }
-#endregion
+                #endregion
 
                 #region 调用外部钩子
                 // 通常为业务校验或特殊数据处理，校验失败时触发异常使赋值失败
@@ -581,7 +581,7 @@ namespace Dt.Core
 
         }
 #endif
-#endregion
+        #endregion
     }
 
     /// <summary>
