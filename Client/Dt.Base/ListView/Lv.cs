@@ -426,6 +426,11 @@ namespace Dt.Base
         internal List<GroupRow> GroupRows { get; set; }
 
         /// <summary>
+        /// 旧的分组行，等待清除
+        /// </summary>
+        internal List<GroupRow> OldGroupRows { get; set; }
+        
+        /// <summary>
         /// 包含分组时，按顺序排列的所有分组行和视图行，true 分组行，false视图行
         /// </summary>
         internal List<bool> MapRows { get; set; }

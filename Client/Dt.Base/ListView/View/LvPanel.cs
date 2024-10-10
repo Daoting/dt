@@ -624,11 +624,29 @@ namespace Dt.Base.ListView
         {
             if (Children.Count > 0)
                 Children.Clear();
+            
+            if (_owner.OldGroupRows != null && _owner.OldGroupRows.Count > 0)
+            {
+                while (_owner.OldGroupRows.Count > 0)
+                {
+                    _owner.OldGroupRows[0].Unload();
+                    _owner.OldGroupRows.RemoveAt(0);
+                }
+                _owner.OldGroupRows = null;
+            }
+            
+            if (_groupHeader != null)
+            {
+                _groupHeader.Unload();
+                _groupHeader = null;
+            }
+            
             while (_dataRows.Count > 0)
             {
                 _dataRows[0].Unload();
                 _dataRows.RemoveAt(0);
             }
+            
             RemoveToolbar();
             RemoveFilterUI();
         }
@@ -639,7 +657,6 @@ namespace Dt.Base.ListView
         void LoadGroupRows()
         {
             // 分组行
-            _groupHeader = null;
             if (_owner.GroupRows != null)
             {
                 foreach (var grp in _owner.GroupRows)

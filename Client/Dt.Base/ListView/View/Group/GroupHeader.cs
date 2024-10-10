@@ -89,6 +89,19 @@ namespace Dt.Base.ListView
             }
         }
 
+        internal void Unload()
+        {
+            while (Children.Count > 0)
+            {
+                var hc = Children[0] as GroupHeaderCell;
+                Children.RemoveAt(0);
+                hc?.Unload();
+            }
+            _cellSelected = null;
+            _border = null;
+            PointerWheelChanged -= OnPointerWheelChanged;
+        }
+
         void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
             e.Handled = true;

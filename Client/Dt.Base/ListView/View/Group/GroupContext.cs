@@ -26,10 +26,22 @@ namespace Dt.Base
     /// </summary>
     public class GroupContext
     {
+        WeakReference _rows;
+        
         /// <summary>
         /// 当前分组的所有数据行
         /// </summary>
-        public IList Rows { get; internal set; }
+        public IList Rows
+        {
+            get => _rows?.Target as IList;
+            internal set
+            {
+                if (_rows == null)
+                    _rows = new WeakReference(value);
+                else
+                    _rows.Target = value;
+            }
+        }
 
         /// <summary>
         /// 分组标题

@@ -74,7 +74,7 @@ namespace Dt.Base.ListView
         /// <summary>
         /// 卸载行
         /// </summary>
-        public void Unload()
+        internal void Unload()
         {
             Children.Clear();
             if (_row != null)

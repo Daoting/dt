@@ -93,7 +93,7 @@ namespace Dt.Base.ListView
             set { SetValue(IsFirstProperty, value); }
         }
 
-        internal IList Data { get; }
+        internal IList Data { get; private set; }
 
         /// <summary>
         /// 在面板上的垂直位置
@@ -107,6 +107,16 @@ namespace Dt.Base.ListView
         {
             if (IsFirst)
                 ((Rectangle)GetTemplateChild("Rect")).Visibility = Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// 卸载行
+        /// </summary>
+        internal void Unload()
+        {
+            Data = null;
+            Content = null;
+            DataContext = null;
         }
     }
 }

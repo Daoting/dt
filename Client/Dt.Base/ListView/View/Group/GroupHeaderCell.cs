@@ -76,7 +76,7 @@ namespace Dt.Base.ListView
             set { SetValue(IsSelectedProperty, value); }
         }
 
-        internal GroupRow Group { get; }
+        internal GroupRow Group { get; private set; }
 
         /// <summary>
         /// 水平位置
@@ -86,6 +86,12 @@ namespace Dt.Base.ListView
 #endif
         internal double Left { get; set; }
 
+        internal void Unload()
+        {
+            Group = null;
+            _owner = null;
+        }
+        
         protected override void OnPointerPressed(PointerRoutedEventArgs e)
         {
             if (CapturePointer(e.Pointer))

@@ -219,8 +219,8 @@ namespace Dt.Base
             bool existGroup = false;
             if (GroupRows != null)
             {
-                // 清空原有分组行
-                GroupRows.Clear();
+                // LvPanel中清空原有分组行
+                OldGroupRows = GroupRows;
                 GroupRows = null;
                 MapRows = null;
                 existGroup = true;
@@ -246,6 +246,7 @@ namespace Dt.Base
             int i = 1;
 
             MapRows = new List<bool>();
+            OldGroupRows = GroupRows;
             GroupRows = new List<GroupRow>();
             foreach (var group in p_groups.OfType<IList>())
             {
@@ -337,7 +338,8 @@ namespace Dt.Base
             bool existGroup = false;
             if (GroupRows != null)
             {
-                GroupRows.Clear();
+                // LvPanel中清空原有分组行
+                OldGroupRows = GroupRows;
                 GroupRows = null;
                 MapRows = null;
                 existGroup = true;
