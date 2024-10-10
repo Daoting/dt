@@ -213,7 +213,7 @@ namespace Dt.Base
         /// <param name="p_rows"></param>
         internal void LoadRows(IList p_rows)
         {
-            _rows.Clear();
+            ClearLvItems();
             ClearSelectionOnDataChanged();
 
             bool existGroup = false;
@@ -241,7 +241,7 @@ namespace Dt.Base
         /// <param name="p_groups"></param>
         internal void LoadGroupRows(IList p_groups)
         {
-            _rows.Clear();
+            ClearLvItems();
             ClearSelectionOnDataChanged();
             int i = 1;
 
@@ -316,7 +316,9 @@ namespace Dt.Base
             // 从后向前删除
             for (int i = p_items.Count - 1; i >= 0; i--)
             {
-                _rows.RemoveAt((int)p_items[i]);
+                int index = (int)p_items[i];
+                _rows[index].Unload();
+                _rows.RemoveAt(index);
             }
             // 更新后续行号
             for (int i = (int)p_items[0]; i < _rows.Count; i++)
@@ -331,7 +333,7 @@ namespace Dt.Base
         /// </summary>
         internal void ClearAllRows()
         {
-            _rows.Clear();
+            ClearLvItems();
             if (_selectedLvItems.Count > 0)
                 _selectedLvItems.Clear();
 
@@ -346,7 +348,7 @@ namespace Dt.Base
             }
             _panel?.OnRowsChanged(existGroup);
         }
-        
+
         void ClearSelectionOnDataChanged()
         {
             if (_selectedLvItems.Count > 0)
@@ -355,6 +357,15 @@ namespace Dt.Base
                 _selectedLvItems.CollectionChanged -= OnSelectedItemsChanged;
                 _selectedLvItems.Clear();
                 _selectedLvItems.CollectionChanged += OnSelectedItemsChanged;
+            }
+        }
+
+        void ClearLvItems()
+        {
+            while (_rows.Count > 0)
+            {
+                _rows[0].Unload();
+                _rows.RemoveAt(0);
             }
         }
         #endregion

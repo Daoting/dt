@@ -57,16 +57,14 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
-        readonly WeakReference _data;
+        object _data;
         bool _isInit;
         #endregion
 
         #region 构造方法
         public ViewItem(object p_data)
         {
-            if (p_data == null)
-                throw new Exception("视图项数据不可为空！");
-            _data = new WeakReference(p_data);
+            _data = p_data ?? throw new Exception("视图项数据不可为空！");
         }
         #endregion
 
@@ -74,18 +72,12 @@ namespace Dt.Base
         /// <summary>
         /// 获取视图项数据
         /// </summary>
-        public object Data
-        {
-            get { return _data.Target; }
-        }
+        public object Data => _data;
 
         /// <summary>
         /// 获取Row数据源
         /// </summary>
-        public Row Row
-        {
-            get { return _data.Target as Row; }
-        }
+        public Row Row => _data as Row;
 
         /// <summary>
         /// 获取设置行前景画刷
@@ -142,17 +134,17 @@ namespace Dt.Base
             get
             {
                 object val = null;
-                if (_data.Target is Row dr && dr.Contains(p_colName))
+                if (_data is Row dr && dr.Contains(p_colName))
                 {
                     // 从Row取
                     val = dr[p_colName];
                 }
-                else if (_data.Target is object obj)
+                else if (_data != null)
                 {
                     // 对象属性
-                    var pi = obj.GetType().GetProperty(p_colName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                    var pi = _data.GetType().GetProperty(p_colName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                     if (pi != null)
-                        val = pi.GetValue(obj);
+                        val = pi.GetValue(_data);
                 }
                 return val;
             }
@@ -193,10 +185,22 @@ namespace Dt.Base
 
             _isInit = true;
             Host.SetItemStyle(this);
-            if (_data.Target is Row row)
-                row.Changed += (s, e) => OnValueChanged();
-            else if (_data.Target is INotifyPropertyChanged pro)
-                pro.PropertyChanged += (s, e) => OnValueChanged();
+            if (_data is Row row)
+                row.Changed += OnRowChanged;
+            else if (_data is INotifyPropertyChanged pro)
+                pro.PropertyChanged += OnDataPropertyChanged;
+        }
+
+        internal void Unload()
+        {
+            if (_isInit)
+            {
+                if (_data is Row row)
+                    row.Changed -= OnRowChanged;
+                else if (_data is INotifyPropertyChanged pro)
+                    pro.PropertyChanged -= OnDataPropertyChanged;
+            }
+            _data = null;
         }
 
         /// <summary>
@@ -207,6 +211,16 @@ namespace Dt.Base
             // 重新设置行/项目样式
             Host.SetItemStyle(this);
             ValueChanged?.Invoke();
+        }
+
+        void OnRowChanged(object sender, Cell e)
+        {
+            OnValueChanged();
+        }
+
+        void OnDataPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnValueChanged();
         }
         #endregion
 
