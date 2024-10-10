@@ -27,8 +27,6 @@ namespace Dt.Base.ListView
         #region 成员变量
         Lv _owner;
         INotifyList _data;
-        IList _transData;
-        GroupDataList _groupData;
         #endregion
 
         #region 构造方法
@@ -53,8 +51,7 @@ namespace Dt.Base.ListView
                 return;
             }
 
-            Destroy();
-            
+            IList rows;
             if (_data.Count > 0
                 && (!string.IsNullOrEmpty(_owner.Where)
                     || (_owner.SortDesc != null && !string.IsNullOrEmpty(_owner.SortDesc.ID))
@@ -62,35 +59,49 @@ namespace Dt.Base.ListView
             {
                 // 自带分组的数据源，如：Nl<GroupData<OmMenu>>
                 if (_data[0] is IList)
-                    _transData = GetTransformedGroup();
+                    rows = GetTransformedGroup();
                 else
-                    _transData = GetTransformedList();
+                    rows = GetTransformedList();
             }
             else
             {
-                _transData = _data;
+                rows = _data;
             }
 
-            if (_transData.Count == 0)
+            if (rows.Count == 0)
             {
                 _owner.ClearAllRows();
                 return;
             }
 
-            if (_transData[0] is IList)
+            if (rows[0] is IList)
             {
                 // 自带分组的数据源，不需要构造分组，如：Nl<GroupData<OmMenu>>
-                _owner.LoadGroupRows(_transData);
+                _owner.LoadGroupRows(rows);
             }
             else if (!string.IsNullOrEmpty(_owner.GroupName))
             {
                 // 按指定列或属性分组
-                _groupData = BuildGroups(_transData);
-                _owner.LoadGroupRows(_groupData);
+                var groupRows = BuildGroups(rows);
+                _owner.LoadGroupRows(groupRows);
+                
+                // 释放
+                while (groupRows.Count > 0)
+                {
+                    groupRows[0].Clear();
+                    groupRows.RemoveAt(0);
+                }
+                groupRows = null;
             }
             else
             {
-                _owner.LoadRows(_transData);
+                _owner.LoadRows(rows);
+            }
+            
+            if (rows != _data)
+            {
+                rows.Clear();
+                rows = null;
             }
         }
 
@@ -99,7 +110,6 @@ namespace Dt.Base.ListView
         /// </summary>
         public void Unload()
         {
-            Destroy();
             _data.CollectionChanged -= OnCollectionChanged;
             _data = null;
         }
@@ -335,30 +345,6 @@ namespace Dt.Base.ListView
                     return num;
                 }
                 return 0;
-            }
-        }
-        #endregion
-
-        #region 释放
-        /// <summary>
-        /// 释放内部创建的数据列表
-        /// </summary>
-        void Destroy()
-        {
-            if (_groupData != null)
-            {
-                while (_groupData.Count > 0)
-                {
-                    _groupData[0].Clear();
-                    _groupData.RemoveAt(0);
-                }
-                _groupData = null;
-            }
-            
-            if (_transData != null && _transData != _data)
-            {
-                _transData.Clear();
-                _transData = null;
             }
         }
         #endregion
