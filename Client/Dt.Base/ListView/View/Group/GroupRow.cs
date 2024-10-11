@@ -21,7 +21,7 @@ namespace Dt.Base.ListView
     /// <summary>
     /// 分组行
     /// </summary>
-    public partial class GroupRow : DtControl
+    public partial class GroupRow : DtControl, ILvCleaner
     {
         #region 静态内容
         public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
@@ -108,15 +108,14 @@ namespace Dt.Base.ListView
             if (IsFirst)
                 ((Rectangle)GetTemplateChild("Rect")).Visibility = Visibility.Collapsed;
         }
-
-        /// <summary>
-        /// 卸载行
-        /// </summary>
-        internal void Unload()
+        
+        #region ILvCleaner
+        void ILvCleaner.Unload()
         {
             Data = null;
             Content = null;
             DataContext = null;
         }
+        #endregion
     }
 }

@@ -7,9 +7,9 @@
 #endregion
 
 #region 引用命名
+using Dt.Base.ListView;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using System.ComponentModel;
 using System.Reflection;
@@ -22,7 +22,7 @@ namespace Dt.Base
     /// 视图项基类，是数据和UI的中间对象
     /// 继承DependencyObject为节省资源，实现INotifyPropertyChanged作为DataContext能更新
     /// </summary>
-    public abstract partial class ViewItem : DependencyObject, INotifyPropertyChanged
+    public abstract partial class ViewItem : DependencyObject, INotifyPropertyChanged, ILvCleaner
     {
         #region 静态内容
         public static readonly DependencyProperty ForegroundProperty = DependencyProperty.Register(
@@ -190,19 +190,7 @@ namespace Dt.Base
             else if (_data is INotifyPropertyChanged pro)
                 pro.PropertyChanged += OnDataPropertyChanged;
         }
-
-        internal void Unload()
-        {
-            if (_isInit)
-            {
-                if (_data is Row row)
-                    row.Changed -= OnRowChanged;
-                else if (_data is INotifyPropertyChanged pro)
-                    pro.PropertyChanged -= OnDataPropertyChanged;
-            }
-            _data = null;
-        }
-
+        
         /// <summary>
         /// 值变化
         /// </summary>
@@ -234,6 +222,20 @@ namespace Dt.Base
         protected void OnPropertyChanged(string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        #endregion
+
+        #region ILvCleaner
+        void ILvCleaner.Unload()
+        {
+            if (_isInit)
+            {
+                if (_data is Row row)
+                    row.Changed -= OnRowChanged;
+                else if (_data is INotifyPropertyChanged pro)
+                    pro.PropertyChanged -= OnDataPropertyChanged;
+            }
+            _data = null;
         }
         #endregion
     }

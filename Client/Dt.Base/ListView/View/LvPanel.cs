@@ -65,7 +65,7 @@ namespace Dt.Base.ListView
         /// <summary>
         /// 虚拟行时：能填充可视区域的UI行列表(可看作一页)，真实行时：与数据行一一对应的UI行列表，
         /// </summary>
-        internal protected readonly List<LvRow> _dataRows = new List<LvRow>();
+        internal protected List<LvRow> _dataRows;
 
         /// <summary>
         /// 采用虚拟行时使用，_dataRows的所有行总高度，看作页面高度
@@ -258,7 +258,7 @@ namespace Dt.Base.ListView
                 {
                     int index = (int)p_items[i];
                     Children.RemoveAt(index);
-                    _dataRows[index].Unload();
+                    ((ILvCleaner)_dataRows[index]).Unload();
                     _dataRows.RemoveAt(index);
                 }
                 // 确保数据变化后可立即访问行UI
@@ -624,31 +624,18 @@ namespace Dt.Base.ListView
         {
             if (Children.Count > 0)
                 Children.Clear();
-            
-            if (_owner.OldGroupRows != null && _owner.OldGroupRows.Count > 0)
-            {
-                while (_owner.OldGroupRows.Count > 0)
-                {
-                    _owner.OldGroupRows[0].Unload();
-                    _owner.OldGroupRows.RemoveAt(0);
-                }
-                _owner.OldGroupRows = null;
-            }
-            
+
+            RemoveToolbar();
+            RemoveFilterUI();
+
             if (_groupHeader != null)
             {
                 _groupHeader.Unload();
                 _groupHeader = null;
             }
-            
-            while (_dataRows.Count > 0)
-            {
-                _dataRows[0].Unload();
-                _dataRows.RemoveAt(0);
-            }
-            
-            RemoveToolbar();
-            RemoveFilterUI();
+
+            Lv.Cleaner.Add(_dataRows);
+            _dataRows = new List<LvRow>();
         }
 
         /// <summary>

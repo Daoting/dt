@@ -219,8 +219,8 @@ namespace Dt.Base
             bool existGroup = false;
             if (GroupRows != null)
             {
-                // LvPanel中清空原有分组行
-                OldGroupRows = GroupRows;
+                // 统一清除
+                Cleaner.Add(GroupRows);
                 GroupRows = null;
                 MapRows = null;
                 existGroup = true;
@@ -246,7 +246,7 @@ namespace Dt.Base
             int i = 1;
 
             MapRows = new List<bool>();
-            OldGroupRows = GroupRows;
+            Cleaner.Add(GroupRows);
             GroupRows = new List<GroupRow>();
             foreach (var group in p_groups.OfType<IList>())
             {
@@ -317,7 +317,7 @@ namespace Dt.Base
             for (int i = p_items.Count - 1; i >= 0; i--)
             {
                 int index = (int)p_items[i];
-                _rows[index].Unload();
+                ((ILvCleaner)_rows[index]).Unload();
                 _rows.RemoveAt(index);
             }
             // 更新后续行号
@@ -340,8 +340,8 @@ namespace Dt.Base
             bool existGroup = false;
             if (GroupRows != null)
             {
-                // LvPanel中清空原有分组行
-                OldGroupRows = GroupRows;
+                // 统一清除
+                Cleaner.Add(GroupRows);
                 GroupRows = null;
                 MapRows = null;
                 existGroup = true;
@@ -362,10 +362,11 @@ namespace Dt.Base
 
         void ClearLvItems()
         {
-            while (_rows.Count > 0)
+            if (_rows.Count > 0)
             {
-                _rows[0].Unload();
-                _rows.RemoveAt(0);
+                // 统一清除
+                Cleaner.Add(_rows);
+                _rows = new List<LvItem>();
             }
         }
         #endregion

@@ -225,5 +225,13 @@ namespace Dt.Base
                 DataContext = dc;
             }
         }
+
+        internal void Unload()
+        {
+            DataContextChanged -= OnDataContextChanged;
+            Content = null;
+            _data = null;
+            _set = null;
+        }
     }
 }

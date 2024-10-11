@@ -24,7 +24,7 @@ namespace Dt.Base.ListView
     /// <summary>
     /// Lv的行基类
     /// </summary>
-    public partial class LvRow : Panel
+    public partial class LvRow : Panel, ILvCleaner
     {
         #region 成员变量
         protected const double _flagWidth = 40;
@@ -71,11 +71,12 @@ namespace Dt.Base.ListView
             //    DataContext = _row;
         }
 
-        /// <summary>
-        /// 卸载行
-        /// </summary>
-        internal void Unload()
+        void ILvCleaner.Unload()
         {
+            foreach (var dot in this.FindChildrenByType<Dot>())
+            {
+                dot.Unload();
+            }
             Children.Clear();
             if (_row != null)
             {
@@ -83,7 +84,7 @@ namespace Dt.Base.ListView
                 _row = null;
                 DataContext = null;
             }
-            
+
             PointerPressed -= OnPointerPressed;
             PointerReleased -= OnPointerReleased;
             PointerEntered -= OnPointerEntered;
@@ -95,7 +96,7 @@ namespace Dt.Base.ListView
             RightTapped -= OnRightTapped;
             OnUnload();
         }
-
+        
         protected virtual void OnUnload()
         {
         }

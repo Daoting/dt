@@ -216,7 +216,7 @@ namespace Dt.Base
         Border _root;
         LvPanel _panel;
         LvDataView _dataView;
-        readonly List<LvItem> _rows;
+        List<LvItem> _rows;
         readonly ObservableCollection<LvItem> _selectedLvItems;
         SizedPresenter _sizedPresenter;
         #endregion
@@ -426,11 +426,6 @@ namespace Dt.Base
         internal List<GroupRow> GroupRows { get; set; }
 
         /// <summary>
-        /// 旧的分组行，等待清除
-        /// </summary>
-        internal List<GroupRow> OldGroupRows { get; set; }
-        
-        /// <summary>
         /// 包含分组时，按顺序排列的所有分组行和视图行，true 分组行，false视图行
         /// </summary>
         internal List<bool> MapRows { get; set; }
@@ -512,6 +507,11 @@ namespace Dt.Base
         /// 是否需要对数据源进行过滤
         /// </summary>
         internal bool NeedFiltering => (FilterCfg != null && FilterCfg.NeedFiltering) || (Filter != null);
+
+        /// <summary>
+        /// 释放资源
+        /// </summary>
+        internal static readonly LvCleaner Cleaner = new LvCleaner();
         #endregion
 
         #region 外部方法
