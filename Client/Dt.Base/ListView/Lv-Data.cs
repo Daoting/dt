@@ -222,8 +222,13 @@ namespace Dt.Base
                 // 统一清除
                 Cleaner.Add(GroupRows);
                 GroupRows = null;
-                MapRows = null;
                 existGroup = true;
+            }
+            
+            if (MapRows != null)
+            {
+                MapRows.Clear();
+                MapRows = null;
             }
 
             int i = 1;
@@ -245,6 +250,12 @@ namespace Dt.Base
             ClearSelectionOnDataChanged();
             int i = 1;
 
+            if (MapRows != null)
+            {
+                MapRows.Clear();
+                MapRows = null;
+            }
+            
             MapRows = new List<bool>();
             Cleaner.Add(GroupRows);
             GroupRows = new List<GroupRow>();
@@ -343,8 +354,13 @@ namespace Dt.Base
                 // 统一清除
                 Cleaner.Add(GroupRows);
                 GroupRows = null;
-                MapRows = null;
                 existGroup = true;
+            }
+
+            if (MapRows != null)
+            {
+                MapRows.Clear();
+                MapRows = null;
             }
             _panel?.OnRowsChanged(existGroup);
         }

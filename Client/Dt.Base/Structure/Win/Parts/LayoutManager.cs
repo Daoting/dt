@@ -160,6 +160,8 @@ namespace Dt.Base.Docking
                     tabs.Items.Clear();
             }
         }
+        
+        public Dictionary<string, Tab> AllTabs => _tabs;
         #endregion
 
         #region 初始化

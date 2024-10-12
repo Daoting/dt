@@ -14,7 +14,7 @@ using System.Collections.Concurrent;
 namespace Dt.Base.ListView
 {
     /// <summary>
-    /// 负责所有Lv的资源释放，独立线程排队释放，提高UI切换速度，避免cpu占用过高
+    /// 负责所有Lv的资源释放，独立线程排队释放，避免影响 UI 切换速度，避免cpu占用过高
     /// </summary>
     class LvCleaner
     {

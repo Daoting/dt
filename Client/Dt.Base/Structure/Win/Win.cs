@@ -349,6 +349,16 @@ namespace Dt.Base
         /// 获取中部停靠容器
         /// </summary>
         internal Pane CenterItem { get; } = new Pane { IsInCenter = true };
+
+        /// <summary>
+        /// 所有Tab
+        /// </summary>
+        internal Dictionary<string, Tab> AllTabs => _tabs ?? _layout?.AllTabs;
+        
+        /// <summary>
+        /// 负责所有Win内部资源的释放
+        /// </summary>
+        internal static readonly WinCleaner Cleaner = new WinCleaner();
         #endregion
 
         #region 外部方法
@@ -1258,8 +1268,7 @@ namespace Dt.Base
         {
             Closed?.Invoke(this, EventArgs.Empty);
             OnClosed();
-            // 以窗口为单位释放
-            GC.Collect();
+            Cleaner.Add(this);
         }
 
         /// <summary>

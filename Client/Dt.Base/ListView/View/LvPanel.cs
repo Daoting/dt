@@ -271,14 +271,28 @@ namespace Dt.Base.ListView
         /// </summary>
         internal void Unload()
         {
-            ClearAllRows();
             _owner.Scroll.ViewChanged -= OnScrollViewChanged;
             SizeChanged -= OnSizeChanged;
-
-#if WIN
             PointerWheelChanged -= OnPointerWheelChanged;
             _owner.KeyDown -= OnKeyDown;
-#endif
+
+            if (Children.Count > 0)
+                Children.Clear();
+
+            RemoveToolbar();
+            RemoveFilterUI();
+
+            if (_groupHeader != null)
+            {
+                _groupHeader.Unload();
+                _groupHeader = null;
+            }
+
+            while (_dataRows.Count > 0)
+            {
+                ((ILvCleaner)_dataRows[0]).Unload();
+                _dataRows.RemoveAt(0);
+            }
         }
 
         /// <summary>
