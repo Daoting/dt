@@ -32,6 +32,11 @@ namespace Dt.Base
         {
             ((LvItem)d).OnPropertyChanged("IsSelected");
         }
+
+        /// <summary>
+        /// 卸载标志对象
+        /// </summary>
+        internal static LvItem UnloadFlagItem = new LvItem(null, Dot.UnloadFlag, -1);
         #endregion
 
         #region 成员变量

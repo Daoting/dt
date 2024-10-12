@@ -21,6 +21,12 @@ namespace Dt.Base
     {
         #region 静态内容
         const double _defaultFontSize = 16;
+
+        /// <summary>
+        /// 卸载标志对象
+        /// </summary>
+        internal static readonly object UnloadFlag = new object();
+        
         public static readonly DependencyProperty CallProperty = DependencyProperty.Register(
             "Call",
             typeof(string),
@@ -65,7 +71,7 @@ namespace Dt.Base
             FontSize = _defaultFontSize;
             DataContextChanged += OnDataContextChanged;
         }
-        
+
         /// <summary>
         /// Lv导出报表用
         /// </summary>
@@ -136,7 +142,7 @@ namespace Dt.Base
         /// 获取当前行数据
         /// </summary>
         public object Data => _data;
-        
+
         /// <summary>
         /// 切换Dot显示隐藏
         /// </summary>
@@ -177,6 +183,17 @@ namespace Dt.Base
             }
 
             _data = vi.Data;
+
+            // 卸载标志
+            if (_data == UnloadFlag)
+            {
+                DataContextChanged -= OnDataContextChanged;
+                Content = null;
+                _data = null;
+                _set = null;
+                return;
+            }
+
             if (!_isInit)
             {
                 _isInit = true;
@@ -224,14 +241,6 @@ namespace Dt.Base
                 DataContext = null;
                 DataContext = dc;
             }
-        }
-
-        internal void Unload()
-        {
-            DataContextChanged -= OnDataContextChanged;
-            Content = null;
-            _data = null;
-            _set = null;
         }
     }
 }

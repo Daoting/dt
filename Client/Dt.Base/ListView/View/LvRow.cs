@@ -35,7 +35,7 @@ namespace Dt.Base.ListView
         bool _menuOpened;
         Point _ptStart;
         #endregion
-        
+
         public LvRow(Lv p_owner)
         {
             _owner = p_owner;
@@ -73,17 +73,17 @@ namespace Dt.Base.ListView
 
         void ILvCleaner.Unload()
         {
-            foreach (var dot in this.FindChildrenByType<Dot>())
-            {
-                dot.Unload();
-            }
-            Children.Clear();
             if (_row != null)
             {
                 _row.ValueChanged = null;
                 _row = null;
-                DataContext = null;
             }
+            
+            // Dot释放标志，用普通对象会造成绑定异常！
+            DataContext = LvItem.UnloadFlagItem;
+            Children.Clear();
+            // 子元素已清空，无任何影响
+            DataContext = null;
 
             PointerPressed -= OnPointerPressed;
             PointerReleased -= OnPointerReleased;
@@ -96,11 +96,11 @@ namespace Dt.Base.ListView
             RightTapped -= OnRightTapped;
             OnUnload();
         }
-        
+
         protected virtual void OnUnload()
         {
         }
-        
+
         /// <summary>
         /// Col属性复制到Dot
         /// </summary>
@@ -113,7 +113,7 @@ namespace Dt.Base.ListView
             // 将Col中的已设置属性值复制到Dot
             if (p_col.ReadLocalValue(Col.CallProperty) != DependencyProperty.UnsetValue)
                 p_dot.Call = p_col.Call;
-            
+
             if (p_col.ReadLocalValue(Col.FormatProperty) != DependencyProperty.UnsetValue)
                 p_dot.Format = p_col.Format;
 
@@ -186,7 +186,7 @@ namespace Dt.Base.ListView
             {
                 _row.OnClick();
             }
-            
+
             ReleasePointerCapture(e.Pointer);
         }
 
