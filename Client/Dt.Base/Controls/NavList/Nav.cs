@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Core;
+using Microsoft.UI.Xaml;
 using System;
 using System.ComponentModel;
 #endregion
@@ -220,6 +221,25 @@ namespace Dt.Base
             return Task.FromResult(true);
         }
 
+        internal void Unload()
+        {
+            if (_obj != null && _obj.IsAlive)
+            {
+                if (_obj.Target is IWinCleaner wc)
+                {
+                    wc.Unload();
+                }
+                else if (_obj.Target is UIElement elem)
+                {
+                    foreach (var cl in elem.FindChildrenByType<IWinCleaner>())
+                    {
+                        cl.Unload();
+                    }
+                }
+                _obj.Target = null;
+            }
+        }
+        
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 

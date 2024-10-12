@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Base.Docking;
 using Dt.Base.ListView;
 #endregion
 
@@ -53,7 +52,10 @@ namespace Dt.Base
             }
 
             if (_selectedLvItems.Count > 0)
+            {
+                _selectedLvItems.CollectionChanged -= OnSelectedItemsChanged;
                 _selectedLvItems.Clear();
+            }
 
             if (GroupRows != null)
             {
@@ -69,6 +71,12 @@ namespace Dt.Base
             {
                 MapRows.Clear();
                 MapRows = null;
+            }
+            
+            if (_dataView != null)
+            {
+                _dataView.Unload();
+                _dataView = null;
             }
         }
         #endregion

@@ -28,7 +28,7 @@ namespace Dt.Base
     /// 可停靠多区域窗口
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class Win : DtControl, IPaneList
+    public partial class Win : DtControl, IPaneList, IWinCleaner
     {
         #region 静态内容
         public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
@@ -1294,6 +1294,16 @@ namespace Dt.Base
         {
             _layout?.SaveCurrentLayout();
             LayoutChanged?.Invoke(this, EventArgs.Empty);
+        }
+        #endregion
+
+        #region IWinCleaner
+        /// <summary>
+        /// 嵌套在主区的窗口释放
+        /// </summary>
+        void IWinCleaner.Unload()
+        {
+            Cleaner.Add(this);
         }
         #endregion
     }

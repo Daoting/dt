@@ -46,7 +46,12 @@ namespace Dt.Base.Docking
                         {
                             foreach (var tab in win.AllTabs.Values)
                             {
-                                if (tab.Content is IWinCleaner wc)
+                                // NavList
+                                if (tab is IWinCleaner tc)
+                                {
+                                    tc.Unload();
+                                }
+                                else if (tab.Content is IWinCleaner wc)
                                 {
                                     wc.Unload();
                                 }
@@ -70,11 +75,14 @@ namespace Dt.Base.Docking
             }
         }
     }
+}
 
+namespace Dt.Base
+{
     /// <summary>
     /// 支持关闭窗口后释放资源的接口
     /// </summary>
-    interface IWinCleaner
+    public interface IWinCleaner
     {
         /// <summary>
         /// 卸载

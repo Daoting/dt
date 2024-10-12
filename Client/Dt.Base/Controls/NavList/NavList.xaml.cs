@@ -15,7 +15,7 @@ namespace Dt.Base
     /// <summary>
     /// 功能列表
     /// </summary>
-    public partial class NavList : Tab
+    public partial class NavList : Tab, IWinCleaner
     {
         #region 静态内容
         public readonly static DependencyProperty ToProperty = DependencyProperty.Register(
@@ -274,6 +274,31 @@ namespace Dt.Base
                                 e.Cancel = true;
                                 return;
                             }
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region IWinCleaner
+        void IWinCleaner.Unload()
+        {
+            ((IWinCleaner)_lv).Unload();
+            
+            if (Data != null && Data.Count > 0)
+            {
+                foreach (var item in Data)
+                {
+                    if (item is Nav nav)
+                    {
+                        nav.Unload();
+                    }
+                    else if (item is GroupData<Nav> group)
+                    {
+                        foreach (var gnav in group)
+                        {
+                            gnav.Unload();
                         }
                     }
                 }

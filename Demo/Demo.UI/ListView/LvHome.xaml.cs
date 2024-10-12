@@ -43,7 +43,6 @@ namespace Demo.UI
                 new Nav("过滤", typeof(LvFilter), Icons.漏斗) { Desc = "三种方式：过滤回调、支持linq的where过滤串、筛选框过滤" },
                 new Nav("上下文菜单", typeof(LvContextMenu), Icons.公告) { Desc = "触发上下文菜单的方式：右键、悬停、点击标识按钮" },
                 new Nav("外部ScrollViewer", typeof(LvInScrollViewer), Icons.乐谱) { Desc = "外部嵌套ScrollViewer，和其他元素一起滚动" },
-                new Nav("内存泄漏测试", typeof(TestLvLeak), Icons.分组) { Desc = "测试Lv各种情况的内存泄漏" },
             };
         }
     }

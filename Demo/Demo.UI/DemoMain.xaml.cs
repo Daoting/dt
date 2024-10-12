@@ -110,6 +110,7 @@ namespace Demo.UI
                 new Nav("常用画刷", typeof(BrushDemo), Icons.扫帚) { Desc = "内部标准画刷" },
                 new Nav("按钮", typeof(BtnDemo), Icons.光标) { Desc = "常用按钮样式" },
                 new Nav("标准控件", typeof(StyleHome), Icons.排列) { Desc = "常用系统控件的样式" },
+                new Nav("内存泄漏", typeof(TestMemLeak), Icons.扫帚) { Desc = "检查内存泄漏" },
 #if DEBUG
                 new Nav("测试", typeof(TestDemo1), Icons.Bug) { Desc = "临时测试用" },
 #endif

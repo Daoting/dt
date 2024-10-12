@@ -112,6 +112,7 @@ namespace Dt.Base.ListView
         {
             _data.CollectionChanged -= OnCollectionChanged;
             _data = null;
+            _owner = null;
         }
         #endregion
 
