@@ -47,19 +47,19 @@ namespace Dt.Base.Docking
                             foreach (var tab in win.AllTabs.Values)
                             {
                                 // NavList
-                                if (tab is IWinCleaner tc)
+                                if (tab is IDisposable tc)
                                 {
-                                    tc.Unload();
+                                    tc.Dispose();
                                 }
-                                else if (tab.Content is IWinCleaner wc)
+                                else if (tab.Content is IDisposable wc)
                                 {
-                                    wc.Unload();
+                                    wc.Dispose();
                                 }
                                 else if (tab.Content is UIElement elem)
                                 {
-                                    foreach (var cl in elem.FindChildrenByType<IWinCleaner>())
+                                    foreach (var cl in elem.FindChildrenByType<IDisposable>())
                                     {
-                                        cl.Unload();
+                                        cl.Dispose();
                                     }
                                 }
                             }
@@ -74,19 +74,5 @@ namespace Dt.Base.Docking
                 catch { }
             }
         }
-    }
-}
-
-namespace Dt.Base
-{
-    /// <summary>
-    /// 支持关闭窗口后释放资源的接口
-    /// </summary>
-    public interface IWinCleaner
-    {
-        /// <summary>
-        /// 卸载
-        /// </summary>
-        void Unload();
     }
 }

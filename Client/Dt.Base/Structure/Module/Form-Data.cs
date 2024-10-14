@@ -23,7 +23,6 @@ namespace Dt.Base
         #region 变量
         protected LvMsgArgs _args;
         protected readonly Locker _locker = new Locker();
-        Win _ownWin;
         bool _toggling;
         bool _needUpdate;
         #endregion
@@ -225,24 +224,6 @@ namespace Dt.Base
                     {
                         fi.IsReadOnly = value;
                     }
-                }
-            }
-        }
-
-        /// <summary>
-        /// 所属Win
-        /// </summary>
-        public Win OwnWin
-        {
-            get { return _ownWin; }
-            set
-            {
-                if (_ownWin != value)
-                {
-                    if (_ownWin != null)
-                        _ownWin.Closed -= OnOwnWinClosed;
-                    _ownWin = value;
-                    _ownWin.Closed += OnOwnWinClosed;
                 }
             }
         }
@@ -718,11 +699,6 @@ namespace Dt.Base
                 // 父子表单，固定宽度，避免切换内容时动态调整宽度
                 Width = DesiredSize.Width;
             }
-        }
-
-        void OnOwnWinClosed(object sender, EventArgs e)
-        {
-            Close();
         }
         #endregion
     }

@@ -1,0 +1,12 @@
+﻿<a:Win
+    x:Class="Demo.UI.TestDlgLeak"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <StackPanel Padding="10">
+        <Button Content="用后即释放的对话框" Click="OnDispose" />
+        <Button Content="关闭窗口即释放的对话框" Click="OnWinDispose" />
+        <Button Content="不主动释放的对话框" Click="OnUndispose" />
+    </StackPanel>
+</a:Win>

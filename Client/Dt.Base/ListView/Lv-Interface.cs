@@ -15,7 +15,7 @@ namespace Dt.Base
     /// <summary>
     /// 接口
     /// </summary>
-    public partial class Lv : IViewItemHost, IMenuHost, IWinCleaner
+    public partial class Lv : IViewItemHost, IMenuHost, IDisposable
     {
         #region IViewItemHost
         bool IViewItemHost.IsCustomItemStyle => ItemStyle != null;
@@ -36,11 +36,11 @@ namespace Dt.Base
         }
         #endregion
 
-        #region IWinCleaner
-        void IWinCleaner.Unload()
+        #region IDisposable
+        public void Dispose()
         {
             _panel?.Unload();
-            
+
             if (_rows.Count > 0)
             {
                 while (_rows.Count > 0)
@@ -72,7 +72,7 @@ namespace Dt.Base
                 MapRows.Clear();
                 MapRows = null;
             }
-            
+
             if (_dataView != null)
             {
                 _dataView.Unload();

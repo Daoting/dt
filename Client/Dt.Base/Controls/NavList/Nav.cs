@@ -225,15 +225,15 @@ namespace Dt.Base
         {
             if (_obj != null && _obj.IsAlive)
             {
-                if (_obj.Target is IWinCleaner wc)
+                if (_obj.Target is IDisposable wc)
                 {
-                    wc.Unload();
+                    wc.Dispose();
                 }
                 else if (_obj.Target is UIElement elem)
                 {
-                    foreach (var cl in elem.FindChildrenByType<IWinCleaner>())
+                    foreach (var cl in elem.FindChildrenByType<IDisposable>())
                     {
-                        cl.Unload();
+                        cl.Dispose();
                     }
                 }
                 _obj.Target = null;

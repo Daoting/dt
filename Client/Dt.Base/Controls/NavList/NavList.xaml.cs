@@ -15,7 +15,7 @@ namespace Dt.Base
     /// <summary>
     /// 功能列表
     /// </summary>
-    public partial class NavList : Tab, IWinCleaner
+    public partial class NavList : Tab, IDisposable
     {
         #region 静态内容
         public readonly static DependencyProperty ToProperty = DependencyProperty.Register(
@@ -281,10 +281,13 @@ namespace Dt.Base
         }
         #endregion
 
-        #region IWinCleaner
-        void IWinCleaner.Unload()
+        #region IDisposable
+        /// <summary>
+        /// 释放内部缓存对象
+        /// </summary>
+        public void Dispose()
         {
-            ((IWinCleaner)_lv).Unload();
+            _lv.Dispose();
             
             if (Data != null && Data.Count > 0)
             {

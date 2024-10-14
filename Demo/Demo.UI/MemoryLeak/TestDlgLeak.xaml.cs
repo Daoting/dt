@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2013-12-16 创建
+* 日志: 2021/5/22 8:53:08 创建
 ******************************************************************************/
 #endregion
 
@@ -11,27 +11,36 @@ using Dt.Base;
 using Dt.Core;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+
 #endregion
 
 namespace Demo.UI
 {
-    public partial class TestWinLeak : Win
+    public partial class TestDlgLeak : Win
     {
-        string _id;
-
-        public TestWinLeak()
+        public TestDlgLeak()
         {
             InitializeComponent();
+        }
 
-            _id = new Random().Next(1000).ToString();
-            _nav.Data = new Nl<Nav>
-            {
-                new Nav("Lv内存泄漏", typeof(TestLvLeak), Icons.公告),
-                new Nav("递归嵌套窗口", typeof(TestWinLeak), Icons.田字格),
-                new Nav("窗口标识：" + _id),
-            };
+        void OnDispose(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        void OnWinDispose(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        void OnUndispose(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

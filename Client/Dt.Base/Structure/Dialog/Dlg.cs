@@ -24,6 +24,7 @@ using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Input;
+using System.Collections.Concurrent;
 #endregion
 
 namespace Dt.Base
@@ -32,7 +33,7 @@ namespace Dt.Base
     /// 对话框容器
     /// </summary>
     [ContentProperty(Name = "Content")]
-    public partial class Dlg : Control, IDlgPressed
+    public partial class Dlg : Control, IDlgPressed, IDisposable
     {
         #region 静态成员
         public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
@@ -161,6 +162,12 @@ namespace Dt.Base
             typeof(Dlg),
             new PropertyMetadata(false));
 
+        public static readonly DependencyProperty OwnWinProperty = DependencyProperty.Register(
+            "OwnWin",
+            typeof(Win),
+            typeof(Dlg),
+            new PropertyMetadata(null, OnOwnWinChanged));
+
         static void OnWinPlacementChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (!Kit.IsPhoneUI)
@@ -186,6 +193,15 @@ namespace Dt.Base
         static void OnTopChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Canvas.SetTop((Dlg)d, (double)e.NewValue);
+        }
+
+        static void OnOwnWinChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Dlg dlg = (Dlg)d;
+            if (e.OldValue is Win old)
+                old.Closed -= dlg.OnOwnWinClosed;
+            if (e.NewValue is Win win)
+                win.Closed += dlg.OnOwnWinClosed;
         }
         #endregion
 
@@ -437,6 +453,15 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(EnableClosingAnimationProperty); }
             set { SetValue(EnableClosingAnimationProperty, value); }
+        }
+
+        /// <summary>
+        /// 所属Win，和Win生命周期相同，Win关闭后关闭对话框、释放资源
+        /// </summary>
+        public Win OwnWin
+        {
+            get { return (Win)GetValue(OwnWinProperty); }
+            set { SetValue(OwnWinProperty, value); }
         }
         #endregion
 
@@ -1608,6 +1633,74 @@ namespace Dt.Base
             }
         }
 #endif
+        #endregion
+
+        #region 释放资源
+        /// <summary>
+        /// 实现 IDisposable 接口
+        /// </summary>
+        public void Dispose()
+        {
+            _cleaner.Add(this);
+        }
+        
+        void OnOwnWinClosed(object sender, EventArgs e)
+        {
+            Close();
+            Dispose();
+        }
+
+        static readonly DlgCleaner _cleaner = new DlgCleaner();
+        class DlgCleaner
+        {
+            readonly BlockingCollection<Dlg> _queue;
+
+            public DlgCleaner()
+            {
+                _queue = new BlockingCollection<Dlg>();
+                Task.Run(Clean);
+            }
+
+            public bool Add(Dlg p_dlg)
+            {
+                if (p_dlg == null || p_dlg.Content == null)
+                    return false;
+                return _queue.TryAdd(p_dlg);
+            }
+
+            void Clean()
+            {
+                while (true)
+                {
+                    try
+                    {
+                        var dlg = _queue.Take();
+                        var con = dlg.Content;
+                        dlg.Content = null;
+                        Kit.RunSync(() =>
+                        {
+                            try
+                            {
+                                if (con is IDisposable tc)
+                                {
+                                    tc.Dispose();
+                                }
+                                else if (con is UIElement elem)
+                                {
+                                    foreach (var cl in elem.FindChildrenByType<IDisposable>())
+                                    {
+                                        cl.Dispose();
+                                    }
+                                }
+                            }
+                            catch { }
+                            con = null;
+                        });
+                    }
+                    catch { }
+                }
+            }
+        }
         #endregion
     }
 }
