@@ -55,11 +55,14 @@ namespace Dt.Base.ListView
         {
             _cells.Clear();
             var cols = _owner.Cols;
-            cols.ColWidthChanged -= OnColWidthChanged;
-            cols.Reloading -= OnColsReloading;
+            if (cols != null)
+            {
+                cols.ColWidthChanged -= OnColWidthChanged;
+                cols.Reloading -= OnColsReloading;
+            }
             _owner.Scroll.ViewChanged -= OnViewChanged;
         }
-        
+
         protected override Size MeasureOverride(Size availableSize)
         {
             // 行最小高度41
@@ -142,7 +145,7 @@ namespace Dt.Base.ListView
             {
                 if (col.Visibility == Visibility.Collapsed)
                     continue;
-                
+
                 Dot dot = new Dot { Padding = TextMargin, BorderBrush = Res.浅灰2, BorderThickness = borderLine, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
                 CopyColToDot(col, dot);
                 Children.Add(dot);

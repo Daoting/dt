@@ -84,7 +84,7 @@ namespace Dt.Base
         /// </summary>
         public string FullIndex
         {
-            get { return $"{_index}/{_owner.Rows.Count}"; }
+            get { return $"{_index}/{_owner?.Rows.Count}"; }
         }
 
         /// <summary>

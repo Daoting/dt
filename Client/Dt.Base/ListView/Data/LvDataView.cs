@@ -27,6 +27,7 @@ namespace Dt.Base.ListView
         #region 成员变量
         Lv _owner;
         INotifyList _data;
+        GroupDataList _groupData;
         #endregion
 
         #region 构造方法
@@ -50,7 +51,9 @@ namespace Dt.Base.ListView
                 _owner.DeferRefreshData = true;
                 return;
             }
-
+            
+            ClearGroupData();
+            
             IList rows;
             if (_data.Count > 0
                 && (!string.IsNullOrEmpty(_owner.Where)
@@ -82,22 +85,16 @@ namespace Dt.Base.ListView
             else if (!string.IsNullOrEmpty(_owner.GroupName))
             {
                 // 按指定列或属性分组
-                var groupRows = BuildGroups(rows);
-                _owner.LoadGroupRows(groupRows);
-                
-                // 释放
-                while (groupRows.Count > 0)
-                {
-                    groupRows[0].Clear();
-                    groupRows.RemoveAt(0);
-                }
-                groupRows = null;
+                // 内部生成的分组需要释放，但不可立即释放，有用
+                _groupData = BuildGroups(rows);
+                _owner.LoadGroupRows(_groupData);
             }
             else
             {
                 _owner.LoadRows(rows);
             }
-            
+
+            // 内部生成的列表就地释放
             if (rows != _data)
             {
                 rows.Clear();
@@ -113,7 +110,9 @@ namespace Dt.Base.ListView
             _data.CollectionChanged -= OnCollectionChanged;
             _data = null;
             _owner = null;
+            ClearGroupData();
         }
+        
         #endregion
 
         #region 集合变化
@@ -308,6 +307,19 @@ namespace Dt.Base.ListView
                 group.Add(row);
             }
             return groupRows;
+        }
+
+        void ClearGroupData()
+        {
+            if (_groupData != null)
+            {
+                while (_groupData.Count > 0)
+                {
+                    _groupData[0].Clear();
+                    _groupData.RemoveAt(0);
+                }
+                _groupData = null;
+            }
         }
         #endregion
 

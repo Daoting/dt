@@ -5,20 +5,79 @@
     xmlns:a="using:Dt.Base"
     xmlns:s="using:Demo.UI">
 
+    <a:Win.Resources>
+        <a:Cols x:Key="TableView">
+            <a:Col ID="xm" Title="姓名" />
+            <a:Col ID="bh" Title="编号" Width="80" />
+            <a:Col ID="chushengrq" Title="出生日期" />
+            <a:Col ID="shenfenzh" Title="身份证号码" Width="200" />
+            <a:Col ID="xb" Title="性别" Width="60" />
+            <a:Col ID="hunfou" Title="婚否" Width="60" />
+            <a:Col ID="shengao" Title="身高" Width="100" />
+            <a:Col ID="bumen" Title="所属部门" Width="160" />
+            <a:Col ID="note" Title="备注" Width="200" RowSpan="2" />
+        </a:Cols>
+
+        <DataTemplate x:Key="ListView">
+            <Grid Padding="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Border Background="{StaticResource 主蓝}"
+                    Height="50"
+                    Width="50"
+                    VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Index}"
+                           FontSize="30"
+                           Foreground="White"
+                           VerticalAlignment="Center"
+                           TextAlignment="Center" />
+                </Border>
+
+                <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
+                    <a:Dot ID="xm" />
+                    <StackPanel Orientation="Horizontal">
+                        <a:Dot ID="xb" />
+                        <a:Dot ID="chushengrq" Margin="20,0,0,0" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
+                    <a:Dot ID="shenfenzh" />
+                    <a:Dot ID="bumen" />
+                    <a:Dot ID="note" Call="Def.小灰" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TileView">
+            <Grid Padding="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="&#xE060;"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="30"
+                        VerticalAlignment="Center"
+                        TextAlignment="Center" />
+                <StackPanel Margin="10,0,0,0" Grid.Column="1">
+                    <a:Dot ID="xm" />
+                    <a:Dot ID="xb" />
+                    <a:Dot ID="bumen" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </a:Win.Resources>
+    
     <a:Main>
         <a:Tabs>
             <a:Tab Order="1" Title="表格">
-                <a:Lv x:Name="_lv">
-                    <a:Cols>
-                        <a:Col ID="bh" Title="编号" Width="80" />
-                        <a:Col ID="xm" Title="姓名" />
-                        <a:Col ID="hunfou" Title="婚否" Width="60" />
-                        <a:Col ID="bumen" Title="所属部门" Width="160" />
-                        <a:Col ID="chushengrq" Title="出生日期" />
-                        <a:Col ID="shenfenzh" Title="身份证号码" Width="200" />
-                        <a:Col ID="xb" Title="性别" Width="60" />
-                    </a:Cols>
-                </a:Lv>
+                <a:Lv x:Name="_lv" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
@@ -34,11 +93,20 @@
                         <Button Content="万行" Tag="10000" Click="OnLoadData" />
                         <Button Content="空" Click="OnLoadNull" />
                     </StackPanel>
+                    <a:CBar Title="视图类型" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="表格" Click="OnGridView" />
+                        <Button Content="列表" Click="OnListView" />
+                        <Button Content="表单列表" Click="OnFormList" />
+                        <Button Content="磁贴" Click="OnTileView" />
+                        <Button Content="表单磁贴" Click="OnFormTile" />
+                    </StackPanel>
                     <a:CBar Title="分组" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="按部门分组" Click="OnGroup" />
                         <Button Content="删除分组" Click="OnDelGroup" />
                     </StackPanel>
+                    <a:CBar Title="渲染方式" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="真实行" Click="OnAutoHeight" />
                         <Button Content="虚拟行" Click="OnVir" />
