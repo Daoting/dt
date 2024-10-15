@@ -15,7 +15,7 @@ namespace Dt.Base
     /// <summary>
     /// 查询格
     /// </summary>
-    public partial class FvCell : DtControl, IFvCell
+    public partial class FvCell
     {
         #region 静态内容
         public static readonly DependencyProperty QueryProperty = DependencyProperty.Register(
@@ -62,6 +62,5 @@ namespace Dt.Base
             get { return (CompFlag)GetValue(QueryFlagProperty); }
             set { SetValue(QueryFlagProperty, value); }
         }
-
     }
 }

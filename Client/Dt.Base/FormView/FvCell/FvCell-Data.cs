@@ -19,7 +19,7 @@ namespace Dt.Base
     /// <summary>
     /// 数据源相关
     /// </summary>
-    public partial class FvCell : DtControl, IFvCell
+    public partial class FvCell
     {
         #region 静态内容
         public static readonly DependencyProperty ValBindingProperty = DependencyProperty.Register(

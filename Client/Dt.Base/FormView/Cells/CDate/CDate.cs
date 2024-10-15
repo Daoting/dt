@@ -162,6 +162,26 @@ namespace Dt.Base
                 return ((MaskBox)_grid.Children[0]).Focus(FocusState.Programmatic);
             return true;
         }
+        
+        protected override void Unload()
+        {
+            if (_grid != null
+                && (Kit.IsPhoneUI || AlwaysTouchPicker))
+            {
+                if (_format == DateFormatType.Date)
+                    _grid.Tapped -= OnDateFly;
+                else if (_format == DateFormatType.Time)
+                    _grid.Tapped -= OnTimeFly;
+                else
+                    _grid.Tapped -= OnDateTimeFly;
+            }
+
+            if (_dlg != null)
+            {
+                _dlg.Dispose();
+                _dlg = null;
+            }
+        }
         #endregion
 
         void LoadContent()

@@ -199,6 +199,12 @@ namespace Dt.Base
                 expresson.UpdateSource();
             }
         }
+
+        protected override void Unload()
+        {
+            if (_tb != null)
+                _tb.TextChanged -= OnUpdateSource;
+        }
     }
 
     /// <summary>
@@ -226,7 +232,7 @@ namespace Dt.Base
             // *****************************
             // 数据源中保存的换行符始终只是 \n
             // *****************************
-            
+
             // TextBox支持多行时：
             // windows换行符只有\r，每次向TextBox赋值时 \r\n 或 \n 都被强制替换为 \r
             // 其它平台换行符只有 \n，wasm每次向TextBox赋值时 \r\n 被强制替换为 \n，ios android不强制替换

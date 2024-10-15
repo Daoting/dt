@@ -280,6 +280,24 @@ namespace Dt.Base
             }
             return true;
         }
+
+        protected override void Unload()
+        {
+            if (_grid != null)
+            {
+#if WIN
+                _grid.RemoveHandler(TappedEvent, new TappedEventHandler(OnShowDlg));
+#else
+                _grid.Tapped -= OnShowDlg;
+#endif
+            }
+
+            if (_dlg != null)
+            {
+                _dlg.Dispose();
+                _dlg = null;
+            }
+        }
         #endregion
 
         #region 内部方法

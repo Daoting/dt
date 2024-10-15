@@ -26,6 +26,7 @@ namespace Demo.UI
             _nav.Data = new Nl<Nav>
             {
                 new Nav("Lv内存泄漏", typeof(TestLvLeak), Icons.表格) { Desc = "测试Lv各种情况的内存泄漏" },
+                new Nav("Fv内存泄漏", typeof(TestFvLeak), Icons.汉堡) { Desc = "测试Fv内存泄漏" },
                 new Nav("嵌套窗口", typeof(TestWinLeak), Icons.Windows) { Desc = "测试嵌套窗口的内存泄漏" },
                 new Nav("对话框", typeof(TestDlgLeak), Icons.公告) { Desc = "测试对话框容器的内存泄漏" },
             };

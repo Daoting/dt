@@ -571,6 +571,17 @@ namespace Dt.Base
             }
         }
 
+        protected override void Unload()
+        {
+            if (_textBox != null)
+            {
+                _textBox.TextChanged -= OnTextBoxTextChanged;
+                _textBox.GotFocus -= OnBoxGotFocus;
+                _textBox.LostFocus -= OnBoxLostFocus;
+                _textBox = null;
+            }
+        }
+        
         void OnBoxGotFocus(object sender, RoutedEventArgs e)
         {
             IsFocused = true;

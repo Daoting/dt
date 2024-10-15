@@ -416,6 +416,11 @@ namespace Dt.Base
         {
             KeyUp?.Invoke(this, e);
         }
+
+        internal void Dispose()
+        {
+            Unload();
+        }
         #endregion
 
         #region 虚方法
@@ -441,6 +446,10 @@ namespace Dt.Base
         }
 
         protected virtual void OnReadOnlyChanged()
+        {
+        }
+
+        protected virtual void Unload()
         {
         }
         #endregion

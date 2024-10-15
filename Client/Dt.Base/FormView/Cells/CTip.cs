@@ -125,6 +125,18 @@ namespace Dt.Base
         {
             return false;
         }
+
+        protected override void Unload()
+        {
+            if (Child is Grid g)
+            {
+                g.PointerEntered -= OnGridPointerEntered;
+                g.PointerPressed -= OnGridPointerPressed;
+                g.PointerReleased -= OnGridPointerReleased;
+                g.PointerExited -= OnGridPointerExited;
+                g.PointerCaptureLost -= OnGridPointerExited;
+            }
+        }
         #endregion
 
         #region 动态内容

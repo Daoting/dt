@@ -287,6 +287,5 @@ namespace Dt.Base
 
         static List<Type> _noAutoFocus = new List<Type> { typeof(CList), typeof(CTree), typeof(CIcon), typeof(CColor), typeof(CFile), typeof(CImage) };
         #endregion
-
     }
 }

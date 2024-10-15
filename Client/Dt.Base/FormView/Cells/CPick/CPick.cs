@@ -230,6 +230,32 @@ namespace Dt.Base
             }
             return false;
         }
+
+        protected override void Unload()
+        {
+            var border = (Border)GetTemplateChild("TextBorder");
+            if (border != null)
+            {
+#if WIN
+                // TextBlock可复制
+                border.RemoveHandler(TappedEvent, new TappedEventHandler(OnShowDlg));
+#else
+                border.Tapped -= OnShowDlg;
+#endif
+            }
+
+            var btn = (Button)GetTemplateChild("BtnFilter");
+            if (btn != null)
+            {
+                btn.Click -= OnButtonClick;
+            }
+
+            if (_dlg != null)
+            {
+                _dlg.Dispose();
+                _dlg = null;
+            }
+        }
         #endregion
 
         #region 内部方法
