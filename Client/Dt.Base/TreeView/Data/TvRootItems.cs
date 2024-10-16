@@ -131,6 +131,31 @@ namespace Dt.Base.TreeViews
             return new Rect(0, pos.Top, 0, pos.Height);
         }
 
+        public void Unload()
+        {
+            while (Count > 0)
+            {
+                UnloadItem(this[0]);
+                RemoveAt(0);
+            }
+        }
+
+        static void UnloadItem(TvItem p_ti)
+        {
+            if (p_ti.Children.Count > 0)
+            {
+                foreach (var item in p_ti.Children)
+                {
+                    UnloadItem(item);
+                }
+            }
+            else
+            {
+                p_ti.Unload();
+                p_ti = null;
+            }
+        }
+        
         IEnumerable<TvItem> GetAllChild(TvItem p_item)
         {
             foreach (var child in p_item.Children)

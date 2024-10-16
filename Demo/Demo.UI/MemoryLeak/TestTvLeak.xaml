@@ -1,0 +1,41 @@
+﻿<a:Win
+    x:Class="Demo.UI.TestTvLeak"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Main>
+        <a:Tabs>
+            <a:Tab Order="1" Title="树">
+                <a:Tv x:Name="_tv">
+                    <DataTemplate>
+                        <a:Dot ID="name" />
+                    </DataTemplate>
+                </a:Tv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Main>
+    <a:Pane Pos="Right">
+        <a:Tabs>
+            <a:Tab Order="2" Title="属性">
+                <a:Fv>
+                    <a:CBar Title="数据源" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Table" Click="OnLoadTbl" />
+                        <Button Content="对象树" Click="OnLoadData" />
+                    </StackPanel>
+                    
+                    <a:CFree Title="筛选框">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="默认" Click="OnFilter" />
+                            <Button Content="自定义" Click="OnCustFilter" />
+                            <Button Content="定制" Click="OnMyFilter" />
+                            <Button Content="隐藏" Click="OnDelFilter" />
+                        </StackPanel>
+                    </a:CFree>
+                    
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:Pane>
+</a:Win>

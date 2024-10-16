@@ -32,12 +32,6 @@ namespace Dt.Base
     public partial class Tv : DtControl, IViewItemHost, IMenuHost
     {
         #region 静态内容
-        public readonly static DependencyProperty DataProperty = DependencyProperty.Register(
-            "Data",
-            typeof(ITreeData),
-            typeof(Tv),
-            new PropertyMetadata(null, OnDataChanged));
-
         public readonly static DependencyProperty ViewProperty = DependencyProperty.Register(
             "View",
             typeof(object),
@@ -61,12 +55,6 @@ namespace Dt.Base
             typeof(SelectionMode),
             typeof(Tv),
             new PropertyMetadata(SelectionMode.Single, OnSelectionModeChanged));
-
-        public readonly static DependencyProperty FixedRootProperty = DependencyProperty.Register(
-            "FixedRoot",
-            typeof(object),
-            typeof(Tv),
-            new PropertyMetadata(null));
 
         public static readonly DependencyProperty ShowRowLineProperty = DependencyProperty.Register(
             "ShowRowLine",
@@ -103,30 +91,6 @@ namespace Dt.Base
             typeof(bool),
             typeof(Tv),
             new PropertyMetadata(false));
-
-        public static readonly DependencyProperty FilterCfgProperty = DependencyProperty.Register(
-            "FilterCfg",
-            typeof(FilterCfg),
-            typeof(Tv),
-            new PropertyMetadata(null, OnFilterCfgChanged));
-        
-        static void OnDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            Tv tv = (Tv)d;
-            if (tv._dataView != null)
-                tv._dataView.Unload();
-
-            if (e.NewValue == null)
-            {
-                tv._dataView = null;
-                tv.ClearItems();
-            }
-            else
-            {
-                tv._dataView = new TvDataView(tv, (ITreeData)e.NewValue);
-            }
-            tv.OnDataChanged();
-        }
 
         static void OnReloadAllRows(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -186,13 +150,6 @@ namespace Dt.Base
                 tv._panel.Reload();
             }
         }
-
-        static void OnFilterCfgChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            Tv tv = (Tv)d;
-            if (tv._isLoaded)
-                tv._panel.Reload();
-        }
         #endregion
 
         #region 成员变量
@@ -241,15 +198,6 @@ namespace Dt.Base
 
         #region 属性
         /// <summary>
-        /// 获取设置数据源对象，Table已实现ITreeData
-        /// </summary>
-        public ITreeData Data
-        {
-            get { return (ITreeData)GetValue(DataProperty); }
-            set { SetValue(DataProperty, value); }
-        }
-
-        /// <summary>
         /// 获取设置节点模板或模板选择器
         /// </summary>
         public object View
@@ -274,15 +222,6 @@ namespace Dt.Base
         {
             get { return (SelectionMode)GetValue(SelectionModeProperty); }
             set { SetValue(SelectionModeProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置固定根节点，切换数据源时不变
-        /// </summary>
-        public object FixedRoot
-        {
-            get { return GetValue(FixedRootProperty); }
-            set { SetValue(FixedRootProperty, value); }
         }
 
         /// <summary>
@@ -346,15 +285,6 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(HasSelectedProperty); }
             set { SetValue(HasSelectedProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置筛选框配置，默认null
-        /// </summary>
-        public FilterCfg FilterCfg
-        {
-            get { return (FilterCfg)GetValue(FilterCfgProperty); }
-            set { SetValue(FilterCfgProperty, value); }
         }
 
         /// <summary>
@@ -888,29 +818,6 @@ namespace Dt.Base
             KeyDown += OnKeyDown;
         }
 
-        /// <summary>
-        /// 加载数据行
-        /// </summary>
-        internal void LoadItems()
-        {
-            if (_selectedRows.Count > 0)
-                _selectedRows.Clear();
-            if (_isLoaded)
-                _panel.OnRowsChanged();
-        }
-
-        /// <summary>
-        /// 清空所有行
-        /// </summary>
-        internal void ClearItems()
-        {
-            RootItems.Clear();
-            if (_selectedRows.Count > 0)
-                _selectedRows.Clear();
-            if (_isLoaded)
-                _panel.OnRowsChanged();
-        }
-
         void OnScrollViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             // 虚拟化滚动时重新布局
@@ -1307,6 +1214,7 @@ namespace Dt.Base
                 _dataView.ApplyFilterFlag();
         }
         #endregion
+        
         #region 触发事件
         /// <summary>
         /// 触发单击行事件

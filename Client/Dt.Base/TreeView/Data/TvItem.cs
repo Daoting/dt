@@ -9,8 +9,10 @@
 #region 引用命名
 using System.Collections.Generic;
 using System.Reflection;
+using Dt.Base.ListView;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 #endregion
 
 namespace Dt.Base
@@ -48,6 +50,11 @@ namespace Dt.Base
         {
             ((TvItem)d).OnPropertyChanged("IsSelected");
         }
+
+        /// <summary>
+        /// 卸载标志对象
+        /// </summary>
+        internal static TvItem UnloadFlagItem = new TvItem(null, Dot.UnloadFlag, null);
         #endregion
 
         #region 成员变量
@@ -76,7 +83,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取当前节点的父节点
         /// </summary>
-        public TvItem Parent { get; }
+        public TvItem Parent { get; private set; }
 
         /// <summary>
         /// 获取当前节点距离根节点的深度
@@ -122,8 +129,8 @@ namespace Dt.Base
                 if (_expandedState == TvItemExpandedState.Expanded || _expandedState == TvItemExpandedState.NotExpanded)
                 {
                     _btnExpanded = new Button { Style = Res.字符按钮, Margin = new Thickness(0, 0, 0, 1) };
-                    _btnExpanded.Click += (s, e) => IsExpanded = !IsExpanded;
-                    _btnExpanded.DoubleTapped += (s, e) => e.Handled = true;
+                    _btnExpanded.Click += OnExpandBtnClick;
+                    _btnExpanded.DoubleTapped += OnExpandBtnDoubleTapped;
                     _btnExpanded.Content = (_expandedState == TvItemExpandedState.Expanded) ? "\uE013" : "\uE011";
                     return _btnExpanded;
                 }
@@ -265,6 +272,29 @@ namespace Dt.Base
                 ExpandedState = (Children.Count > 0) ? TvItemExpandedState.NotExpanded : TvItemExpandedState.Hide;
             }
             _owner.RootItems.Invalidate();
+        }
+
+        internal void Unload()
+        {
+            ((ILvCleaner)this).Unload();
+            if (Children.Count > 0)
+                Children.Clear();
+            if (_btnExpanded != null)
+            {
+                _btnExpanded.Click -= OnExpandBtnClick;
+                _btnExpanded.DoubleTapped -= OnExpandBtnDoubleTapped;
+            }
+            Parent = null;
+        }
+
+        void OnExpandBtnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        void OnExpandBtnClick(object sender, RoutedEventArgs e)
+        {
+            IsExpanded = !IsExpanded;
         }
     }
 

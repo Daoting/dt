@@ -113,6 +113,17 @@ namespace Dt.Base.TreeViews
         }
 
         /// <summary>
+        /// 从可视树卸载，不可重复使用！
+        /// </summary>
+        internal void Unload()
+        {
+#if WIN || SKIA || WASM
+            _owner.KeyDown -= OnKeyDown;
+#endif
+            ClearAllRows();
+        }
+        
+        /// <summary>
         /// 从根节点展开到当前节点，并滚动到可视范围
         /// </summary>
         /// <param name="p_item"></param>
@@ -286,7 +297,7 @@ namespace Dt.Base.TreeViews
                     }
 
                     // 布局虚拟行
-                    item.SetItem(tvItems.Current, true);
+                    item.SetItem(tvItems.Current);
                     item.Arrange(new Rect(0, top, p_finalSize.Width, _rowHeight));
                 }
                 tvItems.Dispose();
@@ -326,7 +337,7 @@ namespace Dt.Base.TreeViews
                     // 布局虚拟行
                     TvItem ti = tvItems.Current;
                     double top = iVirRow * _rowHeight + deltaTop;
-                    item.SetItem(ti, true);
+                    item.SetItem(ti);
                     item.Arrange(new Rect(0, top, p_finalSize.Width, _rowHeight));
                 }
                 else
@@ -631,7 +642,12 @@ namespace Dt.Base.TreeViews
         /// </summary>
         void ClearAllRows()
         {
-            Children.Clear();
+            while (Children.Count > 0)
+            {
+                if (Children[0] is TvPanelItem pi)
+                    pi.Unload();
+                Children.RemoveAt(0);
+            }
             RemoveFilterUI();
             _initVirRow = false;
         }
@@ -645,7 +661,7 @@ namespace Dt.Base.TreeViews
         {
             var row = new TvPanelItem(_owner);
             if (p_item != null)
-                row.SetItem(p_item, false);
+                row.SetItem(p_item);
             return row;
         }
         #endregion

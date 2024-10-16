@@ -345,8 +345,7 @@ namespace Dt.Base
         internal void ClearAllRows()
         {
             ClearLvItems();
-            if (_selectedLvItems.Count > 0)
-                _selectedLvItems.Clear();
+            ClearSelectionOnDataChanged();
 
             bool existGroup = false;
             if (GroupRows != null)

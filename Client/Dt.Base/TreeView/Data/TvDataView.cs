@@ -27,9 +27,8 @@ namespace Dt.Base.TreeViews
         {
             _owner = p_owner;
             _data = p_data;
-            //if (_data is INotifyCollectionChanged coll)
-            //    coll.CollectionChanged += OnDataCollectionChanged;
-            Refresh();
+            if (_data is INotifyCollectionChanged coll)
+                coll.CollectionChanged += OnDataCollectionChanged;
         }
         #endregion
 
@@ -45,8 +44,8 @@ namespace Dt.Base.TreeViews
                 return;
             }
 
+            _owner.ClearAllTvItems();
             _rootItems = _owner.RootItems;
-            _rootItems.Clear();
             if (_owner.FixedRoot != null)
             {
                 // 固定根节点
@@ -88,6 +87,11 @@ namespace Dt.Base.TreeViews
         /// </summary>
         public void Unload()
         {
+            if (_data is INotifyCollectionChanged coll)
+                coll.CollectionChanged -= OnDataCollectionChanged;
+            _data = null;
+            _rootItems = null;
+            _owner = null;
         }
 
         /// <summary>
@@ -117,6 +121,11 @@ namespace Dt.Base.TreeViews
                         root.Add(tiNew);
                     }
                 }
+                
+                // 释放上次搜索结果
+                if (_rootItems != _owner.RootItems && _owner.RootItems.Count > 0)
+                    Tv.Cleaner.Add(_owner.RootItems);
+                
                 _owner.RootItems = root;
                 root.Invalidate();
             }

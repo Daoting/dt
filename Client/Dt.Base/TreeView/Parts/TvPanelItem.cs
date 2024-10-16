@@ -60,8 +60,7 @@ namespace Dt.Base.TreeViews
         /// 设置对应的视图行
         /// </summary>
         /// <param name="p_item"></param>
-        /// <param name="p_isAsync">是否异步设置DataContext</param>
-        public void SetItem(TvItem p_item, bool p_isAsync)
+        public void SetItem(TvItem p_item)
         {
             if (_row == p_item)
                 return;
@@ -80,12 +79,35 @@ namespace Dt.Base.TreeViews
                 SetIndent(_row.Depth * _owner.Indent);
             }
 
-            if (p_isAsync)
-                SetDataContextAsync();
-            else
-                DataContext = _row;
+            // 停止异步，uno上影响速度
+            DataContext = _row;
         }
 
+        internal void Unload()
+        {
+            if (_row != null)
+            {
+                _row.ValueChanged = null;
+                _row = null;
+            }
+
+            // Dot释放标志，用普通对象会造成绑定异常！
+            DataContext = TvItem.UnloadFlagItem;
+            Children.Clear();
+            // 子元素已清空，无任何影响
+            DataContext = null;
+
+            PointerPressed -= OnPointerPressed;
+            PointerReleased -= OnPointerReleased;
+            PointerEntered -= OnPointerEntered;
+            PointerExited -= OnPointerExited;
+            PointerCaptureLost -= OnPointerCaptureLost;
+            DoubleTapped -= OnDoubleTapped;
+
+            Tapped -= OnTapped;
+            RightTapped -= OnRightTapped;
+        }
+        
         #region 重写方法
         protected override Size MeasureOverride(Size availableSize)
         {
@@ -240,7 +262,7 @@ namespace Dt.Base.TreeViews
             PointerEntered += OnPointerEntered;
             PointerExited += OnPointerExited;
             PointerCaptureLost += OnPointerCaptureLost;
-            DoubleTapped += (s, e) => _row.OnDoubleTapped();
+            DoubleTapped += OnDoubleTapped;
         }
 
         void OnPointerPressed(object sender, PointerRoutedEventArgs e)
@@ -292,7 +314,12 @@ namespace Dt.Base.TreeViews
         {
             _rcPointer.Fill = null;
         }
-
+        
+        void OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            _row.OnDoubleTapped();
+        }
+        
         /// <summary>
         /// 缩进不同时必须重新布局，不然有时不对！
         /// </summary>
@@ -328,13 +355,23 @@ namespace Dt.Base.TreeViews
         void AttachContextMenu(Menu p_menu)
         {
             if (p_menu.TriggerEvent == TriggerEvent.RightTapped)
-                RightTapped += (s, e) => OpenContextMenu(e.GetPosition(null));
+                RightTapped += OnRightTapped;
             else if (p_menu.TriggerEvent == TriggerEvent.LeftTapped)
-                Tapped += (s, e) => OpenContextMenu(e.GetPosition(null));
+                Tapped += OnTapped;
             else
                 CreateMenuButton(p_menu);
         }
 
+        protected void OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            OpenContextMenu(e.GetPosition(null));
+        }
+
+        protected void OnRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            OpenContextMenu(e.GetPosition(null));
+        }
+        
         /// <summary>
         /// 显示上下文菜单
         /// </summary>
