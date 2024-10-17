@@ -489,6 +489,22 @@ namespace Dt.Cells.UI
             }
         }
 
+        public void Unload()
+        {
+            Children.Clear();
+
+            foreach (var r in Cells.Values)
+            {
+                r.Unload();
+            }
+            Cells.Clear();
+
+            while (_recycledCells.Count > 0)
+            {
+                _recycledCells[0].Unload();
+                _recycledCells.RemoveAt(0);
+            }
+        }
     }
 }
 

@@ -685,6 +685,17 @@ namespace Dt.Cells.UI
             return new Size();
         }
         #endregion
+
+        public void Unload()
+        {
+            Children.Clear();
+
+            if (_sparkInfo != null)
+            {
+                _sparkInfo.SparklineChanged -= new EventHandler(sparkline_SparklineChanged);
+                _sparkInfo = null;
+            }
+        }
     }
 }
 

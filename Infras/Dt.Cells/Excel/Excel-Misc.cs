@@ -98,7 +98,7 @@ namespace Dt.Base
             sheet.RowChanged -= new EventHandler<SheetChangedEventArgs>(OnSheetRowChanged);
             sheet.ColumnChanged -= new EventHandler<SheetChangedEventArgs>(OnSheetColumnChanged);
             sheet.SelectionChanged -= new EventHandler<SheetSelectionChangedEventArgs>(OnSelectionChanged);
-            sheet.SpanModel.Changed += new EventHandler<SheetSpanModelChangedEventArgs>(OnSpanModelChanged);
+            sheet.SpanModel.Changed -= new EventHandler<SheetSpanModelChangedEventArgs>(OnSpanModelChanged);
             sheet.RowHeaderSpanModel.Changed -= new EventHandler<SheetSpanModelChangedEventArgs>(OnRowHeaderSpanModelChanged);
             sheet.ColumnHeaderSpanModel.Changed -= new EventHandler<SheetSpanModelChangedEventArgs>(OnColumnHeaderSpanModelChanged);
             sheet.ChartChanged -= new EventHandler<ChartChangedEventArgs>(OnSheetChartChanged);
@@ -1863,6 +1863,9 @@ namespace Dt.Base
 
         void DragFillSmartTagPopup_Closed(object sender, object e)
         {
+            if (sender is Popup pop)
+                pop.Closed -= DragFillSmartTagPopup_Closed;
+            
             if (!IsDraggingFill)
             {
                 _dragFillStartRange = null;

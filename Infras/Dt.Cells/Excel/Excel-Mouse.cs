@@ -58,7 +58,7 @@ namespace Dt.Base
 
             // 标志已处理，屏蔽外部的左右滑动
             ManipulationMode = ManipulationModes.None | ManipulationModes.TranslateX;
-            ManipulationStarted += (s, e) => e.Handled = true;
+            ManipulationStarted += OnExcelManipulationStarted;
         }
 
         #region 鼠标按下
@@ -1248,6 +1248,11 @@ namespace Dt.Base
                     _IsTouchStartColumnSelecting = true;
                 }
             }
+        }
+
+        void OnExcelManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        {
+            e.Handled = true;
         }
         #endregion
 

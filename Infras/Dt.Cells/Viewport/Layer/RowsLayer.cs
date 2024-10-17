@@ -175,6 +175,23 @@ namespace Dt.Cells.UI
             return size;
         }
         #endregion
+
+        public void Unload()
+        {
+            Children.Clear();
+            
+            foreach (var r in _rows.Values)
+            {
+                r.Unload();
+            }
+            _rows.Clear();
+            
+            while (_recycledRows.Count > 0)
+            {
+                _recycledRows[0].Unload();
+                _recycledRows.RemoveAt(0);
+            }
+        }
     }
 }
 

@@ -16,13 +16,20 @@ namespace Infras.Demo
                 InitChart();
                 InitChartTitle();
             }
+            Unloaded += OnUnloaded;
+        }
+
+        void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            Unloaded -= OnUnloaded;
+            ((IDisposable)_excel).Dispose();
+            GC.Collect();
         }
 
         void OnBack(object sender, RoutedEventArgs e)
         {
             Frame.GoBack();
         }
-
 
         void InitChart()
         {

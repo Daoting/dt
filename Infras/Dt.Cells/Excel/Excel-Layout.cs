@@ -12,6 +12,7 @@ using Dt.Cells.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
 using System;
@@ -2529,9 +2530,9 @@ namespace Dt.Base
             HideProgressRing();
             _progressRing = new Grid { Background = BrushRes.浅灰1 };
             // 屏蔽交互事件
-            _progressRing.PointerPressed += (s, e) => e.Handled = true;
-            _progressRing.PointerMoved += (s, e) => e.Handled = true;
-            _progressRing.PointerReleased += (s, e) => e.Handled = true;
+            _progressRing.PointerPressed += OnProgressRingPointerPressed;
+            _progressRing.PointerMoved += OnProgressRingPointerPressed;
+            _progressRing.PointerReleased += OnProgressRingPointerPressed;
             var ring = new ProgressRing
             {
                 Foreground = BrushRes.主蓝,
@@ -2543,14 +2544,24 @@ namespace Dt.Base
             InvalidateMeasure();
         }
 
+        void OnProgressRingPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            e.Handled = true;
+        }
+
         void HideProgressRing()
         {
             if (_progressRing != null)
             {
+                _progressRing.PointerPressed -= OnProgressRingPointerPressed;
+                _progressRing.PointerMoved -= OnProgressRingPointerPressed;
+                _progressRing.PointerReleased -= OnProgressRingPointerPressed;
                 Children.Remove(_progressRing);
                 _progressRing = null;
             }
         }
+        
+        
 
         async void LoadResizeGripper()
         {
