@@ -23,7 +23,7 @@ namespace Dt.Base
     /// 开源跨平台Chart https://github.com/ScottPlot/ScottPlot
     /// 高性能、交互性强
     /// </summary>
-    public partial class Chart2 : UserControl, IPlotControl
+    public partial class Chart2 : UserControl, IPlotControl, IDisposable
     {
         #region 变量
         readonly SKXamlCanvas _canvas;
@@ -120,10 +120,16 @@ namespace Dt.Base
         {
             if (XamlRoot is null)
                 return;
-
-            XamlRoot.Changed += (s, e) => DetectDisplayScale();
+            
+            Loaded -= OnLoaded;
+            XamlRoot.Changed += OnRootChanged;
             _plot.ScaleFactor = XamlRoot.RasterizationScale;
             DisplayScale = (float)XamlRoot.RasterizationScale;
+        }
+
+        void OnRootChanged(XamlRoot sender, XamlRootChangedEventArgs args)
+        {
+            DetectDisplayScale();
         }
 
         static SKXamlCanvas CreateRenderTarget()
@@ -198,6 +204,24 @@ namespace Dt.Base
             _interaction.KeyUp(e.OldToKey());
             _inputProcessor.ProcessKeyUp(this, e);
             base.OnKeyUp(e);
+        }
+        #endregion
+
+        #region IDisposable
+        public void Dispose()
+        {
+            if (XamlRoot != null)
+                XamlRoot.Changed -= OnRootChanged;
+
+            _canvas.PaintSurface -= OnPaintSurface;
+            _canvas.PointerWheelChanged -= OnPointerWheelChanged;
+            _canvas.PointerReleased -= OnPointerReleased;
+            _canvas.PointerPressed -= OnPointerPressed;
+            _canvas.PointerMoved -= OnPointerMoved;
+            _canvas.DoubleTapped -= OnDoubleTapped;
+            _canvas.KeyDown -= OnKeyDown;
+            _canvas.KeyUp -= OnKeyUp;
+            Content = null;
         }
         #endregion
     }
