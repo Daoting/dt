@@ -68,7 +68,7 @@
     <Choose>
         <When Condition="$(IsWin)">
             <ItemGroup>
-                <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240802000" PrivateAssets="none" />
+                <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.241001000" PrivateAssets="none" />
             </ItemGroup>
         </When>
         <When Condition="$(IsToolkit)">
@@ -76,7 +76,7 @@
         </When>
         <Otherwise>
             <ItemGroup>
-                <PackageReference Include="Uno.WinUI" Version="5.2.119" PrivateAssets="none" />
+                <PackageReference Include="Uno.WinUI" Version="5.4.39" PrivateAssets="none" />
             </ItemGroup>
 
             <!-- WindowsAppSDK已内置，uno需要，否则xaml文件无法编译 -->
