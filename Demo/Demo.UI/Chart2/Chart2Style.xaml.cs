@@ -129,18 +129,20 @@ namespace Demo.UI
         {
             using (_c.Defer())
             {
-                LinePattern[] linePatterns = Enum.GetValues<LinePattern>().ToArray();
+                List<LinePattern> patterns = [];
+                patterns.AddRange(LinePattern.GetAllPatterns());
+                patterns.Add(new([2, 2, 5, 10], 0, "Custom"));
 
-                for (int i = 0; i < linePatterns.Length; i++)
+                for (int i = 0; i < patterns.Count; i++)
                 {
-                    LinePattern pattern = linePatterns[i];
+                    LinePattern pattern = patterns[i];
 
                     var line = _c.Add.Line(0, -i, 1, -i);
                     line.LinePattern = pattern;
                     line.LineWidth = 2;
                     line.Color = Colors.Black;
 
-                    var txt = _c.Add.Text(pattern.ToString(), 1.1, -i);
+                    var txt = _c.Add.Text(patterns[i].Name, 1.1, -i);
                     txt.LabelFontSize = 18;
                     txt.LabelBold = true;
                     txt.LabelFontColor = Colors.Black;

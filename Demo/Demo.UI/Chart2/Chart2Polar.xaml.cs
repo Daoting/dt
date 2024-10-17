@@ -48,7 +48,7 @@ namespace Demo.UI
             using (_c.Defer())
             {
                 var polarAxis = _c.Add.PolarAxis(radius: 100);
-                polarAxis.RotationDegrees = -90;
+                polarAxis.Rotation = Angle.FromDegrees(-90);
 
                 IColormap colormap = new ScottPlot.Colormaps.Turbo();
                 foreach (double fraction in ScottPlot.Generate.Range(0, 1, 0.02))
@@ -133,7 +133,7 @@ namespace Demo.UI
             using (_c.Defer())
             {
                 var polarAxis = _c.Add.PolarAxis();
-                polarAxis.RotationDegrees = -90;
+                polarAxis.Rotation = Angle.FromDegrees(-90);
 
                 double[] ticksPositions = { 5, 10, 15, 20 };
                 string[] tickLabels = { "A", "B", "C", "D" };
@@ -179,7 +179,7 @@ namespace Demo.UI
             using (_c.Defer())
             {
                 var polarAxis = _c.Add.PolarAxis();
-                polarAxis.RotationDegrees = -90;
+                polarAxis.Rotation = Angle.FromDegrees(-90);
 
                 // add labeled spokes
                 string[] labels = { "Alpha", "Beta", "Gamma", "Delta", "Epsilon" };

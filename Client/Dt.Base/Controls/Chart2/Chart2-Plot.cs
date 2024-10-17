@@ -230,7 +230,9 @@ namespace Dt.Base
         /// <summary>
         /// Render the plot and return an HTML img element containing a Base64-encoded PNG
         /// </summary>
-        public string GetImageHtml(int width, int height) => _plot.GetImageHtml(width, height);
+        public string GetPngHtml(int width, int height) => _plot.GetPngHtml(width, height);
+
+        public string GetSvgHtml(int width, int height) => _plot.GetSvgHtml(width, height);
 
         public SavedImageInfo SaveJpeg(string filePath, int width, int height, int quality = 85)
             => _plot.SaveJpeg(filePath, width, height, quality);

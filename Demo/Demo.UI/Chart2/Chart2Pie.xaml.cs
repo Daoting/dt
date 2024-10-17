@@ -98,7 +98,6 @@ namespace Demo.UI
                 // setup the pie to display slice labels
                 var pie = _c.Add.Pie(slices);
                 pie.ExplodeFraction = .1;
-                pie.ShowSliceLabels = true;
                 pie.SliceLabelDistance = 1.3;
 
                 // color each label's text to match the slice

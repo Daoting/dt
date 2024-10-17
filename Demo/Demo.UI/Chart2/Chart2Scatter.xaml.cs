@@ -126,12 +126,14 @@ namespace Demo.UI
         {
             using (_c.Defer())
             {
-                LinePattern[] patterns = Enum.GetValues<LinePattern>();
+                List<LinePattern> patterns = [];
+                patterns.AddRange(LinePattern.GetAllPatterns());
+                patterns.Add(new([2, 2, 5, 10], 0, "Custom"));
                 ScottPlot.Palettes.ColorblindFriendly palette = new();
 
-                for (int i = 0; i < patterns.Length; i++)
+                for (int i = 0; i < patterns.Count; i++)
                 {
-                    double yOffset = patterns.Length - i;
+                    double yOffset = patterns.Count - i;
                     double[] xs = Generate.Consecutive(51);
                     double[] ys = Generate.Sin(51, offset: yOffset);
 
