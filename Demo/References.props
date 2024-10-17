@@ -17,7 +17,7 @@
 
 	<!-- 非windows引用包 -->
 	<ItemGroup Condition="!$(IsWin)">
-		<PackageReference Include="Uno.WinUI" Version="5.2.119" />
+		<PackageReference Include="Uno.WinUI" Version="5.4.39" />
 	</ItemGroup>
 	
 	<!-- 所有App引用 -->
@@ -39,13 +39,13 @@
 	</ItemGroup>
 	
 	<ItemGroup Condition="$(AppType) == 'gtk'">
-		<PackageReference Include="Uno.WinUI.Skia.Gtk" Version="5.2.119" />
+		<PackageReference Include="Uno.WinUI.Skia.Gtk" Version="5.4.39" />
 		<PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.8" />
 		<PackageReference Include="SkiaSharp.Skottie" Version="2.88.8" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(AppType) == 'wpf'">
-		<PackageReference Include="Uno.WinUI.Skia.Wpf" Version="5.2.119" />
+		<PackageReference Include="Uno.WinUI.Skia.Wpf" Version="5.4.39" />
 		<PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.8" />
 		<PackageReference Include="SkiaSharp.Skottie" Version="2.88.8" />
 	</ItemGroup>
@@ -53,8 +53,8 @@
 	<ItemGroup Condition="$(AppType) == 'wasm'">
 		<PackageReference Include="Uno.Wasm.Bootstrap" Version="8.0.14" />
 		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="8.0.14" />
-		<PackageReference Include="Uno.WinUI.WebAssembly" Version="5.2.119" PrivateAssets="none" />
-		<PackageReference Include="Uno.WinUI.MediaPlayer.WebAssembly" Version="5.2.119" />
+		<PackageReference Include="Uno.WinUI.WebAssembly" Version="5.4.39" PrivateAssets="none" />
+		<PackageReference Include="Uno.WinUI.MediaPlayer.WebAssembly" Version="5.4.39" />
 		<PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.7" />
 		<!-- 不引用link出错 -->
 		<PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.0" />

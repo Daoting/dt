@@ -33,7 +33,7 @@
         <!-- GetTargetPlatformIdentifier无法区分wpf -->
         <When Condition="$(TargetFramework.Contains('windows10'))">
             <PropertyGroup>
-                <WinAppSdkVersion>1.5.240802000</WinAppSdkVersion>
+                <WinAppSdkVersion>1.5.241001000</WinAppSdkVersion>
                 <IsWin>true</IsWin>
                 <!--ENABLECURSOR 启用光标，winui赋值时容易锁死-->
                 <DefineConstants>$(DefineConstants);WIN;ENABLECURSOR</DefineConstants>
