@@ -48,7 +48,6 @@ namespace Dt.Base
                     ((ILvDestroy)_rows[0]).Destroy();
                     _rows.RemoveAt(0);
                 }
-                _rows = null;
             }
 
             if (_selectedLvItems.Count > 0)

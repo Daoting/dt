@@ -73,6 +73,12 @@ namespace Dt.Base
             typeof(Win),
             new PropertyMetadata(null));
 
+        static readonly DependencyProperty IsInnerWinInPhoneUIProperty = DependencyProperty.Register(
+            "IsInnerWinInPhoneUI",
+            typeof(bool),
+            typeof(Win),
+            new PropertyMetadata(false));
+        
         public readonly static DependencyProperty IsActivedProperty = DependencyProperty.Register(
             "IsActived",
             typeof(bool),
@@ -359,11 +365,6 @@ namespace Dt.Base
         /// 所有Tab
         /// </summary>
         internal Dictionary<string, Tab> AllTabs => _tabs ?? _layout?.AllTabs;
-        
-        /// <summary>
-        /// 负责所有Win内部资源的释放
-        /// </summary>
-        internal static readonly WinCleaner Cleaner = new WinCleaner();
         #endregion
 
         #region 外部方法
@@ -861,6 +862,8 @@ namespace Dt.Base
             // 内容相同也需导航
             if (p_content is Win win)
             {
+                // 设置内嵌窗口标志，释放时判断
+                win.SetValue(IsInnerWinInPhoneUIProperty, true);
                 win.NaviToHome();
             }
             else if (p_content is Tab nt)
@@ -890,7 +893,7 @@ namespace Dt.Base
                     // 上次内容为相同的Tab时无需增加
                     if (tabs.Tag == _mainTabFlag && tabs.Items[0] == p_tab)
                         return;
-                    
+
                     if (tabs.Tag != _mainTabFlag)
                     {
                         // 清除内容，以便下次再添加
@@ -1273,7 +1276,10 @@ namespace Dt.Base
         {
             Closed?.Invoke(this, EventArgs.Empty);
             OnClosed();
-            Cleaner.Add(this);
+
+            // PhoneUI内嵌窗口从首页Tab返回时需要排除
+            if (!Kit.IsPhoneUI || !(bool)GetValue(IsInnerWinInPhoneUIProperty))
+                _cleaner.Add(this);
         }
 
         /// <summary>
@@ -1304,13 +1310,18 @@ namespace Dt.Base
 
         #region IDestroy
         /// <summary>
+        /// 负责所有Win内部资源的释放
+        /// </summary>
+        static readonly WinCleaner _cleaner = new WinCleaner();
+
+        /// <summary>
         /// 嵌套在主区的窗口释放
         /// </summary>
         public void Destroy()
         {
-            Cleaner.Add(this);
+            _cleaner.Add(this);
         }
-        
+
         internal void OnDestroyed()
         {
             Destroyed?.Invoke(this);

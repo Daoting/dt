@@ -44,22 +44,25 @@ namespace Dt.Base.Docking
                     {
                         try
                         {
-                            foreach (var tab in win.AllTabs.Values)
+                            if (win.AllTabs != null)
                             {
-                                // NavList
-                                if (tab is IDestroy tc)
+                                foreach (var tab in win.AllTabs.Values)
                                 {
-                                    tc.Destroy();
-                                }
-                                else if (tab.Content is IDestroy wc)
-                                {
-                                    wc.Destroy();
-                                }
-                                else if (tab.Content is UIElement elem)
-                                {
-                                    foreach (var cl in elem.FindChildrenByType<IDestroy>())
+                                    // NavList
+                                    if (tab is IDestroy tc)
                                     {
-                                        cl.Destroy();
+                                        tc.Destroy();
+                                    }
+                                    else if (tab.Content is IDestroy wc)
+                                    {
+                                        wc.Destroy();
+                                    }
+                                    else if (tab.Content is UIElement elem)
+                                    {
+                                        foreach (var cl in elem.FindChildrenByType<IDestroy>())
+                                        {
+                                            cl.Destroy();
+                                        }
                                     }
                                 }
                             }

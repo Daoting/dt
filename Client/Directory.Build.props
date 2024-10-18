@@ -3,7 +3,7 @@
         <Version>4.6.0</Version>
         <!-- 启用全局using -->
         <ImplicitUsings>enable</ImplicitUsings>
-        <NoWarn>$(NoWarn);1591;NU1701;Uno0001;0252;NETSDK1206;SYSLIB0050</NoWarn>
+        <NoWarn>$(NoWarn);1591;NU1701;Uno0001;Uno0006;0252;NETSDK1206;SYSLIB0050</NoWarn>
         <!-- 始终禁止xbf嵌入到pri文件，默认debug时不嵌入，release时嵌入，嵌入时包升级会造成引用项目都必须重新编译 -->
         <DisableEmbeddedXbf>true</DisableEmbeddedXbf>
         <DefaultLanguage>zh-CN</DefaultLanguage>

@@ -27,6 +27,9 @@ namespace Dt.Base
         /// <summary>
         /// 添加绘图元素
         /// </summary>
+#if ANDROID
+        new
+#endif
         public PlottableAdder Add => _plot.Add;
 
         /// <summary>
@@ -36,6 +39,10 @@ namespace Dt.Base
 
         public RenderManager RenderManager => _plot.RenderManager;
         public RenderDetails LastRender => _plot.RenderManager.LastRender;
+
+#if ANDROID
+        new
+#endif
         public LayoutManager Layout => _plot.Layout;
 
         /// <summary>
@@ -83,7 +90,7 @@ namespace Dt.Base
         /// x轴样式
         /// </summary>
         public LabelStyle XStyle => _plot.Axes.Bottom.Label;
-        
+
         /// <summary>
         /// y轴标题
         /// </summary>
@@ -101,7 +108,7 @@ namespace Dt.Base
         /// y轴样式
         /// </summary>
         public LabelStyle YStyle => _plot.Axes.Left.Label;
-        
+
         public IZoomRectangle ZoomRectangle { get; set; }
         public double ScaleFactor { get => _plot.ScaleFactor; set => _plot.ScaleFactor = (float)value; }
 
@@ -122,7 +129,7 @@ namespace Dt.Base
         /// </summary>
         public object Sync => _plot.Sync;
         #endregion
-                
+
         #region 像素坐标转换
         /// <summary>
         /// Return the location on the screen (pixel) for a location on the plot (coordinates) on the default axes.
@@ -135,13 +142,13 @@ namespace Dt.Base
         /// The figure size and layout referenced will be the one from the last render.
         /// </summary>
         public Pixel GetPixel(Coordinates coordinates, IXAxis xAxis, IYAxis yAxis) => _plot.GetPixel(coordinates, xAxis, yAxis);
-        
+
         /// <summary>
         /// Return the coordinate for a specific pixel using measurements from the most recent render.
         /// </summary>
         public Coordinates GetCoordinates(Pixel pixel, IXAxis? xAxis = null, IYAxis? yAxis = null)
             => _plot.GetCoordinates(pixel, xAxis, yAxis);
-        
+
         /// <summary>
         /// Return the coordinate for a specific pixel using measurements from the most recent render.
         /// </summary>
@@ -184,7 +191,7 @@ namespace Dt.Base
         /// <returns>The coordinate rectangle</returns>
         /// </summary>
         public CoordinateRect GetCoordinateRect(Coordinates coordinates, float radius = 10, IXAxis? xAxis = null, IYAxis? yAxis = null)
-            => _plot.GetCoordinateRect(coordinates, radius, xAxis, yAxis);  
+            => _plot.GetCoordinateRect(coordinates, radius, xAxis, yAxis);
 
         /// <summary>
         /// Get the axis under a given pixel
