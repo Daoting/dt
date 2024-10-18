@@ -27,7 +27,7 @@ namespace Dt.Base
         /// <summary>
         /// 添加绘图元素
         /// </summary>
-#if ANDROID
+#if ANDROID || IOS
         new
 #endif
         public PlottableAdder Add => _plot.Add;
