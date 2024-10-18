@@ -15,7 +15,7 @@ namespace Dt.Base
     /// <summary>
     /// 功能列表
     /// </summary>
-    public partial class NavList : Tab, IDisposable
+    public partial class NavList : Tab, IDestroy
     {
         #region 静态内容
         public readonly static DependencyProperty ToProperty = DependencyProperty.Register(
@@ -281,13 +281,13 @@ namespace Dt.Base
         }
         #endregion
 
-        #region IDisposable
+        #region IDestroy
         /// <summary>
         /// 释放内部缓存对象
         /// </summary>
-        public void Dispose()
+        public void Destroy()
         {
-            _lv.Dispose();
+            _lv.Destroy();
             
             if (Data != null && Data.Count > 0)
             {
@@ -295,13 +295,13 @@ namespace Dt.Base
                 {
                     if (item is Nav nav)
                     {
-                        nav.Unload();
+                        nav.Destroy();
                     }
                     else if (item is GroupData<Nav> group)
                     {
                         foreach (var gnav in group)
                         {
-                            gnav.Unload();
+                            gnav.Destroy();
                         }
                     }
                 }

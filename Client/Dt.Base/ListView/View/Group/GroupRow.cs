@@ -21,7 +21,7 @@ namespace Dt.Base.ListView
     /// <summary>
     /// 分组行
     /// </summary>
-    public partial class GroupRow : DtControl, ILvCleaner
+    public partial class GroupRow : DtControl, ILvDestroy
     {
         #region 静态内容
         public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
@@ -110,7 +110,7 @@ namespace Dt.Base.ListView
         }
         
         #region ILvCleaner
-        void ILvCleaner.Unload()
+        void ILvDestroy.Destroy()
         {
             Data = null;
             Content = null;

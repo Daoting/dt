@@ -126,7 +126,7 @@ namespace Dt.Base
             return false;
         }
 
-        protected override void Unload()
+        public override void Destroy()
         {
             if (Child is Grid g)
             {

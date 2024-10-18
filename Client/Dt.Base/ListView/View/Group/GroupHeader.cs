@@ -89,13 +89,13 @@ namespace Dt.Base.ListView
             }
         }
 
-        internal void Unload()
+        internal void Destroy()
         {
             while (Children.Count > 0)
             {
                 var hc = Children[0] as GroupHeaderCell;
                 Children.RemoveAt(0);
-                hc?.Unload();
+                hc?.Destroy();
             }
             _cellSelected = null;
             _border = null;

@@ -274,9 +274,9 @@ namespace Dt.Base
             _owner.RootItems.Invalidate();
         }
 
-        internal void Unload()
+        internal void Destroy()
         {
-            ((ILvCleaner)this).Unload();
+            ((ILvDestroy)this).Destroy();
             if (Children.Count > 0)
                 Children.Clear();
             if (_btnExpanded != null)

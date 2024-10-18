@@ -131,7 +131,7 @@ namespace Dt.Base.TreeViews
             return new Rect(0, pos.Top, 0, pos.Height);
         }
 
-        public void Unload()
+        public void Destroy()
         {
             while (Count > 0)
             {
@@ -151,7 +151,7 @@ namespace Dt.Base.TreeViews
             }
             else
             {
-                p_ti.Unload();
+                p_ti.Destroy();
                 p_ti = null;
             }
         }

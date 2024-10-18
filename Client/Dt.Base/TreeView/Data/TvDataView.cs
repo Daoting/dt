@@ -85,7 +85,7 @@ namespace Dt.Base.TreeViews
         /// <summary>
         /// 卸载数据
         /// </summary>
-        public void Unload()
+        public void Destroy()
         {
             if (_data is INotifyCollectionChanged coll)
                 coll.CollectionChanged -= OnDataCollectionChanged;

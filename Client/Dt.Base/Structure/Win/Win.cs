@@ -28,7 +28,7 @@ namespace Dt.Base
     /// 可停靠多区域窗口
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class Win : DtControl, IPaneList, IDisposable
+    public partial class Win : DtControl, IPaneList, IDestroy
     {
         #region 静态内容
         public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
@@ -139,6 +139,11 @@ namespace Dt.Base
         /// 窗口激活状态变化事件
         /// </summary>
         public event EventHandler IsActivedChanged;
+
+        /// <summary>
+        /// 窗口被销毁后事件
+        /// </summary>
+        public event Action<Win> Destroyed;
         #endregion
 
         #region 属性
@@ -1297,13 +1302,18 @@ namespace Dt.Base
         }
         #endregion
 
-        #region IDisposable
+        #region IDestroy
         /// <summary>
         /// 嵌套在主区的窗口释放
         /// </summary>
-        public void Dispose()
+        public void Destroy()
         {
             Cleaner.Add(this);
+        }
+        
+        internal void OnDestroyed()
+        {
+            Destroyed?.Invoke(this);
         }
         #endregion
     }

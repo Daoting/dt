@@ -105,7 +105,7 @@ namespace Dt.Base.ListView
         /// <summary>
         /// 卸载数据
         /// </summary>
-        public void Unload()
+        public void Destroy()
         {
             _data.CollectionChanged -= OnCollectionChanged;
             _data = null;

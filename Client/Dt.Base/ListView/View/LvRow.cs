@@ -24,7 +24,7 @@ namespace Dt.Base.ListView
     /// <summary>
     /// Lv的行基类
     /// </summary>
-    public partial class LvRow : Panel, ILvCleaner
+    public partial class LvRow : Panel, ILvDestroy
     {
         #region 成员变量
         protected const double _flagWidth = 40;
@@ -71,7 +71,7 @@ namespace Dt.Base.ListView
             //    DataContext = _row;
         }
 
-        void ILvCleaner.Unload()
+        void ILvDestroy.Destroy()
         {
             if (_row != null)
             {

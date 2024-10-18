@@ -22,7 +22,7 @@ namespace Dt.Base
     /// 视图项基类，是数据和UI的中间对象
     /// 继承DependencyObject为节省资源，实现INotifyPropertyChanged作为DataContext能更新
     /// </summary>
-    public abstract partial class ViewItem : DependencyObject, INotifyPropertyChanged, ILvCleaner
+    public abstract partial class ViewItem : DependencyObject, INotifyPropertyChanged, ILvDestroy
     {
         #region 静态内容
         public static readonly DependencyProperty ForegroundProperty = DependencyProperty.Register(
@@ -226,7 +226,7 @@ namespace Dt.Base
         #endregion
 
         #region ILvCleaner
-        void ILvCleaner.Unload()
+        void ILvDestroy.Destroy()
         {
             if (_isInit)
             {

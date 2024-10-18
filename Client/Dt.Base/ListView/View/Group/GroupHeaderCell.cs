@@ -86,7 +86,7 @@ namespace Dt.Base.ListView
 #endif
         internal double Left { get; set; }
 
-        internal void Unload()
+        internal void Destroy()
         {
             Group = null;
             _owner = null;

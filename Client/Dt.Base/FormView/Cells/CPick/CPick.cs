@@ -231,7 +231,7 @@ namespace Dt.Base
             return false;
         }
 
-        protected override void Unload()
+        public override void Destroy()
         {
             var border = (Border)GetTemplateChild("TextBorder");
             if (border != null)
@@ -252,7 +252,7 @@ namespace Dt.Base
 
             if (_dlg != null)
             {
-                _dlg.Dispose();
+                _dlg.Destroy();
                 _dlg = null;
             }
         }

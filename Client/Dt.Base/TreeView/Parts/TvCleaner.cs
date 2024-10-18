@@ -42,7 +42,7 @@ namespace Dt.Base.TreeViews
                     var root = _queue.Take();
                     Kit.RunSync(() =>
                     {
-                        root.Unload();
+                        root.Destroy();
                         root = null;
                     });
                 }

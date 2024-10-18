@@ -83,7 +83,7 @@ namespace Dt.Base.TreeViews
             DataContext = _row;
         }
 
-        internal void Unload()
+        internal void Destroy()
         {
             if (_row != null)
             {

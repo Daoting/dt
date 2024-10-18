@@ -162,8 +162,8 @@ namespace Dt.Base
                 return ((MaskBox)_grid.Children[0]).Focus(FocusState.Programmatic);
             return true;
         }
-        
-        protected override void Unload()
+
+        public override void Destroy()
         {
             if (_grid != null
                 && (Kit.IsPhoneUI || AlwaysTouchPicker))
@@ -178,7 +178,7 @@ namespace Dt.Base
 
             if (_dlg != null)
             {
-                _dlg.Dispose();
+                _dlg.Destroy();
                 _dlg = null;
             }
         }

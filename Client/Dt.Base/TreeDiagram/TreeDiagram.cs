@@ -87,7 +87,7 @@ namespace Dt.Base
         {
             TreeDiagram td = (TreeDiagram)d;
             if (td._dataView != null)
-                td._dataView.Unload();
+                td._dataView.Destroy();
 
             if (e.NewValue == null)
             {

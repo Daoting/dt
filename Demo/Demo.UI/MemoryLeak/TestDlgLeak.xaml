@@ -6,7 +6,7 @@
 
     <StackPanel Padding="10">
         <Button Content="用后即释放的对话框" Click="OnDispose" />
-        <Button Content="关闭窗口即释放的对话框" Click="OnWinDispose" />
+        <Button Content="窗口关闭后统一释放对话框" Click="OnWinDispose" />
         <Button Content="不主动释放的对话框" Click="OnUndispose" />
     </StackPanel>
 </a:Win>

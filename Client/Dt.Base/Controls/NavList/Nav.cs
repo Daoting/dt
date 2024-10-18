@@ -221,19 +221,19 @@ namespace Dt.Base
             return Task.FromResult(true);
         }
 
-        internal void Unload()
+        internal void Destroy()
         {
             if (_obj != null && _obj.IsAlive)
             {
-                if (_obj.Target is IDisposable wc)
+                if (_obj.Target is IDestroy wc)
                 {
-                    wc.Dispose();
+                    wc.Destroy();
                 }
                 else if (_obj.Target is UIElement elem)
                 {
-                    foreach (var cl in elem.FindChildrenByType<IDisposable>())
+                    foreach (var cl in elem.FindChildrenByType<IDestroy>())
                     {
-                        cl.Dispose();
+                        cl.Destroy();
                     }
                 }
                 _obj.Target = null;

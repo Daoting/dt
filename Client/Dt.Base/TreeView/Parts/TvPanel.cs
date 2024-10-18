@@ -115,7 +115,7 @@ namespace Dt.Base.TreeViews
         /// <summary>
         /// 从可视树卸载，不可重复使用！
         /// </summary>
-        internal void Unload()
+        internal void Destroy()
         {
 #if WIN || SKIA || WASM
             _owner.KeyDown -= OnKeyDown;
@@ -645,7 +645,7 @@ namespace Dt.Base.TreeViews
             while (Children.Count > 0)
             {
                 if (Children[0] is TvPanelItem pi)
-                    pi.Unload();
+                    pi.Destroy();
                 Children.RemoveAt(0);
             }
             RemoveFilterUI();

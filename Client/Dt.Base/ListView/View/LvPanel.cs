@@ -258,7 +258,7 @@ namespace Dt.Base.ListView
                 {
                     int index = (int)p_items[i];
                     Children.RemoveAt(index);
-                    ((ILvCleaner)_dataRows[index]).Unload();
+                    ((ILvDestroy)_dataRows[index]).Destroy();
                     _dataRows.RemoveAt(index);
                 }
                 // 确保数据变化后可立即访问行UI
@@ -269,7 +269,7 @@ namespace Dt.Base.ListView
         /// <summary>
         /// 从可视树卸载，不可重复使用！ViewMode切换时卸载旧面板，其它无需卸载
         /// </summary>
-        internal void Unload()
+        internal void Destroy()
         {
             _owner.Scroll.ViewChanged -= OnScrollViewChanged;
             SizeChanged -= OnSizeChanged;
@@ -284,13 +284,13 @@ namespace Dt.Base.ListView
 
             if (_groupHeader != null)
             {
-                _groupHeader.Unload();
+                _groupHeader.Destroy();
                 _groupHeader = null;
             }
 
             while (_dataRows.Count > 0)
             {
-                ((ILvCleaner)_dataRows[0]).Unload();
+                ((ILvDestroy)_dataRows[0]).Destroy();
                 _dataRows.RemoveAt(0);
             }
         }
@@ -644,7 +644,7 @@ namespace Dt.Base.ListView
 
             if (_groupHeader != null)
             {
-                _groupHeader.Unload();
+                _groupHeader.Destroy();
                 _groupHeader = null;
             }
 

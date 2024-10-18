@@ -16,30 +16,30 @@ namespace Dt.Base
     /// <summary>
     /// 接口
     /// </summary>
-    public partial class Tv : IDisposable
+    public partial class Tv : IDestroy
     {
         /// <summary>
         /// 负责切换数据源时的释放
         /// </summary>
         internal static readonly TvCleaner Cleaner = new TvCleaner();
 
-        public void Dispose()
+        public void Destroy()
         {
             KeyDown -= OnKeyDown;
             if (Scroll != null)
                 Scroll.ViewChanged -= OnScrollViewChanged;
             
-            _panel?.Unload();
+            _panel?.Destroy();
 
             if (RootItems?.Count > 0)
             {
-                RootItems.Unload();
+                RootItems.Destroy();
             }
             ClearSelectionOnDataChanged();
 
             if (_dataView != null)
             {
-                _dataView.Unload();
+                _dataView.Destroy();
                 _dataView = null;
             }
         }

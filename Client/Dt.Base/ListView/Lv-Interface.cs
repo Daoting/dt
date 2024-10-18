@@ -15,7 +15,7 @@ namespace Dt.Base
     /// <summary>
     /// 接口
     /// </summary>
-    public partial class Lv : IViewItemHost, IMenuHost, IDisposable
+    public partial class Lv : IViewItemHost, IMenuHost, IDestroy
     {
         #region IViewItemHost
         bool IViewItemHost.IsCustomItemStyle => ItemStyle != null;
@@ -36,16 +36,16 @@ namespace Dt.Base
         }
         #endregion
 
-        #region IDisposable
-        public void Dispose()
+        #region IDestroy
+        public void Destroy()
         {
-            _panel?.Unload();
+            _panel?.Destroy();
 
             if (_rows.Count > 0)
             {
                 while (_rows.Count > 0)
                 {
-                    ((ILvCleaner)_rows[0]).Unload();
+                    ((ILvDestroy)_rows[0]).Destroy();
                     _rows.RemoveAt(0);
                 }
                 _rows = null;
@@ -61,7 +61,7 @@ namespace Dt.Base
             {
                 while (GroupRows.Count > 0)
                 {
-                    ((ILvCleaner)GroupRows[0]).Unload();
+                    ((ILvDestroy)GroupRows[0]).Destroy();
                     GroupRows.RemoveAt(0);
                 }
                 GroupRows = null;
@@ -75,7 +75,7 @@ namespace Dt.Base
 
             if (_dataView != null)
             {
-                _dataView.Unload();
+                _dataView.Destroy();
                 _dataView = null;
             }
         }

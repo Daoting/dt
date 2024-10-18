@@ -23,7 +23,7 @@ namespace Dt.Base
     /// 开源跨平台Chart https://github.com/ScottPlot/ScottPlot
     /// 高性能、交互性强
     /// </summary>
-    public partial class Chart2 : UserControl, IPlotControl, IDisposable
+    public partial class Chart2 : UserControl, IPlotControl, IDestroy
     {
         #region 变量
         readonly SKXamlCanvas _canvas;
@@ -207,8 +207,8 @@ namespace Dt.Base
         }
         #endregion
 
-        #region IDisposable
-        public void Dispose()
+        #region IDestroy
+        public void Destroy()
         {
             if (XamlRoot != null)
                 XamlRoot.Changed -= OnRootChanged;

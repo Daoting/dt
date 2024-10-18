@@ -235,7 +235,7 @@ namespace Dt.Base
                     Scroll.Content = null;
                 else
                     _root.Child = null;
-                _panel.Unload();
+                _panel.Destroy();
                 // 复位
                 Scroll.ChangeView(0, 0, null, true);
             }

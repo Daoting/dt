@@ -47,22 +47,23 @@ namespace Dt.Base.Docking
                             foreach (var tab in win.AllTabs.Values)
                             {
                                 // NavList
-                                if (tab is IDisposable tc)
+                                if (tab is IDestroy tc)
                                 {
-                                    tc.Dispose();
+                                    tc.Destroy();
                                 }
-                                else if (tab.Content is IDisposable wc)
+                                else if (tab.Content is IDestroy wc)
                                 {
-                                    wc.Dispose();
+                                    wc.Destroy();
                                 }
                                 else if (tab.Content is UIElement elem)
                                 {
-                                    foreach (var cl in elem.FindChildrenByType<IDisposable>())
+                                    foreach (var cl in elem.FindChildrenByType<IDestroy>())
                                     {
-                                        cl.Dispose();
+                                        cl.Destroy();
                                     }
                                 }
                             }
+                            win.OnDestroyed();
                         }
                         catch { }
                         win = null;

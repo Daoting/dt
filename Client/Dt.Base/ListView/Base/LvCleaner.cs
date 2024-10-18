@@ -45,8 +45,8 @@ namespace Dt.Base.ListView
                     {
                         while (ls.Count > 0)
                         {
-                            if (ls[0] is ILvCleaner cl)
-                                cl.Unload();
+                            if (ls[0] is ILvDestroy cl)
+                                cl.Destroy();
                             ls.RemoveAt(0);
                         }
                         ls = null;
@@ -60,11 +60,11 @@ namespace Dt.Base.ListView
     /// <summary>
     /// 支持通过 LvCleaner 释放资源的接口
     /// </summary>
-    interface ILvCleaner
+    interface ILvDestroy
     {
         /// <summary>
         /// 卸载
         /// </summary>
-        void Unload();
+        void Destroy();
     }
 }

@@ -200,7 +200,7 @@ namespace Dt.Base
             }
         }
 
-        protected override void Unload()
+        public override void Destroy()
         {
             if (_tb != null)
                 _tb.TextChanged -= OnUpdateSource;

@@ -53,7 +53,7 @@ namespace Dt.Base
         {
             Tv tv = (Tv)d;
             if (tv._dataView != null)
-                tv._dataView.Unload();
+                tv._dataView.Destroy();
 
             if (e.NewValue == null)
             {

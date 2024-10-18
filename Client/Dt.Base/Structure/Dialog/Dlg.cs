@@ -33,7 +33,7 @@ namespace Dt.Base
     /// 对话框容器
     /// </summary>
     [ContentProperty(Name = "Content")]
-    public partial class Dlg : Control, IDlgPressed, IDisposable
+    public partial class Dlg : Control, IDlgPressed, IDestroy
     {
         #region 静态成员
         public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
@@ -199,9 +199,9 @@ namespace Dt.Base
         {
             Dlg dlg = (Dlg)d;
             if (e.OldValue is Win old)
-                old.Closed -= dlg.OnOwnWinClosed;
+                old.Destroyed -= dlg.OnOwnWinDestroyed;
             if (e.NewValue is Win win)
-                win.Closed += dlg.OnOwnWinClosed;
+                win.Destroyed += dlg.OnOwnWinDestroyed;
         }
         #endregion
 
@@ -1637,17 +1637,18 @@ namespace Dt.Base
 
         #region 释放资源
         /// <summary>
-        /// 实现 IDisposable 接口
+        /// 实现 IDestroy 接口
         /// </summary>
-        public void Dispose()
+        public void Destroy()
         {
             _cleaner.Add(this);
         }
         
-        void OnOwnWinClosed(object sender, EventArgs e)
+        void OnOwnWinDestroyed(Win e)
         {
+            e.Destroyed -= OnOwnWinDestroyed;
             Close();
-            Dispose();
+            _cleaner.Add(this);
         }
 
         static readonly DlgCleaner _cleaner = new DlgCleaner();
@@ -1675,26 +1676,26 @@ namespace Dt.Base
                     try
                     {
                         var dlg = _queue.Take();
-                        var con = dlg.Content;
-                        dlg.Content = null;
                         Kit.RunSync(() =>
                         {
                             try
                             {
-                                if (con is IDisposable tc)
+                                if (dlg.Content is IDestroy tc)
                                 {
-                                    tc.Dispose();
+                                    tc.Destroy();
                                 }
-                                else if (con is UIElement elem)
+                                else if (dlg.Content is UIElement elem)
                                 {
-                                    foreach (var cl in elem.FindChildrenByType<IDisposable>())
+                                    foreach (var cl in elem.FindChildrenByType<IDestroy>())
                                     {
-                                        cl.Dispose();
+                                        cl.Destroy();
                                     }
                                 }
                             }
                             catch { }
-                            con = null;
+
+                            dlg.Content = null;
+                            dlg = null;
                         });
                     }
                     catch { }

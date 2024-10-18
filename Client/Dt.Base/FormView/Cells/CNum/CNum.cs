@@ -571,7 +571,7 @@ namespace Dt.Base
             }
         }
 
-        protected override void Unload()
+        public override void Destroy()
         {
             if (_textBox != null)
             {

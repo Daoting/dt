@@ -281,7 +281,7 @@ namespace Dt.Base
             return true;
         }
 
-        protected override void Unload()
+        public override void Destroy()
         {
             if (_grid != null)
             {
@@ -294,7 +294,7 @@ namespace Dt.Base
 
             if (_dlg != null)
             {
-                _dlg.Dispose();
+                _dlg.Destroy();
                 _dlg = null;
             }
         }

@@ -72,7 +72,7 @@ namespace Dt.Base.TreeDiagrams
         /// <summary>
         /// 卸载数据
         /// </summary>
-        public void Unload()
+        public void Destroy()
         {
         }
 

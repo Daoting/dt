@@ -173,7 +173,7 @@ namespace Dt.Base
                 ClearValue(PageDataProperty);
 
             if (_dataView != null)
-                _dataView.Unload();
+                _dataView.Destroy();
 
             var data = Data;
             if (data == null)
@@ -328,7 +328,7 @@ namespace Dt.Base
             for (int i = p_items.Count - 1; i >= 0; i--)
             {
                 int index = (int)p_items[i];
-                ((ILvCleaner)_rows[index]).Unload();
+                ((ILvDestroy)_rows[index]).Destroy();
                 _rows.RemoveAt(index);
             }
             // 更新后续行号
