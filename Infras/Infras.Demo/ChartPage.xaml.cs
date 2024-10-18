@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Dt.Cells.Data;
 using System;
+using Dt.Base;
 
 namespace Infras.Demo
 {
@@ -22,7 +23,7 @@ namespace Infras.Demo
         void OnUnloaded(object sender, RoutedEventArgs e)
         {
             Unloaded -= OnUnloaded;
-            ((IDisposable)_excel).Dispose();
+            _excel.Destroy();
             GC.Collect();
         }
 

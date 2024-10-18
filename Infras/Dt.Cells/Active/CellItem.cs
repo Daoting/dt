@@ -686,7 +686,7 @@ namespace Dt.Cells.UI
         }
         #endregion
 
-        public void Unload()
+        public void Destroy()
         {
             Children.Clear();
 

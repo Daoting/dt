@@ -489,19 +489,19 @@ namespace Dt.Cells.UI
             }
         }
 
-        public void Unload()
+        public void Destroy()
         {
             Children.Clear();
 
             foreach (var r in Cells.Values)
             {
-                r.Unload();
+                r.Destroy();
             }
             Cells.Clear();
 
             while (_recycledCells.Count > 0)
             {
-                _recycledCells[0].Unload();
+                _recycledCells[0].Destroy();
                 _recycledCells.RemoveAt(0);
             }
         }

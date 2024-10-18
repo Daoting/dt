@@ -176,19 +176,19 @@ namespace Dt.Cells.UI
         }
         #endregion
 
-        public void Unload()
+        public void Destroy()
         {
             Children.Clear();
             
             foreach (var r in _rows.Values)
             {
-                r.Unload();
+                r.Destroy();
             }
             _rows.Clear();
             
             while (_recycledRows.Count > 0)
             {
-                _recycledRows[0].Unload();
+                _recycledRows[0].Destroy();
                 _recycledRows.RemoveAt(0);
             }
         }

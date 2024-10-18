@@ -19,9 +19,12 @@ using Microsoft.UI.Xaml.Input;
 
 namespace Dt.Base
 {
-    public partial class Excel : IDisposable
+    public partial class Excel : IDestroy
     {
-        void IDisposable.Dispose()
+        /// <summary>
+        /// 销毁对象，释放资源
+        /// </summary>
+        public void Destroy()
         {
             Workbook.Sheets.CollectionChanged -= OnSheetsCollectionChanged;
             Workbook.PropertyChanged -= OnWorkbookPropertyChanged;
@@ -32,7 +35,6 @@ namespace Dt.Base
                 DetachSheet(sheet);
                 Workbook.Sheets.RemoveAt(0);
             }
-
             Children.Clear();
 
             DetachPointerEvent();
@@ -47,7 +49,7 @@ namespace Dt.Base
                     var cp = _cellsPanels[i, j];
                     if (cp != null)
                     {
-                        cp.Unload();
+                        cp.Destroy();
                         _cellsPanels[i, j] = null;
                     }
                 }
@@ -117,5 +119,16 @@ namespace Dt.Base
             ManipulationMode = ManipulationModes.None | ManipulationModes.TranslateX;
             ManipulationStarted -= OnExcelManipulationStarted;
         }
+    }
+
+    /// <summary>
+    /// 销毁对象接口，因uno中FrameworkElement已实现 IDisposable 
+    /// </summary>
+    public interface IDestroy
+    {
+        /// <summary>
+        /// 销毁对象，释放资源
+        /// </summary>
+        void Destroy();
     }
 }

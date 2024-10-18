@@ -16,10 +16,10 @@ namespace Dt.Cells.UI
 {
     internal partial class CellsPanel
     {
-        public void Unload()
+        public void Destroy()
         {
             Children.Clear();
-            _rowsLayer.Unload();
+            _rowsLayer.Destroy();
         }
     }
 }
