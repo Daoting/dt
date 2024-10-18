@@ -3,7 +3,7 @@
 	<Choose>
 		<When Condition="$(SolutionFileName.Contains('Demo-'))">
 			<ItemGroup>
-				<PackageReference Include="Dt.Client" Version="4.6.0" />
+				<PackageReference Include="Dt.Client" Version="4.6.1" />
 			</ItemGroup>
 		</When>
 		<Otherwise>
