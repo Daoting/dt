@@ -311,6 +311,15 @@ namespace Dt.Base
                 }
             }
         }
+
+        internal void Destroy()
+        {
+            Items.ItemsChanged -= OnItemsChanged;
+            if (_gridTaskbar != null)
+                _gridTaskbar.SizeChanged -= OnTaskbarSizeChanged;
+
+            Items.Clear();
+        }
         #endregion
 
         #region 加载过程
@@ -330,7 +339,6 @@ namespace Dt.Base
             if (RightWin != null)
                 ChangeRightWin(null, RightWin);
         }
-
         #endregion
 
         #region 切换 MainWin
@@ -535,7 +543,7 @@ namespace Dt.Base
 
             LoadAllItems();
             Items.ItemsChanged += OnItemsChanged;
-            _gridTaskbar.SizeChanged += (s, e) => UpdateTaskbar();
+            _gridTaskbar.SizeChanged += OnTaskbarSizeChanged;
 
 #if WIN
             var bar = Kit.MainWin.AppWindow.TitleBar;
@@ -549,6 +557,11 @@ namespace Dt.Base
             // 最小留出标题栏拖拽宽度
             _taskbarPanel.Padding = new Thickness(0, 0, 100, 0);
 #endif
+        }
+
+        void OnTaskbarSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdateTaskbar();
         }
 
         /// <summary>

@@ -229,6 +229,7 @@ namespace Dt.Base
             }
             else if (UITree.RootContent is Desktop desktop)
             {
+                desktop.Destroy();
                 if (desktop.MainWin != desktop.HomeWin)
                 {
                     _autoStartOnce = AutoStartKit.GetAutoStartInfo(desktop.MainWin);
