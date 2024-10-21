@@ -183,6 +183,22 @@ namespace Dt.Core
             {
                 SetDefaultStyle(value as Control);
                 _contentBorder.Child = value;
+                
+#if WIN
+                // 因非调试状态切换两UI模式时造成闪退！Win上始终自定义标题栏
+                if (value is Frame frame)
+                {
+                    // 顶部空出标题栏
+                    _contentBorder.Padding = new Thickness(0, MainWin.AppWindow.TitleBar.Height, 0, 0);
+                    // 清除标题栏可Passthrough区域
+                    var nonClient = Microsoft.UI.Input.InputNonClientPointerSource.GetForWindowId(Kit.MainWin.AppWindow.Id);
+                    nonClient.ClearRegionRects(Microsoft.UI.Input.NonClientRegionKind.Passthrough);
+                }
+                else
+                {
+                    _contentBorder.Padding = new Thickness();
+                }
+#endif
             }
         }
 
@@ -396,7 +412,8 @@ namespace Dt.Core
                 _dlgCanvas.Children.Clear();
                 Kit.OnUIModeChanged();
 
-                MainWin.ExtendsContentIntoTitleBar = !isPhoneUI;
+                // 在非调试状态，切换两UI模式时造成闪退崩溃！！！
+                //MainWin.ExtendsContentIntoTitleBar = !isPhoneUI;
             }));
         }
 #elif WASM || SKIA
