@@ -44,6 +44,7 @@ namespace Dt.Base.Docking
                     {
                         try
                         {
+                            win.DetachEvent();
                             if (win.AllTabs != null)
                             {
                                 foreach (var tab in win.AllTabs.Values)

@@ -1326,6 +1326,12 @@ namespace Dt.Base
         {
             Destroyed?.Invoke(this);
         }
+        
+        internal void DetachEvent()
+        {
+            Items.ItemsChanged -= OnItemsChanged;
+            SizeChanged -= OnSizeChanged;
+        }
         #endregion
     }
 }
