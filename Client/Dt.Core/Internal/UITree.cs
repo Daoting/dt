@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Microsoft.UI;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -53,7 +54,7 @@ namespace Dt.Core
         /// 内容元素的容器
         /// </summary>
         static readonly Border _contentBorder;
-        
+
         #endregion
 
         #region 静态构造
@@ -93,7 +94,7 @@ namespace Dt.Core
             // 最低层，不可见，截图用
             SnapBorder = new Border();
             RootGrid.Children.Add(SnapBorder);
-            
+
             // 桌面层/页面层，容器为Border，首页加载快时不显示进度动画！
             _contentBorder = new Border();
             _contentBorder.Child = new ProgressRing
@@ -166,7 +167,7 @@ namespace Dt.Core
         /// Window.Content内容，根Grid
         /// </summary>
         public static readonly Grid RootGrid;
-        
+
         /// <summary>
         /// 在最低层，不可见，截图用的Border容器
         /// </summary>
@@ -377,18 +378,26 @@ namespace Dt.Core
                 return;
 
             Kit.IsPhoneUI = isPhoneUI;
-            ApplyNotifyStyle();
 
-            // 登录之前无UI自适应！有向导对话框时造成关闭
-            var tp = RootContent.GetType().Name;
-            if (tp != "Frame" && tp != "Desktop")
-                return;
+            // 切换更丝滑
+            MainWin.DispatcherQueue.TryEnqueue(new DispatcherQueueHandler(() =>
+            {
+#if DEBUG
+                System.Diagnostics.Debug.WriteLine("切换UI模式");
+#endif
+                ApplyNotifyStyle();
 
-            // 调整对话框层
-            _dlgCanvas.Children.Clear();
-            Kit.OnUIModeChanged();
+                // 登录之前无UI自适应！有向导对话框时造成关闭
+                var tp = RootContent.GetType().Name;
+                if (tp != "Frame" && tp != "Desktop")
+                    return;
 
-            MainWin.ExtendsContentIntoTitleBar = !isPhoneUI;
+                // 调整对话框层
+                _dlgCanvas.Children.Clear();
+                Kit.OnUIModeChanged();
+
+                MainWin.ExtendsContentIntoTitleBar = !isPhoneUI;
+            }));
         }
 #elif WASM || SKIA
         static void OnRootSizeChanged(object sender, SizeChangedEventArgs e)
