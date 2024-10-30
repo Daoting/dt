@@ -6,7 +6,7 @@
     xmlns:home="using:Dt.Mgr.Home"
     xmlns:wf="using:Dt.Mgr.Workflow">
 
-    <home:HomeMenu x:Name="_menu" Order="2" a:Ex.Dock="Left" />
-    <wf:CurrentTasks Order="1" />
+    <home:HomeMenu x:Name="_menu" Order="1" a:Ex.Dock="Left" />
+    <wf:CurrentTasks Order="2" />
     <home:MyMain Order="3" a:Ex.Dock="Right" />
 </a:Win>

@@ -49,6 +49,7 @@
                     <Button Content="右侧" Click="OnNavi" />
                 </StackPanel>
             </a:Tab>
+            <l:TabNaviItem Title="Tab内部导航" />
             <a:Tab Title="右停靠" IsPinned="False">
                 <StackPanel Margin="10">
                     <Button Content="底部" Click="OnNavi" />

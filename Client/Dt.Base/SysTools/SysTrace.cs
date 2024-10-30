@@ -116,7 +116,14 @@ namespace Dt.Base.Tools
                 } },
                 
 #if WIN
-                new Nav("切换顶层显示", Icons.复制) { Callback = (s, n) =>
+                new Nav("1280 X 720", Icons.新窗口) { Callback = (s, n) =>
+                {
+                    ChangeMainWinSize(1280, 720);
+                    if (s is Dlg dlg)
+                        dlg.Close();
+                } },
+
+                new Nav("切换顶层显示", Icons.Bug) { Callback = (s, n) =>
                 {
                     ToggleAlwaysOnTop();
                     if (s is Dlg dlg)
@@ -212,6 +219,24 @@ namespace Dt.Base.Tools
         }
 
 #if WIN
+        public static void ChangeMainWinSize(int p_width, int p_height)
+        {
+            int left;
+            // 宽度莫名少一丢丢
+            int width = p_width + 12;
+            
+            // 先最大化获取屏蔽宽度
+            var presenter = (Microsoft.UI.Windowing.OverlappedPresenter)Kit.MainWin.AppWindow.Presenter;
+            if (presenter.State != Microsoft.UI.Windowing.OverlappedPresenterState.Maximized)
+                presenter.Maximize();
+            left = (int)Kit.MainWin.Bounds.Width - width;
+            
+            presenter.Restore();
+            // 用 Resize MoveAndResize 不准
+            Kit.MainWin.AppWindow.ResizeClient(new Windows.Graphics.SizeInt32(width, p_height - Kit.MainWin.AppWindow.TitleBar.Height));
+            Kit.MainWin.AppWindow.Move(new Windows.Graphics.PointInt32(left, 0));
+        }
+
         public static void ToggleAlwaysOnTop()
         {
             var pre = (Microsoft.UI.Windowing.OverlappedPresenter)Kit.MainWin.AppWindow.Presenter;
