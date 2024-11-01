@@ -24,6 +24,7 @@ namespace Demo.UI
 
         void OnEllipse(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 Random rand = new(0);
@@ -40,6 +41,7 @@ namespace Demo.UI
 
         void OnCircle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 Random rand = new(0);
@@ -55,6 +57,7 @@ namespace Demo.UI
 
         void OnEllipseStyle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var circle = _c.Add.Circle(center: Coordinates.Origin, radius: 5);
@@ -71,6 +74,7 @@ namespace Demo.UI
 
         void OnRotation(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 int count = 5;
@@ -91,6 +95,7 @@ namespace Demo.UI
 
         void OnLockCircle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 Random rand = new(0);

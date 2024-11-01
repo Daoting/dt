@@ -29,6 +29,7 @@ namespace Demo.UI
 
         void OnColor(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin(51));
@@ -52,6 +53,7 @@ namespace Demo.UI
 
         void OnCustom(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin(51));
@@ -87,6 +89,7 @@ namespace Demo.UI
 
         void OnPalette(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Palette = new ScottPlot.Palettes.Nord();
@@ -102,6 +105,7 @@ namespace Demo.UI
 
         void OnArrow(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 ArrowShape[] arrowShapes = Enum.GetValues<ArrowShape>().ToArray();
@@ -127,6 +131,7 @@ namespace Demo.UI
 
         void OnLineStyle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 List<LinePattern> patterns = [];
@@ -159,6 +164,7 @@ namespace Demo.UI
 
         void OnScaleFactor(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.ScaleFactor = 2;
@@ -169,6 +175,7 @@ namespace Demo.UI
 
         void OnHairline(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 // 发际线模式允许轴帧、刻度线和网格线始终呈现单个像素宽，而不管比例因子如何。启用细线模式，以便在使用大比例因子时使交互式绘图感觉更平滑
@@ -182,6 +189,7 @@ namespace Demo.UI
 
         void OnDark(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Palette = new ScottPlot.Palettes.Penumbra();
@@ -215,6 +223,7 @@ namespace Demo.UI
 
         void OnColormap(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 IColormap colormap = new ScottPlot.Colormaps.Turbo();
@@ -239,6 +248,7 @@ namespace Demo.UI
 
         void OnDataBackground(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var sig1 = _c.Add.Signal(Generate.Sin());
@@ -257,6 +267,7 @@ namespace Demo.UI
 
         void OnBackground(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var sig1 = _c.Add.Signal(Generate.Sin());
@@ -283,6 +294,7 @@ namespace Demo.UI
 
         void OnRectImg(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 Image img = ScottPlot.SampleImages.MonaLisa();
@@ -293,6 +305,7 @@ namespace Demo.UI
 
         void OnRgb(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 for (int i = 0; i <= 10; i++)
@@ -309,6 +322,7 @@ namespace Demo.UI
 
         void OnNoAxes(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin(51));
@@ -324,6 +338,7 @@ namespace Demo.UI
 
         void OnPadding(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin(51));
@@ -341,6 +356,7 @@ namespace Demo.UI
 
         void OnRect(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin(51));

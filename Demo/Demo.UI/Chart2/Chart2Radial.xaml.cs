@@ -24,6 +24,7 @@ namespace Demo.UI
 
         void OnDef(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] values = { 100, 80, 65, 45, 20 };
@@ -33,6 +34,7 @@ namespace Demo.UI
 
         void OnColor(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Palette = new ScottPlot.Palettes.Nord();
@@ -43,6 +45,7 @@ namespace Demo.UI
 
         void OnVal(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Palette = new ScottPlot.Palettes.Nord();
@@ -53,6 +56,7 @@ namespace Demo.UI
 
         void OnSequential(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Palette = new ScottPlot.Palettes.Nord();
@@ -64,6 +68,7 @@ namespace Demo.UI
 
         void OnOrder(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Palette = new ScottPlot.Palettes.Nord();
@@ -76,6 +81,7 @@ namespace Demo.UI
 
         void OnSingle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Palette = new ScottPlot.Palettes.Nord();
@@ -90,6 +96,7 @@ namespace Demo.UI
 
         void OnOri(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Palette = new ScottPlot.Palettes.Nord();
@@ -102,6 +109,7 @@ namespace Demo.UI
 
         void OnSize(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Palette = new ScottPlot.Palettes.Nord();
@@ -113,6 +121,7 @@ namespace Demo.UI
         
         void OnStartingAngle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Palette = new ScottPlot.Palettes.Nord();
@@ -125,6 +134,7 @@ namespace Demo.UI
 
         void OnMaximumAngle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Palette = new ScottPlot.Palettes.Nord();
@@ -137,6 +147,7 @@ namespace Demo.UI
 
         void OnShowLevel(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Palette = new ScottPlot.Palettes.Nord();
@@ -149,6 +160,7 @@ namespace Demo.UI
 
         void OnPositionFraction(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Palette = new ScottPlot.Palettes.Nord();
@@ -161,6 +173,7 @@ namespace Demo.UI
 
         void OnFontSizeFraction(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Palette = new ScottPlot.Palettes.Nord();
@@ -173,6 +186,7 @@ namespace Demo.UI
 
         void OnFontColor(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Palette = new ScottPlot.Palettes.Nord();
@@ -185,6 +199,7 @@ namespace Demo.UI
 
         void OnLegend(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Palette = new ScottPlot.Palettes.Nord();
@@ -198,6 +213,7 @@ namespace Demo.UI
 
         void OnTransparent(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Palette = new ScottPlot.Palettes.Nord();
@@ -210,6 +226,7 @@ namespace Demo.UI
 
         void OnCircular(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Palette = new ScottPlot.Palettes.Nord();

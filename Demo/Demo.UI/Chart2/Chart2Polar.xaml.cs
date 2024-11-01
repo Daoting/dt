@@ -24,6 +24,7 @@ namespace Demo.UI
 
         void OnDef(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var polarAxis = _c.Add.PolarAxis(radius: 100);
@@ -45,6 +46,7 @@ namespace Demo.UI
 
         void OnRotate(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var polarAxis = _c.Add.PolarAxis(radius: 100);
@@ -64,6 +66,7 @@ namespace Demo.UI
 
         void OnPolarAxis(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 PolarCoordinates[] points = [
@@ -90,6 +93,7 @@ namespace Demo.UI
 
         void OnStyle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var polarAxis = _c.Add.PolarAxis();
@@ -119,6 +123,7 @@ namespace Demo.UI
 
         void OnSpoke(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var polarAxis = _c.Add.PolarAxis();
@@ -130,6 +135,7 @@ namespace Demo.UI
 
         void OnTick(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var polarAxis = _c.Add.PolarAxis();
@@ -145,6 +151,7 @@ namespace Demo.UI
 
         void OnCircle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var polarAxis = _c.Add.PolarAxis();
@@ -176,6 +183,7 @@ namespace Demo.UI
 
         void OnRata(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var polarAxis = _c.Add.PolarAxis();
@@ -208,6 +216,7 @@ namespace Demo.UI
         
         void OnPhasorDef(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var polarAxis = _c.Add.PolarAxis(30);
@@ -232,6 +241,7 @@ namespace Demo.UI
 
         void OnPhasorLineStyle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var polarAxis = _c.Add.PolarAxis(30);

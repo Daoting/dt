@@ -29,6 +29,7 @@ namespace Demo.UI
 
         void OnXYTitle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.XTitle = "横坐标";
@@ -43,6 +44,7 @@ namespace Demo.UI
 
         void OnSubTitle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 LeftAxisWithSubtitle customAxisY = new()
@@ -58,6 +60,7 @@ namespace Demo.UI
 
         void OnAxisLimits(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -71,6 +74,7 @@ namespace Demo.UI
 
         void OnAutoScale(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -82,6 +86,7 @@ namespace Demo.UI
 
         void OnInvertedAxis(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -93,6 +98,7 @@ namespace Demo.UI
 
         void OnSquareUnits(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Circle(0, 0, 10);
@@ -107,6 +113,7 @@ namespace Demo.UI
 
         void OnAntiAlias(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] dataX = { 1, 2, 3, 4, 5 };
@@ -118,6 +125,7 @@ namespace Demo.UI
 
         void OnHideAxis(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -137,6 +145,7 @@ namespace Demo.UI
 
         void OnHideGrid(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -147,6 +156,7 @@ namespace Demo.UI
 
         void OnHideGrid2(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -159,6 +169,7 @@ namespace Demo.UI
 
         void OnCustomGrid(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -173,6 +184,7 @@ namespace Demo.UI
 
         void OnSpecificGrid(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -187,6 +199,7 @@ namespace Demo.UI
 
         void OnAboveGrid(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var a = _c.Add.Signal(Generate.Sin());
@@ -200,6 +213,7 @@ namespace Demo.UI
 
         void OnTopGrid(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var a = _c.Add.Signal(Generate.Sin());
@@ -210,6 +224,7 @@ namespace Demo.UI
 
         void OnFillColors(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -228,6 +243,7 @@ namespace Demo.UI
 
         void OnFillDark(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var sig = _c.Add.Signal(Generate.Sin());
@@ -258,6 +274,7 @@ namespace Demo.UI
 
         void OnCustomTick(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(100, 1, -50);
@@ -281,6 +298,7 @@ namespace Demo.UI
 
         void OnDateTimeTick(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 DateTime[] xs = Generate.ConsecutiveHours(100);
@@ -301,6 +319,7 @@ namespace Demo.UI
 
         void OnNumericFixed(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin(51));
@@ -312,6 +331,7 @@ namespace Demo.UI
 
         void OnSetTicks(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -325,6 +345,7 @@ namespace Demo.UI
 
         void OnTickPositions(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -351,6 +372,7 @@ namespace Demo.UI
 
         void OnRotatedTick(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -363,6 +385,7 @@ namespace Demo.UI
 
         void OnRotatedLongTick(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] values = { 5, 10, 7, 13, 25, 60 };
@@ -400,6 +423,7 @@ namespace Demo.UI
 
         void OnMiniTick(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin(51));
@@ -412,6 +436,7 @@ namespace Demo.UI
 
         void OnTickDensity(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin(51));
@@ -424,6 +449,7 @@ namespace Demo.UI
 
         void OnMinorTickDensity(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 // 次要刻度线是在主要刻度线之间的间隔自动生成的。默认情况下，它们的间距是均匀的，但可以自定义它们的密度。
@@ -438,6 +464,7 @@ namespace Demo.UI
         
         void OnTickCount(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin(51));
@@ -450,6 +477,7 @@ namespace Demo.UI
 
         void OnLogScale(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 // 可以通过对要显示的数据进行对数缩放，然后自定义次要刻度和网格来实现对数缩放的外观。
@@ -477,6 +505,7 @@ namespace Demo.UI
 
         void OnDateTimeAxis(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 int numberOfHours = 24;
@@ -509,6 +538,7 @@ namespace Demo.UI
 
         void OnDateTimeFormat(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 DateTime[] dates = Generate.ConsecutiveDays(100);
@@ -532,6 +562,7 @@ namespace Demo.UI
 
         void OnDateTimeFixedTick(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 // 使刻度从自定义开始日期呈现，而不是使用绘图的开始日期（例如，在每小时的整点或每月的第一天绘制刻度等）
@@ -578,6 +609,7 @@ namespace Demo.UI
 
         void OnRightAxis(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var sig1 = _c.Add.Signal(Generate.Sin(mult: 0.01));
@@ -597,6 +629,7 @@ namespace Demo.UI
 
         void OnMultiAxis(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var sig1 = _c.Add.Signal(ScottPlot.Generate.Sin(51, mult: 0.01));
@@ -617,6 +650,7 @@ namespace Demo.UI
 
         void OnLegend(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var sig1 = _c.Add.Signal(Generate.Sin(51));
@@ -631,6 +665,7 @@ namespace Demo.UI
 
         void OnManLegend(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin(51));
@@ -662,6 +697,7 @@ namespace Demo.UI
 
         void OnSetLegend(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var sig1 = _c.Add.Signal(Generate.Sin(51));
@@ -687,6 +723,7 @@ namespace Demo.UI
 
         void OnLegendOri(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var sig1 = _c.Add.Signal(Generate.Sin(51, phase: .2));
@@ -703,6 +740,7 @@ namespace Demo.UI
 
         void OnLegendLine(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 for (int i = 1; i <= 10; i++)
@@ -719,6 +757,7 @@ namespace Demo.UI
 
         void OnMutiLegend(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 for (int i = 1; i <= 5; i++)
@@ -743,6 +782,7 @@ namespace Demo.UI
 
         void OnEdageLegend(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var sig1 = _c.Add.Signal(Generate.Sin());
@@ -757,6 +797,7 @@ namespace Demo.UI
 
         void OnLegendFont(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 Fonts.AddFontFile("DtIcon", Path.Combine(Package.Current.InstalledLocation.Path, "icon.ttf"));
@@ -777,6 +818,7 @@ namespace Demo.UI
         
         void OnLegendFont2(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 Fonts.AddFontFile("DtIcon", Path.Combine(Package.Current.InstalledLocation.Path, "icon.ttf"));

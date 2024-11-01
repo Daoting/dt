@@ -23,6 +23,7 @@ namespace Demo.UI
 
         void OnDefAnnotation(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -33,6 +34,7 @@ namespace Demo.UI
 
         void OnCustomAnnotation(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -52,6 +54,7 @@ namespace Demo.UI
 
         void OnAnnotationPos(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 foreach (Alignment alignment in Enum.GetValues(typeof(Alignment)))
@@ -63,6 +66,7 @@ namespace Demo.UI
 
         void OnArrow(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 Coordinates arrowTip = new(0, 0);
@@ -108,6 +112,7 @@ namespace Demo.UI
 
         void OnHorAxes(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -121,6 +126,7 @@ namespace Demo.UI
 
         void OnAxesLable(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -152,6 +158,7 @@ namespace Demo.UI
 
         void OnAxesPos(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -180,6 +187,7 @@ namespace Demo.UI
 
         void OnAxesType(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -208,6 +216,7 @@ namespace Demo.UI
 
         void OnAxesLegend(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -236,6 +245,7 @@ namespace Demo.UI
 
         void OnAxesIgnore(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin(51));
@@ -254,6 +264,7 @@ namespace Demo.UI
 
         void OnAxisSpan(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -271,6 +282,7 @@ namespace Demo.UI
 
         void OnAxisSpanStyle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -287,6 +299,7 @@ namespace Demo.UI
 
         void OnCallout(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(15);
@@ -305,6 +318,7 @@ namespace Demo.UI
 
         void OnCrosshair(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -317,6 +331,7 @@ namespace Demo.UI
 
         void OnCustomCrosshair(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());

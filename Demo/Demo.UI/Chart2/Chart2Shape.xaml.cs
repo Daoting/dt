@@ -23,6 +23,7 @@ namespace Demo.UI
 
         void OnDef(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Rectangle(0, 1, 0, 1);
@@ -44,6 +45,7 @@ namespace Demo.UI
 
         void OnCircle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var c1 = _c.Add.Circle(1, 0, .5);
@@ -66,6 +68,7 @@ namespace Demo.UI
 
         void OnEllipse(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 for (int i = 0; i < 10; i++)
@@ -83,6 +86,7 @@ namespace Demo.UI
 
         void OnPolygon(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 Coordinates[] points =

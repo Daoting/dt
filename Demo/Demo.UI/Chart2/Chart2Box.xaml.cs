@@ -23,6 +23,7 @@ namespace Demo.UI
 
         void OnDef(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 Box box = new()
@@ -43,6 +44,7 @@ namespace Demo.UI
 
         void OnGroup(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 List<ScottPlot.Box> boxes1 = new() {

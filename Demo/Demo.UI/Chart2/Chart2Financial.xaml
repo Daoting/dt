@@ -6,14 +6,14 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="图表样例">
+            <a:Tab Title="图表样例">
                 <a:Chart2 x:Name="_c" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Order="1" Title="属性">
                 <StackPanel>
                     <Button Content="蜡烛棒图，矩形表示开盘价和收盘价，&#10;中心线表示给定时间段的最低价和最高价，&#10;颜色表示价格在开盘价和收盘价之间是上涨还是下跌" Click="OnCandlestick" />
                     <Button Content="OHLC图，特定时间范围内的价格数据（开盘价、最高价、最低价和收盘价）" Click="OnOHLC" />

@@ -24,6 +24,7 @@ namespace Demo.UI
 
         void OnDef(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = { 1, 2, 3, 4, 5 };
@@ -35,6 +36,7 @@ namespace Demo.UI
 
         void OnCoor(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 Coordinates[] coordinates =
@@ -52,6 +54,7 @@ namespace Demo.UI
 
         void OnDataType(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 float[] xs = { 1, 2, 3, 4, 5 };
@@ -63,6 +66,7 @@ namespace Demo.UI
 
         void OnList(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 List<double> xs = new() { 1, 2, 3, 4, 5 };
@@ -74,6 +78,7 @@ namespace Demo.UI
 
         void OnLine(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(51);
@@ -87,6 +92,7 @@ namespace Demo.UI
 
         void OnPoints(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(51);
@@ -100,6 +106,7 @@ namespace Demo.UI
 
         void OnStyle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(51);
@@ -124,6 +131,7 @@ namespace Demo.UI
 
         void OnMode(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 List<LinePattern> patterns = [];
@@ -156,6 +164,7 @@ namespace Demo.UI
         
         void OnDate(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 DateTime[] xs = Generate.ConsecutiveDays(100);
@@ -168,6 +177,7 @@ namespace Demo.UI
 
         void OnStep(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(20);
@@ -193,6 +203,7 @@ namespace Demo.UI
 
         void OnGap(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(51);
@@ -217,6 +228,7 @@ namespace Demo.UI
 
         void OnSmooth(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(10);
@@ -232,6 +244,7 @@ namespace Demo.UI
 
         void OnTension(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.RandomWalk(10);
@@ -258,6 +271,7 @@ namespace Demo.UI
 
         void OnRadio(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(10);
@@ -273,6 +287,7 @@ namespace Demo.UI
 
         void OnMinMax(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(51);
@@ -286,6 +301,7 @@ namespace Demo.UI
 
         void OnFill(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(51);
@@ -299,6 +315,7 @@ namespace Demo.UI
 
         void OnCustomFill(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(51);
@@ -313,6 +330,7 @@ namespace Demo.UI
 
         void OnFillTop(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(51);
@@ -328,6 +346,7 @@ namespace Demo.UI
 
         void OnFillColor(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(51);
@@ -347,6 +366,7 @@ namespace Demo.UI
 
         void OnScale(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(51);
@@ -361,6 +381,7 @@ namespace Demo.UI
 
         void OnStack(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = { 1, 2, 3, 4 };

@@ -25,6 +25,7 @@ namespace Demo.UI
 
         void OnDef(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(10);
@@ -57,6 +58,7 @@ namespace Demo.UI
 
         void OnColor(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 RootedCoordinateVector[] vectors = Generate.SampleVectors();

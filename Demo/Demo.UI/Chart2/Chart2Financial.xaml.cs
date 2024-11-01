@@ -24,6 +24,7 @@ namespace Demo.UI
 
         void OnCandlestick(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var prices = Generate.RandomOHLCs(30);
@@ -34,6 +35,7 @@ namespace Demo.UI
 
         void OnOHLC(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var prices = Generate.RandomOHLCs(30);
@@ -45,6 +47,7 @@ namespace Demo.UI
 
         void OnFinance(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 DateTime timeOpen = new(1985, 09, 24, 9, 30, 0); // 9:30 AM
@@ -68,6 +71,7 @@ namespace Demo.UI
 
         void OnRight(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var prices = Generate.RandomOHLCs(30);
@@ -84,6 +88,7 @@ namespace Demo.UI
 
         void OnMoving(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var prices = Generate.RandomOHLCs(75);
@@ -109,6 +114,7 @@ namespace Demo.UI
 
         void OnBollinger(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var prices = Generate.RandomOHLCs(100);
@@ -139,6 +145,7 @@ namespace Demo.UI
 
         void OnCandlestickNoGap(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var prices = Generate.RandomOHLCs(31);
@@ -166,6 +173,7 @@ namespace Demo.UI
 
         void OnOHLCNoGap(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var prices = Generate.RandomOHLCs(31);

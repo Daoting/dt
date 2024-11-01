@@ -25,6 +25,7 @@ namespace Demo.UI
 
         void OnDef(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] values = { 5, 10, 7, 13 };
@@ -35,6 +36,7 @@ namespace Demo.UI
 
         void OnLegend(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs1 = { 1, 2, 3, 4 };
@@ -54,6 +56,7 @@ namespace Demo.UI
 
         void OnLabels(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] values = { 5, 10, 7, 13 };
@@ -73,6 +76,7 @@ namespace Demo.UI
 
         void OnHorLabels(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] values = { -20, 10, 7, 13 };
@@ -94,6 +98,7 @@ namespace Demo.UI
 
         void OnPosition(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 Bar[] bars =
@@ -109,6 +114,7 @@ namespace Demo.UI
 
         void OnError(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 Bar[] bars =
@@ -126,6 +132,7 @@ namespace Demo.UI
 
         void OnLabeled(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Bar(position: 1, value: 5, error: 1);
@@ -151,6 +158,7 @@ namespace Demo.UI
 
         void OnStacked(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 Category10 palette = new();
@@ -183,6 +191,7 @@ namespace Demo.UI
 
         void OnGrouped(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 Category10 palette = new();
@@ -226,6 +235,7 @@ namespace Demo.UI
         
         void OnHor(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 Bar[] bars =
@@ -245,6 +255,7 @@ namespace Demo.UI
 
         void OnHorGrouped(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 string[] categoryNames = { "Phones", "Computers", "Tablets" };

@@ -23,6 +23,7 @@ namespace Demo.UI
 
         void OnDef(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] values = { 5, 2, 8, 4, 8 };
@@ -33,6 +34,7 @@ namespace Demo.UI
 
         void OnList(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 List<PieSlice> slices = new()
@@ -53,6 +55,7 @@ namespace Demo.UI
 
         void OnDonutFraction(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 List<PieSlice> slices = new()
@@ -73,6 +76,7 @@ namespace Demo.UI
 
         void OnRotation(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] values = { 5, 2, 8, 4, 8 };
@@ -85,6 +89,7 @@ namespace Demo.UI
 
         void OnLabel(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 PieSlice slice1 = new() { Value = 5, FillColor = Colors.Red, Label = "alpha" };
@@ -112,6 +117,7 @@ namespace Demo.UI
 
         void OnCoxcomb(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 List<PieSlice> slices = new()

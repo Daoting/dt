@@ -24,6 +24,7 @@ namespace Demo.UI
 
         void OnDef(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -37,6 +38,7 @@ namespace Demo.UI
 
         void OnPosition(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 MarkerShape[] markerShapes = Enum.GetValues<MarkerShape>().ToArray();
@@ -73,6 +75,7 @@ namespace Demo.UI
 
         void OnCustom(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var sin = _c.Add.Signal(Generate.Sin());
@@ -89,6 +92,7 @@ namespace Demo.UI
 
         void OnHor(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(51);
@@ -102,6 +106,7 @@ namespace Demo.UI
 
         void OnColor(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(51);
@@ -114,6 +119,7 @@ namespace Demo.UI
 
         void OnImg(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());

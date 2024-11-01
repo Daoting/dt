@@ -24,6 +24,7 @@ namespace Demo.UI
 
         void OnDef(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Line(1, 12, 12, 0);
@@ -34,6 +35,7 @@ namespace Demo.UI
 
         void OnLineStyle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 ScottPlot.Colormaps.Viridis colormap = new();
@@ -60,6 +62,7 @@ namespace Demo.UI
 
         void OnLineLegend(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var sin = _c.Add.Signal(Generate.Sin());

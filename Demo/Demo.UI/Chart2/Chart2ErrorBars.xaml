@@ -6,14 +6,14 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="图表样例">
+            <a:Tab Title="图表样例">
                 <a:Chart2 x:Name="_c" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Order="1" Title="属性">
                 <StackPanel>
                     <Button Content="误差线" Click="OnError" />
                     <Button Content="分别设置误差大小" Click="OnValues" />

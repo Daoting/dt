@@ -25,6 +25,7 @@ namespace Demo.UI
 
         void OnDef(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 for (int i = 0; i < 5; i++)
@@ -50,6 +51,7 @@ namespace Demo.UI
 
         void OnBox(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 for (int i = 0; i < 5; i++)
@@ -71,6 +73,7 @@ namespace Demo.UI
 
         void OnBoxVal(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 for (int i = 0; i < 5; i++)
@@ -90,6 +93,7 @@ namespace Demo.UI
 
         void OnBarStyle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 for (int i = 0; i < 5; i++)
@@ -111,6 +115,7 @@ namespace Demo.UI
 
         void OnBoxStyle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 for (int i = 0; i < 5; i++)
@@ -130,6 +135,7 @@ namespace Demo.UI
 
         void OnMarkStyle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 for (int i = 0; i < 5; i++)
@@ -150,6 +156,7 @@ namespace Demo.UI
 
         void OnDotPos(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 for (int i = 0; i < 5; i++)
@@ -175,6 +182,7 @@ namespace Demo.UI
 
         void OnCustom(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 string[] groupNames = { "Gen X", "Gen Y", "Gen Z" };

@@ -24,6 +24,7 @@ namespace Demo.UI
 
         void OnFunc(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 static double func1(double x) => (Math.Sin(x) * Math.Sin(x / 2));
@@ -42,6 +43,7 @@ namespace Demo.UI
 
         void OnXLimit(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var func = new Func<double, double>((x) => Math.Sin(x) * Math.Sin(x / 2));

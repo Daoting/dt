@@ -24,6 +24,7 @@ namespace Demo.UI
 
         void OnDef(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] values = Generate.RandomWalk(1_000_000);
@@ -36,6 +37,7 @@ namespace Demo.UI
 
         void OnStyle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var sig1 = _c.Add.Signal(Generate.Sin());
@@ -54,6 +56,7 @@ namespace Demo.UI
 
         void OnOffset(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] values = ScottPlot.Generate.Sin(51);
@@ -72,6 +75,7 @@ namespace Demo.UI
 
         void OnScale(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] values = ScottPlot.Generate.Sin(51);
@@ -84,6 +88,7 @@ namespace Demo.UI
 
         void OnMarker(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var sig1 = _c.Add.Signal(Generate.Cos());
@@ -106,6 +111,7 @@ namespace Demo.UI
 
         void OnRange(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] values = Generate.RandomWalk(1000);
@@ -137,6 +143,7 @@ namespace Demo.UI
 
         void OnDouble(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 int[] values = Generate.RandomIntegers(1000, -100, 100);
@@ -147,6 +154,7 @@ namespace Demo.UI
 
         void OnDate(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 DateTime start = new(2024, 1, 1);
@@ -162,6 +170,7 @@ namespace Demo.UI
         
         void OnSignalConst(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] data = Generate.RandomWalk(1_000_000);

@@ -30,6 +30,7 @@ namespace Demo.UI
 
         void OnDef(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] values = { 78, 83, 84, 76, 43 };
@@ -39,6 +40,7 @@ namespace Demo.UI
 
         void OnArray(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 
@@ -48,6 +50,7 @@ namespace Demo.UI
 
         void OnLang(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var radar = _c.Add.Radar(_values);
@@ -58,6 +61,7 @@ namespace Demo.UI
 
         void OnRadarSeries(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var radar = _c.Add.Radar(_values);
@@ -75,6 +79,7 @@ namespace Demo.UI
 
         void OnSpokeLabel(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var radar = _c.Add.Radar(_values);
@@ -86,6 +91,7 @@ namespace Demo.UI
 
         void OnPolarAxis(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var radar = _c.Add.Radar(_values);
@@ -98,6 +104,7 @@ namespace Demo.UI
 
         void OnStraightLine(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] values = { 78, 83, 100, 76, 43 };

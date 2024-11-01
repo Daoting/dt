@@ -25,6 +25,7 @@ namespace Demo.UI
 
         void OnDef(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 _c.Add.Signal(Generate.Sin());
@@ -35,6 +36,7 @@ namespace Demo.UI
 
         void OnFormat(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var text = _c.Add.Text("Hello, World", 42, 69);
@@ -52,6 +54,7 @@ namespace Demo.UI
 
         void OnHeight(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 var label1 = _c.Add.Text($"line\nheight", 0, 0);
@@ -81,6 +84,7 @@ namespace Demo.UI
 
         void OnOffset(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 for (int i = 0; i < 25; i += 5)

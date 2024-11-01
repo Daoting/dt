@@ -24,6 +24,7 @@ namespace Demo.UI
 
         void OnError(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 int points = 30;
@@ -40,6 +41,7 @@ namespace Demo.UI
 
         void OnValues(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 int points = 10;

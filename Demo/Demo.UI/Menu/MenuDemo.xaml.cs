@@ -24,8 +24,11 @@ namespace Demo.UI
         public MenuDemo()
         {
             InitializeComponent();
-            _lv.Data = _m.AllItems.ToNl();
-            _lv.ItemClick += OnSelectMi;
+            if (!Kit.IsPhoneUI)
+            {
+                _lv.Data = _m.AllItems.ToNl();
+                _lv.ItemClick += OnSelectMi;
+            }
         }
 
         void OnItemClick(Mi e)

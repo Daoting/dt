@@ -24,6 +24,7 @@ namespace Demo.UI
 
         void OnFillY(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 RandomDataGenerator dataGen = new(0);
@@ -43,6 +44,7 @@ namespace Demo.UI
 
         void OnValues(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 RandomDataGenerator dataGen = new(0);
@@ -65,6 +67,7 @@ namespace Demo.UI
 
         void OnCustom(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 List<(int, int, int)> data = new();
@@ -87,6 +90,7 @@ namespace Demo.UI
 
         void OnStyle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 RandomDataGenerator dataGen = new(0);

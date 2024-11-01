@@ -24,6 +24,7 @@ namespace Demo.UI
 
         void OnDef(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] values = Generate.Sin(25);
@@ -33,6 +34,7 @@ namespace Demo.UI
 
         void OnPosition(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Range(0, 6.28, 0.314);
@@ -43,6 +45,7 @@ namespace Demo.UI
 
         void OnCustom(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] values = Generate.Sin(21);
@@ -60,6 +63,7 @@ namespace Demo.UI
 
         void OnHor(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Sin(21);

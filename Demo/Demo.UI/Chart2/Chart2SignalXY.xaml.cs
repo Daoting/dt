@@ -25,6 +25,7 @@ namespace Demo.UI
 
         void OnSignalXY(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 List<double> xList = new();
@@ -44,6 +45,7 @@ namespace Demo.UI
 
         void OnPart(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(1000);
@@ -76,6 +78,7 @@ namespace Demo.UI
 
         void OnOffset(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(1000);
@@ -91,6 +94,7 @@ namespace Demo.UI
 
         void OnScale(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] values = ScottPlot.Generate.Sin(51);
@@ -104,6 +108,7 @@ namespace Demo.UI
 
         void OnVer(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(1000);
@@ -116,6 +121,7 @@ namespace Demo.UI
 
         void OnReverseX(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(5_000);
@@ -132,6 +138,7 @@ namespace Demo.UI
 
         void OnReverseY(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(5_000);
@@ -148,6 +155,7 @@ namespace Demo.UI
 
         void OnMarker(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[] xs = Generate.Consecutive(51);

@@ -53,4 +53,12 @@ namespace Demo.UI
             };
         }
     }
+    
+    public static class ChartWinEx
+    {
+        public static void NaviChart(this Win win)
+        {
+            win.NaviTo("图表样例");
+        }
+    }
 }

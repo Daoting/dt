@@ -24,6 +24,7 @@ namespace Demo.UI
 
         void OnDef(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[,] data = ScottPlot.SampleData.MonaLisa();
@@ -33,6 +34,7 @@ namespace Demo.UI
 
         void OnReverse(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[,] data = ScottPlot.SampleData.MonaLisa();
@@ -49,6 +51,7 @@ namespace Demo.UI
 
         void OnColor(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[,] data = ScottPlot.SampleData.MonaLisa();
@@ -62,6 +65,7 @@ namespace Demo.UI
 
         void OnMultiColor(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[,] data = ScottPlot.SampleData.MonaLisa();
@@ -80,6 +84,7 @@ namespace Demo.UI
 
         void OnColorTitle(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[,] data = ScottPlot.SampleData.MonaLisa();
@@ -95,6 +100,7 @@ namespace Demo.UI
 
         void OnFormatTick(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[,] data = ScottPlot.SampleData.MonaLisa();
@@ -121,6 +127,7 @@ namespace Demo.UI
 
         void OnFlip(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[,] data = ScottPlot.SampleData.MonaLisa();
@@ -151,6 +158,7 @@ namespace Demo.UI
 
         void OnSmooth(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[,] data = ScottPlot.SampleData.MonaLisa();
@@ -168,6 +176,7 @@ namespace Demo.UI
 
         void OnTransparent(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[,] data = ScottPlot.SampleData.MonaLisa();
@@ -196,6 +205,7 @@ namespace Demo.UI
 
         void OnOpacity(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[,] data = ScottPlot.SampleData.MonaLisa();
@@ -213,6 +223,7 @@ namespace Demo.UI
 
         void OnAlphaMap(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[,] data = ScottPlot.SampleData.MonaLisa();
@@ -243,6 +254,7 @@ namespace Demo.UI
 
         void OnFrameless(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[,] data =
@@ -265,6 +277,7 @@ namespace Demo.UI
 
         void OnAlignment(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[,] data =
@@ -281,6 +294,7 @@ namespace Demo.UI
 
         void OnCell(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[,] data =
@@ -299,6 +313,7 @@ namespace Demo.UI
 
         void OnManualRange(object sender, RoutedEventArgs e)
         {
+            this.NaviChart();
             using (_c.Defer())
             {
                 double[,] data = ScottPlot.SampleData.MonaLisa();
