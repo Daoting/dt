@@ -125,11 +125,6 @@
         <!-- .net8.0后其它设置不再需要，也不需Microsoft.SourceLink.GitHub包 -->
     </PropertyGroup>
 
-    <ItemGroup>
-        <!-- 引用SourceLink提供者包 -->
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
-    </ItemGroup>
-
     <!-- 包引用，独立文件方便升级 -->
     <Import Project="References.props" Condition="exists('References.props')" />
 
