@@ -68,7 +68,7 @@ namespace Dt.Core
 
         /// <summary>
         /// 直接抛出异常，业务处理异常请指定异常消息，未指定异常消息时只抛出异常位置辅助判断
-        /// <para>.net7.0 maui抛异常规律：</para>
+        /// <para>.net7.0 winui抛异常规律：</para>
         /// <para>1. UI主线程同步方法中抛异常被.net内部拦截处理，不触发未处理异常事件</para>
         /// <para>2. UI主线程异步方法中抛异常，触发未处理异常事件</para>
         /// <para>3. Task内部异常，不管同步或异步都不触发未处理异常事件</para>
@@ -76,7 +76,7 @@ namespace Dt.Core
         /// <para></para>
         /// <para>WinAppSdk V1.2 都能触发未处理异常事件，已完美解决崩溃问题</para>
         /// <para></para>
-        /// <para>总结：所有平台都不会因为异常而崩溃，对于maui上的非KnownException类型异常，在UI同步方法或后台抛出时无法给出警告提示！</para>
+        /// <para>总结：所有平台都不会因为异常而崩溃，对于winui上的非KnownException类型异常，在UI同步方法或后台抛出时无法给出警告提示！</para>
         /// </summary>
         /// <param name="p_msg">异常消息</param>
         /// <param name="p_cell">通过单元格触发警告信息事件</param>
