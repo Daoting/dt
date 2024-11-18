@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Dt.Service" Version="4.6.0" />
+		<PackageReference Include="Dt.Service" Version="4.6.1" />
 	</ItemGroup>
 
 	<!-- 确保使用github源码调试dt包 -->
