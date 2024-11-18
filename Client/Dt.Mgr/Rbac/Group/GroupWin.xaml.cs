@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Mgr.Rbac
 {
-    [View(LobViews.分组管理)]
+    [View(LobViews.用户组)]
     public partial class GroupWin : Win
     {
         readonly GroupForm _mainForm;
