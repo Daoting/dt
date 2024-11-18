@@ -11,8 +11,8 @@
     <l:RoleList x:Name="_mainList" />
     <a:Tabs a:Ex.Dock="Right">
         <l:RoleUserList x:Name="_userList" />
-        <l:RoleGroupList x:Name="_groupList" />
         <l:RoleMenuList x:Name="_menuList" />
         <l:RolePerList x:Name="_permissionList" />
+        <l:RoleGroupList x:Name="_groupList" />
     </a:Tabs>
 </a:Win>
