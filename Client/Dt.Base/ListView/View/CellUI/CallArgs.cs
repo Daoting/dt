@@ -112,7 +112,7 @@ namespace Dt.Base
                 // 从Row取
                 val = dr[p_colName];
             }
-            else
+            else if (_dot.Data != null)
             {
                 // 对象属性
                 var pi = _dot.Data.GetType().GetProperty(p_colName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
