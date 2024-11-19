@@ -109,7 +109,7 @@ CREATE TABLE "public"."cm_group" (
 COMMENT ON COLUMN "public"."cm_group"."id" IS '组标识';
 COMMENT ON COLUMN "public"."cm_group"."name" IS '组名';
 COMMENT ON COLUMN "public"."cm_group"."note" IS '组描述';
-COMMENT ON TABLE "public"."cm_group" IS '分组，与用户和角色多对多';
+COMMENT ON TABLE "public"."cm_group" IS '用户组，与用户和角色多对多';
 
 -- ----------------------------
 -- Table structure for cm_group_role
@@ -158,16 +158,16 @@ COMMENT ON TABLE "public"."cm_menu" IS '业务菜单';
 -- ----------------------------
 -- Records of cm_menu
 -- ----------------------------
-INSERT INTO "public"."cm_menu" VALUES (1, NULL, '工作台', '1', '', NULL, '搬运工', NULL, 1, '0', '2019-03-07 10:45:44', '2019-03-07 10:45:43');
-INSERT INTO "public"."cm_menu" VALUES (2, 1, '用户账号', '0', '用户账号', NULL, '钥匙', '账号管理及所属分组、关联角色，查看拥有菜单、已授权限', 2, '0', '2019-11-08 11:42:28', '2019-11-08 11:43:53');
-INSERT INTO "public"."cm_menu" VALUES (3, 1, '菜单管理', '0', '菜单管理', NULL, '大图标', '菜单、菜单组管理和菜单授权角色', 3, '0', '2019-03-11 11:35:59', '2019-03-11 11:35:58');
-INSERT INTO "public"."cm_menu" VALUES (4, 1, '系统角色', '0', '系统角色', NULL, '两人', '角色管理及所属分组、关联用户、拥有菜单、授予权限的管理', 4, '0', '2019-11-08 11:47:21', '2019-11-08 11:48:22');
-INSERT INTO "public"."cm_menu" VALUES (5, 1, '分组管理', '0', '分组管理', NULL, '分组', '分组管理及关联的角色、关联的用户', 5, '0', '2023-03-10 08:34:49', '2023-03-10 08:34:49');
-INSERT INTO "public"."cm_menu" VALUES (6, 1, '基础权限', '0', '基础权限', NULL, '审核', '按照模块、功能两级目录管理的权限和关联的角色', 6, '0', '2019-03-12 09:11:22', '2019-03-07 11:23:40');
-INSERT INTO "public"."cm_menu" VALUES (7, 1, '参数定义', '0', '参数定义', NULL, '调色板', '参数名称、默认值的定义管理', 7, '0', '2019-03-12 15:35:56', '2019-03-12 15:37:10');
-INSERT INTO "public"."cm_menu" VALUES (8, 1, '基础选项', '0', '基础选项', NULL, '修理', '按照分组管理的选项列表，如民族、学历等静态列表', 8, '0', '2019-11-08 11:49:40', '2019-11-08 11:49:46');
-INSERT INTO "public"."cm_menu" VALUES (9, 1, '报表设计', '0', '报表设计', NULL, '折线图', '报表管理及报表模板设计', 9, '0', '2020-10-19 11:21:38', '2020-10-19 11:21:38');
-INSERT INTO "public"."cm_menu" VALUES (10, 1, '流程设计', '0', '流程设计', NULL, '双绞线', '流程模板设计及流程实例查询', 10, '0', '2020-11-02 16:21:19', '2020-11-02 16:21:19');
+INSERT INTO "public"."cm_menu" VALUES (1, NULL, '工作台', 't', '', NULL, '搬运工', NULL, 1, 'f', '2019-03-07 10:45:44', '2019-03-07 10:45:43');
+INSERT INTO "public"."cm_menu" VALUES (2, 1, '用户账号', 'f', '用户账号', NULL, '钥匙', '用户账号及所属用户组管理、为用户分配角色、查看用户可访问菜单和已授权限', 2, 'f', '2019-11-08 11:42:28', '2019-11-08 11:43:53');
+INSERT INTO "public"."cm_menu" VALUES (3, 1, '用户组', 'f', '用户组', NULL, '分组', '管理用户组、组内用户，为用户组分配角色', 3, 'f', '2023-03-10 08:34:49', '2023-03-10 08:34:49');
+INSERT INTO "public"."cm_menu" VALUES (4, 1, '系统角色', 'f', '系统角色', NULL, '两人', '角色管理及所属分组、关联用户、拥有菜单、授予权限的管理', 4, 'f', '2019-11-08 11:47:21', '2019-11-08 11:48:22');
+INSERT INTO "public"."cm_menu" VALUES (5, 1, '基础权限', 'f', '基础权限', NULL, '审核', '按照模块、功能两级目录管理的权限和关联的角色', 5, 'f', '2019-03-12 09:11:22', '2019-03-07 11:23:40');
+INSERT INTO "public"."cm_menu" VALUES (6, 1, '菜单管理', 'f', '菜单管理', NULL, '大图标', '菜单和菜单组管理、将菜单授权给角色', 6, 'f', '2019-03-11 11:35:59', '2019-03-11 11:35:58');
+INSERT INTO "public"."cm_menu" VALUES (7, 1, '报表设计', 'f', '报表设计', NULL, '折线图', '报表管理及报表模板设计', 7, 'f', '2020-10-19 11:21:38', '2020-10-19 11:21:38');
+INSERT INTO "public"."cm_menu" VALUES (8, 1, '流程设计', 'f', '流程设计', NULL, '双绞线', '流程模板设计及流程实例查询', 8, 'f', '2020-11-02 16:21:19', '2020-11-02 16:21:19');
+INSERT INTO "public"."cm_menu" VALUES (9, 1, '参数定义', 'f', '参数定义', NULL, '调色板', '参数名称、默认值的定义管理', 9, 'f', '2019-03-12 15:35:56', '2019-03-12 15:37:10');
+INSERT INTO "public"."cm_menu" VALUES (10, 1, '基础选项', 'f', '基础选项', NULL, '修理', '按照分组管理的选项列表，如民族、学历等静态列表', 10, 'f', '2019-11-08 11:49:40', '2019-11-08 11:49:46');
 
 -- ----------------------------
 -- Table structure for cm_option
@@ -411,9 +411,9 @@ INSERT INTO "public"."cm_role_menu" VALUES (2, 3);
 INSERT INTO "public"."cm_role_menu" VALUES (2, 4);
 INSERT INTO "public"."cm_role_menu" VALUES (2, 5);
 INSERT INTO "public"."cm_role_menu" VALUES (2, 6);
-INSERT INTO "public"."cm_role_menu" VALUES (1, 7);
-INSERT INTO "public"."cm_role_menu" VALUES (1, 8);
-INSERT INTO "public"."cm_role_menu" VALUES (1, 9);
+INSERT INTO "public"."cm_role_menu" VALUES (2, 7);
+INSERT INTO "public"."cm_role_menu" VALUES (2, 8);
+INSERT INTO "public"."cm_role_menu" VALUES (2, 9);
 INSERT INTO "public"."cm_role_menu" VALUES (2, 10);
 
 -- ----------------------------

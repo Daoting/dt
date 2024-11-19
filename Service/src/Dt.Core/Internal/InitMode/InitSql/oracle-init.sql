@@ -125,7 +125,7 @@ CREATE TABLE CM_GROUP (
 COMMENT ON COLUMN CM_GROUP.ID IS '组标识';
 COMMENT ON COLUMN CM_GROUP.NAME IS '组名';
 COMMENT ON COLUMN CM_GROUP.NOTE IS '组描述';
-COMMENT ON TABLE CM_GROUP IS '分组，与用户和角色多对多';
+COMMENT ON TABLE CM_GROUP IS '用户组，与用户和角色多对多';
 
 -- ----------------------------
 -- Table structure for cm_group_role
@@ -179,15 +179,15 @@ COMMENT ON TABLE CM_MENU IS '业务菜单';
 -- Records of cm_menu
 -- ----------------------------
 INSERT INTO CM_MENU VALUES ('1', NULL, '工作台', '1', '', '', '搬运工', '', '1', '0', TO_DATE('2019-03-07 10:45:44', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-03-07 10:45:43', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_MENU VALUES ('2', '1', '用户账号', '0', '用户账号', '', '钥匙', '账号管理及所属分组、关联角色，查看拥有菜单、已授权限', '2', '0', TO_DATE('2019-11-08 11:42:28', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-11-08 11:43:53', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_MENU VALUES ('3', '1', '菜单管理', '0', '菜单管理', '', '大图标', '菜单、菜单组管理和菜单授权角色', '3', '0', TO_DATE('2019-03-11 11:35:59', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-03-11 11:35:58', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_MENU VALUES ('2', '1', '用户账号', '0', '用户账号', '', '钥匙', '用户账号及所属用户组管理、为用户分配角色、查看用户可访问菜单和已授权限', '2', '0', TO_DATE('2019-11-08 11:42:28', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-11-08 11:43:53', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_MENU VALUES ('3', '1', '用户组', '0', '用户组', '', '分组', '管理用户组、组内用户，为用户组分配角色', '3', '0', TO_DATE('2019-03-11 11:35:59', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-03-11 11:35:58', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO CM_MENU VALUES ('4', '1', '系统角色', '0', '系统角色', '', '两人', '角色管理及所属分组、关联用户、拥有菜单、授予权限的管理', '4', '0', TO_DATE('2019-11-08 11:47:21', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-11-08 11:48:22', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_MENU VALUES ('5', '1', '分组管理', '0', '分组管理', '', '分组', '分组管理及关联的角色、关联的用户', '5', '0', TO_DATE('2023-03-10 08:34:49', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-10 08:34:49', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_MENU VALUES ('6', '1', '基础权限', '0', '基础权限', '', '审核', '按照模块、功能两级目录管理的权限和关联的角色', '6', '0', TO_DATE('2019-03-12 09:11:22', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-03-07 11:23:40', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_MENU VALUES ('7', '1', '参数定义', '0', '参数定义', '', '调色板', '参数名称、默认值的定义管理', '7', '0', TO_DATE('2019-03-12 15:35:56', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-03-12 15:37:10', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_MENU VALUES ('8', '1', '基础选项', '0', '基础选项', '', '修理', '按照分组管理的选项列表，如民族、学历等静态列表', '8', '0', TO_DATE('2019-11-08 11:49:40', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-11-08 11:49:46', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_MENU VALUES ('9', '1', '报表设计', '0', '报表设计', '', '折线图', '报表管理及报表模板设计', '9', '0', TO_DATE('2020-10-19 11:21:38', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-10-19 11:21:38', 'SYYYY-MM-DD HH24:MI:SS'));
-INSERT INTO CM_MENU VALUES ('10', '1', '流程设计', '0', '流程设计', '', '双绞线', '流程模板设计及流程实例查询', '10', '0', TO_DATE('2020-11-02 16:21:19', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-11-02 16:21:19', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_MENU VALUES ('5', '1', '基础权限', '0', '基础权限', '', '审核', '按照模块、功能两级目录管理的权限和关联的角色', '5', '0', TO_DATE('2023-03-10 08:34:49', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2023-03-10 08:34:49', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_MENU VALUES ('6', '1', '菜单管理', '0', '菜单管理', '', '大图标', '菜单和菜单组管理、将菜单授权给角色', '6', '0', TO_DATE('2019-03-12 09:11:22', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-03-07 11:23:40', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_MENU VALUES ('7', '1', '报表设计', '0', '报表设计', '', '折线图', '报表管理及报表模板设计', '7', '0', TO_DATE('2019-03-12 15:35:56', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-03-12 15:37:10', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_MENU VALUES ('8', '1', '流程设计', '0', '流程设计', '', '双绞线', '流程模板设计及流程实例查询', '8', '0', TO_DATE('2019-11-08 11:49:40', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-11-08 11:49:46', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_MENU VALUES ('9', '1', '参数定义', '0', '参数定义', '', '调色板', '参数名称、默认值的定义管理', '9', '0', TO_DATE('2020-10-19 11:21:38', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-10-19 11:21:38', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO CM_MENU VALUES ('10', '1', '基础选项', '0', '基础选项', '', '修理', '按照分组管理的选项列表，如民族、学历等静态列表', '10', '0', TO_DATE('2020-11-02 16:21:19', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2020-11-02 16:21:19', 'SYYYY-MM-DD HH24:MI:SS'));
 
 -- ----------------------------
 -- Table structure for cm_option
@@ -431,9 +431,9 @@ INSERT INTO CM_ROLE_MENU VALUES ('2', '3');
 INSERT INTO CM_ROLE_MENU VALUES ('2', '4');
 INSERT INTO CM_ROLE_MENU VALUES ('2', '5');
 INSERT INTO CM_ROLE_MENU VALUES ('2', '6');
-INSERT INTO CM_ROLE_MENU VALUES ('1', '7');
-INSERT INTO CM_ROLE_MENU VALUES ('1', '8');
-INSERT INTO CM_ROLE_MENU VALUES ('1', '9');
+INSERT INTO CM_ROLE_MENU VALUES ('2', '7');
+INSERT INTO CM_ROLE_MENU VALUES ('2', '8');
+INSERT INTO CM_ROLE_MENU VALUES ('2', '9');
 INSERT INTO CM_ROLE_MENU VALUES ('2', '10');
 
 -- ----------------------------

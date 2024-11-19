@@ -41,7 +41,7 @@ namespace Dt.Base.Tools
 
         public static Stream GetFileStream(string p_sqlFile)
         {
-            return typeof(DbKit).Assembly.GetManifestResourceStream("Dt.Base.Tools.DbInit.Sql." + p_sqlFile);
+            return typeof(DbKit).Assembly.GetManifestResourceStream("Dt.Base.SysTools.DbInit.Sql." + p_sqlFile);
         }
         
         static IDataAccess NewPostgreSql(DbInitInfo p_info)
