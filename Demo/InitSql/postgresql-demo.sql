@@ -1,4 +1,45 @@
 -- ----------------------------
+-- 按照依赖顺序删除demo库对象
+-- ----------------------------
+DROP VIEW IF EXISTS "v_物资目录";
+DROP VIEW IF EXISTS "v_人员";
+DROP VIEW IF EXISTS "v_部门";
+DROP VIEW IF EXISTS "v_物资主单";
+DROP VIEW IF EXISTS "v_物资详单";
+
+DROP TABLE IF EXISTS "crud_基础";
+DROP TABLE IF EXISTS "crud_扩展1";
+DROP TABLE IF EXISTS "crud_扩展2";
+DROP TABLE IF EXISTS "crud_主表";
+DROP TABLE IF EXISTS "crud_大儿";
+DROP TABLE IF EXISTS "crud_小儿";
+DROP TABLE IF EXISTS "crud_父表";
+DROP TABLE IF EXISTS crud_缓存表;
+DROP TABLE IF EXISTS crud_角色权限;
+DROP TABLE IF EXISTS crud_用户角色;
+DROP TABLE IF EXISTS crud_用户;
+DROP TABLE IF EXISTS crud_角色;
+DROP TABLE IF EXISTS crud_权限;
+DROP TABLE IF EXISTS crud_字段类型;
+
+DROP TABLE IF EXISTS 物资详单;
+DROP TABLE IF EXISTS 物资主单;
+DROP TABLE IF EXISTS 物资计划明细;
+DROP TABLE IF EXISTS 物资计划;
+DROP TABLE IF EXISTS 物资库存;
+DROP TABLE IF EXISTS 物资目录;
+DROP TABLE IF EXISTS 物资分类;
+DROP TABLE IF EXISTS 物资入出类别;
+DROP TABLE IF EXISTS 供应商;
+DROP TABLE IF EXISTS 部门人员;
+DROP TABLE IF EXISTS 部门;
+DROP TABLE IF EXISTS 人员;
+
+DROP SEQUENCE IF EXISTS "crud_基础_序列";
+DROP SEQUENCE IF EXISTS "物资主单_单号";
+DROP SEQUENCE IF EXISTS "物资入出类别_id";
+
+-- ----------------------------
 -- 按照依赖顺序删除dt初始库对象
 -- ----------------------------
 DROP TABLE IF EXISTS cm_cache;
@@ -37,46 +78,6 @@ DROP SEQUENCE IF EXISTS "cm_wfd_prc_dispidx";
 DROP SEQUENCE IF EXISTS "cm_wfi_item_dispidx";
 DROP SEQUENCE IF EXISTS "cm_wfi_prc_dispidx";
 
--- ----------------------------
--- 按照依赖顺序删除demo库对象
--- ----------------------------
-DROP VIEW IF EXISTS "v_物资目录";
-DROP VIEW IF EXISTS "v_人员";
-DROP VIEW IF EXISTS "v_部门";
-DROP VIEW IF EXISTS "v_物资主单";
-DROP VIEW IF EXISTS "v_物资详单";
-
-DROP TABLE IF EXISTS "crud_基础";
-DROP TABLE IF EXISTS "crud_扩展1";
-DROP TABLE IF EXISTS "crud_扩展2";
-DROP TABLE IF EXISTS "crud_主表";
-DROP TABLE IF EXISTS "crud_大儿";
-DROP TABLE IF EXISTS "crud_小儿";
-DROP TABLE IF EXISTS "crud_父表";
-DROP TABLE IF EXISTS crud_缓存表;
-DROP TABLE IF EXISTS crud_角色权限;
-DROP TABLE IF EXISTS crud_用户角色;
-DROP TABLE IF EXISTS crud_用户;
-DROP TABLE IF EXISTS crud_角色;
-DROP TABLE IF EXISTS crud_权限;
-DROP TABLE IF EXISTS crud_字段类型;
-
-DROP TABLE IF EXISTS 物资详单;
-DROP TABLE IF EXISTS 物资主单;
-DROP TABLE IF EXISTS 物资计划明细;
-DROP TABLE IF EXISTS 物资计划;
-DROP TABLE IF EXISTS 物资库存;
-DROP TABLE IF EXISTS 物资分类;
-DROP TABLE IF EXISTS 物资目录;
-DROP TABLE IF EXISTS 物资入出类别;
-DROP TABLE IF EXISTS 供应商;
-DROP TABLE IF EXISTS 部门人员;
-DROP TABLE IF EXISTS 部门;
-DROP TABLE IF EXISTS 人员;
-
-DROP SEQUENCE IF EXISTS "crud_基础_序列";
-DROP SEQUENCE IF EXISTS "物资主单_单号";
-DROP SEQUENCE IF EXISTS "物资入出类别_id";
 
 -- ----------------------------
 -- 以下为Navicat导出的demo库
