@@ -475,13 +475,23 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 默认为Config.json配置的当前实体系统使用的服务 或 直连数据库 或本地sqlite库信息
+        /// <para>非默认时需重写，获取方式：At.GetAccessInfo(AccessType.Local, name)</para>
+        /// </summary>
+        /// <returns></returns>
+        protected virtual IAccessInfo GetAccessInfo()
+        {
+            return At.AccessInfo;
+        }
+
+        /// <summary>
         /// 保存实体数据
         /// </summary>
         /// <returns></returns>
         Task<bool> SaveInternal()
         {
             // 实体写入器，所有需要增删改的实体在一个事务内保存到db
-            var w = At.NewWriter();
+            var w = new EntityWriter(GetAccessInfo().GetDa());
             return DoSave(w, true, true);
         }
         #endregion
@@ -542,7 +552,7 @@ namespace Dt.Base
                 if (ls.Count == 0)
                     return await entity.Delete();
 
-                var w = At.NewWriter();
+                var w = new EntityWriter(GetAccessInfo().GetDa());
                 // 先删子实体
                 foreach (var tbl in ls)
                 {

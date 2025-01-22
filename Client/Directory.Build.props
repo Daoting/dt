@@ -1,6 +1,6 @@
 ﻿<Project>
     <PropertyGroup>
-        <Version>4.6.1</Version>
+        <Version>4.6.2</Version>
         <!-- 启用全局using -->
         <ImplicitUsings>enable</ImplicitUsings>
         <NoWarn>$(NoWarn);1591;NU1701;Uno0001;Uno0006;0252;NETSDK1206;SYSLIB0050</NoWarn>

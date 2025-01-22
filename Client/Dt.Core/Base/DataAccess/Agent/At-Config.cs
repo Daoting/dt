@@ -66,6 +66,15 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 设置实体系统当前的本地sqlite库
+        /// </summary>
+        /// <param name="p_dbSqlite"></param>
+        public static void SetSqliteDb(string p_dbSqlite)
+        {
+            _currentAI = GetAccessInfo(AccessType.Local, p_dbSqlite);
+        }
+
+        /// <summary>
         /// 重置实体系统的默认服务 或 默认数据库
         /// </summary>
         public static void Reset()
@@ -161,6 +170,7 @@ namespace Dt.Core
 #endif
 
             string dbKey = null;
+            string sqliteKey = null;
             try
             {
                 var r = new Utf8JsonReader(Encoding.UTF8.GetBytes(config), new JsonReaderOptions { CommentHandling = JsonCommentHandling.Skip, AllowTrailingCommas = true, });
@@ -183,6 +193,10 @@ namespace Dt.Core
                         {
                             _svcUrlInfo = new SvcUrlInfo(str);
                             _originAI = _currentAI = GetAccessInfo(AccessType.Service, "cm");
+                        }
+                        else if (str.StartsWith("sqlite/", StringComparison.OrdinalIgnoreCase))
+                        {
+                            sqliteKey = str.Substring(7);
                         }
                         else
                         {
@@ -253,9 +267,34 @@ namespace Dt.Core
                     Kit.Debug($"Config.json 中未设置键名为 {dbKey} 的数据库连接串！");
                 }
             }
+            else if (sqliteKey != null)
+            {
+                SqliteAccessInfo info;
+                if (!_sqlites.TryGetValue(sqliteKey, out info))
+                {
+                    info = new SqliteAccessInfo(sqliteKey);
+                    _sqlites[sqliteKey] = info;
+                }
+                _originAI = _currentAI = info;
+            }
 
 #if DEBUG
-            string fw = _originAI == null ? "单机架构" : (_originAI.Type == AccessType.Service ? "多层服务架构" : $"两层架构({((DbAccessInfo)_originAI).DbType})");
+            string fw = "单机架构";
+            if (_originAI != null)
+            {
+                if (_originAI.Type == AccessType.Service)
+                {
+                    fw = "多层服务架构";
+                }
+                else if (_originAI.Type == AccessType.Database)
+                {
+                    fw = $"两层架构({((DbAccessInfo)_originAI).DbType})";
+                }
+                else if (sqliteKey != null)
+                {
+                    fw = $"单机架构({sqliteKey})";
+                }
+            }
             Kit.Debug(fw);
 #endif
 #endif
