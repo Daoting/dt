@@ -353,6 +353,16 @@ namespace Dt.Base
         protected virtual void OnFvDataChanged()
         {
         }
+
+        /// <summary>
+        /// 默认为Config.json配置的当前实体系统使用的服务 或 直连数据库 或本地sqlite库信息
+        /// <para>非默认时需重写，获取方式：At.GetAccessInfo(AccessType.Local, name)</para>
+        /// </summary>
+        /// <returns></returns>
+        protected virtual IAccessInfo GetAccessInfo()
+        {
+            return At.AccessInfo;
+        }
         #endregion
 
         #region 增加
@@ -425,6 +435,7 @@ namespace Dt.Base
                         OnFvDataChanged();
                     }
                 }
+                OnSaved(suc);
             });
         }
 
@@ -475,15 +486,13 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 默认为Config.json配置的当前实体系统使用的服务 或 直连数据库 或本地sqlite库信息
-        /// <para>非默认时需重写，获取方式：At.GetAccessInfo(AccessType.Local, name)</para>
+        /// 保存命令执行后调用，如保存成功后关闭窗口
         /// </summary>
-        /// <returns></returns>
-        protected virtual IAccessInfo GetAccessInfo()
+        /// <param name="p_suc">是否保存成功</param>
+        protected virtual void OnSaved(bool p_suc)
         {
-            return At.AccessInfo;
         }
-
+        
         /// <summary>
         /// 保存实体数据
         /// </summary>
@@ -527,6 +536,7 @@ namespace Dt.Base
                     UpdateRelatedInternal(-1, d, UpdateRelatedEvent.Deleted);
                     UpdateListInternal(d, UpdateListEvent.Deleted);
                 }
+                OnDeleted(suc);
             });
         }
 
@@ -562,6 +572,14 @@ namespace Dt.Base
                 return await w.Commit();
             }
             return false;
+        }
+
+        /// <summary>
+        /// 删除命令执行后调用
+        /// </summary>
+        /// <param name="p_suc">是否删除成功</param>
+        protected virtual void OnDeleted(bool p_suc)
+        {
         }
         #endregion
 
