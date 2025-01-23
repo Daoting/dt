@@ -159,7 +159,7 @@ namespace Dt.Base.ListView
                 // 标题
                 var tb = new TextBlock
                 {
-                    Text = col.Title,
+                    Text = string.IsNullOrEmpty(col.Title) ? col.ID : col.Title,
                     Margin = TableRow.TextMargin,
                     VerticalAlignment = VerticalAlignment.Center,
                     TextWrapping = TextWrapping.NoWrap,
