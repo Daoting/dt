@@ -45,16 +45,26 @@ namespace Dt.Base
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="p_fullSql">是否为完整的sql语句，默认true，false只返回where子句，查询视图时常用</param>
         /// <returns>返回始终不为null</returns>
-        public async Task<QueryParams> Build<TEntity>(bool p_fullSql = true)
+        public Task<QueryParams> Build<TEntity>(bool p_fullSql = true)
             where TEntity : Entity
         {
+            return Build(typeof(TEntity), p_fullSql);
+        }
+
+        /// <summary>
+        /// 构造查询的sql和参数
+        /// </summary>
+        /// <param name="p_entityType">实体类型</param>
+        /// <param name="p_fullSql">是否为完整的sql语句，默认true，false只返回where子句，查询视图时常用</param>
+        /// <returns>返回始终不为null</returns>
+        public async Task<QueryParams> Build(Type p_entityType, bool p_fullSql = true)
+        {
             List<TableSchema> schemas = new List<TableSchema>();
-            var type = typeof(TEntity);
-            bool isVirEntity = type.GetInterface("IVirEntity") == typeof(IVirEntity);
+            bool isVirEntity = p_entityType.GetInterface("IVirEntity") == typeof(IVirEntity);
 
             if (isVirEntity)
             {
-                var vm = await VirEntitySchema.Get(type);
+                var vm = await VirEntitySchema.Get(p_entityType);
                 _selectAll = vm.GetSelectAllSql();
                 foreach (var sc in vm.Schemas)
                 {
@@ -63,7 +73,7 @@ namespace Dt.Base
             }
             else
             {
-                var model = await EntitySchema.Get(type);
+                var model = await EntitySchema.Get(p_entityType);
                 _selectAll = model.Schema.GetSelectAllSql();
                 schemas.Add(model.Schema);
             }
@@ -77,7 +87,7 @@ namespace Dt.Base
                 var str = FuzzyOrWhere.Trim();
                 if (str.StartsWith("where ", StringComparison.OrdinalIgnoreCase))
                     return new QueryParams(p_fullSql ? _selectAll + " " + str : str, null);
-                
+
                 return BuildFuzzy(schemas, p_fullSql);
             }
 
@@ -152,7 +162,7 @@ namespace Dt.Base
                 // 忽略id为0的情况
                 if (c.Type == typeof(long) && c.Long == 0 && cell.QueryFlag == CompFlag.Equal)
                     continue;
-                
+
                 // 可null值类型
                 if (c.Type.IsGenericType
                     && c.Type.GetGenericTypeDefinition() == typeof(Nullable<>)
@@ -181,7 +191,7 @@ namespace Dt.Base
                         sw.Append(prefix);
                         sw.Append(id);
                         break;
-                        
+
                     case CompFlag.Unequal://不等 unequal
                         dt[id] = val;
                         sw.Append(name);
@@ -189,7 +199,7 @@ namespace Dt.Base
                         sw.Append(prefix);
                         sw.Append(id);
                         break;
-                        
+
                     case CompFlag.Less://小于 less
                         dt[id] = val;
                         sw.Append(name);
@@ -197,7 +207,7 @@ namespace Dt.Base
                         sw.Append(prefix);
                         sw.Append(id);
                         break;
-                        
+
                     case CompFlag.Ceil://小于等于
                         dt[id] = val;
                         sw.Append(name);
@@ -205,7 +215,7 @@ namespace Dt.Base
                         sw.Append(prefix);
                         sw.Append(id);
                         break;
-                        
+
                     case CompFlag.Greater://大于 more
                         dt[id] = val;
                         sw.Append(name);
@@ -213,7 +223,7 @@ namespace Dt.Base
                         sw.Append(prefix);
                         sw.Append(id);
                         break;
-                        
+
                     case CompFlag.Floor://大于等于 more equal
                         dt[id] = val;
                         sw.Append(name);
@@ -221,7 +231,7 @@ namespace Dt.Base
                         sw.Append(prefix);
                         sw.Append(id);
                         break;
-                        
+
                     case CompFlag.StartsWith:// begin with
                         dt[id] = val.ToString() + "%";
                         sw.Append(name);
@@ -229,7 +239,7 @@ namespace Dt.Base
                         sw.Append(prefix);
                         sw.Append(id);
                         break;
-                        
+
                     case CompFlag.EndsWith:// finish with
                         dt[id] = "%" + val.ToString();
                         sw.Append(name);
@@ -237,7 +247,7 @@ namespace Dt.Base
                         sw.Append(prefix);
                         sw.Append(id);
                         break;
-                        
+
                     case CompFlag.Contains:// any where 
                         dt[id] = "%" + val.ToString() + "%";
                         sw.Append(name);
@@ -256,7 +266,7 @@ namespace Dt.Base
                             sw.Append(" = ''");
                         }
                         break;
-                        
+
                     default:
                         dt[id] = val;
                         sw.Append(" = ");
