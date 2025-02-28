@@ -12,9 +12,9 @@ using Microsoft.UI.Xaml.Controls;
 using System.Text.Json;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base.Views
 {
-    [View("单表")]
+    [View("单表通用视图")]
     public partial class SingleTblWin : Win
     {
         public SingleTblWin(string p_jsonCfg)

@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Markup;
 using System.Text;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base.Views
 {
     public sealed partial class SingleTblForm : Form
     {

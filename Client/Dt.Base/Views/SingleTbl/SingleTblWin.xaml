@@ -1,0 +1,10 @@
+﻿<a:Win
+    x:Class="Dt.Base.Views.SingleTblWin"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:v="using:Dt.Base.Views">
+
+    <v:SingleTblQuery x:Name="_query" a:Ex.Dock="Left" Order="1" />
+    <v:SingleTblList x:Name="_list" />
+</a:Win>
