@@ -142,9 +142,11 @@ namespace Dt.Mgr.Rbac
         async void OnEditParam(object sender, RoutedEventArgs e)
         {
             var m = _fv.Data.To<MenuX>();
-            if (m.ViewName == "报表")
+            var tp = Kit.GetViewParamsEditorByAlias(m.ViewName);
+            if (tp != null && tp.IsAssignableTo(typeof(IViewParamsEditor)))
             {
-                var result = await RptViewParamsDlg.ShowDlg(m.Params);
+                var editor = Activator.CreateInstance(tp) as IViewParamsEditor;
+                var result = await editor.ShowDlg(m.Params);
                 if (!string.IsNullOrEmpty(result))
                     m.Params = result;
             }

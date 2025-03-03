@@ -21,7 +21,7 @@ namespace Dt.Mgr
     /// <summary>
     /// 报表预览视图，可由菜单命令启动或自定义启动
     /// </summary>
-    [View(LobViews.报表)]
+    [View(LobViews.通用报表)]
     public class ReportView : IView
     {
         /// <summary>

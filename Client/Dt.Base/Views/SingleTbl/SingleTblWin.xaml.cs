@@ -14,7 +14,7 @@ using System.Text.Json;
 
 namespace Dt.Base.Views
 {
-    [View("单表通用视图")]
+    [View("通用单表")]
     public partial class SingleTblWin : Win
     {
         public SingleTblWin(string p_jsonCfg)

@@ -17,13 +17,18 @@ using System.Text.Json.Serialization.Metadata;
 
 namespace Dt.Mgr.Module
 {
-    public partial class RptViewParamsDlg : Dlg
+    [ViewParamsEditor(LobViews.通用报表)]
+    public partial class RptViewParamsDlg : Dlg, IViewParamsEditor
     {
         string _params;
 
-        public RptViewParamsDlg(string p_params)
+        public RptViewParamsDlg()
         {
             InitializeComponent();
+        }
+
+        public async Task<string> ShowDlg(string p_params)
+        {
             _params = p_params;
 
             RptTbl = new Table { { "id", typeof(long) }, { "uri" } };
@@ -32,31 +37,27 @@ namespace Dt.Mgr.Module
 
             RptForm = new(this);
             ParamsForm = new(this);
-        }
-
-        public static async Task<string> ShowDlg(string p_params)
-        {
-            var dlg = new RptViewParamsDlg(p_params);
+            
             if (!Kit.IsPhoneUI)
             {
-                dlg.Width = 600;
-                dlg.Height = 600;
+                Width = 600;
+                Height = 600;
             }
 
-            if (await dlg.ShowAsync())
+            if (await ShowAsync())
             {
-                return dlg.GetResult();
+                return GetResult();
             }
             return null;
         }
 
-        public readonly RptViewRptInoForm RptForm;
+        public RptViewRptInoForm RptForm { get; private set; }
 
-        public readonly RptViewParamsForm ParamsForm;
+        public RptViewParamsForm ParamsForm { get; private set; }
 
-        public readonly Table RptTbl;
+        public Table RptTbl { get; private set; }
 
-        public readonly Table ParamsTbl;
+        public Table ParamsTbl { get; private set; }
 
         public Row SelectedRpt => _lvRpt.SelectedRow;
 

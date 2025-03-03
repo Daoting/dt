@@ -13,12 +13,33 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Base.Views
 {
-    public sealed partial class SingleTblDesign : Dlg
+    [ViewParamsEditor("通用单表")]
+    public sealed partial class SingleTblDesign : Dlg, IViewParamsEditor
     {
         public SingleTblDesign()
         {
             InitializeComponent();
         }
-        
+
+        public async Task<string> ShowDlg(string p_params)
+        {
+            if (!Kit.IsPhoneUI)
+            {
+                Width = 600;
+                Height = 600;
+            }
+
+            if (await ShowAsync())
+            {
+                return GetResult();
+            }
+            return null;
+        }
+
+        string GetResult()
+        {
+            return "abc";
+            
+        }
     }
 }

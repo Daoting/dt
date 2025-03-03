@@ -95,6 +95,16 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 根据别名获取视图参数编辑器类型
+        /// </summary>
+        /// <param name="p_alias">类型别名</param>
+        /// <returns>返回类型</returns>
+        public static Type GetViewParamsEditorByAlias(string p_alias)
+        {
+            return _typeAlias.GetTypeByAlias(typeof(ViewParamsEditorAttribute), p_alias);
+        }
+        
+        /// <summary>
         /// 根据类型别名和方法名获取方法定义，取列表中第一个匹配项
         /// </summary>
         /// <param name="p_attrType">标签类型</param>

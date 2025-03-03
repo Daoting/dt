@@ -9,14 +9,20 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
-		<a:Fv x:Name="_pbFv">
-			<a:CBar Title="表单" />
-            <a:CList />
+		<a:Fv x:Name="_fvMain">
+            <a:CList ID="EntityCls" Title="实体类型" />
         </a:Fv>
-		<a:Fv x:Name="_pbCell" Grid.Row="1">
+		<a:Fv x:Name="_fvQuery" Grid.Row="1">
 			<a:CBar Title="表单" />
 		</a:Fv>
-	</Grid>
+        <a:Fv x:Name="_fvList" Grid.Row="2">
+            <a:CBar Title="表单" />
+        </a:Fv>
+        <a:Fv x:Name="_fvForm" Grid.Row="3">
+            <a:CBar Title="表单" />
+        </a:Fv>
+    </Grid>
 </a:Dlg>
