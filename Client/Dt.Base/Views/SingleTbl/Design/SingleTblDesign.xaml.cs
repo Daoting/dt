@@ -8,7 +8,7 @@
 
 #region 引用命名
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using System.Text.Json;
 #endregion
 
 namespace Dt.Base.Views
@@ -16,6 +16,8 @@ namespace Dt.Base.Views
     [ViewParamsEditor("通用单表")]
     public sealed partial class SingleTblDesign : Dlg, IViewParamsEditor
     {
+        SingleTblCfg _cfg;
+        
         public SingleTblDesign()
         {
             InitializeComponent();
@@ -23,12 +25,19 @@ namespace Dt.Base.Views
 
         public async Task<string> ShowDlg(string p_params)
         {
-            if (!Kit.IsPhoneUI)
+            if (string.IsNullOrEmpty(p_params))
             {
-                Width = 600;
-                Height = 600;
+                _cfg = new SingleTblCfg();
             }
-
+            else
+            {
+                _cfg = JsonSerializer.Deserialize<SingleTblCfg>(p_params);
+            }
+            
+            _fvMain.Data = _cfg;
+            _fvList.Data = _cfg.ListCfg;
+            _fvForm.Data = _cfg.FormCfg;
+            
             if (await ShowAsync())
             {
                 return GetResult();
@@ -38,8 +47,22 @@ namespace Dt.Base.Views
 
         string GetResult()
         {
-            return "abc";
-            
+            return _cfg.Serialize();
+        }
+
+        void EditQueryFvXaml(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        void EditListXaml(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        void EditFormXaml(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

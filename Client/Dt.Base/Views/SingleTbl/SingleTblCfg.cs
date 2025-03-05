@@ -8,6 +8,8 @@
 
 #region 引用命名
 using System.Reflection;
+using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 #endregion
 
@@ -17,11 +19,11 @@ namespace Dt.Base
     {
         public string EntityCls { get; set; }
 
-        public SingleTblQueryCfg QueryCfg { get; set; }
+        public string QueryFvXaml { get; set; }
 
-        public SingleTblListCfg ListCfg { get; set; }
+        public SingleTblListCfg ListCfg { get; set; } = new SingleTblListCfg();
 
-        public SingleTblFormCfg FormCfg { get; set; }
+        public SingleTblFormCfg FormCfg { get; set; } = new SingleTblFormCfg();
 
         [JsonIgnore]
         public TableSchema Table => _model.Schema;
@@ -136,44 +138,81 @@ namespace Dt.Base
             await task;
             return task.GetType().GetProperty("Result").GetValue(task);
         }
-        
+
+        public string Serialize()
+        {
+            using (var stream = new MemoryStream())
+            using (var writer = new Utf8JsonWriter(stream, JsonOptions.UnsafeWriter))
+            {
+                writer.WriteStartObject();
+                if (!string.IsNullOrEmpty(EntityCls))
+                    writer.WriteString("EntityCls", EntityCls);
+                if (!string.IsNullOrEmpty(QueryFvXaml))
+                    writer.WriteString("QueryFvXaml", QueryFvXaml);
+
+                if (ListCfg.IsChanged)
+                {
+                    writer.WriteStartObject("ListCfg");
+                    if (!string.IsNullOrEmpty(ListCfg.Xaml))
+                        writer.WriteString("Xaml", ListCfg.Xaml);
+                    if (!ListCfg.ShowAddMi)
+                        writer.WriteBoolean("ShowAddMi", ListCfg.ShowAddMi);
+                    if (!ListCfg.ShowDelMi)
+                        writer.WriteBoolean("ShowDelMi", ListCfg.ShowDelMi);
+                    if (!ListCfg.ShowMultiSelMi)
+                        writer.WriteBoolean("ShowMultiSelMi", ListCfg.ShowMultiSelMi);
+                    writer.WriteEndObject();
+                }
+                
+                if (FormCfg.IsChanged)
+                {
+                    writer.WriteStartObject("FormCfg");
+                    if (!string.IsNullOrEmpty(FormCfg.Xaml))
+                        writer.WriteString("Xaml", FormCfg.Xaml);
+                    if (!FormCfg.ShowAddMi)
+                        writer.WriteBoolean("ShowAddMi", FormCfg.ShowAddMi);
+                    if (!FormCfg.ShowDelMi)
+                        writer.WriteBoolean("ShowDelMi", FormCfg.ShowDelMi);
+                    if (!FormCfg.ShowSaveMi)
+                        writer.WriteBoolean("ShowSaveMi", FormCfg.ShowSaveMi);
+                    writer.WriteEndObject();
+                }
+                
+                writer.WriteEndObject();
+                writer.Flush();
+                return Encoding.UTF8.GetString(stream.ToArray());
+            }
+        }
+
         EntitySchema _model;
         Type _entityType;
         // EntityX<TEntity> 获取静态方法
         Type _genericType;
     }
 
-    public class SingleTblQueryCfg
-    {
-        public bool AutoXaml { get; set; } = true;
-
-        public string Xaml { get; set; }
-    }
-
     public class SingleTblListCfg
     {
-        public bool AutoXaml { get; set; } = true;
-
         public string Xaml { get; set; }
-
-
-        public bool ShowMenu { get; set; } = true;
 
         public bool ShowAddMi { get; set; } = true;
 
         public bool ShowDelMi { get; set; } = true;
+
+        public bool ShowMultiSelMi { get; set; } = true;
+        
+        public bool IsChanged => !string.IsNullOrEmpty(Xaml) || !ShowAddMi || !ShowDelMi || !ShowMultiSelMi;
     }
 
     public class SingleTblFormCfg
     {
-        public bool AutoXaml { get; set; } = true;
-
         public string Xaml { get; set; }
-
-        public bool ShowMenu { get; set; } = true;
 
         public bool ShowAddMi { get; set; } = true;
 
+        public bool ShowSaveMi { get; set; } = true;
+
         public bool ShowDelMi { get; set; } = true;
+
+        public bool IsChanged => !string.IsNullOrEmpty(Xaml) || !ShowAddMi || !ShowDelMi || !ShowSaveMi;
     }
 }

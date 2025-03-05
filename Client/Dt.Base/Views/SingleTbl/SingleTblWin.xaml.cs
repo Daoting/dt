@@ -21,22 +21,7 @@ namespace Dt.Base.Views
         {
             InitializeComponent();
 
-            Cfg = new SingleTblCfg
-            {
-                EntityCls = "Demo.Base.基础X,Demo.Base",
-                QueryCfg = new SingleTblQueryCfg
-                {
-                    AutoXaml = true,
-                },
-                FormCfg = new SingleTblFormCfg
-                {
-                    AutoXaml = true,
-                },
-                ListCfg = new SingleTblListCfg
-                {
-                    AutoXaml = true
-                }
-            };
+            Cfg = new SingleTblCfg { EntityCls = "Demo.Base.基础X,Demo.Base", };
             //Cfg = JsonSerializer.Deserialize<SingleTblCfg>(p_jsonCfg);
             LoadCfg();
         }

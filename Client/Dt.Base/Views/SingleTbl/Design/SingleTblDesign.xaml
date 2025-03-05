@@ -4,25 +4,48 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
     Title="单表视图参数">
-
-	<Grid>
+    <a:Dlg.Menu>
+        <a:Menu>
+            <a:Mi ID="保存" Icon="保存" Click="OnOK" ShowInPhone="Icon" />
+        </a:Menu>
+    </a:Dlg.Menu>
+    
+    <Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 		<a:Fv x:Name="_fvMain">
             <a:CList ID="EntityCls" Title="实体类型" />
+            <a:CBar Title="查询面板">
+                <Button Content="编辑Xaml" Click="EditQueryFvXaml" HorizontalAlignment="Right" />
+            </a:CBar>
+            <a:CText ID="QueryFvXaml" Placeholder="Xaml空时自动生成" AcceptsReturn="True" ShowTitle="False" RowSpan="4" />
         </a:Fv>
-		<a:Fv x:Name="_fvQuery" Grid.Row="1">
-			<a:CBar Title="表单" />
-		</a:Fv>
-        <a:Fv x:Name="_fvList" Grid.Row="2">
-            <a:CBar Title="表单" />
+        <a:Fv x:Name="_fvList" Grid.Row="1">
+            <a:CBar Title="列表">
+                <Button Content="编辑Xaml" Click="EditListXaml" HorizontalAlignment="Right" />
+            </a:CBar>
+            <a:CText ID="Xaml" Placeholder="Xaml空时自动生成" AcceptsReturn="True" ShowTitle="False" RowSpan="4" />
+            <a:CBar ColSpan="0.25">
+                <TextBlock Text="显示菜单项" />
+            </a:CBar>
+            <a:CBool ID="ShowAddMi" Title="增加" ColSpan="0.25" ShowTitle="False" />
+            <a:CBool ID="ShowDelMi" Title="删除" ColSpan="0.25" ShowTitle="False" />
+            <a:CBool ID="ShowMultiSelMi" Title="多选" ColSpan="0.25" ShowTitle="False" />
         </a:Fv>
-        <a:Fv x:Name="_fvForm" Grid.Row="3">
-            <a:CBar Title="表单" />
+        <a:Fv x:Name="_fvForm" Grid.Row="2">
+            <a:CBar Title="表单">
+                <Button Content="编辑Xaml" Click="EditFormXaml" HorizontalAlignment="Right" />
+            </a:CBar>
+            <a:CText ID="Xaml" Placeholder="Xaml空时自动生成" AcceptsReturn="True" ShowTitle="False" RowSpan="4" />
+            <a:CBar ColSpan="0.25">
+                <TextBlock Text="显示菜单项" />
+            </a:CBar>
+            <a:CBool ID="ShowAddMi" Title="增加" ColSpan="0.25" ShowTitle="False" />
+            <a:CBool ID="ShowSaveMi" Title="保存" ColSpan="0.25" ShowTitle="False" />
+            <a:CBool ID="ShowDelMi" Title="删除" ColSpan="0.25" ShowTitle="False" />
         </a:Fv>
     </Grid>
 </a:Dlg>

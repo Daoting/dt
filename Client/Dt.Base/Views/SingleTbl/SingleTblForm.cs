@@ -26,12 +26,7 @@ namespace Dt.Base.Views
             _win = p_win;
             OwnWin = _win;
 
-            if (_win.Cfg.FormCfg.AutoXaml)
-            {
-                string xaml = GetXaml();
-                _fv = XamlReader.Load(xaml) as Fv;
-            }
-            else if (!string.IsNullOrEmpty(_win.Cfg.FormCfg.Xaml))
+            if (!string.IsNullOrEmpty(_win.Cfg.FormCfg.Xaml))
             {
                 try
                 {
@@ -44,7 +39,8 @@ namespace Dt.Base.Views
             }
             else
             {
-                Throw.Msg("Fv的xaml内容为空，无法创建！");
+                string xaml = GetXaml();
+                _fv = XamlReader.Load(xaml) as Fv;
             }
 
             Content = _fv;
@@ -57,9 +53,9 @@ namespace Dt.Base.Views
             };
             
             var cfg = _win.Cfg.FormCfg;
-            if (cfg.ShowMenu)
+            if (cfg.ShowAddMi || cfg.ShowDelMi || cfg.ShowSaveMi)
             {
-                Menu = CreateMenu(null, cfg.ShowAddMi, true, cfg.ShowDelMi);
+                Menu = CreateMenu(null, cfg.ShowAddMi, cfg.ShowSaveMi, cfg.ShowDelMi);
             }
         }
 

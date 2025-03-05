@@ -27,15 +27,9 @@ namespace Dt.Base.Views
             Icon = Icons.漏斗;
             _win = p_win;
 
-            if (_win.Cfg.QueryCfg.AutoXaml)
+            if (!string.IsNullOrEmpty(_win.Cfg.QueryFvXaml))
             {
-                string xaml = GetCellsXaml();
-                xaml = _xamlPrefix + xaml + _xamlPostfix;
-                _fv = XamlReader.Load(xaml) as QueryFv;
-            }
-            else if (!string.IsNullOrEmpty(_win.Cfg.QueryCfg.Xaml))
-            {
-                var xaml = _xamlPrefix + _win.Cfg.QueryCfg.Xaml + _xamlPostfix;
+                var xaml = _xamlPrefix + _win.Cfg.QueryFvXaml + _xamlPostfix;
                 try
                 {
                     _fv = XamlReader.Load(xaml) as QueryFv;
@@ -47,7 +41,9 @@ namespace Dt.Base.Views
             }
             else
             {
-                Throw.Msg("查询面板xaml内容为空，无法创建！");
+                string xaml = GetCellsXaml();
+                xaml = _xamlPrefix + xaml + _xamlPostfix;
+                _fv = XamlReader.Load(xaml) as QueryFv;
             }
 
             Content = _fv;

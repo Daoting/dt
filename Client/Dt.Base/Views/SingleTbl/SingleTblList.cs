@@ -24,12 +24,7 @@ namespace Dt.Base.Views
             Icon = Icons.列表;
             _win = p_win;
             
-            if (_win.Cfg.ListCfg.AutoXaml)
-            {
-                string xaml = GetXaml();
-                _lv = XamlReader.Load(xaml) as Lv;
-            }
-            else if (!string.IsNullOrEmpty(_win.Cfg.ListCfg.Xaml))
+            if (!string.IsNullOrEmpty(_win.Cfg.ListCfg.Xaml))
             {
                 try
                 {
@@ -42,7 +37,8 @@ namespace Dt.Base.Views
             }
             else
             {
-                Throw.Msg("Lv的xaml内容为空，无法创建！");
+                string xaml = GetXaml();
+                _lv = XamlReader.Load(xaml) as Lv;
             }
 
             Content = _lv;
@@ -50,10 +46,11 @@ namespace Dt.Base.Views
             Msg += e => _ = _win.Form.Query(e);
             
             var cfg = _win.Cfg.ListCfg;
-            if (cfg.ShowMenu)
+            if (cfg.ShowAddMi || cfg.ShowDelMi)
             {
                 Menu = CreateMenu(null, cfg.ShowAddMi, cfg.ShowDelMi);
-                _lv.AddMultiSelMenu(Menu);
+                if (cfg.ShowMultiSelMi)
+                    _lv.AddMultiSelMenu(Menu);
                 _lv.SetMenu(CreateContextMenu(null, cfg.ShowAddMi, cfg.ShowDelMi));
             }
         }
