@@ -180,6 +180,11 @@ namespace Dt.Core
         /// 所有类型别名的类型列表
         /// </summary>
         public static IReadOnlyDictionary<string, List<Type>> AllAliasTypeList => _typeAlias.AllAliasTypeList;
+
+        /// <summary>
+        /// 所有本地库的结构信息
+        /// </summary>
+        public static IReadOnlyDictionary<string, SqliteTblsInfo> AllSqliteDbs => _typeAlias.AllSqliteDbs;
         
         /// <summary>
         /// 获取某本地库的结构信息

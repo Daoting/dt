@@ -76,6 +76,8 @@ namespace Dt.Core
 
         public IReadOnlyDictionary<string, List<Type>> AllAliasTypeList => _aliasTypeList;
 
+        public IReadOnlyDictionary<string, SqliteTblsInfo> AllSqliteDbs => _sqliteDbs;
+
         internal static FrozenDictionary<string, SqliteTblsInfo> _sqliteDbs;
         internal static FrozenDictionary<string, Type> _aliasTypes;
         internal static FrozenDictionary<string, List<Type>> _aliasTypeList;

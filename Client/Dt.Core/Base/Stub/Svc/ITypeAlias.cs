@@ -55,5 +55,10 @@ namespace Dt.Core
         /// 所有类型别名的类型列表
         /// </summary>
         IReadOnlyDictionary<string, List<Type>> AllAliasTypeList { get; }
+
+        /// <summary>
+        /// 所有本地库的结构信息
+        /// </summary>
+        IReadOnlyDictionary<string, SqliteTblsInfo> AllSqliteDbs { get; }
     }
 }
