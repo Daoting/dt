@@ -17,7 +17,14 @@
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 		<a:Fv x:Name="_fvMain">
-            <a:CList ID="EntityCls" Title="实体类型" />
+            <a:CList ID="EntityCls" Title="实体类型" SrcID="cls" LoadData="OnLoadEntityCls" GroupName="group">
+                <DataTemplate>
+                    <StackPanel Margin="10">
+                        <a:Dot ID="cls" />
+                        <a:Dot ID="tbl" Call="Def.小灰" />
+                    </StackPanel>
+                </DataTemplate>
+            </a:CList>
             <a:CBar Title="查询面板">
                 <Button Content="编辑Xaml" Click="EditQueryFvXaml" HorizontalAlignment="Right" />
             </a:CBar>

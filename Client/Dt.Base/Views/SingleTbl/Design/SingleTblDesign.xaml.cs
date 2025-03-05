@@ -16,6 +16,7 @@ namespace Dt.Base.Views
     [ViewParamsEditor("通用单表")]
     public sealed partial class SingleTblDesign : Dlg, IViewParamsEditor
     {
+        static Table _entityCls;
         SingleTblCfg _cfg;
         
         public SingleTblDesign()
@@ -63,6 +64,44 @@ namespace Dt.Base.Views
         void EditFormXaml(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        void OnLoadEntityCls(CList p_list, AsyncArgs p_args)
+        {
+            if (_entityCls == null)
+            {
+                string prefix = "Tbl-";
+                _entityCls = new Table { { "cls" }, { "tbl" }, { "group" } };
+                foreach (var item in Kit.AllAliasTypes)
+                {
+                    if (!item.Key.StartsWith(prefix))
+                        continue;
+
+                    int index = item.Value.AssemblyQualifiedName.IndexOf(", Version=");
+                    _entityCls.AddRow(new
+                    {
+                        cls = item.Value.AssemblyQualifiedName.Substring(0, index),
+                        tbl = item.Key.Substring(prefix.Length),
+                        group = "远程库",
+                    });
+                }
+
+                foreach (var item in Kit.AllSqliteDbs)
+                {
+                    foreach (var tbl in item.Value.Tables)
+                    {
+                        int index = tbl.AssemblyQualifiedName.IndexOf(", Version=");
+                        _entityCls.AddRow(new
+                        {
+                            cls = tbl.AssemblyQualifiedName.Substring(0, index),
+                            tbl = tbl.Name.TrimEnd('X') + "，库" + item.Key,
+                            group = "本地库",
+                        });
+                    }
+                }
+            }
+            
+            p_list.Data = _entityCls;
         }
     }
 }

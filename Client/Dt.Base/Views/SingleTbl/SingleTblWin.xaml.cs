@@ -14,15 +14,22 @@ using System.Text.Json;
 
 namespace Dt.Base.Views
 {
-    [View("通用单表")]
+    [View("通用单表视图")]
     public partial class SingleTblWin : Win
     {
         public SingleTblWin(string p_jsonCfg)
         {
             InitializeComponent();
 
-            Cfg = new SingleTblCfg { EntityCls = "Demo.Base.基础X,Demo.Base", };
-            //Cfg = JsonSerializer.Deserialize<SingleTblCfg>(p_jsonCfg);
+            Cfg = JsonSerializer.Deserialize<SingleTblCfg>(p_jsonCfg);
+            LoadCfg();
+        }
+
+        public SingleTblWin(SingleTblCfg p_cfg)
+        {
+            InitializeComponent();
+
+            Cfg = p_cfg;
             LoadCfg();
         }
 

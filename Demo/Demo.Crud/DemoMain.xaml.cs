@@ -76,6 +76,11 @@ namespace Demo.Crud
                 new Nav("虚拟实体", typeof(虚拟Win)) { Desc = "因字段过多将单表拆分成多表时适用于虚拟实体，本质还是单实体框架" },
                 new Nav("树形单实体", typeof(树形Win)) { Desc = "树形单表的增删改查框架" },
                 new Nav("字段类型", typeof(字段类型Win)) { Desc = "框架根据字段类型生成的默认查询，方便后续修改" },
+                new Nav("通用单表视图")
+                { 
+                    Callback = (o, e) => GenericView.SingleTbl(new SingleTblCfg { EntityCls = "Demo.Base.基础X,Demo.Base" }),
+                    Desc = "只提供参数无需另外代码，实现单表的增删改查"
+                },
             };
             group.Title = "单实体框架";
             ds.Add(group);

@@ -17,21 +17,37 @@ namespace Dt.Base
 {
     public class SingleTblCfg
     {
+        /// <summary>
+        /// 实体类全名，包括程序集名称
+        /// </summary>
         public string EntityCls { get; set; }
 
+        /// <summary>
+        /// 查询面板的xaml
+        /// </summary>
         public string QueryFvXaml { get; set; }
 
+        /// <summary>
+        /// 列表配置
+        /// </summary>
         public SingleTblListCfg ListCfg { get; set; } = new SingleTblListCfg();
 
+        /// <summary>
+        /// 表单配置
+        /// </summary>
         public SingleTblFormCfg FormCfg { get; set; } = new SingleTblFormCfg();
 
-        [JsonIgnore]
+        /// <summary>
+        /// 实体对应的表模型
+        /// </summary>
         public TableSchema Table => _model.Schema;
 
-        [JsonIgnore]
+        /// <summary>
+        /// 实体类型
+        /// </summary>
         public Type EntityType => _entityType;
 
-        public async Task Init()
+        internal async Task Init()
         {
             _entityType = Type.GetType(EntityCls);
             _model = await EntitySchema.Get(_entityType);
@@ -39,7 +55,7 @@ namespace Dt.Base
             _genericType = typeof(EntityX<>).MakeGenericType(_entityType);
         }
 
-        public async Task<Table> Query(string p_whereOrSqlOrSp, object p_params = null)
+        internal async Task<Table> Query(string p_whereOrSqlOrSp, object p_params = null)
         {
             var fun = _genericType.GetMethod("Query", BindingFlags.Public | BindingFlags.Static);
             var task = (Task)fun.Invoke(null, new object[] { p_whereOrSqlOrSp, p_params });
@@ -47,7 +63,7 @@ namespace Dt.Base
             return (Table)task.GetType().GetProperty("Result").GetValue(task);
         }
 
-        public async Task<object> New()
+        internal async Task<object> New()
         {
             object[] tgtParams = null;
 
@@ -131,7 +147,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_id">主键值</param>
         /// <returns>返回实体对象或null</returns>
-        public async Task<object> GetByID(object p_id)
+        internal async Task<object> GetByID(object p_id)
         {
             var fun = _genericType.GetMethod("GetByID", BindingFlags.Public | BindingFlags.Static);
             var task = (Task)fun.Invoke(null, new object[] { p_id });
@@ -139,7 +155,7 @@ namespace Dt.Base
             return task.GetType().GetProperty("Result").GetValue(task);
         }
 
-        public string Serialize()
+        internal string Serialize()
         {
             using (var stream = new MemoryStream())
             using (var writer = new Utf8JsonWriter(stream, JsonOptions.UnsafeWriter))
