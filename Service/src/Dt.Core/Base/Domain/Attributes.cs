@@ -16,9 +16,10 @@ namespace Dt.Core
     /// 实体类映射表标签
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class TblAttribute : Attribute
+    public class TblAttribute : TypeAliasAttribute
     {
         public TblAttribute(string p_tblName)
+            : base(p_tblName)
         {
             Name = p_tblName;
         }
