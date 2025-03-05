@@ -18,6 +18,7 @@ namespace Dt.Mgr.Rbac
     public sealed partial class MenuForm : Form
     {
         #region 变量
+        static Table _allViews;
         bool _isAddGroup;
         #endregion
         
@@ -125,18 +126,24 @@ namespace Dt.Mgr.Rbac
         
         void OnLoadViewName(CList p_list, AsyncArgs p_args)
         {
-            string prefix = "View-";
-            var tbl = new Table { { "alias" }, { "types" } };
-            foreach (var item in Kit.AllAliasTypes)
+            if (_allViews == null)
             {
-                if (!item.Key.StartsWith(prefix))
-                    continue;
+                string prefix = "View-";
+                _allViews = new Table { { "alias" }, { "types" } };
+                foreach (var item in Kit.AllAliasTypes)
+                {
+                    if (!item.Key.StartsWith(prefix))
+                        continue;
 
-                var r = tbl.AddRow();
-                r.InitVal("alias", item.Key.Substring(prefix.Length));
-                r.InitVal("types", item.Value.FullName);
+                    var name = item.Key.Substring(prefix.Length);
+                    var r = _allViews.NewRow(new { alias = name, types = item.Value.FullName });
+                    if (name.StartsWith("通用"))
+                        _allViews.Insert(0, r);
+                    else
+                        _allViews.Add(r);
+                }
             }
-            p_list.Data = tbl;
+            p_list.Data = _allViews;
         }
         
         async void OnEditParam(object sender, RoutedEventArgs e)
