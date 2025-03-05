@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base.FormView;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Markup;
@@ -186,13 +187,18 @@ namespace Dt.Base
                                 if (tgtRow.Contains(tgtID))
                                     tgtRow[tgtID] = tgtVal;
                             }
+                            else if (_owner.Owner[tgtID] is FvCell fc && fc.ValBinding.Source is PropertyView pv)
+                            {
+                                // 通过 PropertyView 赋值确保 UI 同步更新
+                                pv.Val = tgtVal;
+                            }
                             else
                             {
                                 var pi = tgtObj.GetType().GetProperty(tgtID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                                 if (pi != null)
                                     pi.SetValue(tgtObj, tgtVal);
                             }
-
+                            
                             // 对于联动的CList CPick CTree，清空其下拉数据源
                             if (srcID == "-")
                             {
@@ -253,7 +259,7 @@ namespace Dt.Base
                 // 未设置源ID时，源为对象本身
                 _owner.Value = e.Data;
             }
-            
+
             Close();
             _owner.OnSelected(e.Data);
         }
