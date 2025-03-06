@@ -355,13 +355,24 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 默认为Config.json配置的当前实体系统使用的服务 或 直连数据库 或本地sqlite库信息
-        /// <para>非默认时需重写，获取方式：At.GetAccessInfo(AccessType.Local, name)</para>
+        /// 获取Fv当前实体的数据访问对象
         /// </summary>
         /// <returns></returns>
-        protected virtual IAccessInfo GetAccessInfo()
+        async Task<IDataAccess> GetDataAccess()
         {
-            return At.AccessInfo;
+            if (MainFv.Data is Entity entity)
+            {
+                Type tp = entity.GetType();
+                if (Entity.IsVirEntity(tp))
+                {
+                    var vm = await VirEntitySchema.Get(tp);
+                    return vm.AccessInfo.GetDa();
+                }
+                
+                var model = await EntitySchema.Get(tp);
+                return model.AccessInfo.GetDa();
+            }
+            return At.AccessInfo.GetDa();
         }
         #endregion
 
@@ -497,11 +508,12 @@ namespace Dt.Base
         /// 保存实体数据
         /// </summary>
         /// <returns></returns>
-        Task<bool> SaveInternal()
+        async Task<bool> SaveInternal()
         {
             // 实体写入器，所有需要增删改的实体在一个事务内保存到db
-            var w = new EntityWriter(GetAccessInfo().GetDa());
-            return DoSave(w, true, true);
+            var da = await GetDataAccess();
+            var w = new EntityWriter(da);
+            return await DoSave(w, true, true);
         }
         #endregion
 
@@ -562,7 +574,8 @@ namespace Dt.Base
                 if (ls.Count == 0)
                     return await entity.Delete();
 
-                var w = new EntityWriter(GetAccessInfo().GetDa());
+                var da = await GetDataAccess();
+                var w = new EntityWriter(da);
                 // 先删子实体
                 foreach (var tbl in ls)
                 {
