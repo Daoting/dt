@@ -15,20 +15,20 @@ namespace Dt.Core
     /// <summary>
     /// 日志的Trace输出内容
     /// </summary>
-    public static class TraceLogs
+    internal static class TraceLogs
     {
         const int _maxTrace = 30;
 
         /// <summary>
         /// Trace日志列表
         /// </summary>
-        internal static readonly Nl<TraceLogItem> Data = new Nl<TraceLogItem>();
+        public static readonly Nl<TraceLogItem> Data = new Nl<TraceLogItem>();
 
         /// <summary>
         /// 向Trace窗口输出信息
         /// </summary>
         /// <param name="p_logEvent"></param>
-        internal static void AddItem(LogEvent p_logEvent)
+        public static void AddItem(LogEvent p_logEvent)
         {
             var item = new TraceLogItem { Log = p_logEvent };
             Kit.RunAsync(() =>
@@ -48,7 +48,7 @@ namespace Dt.Core
         /// <summary>
         /// 清空输出
         /// </summary>
-        internal static void Clear()
+        public static void Clear()
         {
             Data.Clear();
         }
@@ -57,7 +57,7 @@ namespace Dt.Core
         /// 除某项外清空
         /// </summary>
         /// <param name="p_item"></param>
-        internal static void ClearExcept(TraceLogItem p_item)
+        public static void ClearExcept(TraceLogItem p_item)
         {
             Kit.RunAsync(() =>
             {

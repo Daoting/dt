@@ -19,19 +19,11 @@ namespace Dt.Core
     class SqliteAccess : IDataAccess
     {
         #region 成员变量
-        static ILogger _log;
         readonly SqliteAccessInfo _ai;
         SqliteConnectionEx _db;
         #endregion
 
         #region 构造方法
-        static SqliteAccess()
-        {
-            // 只要详细级别才输出sqlite的sql
-            if (Log.IsEnabled(LogEventLevel.Verbose))
-                _log = Log.Logger;
-        }
-
         public SqliteAccess(SqliteAccessInfo p_ai)
         {
             _ai = p_ai;
@@ -41,7 +33,7 @@ namespace Dt.Core
         #region 查询
         public async Task<Table> Query(string p_sql, object p_params = null)
         {
-            if (_log != null)
+            if (TraceLog)
                 Trace("Query", p_sql);
 
             var db = await GetDb();
@@ -51,7 +43,7 @@ namespace Dt.Core
         public async Task<Table<TEntity>> Query<TEntity>(string p_sql, object p_params = null)
             where TEntity : Entity
         {
-            if (_log != null)
+            if (TraceLog)
                 Trace("Query", p_sql);
 
             var db = await GetDb();
@@ -61,7 +53,7 @@ namespace Dt.Core
         public Task<Table> Page(int p_starRow, int p_pageSize, string p_sql, object p_params = null)
         {
             string sql = $"select * from ({p_sql}) a limit {p_starRow},{p_pageSize}";
-            if (_log != null)
+            if (TraceLog)
                 Trace("Page", sql);
             return Query(sql, p_params);
         }
@@ -70,14 +62,14 @@ namespace Dt.Core
             where TEntity : Entity
         {
             string sql = $"select * from ({p_sql}) a limit {p_starRow},{p_pageSize} ";
-            if (_log != null)
+            if (TraceLog)
                 Trace("Page", sql);
             return Query<TEntity>(sql, p_params);
         }
 
         public async Task<Row> First(string p_sql, object p_params = null)
         {
-            if (_log != null)
+            if (TraceLog)
                 Trace("First", p_sql);
 
             var db = await GetDb();
@@ -87,7 +79,7 @@ namespace Dt.Core
         public async Task<TEntity> First<TEntity>(string p_sql, object p_params = null)
             where TEntity : Entity
         {
-            if (_log != null)
+            if (TraceLog)
                 Trace("First", p_sql);
 
             var db = await GetDb();
@@ -96,7 +88,7 @@ namespace Dt.Core
 
         public async Task<List<T>> FirstCol<T>(string p_sql, object p_params = null)
         {
-            if (_log != null)
+            if (TraceLog)
                 Trace("FirstCol", p_sql);
 
             var db = await GetDb();
@@ -110,7 +102,7 @@ namespace Dt.Core
 
         public async Task<T> GetScalar<T>(string p_sql, object p_params = null)
         {
-            if (_log != null)
+            if (TraceLog)
                 Trace("GetScalar", p_sql);
 
             var db = await GetDb();
@@ -119,7 +111,7 @@ namespace Dt.Core
 
         public async Task<IEnumerable<Row>> Each(string p_sql, object p_params = null)
         {
-            if (_log != null)
+            if (TraceLog)
                 Trace("Each", p_sql);
 
             var db = await GetDb();
@@ -129,7 +121,7 @@ namespace Dt.Core
         public async Task<IEnumerable<TEntity>> Each<TEntity>(string p_sql, object p_params = null)
             where TEntity : Entity
         {
-            if (_log != null)
+            if (TraceLog)
                 Trace("Each", p_sql);
 
             var db = await GetDb();
@@ -138,7 +130,7 @@ namespace Dt.Core
 
         public async Task<IEnumerable<T>> EachFirstCol<T>(string p_sql, object p_params = null)
         {
-            if (_log != null)
+            if (TraceLog)
                 Trace("EachFirstCol", p_sql);
 
             var db = await GetDb();
@@ -149,7 +141,7 @@ namespace Dt.Core
         #region 增删改
         public async Task<int> Exec(string p_sql, object p_params = null)
         {
-            if (_log != null)
+            if (TraceLog)
                 Trace("Exec", p_sql);
 
             var db = await GetDb();
@@ -158,7 +150,7 @@ namespace Dt.Core
 
         public async Task<int> BatchExec(List<Dict> p_dts)
         {
-            if (_log != null)
+            if (TraceLog)
                 Trace("BatchExec", "批量sql");
 
             var db = await GetDb();
@@ -252,7 +244,8 @@ namespace Dt.Core
                     }
                 }
 
-                _log?.Debug($"打开 {_ai.Name} 库");
+                if (TraceLog)
+                    Log.Logger.Debug($"打开 {_ai.Name} 库");
             }
             catch (Exception ex)
             {
@@ -268,11 +261,6 @@ namespace Dt.Core
             return _db;
         }
 
-        void Trace(string p_method, string p_sql)
-        {
-            _log.ForContext("src", $"{_ai.Name}.{p_method}")
-                .Debug(p_sql);
-        }
         #endregion
 
         #region 库信息
@@ -314,6 +302,19 @@ namespace Dt.Core
         public Task SyncDbTime()
         {
             throw new NotSupportedException();
+        }
+        #endregion
+
+        #region 日志
+        /// <summary>
+        /// 是否记录sql日志
+        /// </summary>
+        internal static bool TraceLog { get; set; } = false;
+
+        void Trace(string p_method, string p_sql)
+        {
+            Log.Logger.ForContext("src", $"sqlite.{_ai.Name}.{p_method}")
+                .Debug(p_sql);
         }
         #endregion
 

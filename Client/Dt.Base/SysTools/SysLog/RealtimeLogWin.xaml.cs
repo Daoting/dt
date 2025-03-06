@@ -35,6 +35,7 @@ namespace Dt.Base.Tools
                 Serilogger.ApplySetting(new LogSetting());
                 Log.Debug("已将最小日志级别自动调整为Debug");
             }
+            _menu["Sqlite"].IsChecked = SqliteAccess.TraceLog;
         }
 
         void OnOutputClick(ItemClickArgs e)
@@ -50,6 +51,12 @@ namespace Dt.Base.Tools
             NaviTo("日志内容");
         }
 
+        void OnSqlite(Mi e)
+        {
+            SqliteAccess.TraceLog = !SqliteAccess.TraceLog;
+            e.IsChecked = SqliteAccess.TraceLog;
+        }
+        
         void OnClear(Mi e)
         {
             TraceLogs.Clear();
