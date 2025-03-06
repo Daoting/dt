@@ -13,7 +13,7 @@ using System.Text.Json;
 
 namespace Dt.Base.Views
 {
-    [ViewParamsEditor("通用单表")]
+    [ViewParamsEditor("通用单表视图")]
     public sealed partial class SingleTblDesign : Dlg, IViewParamsEditor
     {
         static Table _entityCls;
@@ -102,6 +102,26 @@ namespace Dt.Base.Views
             }
             
             p_list.Data = _entityCls;
+        }
+
+        async void OnClsChanged(FvCell arg1, object arg2)
+        {
+            if (!string.IsNullOrEmpty(_cfg.QueryFvXaml)
+                || _cfg.ListCfg.IsChanged
+                || _cfg.FormCfg.IsChanged)
+            {
+                if (await Kit.Confirm("实体类型已修改，是否清空所有配置？"))
+                {
+                    _cfg.QueryFvXaml = null;
+                    _cfg.ListCfg = new SingleTblListCfg();
+                    _cfg.FormCfg = new SingleTblFormCfg();
+
+                    _fvMain.Data = null;
+                    _fvMain.Data = _cfg;
+                    _fvList.Data = _cfg.ListCfg;
+                    _fvForm.Data = _cfg.FormCfg;
+                }
+            }
         }
     }
 }

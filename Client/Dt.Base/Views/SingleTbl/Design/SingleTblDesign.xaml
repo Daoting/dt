@@ -17,7 +17,7 @@
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 		<a:Fv x:Name="_fvMain">
-            <a:CList ID="EntityCls" Title="实体类型" SrcID="cls" LoadData="OnLoadEntityCls" GroupName="group">
+            <a:CList ID="EntityCls" Title="实体类型" SrcID="cls" LoadData="OnLoadEntityCls" GroupName="group" Changed="OnClsChanged">
                 <DataTemplate>
                     <StackPanel Margin="10">
                         <a:Dot ID="cls" />
