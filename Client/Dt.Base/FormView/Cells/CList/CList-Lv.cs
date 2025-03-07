@@ -140,5 +140,14 @@ namespace Dt.Base
             get { return _lv.GroupContext; }
             set { _lv.GroupContext = value; }
         }
+
+        /// <summary>
+        /// 获取设置项目的最小宽度，默认160，只磁贴视图有效！
+        /// </summary>
+        public double MinItemWidth
+        {
+            get { return _lv.MinItemWidth; }
+            set { _lv.MinItemWidth = value; }
+        }
     }
 }
