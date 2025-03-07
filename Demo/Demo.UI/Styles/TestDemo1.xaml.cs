@@ -28,17 +28,12 @@ namespace Demo.UI
 
         void OnTest1(object sender, RoutedEventArgs e)
         {
-            var txt = ResKit.GetText("成绩.json");
-            Kit.Msg(txt);
+            
         }
 
         void OnTest2(object sender, RoutedEventArgs e)
         {
-            using (var stream = ResKit.GetStream("成绩.json"))
-            using (var reader = new StreamReader(stream))
-            {
-                Kit.Msg(reader.ReadToEnd());
-            }
+           
         }
     }
 }
