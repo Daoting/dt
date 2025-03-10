@@ -37,7 +37,9 @@ namespace Dt.Base
             if (tp.IsGenericType && tp.GetGenericTypeDefinition() == typeof(Nullable<>))
                 tp = tp.GetGenericArguments()[0];
 
-            if (m.Val.GetType() == tp)
+            // 可能为子类，如值为 RuntimeType 时
+            Type tpVal = m.Val.GetType();
+            if (tpVal == tp || tpVal.IsSubclassOf(tp))
                 return m.Val;
 
             // 从ListDlg选择对象后回填数据时
