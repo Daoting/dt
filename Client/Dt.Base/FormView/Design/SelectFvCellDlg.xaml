@@ -17,6 +17,5 @@
                 <a:Dot ID="Name" Padding="10"/>
             </DataTemplate>
         </a:CList>
-        <a:CList ID="ID" />
     </a:Fv>
 </a:Dlg>

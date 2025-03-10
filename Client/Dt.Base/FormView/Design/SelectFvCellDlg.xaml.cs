@@ -16,15 +16,32 @@ namespace Dt.Base.FormView
     public partial class SelectFvCellDlg : Dlg
     {
         readonly Row _row;
-        
-        public SelectFvCellDlg()
+
+        public SelectFvCellDlg(FvDesign p_design)
         {
             InitializeComponent();
 
             _row = new Row { { "Type", typeof(Type) }, { "ID", "" } };
-            //_row[0] = typeof(CText);
+            if (p_design.IsFixCols)
+            {
+                var ls = new CList { ID = "ID" };
+                var cols = new Nl<string>();
+                foreach (var col in p_design.GetUnusedCols())
+                {
+                    cols.Add(col.Name);
+                }
+                ls.Data = cols;
+                if (cols.Count == 0)
+                    ls.IsEditable = true;
+                _fv.Items.Add(ls);
+            }
+            else
+            {
+                _fv.Items.Add(new CText { ID = "ID" });
+            }
+            _row[0] = typeof(CText);
             _fv.Data = _row;
-            
+
             if (!Kit.IsPhoneUI)
             {
                 Width = 400;
@@ -33,7 +50,7 @@ namespace Dt.Base.FormView
         }
 
         public Row Row => _row;
-        
+
         void OnLoadType(CList arg1, AsyncArgs arg2)
         {
             arg1.Data = new Nl<Type>
@@ -61,13 +78,19 @@ namespace Dt.Base.FormView
 
         void OnSave()
         {
-            if (_row[0] == null)
+            var tp = _row["Type"] as Type;
+            if (tp == null)
             {
                 _fv[0].Warn("请选择格类型！");
                 return;
             }
-            
-            
+
+            if (tp.IsSubclassOf(typeof(FvCell)) && _row.Str("ID") == "")
+            {
+                _fv[1].Warn("请输入ID！");
+                return;
+            }
+            Close(true);
         }
     }
 }

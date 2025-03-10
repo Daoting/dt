@@ -49,6 +49,20 @@ namespace Dt.Base
             return null;
         }
 
+        public bool IsFixCols => _info.Cols != null && _info.Cols.Count > 0;
+
+        public IEnumerable<EntityCol> GetUnusedCols()
+        {
+            if (!IsFixCols)
+                yield return null;
+            
+            foreach (var col in _info.Cols)
+            {
+                if (_fv.Items.FirstOrDefault(c => c is FvCell fc && fc.ID == col.Name) == null)
+                    yield return col;
+            }
+        }
+        
         void Jz()
         {
             if (!string.IsNullOrEmpty(_info.Xaml))
@@ -121,7 +135,7 @@ namespace Dt.Base
 
         async void OnAdd()
         {
-            var dlg = new SelectFvCellDlg();
+            var dlg = new SelectFvCellDlg(this);
             if (await dlg.ShowAsync())
             {
                 Row row = dlg.Row;
