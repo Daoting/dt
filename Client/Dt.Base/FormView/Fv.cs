@@ -118,9 +118,9 @@ namespace Dt.Base
         public event Action<bool> Dirty;
 
         /// <summary>
-        /// 单元格点击事件
+        /// 单元格点击事件，参数为单元格
         /// </summary>
-        public event Action<FvCell> CellClick;
+        public event Action<object> CellClick;
 
         /// <summary>
         /// 保存事件
@@ -523,7 +523,7 @@ namespace Dt.Base
         /// 触发内部单元格点击事件
         /// </summary>
         /// <param name="p_cell"></param>
-        internal void OnCellClick(FvCell p_cell)
+        internal void OnCellClick(object p_cell)
         {
             CellClick?.Invoke(p_cell);
         }

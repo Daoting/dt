@@ -79,53 +79,9 @@ namespace Dt.Base
                 _fv = new Fv();
             }
             _tabMain.Content = _fv;
-            _fv.CellClick += OnCellClick;
+            _fv.CellClick += (e) => FvDesignKit.LoadCellProperties(e, _fvProp);
 
             return;
-        }
-
-        void OnCellClick(FvCell e)
-        {
-            if (_fvProp.Data == e)
-                return;
-
-            if (_fvProp.Data != null && _fvProp.Data.GetType() == e.GetType())
-            {
-                _fvProp.Data = e;
-                return;
-            }
-            
-            var items = _fvProp.Items;
-            using (items.Defer())
-            {
-                items.Clear();
-                FvCell cell = new CTip();
-                cell.ID = "ID";
-                items.Add(cell);
-
-                cell = new CList();
-                cell.ID = "Title";
-                cell.Title = "标题";
-                items.Add(cell);
-                
-                foreach (var info in e.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
-                {
-                    // 可设置属性
-                    var attr = (CellParamAttribute)info.GetCustomAttribute(typeof(CellParamAttribute), false);
-                    if (attr == null)
-                        continue;
-
-                    cell = Fv.CreateCell(info.PropertyType, info.Name);
-                    cell.Title = attr.Title;
-                    items.Add(cell);
-                }
-
-                cell = new CBool();
-                cell.ID = "ShowTitle";
-                cell.Title = "显示标题";
-                items.Add(cell);
-            }
-            _fvProp.Data = e;
         }
         
         string GetXaml()

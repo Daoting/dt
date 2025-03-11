@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
 using Dt.Base.FormView;
+using Microsoft.UI.Xaml.Input;
 #endregion
 
 namespace Dt.Base
@@ -127,6 +128,11 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 获取所属的Fv
+        /// </summary>
+        internal Fv Owner { get; set; }
+        
+        /// <summary>
         /// 在面板上的布局区域
         /// </summary>
         Rect IFvCell.Bounds { get; set; }
@@ -199,6 +205,14 @@ namespace Dt.Base
             {
                 // 独立使用时右下边框
                 Margin = new Thickness(0, 0, 1, 1);
+            }
+        }
+
+        protected override void OnPointerPressed(PointerRoutedEventArgs e)
+        {
+            if (Owner != null && e.GetCurrentPoint(null).Properties.IsLeftButtonPressed)
+            {
+                Owner.OnCellClick(this);
             }
         }
     }

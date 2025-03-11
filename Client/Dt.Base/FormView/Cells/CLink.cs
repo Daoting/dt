@@ -84,9 +84,10 @@ namespace Dt.Base
         protected override void OnPointerPressed(PointerRoutedEventArgs e)
         {
             var props = e.GetCurrentPoint(null).Properties;
-            if (props.IsLeftButtonPressed)
+            if (props.IsLeftButtonPressed && Owner != null)
             {
                 VisualStateManager.GoToState(this, "Pressed", true);
+                Owner.OnCellClick(this);
             }
         }
 

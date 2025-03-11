@@ -27,7 +27,7 @@ namespace Demo.UI
         public SelectionCellDemo()
         {
             InitializeComponent();
-            _fv.CellClick += (e) => CellDemoKit.OnCellClick(e, _pbCell);
+            _fv.CellClick += (e) => FvDesignKit.LoadCellProperties(e, _pbCell);
             _fv.Changed += (e) => CellDemoKit.OnChanged(_fv, e);
             _pbFv.Data = _fv;
             LoadData();

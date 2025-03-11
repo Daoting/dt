@@ -27,7 +27,7 @@ namespace Demo.UI
             _fv.CellClick += OnCellClick;
         }
 
-        void OnCellClick(FvCell e)
+        void OnCellClick(object e)
         {
             _ob.Data = e;
         }

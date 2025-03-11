@@ -112,7 +112,11 @@ namespace Dt.Base
             {
                 cell.Owner = this;
             }
-            else if (!(p_item is CBar))
+            else if (p_item is CBar bar)
+            {
+                bar.Owner = this;
+            }
+            else
             {
                 // 自定义内容
                 CFree c = new CFree();
