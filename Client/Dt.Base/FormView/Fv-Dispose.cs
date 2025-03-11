@@ -36,6 +36,8 @@ namespace Dt.Base
         public void Destroy()
         {
             _isLoaded = false;
+            Unloaded -= OnFvUnloaded;
+            
             if (Data != null)
             {
                 // 移除旧数据事件

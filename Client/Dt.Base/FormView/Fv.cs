@@ -45,12 +45,6 @@ namespace Dt.Base
             typeof(Fv),
             new PropertyMetadata(4, OnMaxColCountChanged));
 
-        public readonly static DependencyProperty IsDesignModeProperty = DependencyProperty.Register(
-            "IsDesignMode",
-            typeof(bool),
-            typeof(Fv),
-            new PropertyMetadata(false, OnIsDesignModeChanged));
-        
         public readonly static DependencyProperty DataViewProperty = DependencyProperty.Register(
             "DataView",
             typeof(ObjectView),
@@ -76,14 +70,6 @@ namespace Dt.Base
                 fv._panel.InvalidateMeasure();
         }
 
-        static void OnIsDesignModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            Fv fv = (Fv)d;
-            if (fv._isLoaded && !(bool)e.NewValue)
-            {
-
-            }
-        }
         #endregion
 
         #region 成员变量
@@ -174,15 +160,6 @@ namespace Dt.Base
             set { SetValue(MaxColCountProperty, value); }
         }
 
-        /// <summary>
-        /// 获取设置是否为设计模式，默认false，设计模式时点击格显示选中状态、可拖拽格调序
-        /// </summary>
-        public bool IsDesignMode
-        {
-            get { return (bool)GetValue(IsDesignModeProperty); }
-            set { SetValue(IsDesignModeProperty, value); }
-        }
-        
         /// <summary>
         /// 获取撤消命令
         /// </summary>
@@ -517,15 +494,6 @@ namespace Dt.Base
         void OnDirty()
         {
             Dirty?.Invoke(IsDirty);
-        }
-
-        /// <summary>
-        /// 触发内部单元格点击事件
-        /// </summary>
-        /// <param name="p_cell"></param>
-        internal void OnCellClick(object p_cell)
-        {
-            CellClick?.Invoke(p_cell);
         }
 
         internal void OnSave()

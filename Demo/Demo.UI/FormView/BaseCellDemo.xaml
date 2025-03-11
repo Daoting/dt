@@ -102,8 +102,9 @@
                             <Button Content="普通对象" Click="OnObj" />
                             <Button Content="空数据源" Click="OnNull" />
                         </StackPanel>
-                        <a:CBool Title="表单只读" ID="IsReadOnly" />
-                        <a:CBool Title="自动获得焦点" ID="AutoFocus" />
+                        <a:CBool Title="表单只读" ID="IsReadOnly" ShowTitle="False" ColSpan="0.33" />
+                        <a:CBool Title="设计模式" ID="IsDesignMode" ShowTitle="False" ColSpan="0.33" />
+                        <a:CBool Title="自动焦点" ID="AutoFocus" ShowTitle="False" ColSpan="0.33" />
                         <StackPanel Orientation="Horizontal">
                             <Button Content="警告信息" Click="OnWarn" />
                             <Button Content="提示信息" Click="OnMsg" />

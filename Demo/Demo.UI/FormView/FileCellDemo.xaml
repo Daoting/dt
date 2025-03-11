@@ -55,7 +55,8 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <a:Fv x:Name="_pbFv">
-                        <a:CBool Title="表单只读" ID="IsReadOnly" />
+                        <a:CBool Title="表单只读" ID="IsReadOnly" ShowTitle="False" ColSpan="0.5" />
+                        <a:CBool Title="设计模式" ID="IsDesignMode" ShowTitle="False" ColSpan="0.5" />
                         <a:CBar Title="单元格" />
                     </a:Fv>
                     <a:Fv x:Name="_pbCell" Grid.Row="1" />
