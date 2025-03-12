@@ -124,4 +124,31 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!--拖拽标志-->
+    <Style x:Key="DragFlagDlg" TargetType="a:Dlg">
+        <Setter Property="Title" Value="&#xE0C7;" />
+        <Setter Property="Foreground" Value="{StaticResource 亮红}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="ShowVeil" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:Dlg">
+                    <Grid x:Name="HeaderGrid"
+                          Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}">
+                        <!--标题-->
+                        <TextBlock Text="{TemplateBinding Title}"
+                                   FontFamily="{StaticResource IconFont}"
+                                   FontSize="30"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   Foreground="{TemplateBinding Foreground}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

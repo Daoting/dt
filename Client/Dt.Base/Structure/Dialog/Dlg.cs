@@ -249,6 +249,16 @@ namespace Dt.Base
         /// 拖拽调整大小后事件
         /// </summary>
         public event Action Resized;
+
+        /// <summary>
+        /// 对话框拖拽移动事件，参数为当前鼠标的位置
+        /// </summary>
+        public event Action<Dlg, Point> Dragging;
+
+        /// <summary>
+        /// 对话框停止拖拽事件，参数为停止时的位置
+        /// </summary>
+        public event Action<Point> Dropped;
         #endregion
 
         #region 属性
@@ -1259,13 +1269,14 @@ namespace Dt.Base
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnHeaderPointerPressed(object sender, PointerRoutedEventArgs e)
+        internal void OnHeaderPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             if (GetResizeDirection(e.GetCurrentPoint(this).Position) == ResizeDirection.None && _headerGrid.CapturePointer(e.Pointer))
             {
                 _isHeadPressed = true;
                 Point pt = e.GetCurrentPoint(null).Position;
                 _startPoint = new Point(pt.X - Left, pt.Y - Top);
+                Dragging?.Invoke(this, pt);
             }
         }
 
@@ -1293,6 +1304,7 @@ namespace Dt.Base
 
                 Left = left;
                 Top = top;
+                Dragging?.Invoke(this, pt);
             }
         }
 
@@ -1307,6 +1319,7 @@ namespace Dt.Base
             {
                 _isHeadPressed = false;
                 _headerGrid.ReleasePointerCapture(e.Pointer);
+                Dropped?.Invoke(e.GetCurrentPoint(null).Position);
             }
         }
 

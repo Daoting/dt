@@ -13,6 +13,8 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
+using Microsoft.UI.Xaml.Input;
+using Windows.UI;
 #endregion
 
 namespace Dt.Base
@@ -83,7 +85,7 @@ namespace Dt.Base
                 },
             });
             grid.Children.Add(sp);
-            
+
             dlg.Content = grid;
             dlg.Show();
             return dlg;
@@ -210,6 +212,53 @@ namespace Dt.Base
                 return p_dlg.ShowAsync();
             }
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// 开始拖拽
+        /// </summary>
+        /// <param name="e">当前鼠标点击事件参数</param>
+        /// <param name="p_stopDragCall">对话框停止拖拽时的回调方法</param>
+        /// <param name="p_draggingCall">对话框拖拽移动时的回调方法</param>
+        /// <param name="p_dlgSetting">设置对话框图标(Title)或前景色</param>
+        public static void StartDrag(
+            this PointerRoutedEventArgs e,
+            Action<Point> p_stopDragCall,
+            Action<Dlg, Point> p_draggingCall = null,
+            Action<Dlg> p_dlgSetting = null)
+        {
+            var dlg = new Dlg
+            {
+                Style = (Style)Res.DialogRes["DragFlagDlg"],
+                IsPinned = true
+            };
+
+            Action<Dlg, Point> dragging = (d, p) => p_draggingCall(d, p);
+            if (p_draggingCall != null)
+                dlg.Dragging += dragging;
+
+            Action<Point> stopDrag = null;
+            stopDrag = p =>
+            {
+                dlg.Dragging -= dragging;
+                dlg.Dropped -= stopDrag;
+                dlg.Close();
+                dlg = null;
+                
+                if (p_stopDragCall != null)
+                    p_stopDragCall(p);
+            };
+            dlg.Dropped += stopDrag;
+
+            dlg.Show();
+            var pt = e.GetCurrentPoint(null).Position;
+            dlg.Left = pt.X - Math.Floor(dlg.DesiredSize.Width / 2);
+            dlg.Top = pt.Y - Math.Floor(dlg.DesiredSize.Height / 2);
+
+            if (p_dlgSetting != null)
+                p_dlgSetting(dlg);
+
+            dlg.OnHeaderPointerPressed(dlg, e);
         }
     }
 }

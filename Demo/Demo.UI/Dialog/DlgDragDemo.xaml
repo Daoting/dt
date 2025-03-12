@@ -1,0 +1,31 @@
+﻿<a:Win
+    x:Class="Demo.UI.DlgDragDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Demo.UI">
+
+    <Grid Padding="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal">
+            <Border Width="100" Height="100" Background="LightGray" Padding="4" PointerPressed="OnPointerPressed1">
+                <TextBlock Text="拖动此区域，只拖拽结束时处理" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <Border Width="100" Height="100" Background="Green" Padding="4" Margin="20,0,20,0" PointerPressed="OnPointerPressed2">
+                <TextBlock Text="拖动此区域，显示拖拽过程的不同状态" TextWrapping="Wrap" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <Border Width="100" Height="100" Background="Red" Padding="4" PointerPressed="OnPointerPressed3">
+                <TextBlock Text="拖动此区域，自定义拖拽图标和不同状态" TextWrapping="Wrap" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+        </StackPanel>
+
+        <Border x:Name="_bdTgt" BorderBrush="Black" BorderThickness="2" Width="400" Height="400" Grid.Row="2">
+            <TextBlock Text="目标区域" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Border>
+    </Grid>
+</a:Win>
