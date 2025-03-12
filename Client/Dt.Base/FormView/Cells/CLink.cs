@@ -87,7 +87,7 @@ namespace Dt.Base
             if (props.IsLeftButtonPressed && Owner != null)
             {
                 VisualStateManager.GoToState(this, "Pressed", true);
-                Owner.OnCellClick(this);
+                Owner.OnCellClick(this, e);
             }
         }
 

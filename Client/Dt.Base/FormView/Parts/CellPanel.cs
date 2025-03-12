@@ -297,7 +297,7 @@ namespace Dt.Base.FormView
         void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             if (_owner != null && _owner.Owner != null)
-                _owner.Owner.OnCellClick(_owner);
+                _owner.Owner.OnCellClick(_owner, e);
         }
 
         /// <summary>

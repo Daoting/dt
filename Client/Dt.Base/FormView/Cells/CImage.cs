@@ -158,7 +158,7 @@ namespace Dt.Base
         {
             base.OnPointerPressed(e);
             if (Owner != null)
-                Owner.OnCellClick(this);
+                Owner.OnCellClick(this, e);
         }
 
         protected override void SetValBinding()

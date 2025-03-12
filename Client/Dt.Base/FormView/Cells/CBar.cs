@@ -212,7 +212,7 @@ namespace Dt.Base
         {
             if (Owner != null && e.GetCurrentPoint(null).Properties.IsLeftButtonPressed)
             {
-                Owner.OnCellClick(this);
+                Owner.OnCellClick(this, e);
             }
         }
     }
