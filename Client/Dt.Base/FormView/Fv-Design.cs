@@ -9,7 +9,6 @@
 #region 引用命名
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
 #endregion
 
@@ -71,6 +70,7 @@ namespace Dt.Base
                     _rcDesign = new Dlg
                     {
                         IsPinned = true,
+                        TopMost = true,
                         HideTitleBar = true,
                         BorderBrush = Res.亮红,
                         BorderThickness = new Thickness(2),
@@ -107,10 +107,12 @@ namespace Dt.Base
                     break;
                 }
             }
-
+            
+            int src = _panel.Children.IndexOf(_rcDesign.PlacementTarget);
+            if (src == tgt)
+                return;
+            
             Items.ItemsChanged -= OnItemsChanged;
-
-            var src = _panel.Children.IndexOf(_rcDesign.PlacementTarget);
 
             // 往前移动插入到目标前面，往后移动插入到目标后面
             _panel.Children.RemoveAt(src);

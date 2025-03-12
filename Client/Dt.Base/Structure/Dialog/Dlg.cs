@@ -162,6 +162,12 @@ namespace Dt.Base
             typeof(Dlg),
             new PropertyMetadata(false));
 
+        public static readonly DependencyProperty TopMostProperty = DependencyProperty.Register(
+            "TopMost",
+            typeof(bool),
+            typeof(Dlg),
+            new PropertyMetadata(false));
+
         public static readonly DependencyProperty OwnWinProperty = DependencyProperty.Register(
             "OwnWin",
             typeof(Win),
@@ -206,7 +212,8 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
-        static int _currentZIndex = 1;
+        static int _normalZIndex = 1;
+        static int _topmostZIndex = 100000;
         readonly Canvas _canvas;
         Grid _headerGrid;
         bool _isHeadPressed;
@@ -466,6 +473,15 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 是否将对话框置于最上层，默认false
+        /// </summary>
+        public bool TopMost
+        {
+            get { return (bool)GetValue(TopMostProperty); }
+            set { SetValue(TopMostProperty, value); }
+        }
+
+        /// <summary>
         /// 所属Win，和Win生命周期相同，Win关闭后关闭对话框、释放资源
         /// </summary>
         public Win OwnWin
@@ -487,10 +503,8 @@ namespace Dt.Base
                 ShowInCanvas();
                 return true;
             }
-            else if (Canvas.GetZIndex(_canvas) != _currentZIndex)
-            {
-                Canvas.SetZIndex(_canvas, ++_currentZIndex);
-            }
+
+            BringToTop();
             return false;
         }
 
@@ -506,10 +520,8 @@ namespace Dt.Base
                 ShowInCanvas();
                 return _taskSrc.Task;
             }
-            else if (Canvas.GetZIndex(_canvas) != _currentZIndex)
-            {
-                Canvas.SetZIndex(_canvas, ++_currentZIndex);
-            }
+
+            BringToTop();
 
             // 确保已显示时也能正常等待
             if (_taskSrc != null && !_taskSrc.Task.IsCompleted)
@@ -531,6 +543,14 @@ namespace Dt.Base
         /// </summary>
         /// <param name="e"></param>
         public void OnOK(Mi e)
+        {
+            Close(true);
+        }
+
+        /// <summary>
+        /// 确认并关闭对话框，使方法ShowAsync返回true，方便菜单项使用
+        /// </summary>
+        public void OnOK()
         {
             Close(true);
         }
@@ -565,8 +585,16 @@ namespace Dt.Base
         /// </summary>
         public void BringToTop()
         {
-            if (Canvas.GetZIndex(_canvas) != _currentZIndex)
-                Canvas.SetZIndex(_canvas, ++_currentZIndex);
+            if (TopMost)
+            {
+                if (Canvas.GetZIndex(_canvas) != _topmostZIndex)
+                    Canvas.SetZIndex(_canvas, ++_topmostZIndex);
+            }
+            else
+            {
+                if (Canvas.GetZIndex(_canvas) != _normalZIndex)
+                    Canvas.SetZIndex(_canvas, ++_normalZIndex);
+            }
         }
 
         /// <summary>
@@ -717,7 +745,11 @@ namespace Dt.Base
                 || (placement > DlgPlacement.FromBottom && PlacementTarget == null))
                 return;
 
-            Canvas.SetZIndex(_canvas, ++_currentZIndex);
+            if (TopMost)
+                Canvas.SetZIndex(_canvas, ++_topmostZIndex);
+            else
+                Canvas.SetZIndex(_canvas, ++_normalZIndex);
+            
             double maxWidth = Kit.ViewWidth;
             double maxHeight = Kit.ViewHeight;
 
@@ -1362,7 +1394,8 @@ namespace Dt.Base
                     };
                     Canvas.SetLeft(_bdResize, offset.X);
                     Canvas.SetTop(_bdResize, offset.Y);
-                    Canvas.SetZIndex(_bdResize, _currentZIndex + 10);
+                    int zindex = TopMost ? _topmostZIndex : _normalZIndex;
+                    Canvas.SetZIndex(_bdResize, zindex + 10);
                     UITree.AddDlgResizeFlag(_bdResize);
                 }
             }
@@ -1656,7 +1689,7 @@ namespace Dt.Base
         {
             _cleaner.Add(this);
         }
-        
+
         void OnOwnWinDestroyed(Win e)
         {
             e.Destroyed -= OnOwnWinDestroyed;

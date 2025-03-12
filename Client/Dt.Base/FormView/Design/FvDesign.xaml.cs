@@ -78,6 +78,7 @@ namespace Dt.Base
             {
                 _fv = new Fv();
             }
+            _fv.IsDesignMode = true;
             _tabMain.Content = _fv;
             _fv.CellClick += (e) => FvDesignKit.LoadCellProperties(e, _fvProp);
 
@@ -102,6 +103,26 @@ namespace Dt.Base
                 }
                 _fv.Items.Add(cell);
             }
+        }
+        
+        void OnDel()
+        {
+
+        }
+        
+        void OnCopyXaml()
+        {
+
+        }
+
+        void OnShowEditXaml()
+        {
+
+        }
+
+        void OnSave()
+        {
+            OwnDlg?.OnOK();
         }
     }
 }

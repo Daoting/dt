@@ -230,7 +230,8 @@ namespace Dt.Base
             var dlg = new Dlg
             {
                 Style = (Style)Res.DialogRes["DragFlagDlg"],
-                IsPinned = true
+                IsPinned = true,
+                TopMost = true,
             };
 
             Action<Dlg, Point> dragging = (d, p) => p_draggingCall(d, p);
