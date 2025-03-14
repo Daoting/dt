@@ -9,6 +9,9 @@
 #region 引用命名
 using Dt.Base.FormView;
 using Dt.Toolkit.Mask;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Data;
 #endregion
 
 namespace Dt.Base
@@ -57,15 +60,6 @@ namespace Dt.Base
         {
             get { return _box.ShowPlaceHolder; }
             set { _box.ShowPlaceHolder = value; }
-        }
-
-        /// <summary>
-        /// 掩码占位符，RegEx有效
-        /// </summary>
-        public char PlaceHolder
-        {
-            get { return _box.PlaceHolder; }
-            set { _box.PlaceHolder = value; }
         }
 
         /// <summary>
@@ -119,10 +113,26 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 方法
+        /// <summary>
+        /// 设置掩码占位符，RegEx有效，不再使用属性，改为方法，因FvCell.Placeholder为string类型
+        /// </summary>
+        public void SetPlaceHolder(char p_ch)
+        {
+            _box.PlaceHolder = p_ch;
+        }
+        #endregion
+
         #region 重写方法
         protected override void OnApplyCellTemplate()
         {
             _panel.Child = _box;
+            var bind = new Binding
+            {
+                Path = new PropertyPath("Placeholder"),
+                Source = this
+            };
+            _box.Box.SetBinding(TextBox.PlaceholderTextProperty, bind);
         }
 
         protected override void SetValBinding()
