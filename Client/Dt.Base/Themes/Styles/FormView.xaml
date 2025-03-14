@@ -423,6 +423,7 @@
                                      IsEnabled="{Binding ReadOnlyBinding,Converter={StaticResource CvBoolReverse},RelativeSource={RelativeSource TemplatedParent}}"
                                      MaxLength="{TemplateBinding MaxLength}"
                                      PasswordChar="{TemplateBinding Holder}"
+                                     PlaceholderText="{TemplateBinding Placeholder}"
                                      BorderThickness="0"
                                      Padding="10" />
                     </fv:CellPanel>
