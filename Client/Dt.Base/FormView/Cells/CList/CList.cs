@@ -72,7 +72,7 @@ namespace Dt.Base
             typeof(bool),
             typeof(CList),
             new PropertyMetadata(false, OnIsEditableChanged));
-        
+
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
             "Value",
             typeof(object),
@@ -181,7 +181,7 @@ namespace Dt.Base
         /// <para>1. 当为目标列填充null时，用'-'标志，如：SrcID="id#-#-"</para>
         /// <para>2. SrcID空时默认取name列 或 数据源第一列的列名</para>
         /// </summary>
-        [CellParam("源属性列表")]
+        [CellParam("源属性：'#'隔开，'-'目标填充null，空时name列或第一列")]
         public string SrcID
         {
             get { return (string)GetValue(SrcIDProperty); }
@@ -193,7 +193,7 @@ namespace Dt.Base
         /// <para>1. TgtID空时默认取当前列名</para>
         /// <para>2. '#'隔开多列时可用'-'代表当前列名，如：TgtID="-#child1#child2"，也可以直接写当前列名</para>
         /// </summary>
-        [CellParam("目标属性列表")]
+        [CellParam("目标属性：'#'隔开，'-'代表当前列名，空时当前列名")]
         public string TgtID
         {
             get { return (string)GetValue(TgtIDProperty); }
@@ -220,7 +220,7 @@ namespace Dt.Base
             get { return (bool)GetValue(IsEditableProperty); }
             set { SetValue(IsEditableProperty, value); }
         }
-        
+
         /// <summary>
         /// 获取设置当前值
         /// </summary>
@@ -243,7 +243,6 @@ namespace Dt.Base
         {
             _grid = (Grid)GetTemplateChild("Grid");
 #if WIN
-            // TextBlock可复制
             _grid.AddHandler(TappedEvent, new TappedEventHandler(OnShowDlg), true);
 #else
             _grid.Tapped += OnShowDlg;
@@ -298,6 +297,22 @@ namespace Dt.Base
                 _dlg = null;
             }
         }
+
+        public override FvCell CreateDesignCell(CellPropertyInfo p_info)
+        {
+            if (p_info.Info.Name == "Format")
+            {
+                return new CList
+                {
+                    ID = p_info.Info.Name,
+                    Title = p_info.Title,
+                    IsEditable = true,
+                    Items = { "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "HH:mm:ss" }
+                };
+            }
+
+            return base.CreateDesignCell(p_info);
+        }
         #endregion
 
         #region 内部方法
@@ -349,31 +364,30 @@ namespace Dt.Base
             if (_grid.Children.Count == 2)
                 _grid.Children.RemoveAt(1);
 
+            TextBox tb = new TextBox { Style = Res.FvTextBox };
+            Binding bind = new Binding
+            {
+                Path = new PropertyPath("Value"),
+                Converter = new ListTextConverter(this),
+                Source = this
+            };
             if (IsEditable && !ReadOnlyBinding)
             {
-                TextBox tb = new TextBox { Style = Res.FvTextBox };
-                Binding bind = new Binding
-                {
-                    Path = new PropertyPath("Value"),
-                    Converter = new ListTextConverter(this),
-                    Mode = BindingMode.TwoWay,
-                    Source = this
-                };
-                tb.SetBinding(TextBox.TextProperty, bind);
-                _grid.Children.Add(tb);
+                bind.Mode = BindingMode.TwoWay;
             }
             else
             {
-                TextBlock tb = new TextBlock { IsTextSelectionEnabled = true, Margin = new Thickness(10, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center };
-                Binding bind = new Binding
-                {
-                    Path = new PropertyPath("Value"),
-                    Converter = new ListTextConverter(this),
-                    Source = this
-                };
-                tb.SetBinding(TextBlock.TextProperty, bind);
-                _grid.Children.Add(tb);
+                tb.IsReadOnly = true;
             }
+            tb.SetBinding(TextBox.TextProperty, bind);
+
+            bind = new Binding
+            {
+                Path = new PropertyPath("Placeholder"),
+                Source = this
+            };
+            tb.SetBinding(TextBox.PlaceholderTextProperty, bind);
+            _grid.Children.Add(tb);
         }
 
         /// <summary>
