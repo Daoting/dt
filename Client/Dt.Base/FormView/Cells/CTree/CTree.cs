@@ -227,7 +227,6 @@ namespace Dt.Base
         {
             _grid = (Grid)GetTemplateChild("Grid");
 #if WIN
-            // TextBlock可复制
             _grid.AddHandler(TappedEvent, new TappedEventHandler(OnShowDlg), true);
 #else
             _grid.Tapped += OnShowDlg;

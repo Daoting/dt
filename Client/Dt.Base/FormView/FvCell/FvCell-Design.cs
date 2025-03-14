@@ -37,7 +37,7 @@ namespace Dt.Base
                 p_xw.WriteAttributeString("ID", ID);
             if (Title != null)
                 p_xw.WriteAttributeString("Title", Title);
-            
+
             foreach (var prop in FvDesignKit.GetCellProps(tp))
             {
                 var val = prop.Info.GetValue(this);
@@ -45,8 +45,42 @@ namespace Dt.Base
                 if (!object.Equals(val, prop.DefaultValue))
                     p_xw.WriteAttributeString(prop.Info.Name, val.ToString());
             }
-            
+
             p_xw.WriteEndElement();
+        }
+
+        /// <summary>
+        /// 创建当前单元格设计时的属性单元格
+        /// </summary>
+        /// <param name="p_info"></param>
+        /// <returns></returns>
+        public virtual FvCell CreateDesignCell(CellPropertyInfo p_info)
+        {
+            var fc = Fv.CreateCell(p_info.Info.PropertyType, p_info.Info.Name);
+            if (p_info.Info.PropertyType == typeof(bool))
+            {
+                fc.Title = p_info.Title;
+                fc.ShowTitle = false;
+                fc.ColSpan = 0.5;
+            }
+            else
+            {
+                var length = Kit.GetByteCount(p_info.Title);
+                if (length > 26)
+                {
+                    fc.ShowTitle = false;
+                }
+                else if (length > 13)
+                {
+                    fc.Title = p_info.Title;
+                    fc.TitleWidth = 240;
+                }
+                else
+                {
+                    fc.Title = p_info.Title;
+                }
+            }
+            return fc;
         }
     }
 }

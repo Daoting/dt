@@ -111,7 +111,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置可在文本框中键入或粘贴的最大字符数，默认0无限制
         /// </summary>
-        [CellParam("最大字符数")]
+        [CellParam("最大字符数，默认0无限制")]
         public int MaxLength
         {
             get { return (int)GetValue(MaxLengthProperty); }

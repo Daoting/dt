@@ -137,6 +137,22 @@ namespace Dt.Base
                 g.PointerCaptureLost -= OnGridPointerExited;
             }
         }
+
+        public override FvCell CreateDesignCell(CellPropertyInfo p_info)
+        {
+            if (p_info.Info.Name == "Format")
+            {
+                return new CList
+                {
+                    ID = p_info.Info.Name,
+                    Title = p_info.Title,
+                    IsEditable = true,
+                    Items = { "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "HH:mm:ss", "d2" }
+                };
+            }
+
+            return base.CreateDesignCell(p_info);
+        }
         #endregion
 
         #region 动态内容

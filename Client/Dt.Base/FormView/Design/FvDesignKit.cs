@@ -51,29 +51,34 @@ namespace Dt.Base
                     cell.Title = "标题";
                     items.Add(cell);
 
-                    List<FvCell> bs = new List<FvCell>();
+                    int sumFront = 2;
+                    int sumMiddle = 0;
+                    int sumBar = 0;
+                    
+                    // 按标题宽度排序显示，最后放选择框
                     foreach (var info in GetCellProps(fc.GetType()))
                     {
-                        cell = Fv.CreateCell(info.Info.PropertyType, info.Info.Name);
-                        cell.Title = info.Title;
+                        cell = fc.CreateDesignCell(info);
                         if (info.Info.PropertyType == typeof(bool))
                         {
-                            cell.ShowTitle = false;
-                            cell.ColSpan = 0.5;
-                            bs.Add(cell);
+                            items.Add(cell);
+                        }
+                        else if (!cell.ShowTitle)
+                        {
+                            items.Insert(sumFront + sumMiddle + sumBar, new CBar { Title = info.Title });
+                            sumBar++;
+                            items.Insert(sumFront + sumMiddle + sumBar, cell);
+                            sumBar++;
+                        }
+                        else if (cell.TitleWidth > 120)
+                        {
+                            items.Insert(sumFront + sumMiddle, cell);
+                            sumMiddle++;
                         }
                         else
                         {
-                            cell.TitleWidth = 240;
-                            items.Add(cell);
-                        }
-                    }
-
-                    if (bs.Count > 0)
-                    {
-                        foreach (var item in bs)
-                        {
-                            items.Add(item);
+                            items.Insert(sumFront, cell);
+                            sumFront++;
                         }
                     }
                 }
