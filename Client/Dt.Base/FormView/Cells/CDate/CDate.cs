@@ -182,6 +182,22 @@ namespace Dt.Base
                 _dlg = null;
             }
         }
+
+        public override FvCell CreateDesignCell(CellPropertyInfo p_info)
+        {
+            if (p_info.Info.Name == "Format")
+            {
+                return new CList
+                {
+                    ID = p_info.Info.Name,
+                    Title = p_info.Title,
+                    IsEditable = true,
+                    Items = { "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "HH:mm:ss" }
+                };
+            }
+
+            return base.CreateDesignCell(p_info);
+        }
         #endregion
 
         void LoadContent()
@@ -230,6 +246,12 @@ namespace Dt.Base
                     Source = this
                 };
                 box.SetBinding(MaskBox.ValueProperty, bind);
+                bind = new Binding
+                {
+                    Path = new PropertyPath("Placeholder"),
+                    Source = this
+                };
+                box.Box.SetBinding(TextBox.PlaceholderTextProperty, bind);
                 _grid.Children.Add(box);
 
                 if (_format != DateFormatType.Time)
