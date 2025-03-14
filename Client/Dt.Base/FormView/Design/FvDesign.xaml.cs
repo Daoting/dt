@@ -19,8 +19,6 @@ namespace Dt.Base
 {
     public partial class FvDesign : Win
     {
-        const string _xamlPrefix = "<a:Fv xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" xmlns:a=\"using:Dt.Base\">";
-        const string _xamlPostfix = "</a:Fv>";
         readonly FvDesignInfo _info;
         Fv _fv;
 
@@ -30,7 +28,7 @@ namespace Dt.Base
 
             Throw.IfNull(p_info);
             _info = p_info;
-            Jz();
+            Jz(_info.Xaml);
         }
 
         public static async Task<string> Show(FvDesignInfo p_info)
@@ -45,7 +43,7 @@ namespace Dt.Base
             var win = new FvDesign(p_info);
             dlg.LoadWin(win);
             if (await dlg.ShowAsync())
-                return win.GetXaml();
+                return win._fv.ExportXaml();
             return null;
         }
 
@@ -55,43 +53,28 @@ namespace Dt.Base
         {
             if (!IsFixCols)
                 yield return null;
-            
+
             foreach (var col in _info.Cols)
             {
                 if (_fv.Items.FirstOrDefault(c => c is FvCell fc && fc.ID == col.Name) == null)
                     yield return col;
             }
         }
-        
-        void Jz()
+
+        void Jz(string p_xaml)
         {
-            if (!string.IsNullOrEmpty(_info.Xaml))
-            {
-                var xaml = _info.Xaml.Trim();
-                if (!xaml.StartsWith("<a:Fv "))
-                {
-                    xaml = _xamlPrefix + xaml + _xamlPostfix;
-                }
-                _fv = XamlReader.Load(xaml) as Fv;
-            }
-            else
-            {
-                _fv = new Fv();
-            }
+            _fv = string.IsNullOrEmpty(p_xaml) ? new Fv() : Fv.CreateByXaml(p_xaml);
             _fv.IsDesignMode = true;
             _tabMain.Content = _fv;
-            _fv.CellClick += (e) => FvDesignKit.LoadCellProperties(e, _fvProp);
-
-            return;
-        }
-        
-        string GetXaml()
-        {
-            return "";
+            _fv.CellClick += (e) => FvDesignKit.LoadCellProps(e, _fvProp);
         }
 
         async void OnAdd()
         {
+            _fv.ClearDesignCell();
+            _fvProp.Data = null;
+            _fvProp.Items.Clear();
+
             var dlg = new SelectFvCellDlg(this);
             if (await dlg.ShowAsync())
             {
@@ -104,12 +87,14 @@ namespace Dt.Base
                 _fv.Items.Add(cell);
             }
         }
-        
+
         void OnDel()
         {
-
+            _fv.DelDesignCell();
+            _fvProp.Data = null;
+            _fvProp.Items.Clear();
         }
-        
+
         void OnCopyXaml()
         {
 

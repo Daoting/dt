@@ -24,15 +24,13 @@ namespace Dt.Base.FormView
             _row = new Row { { "Type", typeof(Type) }, { "ID", "" } };
             if (p_design.IsFixCols)
             {
-                var ls = new CList { ID = "ID" };
+                var ls = new CList { ID = "ID", IsEditable = true };
                 var cols = new Nl<string>();
                 foreach (var col in p_design.GetUnusedCols())
                 {
                     cols.Add(col.Name);
                 }
                 ls.Data = cols;
-                if (cols.Count == 0)
-                    ls.IsEditable = true;
                 _fv.Items.Add(ls);
             }
             else

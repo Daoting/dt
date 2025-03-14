@@ -9,6 +9,9 @@
 #region 引用命名
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Markup;
+using System.Text;
+using System.Xml;
 using Windows.Foundation;
 #endregion
 
@@ -20,6 +23,9 @@ namespace Dt.Base
     public partial class Fv
     {
         #region 静态内容
+        const string _xamlPrefix = "<a:Fv xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" xmlns:a=\"using:Dt.Base\">";
+        const string _xamlPostfix = "</a:Fv>";
+
         public readonly static DependencyProperty IsDesignModeProperty = DependencyProperty.Register(
             "IsDesignMode",
             typeof(bool),
@@ -54,6 +60,78 @@ namespace Dt.Base
             set { SetValue(IsDesignModeProperty, value); }
         }
 
+        #region Xaml
+        /// <summary>
+        /// 根据xaml创建Fv
+        /// </summary>
+        /// <param name="p_xaml"></param>
+        /// <returns></returns>
+        public static Fv CreateByXaml(string p_xaml)
+        {
+            if (string.IsNullOrWhiteSpace(p_xaml))
+                Throw.Msg("无法创建Fv，xaml内容为空！");
+
+            var xaml = p_xaml.Trim();
+            if (!xaml.StartsWith("<a:Fv "))
+            {
+                xaml = _xamlPrefix + xaml + _xamlPostfix;
+            }
+            return XamlReader.Load(xaml) as Fv;
+        }
+
+        /// <summary>
+        /// 导出Fv的xaml
+        /// </summary>
+        /// <returns></returns>
+        public string ExportXaml()
+        {
+            var sb = new StringBuilder();
+            using (XmlWriter xw = XmlWriter.Create(sb, new XmlWriterSettings() { OmitXmlDeclaration = true, Indent = true }))
+            {
+                xw.WriteStartElement("a", "Fv", "using:Dt.Base");
+                xw.WriteAttributeString("xmlns", "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
+                xw.WriteAttributeString("xmlns", "x", null, "http://schemas.microsoft.com/winfx/2006/xaml");
+
+                foreach (var obj in Items)
+                {
+                    if (obj is FvCell cell)
+                        cell.ExportXaml(xw);
+                    else if (obj is CBar bar)
+                        bar.ExportXaml(xw);
+                }
+
+                xw.WriteEndElement();
+                xw.Flush();
+            }
+            return sb.ToString();
+        }
+        #endregion
+
+        /// <summary>
+        /// 设计模式时删除当前选择的的单元格
+        /// </summary>
+        public void DelDesignCell()
+        {
+            if (_rcDesign != null && _rcDesign.IsOpened)
+            {
+                Items.Remove(_rcDesign.PlacementTarget);
+                _rcDesign.PlacementTarget = null;
+                _rcDesign.Close();
+            }
+        }
+
+        /// <summary>
+        /// 设计模式时清除当前选择的的单元格
+        /// </summary>
+        public void ClearDesignCell()
+        {
+            if (_rcDesign != null && _rcDesign.IsOpened)
+            {
+                _rcDesign.PlacementTarget = null;
+                _rcDesign.Close();
+            }
+        }
+
         /// <summary>
         /// 触发内部单元格点击事件
         /// </summary>
@@ -62,7 +140,7 @@ namespace Dt.Base
         internal void OnCellClick(object p_cell, PointerRoutedEventArgs e)
         {
             CellClick?.Invoke(p_cell);
-            
+
             if (IsDesignMode)
             {
                 if (_rcDesign == null)
@@ -97,8 +175,9 @@ namespace Dt.Base
                 return;
 
             // uno中的 VisualTreeHelper.FindElementsInHostCoordinates 无值
-            int tgt = _panel.Children.Count - 1;
-            for (int i = 0; i < _panel.Children.Count; i++)
+            // _panel.Children和Items个数不相同！末尾多边框
+            int tgt = Items.Count - 1;
+            for (int i = 0; i < Items.Count; i++)
             {
                 var item = _panel.Children[i] as FrameworkElement;
                 if (item.ContainPoint(e))
@@ -107,11 +186,11 @@ namespace Dt.Base
                     break;
                 }
             }
-            
+
             int src = _panel.Children.IndexOf(_rcDesign.PlacementTarget);
             if (src == tgt)
                 return;
-            
+
             Items.ItemsChanged -= OnItemsChanged;
 
             // 往前移动插入到目标前面，往后移动插入到目标后面
@@ -127,11 +206,11 @@ namespace Dt.Base
                 Items.Add(srcCell);
             else
                 Items.Insert(tgt, srcCell);
-            
+
             Items.ItemsChanged += OnItemsChanged;
             _rcDesign.Close();
         }
-        
+
         void OnDragging(Dlg dlg, Point e)
         {
             if (!this.ContainPoint(e) || _rcDesign.ContainPoint(e))
@@ -143,7 +222,7 @@ namespace Dt.Base
                 dlg.Foreground = Res.亮红;
             }
         }
-        
+
         void OnFvUnloaded(object sender, RoutedEventArgs e)
         {
             if (_rcDesign != null)
@@ -152,7 +231,7 @@ namespace Dt.Base
                 _rcDesign = null;
             }
         }
-        
+
         Dlg _rcDesign;
     }
 }

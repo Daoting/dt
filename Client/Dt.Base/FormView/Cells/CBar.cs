@@ -13,6 +13,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
 using Dt.Base.FormView;
 using Microsoft.UI.Xaml.Input;
+using System.Xml;
 #endregion
 
 namespace Dt.Base
@@ -137,6 +138,25 @@ namespace Dt.Base
         /// </summary>
         Rect IFvCell.Bounds { get; set; }
 
+        /// <summary>
+        /// 导出xaml
+        /// </summary>
+        /// <param name="p_xw"></param>
+        public void ExportXaml(XmlWriter p_xw)
+        {
+            Type tp = GetType();
+            p_xw.WriteStartElement("a", tp.Name, null);
+
+            if (Title != null)
+                p_xw.WriteAttributeString("Title", Title);
+            if (RowSpan != 1)
+                p_xw.WriteAttributeString("RowSpan", RowSpan.ToString());
+            if (ColSpan != 0)
+                p_xw.WriteAttributeString("ColSpan", ColSpan.ToString());
+            
+            p_xw.WriteEndElement();
+        }
+        
         protected override void OnLoadTemplate()
         {
             Grid root = (Grid)GetTemplateChild("RootGrid");

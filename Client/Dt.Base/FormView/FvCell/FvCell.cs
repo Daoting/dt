@@ -208,6 +208,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置列名的宽度
         /// </summary>
+        [CellParam("标题宽度，默认放6个中文字")]
         public double TitleWidth
         {
             get { return (double)GetValue(TitleWidthProperty); }
@@ -217,6 +218,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置是否显示标题列
         /// </summary>
+        [CellParam("显示标题")]
         public bool ShowTitle
         {
             get { return (bool)GetValue(ShowTitleProperty); }
@@ -226,6 +228,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置自定义取值赋值过程的类名
         /// </summary>
+        [CellParam("取值赋值类名(Call)")]
         public string Call
         {
             get { return (string)GetValue(CallProperty); }
@@ -235,6 +238,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置是否垂直显示标题
         /// </summary>
+        [CellParam("垂直显示标题")]
         public bool IsVerticalTitle
         {
             get { return (bool)GetValue(IsVerticalTitleProperty); }
@@ -244,6 +248,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置占用的行数，默认1行，-1时自动行高
         /// </summary>
+        [CellParam("占用行数，-1自动行高")]
         public int RowSpan
         {
             get { return (int)GetValue(RowSpanProperty); }
@@ -253,6 +258,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置单元格占用列的比例，取值范围 0~1，0表示水平填充，1表示占满整列，默认1
         /// </summary>
+        [CellParam("列宽占比0~1，0填充，1整列")]
         public double ColSpan
         {
             get { return (double)GetValue(ColSpanProperty); }
@@ -262,6 +268,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置列是否只读，最终是否只读由ReadOnlyBinding确定！
         /// </summary>
+        [CellParam("只读")]
         public bool IsReadOnly
         {
             get { return (bool)GetValue(IsReadOnlyProperty); }
@@ -271,6 +278,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置是否自动保存单元格最后一次编辑值，默认False
         /// </summary>
+        [CellParam("自动加载历史值")]
         public bool AutoCookie
         {
             get { return (bool)GetValue(AutoCookieProperty); }
@@ -280,6 +288,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置占位符文本
         /// </summary>
+        [CellParam("占位符文本")]
         public string Placeholder
         {
             get { return (string)GetValue(PlaceholderProperty); }
