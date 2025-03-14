@@ -348,10 +348,12 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{TemplateBinding Text}"
-                                       Margin="10,0,0,0"
-                                       IsTextSelectionEnabled="True"
-                                       VerticalAlignment="Center" />
+                            <TextBox Text="{TemplateBinding Text}"
+                                     IsReadOnly="True"
+                                     PlaceholderText="{TemplateBinding Placeholder}"
+                                     Margin="10,0,0,0"
+                                     Style="{StaticResource FvTextBox}"
+                                     VerticalAlignment="Center" />
                             <TextBlock Text="&#xE102;"
                                        FontFamily="{StaticResource IconFont}"
                                        FontSize="20"
