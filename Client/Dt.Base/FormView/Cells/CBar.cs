@@ -154,6 +154,11 @@ namespace Dt.Base
             if (ColSpan != 0)
                 p_xw.WriteAttributeString("ColSpan", ColSpan.ToString());
             
+            if (Content != null)
+            {
+                
+            }
+            
             p_xw.WriteEndElement();
         }
         

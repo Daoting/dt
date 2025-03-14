@@ -79,9 +79,19 @@ namespace Dt.Base
                 }
                 else
                 {
-                    var cell = new CText();
+                    FvCell cell = new CText();
                     cell.ID = "Title";
                     cell.Title = "标题";
+                    items.Add(cell);
+
+                    cell = new CNum { IsInteger = true };
+                    cell.ID = "RowSpan";
+                    cell.Title = "占用行数";
+                    items.Add(cell);
+
+                    cell = new CNum();
+                    cell.ID = "ColSpan";
+                    cell.Title = "列宽占比0~1";
                     items.Add(cell);
                 }
             }
