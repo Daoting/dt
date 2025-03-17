@@ -81,6 +81,8 @@ namespace Dt.Base
                             sumFront++;
                         }
                     }
+                    
+                    fc.AddCustomDesignCells(items);
                 }
                 else
                 {

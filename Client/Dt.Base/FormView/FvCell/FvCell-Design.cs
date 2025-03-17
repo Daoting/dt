@@ -45,10 +45,15 @@ namespace Dt.Base
                 if (!object.Equals(val, prop.DefaultValue))
                     p_xw.WriteAttributeString(prop.Info.Name, val.ToString());
             }
-
+            ExportCustomXaml(p_xw);
+            
             p_xw.WriteEndElement();
         }
 
+        protected virtual void ExportCustomXaml(XmlWriter p_xw)
+        {
+        }
+        
         /// <summary>
         /// 创建当前单元格设计时的属性单元格
         /// </summary>
@@ -81,6 +86,14 @@ namespace Dt.Base
                 }
             }
             return fc;
+        }
+
+        /// <summary>
+        /// 添加自定义设计时属性单元格
+        /// </summary>
+        /// <param name="p_items"></param>
+        public virtual void AddCustomDesignCells(FvItems p_items)
+        {
         }
     }
 }
