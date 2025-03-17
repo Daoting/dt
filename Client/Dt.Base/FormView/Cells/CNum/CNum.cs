@@ -151,6 +151,12 @@ namespace Dt.Base
             typeof(CNum),
             new PropertyMetadata(false));
 
+        public static readonly DependencyProperty PlaceholderProperty = DependencyProperty.Register(
+            "Placeholder",
+            typeof(string),
+            typeof(CNum),
+            new PropertyMetadata(null));
+
         static void OnValuePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             CNum c = (CNum)d;
@@ -427,6 +433,16 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(AutoReverseProperty); }
             set { SetValue(AutoReverseProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置占位符文本
+        /// </summary>
+        [CellParam("占位符文本")]
+        public string Placeholder
+        {
+            get { return (string)GetValue(PlaceholderProperty); }
+            set { SetValue(PlaceholderProperty, value); }
         }
 
         /// <summary>

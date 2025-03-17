@@ -56,6 +56,12 @@ namespace Dt.Base
             typeof(CText),
             new PropertyMetadata(null, OnInputScopeChanged));
 
+        public static readonly DependencyProperty PlaceholderProperty = DependencyProperty.Register(
+            "Placeholder",
+            typeof(string),
+            typeof(CText),
+            new PropertyMetadata(null));
+
         static void OnAcceptsReturnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             CText c = (CText)d;
@@ -135,6 +141,16 @@ namespace Dt.Base
         {
             get { return (InputScope)GetValue(InputScopeProperty); }
             set { SetValue(InputScopeProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置占位符文本
+        /// </summary>
+        [CellParam("占位符文本")]
+        public string Placeholder
+        {
+            get { return (string)GetValue(PlaceholderProperty); }
+            set { SetValue(PlaceholderProperty, value); }
         }
 
         protected override IFvCall DefaultMiddle => new TextValConverter();

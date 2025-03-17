@@ -54,6 +54,12 @@ namespace Dt.Base
             typeof(CPick),
             new PropertyMetadata(null));
 
+        public static readonly DependencyProperty PlaceholderProperty = DependencyProperty.Register(
+            "Placeholder",
+            typeof(string),
+            typeof(CPick),
+            new PropertyMetadata(null));
+        
         static void OnClearData(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var ls = (CPick)d;
@@ -161,6 +167,16 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(ShowButtonProperty); }
             set { SetValue(ShowButtonProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置占位符文本
+        /// </summary>
+        [CellParam("占位符文本")]
+        public string Placeholder
+        {
+            get { return (string)GetValue(PlaceholderProperty); }
+            set { SetValue(PlaceholderProperty, value); }
         }
 
         /// <summary>

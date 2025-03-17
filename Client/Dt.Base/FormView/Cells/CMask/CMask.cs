@@ -21,6 +21,14 @@ namespace Dt.Base
     /// </summary>
     public partial class CMask : FvCell
     {
+        #region 静态内容
+        public static readonly DependencyProperty PlaceholderProperty = DependencyProperty.Register(
+            "Placeholder",
+            typeof(string),
+            typeof(CMask),
+            new PropertyMetadata(null));
+        #endregion
+        
         readonly MaskBox _box;
 
         #region 构造方法
@@ -110,6 +118,16 @@ namespace Dt.Base
         {
             get { return _box.IgnoreBlank; }
             set { _box.IgnoreBlank = value; }
+        }
+
+        /// <summary>
+        /// 获取设置占位符文本
+        /// </summary>
+        [CellParam("占位符文本")]
+        public string Placeholder
+        {
+            get { return (string)GetValue(PlaceholderProperty); }
+            set { SetValue(PlaceholderProperty, value); }
         }
         #endregion
 

@@ -37,6 +37,12 @@ namespace Dt.Base
             typeof(CPassword),
             new PropertyMetadata(0));
 
+        public static readonly DependencyProperty PlaceholderProperty = DependencyProperty.Register(
+            "Placeholder",
+            typeof(string),
+            typeof(CPassword),
+            new PropertyMetadata(null));
+
         PasswordBox _pb;
 
         public CPassword()
@@ -62,6 +68,16 @@ namespace Dt.Base
         {
             get { return (int)GetValue(MaxLengthProperty); }
             set { SetValue(MaxLengthProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置占位符文本
+        /// </summary>
+        [CellParam("占位符文本")]
+        public string Placeholder
+        {
+            get { return (string)GetValue(PlaceholderProperty); }
+            set { SetValue(PlaceholderProperty, value); }
         }
 
         protected override void OnApplyCellTemplate()
