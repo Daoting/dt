@@ -17,6 +17,8 @@ namespace Dt.Base
         public string Xaml { get; set; }
         
         public List<EntityCol> Cols { get; set; }
+        
+        public bool IsQueryFv { get; set; }
     }
 
     public class EntityCol

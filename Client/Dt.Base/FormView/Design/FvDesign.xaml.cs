@@ -77,7 +77,33 @@ namespace Dt.Base
 
         public void Jz(string p_xaml)
         {
-            _fv = string.IsNullOrEmpty(p_xaml) ? new Fv() : Fv.CreateByXaml(p_xaml);
+            if (!string.IsNullOrEmpty(p_xaml))
+            {
+                try
+                {
+                    var obj = XamlReader.Load(p_xaml);
+                    if (_info.IsQueryFv)
+                    {
+                        _fv = obj as QueryFv;
+                        if (_fv == null)
+                            Kit.Warn("无法创建表单，xaml内容不是QueryFv！");
+                    }
+                    else
+                    {
+                        _fv = obj as Fv;
+                        if (_fv == null)
+                            Kit.Warn("无法创建表单，xaml内容不是Fv！");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Kit.Warn("通过xaml创建表单时异常：" + ex.Message);
+                }
+            }
+            
+            if (_fv == null)
+                _fv = _info.IsQueryFv ? new QueryFv() : new Fv();
+            
             _fv.IsDesignMode = true;
             _tabMain.Content = _fv;
             _fv.CellClick += (e) => FvDesignKit.LoadCellProps(e, _fvProp);
@@ -102,6 +128,8 @@ namespace Dt.Base
                 if (cell is FvCell fc)
                 {
                     fc.ID = row.Str("ID");
+                    if (_info.IsQueryFv)
+                        fc.Query = QueryType.Editable;
                 }
                 _fv.Items.Add(cell);
             }

@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base.FormView;
 using Microsoft.UI.Xaml;
 #endregion
 
@@ -48,6 +49,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置查询时对条件比较符控制：无比较符、可修改比较符、比较符只读
         /// </summary>
+        [CellParam("控制查询条件比较符")]
         public QueryType Query
         {
             get { return (QueryType)GetValue(QueryProperty); }
@@ -57,6 +59,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置查询时的条件比较符
         /// </summary>
+        [CellParam("查询条件比较符")]
         public CompFlag QueryFlag
         {
             get { return (CompFlag)GetValue(QueryFlagProperty); }

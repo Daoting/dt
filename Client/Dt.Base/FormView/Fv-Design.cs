@@ -23,9 +23,6 @@ namespace Dt.Base
     public partial class Fv
     {
         #region 静态内容
-        const string _xamlPrefix = "<a:Fv xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" xmlns:a=\"using:Dt.Base\">";
-        const string _xamlPostfix = "</a:Fv>";
-
         public readonly static DependencyProperty IsDesignModeProperty = DependencyProperty.Register(
             "IsDesignMode",
             typeof(bool),
@@ -62,24 +59,6 @@ namespace Dt.Base
 
         #region Xaml
         /// <summary>
-        /// 根据xaml创建Fv
-        /// </summary>
-        /// <param name="p_xaml"></param>
-        /// <returns></returns>
-        public static Fv CreateByXaml(string p_xaml)
-        {
-            if (string.IsNullOrWhiteSpace(p_xaml))
-                Throw.Msg("无法创建Fv，xaml内容为空！");
-
-            var xaml = p_xaml.Trim();
-            if (!xaml.StartsWith("<a:Fv "))
-            {
-                xaml = _xamlPrefix + xaml + _xamlPostfix;
-            }
-            return XamlReader.Load(xaml) as Fv;
-        }
-
-        /// <summary>
         /// 导出Fv的xaml
         /// </summary>
         /// <returns></returns>
@@ -88,9 +67,10 @@ namespace Dt.Base
             var sb = new StringBuilder();
             using (XmlWriter xw = XmlWriter.Create(sb, new XmlWriterSettings() { OmitXmlDeclaration = true, Indent = true }))
             {
-                xw.WriteStartElement("a", "Fv", "using:Dt.Base");
+                // 可能为QueryFv
+                xw.WriteStartElement("a", GetType().Name, "using:Dt.Base");
                 xw.WriteAttributeString("xmlns", "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
-                xw.WriteAttributeString("xmlns", "x", null, "http://schemas.microsoft.com/winfx/2006/xaml");
+                //xw.WriteAttributeString("xmlns", "x", null, "http://schemas.microsoft.com/winfx/2006/xaml");
 
                 foreach (var obj in Items)
                 {
