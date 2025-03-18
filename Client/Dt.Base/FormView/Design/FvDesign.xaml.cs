@@ -31,7 +31,12 @@ namespace Dt.Base
             Jz(_info.Xaml);
         }
 
-        public static async Task<string> Show(FvDesignInfo p_info)
+        /// <summary>
+        /// 显示设计表单对话框
+        /// </summary>
+        /// <param name="p_info"></param>
+        /// <returns></returns>
+        public static async Task<string> ShowDlg(FvDesignInfo p_info)
         {
             Dlg dlg = new Dlg { IsPinned = true, Title = "设计表单" };
             if (!Kit.IsPhoneUI)
@@ -47,6 +52,9 @@ namespace Dt.Base
             return null;
         }
 
+        /// <summary>
+        /// 显示设计表单窗口
+        /// </summary>
         public static void ShowWin()
         {
             var win = (FvDesign)Kit.OpenWin(typeof(FvDesign), "设计表单", Icons.排列, new FvDesignInfo());

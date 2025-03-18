@@ -35,7 +35,7 @@ namespace Dt.Base
 
             if (ID != null)
                 p_xw.WriteAttributeString("ID", ID);
-            if (Title != null)
+            if (Title != null && Title != ID)
                 p_xw.WriteAttributeString("Title", Title);
 
             foreach (var prop in FvDesignKit.GetCellProps(tp))
