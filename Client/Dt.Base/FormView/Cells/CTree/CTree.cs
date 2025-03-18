@@ -8,16 +8,11 @@
 
 #region 引用命名
 using Dt.Base.FormView;
-using Dt.Core;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Markup;
+using System.Xml;
 #endregion
 
 namespace Dt.Base
@@ -191,7 +186,7 @@ namespace Dt.Base
         /// <para>1. 当为目标列填充null时，用'-'标志，如：SrcID="id#-#-"</para>
         /// <para>2. SrcID空时默认取name列 或 数据源第一列的列名</para>
         /// </summary>
-        [CellParam("源属性列表")]
+        [CellParam("源属性：#隔开，-目标清空，空时name或第一列")]
         public string SrcID
         {
             get { return (string)GetValue(SrcIDProperty); }
@@ -203,7 +198,7 @@ namespace Dt.Base
         /// <para>1. TgtID空时默认取当前列名</para>
         /// <para>2. '#'隔开多列时可用'-'代表当前列名，如：TgtID="-#child1#child2"，也可以直接写当前列名</para>
         /// </summary>
-        [CellParam("目标属性列表")]
+        [CellParam("目标属性：#隔开，-代表当前列名，空时当前列名")]
         public string TgtID
         {
             get { return (string)GetValue(TgtIDProperty); }
@@ -277,6 +272,33 @@ namespace Dt.Base
                 _dlg.Destroy();
                 _dlg = null;
             }
+        }
+        
+        protected override void ExportCustomXaml(XmlWriter p_xw)
+        {
+            if (Sql == null || string.IsNullOrEmpty(Sql.SqlStr))
+                return;
+
+            p_xw.WriteStartElement("a", "CTree.Sql", null);
+            p_xw.WriteStartElement("a", "Sql", null);
+
+            if (!string.IsNullOrEmpty(Sql.LocalDb))
+                p_xw.WriteAttributeString("LocalDb", Sql.LocalDb);
+            if (!string.IsNullOrEmpty(Sql.Svc))
+                p_xw.WriteAttributeString("Svc", Sql.Svc);
+            p_xw.WriteString(Sql.SqlStr);
+
+            p_xw.WriteEndElement();
+            p_xw.WriteEndElement();
+        }
+        
+        public override void AddCustomDesignCells(FvItems p_items)
+        {
+            // 空时无法绑定
+            if (Sql == null)
+                Sql = new Sql();
+
+            CList.AddDesignCells(p_items);
         }
         #endregion
 

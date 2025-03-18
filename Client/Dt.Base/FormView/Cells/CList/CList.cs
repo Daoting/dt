@@ -352,12 +352,17 @@ namespace Dt.Base
 
         public override void AddCustomDesignCells(FvItems p_items)
         {
-            CBar bar = new CBar { Title = "数据源Sql，语句可包含变量或占位符\n变量：@userid @username @[列名]\n占位符：#input#，输入的过滤串", RowSpan = 2 };
-            p_items.Add(bar);
-
             // 空时无法绑定
             if (Sql == null)
                 Sql = new Sql();
+            
+            AddDesignCells(p_items);
+        }
+        
+        internal static void AddDesignCells(FvItems p_items)
+        {
+            CBar bar = new CBar { Title = "数据源Sql，语句可包含变量或占位符\n变量：@userid @username @[列名]\n占位符：#input#，输入的过滤串", RowSpan = 2 };
+            p_items.Add(bar);
             
             CText text = new CText
             {

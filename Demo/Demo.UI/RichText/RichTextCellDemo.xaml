@@ -17,9 +17,18 @@
     <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab Order="2" Title="属性">
-                <a:Fv Data="{Binding ElementName=_fv}">
-                    <a:CBool Title="只读" ID="IsReadOnly" />
-                </a:Fv>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <a:Fv x:Name="_pbFv">
+                        <a:CBool Title="表单只读" ID="IsReadOnly" ShowTitle="False" ColSpan="0.5" />
+                        <a:CBool Title="设计模式" ID="IsDesignMode" ShowTitle="False" ColSpan="0.5" />
+                        <a:CBar Title="单元格" />
+                    </a:Fv>
+                    <a:Fv x:Name="_pbCell" Grid.Row="1" />
+                </Grid>
             </a:Tab>
         </a:Tabs>
     </a:Pane>

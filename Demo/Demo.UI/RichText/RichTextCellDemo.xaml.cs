@@ -23,12 +23,14 @@ namespace Demo.UI
         public RichTextCellDemo()
         {
             InitializeComponent();
+            _fv.CellClick += (e) => FvDesignKit.LoadCellProps(e, _pbCell);
             _fv.Changed += (e) => CellDemoKit.OnChanged(_fv, e);
             _fv.Data = new Row
             {
                 { "html", _initHtml },
                 { "md",  _initText },
             };
+            _pbFv.Data = _fv;
         }
 
         const string _initHtml = @"<p><span style=""font-size: 24px;"">初始内容</span></p><ol><li><span style=""font-size: 14px;""><strong>粗体</strong></span></li><li><s>删除线</s></li></ol>";
