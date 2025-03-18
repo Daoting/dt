@@ -26,13 +26,13 @@
                 </DataTemplate>
             </a:CList>
             <a:CBar Title="查询面板">
-                <Button Content="编辑Xaml" Click="EditQueryFvXaml" HorizontalAlignment="Right" />
+                <Button Content="设计" Click="EditQueryFvXaml" HorizontalAlignment="Right" />
             </a:CBar>
             <a:CText ID="QueryFvXaml" Placeholder="Xaml空时自动生成" AcceptsReturn="True" ShowTitle="False" RowSpan="4" />
         </a:Fv>
         <a:Fv x:Name="_fvList" Grid.Row="1">
             <a:CBar Title="列表">
-                <Button Content="编辑Xaml" Click="EditListXaml" HorizontalAlignment="Right" />
+                <Button Content="设计" Click="EditListXaml" HorizontalAlignment="Right" />
             </a:CBar>
             <a:CText ID="Xaml" Placeholder="Xaml空时自动生成" AcceptsReturn="True" ShowTitle="False" RowSpan="4" />
             <a:CBar ColSpan="0.25">

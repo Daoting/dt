@@ -53,9 +53,19 @@ namespace Dt.Base.Views
             return _cfg.Serialize();
         }
 
-        void EditQueryFvXaml(object sender, RoutedEventArgs e)
+        async void EditQueryFvXaml(object sender, RoutedEventArgs e)
         {
+            var info = new FvDesignInfo { Xaml = _cfg.QueryFvXaml, IsQueryFv = true };
+            var cols = new List<EntityCol>();
+            foreach (var col in _cfg.Table.Columns)
+            {
+                cols.Add(new EntityCol(col.Name, col.Type));
+            }
+            info.Cols = cols;
 
+            var xaml = await FvDesign.ShowDlg(info);
+            if (!string.IsNullOrEmpty(xaml))
+                _fvMain["QueryFvXaml"].Val = xaml;
         }
 
         void EditListXaml(object sender, RoutedEventArgs e)
