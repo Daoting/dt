@@ -46,18 +46,17 @@ namespace Dt.Base.Tools
 
                 new Nav("本地库", typeof(LocalDbWin), Icons.数据库) { Desc = "管理 LocalState\\.data 目录下的 sqlite 库" },
                 new Nav("本地文件", typeof(LocalFileWin), Icons.文件) { Desc = "管理 LocalState 的所有文件" },
-#if WIN || WASM || SKIA
-                new Nav("打开本地文件目录", Icons.文件夹) { Desc = "快捷键：Ctrl + →", Callback = (s, n) =>
-                {
-                    OpenLocalPath();
-                    if (s is Dlg dlg)
-                        dlg.Close();
-                } },
-#endif
+
 
                 new Nav("报表设计", Icons.Excel) { Desc = "报表模板设计", Callback = (s, n) =>
                 {
                     _ = Rpt.ShowDesign(null);
+                    if (s is Dlg dlg)
+                        dlg.Close();
+                } },
+                new Nav("表单设计", Icons.排列) { Desc = "表单Xaml设计", Callback = (s, n) =>
+                {
+                    FvDesign.ShowWin();
                     if (s is Dlg dlg)
                         dlg.Close();
                 } },
@@ -114,6 +113,15 @@ namespace Dt.Base.Tools
                     if (s is Dlg dlg)
                         dlg.Close();
                 } },
+                
+#if WIN || WASM || SKIA
+                new Nav("打开本地文件目录", Icons.文件夹) { Desc = "快捷键：Ctrl + →", Callback = (s, n) =>
+                {
+                    OpenLocalPath();
+                    if (s is Dlg dlg)
+                        dlg.Close();
+                } },
+#endif
                 
 #if WIN
                 new Nav("1280 X 720", Icons.新窗口) { Callback = (s, n) =>
@@ -224,13 +232,13 @@ namespace Dt.Base.Tools
             int left;
             // 宽度莫名少一丢丢
             int width = p_width + 12;
-            
+
             // 先最大化获取屏蔽宽度
             var presenter = (Microsoft.UI.Windowing.OverlappedPresenter)Kit.MainWin.AppWindow.Presenter;
             if (presenter.State != Microsoft.UI.Windowing.OverlappedPresenterState.Maximized)
                 presenter.Maximize();
             left = (int)Kit.MainWin.Bounds.Width - width;
-            
+
             presenter.Restore();
             // 用 Resize MoveAndResize 不准
             Kit.MainWin.AppWindow.ResizeClient(new Windows.Graphics.SizeInt32(width, p_height - Kit.MainWin.AppWindow.TitleBar.Height));

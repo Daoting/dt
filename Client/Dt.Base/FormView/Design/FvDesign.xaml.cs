@@ -37,7 +37,7 @@ namespace Dt.Base
             if (!Kit.IsPhoneUI)
             {
                 dlg.Width = 850;
-                dlg.Height = 500;
+                dlg.Height = 600;
             }
 
             var win = new FvDesign(p_info);
@@ -47,6 +47,12 @@ namespace Dt.Base
             return null;
         }
 
+        public static void ShowWin()
+        {
+            var win = (FvDesign)Kit.OpenWin(typeof(FvDesign), "设计表单", Icons.排列, new FvDesignInfo());
+            win._tabMain.Menu["确定"].Visibility = Visibility.Collapsed;
+        }
+        
         public bool IsFixCols => _info.Cols != null && _info.Cols.Count > 0;
 
         public IEnumerable<EntityCol> GetUnusedCols()
@@ -61,7 +67,7 @@ namespace Dt.Base
             }
         }
 
-        void Jz(string p_xaml)
+        public void Jz(string p_xaml)
         {
             _fv = string.IsNullOrEmpty(p_xaml) ? new Fv() : Fv.CreateByXaml(p_xaml);
             _fv.IsDesignMode = true;
@@ -69,6 +75,11 @@ namespace Dt.Base
             _fv.CellClick += (e) => FvDesignKit.LoadCellProps(e, _fvProp);
         }
 
+        public string GetXaml()
+        {
+            return _fv.ExportXaml();
+        }
+        
         async void OnAdd()
         {
             _fv.ClearDesignCell();
@@ -97,12 +108,12 @@ namespace Dt.Base
 
         void OnCopyXaml()
         {
-
+            Kit.CopyToClipboard(_fv.ExportXaml());
         }
 
         void OnShowEditXaml()
         {
-
+            new FvXamlEditDlg().ShowDlg(this);
         }
 
         void OnSave()
