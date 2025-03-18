@@ -22,6 +22,7 @@ namespace Dt.Base.Views
         public SingleTblDesign()
         {
             InitializeComponent();
+            IsPinned = true;
         }
 
         public async Task<string> ShowDlg(string p_params)
@@ -34,7 +35,8 @@ namespace Dt.Base.Views
             {
                 _cfg = JsonSerializer.Deserialize<SingleTblCfg>(p_params);
             }
-            
+
+            await _cfg.Init();
             _fvMain.Data = _cfg;
             _fvList.Data = _cfg.ListCfg;
             _fvForm.Data = _cfg.FormCfg;
@@ -61,9 +63,19 @@ namespace Dt.Base.Views
 
         }
 
-        void EditFormXaml(object sender, RoutedEventArgs e)
+        async void EditFormXaml(object sender, RoutedEventArgs e)
         {
-
+            var info = new FvDesignInfo { Xaml = _cfg.FormCfg.Xaml, };
+            var cols = new List<EntityCol>();
+            foreach (var col in _cfg.Table.Columns)
+            {
+                cols.Add(new EntityCol(col.Name, col.Type));
+            }
+            info.Cols = cols;
+            
+            var xaml = await FvDesign.ShowDlg(info);
+            if (!string.IsNullOrEmpty(xaml))
+                _fvForm["Xaml"].Val = xaml;
         }
 
         void OnLoadEntityCls(CList p_list, AsyncArgs p_args)

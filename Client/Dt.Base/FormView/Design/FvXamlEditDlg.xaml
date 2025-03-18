@@ -13,7 +13,8 @@
 
     <TextBox x:Name="_tb"
              AcceptsReturn="True"
-             ScrollViewer.HorizontalScrollBarVisibility="Auto"
+             TextWrapping="Wrap"
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
              ScrollViewer.VerticalScrollBarVisibility="Auto" />
 
 </a:Dlg>

@@ -25,6 +25,7 @@ namespace Dt.Mgr.Module
         public RptViewParamsDlg()
         {
             InitializeComponent();
+            IsPinned = true;
         }
 
         public async Task<string> ShowDlg(string p_params)

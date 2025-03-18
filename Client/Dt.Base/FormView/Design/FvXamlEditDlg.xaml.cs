@@ -26,8 +26,8 @@ namespace Dt.Base.FormView
             IsPinned = true;
             if (!Kit.IsPhoneUI)
             {
-                MaxWidth = Kit.ViewWidth - 200;
-                MaxHeight = Kit.ViewHeight - 200;
+                Width = 600;
+                Height = 500;
             }
         }
 

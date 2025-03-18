@@ -44,7 +44,7 @@
         </a:Fv>
         <a:Fv x:Name="_fvForm" Grid.Row="2">
             <a:CBar Title="表单">
-                <Button Content="编辑Xaml" Click="EditFormXaml" HorizontalAlignment="Right" />
+                <Button Content="设计" Click="EditFormXaml" HorizontalAlignment="Right" />
             </a:CBar>
             <a:CText ID="Xaml" Placeholder="Xaml空时自动生成" AcceptsReturn="True" ShowTitle="False" RowSpan="4" />
             <a:CBar ColSpan="0.25">
