@@ -24,7 +24,7 @@ namespace Dt.Base.Report
             InitializeComponent();
             _dlg = p_dlg;
             _fv.Data = _dlg.Info.Root.Params;
-            _tbXaml.SetBinding(TextBox.TextProperty, new Binding { Source = _dlg.Info.Root.Params.XamlRow, Path = new PropertyPath("Cells[xaml].Val"), Mode = BindingMode.TwoWay });
+            _tbXaml.Text = _dlg.Info.Root.Params.XamlRow.Str("xaml");
         }
 
         async void OnCreatePreview()
@@ -34,60 +34,52 @@ namespace Dt.Base.Report
             dlg.Content = fv;
             dlg.Show();
         }
-
-        void OnAddCellXaml(Mi e)
-        {
-            AddCellXamlDlg.ShowDlg(_dlg, e.ID, txt => AppendXaml(txt));
-        }
-
-        void OnAddCListXaml()
-        {
-            AddCListXamlDlg.ShowDlg(_dlg, txt => AppendXaml(txt));
-        }
-
-        void OnAddCPickXaml()
-        {
-            AddCPickXamlDlg.ShowDlg(_dlg, txt => AppendXaml(txt));
-        }
         
-        void AppendXaml(string p_txt)
+        async void OnDesign(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(p_txt))
-                return;
-
-            var txt = p_txt.Trim('\r', '\n');
-            var prefix = _tbXaml.Text.Substring(0, _tbXaml.SelectionStart).TrimEnd('\r');
-            if (prefix != "")
-                prefix += "\r";
-
-            string postfix = "";
-            if (_tbXaml.Text.Length > _tbXaml.SelectionStart)
-                postfix = "\r" + _tbXaml.Text.Substring(_tbXaml.SelectionStart).Trim('\r');
-            _tbXaml.Text = prefix + txt + postfix;
-        }
-        
-        async void OnAuto(object sender, RoutedEventArgs e)
-        {
-            if (_tbXaml.Text.Length > 0)
+            var info = new FvDesignInfo { Xaml = _dlg.Info.Root.Params.XamlRow.Str("xaml"), IsQueryFv = true };
+            var cols = new List<EntityCol>();
+            foreach (var r in _dlg.Info.Root.Params.Data)
             {
-                if (!await Kit.Confirm("自动生成Xaml会覆盖现有内容，要继续吗？"))
-                    return;
+                Type tp;
+                switch (r.Str("type").ToLower())
+                {
+                    case "bool":
+                        tp = typeof(bool);
+                        break;
+
+                    case "double":
+                        tp = typeof(double);
+                        break;
+
+                    case "int":
+                        tp = typeof(int);
+                        break;
+
+                    case "date":
+                        tp = typeof(DateTime);
+                        break;
+
+                    default:
+                        tp = typeof(string);
+                        break;
+                }
+                cols.Add(new EntityCol(r.Str("name"), tp));
             }
-            _tbXaml.Text = _dlg.Info.Root.Params.CreateXamlByDefine();
+            info.Cols = cols;
+
+            var xaml = await FvDesign.ShowDlg(info);
+            if (!string.IsNullOrEmpty(xaml))
+                _tbXaml.Text = xaml;
         }
 
-        void OnBar()
+        void OnXamlChanged(object sender, TextChangedEventArgs e)
         {
-            AppendXaml("<a:CBar Title=\"标题\" />");
-        }
-
-        void OnSqlFormatter(object sender, RoutedEventArgs e)
-        {
-            if (_tbXaml.SelectedText.Length > 7)
-            {
-                var sql = SqlFormatter.Format(_tbXaml.SelectedText);
-                _tbXaml.Text = _tbXaml.Text.Substring(0, _tbXaml.SelectionStart).TrimEnd('\r') + "\r" + sql + "\r" + _tbXaml.Text.Substring(_tbXaml.SelectionStart + _tbXaml.SelectionLength).Trim('\r');
-            }
+#if WIN || SKIA
+            _dlg.Info.Root.Params.XamlRow["xaml"] = _tbXaml.Text.Trim().Replace('\r', '\n');
+#else
+            _dlg.Info.Root.Params.XamlRow["xaml"] = _tbXaml.Text.Trim();
+#endif
         }
     }
 }

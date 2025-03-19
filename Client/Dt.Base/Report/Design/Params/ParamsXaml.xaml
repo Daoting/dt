@@ -23,31 +23,17 @@
             <a:CBool ID="AutoXaml" Title="自动生成Xaml" />
         </a:Fv>
         <a:CBar Title="查询面板Xaml" Grid.Row="1">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="+单元格">
-                    <a:Ex.Menu>
-                        <a:Menu Placement="BottomLeft">
-                            <a:Mi ID="CText" Click="OnAddCellXaml" />
-                            <a:Mi ID="CList" Call="OnAddCListXaml"/>
-                            <a:Mi ID="CPick" Call="OnAddCPickXaml"/>
-                            <a:Mi ID="CBool" Click="OnAddCellXaml" />
-                            <a:Mi ID="CNum" Click="OnAddCellXaml" />
-                            <a:Mi ID="CDate" Click="OnAddCellXaml" />
-                            <a:Mi ID="CBar" Call="OnBar" />
-                        </a:Menu>
-                    </a:Ex.Menu>
-                </Button>
-                <Button Content="美化SQL" Click="OnSqlFormatter" />
-                <Button Content="自动生成" Click="OnAuto" />
-            </StackPanel>
+            <Button Content="设计" Click="OnDesign" HorizontalAlignment="Right" />
         </a:CBar>
         <TextBox x:Name="_tbXaml"
+                 TextChanged="OnXamlChanged"
                  VerticalAlignment="Stretch"
                  HorizontalAlignment="Stretch"
-                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                  ScrollViewer.VerticalScrollBarVisibility="Auto"
                  AcceptsReturn="True"
+                 TextWrapping="Wrap"
                  Grid.Row="2" />
-        <a:CBar Title="优先级：查询面板类名 > Xaml > 自动生成Xaml，仅一个有效" Grid.Row="3" />
+        <a:CBar Title="显示查询面板优先级：类名 > Xaml > 自动生成Xaml，都无则不显示查询面板，直接查询，显示报表" Grid.Row="3" />
     </Grid>
 </a:Tab>

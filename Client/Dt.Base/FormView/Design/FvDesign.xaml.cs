@@ -75,6 +75,7 @@ namespace Dt.Base
             {
                 try
                 {
+                    // XamlReader会将 \n或\r 转换为空格！
                     var obj = XamlReader.Load(p_xaml);
                     if (_info.IsQueryFv)
                     {

@@ -203,7 +203,6 @@ namespace Dt.Base.Report
             else if (AutoXaml)
             {
                 string xaml = CreateXamlByDefine();
-                xaml = _xamlPrefix + xaml + _xamlPostfix;
                 var fv = XamlReader.Load(xaml) as QueryFv;
                 query = new RptQuery();
                 query.LoadData(data, fv);
@@ -245,7 +244,7 @@ namespace Dt.Base.Report
         /// <returns></returns>
         public string CreateXamlByDefine()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder(_xamlPrefix);
             foreach (var row in Data)
             {
                 string name = row.Str("name");
@@ -280,6 +279,7 @@ namespace Dt.Base.Report
                         break;
                 }
             }
+            sb.Append(_xamlPostfix);
             return sb.ToString();
         }
 
@@ -387,14 +387,13 @@ namespace Dt.Base.Report
                 Throw.Msg("报表参数的xaml内容为空，无法创建查询面板！");
             }
 
-            var xaml = _xamlPrefix + Xaml + _xamlPostfix;
             try
             {
-                return XamlReader.Load(xaml) as QueryFv;
+                return XamlReader.Load(Xaml) as QueryFv;
             }
             catch (Exception ex)
             {
-                Throw.Msg($"报表参数的xaml内容错误：{ex.Message}\n{xaml}");
+                Throw.Msg($"报表参数的xaml内容错误：{ex.Message}\n{Xaml}");
             }
             return null;
         }
