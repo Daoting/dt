@@ -913,6 +913,7 @@ namespace Dt.Base
             grid.Children.Add(btn);
             btn.Tapped += OnMoreBtnClick;
             btn.PointerEntered += OnBtnPointerEntered;
+            btn.PointerExited += OnBtnPointerExited;
         }
 
         void RemoveMoreBtn()
@@ -924,6 +925,7 @@ namespace Dt.Base
                 {
                     btn.Tapped -= OnMoreBtnClick;
                     btn.PointerEntered -= OnBtnPointerEntered;
+                    btn.PointerExited -= OnBtnPointerExited;
                     grid.Children.Remove(btn);
                     break;
                 }
@@ -933,12 +935,19 @@ namespace Dt.Base
         void OnBtnPointerEntered(object sender, PointerRoutedEventArgs e)
         {
             e.Handled = true;
+            VisualStateManager.GoToState(this, "Normal", true);
         }
 
         void OnMoreBtnClick(object sender, TappedRoutedEventArgs e)
         {
             e.Handled = true;
             BtnCall?.Invoke();
+        }
+
+        void OnBtnPointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            if (this.ContainPoint(e.GetCurrentPoint(null).Position))
+                OnPointerEntered(e);
         }
         #endregion
     }
