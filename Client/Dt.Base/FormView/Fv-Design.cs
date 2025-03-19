@@ -70,7 +70,7 @@ namespace Dt.Base
                 // 可能为QueryFv
                 xw.WriteStartElement("a", GetType().Name, "using:Dt.Base");
                 xw.WriteAttributeString("xmlns", "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
-                //xw.WriteAttributeString("xmlns", "x", null, "http://schemas.microsoft.com/winfx/2006/xaml");
+                xw.WriteAttributeString("xmlns", "x", null, "http://schemas.microsoft.com/winfx/2006/xaml");
 
                 foreach (var obj in Items)
                 {

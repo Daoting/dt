@@ -28,6 +28,10 @@ namespace Dt.Base
 
             Throw.IfNull(p_info);
             _info = p_info;
+            if (_info.Cols != null && _info.Cols.Count > 0)
+            {
+                _tabMain.Menu["增加"].ShowBtn = true;
+            }
             Jz(_info.Xaml);
         }
 
@@ -61,20 +65,10 @@ namespace Dt.Base
             win._tabMain.Menu["确定"].Visibility = Visibility.Collapsed;
         }
         
-        public bool IsFixCols => _info.Cols != null && _info.Cols.Count > 0;
-
-        public IEnumerable<EntityCol> GetUnusedCols()
-        {
-            if (!IsFixCols)
-                yield return null;
-
-            foreach (var col in _info.Cols)
-            {
-                if (_fv.Items.FirstOrDefault(c => c is FvCell fc && fc.ID == col.Name) == null)
-                    yield return col;
-            }
-        }
-
+        internal FvDesignInfo Info => _info;
+        
+        internal Fv Fv => _fv;
+        
         public void Jz(string p_xaml)
         {
             if (!string.IsNullOrEmpty(p_xaml))
@@ -135,6 +129,22 @@ namespace Dt.Base
             }
         }
 
+        void OnBatchAdd()
+        {
+            int cnt = _fv.Items.Count;
+            foreach (var col in _info.Cols)
+            {
+                if (_fv.Items.FirstOrDefault(c => c is FvCell fc && fc.ID == col.Name) == null)
+                {
+                    _fv.Items.Add(Fv.CreateCell(col.Type, col.Name));
+                }
+            }
+            if (cnt == _fv.Items.Count)
+                Kit.Warn("无新列可添加！");
+            else
+                Kit.Msg($"已批量添加{_fv.Items.Count - cnt}个格！");
+        }
+        
         void OnDel()
         {
             _fv.DelDesignCell();

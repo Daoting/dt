@@ -20,17 +20,23 @@ namespace Dt.Base.FormView
         public SelectFvCellDlg(FvDesign p_design)
         {
             InitializeComponent();
-
+            IsPinned = true;
+            
             _row = new Row { { "Type", typeof(Type) }, { "ID", "" } };
-            if (p_design.IsFixCols)
+            if (p_design.Info.Cols != null && p_design.Info.Cols.Count > 0)
             {
-                var ls = new CList { ID = "ID", IsEditable = true };
+                var ls = new CList { ID = "ID" };
+                if (p_design.Info.AllowCustomCol)
+                    ls.IsEditable = true;
+                
                 var cols = new Nl<string>();
-                foreach (var col in p_design.GetUnusedCols())
+                foreach (var col in p_design.Info.Cols)
                 {
-                    cols.Add(col.Name);
+                    if (p_design.Fv.Items.FirstOrDefault(c => c is FvCell fc && fc.ID == col.Name) == null)
+                        cols.Add(col.Name);
                 }
                 ls.Data = cols;
+                
                 _fv.Items.Add(ls);
             }
             else
