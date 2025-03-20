@@ -26,14 +26,25 @@ namespace Demo.UI
         }
 
 
-        void OnTest1(object sender, RoutedEventArgs e)
+        async void OnTest1(object sender, RoutedEventArgs e)
         {
-            
+            var xaml = await FvDesign.ShowDlg(new FvDesignInfo
+            {
+                Xaml = "<a:QueryFv>\r\n  <a:CBar Title=\"枚举\" />\r\n  <a:CText ID=\"txt\" Title=\"文本框\" Placeholder=\"文本框\" />\r\n  <a:CList ID=\"liststr\" Title=\"字符串列表\" />\r\n</a:QueryFv>",
+                IsQueryFv = true,
+                Cols = new List<EntityCol>
+                {
+                    new EntityCol("txt1", typeof(string)),
+                    new EntityCol ("liststr1", typeof(string)),
+                    new EntityCol ("liststr", typeof(string)),
+                }
+            });
+            Log.Debug(xaml);
         }
 
         void OnTest2(object sender, RoutedEventArgs e)
         {
-           
+
         }
     }
 }
