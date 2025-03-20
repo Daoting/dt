@@ -73,26 +73,17 @@ namespace Dt.Base
         {
             if (!string.IsNullOrEmpty(p_xaml))
             {
-                try
+                if (_info.IsQueryFv)
                 {
-                    // XamlReader会将 \n或\r 转换为空格！
-                    var obj = XamlReader.Load(p_xaml);
-                    if (_info.IsQueryFv)
-                    {
-                        _fv = obj as QueryFv;
-                        if (_fv == null)
-                            Kit.Warn("无法创建表单，xaml内容不是QueryFv！");
-                    }
-                    else
-                    {
-                        _fv = obj as Fv;
-                        if (_fv == null)
-                            Kit.Warn("无法创建表单，xaml内容不是Fv！");
-                    }
+                    _fv = Kit.LoadXaml<QueryFv>(p_xaml);
+                    if (_fv == null)
+                        Kit.Warn("无法创建表单，xaml内容不是QueryFv！");
                 }
-                catch (Exception ex)
+                else
                 {
-                    Kit.Warn("通过xaml创建表单时异常：" + ex.Message);
+                    _fv = Kit.LoadXaml<Fv>(p_xaml);
+                    if (_fv == null)
+                        Kit.Warn("无法创建表单，xaml内容不是Fv！");
                 }
             }
             

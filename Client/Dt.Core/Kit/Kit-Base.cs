@@ -183,7 +183,7 @@ namespace Dt.Core
         #endregion
 
         #region 加载xaml
-        const string _xamlPrefix = " xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" xmlns:a=\"using:Dt.Base\" ";
+        const string _xamlPrefix = " xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" xmlns:a=\"using:Dt.Base\"";
 
         /// <summary>
         /// 加载xaml字符串，返回实例对象，已包含Dt.Base命名空间，前缀a
@@ -194,22 +194,28 @@ namespace Dt.Core
         public static T LoadXaml<T>(string p_xaml)
             where T : class
         {
-            if (string.IsNullOrEmpty(p_xaml))
+            int index;
+            if (string.IsNullOrEmpty(p_xaml) || (index = p_xaml.IndexOf('>')) < 0)
                 return default(T);
 
             try
             {
-                int index = p_xaml.IndexOf('>');
-                if (index > 0)
+                string xaml = p_xaml;
+
+                // 未包含命名空间，补充
+                if (xaml.IndexOf(" xmlns=", 0, index) == -1)
                 {
-                    if (p_xaml[index - 1] == '/')
+                    if (xaml[index - 1] == '/')
                         index--;
-                    return XamlReader.Load(p_xaml.Insert(index, _xamlPrefix)) as T;
+                    xaml = xaml.Insert(index, _xamlPrefix);
                 }
+
+                // XamlReader会将 \n或\r 转换为空格！
+                return XamlReader.Load(xaml) as T;
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "xaml内容错误");
+                Log.Error(ex, $"通过xaml创建 {typeof(T).Name} 时错误");
             }
             return default(T);
         }

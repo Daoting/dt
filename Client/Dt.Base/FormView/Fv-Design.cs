@@ -69,8 +69,12 @@ namespace Dt.Base
             {
                 // 可能为QueryFv
                 xw.WriteStartElement("a", GetType().Name, "using:Dt.Base");
-                xw.WriteAttributeString("xmlns", "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
                 xw.WriteAttributeString("xmlns", "x", null, "http://schemas.microsoft.com/winfx/2006/xaml");
+                
+                // Kit.LoadXaml已自动添加
+                //xw.WriteStartElement("a", GetType().Name, "using:Dt.Base");
+                //xw.WriteAttributeString("xmlns", "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
+                //xw.WriteAttributeString("xmlns", "x", null, "http://schemas.microsoft.com/winfx/2006/xaml");
 
                 foreach (var obj in Items)
                 {
@@ -83,7 +87,12 @@ namespace Dt.Base
                 xw.WriteEndElement();
                 xw.Flush();
             }
-            return sb.ToString();
+
+            // 去掉冗余的命名空间，Kit.LoadXaml已自动添加
+            string str = sb.ToString();
+            int idx = str.IndexOf(' ');
+            int idx2 = str.IndexOf('>');
+            return str.Remove(idx, idx2 - idx);
         }
         #endregion
 

@@ -19,9 +19,6 @@ namespace Dt.Base.Report
     /// </summary>
     public class RptParams
     {
-        const string _xamlPrefix = "<a:QueryFv xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" xmlns:a=\"using:Dt.Base\">";
-        const string _xamlPostfix = "</a:QueryFv>";
-
         public RptParams(RptRoot p_root)
         {
             Root = p_root;
@@ -151,7 +148,7 @@ namespace Dt.Base.Report
                             dict[name] = default(long);
                         }
                         break;
-                        
+
                     case "date":
                         if (val != "" && DateTime.TryParse(val, out var d))
                         {
@@ -180,7 +177,7 @@ namespace Dt.Base.Report
         {
             RptQuery query = null;
             Row data = await BuildInitRow(p_params);
-            
+
             if (!string.IsNullOrEmpty(QueryForm))
             {
                 var tp = Kit.GetTypeByAlias(typeof(RptQueryAttribute), QueryForm);
@@ -203,7 +200,7 @@ namespace Dt.Base.Report
             else if (AutoXaml)
             {
                 string xaml = CreateXamlByDefine();
-                var fv = XamlReader.Load(xaml) as QueryFv;
+                var fv = Kit.LoadXaml<QueryFv>(xaml);
                 query = new RptQuery();
                 query.LoadData(data, fv);
             }
@@ -244,42 +241,39 @@ namespace Dt.Base.Report
         /// <returns></returns>
         public string CreateXamlByDefine()
         {
-            StringBuilder sb = new StringBuilder(_xamlPrefix);
+            StringBuilder sb = new StringBuilder("<a:QueryFv>");
             foreach (var row in Data)
             {
                 string name = row.Str("name");
                 if (name == "")
                     continue;
 
+                sb.AppendLine();
                 switch (row.Str("type").ToLower())
                 {
                     case "bool":
                         sb.Append($"<a:CBool ID=\"{name}\" ShowTitle=\"False\" />");
-                        sb.AppendLine();
                         break;
 
                     case "double":
                         sb.Append($"<a:CNum ID=\"{name}\" />");
-                        sb.AppendLine();
                         break;
 
                     case "int":
                         sb.Append($"<a:CNum ID=\"{name}\" IsInteger=\"True\" />");
-                        sb.AppendLine();
                         break;
 
                     case "date":
                         sb.Append($"<a:CDate ID=\"{name}\" />");
-                        sb.AppendLine();
                         break;
 
                     default:
                         sb.Append($"<a:CText ID=\"{name}\" />");
-                        sb.AppendLine();
                         break;
                 }
             }
-            sb.Append(_xamlPostfix);
+            sb.AppendLine();
+            sb.Append("</a:QueryFv>");
             return sb.ToString();
         }
 
@@ -387,15 +381,10 @@ namespace Dt.Base.Report
                 Throw.Msg("报表参数的xaml内容为空，无法创建查询面板！");
             }
 
-            try
-            {
-                return XamlReader.Load(Xaml) as QueryFv;
-            }
-            catch (Exception ex)
-            {
-                Throw.Msg($"报表参数的xaml内容错误：{ex.Message}\n{Xaml}");
-            }
-            return null;
+            var fv = Kit.LoadXaml<QueryFv>(Xaml);
+            if (fv == null)
+                Throw.Msg("报表参数的xaml内容错误！");
+            return fv;
         }
 
         /// <summary>
@@ -413,13 +402,13 @@ namespace Dt.Base.Report
                     continue;
 
                 string val;
-                
+
                 // 初始值：外部传入的值或缺省值
                 if (p_params != null && p_params.TryGetValue(name, out var initVal))
                     val = initVal == null ? "" : initVal.ToString();
                 else
                     val = await GetInitVal(row);
-                
+
                 switch (row.Str("type").ToLower())
                 {
                     case "bool":

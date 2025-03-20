@@ -17,34 +17,29 @@ namespace Dt.Base.Views
     {
         SingleTblWin _win;
         Lv _lv;
-        
+
         public void LoadCfg(SingleTblWin p_win)
         {
             Title = "列表";
             Icon = Icons.列表;
             _win = p_win;
-            
+
             if (!string.IsNullOrEmpty(_win.Cfg.ListCfg.Xaml))
             {
-                try
-                {
-                    _lv = XamlReader.Load(_win.Cfg.ListCfg.Xaml) as Lv;
-                }
-                catch (Exception ex)
-                {
-                    Throw.Msg($"加载Lv的xaml时错误：{ex.Message}\n{_win.Cfg.ListCfg.Xaml}");
-                }
+                _lv = Kit.LoadXaml<Lv>(_win.Cfg.ListCfg.Xaml);
+                if (_lv == null)
+                    Throw.Msg($"加载Lv的xaml时错误：\n{_win.Cfg.ListCfg.Xaml}");
             }
             else
             {
                 string xaml = GetXaml();
-                _lv = XamlReader.Load(xaml) as Lv;
+                _lv = Kit.LoadXaml<Lv>(xaml);
             }
 
             Content = _lv;
             Lv = _lv;
             Msg += e => _ = _win.Form.Query(e);
-            
+
             var cfg = _win.Cfg.ListCfg;
             if (cfg.ShowAddMi || cfg.ShowDelMi)
             {
@@ -70,7 +65,7 @@ namespace Dt.Base.Views
 
         string GetXaml()
         {
-            StringBuilder sb = new StringBuilder("<a:Lv xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" xmlns:a=\"using:Dt.Base\">\n<a:Cols>");
+            StringBuilder sb = new StringBuilder("<a:Lv>\n<a:Cols>");
             foreach (var col in _win.Cfg.Table.Columns)
             {
                 string title = "";

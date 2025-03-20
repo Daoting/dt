@@ -28,19 +28,14 @@ namespace Dt.Base.Views
 
             if (!string.IsNullOrEmpty(_win.Cfg.FormCfg.Xaml))
             {
-                try
-                {
-                    _fv = XamlReader.Load(_win.Cfg.FormCfg.Xaml) as Fv;
-                }
-                catch (Exception ex)
-                {
-                    Throw.Msg($"加载Fv的xaml时错误：{ex.Message}\n{_win.Cfg.FormCfg.Xaml}");
-                }
+                _fv = Kit.LoadXaml<Fv>(_win.Cfg.FormCfg.Xaml);
+                if (_fv == null)
+                    Throw.Msg($"加载Fv的xaml时错误：{_win.Cfg.FormCfg.Xaml}");
             }
             else
             {
                 string xaml = GetXaml();
-                _fv = XamlReader.Load(xaml) as Fv;
+                _fv = Kit.LoadXaml<Fv>(xaml);
             }
 
             Content = _fv;
@@ -71,7 +66,7 @@ namespace Dt.Base.Views
 
         string GetXaml()
         {
-            StringBuilder sb = new StringBuilder("<a:Fv xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" xmlns:a=\"using:Dt.Base\">");
+            StringBuilder sb = new StringBuilder("<a:Fv>");
             foreach (var col in _win.Cfg.Table.Columns)
             {
                 string title;

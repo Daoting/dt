@@ -15,9 +15,6 @@ namespace Dt.Base.Views
 {
     public sealed partial class SingleTblQuery : Tab
     {
-        const string _xamlPrefix = "<a:QueryFv xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" xmlns:a=\"using:Dt.Base\">";
-        const string _xamlPostfix = "</a:QueryFv>";
-
         SingleTblWin _win;
         QueryFv _fv;
 
@@ -29,21 +26,14 @@ namespace Dt.Base.Views
 
             if (!string.IsNullOrEmpty(_win.Cfg.QueryFvXaml))
             {
-                var xaml = _xamlPrefix + _win.Cfg.QueryFvXaml + _xamlPostfix;
-                try
-                {
-                    _fv = XamlReader.Load(xaml) as QueryFv;
-                }
-                catch (Exception ex)
-                {
-                    Throw.Msg($"加载查询面板xaml时错误：{ex.Message}\n{xaml}");
-                }
+                _fv = Kit.LoadXaml<QueryFv>(_win.Cfg.QueryFvXaml);
+                if (_fv == null)
+                    Throw.Msg($"加载查询面板xaml时错误：\n{_win.Cfg.QueryFvXaml}");
             }
             else
             {
                 string xaml = GetCellsXaml();
-                xaml = _xamlPrefix + xaml + _xamlPostfix;
-                _fv = XamlReader.Load(xaml) as QueryFv;
+                _fv = Kit.LoadXaml<QueryFv>(xaml);
             }
 
             Content = _fv;
@@ -62,7 +52,7 @@ namespace Dt.Base.Views
         /// <returns></returns>
         string GetCellsXaml()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder("<a:QueryFv>");
             foreach (var col in _win.Cfg.Table.Columns)
             {
                 // 字段可能为null
@@ -74,8 +64,7 @@ namespace Dt.Base.Views
                 if (tp == typeof(long))
                     continue;
 
-                if (sb.Length > 0)
-                    sb.AppendLine();
+                sb.AppendLine();
 
                 string title;
                 if (col.IsEnumCol)
@@ -132,6 +121,7 @@ namespace Dt.Base.Views
                     sb.Append($"<a:CText ID=\"{col.Name.ToLower()}\"{title} Query=\"Editable\" QueryFlag=\"Contains\" />");
                 }
             }
+            sb.Append("</a:QueryFv>");
             return sb.ToString();
         }
 
