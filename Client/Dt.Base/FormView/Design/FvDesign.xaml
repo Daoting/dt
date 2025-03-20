@@ -10,6 +10,7 @@
                 <a:Mi ID="增加" Icon="加号" Call="OnAdd" BtnCall="OnBatchAdd" />
                 <a:Mi ID="删除" Icon="删除" Call="OnDel" />
                 <a:Mi ID="Xaml" Icon="HtmL" Call="OnShowEditXaml" ShowBtn="True" BtnCall="OnCopyXaml" />
+                <a:Mi ID="预览" Icon="眼睛" Call="OnCreatePreview" />
                 <a:Mi ID="确定" Icon="保存" Call="OnSave" />
             </a:Menu>
         </a:Tab.Menu>

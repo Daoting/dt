@@ -92,6 +92,8 @@ namespace Dt.Base
             string str = sb.ToString();
             int idx = str.IndexOf(' ');
             int idx2 = str.IndexOf('>');
+            if (str[idx2 - 1] == '/')
+                idx2--;
             return str.Remove(idx, idx2 - idx);
         }
         #endregion

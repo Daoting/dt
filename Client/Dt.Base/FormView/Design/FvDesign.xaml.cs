@@ -45,8 +45,8 @@ namespace Dt.Base
             Dlg dlg = new Dlg { IsPinned = true, Title = "设计表单" };
             if (!Kit.IsPhoneUI)
             {
-                dlg.Width = 850;
-                dlg.Height = 600;
+                dlg.Width = 1000;
+                dlg.Height = 800;
             }
 
             var win = new FvDesign(p_info);
@@ -128,7 +128,10 @@ namespace Dt.Base
             {
                 if (_fv.Items.FirstOrDefault(c => c is FvCell fc && fc.ID == col.Name) == null)
                 {
-                    _fv.Items.Add(Fv.CreateCell(col.Type, col.Name));
+                    var fc = Fv.CreateCell(col.Type, col.Name);
+                    if (_info.IsQueryFv)
+                        fc.Query = QueryType.Editable;
+                    _fv.Items.Add(fc);
                 }
             }
             if (cnt == _fv.Items.Count)
@@ -157,6 +160,31 @@ namespace Dt.Base
         void OnSave()
         {
             OwnDlg?.OnOK();
+        }
+
+        void OnCreatePreview()
+        {
+            var fv = Kit.LoadXaml<Fv>(_fv.ExportXaml());
+            Row r = new Row();
+            foreach (var c in fv.IDCells)
+            {
+                if (c is CText)
+                    r.Add(c.ID, "");
+                else if (c is CNum num)
+                    r.Add(c.ID, num.IsInteger ? (int)0 : (double)0.1);
+                else if (c is CBool)
+                    r.Add(c.ID, false);
+                else if (c is CDate)
+                    r.Add(c.ID, Kit.Now);
+                else if (c is CIcon)
+                    r.Add(c.ID, Icons.选日);
+                else
+                    r.Add(c.ID, "");
+            }
+            fv.Data = r;
+            var dlg = new Dlg { Title = "预览", MinHeight = 300 };
+            dlg.Content = fv;
+            dlg.Show();
         }
     }
 }
