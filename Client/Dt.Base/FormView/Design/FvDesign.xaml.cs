@@ -9,10 +9,7 @@
 #region 引用命名
 using Dt.Base.FormView;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Markup;
-using System.Reflection;
-using System.Threading.Tasks;
+using System.Xml;
 #endregion
 
 namespace Dt.Base
@@ -64,32 +61,53 @@ namespace Dt.Base
             var win = (FvDesign)Kit.OpenWin(typeof(FvDesign), "设计表单", Icons.排列, new FvDesignInfo());
             win._tabMain.Menu["确定"].Visibility = Visibility.Collapsed;
         }
-        
+
         internal FvDesignInfo Info => _info;
-        
+
         internal Fv Fv => _fv;
-        
+
         public void Jz(string p_xaml)
         {
             if (!string.IsNullOrEmpty(p_xaml))
             {
-                if (_info.IsQueryFv)
+                _fv = _info.IsQueryFv ? Kit.LoadXaml<QueryFv>(p_xaml) : Kit.LoadXaml<Fv>(p_xaml);
+                if (_fv == null)
+                    Throw.Msg("无法根据xaml创建表单：\n" + p_xaml);
+
+                // 未包含命名空间，补充，否则节点含a: x:前缀时无法解析
+                string xml = p_xaml;
+                int index = xml.IndexOf('>');
+                if (xml.IndexOf(" xmlns:a=", 0, index) == -1)
                 {
-                    _fv = Kit.LoadXaml<QueryFv>(p_xaml);
-                    if (_fv == null)
-                        Kit.Warn("无法创建表单，xaml内容不是QueryFv！");
+                    if (xml[index - 1] == '/')
+                        index--;
+                    xml = xml.Insert(index, " xmlns:x=\"xaml\" xmlns:a=\"dt\"");
                 }
-                else
+                var doc = new XmlDocument();
+                doc.LoadXml(xml);
+                var chs = doc.DocumentElement.ChildNodes;
+                for (int i = 0; i < chs.Count; i++)
                 {
-                    _fv = Kit.LoadXaml<Fv>(p_xaml);
-                    if (_fv == null)
-                        Kit.Warn("无法创建表单，xaml内容不是Fv！");
+                    var obj = _fv.Items[i];
+                    var ch = chs[i];
+                    if (ch.ChildNodes.Count > 0 && ch.LocalName == obj.GetType().Name)
+                    {
+                        if (obj is FvCell fc)
+                        {
+
+                        }
+                        else if (obj is CBar bar)
+                        {
+                            bar.LoadXamlString(ch);
+                        }
+                    }
                 }
             }
-            
-            if (_fv == null)
+            else
+            {
                 _fv = _info.IsQueryFv ? new QueryFv() : new Fv();
-            
+            }
+
             _fv.IsDesignMode = true;
             _tabMain.Content = _fv;
             _fv.CellClick += (e) => FvDesignKit.LoadCellProps(e, _fvProp);
@@ -99,7 +117,7 @@ namespace Dt.Base
         {
             return _fv.ExportXaml();
         }
-        
+
         async void OnAdd()
         {
             _fv.ClearDesignCell();
@@ -139,7 +157,7 @@ namespace Dt.Base
             else
                 Kit.Msg($"已批量添加{_fv.Items.Count - cnt}个格！");
         }
-        
+
         void OnDel()
         {
             _fv.DelDesignCell();

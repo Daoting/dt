@@ -14,6 +14,7 @@ using Microsoft.UI.Xaml.Markup;
 using Dt.Base.FormView;
 using Microsoft.UI.Xaml.Input;
 using System.Xml;
+using System.Xml.Linq;
 #endregion
 
 namespace Dt.Base
@@ -32,7 +33,7 @@ namespace Dt.Base
             typeof(string),
             typeof(CBar),
             new PropertyMetadata(null, OnContentPropertyChanged));
-        
+
         public static readonly DependencyProperty ColSpanProperty = DependencyProperty.Register(
             "ColSpan",
             typeof(double),
@@ -50,6 +51,12 @@ namespace Dt.Base
             typeof(object),
             typeof(CBar),
             new PropertyMetadata(null, OnContentPropertyChanged));
+
+        public readonly static DependencyProperty ContentXamlProperty = DependencyProperty.Register(
+            "ContentXaml",
+            typeof(string),
+            typeof(CBar),
+            new PropertyMetadata(null));
 
         static void OnUpdateLayout(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -129,10 +136,19 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 设计时用，分隔行内容的xaml
+        /// </summary>
+        public string ContentXaml
+        {
+            get { return (string)GetValue(ContentXamlProperty); }
+            set { SetValue(ContentXamlProperty, value); }
+        }
+
+        /// <summary>
         /// 获取所属的Fv
         /// </summary>
         internal Fv Owner { get; set; }
-        
+
         /// <summary>
         /// 在面板上的布局区域
         /// </summary>
@@ -153,15 +169,52 @@ namespace Dt.Base
                 p_xw.WriteAttributeString("RowSpan", RowSpan.ToString());
             if (ColSpan != 0)
                 p_xw.WriteAttributeString("ColSpan", ColSpan.ToString());
-            
-            if (Content != null)
+
+            if (!string.IsNullOrEmpty(ContentXaml))
             {
-                
+                FvDesignKit.CopyXml(p_xw, ContentXaml);
             }
-            
             p_xw.WriteEndElement();
         }
-        
+
+        internal void AddCustomDesignCells(FvItems p_items)
+        {
+            CBar bar = new CBar { Title = "分隔行内容" };
+            p_items.Add(bar);
+
+            CText text = new CText
+            {
+                ID = "ContentXaml",
+                ShowTitle = false,
+                AcceptsReturn = true,
+                RowSpan = 4,
+            };
+            p_items.Add(text);
+
+            var sp = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
+            var btn = new Button { Content = "+按钮" };
+            btn.Click += (s, e) =>
+            {
+                text.Val = "<Button Content=\"按钮\" HorizontalAlignment=\"Right\"/>";
+            };
+            sp.Children.Add(btn);
+
+            btn = new Button { Content = "+多按钮" };
+            btn.Click += (s, e) =>
+            {
+                text.Val = "<StackPanel Orientation=\"Horizontal\" HorizontalAlignment=\"Right\">\n  <Button Content=\"按钮\"/>\n  <Button Content=\"按钮\"/>\n" +
+                "</StackPanel>";
+            };
+            sp.Children.Add(btn);
+
+            bar.Content = sp;
+        }
+
+        internal void LoadXamlString(XmlNode p_node)
+        {
+            ContentXaml = p_node.InnerXml.Replace(" xmlns:a=\"dt\"", "").Replace(" xmlns:x=\"xaml\"", "");
+        }
+
         protected override void OnLoadTemplate()
         {
             Grid root = (Grid)GetTemplateChild("RootGrid");
@@ -216,7 +269,7 @@ namespace Dt.Base
                     TextWrapping = TextWrapping.NoWrap,
                 };
                 root.Children.Insert(0, tb);
-                
+
                 var con = Content as FrameworkElement;
                 CFree.ApplyCellStyle(con);
                 // 左上空出边线
@@ -225,7 +278,7 @@ namespace Dt.Base
                 Grid.SetColumn(con, 1);
                 root.Children.Insert(1, con);
             }
-            
+
             if (this.GetParent() is not FormPanel)
             {
                 // 独立使用时右下边框

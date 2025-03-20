@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Base.FormView;
 using System.Reflection;
+using System.Xml;
 #endregion
 
 namespace Dt.Base
@@ -54,7 +55,7 @@ namespace Dt.Base
                     int sumFront = 2;
                     int sumMiddle = 0;
                     int sumBar = 0;
-                    
+
                     // 按标题宽度排序显示，最后放选择框
                     foreach (var info in GetCellProps(fc.GetType()))
                     {
@@ -81,10 +82,11 @@ namespace Dt.Base
                             sumFront++;
                         }
                     }
-                    
-                    fc.AddCustomDesignCells(items);
+
+                    if (fc.Owner != null && fc.Owner.IsDesignMode)
+                        fc.AddCustomDesignCells(items);
                 }
-                else
+                else if (p_tgtCell is CBar bar)
                 {
                     FvCell cell = new CText();
                     cell.ID = "Title";
@@ -100,6 +102,9 @@ namespace Dt.Base
                     cell.ID = "ColSpan";
                     cell.Title = "列宽占比0~1";
                     items.Add(cell);
+
+                    if (bar.Owner != null && bar.Owner.IsDesignMode)
+                        bar.AddCustomDesignCells(items);
                 }
             }
             p_fv.Data = p_tgtCell;
@@ -109,7 +114,7 @@ namespace Dt.Base
         {
             if (p_type == null)
                 return null;
-            
+
             if (!_cellProps.TryGetValue(p_type, out List<CellPropertyInfo> props))
             {
                 props = new List<CellPropertyInfo>();
@@ -124,7 +129,68 @@ namespace Dt.Base
             }
             return props.Concat(_baseProps);
         }
-        
+
+        public static void CopyXml(XmlWriter p_xw, string p_xml)
+        {
+            int index;
+            if (string.IsNullOrEmpty(p_xml) || (index = p_xml.IndexOf('>')) < 0)
+                return;
+
+            // 未包含命名空间，补充，否则节点含a: x:前缀时无法解析
+            string xml = p_xml;
+            if (xml.IndexOf(" xmlns:a=", 0, index) == -1)
+            {
+                if (xml[index - 1] == '/')
+                    index--;
+                xml = xml.Insert(index, " xmlns:x=\"xaml\" xmlns:a=\"dt\"");
+            }
+
+            using (var stringReader = new StringReader(xml))
+            using (XmlReader reader = XmlReader.Create(stringReader, new XmlReaderSettings { IgnoreWhitespace = true, IgnoreComments = true, IgnoreProcessingInstructions = true }))
+            {
+                while (reader.Read()) // 逐节点读取
+                {
+                    switch (reader.NodeType)
+                    {
+                        case XmlNodeType.Element:
+                            // 处理元素及属性
+                            p_xw.WriteStartElement(reader.Prefix, reader.LocalName, null);
+
+                            // 复制所有属性
+                            if (reader.HasAttributes)
+                            {
+                                while (reader.MoveToNextAttribute())
+                                {
+                                    // 忽略xmlns前缀的属性
+                                    if (reader.Prefix != "xmlns")
+                                        p_xw.WriteAttributeString(reader.Prefix, reader.LocalName, reader.NamespaceURI, reader.Value);
+                                }
+                                reader.MoveToElement(); // 移回元素
+                            }
+
+                            // 如果是空元素则立即闭合
+                            if (reader.IsEmptyElement)
+                            {
+                                p_xw.WriteEndElement();
+                            }
+                            break;
+
+                        case XmlNodeType.Text:
+                            p_xw.WriteString(reader.Value);
+                            break;
+
+                        case XmlNodeType.CDATA:
+                            p_xw.WriteCData(reader.Value);
+                            break;
+
+                        case XmlNodeType.EndElement:
+                            p_xw.WriteEndElement();
+                            break;
+                    }
+                }
+            }
+        }
+
         static FvDesignKit()
         {
             var normal = new FvCell();
