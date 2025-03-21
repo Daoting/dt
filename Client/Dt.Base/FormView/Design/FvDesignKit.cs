@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Base.FormView;
 using System.Reflection;
+using System.Text;
 using System.Xml;
 #endregion
 
@@ -191,6 +192,60 @@ namespace Dt.Base
             }
         }
 
+        /// <summary>
+        /// 未包含命名空间，补充，否则节点含a: x:前缀时无法解析
+        /// </summary>
+        /// <param name="p_xml"></param>
+        /// <returns></returns>
+        public static string AddXmlns(string p_xml)
+        {
+            int index;
+            if (string.IsNullOrEmpty(p_xml) || (index = p_xml.IndexOf('>')) < 0)
+                return p_xml;
+
+            if (p_xml.IndexOf(" xmlns:a=", 0, index) == -1)
+            {
+                if (p_xml[index - 1] == '/')
+                    index--;
+                return p_xml.Insert(index, " xmlns:x=\"xaml\" xmlns:a=\"dt\"");
+            }
+            return p_xml;
+        }
+
+        /// <summary>
+        /// 获取节点的xml
+        /// </summary>
+        /// <param name="p_node"></param>
+        /// <returns></returns>
+        public static string GetNodeXml(XmlNode p_node)
+        {
+            var sb = new StringBuilder();
+            using (XmlWriter xw = XmlWriter.Create(sb, new XmlWriterSettings() { OmitXmlDeclaration = true, Indent = true }))
+            {
+                p_node.WriteTo(xw);
+                xw.Flush();
+            }
+            return sb.Replace(" xmlns:a=\"dt\"", "").Replace(" xmlns:x=\"xaml\"", "").ToString();
+        }
+
+        /// <summary>
+        /// 添加xaml到CText
+        /// </summary>
+        /// <param name="p_ct"></param>
+        /// <param name="p_txt"></param>
+        public static void AddXamlToCText(CText p_ct, string p_txt)
+        {
+            var tb = p_ct.TextBox;
+            var prefix = tb.Text.Substring(0, tb.SelectionStart).TrimEnd('\r');
+            if (prefix != "")
+                prefix += "\r";
+
+            string postfix = "";
+            if (tb.Text.Length > tb.SelectionStart)
+                postfix = "\r" + tb.Text.Substring(tb.SelectionStart).Trim('\r');
+            p_ct.Val = prefix + p_txt + postfix;
+        }
+        
         static FvDesignKit()
         {
             var normal = new FvCell();

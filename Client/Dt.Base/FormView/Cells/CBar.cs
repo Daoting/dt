@@ -15,6 +15,7 @@ using Dt.Base.FormView;
 using Microsoft.UI.Xaml.Input;
 using System.Xml;
 using System.Xml.Linq;
+using System.Text;
 #endregion
 
 namespace Dt.Base
@@ -187,32 +188,43 @@ namespace Dt.Base
                 ID = "ContentXaml",
                 ShowTitle = false,
                 AcceptsReturn = true,
-                RowSpan = 4,
+                RowSpan = 6,
             };
             p_items.Add(text);
 
             var sp = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
-            var btn = new Button { Content = "+按钮" };
-            btn.Click += (s, e) =>
-            {
-                text.Val = "<Button Content=\"按钮\" HorizontalAlignment=\"Right\"/>";
-            };
+            var btn = new Button { Content = "+模板" };
+            Menu m = new Menu { Placement = MenuPosition.BottomLeft };
+            Mi mi = new Mi { ID = "单个按钮" };
+            mi.Call += () => FvDesignKit.AddXamlToCText(text, "<Button Content=\"按钮\" HorizontalAlignment=\"Right\"/>");
+            m.Add(mi);
+
+            mi = new Mi { ID = "多个按钮" };
+            mi.Call += () => FvDesignKit.AddXamlToCText(text, "<StackPanel Orientation=\"Horizontal\" HorizontalAlignment=\"Right\">\n  <Button Content=\"按钮\"/>\n  <Button Content=\"按钮\"/>\n</StackPanel>");
+            m.Add(mi);
+
+            mi = new Mi { ID = "工具栏" };
+            mi.Call += () => FvDesignKit.AddXamlToCText(text, "<a:Menu HorizontalAlignment=\"Right\">\n  <a:Mi ID=\"保存\" Icon=\"保存\" />\n  <a:Mi ID=\"搜索\" Icon=\"搜索\" />\n</a:Menu>");
+            m.Add(mi);
+            Ex.SetMenu(btn, m);
             sp.Children.Add(btn);
 
-            btn = new Button { Content = "+多按钮" };
+            btn = new Button { Content = "应用" };
             btn.Click += (s, e) =>
             {
-                text.Val = "<StackPanel Orientation=\"Horizontal\" HorizontalAlignment=\"Right\">\n  <Button Content=\"按钮\"/>\n  <Button Content=\"按钮\"/>\n" +
-                "</StackPanel>";
+                if (string.IsNullOrEmpty(ContentXaml))
+                    Content = null;
+                else
+                    Content = Kit.LoadXaml<object>(ContentXaml);
             };
             sp.Children.Add(btn);
-
             bar.Content = sp;
         }
 
         internal void LoadXamlString(XmlNode p_node)
         {
-            ContentXaml = p_node.InnerXml.Replace(" xmlns:a=\"dt\"", "").Replace(" xmlns:x=\"xaml\"", "");
+            if (p_node.ChildNodes.Count == 1)
+                ContentXaml = FvDesignKit.GetNodeXml(p_node.ChildNodes[0]);
         }
 
         protected override void OnLoadTemplate()

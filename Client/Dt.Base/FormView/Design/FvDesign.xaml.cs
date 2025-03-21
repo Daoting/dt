@@ -73,18 +73,9 @@ namespace Dt.Base
                 _fv = _info.IsQueryFv ? Kit.LoadXaml<QueryFv>(p_xaml) : Kit.LoadXaml<Fv>(p_xaml);
                 if (_fv == null)
                     Throw.Msg("无法根据xaml创建表单：\n" + p_xaml);
-
-                // 未包含命名空间，补充，否则节点含a: x:前缀时无法解析
-                string xml = p_xaml;
-                int index = xml.IndexOf('>');
-                if (xml.IndexOf(" xmlns:a=", 0, index) == -1)
-                {
-                    if (xml[index - 1] == '/')
-                        index--;
-                    xml = xml.Insert(index, " xmlns:x=\"xaml\" xmlns:a=\"dt\"");
-                }
+                
                 var doc = new XmlDocument();
-                doc.LoadXml(xml);
+                doc.LoadXml(FvDesignKit.AddXmlns(p_xaml));
                 var chs = doc.DocumentElement.ChildNodes;
                 for (int i = 0; i < chs.Count; i++)
                 {
