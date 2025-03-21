@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Base.FormView;
 using System.Reflection;
+using System.Security;
 using System.Text;
 using System.Xml;
 #endregion

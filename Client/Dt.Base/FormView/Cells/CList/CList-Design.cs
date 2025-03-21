@@ -45,9 +45,23 @@ namespace Dt.Base
             get { return (string)GetValue(ItemsXamlProperty); }
             set { SetValue(ItemsXamlProperty, value); }
         }
+
+        /// <summary>
+        /// 设计时用，行视图的xaml
+        /// </summary>
+        public string ViewXaml
+        {
+            get { return _lv.ViewXaml; }
+            set { _lv.ViewXaml = value; }
+        }
         
         protected override void ExportCustomXaml(XmlWriter p_xw)
         {
+            if (!string.IsNullOrEmpty(ViewXaml))
+            {
+                FvDesignKit.CopyXml(p_xw, ViewXaml);
+            }
+            
             if (!string.IsNullOrEmpty(ItemsXaml))
             {
                 p_xw.WriteStartElement("a", "CList.Items", null);
@@ -89,6 +103,84 @@ namespace Dt.Base
 
         public override void AddCustomDesignCells(FvItems p_items)
         {
+            AddViewDesignCells(p_items);
+            AddItemsDesignCells(p_items);
+            
+            // 空时无法绑定
+            if (Sql == null)
+                Sql = new Sql();
+
+            AddSqlDesignCells(p_items);
+        }
+
+        public override void LoadXamlString(XmlNode p_node)
+        {
+            for (int i = 0; i < p_node.ChildNodes.Count; i++)
+            {
+                var node = p_node.ChildNodes[i];
+                if (node.LocalName == "CList.Items")
+                {
+                    ItemsXaml = FvDesignKit.GetNodeXml(node, true);
+                }
+                else if (!node.LocalName.StartsWith("CList."))
+                {
+                    ViewXaml = FvDesignKit.GetNodeXml(node, false);
+                }
+            }
+        }
+
+        void AddViewDesignCells(FvItems p_items)
+        {
+            CBar bar = new CBar { Title = "行视图" };
+            p_items.Add(bar);
+
+            CText text = new CText
+            {
+                ID = "ViewXaml",
+                ShowTitle = false,
+                AcceptsReturn = true,
+                RowSpan = 6,
+            };
+            p_items.Add(text);
+
+            var btn = new Button { Content = "+模板", HorizontalAlignment = HorizontalAlignment.Right };
+            Menu m = new Menu { Placement = MenuPosition.BottomLeft };
+            Mi mi = new Mi { ID = "Cols定义" };
+            mi.Call += () => FvDesignKit.AddXamlToCText(text, "<a:Cols>\n  <a:Col ID=\"xm\" Title=\"姓名\" />\n</a:Cols>");
+            m.Add(mi);
+
+            mi = new Mi { ID = "Col" };
+            mi.Call += () => FvDesignKit.AddXamlToCText(text, "<a:Col ID=\"xm\" Title=\"姓名\" />");
+            m.Add(mi);
+
+            mi = new Mi { ID = "行模板" };
+            mi.Call += () => FvDesignKit.AddXamlToCText(text,
+@"<DataTemplate>
+    <Grid Padding=""6"">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=""50"" />
+            <ColumnDefinition Width=""*"" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Text=""&#xE060;""
+                    FontFamily=""{StaticResource IconFont}""
+                    FontSize=""30""
+                    VerticalAlignment=""Center""
+                    TextAlignment=""Center"" />
+        <StackPanel Margin=""10,0,0,0"" Grid.Column=""1"">
+            <a:Dot ID=""xm"" />
+            <a:Dot ID=""xb"" />
+            <a:Dot ID=""bumen"" />
+        </StackPanel>
+    </Grid>
+</DataTemplate>");
+            m.Add(mi);
+            
+            Dt.Base.Ex.SetMenu(btn, m);
+            bar.Content = btn;
+        }
+        
+        void AddItemsDesignCells(FvItems p_items)
+        {
             CBar bar = new CBar { Title = "对象列表" };
             p_items.Add(bar);
 
@@ -116,26 +208,8 @@ namespace Dt.Base
             m.Add(mi);
             Dt.Base.Ex.SetMenu(btn, m);
             bar.Content = btn;
-            
-            // 空时无法绑定
-            if (Sql == null)
-                Sql = new Sql();
-
-            AddSqlDesignCells(p_items);
         }
 
-        public override void LoadXamlString(XmlNode p_node)
-        {
-            for (int i = 0; i < p_node.ChildNodes.Count; i++)
-            {
-                var node = p_node.ChildNodes[i];
-                if (node.LocalName == "CList.Items")
-                {
-                    ItemsXaml = FvDesignKit.GetNodeXml(node, true);
-                }
-            }
-        }
-        
         internal static void AddSqlDesignCells(FvItems p_items)
         {
             CBar bar = new CBar { Title = "数据源Sql，语句可包含变量或占位符\n变量：@userid @username @[列名]\n占位符：#input#，输入的过滤串", RowSpan = 2 };

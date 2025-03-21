@@ -53,6 +53,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置视图类型：列表、表格、磁贴，默认List
         /// </summary>
+        [CellParam("视图类型")]
         public ViewMode ViewMode
         {
             get { return _lv.ViewMode; }
@@ -117,6 +118,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置分组列名
         /// </summary>
+        [CellParam("列表分组列名")]
         public string GroupName
         {
             get { return _lv.GroupName; }
