@@ -224,7 +224,7 @@ namespace Dt.Base
         internal void LoadXamlString(XmlNode p_node)
         {
             if (p_node.ChildNodes.Count == 1)
-                ContentXaml = FvDesignKit.GetNodeXml(p_node.ChildNodes[0]);
+                ContentXaml = FvDesignKit.GetNodeXml(p_node.ChildNodes[0], false);
         }
 
         protected override void OnLoadTemplate()

@@ -95,5 +95,13 @@ namespace Dt.Base
         public virtual void AddCustomDesignCells(FvItems p_items)
         {
         }
+
+        /// <summary>
+        /// 设计时加载内容xaml
+        /// </summary>
+        /// <param name="p_node"></param>
+        public virtual void LoadXamlString(XmlNode p_node)
+        {
+        }
     }
 }

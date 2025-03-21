@@ -73,9 +73,23 @@ namespace Dt.Base
                 _fv = _info.IsQueryFv ? Kit.LoadXaml<QueryFv>(p_xaml) : Kit.LoadXaml<Fv>(p_xaml);
                 if (_fv == null)
                     Throw.Msg("无法根据xaml创建表单：\n" + p_xaml);
-                
+
                 var doc = new XmlDocument();
-                doc.LoadXml(FvDesignKit.AddXmlns(p_xaml));
+                using (var stringReader = new StringReader(p_xaml))
+                using (XmlReader reader = XmlReader.Create(
+                    stringReader,
+                    new XmlReaderSettings
+                    {
+                        ConformanceLevel = ConformanceLevel.Fragment,
+                        IgnoreWhitespace = true,
+                        IgnoreComments = true,
+                        IgnoreProcessingInstructions = true
+                    },
+                    FvDesignKit.GetXmlContext()))
+                {
+                    doc.Load(reader);
+                }
+
                 var chs = doc.DocumentElement.ChildNodes;
                 for (int i = 0; i < chs.Count; i++)
                 {
@@ -85,7 +99,7 @@ namespace Dt.Base
                     {
                         if (obj is FvCell fc)
                         {
-
+                            fc.LoadXamlString(ch);
                         }
                         else if (obj is CBar bar)
                         {

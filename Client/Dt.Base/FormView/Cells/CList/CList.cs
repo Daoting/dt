@@ -103,7 +103,7 @@ namespace Dt.Base
         #region 成员变量
         readonly Lv _lv;
         Grid _grid;
-        Nl<object> _items;
+        NlItems _items;
         ListDlg _dlg;
         #endregion
 
@@ -174,12 +174,12 @@ namespace Dt.Base
         /// <summary>
         /// 外部(xaml中)定义的对象列表
         /// </summary>
-        public Nl<object> Items
+        public NlItems Items
         {
             get
             {
                 if (_items == null)
-                    _items = new Nl<object>();
+                    _items = new NlItems();
                 return _items;
             }
         }
@@ -314,94 +314,6 @@ namespace Dt.Base
                 _dlg.Destroy();
                 _dlg = null;
             }
-        }
-
-        protected override void ExportCustomXaml(XmlWriter p_xw)
-        {
-            if (Sql == null || string.IsNullOrEmpty(Sql.SqlStr))
-                return;
-
-            p_xw.WriteStartElement("a", "CList.Sql", null);
-            p_xw.WriteStartElement("a", "Sql", null);
-            
-            if (!string.IsNullOrEmpty(Sql.LocalDb))
-                p_xw.WriteAttributeString("LocalDb", Sql.LocalDb);
-            if (!string.IsNullOrEmpty(Sql.Svc))
-                p_xw.WriteAttributeString("Svc", Sql.Svc);
-            p_xw.WriteString(Sql.SqlStr);
-            
-            p_xw.WriteEndElement();
-            p_xw.WriteEndElement();
-        }
-        
-        public override FvCell CreateDesignCell(CellPropertyInfo p_info)
-        {
-            if (p_info.Info.Name == "Ex")
-            {
-                return new CList
-                {
-                    ID = p_info.Info.Name,
-                    IsEditable = true,
-                    Items = { "Option#民族", "EnumData#Dt.Base.DlgPlacement,Dt.Base" },
-                    ShowTitle = false,
-                };
-            }
-
-            return base.CreateDesignCell(p_info);
-        }
-
-        public override void AddCustomDesignCells(FvItems p_items)
-        {
-            // 空时无法绑定
-            if (Sql == null)
-                Sql = new Sql();
-            
-            AddDesignCells(p_items);
-        }
-        
-        internal static void AddDesignCells(FvItems p_items)
-        {
-            CBar bar = new CBar { Title = "数据源Sql，语句可包含变量或占位符\n变量：@userid @username @[列名]\n占位符：#input#，输入的过滤串", RowSpan = 2 };
-            p_items.Add(bar);
-            
-            CText text = new CText
-            {
-                ID = "Sql.SqlStr",
-                ShowTitle = false,
-                AcceptsReturn = true,
-                RowSpan = 6,
-                Placeholder = "SELECT\r\n\ttitle\r\nFROM\r\n\tdemo_tbl\r\nWHERE\r\n\tparent_id = @[parentid]\r\n    AND name LIKE '#input#%'\r\n    AND id = @RptValueCall.GetMaxID(demo_tbl)\r\n    AND owner = @userid",
-            };
-            p_items.Add(text);
-
-            var btn = new Button { Content = "美化SQL", HorizontalAlignment = HorizontalAlignment.Right };
-            btn.Click += (s, e) =>
-            {
-                var val = text.Val;
-                if (val != null && !string.IsNullOrEmpty(text.Val.ToString()))
-                {
-                    text.Val = SqlFormatter.Format(text.Val.ToString());
-                }
-            };
-            bar.Content = btn;
-
-            var ct = new CText
-            {
-                ID = "Sql.LocalDb",
-                ShowTitle = false,
-                ColSpan = 0.5,
-                Placeholder = "本地sqlite库名",
-            };
-            p_items.Add(ct);
-
-            ct = new CText
-            {
-                ID = "Sql.Svc",
-                ShowTitle = false,
-                ColSpan = 0.5,
-                Placeholder = "服务名，空为当前服务",
-            };
-            p_items.Add(ct);
         }
         #endregion
 

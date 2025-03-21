@@ -111,6 +111,11 @@ namespace Dt.Base
             p_fv.Data = p_tgtCell;
         }
 
+        /// <summary>
+        /// 根据格类型获取设计属性列表
+        /// </summary>
+        /// <param name="p_type">格类型</param>
+        /// <returns></returns>
         public static IEnumerable<CellPropertyInfo> GetCellProps(Type p_type)
         {
             if (p_type == null)
@@ -131,23 +136,27 @@ namespace Dt.Base
             return props.Concat(_baseProps);
         }
 
+        /// <summary>
+        /// 将xml字符串节点复制到XmlWriter
+        /// </summary>
+        /// <param name="p_xw"></param>
+        /// <param name="p_xml"></param>
         public static void CopyXml(XmlWriter p_xw, string p_xml)
         {
-            int index;
-            if (string.IsNullOrEmpty(p_xml) || (index = p_xml.IndexOf('>')) < 0)
+            if (string.IsNullOrEmpty(p_xml))
                 return;
 
-            // 未包含命名空间，补充，否则节点含a: x:前缀时无法解析
-            string xml = p_xml;
-            if (xml.IndexOf(" xmlns:a=", 0, index) == -1)
-            {
-                if (xml[index - 1] == '/')
-                    index--;
-                xml = xml.Insert(index, " xmlns:x=\"xaml\" xmlns:a=\"dt\"");
-            }
-
-            using (var stringReader = new StringReader(xml))
-            using (XmlReader reader = XmlReader.Create(stringReader, new XmlReaderSettings { IgnoreWhitespace = true, IgnoreComments = true, IgnoreProcessingInstructions = true }))
+            using (var stringReader = new StringReader(p_xml))
+            using (XmlReader reader = XmlReader.Create(
+                stringReader,
+                new XmlReaderSettings
+                {
+                    ConformanceLevel = ConformanceLevel.Fragment,
+                    IgnoreWhitespace = true,
+                    IgnoreComments = true,
+                    IgnoreProcessingInstructions = true
+                },
+                GetXmlContext()))
             {
                 while (reader.Read()) // 逐节点读取
                 {
@@ -195,34 +204,37 @@ namespace Dt.Base
         /// <summary>
         /// 未包含命名空间，补充，否则节点含a: x:前缀时无法解析
         /// </summary>
-        /// <param name="p_xml"></param>
         /// <returns></returns>
-        public static string AddXmlns(string p_xml)
+        public static XmlParserContext GetXmlContext()
         {
-            int index;
-            if (string.IsNullOrEmpty(p_xml) || (index = p_xml.IndexOf('>')) < 0)
-                return p_xml;
-
-            if (p_xml.IndexOf(" xmlns:a=", 0, index) == -1)
-            {
-                if (p_xml[index - 1] == '/')
-                    index--;
-                return p_xml.Insert(index, " xmlns:x=\"xaml\" xmlns:a=\"dt\"");
-            }
-            return p_xml;
+            var nsmgr = new XmlNamespaceManager(new NameTable());
+            nsmgr.AddNamespace("a", "dt");
+            nsmgr.AddNamespace("x", "xaml");
+            return new XmlParserContext(null, nsmgr, null, XmlSpace.None);
         }
 
         /// <summary>
         /// 获取节点的xml
         /// </summary>
         /// <param name="p_node"></param>
+        /// <param name="p_onlyChild">只输出子节点</param>
         /// <returns></returns>
-        public static string GetNodeXml(XmlNode p_node)
+        public static string GetNodeXml(XmlNode p_node, bool p_onlyChild)
         {
             var sb = new StringBuilder();
-            using (XmlWriter xw = XmlWriter.Create(sb, new XmlWriterSettings() { OmitXmlDeclaration = true, Indent = true }))
+            using (XmlWriter xw = XmlWriter.Create(sb, new XmlWriterSettings() { ConformanceLevel = ConformanceLevel.Fragment, OmitXmlDeclaration = true, Indent = true }))
             {
-                p_node.WriteTo(xw);
+                if (p_onlyChild)
+                {
+                    for (int i = 0; i < p_node.ChildNodes.Count; i++)
+                    {
+                        p_node.ChildNodes[i].WriteTo(xw);
+                    }
+                }
+                else
+                {
+                    p_node.WriteTo(xw);
+                }
                 xw.Flush();
             }
             return sb.Replace(" xmlns:a=\"dt\"", "").Replace(" xmlns:x=\"xaml\"", "").ToString();

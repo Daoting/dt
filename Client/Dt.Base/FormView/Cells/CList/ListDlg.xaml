@@ -4,4 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
+    <a:Dlg.Resources>
+        <!-- 禁止删除，否则 XamlReader.Load 无法生成实例，XamlType中缺少NlItems -->
+        <a:NlItems x:Key="_placehold" />
+    </a:Dlg.Resources>
+    
 </a:Dlg>

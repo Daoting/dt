@@ -298,7 +298,7 @@ namespace Dt.Base
             if (Sql == null)
                 Sql = new Sql();
 
-            CList.AddDesignCells(p_items);
+            CList.AddSqlDesignCells(p_items);
         }
         #endregion
 
