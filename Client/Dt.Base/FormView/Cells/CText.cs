@@ -153,6 +153,11 @@ namespace Dt.Base
             set { SetValue(PlaceholderProperty, value); }
         }
 
+        /// <summary>
+        /// 获取内部TextBox控件
+        /// </summary>
+        public TextBox TextBox => _tb;
+        
         protected override IFvCall DefaultMiddle => new TextValConverter();
 
         protected override void OnApplyCellTemplate()
