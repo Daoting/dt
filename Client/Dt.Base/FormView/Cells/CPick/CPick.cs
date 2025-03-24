@@ -273,33 +273,6 @@ namespace Dt.Base
                 _dlg = null;
             }
         }
-
-        protected override void ExportCustomXaml(XmlWriter p_xw)
-        {
-            if (Sql == null || string.IsNullOrEmpty(Sql.SqlStr))
-                return;
-
-            p_xw.WriteStartElement("a", "CPick.Sql", null);
-            p_xw.WriteStartElement("a", "Sql", null);
-
-            if (!string.IsNullOrEmpty(Sql.LocalDb))
-                p_xw.WriteAttributeString("LocalDb", Sql.LocalDb);
-            if (!string.IsNullOrEmpty(Sql.Svc))
-                p_xw.WriteAttributeString("Svc", Sql.Svc);
-            p_xw.WriteString(Sql.SqlStr);
-
-            p_xw.WriteEndElement();
-            p_xw.WriteEndElement();
-        }
-
-        public override void AddCustomDesignCells(FvItems p_items)
-        {
-            // 空时无法绑定
-            if (Sql == null)
-                Sql = new Sql();
-
-            CList.AddSqlDesignCells(p_items);
-        }
         #endregion
 
         #region 内部方法

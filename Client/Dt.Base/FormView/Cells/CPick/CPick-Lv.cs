@@ -53,6 +53,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置视图类型：列表、表格、磁贴，默认List
         /// </summary>
+        [CellParam("视图类型")]
         public ViewMode ViewMode
         {
             get { return _lv.ViewMode; }
@@ -95,6 +96,52 @@ namespace Dt.Base
             get { return _lv.Toolbar; }
         }
 
+        /// <summary>
+        /// 获取设置顶部是否显示分组导航，默认true
+        /// </summary>
+        public bool ShowGroupHeader
+        {
+            get { return _lv.ShowGroupHeader; }
+            set { _lv.ShowGroupHeader = value; }
+        }
+
+        /// <summary>
+        /// 获取设置分组列名
+        /// </summary>
+        [CellParam("列表分组列名")]
+        public string GroupName
+        {
+            get { return _lv.GroupName; }
+            set { _lv.GroupName = value; }
+        }
+
+        /// <summary>
+        /// 获取设置分组模板，和GroupContext配合使用
+        /// </summary>
+        public DataTemplate GroupTemplate
+        {
+            get { return _lv.GroupTemplate; }
+            set { _lv.GroupTemplate = value; }
+        }
+
+        /// <summary>
+        /// 获取设置分组模板的数据上下文类型，和GroupTemplate配合使用，需继承自GroupContext
+        /// </summary>
+        public Type GroupContext
+        {
+            get { return _lv.GroupContext; }
+            set { _lv.GroupContext = value; }
+        }
+
+        /// <summary>
+        /// 获取设置项目的最小宽度，默认160，只磁贴视图有效！
+        /// </summary>
+        public double MinItemWidth
+        {
+            get { return _lv.MinItemWidth; }
+            set { _lv.MinItemWidth = value; }
+        }
+        
         /// <summary>
         /// 获取当前选定行
         /// </summary>

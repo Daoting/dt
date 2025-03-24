@@ -129,7 +129,7 @@ namespace Dt.Base
             }
         }
 
-        void AddViewDesignCells(FvItems p_items)
+        internal static void AddViewDesignCells(FvItems p_items)
         {
             CBar bar = new CBar { Title = "行视图" };
             p_items.Add(bar);

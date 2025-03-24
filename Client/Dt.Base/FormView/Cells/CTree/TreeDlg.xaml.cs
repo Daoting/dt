@@ -65,6 +65,9 @@ namespace Dt.Base.FormView
                 tv.Data = await _owner.Sql.GetData(_owner.Owner.Data, null);
             }
 
+            if (tv.Data == null)
+                Throw.Msg("数据源为空！");
+            
             // 拆分填充列
             if (_srcIDs == null)
             {
