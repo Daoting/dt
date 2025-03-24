@@ -161,15 +161,10 @@ namespace Dt.Base
             <ColumnDefinition Width=""50"" />
             <ColumnDefinition Width=""*"" />
         </Grid.ColumnDefinitions>
-        <TextBlock Text=""&#xE060;""
-                    FontFamily=""{StaticResource IconFont}""
-                    FontSize=""30""
-                    VerticalAlignment=""Center""
-                    TextAlignment=""Center"" />
+        <a:Dot ID=""icon"" />
         <StackPanel Margin=""10,0,0,0"" Grid.Column=""1"">
             <a:Dot ID=""xm"" />
             <a:Dot ID=""xb"" />
-            <a:Dot ID=""bumen"" />
         </StackPanel>
     </Grid>
 </DataTemplate>");

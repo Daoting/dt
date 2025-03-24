@@ -273,9 +273,25 @@ namespace Dt.Base
                 _dlg = null;
             }
         }
+        #endregion
+
+        #region Design
+        /// <summary>
+        /// 设计时用，行视图的xaml
+        /// </summary>
+        public string ViewXaml
+        {
+            get { return _tv.ViewXaml; }
+            set { _tv.ViewXaml = value; }
+        }
         
         protected override void ExportCustomXaml(XmlWriter p_xw)
         {
+            if (!string.IsNullOrEmpty(ViewXaml))
+            {
+                FvDesignKit.CopyXml(p_xw, ViewXaml);
+            }
+            
             if (Sql == null || string.IsNullOrEmpty(Sql.SqlStr))
                 return;
 
@@ -294,11 +310,66 @@ namespace Dt.Base
         
         public override void AddCustomDesignCells(FvItems p_items)
         {
+            AddViewDesignCells(p_items);
+            
             // 空时无法绑定
             if (Sql == null)
                 Sql = new Sql();
 
             CList.AddSqlDesignCells(p_items);
+        }
+
+        public override void LoadXamlString(XmlNode p_node)
+        {
+            for (int i = 0; i < p_node.ChildNodes.Count; i++)
+            {
+                var node = p_node.ChildNodes[i];
+                if (!node.LocalName.StartsWith("CTree."))
+                {
+                    ViewXaml = FvDesignKit.GetNodeXml(node, false);
+                }
+            }
+        }
+        
+        void AddViewDesignCells(FvItems p_items)
+        {
+            CBar bar = new CBar { Title = "行视图" };
+            p_items.Add(bar);
+
+            CText text = new CText
+            {
+                ID = "ViewXaml",
+                ShowTitle = false,
+                AcceptsReturn = true,
+                RowSpan = 6,
+            };
+            p_items.Add(text);
+
+            var btn = new Button { Content = "+模板", HorizontalAlignment = HorizontalAlignment.Right };
+            Menu m = new Menu { Placement = MenuPosition.BottomLeft };
+            Mi mi = new Mi { ID = "单列模板" };
+            mi.Call += () => FvDesignKit.AddXamlToCText(text, "<DataTemplate>\n  <a:Dot ID=\"name\" />\n</DataTemplate>");
+            m.Add(mi);
+            
+            mi = new Mi { ID = "多列模板" };
+            mi.Call += () => FvDesignKit.AddXamlToCText(text,
+@"<DataTemplate>
+    <Grid Padding=""6"">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=""50"" />
+            <ColumnDefinition Width=""*"" />
+        </Grid.ColumnDefinitions>
+        <a:Dot ID=""icon"" />
+        <StackPanel Margin=""10,0,0,0"" Grid.Column=""1"">
+            <a:Dot ID=""xm"" />
+            <a:Dot ID=""xb"" />
+        </StackPanel>
+    </Grid>
+</DataTemplate>");
+            m.Add(mi);
+
+            Dt.Base.Ex.SetMenu(btn, m);
+            bar.Content = btn;
         }
         #endregion
 
