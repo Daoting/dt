@@ -341,7 +341,7 @@ namespace Dt.Base
 
                 p_writer.WritePropertyName("ID");
                 p_writer.WriteStringValue(col.ID);
-                if (!string.IsNullOrEmpty(col.Title))
+                if (!string.IsNullOrEmpty(col.Title) && col.ID != col.Title)
                 {
                     p_writer.WritePropertyName("Title");
                     p_writer.WriteStringValue(col.Title);
@@ -512,7 +512,7 @@ namespace Dt.Base
                 {
                     xw.WriteStartElement("a", "Col", null);
                     xw.WriteAttributeString("ID", col.ID);
-                    if (!string.IsNullOrEmpty(col.Title))
+                    if (!string.IsNullOrEmpty(col.Title) && col.ID != col.Title)
                         xw.WriteAttributeString("Title", col.Title);
                     if (!string.IsNullOrEmpty(col.Width))
                         xw.WriteAttributeString("Width", col.Width);

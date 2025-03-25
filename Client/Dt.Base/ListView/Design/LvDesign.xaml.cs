@@ -10,6 +10,7 @@
 using Dt.Base.FormView;
 using Dt.Base.ListView;
 using Microsoft.UI.Xaml;
+using System.Text;
 using System.Xml;
 #endregion
 
@@ -27,6 +28,7 @@ namespace Dt.Base
             Throw.IfNull(p_info);
             _info = p_info;
             Jz(_info.Xaml);
+            JzOnce();
         }
 
         /// <summary>
@@ -66,6 +68,7 @@ namespace Dt.Base
         {
             if (_lv != null)
             {
+                _lv.Data = null;
                 if (_lv.View is Cols cs)
                     cs.LayoutChanged -= OnColsChanged;
             }
@@ -140,7 +143,52 @@ namespace Dt.Base
 
         void OnViewTemp(Mi mi)
         {
-
+            StringBuilder sb = new StringBuilder();
+            if (mi.ID == "完整Cols定义")
+            {
+                if (_info.Cols != null && _info.Cols.Count > 0)
+                {
+                    sb.AppendLine("<a:Cols>");
+                    foreach (var col in _info.Cols)
+                    {
+                        sb.AppendLine($"    <a:Col ID=\"{col.Name}\" Title=\"{col.Name}\" />");
+                    }
+                    sb.Append("</a:Cols>");
+                }
+                else
+                {
+                    sb.AppendLine("<a:Cols>");
+                    sb.AppendLine("    <a:Col ID=\"txt\" Title=\"标题\" />");
+                    sb.Append("</a:Cols>");
+                }
+            }
+            else if (mi.ID == "Col")
+            {
+                sb.AppendLine("    <a:Col ID=\"txt\" Title=\"标题\" />");
+            }
+            else
+            {
+                if (_info.Cols != null && _info.Cols.Count > 0)
+                {
+                    sb.AppendLine("<DataTemplate>");
+                    sb.AppendLine("  <StackPanel Padding=\"10\">");
+                    foreach (var col in _info.Cols)
+                    {
+                        sb.AppendLine($"    <a:Dot ID=\"{col.Name}\" />");
+                    }
+                    sb.AppendLine("  </StackPanel>");
+                    sb.Append("</DataTemplate>");
+                }
+                else
+                {
+                    sb.AppendLine("<DataTemplate>");
+                    sb.AppendLine("  <StackPanel Padding=\"10\">");
+                    sb.AppendLine("    <a:Dot ID=\"txt\" />");
+                    sb.AppendLine("  </StackPanel>");
+                    sb.Append("</DataTemplate>");
+                }
+            }
+            FvDesignKit.AddXamlToCText((CText)_fv["ViewXaml"], sb.ToString());
         }
 
         void OnColsChanged()
@@ -173,11 +221,11 @@ namespace Dt.Base
                         tbl.Add(dot.ID);
                 }
             }
-            
+
             if (tbl.Columns.Count > 0)
             {
                 Random r = new Random();
-                for (int i = 0; i < 50; i++)
+                for (int i = 0; i < 20; i++)
                 {
                     var row = tbl.AddRow();
                     for (int j = 0; j < tbl.Columns.Count; j++)
@@ -191,12 +239,23 @@ namespace Dt.Base
                             row[j] = DateTime.Now.AddDays(r.Next(100));
                         else if (tp == typeof(bool))
                             row[j] = r.Next(2) == 1;
-                        else
-                            row[j] = "测试" + r.Next(10000);
                     }
                 }
             }
             _lv.Data = tbl;
+        }
+
+        void JzOnce()
+        {
+            if (_info.Cols != null && _info.Cols.Count > 0)
+            {
+                Nl<string> ls = new Nl<string>();
+                foreach (var col in _info.Cols)
+                {
+                    ls.Add(col.Name);
+                }
+                ((CList)_fv["GroupName"]).Data = ls;
+            }
         }
     }
 }
