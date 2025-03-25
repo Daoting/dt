@@ -117,12 +117,7 @@ namespace Dt.Base
             _tabMain.Content = _fv;
             _fv.CellClick += (e) => FvDesignKit.LoadCellProps(e, _fvProp);
         }
-
-        public string GetXaml()
-        {
-            return _fv.ExportXaml();
-        }
-
+        
         async void OnAdd()
         {
             _fv.ClearDesignCell();

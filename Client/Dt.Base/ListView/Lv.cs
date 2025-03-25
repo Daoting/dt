@@ -376,7 +376,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置是否根据数据源自动生成列
+        /// 获取设置是否根据数据源自动生成列，默认false
         /// </summary>
         public bool AutoCreateCol
         {

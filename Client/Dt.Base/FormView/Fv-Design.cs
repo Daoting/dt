@@ -89,12 +89,7 @@ namespace Dt.Base
             }
 
             // 去掉冗余的命名空间，Kit.LoadXaml已自动添加
-            string str = sb.ToString();
-            int idx = str.IndexOf(' ');
-            int idx2 = str.IndexOf('>');
-            if (str[idx2 - 1] == '/')
-                idx2--;
-            return str.Remove(idx, idx2 - idx);
+            return sb.Replace(" xmlns:a=\"dt\"", "").Replace(" xmlns:x=\"xaml\"", "").ToString();
         }
         #endregion
 

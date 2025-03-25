@@ -14,13 +14,13 @@ using System.Reflection;
 using System.Text;
 #endregion
 
-namespace Dt.Base.FormView
+namespace Dt.Base.ListView
 {
-    public partial class FvXamlEditDlg : Dlg
+    public partial class LvXamlEditDlg : Dlg
     {
-        FvDesign _design;
+        LvDesign _design;
 
-        public FvXamlEditDlg()
+        public LvXamlEditDlg()
         {
             InitializeComponent();
             IsPinned = true;
@@ -31,10 +31,10 @@ namespace Dt.Base.FormView
             }
         }
 
-        public void ShowDlg(FvDesign p_design)
+        public void ShowDlg(LvDesign p_design)
         {
             _design = p_design;
-            _tb.Text = _design.Fv.ExportXaml();
+            _tb.Text = _design.Lv.ExportXaml();
             Show();
         }
 
