@@ -69,7 +69,7 @@ namespace Dt.Base
                 if (_lv.View is Cols cs)
                     cs.LayoutChanged -= OnColsChanged;
             }
-            
+
             if (!string.IsNullOrEmpty(p_xaml))
             {
                 _lv = Kit.LoadXaml<Lv>(p_xaml);
@@ -115,8 +115,9 @@ namespace Dt.Base
 
             if (_lv.View is Cols cols)
                 cols.LayoutChanged += OnColsChanged;
+            LoadTestData();
         }
-        
+
         void OnCopyXaml()
         {
             Kit.CopyToClipboard(_lv.ExportXaml());
@@ -141,11 +142,61 @@ namespace Dt.Base
         {
 
         }
-        
+
         void OnColsChanged()
         {
             if (_lv.View is Cols cols)
                 _fv["ViewXaml"].Val = cols.ExportXaml();
+        }
+
+        void LoadTestData()
+        {
+            var tbl = new Table();
+            if (_lv.View is Cols cols)
+            {
+                foreach (var col in cols.OfType<Col>())
+                {
+                    if (_info.Cols != null && _info.Cols.FirstOrDefault(p => p.Name == col.ID) is EntityCol src)
+                        tbl.Add(col.ID, src.Type);
+                    else
+                        tbl.Add(col.ID);
+                }
+            }
+            else if (_lv.View is DataTemplate view)
+            {
+                var c = view.LoadContent() as UIElement;
+                foreach (var dot in c.FindChildrenByType<Dot>())
+                {
+                    if (_info.Cols != null && _info.Cols.FirstOrDefault(p => p.Name == dot.ID) is EntityCol src)
+                        tbl.Add(dot.ID, src.Type);
+                    else
+                        tbl.Add(dot.ID);
+                }
+            }
+            
+            if (tbl.Columns.Count > 0)
+            {
+                Random r = new Random();
+                for (int i = 0; i < 50; i++)
+                {
+                    var row = tbl.AddRow();
+                    for (int j = 0; j < tbl.Columns.Count; j++)
+                    {
+                        var tp = tbl.Columns[j].Type;
+                        if (tp == typeof(string))
+                            row[j] = "测试" + r.Next(10000);
+                        else if (tp == typeof(int) || tp == typeof(double) || tp == typeof(long))
+                            row[j] = r.Next(10000);
+                        else if (tp == typeof(DateTime))
+                            row[j] = DateTime.Now.AddDays(r.Next(100));
+                        else if (tp == typeof(bool))
+                            row[j] = r.Next(2) == 1;
+                        else
+                            row[j] = "测试" + r.Next(10000);
+                    }
+                }
+            }
+            _lv.Data = tbl;
         }
     }
 }
