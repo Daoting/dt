@@ -19,27 +19,13 @@ namespace Dt.Base
     /// </summary>
     public partial class Lv
     {
-        #region 静态内容
-        public readonly static DependencyProperty ViewXamlProperty = DependencyProperty.Register(
-            "ViewXaml",
-            typeof(string),
-            typeof(Lv),
-            new PropertyMetadata(null));
-
-        public readonly static DependencyProperty FilterCfgXamlProperty = DependencyProperty.Register(
-            "FilterCfgXaml",
-            typeof(string),
-            typeof(Lv),
-            new PropertyMetadata(null));
-        #endregion
-
         /// <summary>
         /// 设计时用，行视图的xaml
         /// </summary>
         public string ViewXaml
         {
-            get { return (string)GetValue(ViewXamlProperty); }
-            set { SetValue(ViewXamlProperty, value); }
+            get { return Ex.GetViewXaml(this); }
+            set { Ex.SetViewXaml(this, value); }
         }
 
         /// <summary>
@@ -47,10 +33,10 @@ namespace Dt.Base
         /// </summary>
         public string FilterCfgXaml
         {
-            get { return (string)GetValue(FilterCfgXamlProperty); }
-            set { SetValue(FilterCfgXamlProperty, value); }
+            get { return Ex.GetFilterCfgXaml(this); }
+            set { Ex.SetFilterCfgXaml(this, value); }
         }
-        
+
         /// <summary>
         /// 导出Lv的xaml
         /// </summary>

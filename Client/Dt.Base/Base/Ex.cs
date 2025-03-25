@@ -13,6 +13,7 @@ using System.Diagnostics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 using Dt.Base.Docking;
+using Microsoft.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Base
@@ -104,6 +105,68 @@ namespace Dt.Base
         public static void SetLvMultiSelect(this Mi d, Lv value)
         {
             d.SetValue(LvMultiSelectProperty, value);
+        }
+        #endregion
+
+        #region Design
+        /// <summary>
+        /// 附加到Lv Tv上
+        /// </summary>
+        internal static readonly DependencyProperty ViewXamlProperty =
+            DependencyProperty.RegisterAttached(
+                "ViewXaml",
+                typeof(string),
+                typeof(Ex),
+                new PropertyMetadata(null));
+        
+        internal static string GetViewXaml(Control d)
+        {
+            return (string)d.GetValue(ViewXamlProperty);
+        }
+
+        internal static void SetViewXaml(Control d, string value)
+        {
+            d.SetValue(ViewXamlProperty, value);
+        }
+
+        /// <summary>
+        /// 附加到Lv
+        /// </summary>
+        internal static readonly DependencyProperty FilterCfgXamlProperty =
+            DependencyProperty.RegisterAttached(
+                "FilterCfgXaml",
+                typeof(string),
+                typeof(Ex),
+                new PropertyMetadata(null));
+
+        internal static string GetFilterCfgXaml(Control d)
+        {
+            return (string)d.GetValue(FilterCfgXamlProperty);
+        }
+
+        internal static void SetFilterCfgXaml(Control d, string value)
+        {
+            d.SetValue(FilterCfgXamlProperty, value);
+        }
+
+        /// <summary>
+        /// 附加到CList
+        /// </summary>
+        internal static readonly DependencyProperty ItemsXamlProperty =
+            DependencyProperty.RegisterAttached(
+                "ItemsXaml",
+                typeof(string),
+                typeof(Ex),
+                new PropertyMetadata(null));
+
+        internal static string GetItemsXaml(Control d)
+        {
+            return (string)d.GetValue(ItemsXamlProperty);
+        }
+
+        internal static void SetItemsXaml(Control d, string value)
+        {
+            d.SetValue(ItemsXamlProperty, value);
         }
         #endregion
 

@@ -29,21 +29,13 @@ namespace Dt.Base
     /// </summary>
     public partial class CList
     {
-        #region 静态内容
-        public readonly static DependencyProperty ItemsXamlProperty = DependencyProperty.Register(
-            "ItemsXaml",
-            typeof(string),
-            typeof(CList),
-            new PropertyMetadata(null));
-        #endregion
-
         /// <summary>
         /// 设计时用，xaml中定义的对象列表
         /// </summary>
         public string ItemsXaml
         {
-            get { return (string)GetValue(ItemsXamlProperty); }
-            set { SetValue(ItemsXamlProperty, value); }
+            get { return Dt.Base.Ex.GetItemsXaml(this); }
+            set { Dt.Base.Ex.SetItemsXaml(this, value); }
         }
 
         /// <summary>

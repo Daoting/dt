@@ -17,21 +17,13 @@ namespace Dt.Base
     /// </summary>
     public partial class Tv
     {
-        #region 静态内容
-        public readonly static DependencyProperty ViewXamlProperty = DependencyProperty.Register(
-            "ViewXaml",
-            typeof(string),
-            typeof(Tv),
-            new PropertyMetadata(null));
-        #endregion
-
         /// <summary>
         /// 设计时用，行视图的xaml
         /// </summary>
         public string ViewXaml
         {
-            get { return (string)GetValue(ViewXamlProperty); }
-            set { SetValue(ViewXamlProperty, value); }
+            get { return Ex.GetViewXaml(this); }
+            set { Ex.SetViewXaml(this, value); }
         }
     }
 }
