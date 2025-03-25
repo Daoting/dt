@@ -25,8 +25,14 @@ namespace Dt.Base
             typeof(string),
             typeof(Lv),
             new PropertyMetadata(null));
+
+        public readonly static DependencyProperty FilterCfgXamlProperty = DependencyProperty.Register(
+            "FilterCfgXaml",
+            typeof(string),
+            typeof(Lv),
+            new PropertyMetadata(null));
         #endregion
-        
+
         /// <summary>
         /// 设计时用，行视图的xaml
         /// </summary>
@@ -36,6 +42,15 @@ namespace Dt.Base
             set { SetValue(ViewXamlProperty, value); }
         }
 
+        /// <summary>
+        /// 设计时用，筛选框的xaml
+        /// </summary>
+        public string FilterCfgXaml
+        {
+            get { return (string)GetValue(FilterCfgXamlProperty); }
+            set { SetValue(FilterCfgXamlProperty, value); }
+        }
+        
         /// <summary>
         /// 导出Lv的xaml
         /// </summary>
@@ -92,6 +107,13 @@ namespace Dt.Base
                 if (!string.IsNullOrEmpty(ViewXaml))
                     FvDesignKit.CopyXml(xw, ViewXaml);
                 
+                if (!string.IsNullOrEmpty(FilterCfgXaml))
+                {
+                    xw.WriteStartElement("a", "Lv.FilterCfg", null);
+                    FvDesignKit.CopyXml(xw, FilterCfgXaml);
+                    xw.WriteEndElement();
+                }
+                    
                 xw.WriteEndElement();
                 xw.Flush();
             }

@@ -7,6 +7,7 @@
     <a:Dlg.Resources>
         <!-- 禁止删除，否则 XamlReader.Load 无法生成实例，XamlType中缺少NlItems -->
         <a:NlItems x:Key="_placehold" />
+        <a:FilterCfg x:Key="_filter" />
     </a:Dlg.Resources>
     
 </a:Dlg>

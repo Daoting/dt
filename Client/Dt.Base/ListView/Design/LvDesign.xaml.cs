@@ -105,6 +105,10 @@ namespace Dt.Base
                         {
                             _lv.ViewXaml = FvDesignKit.GetNodeXml(ch, false);
                         }
+                        else if (ch.LocalName == "Lv.FilterCfg")
+                        {
+                            _lv.FilterCfgXaml = FvDesignKit.GetNodeXml(ch, false);
+                        }
                     }
                 }
             }
@@ -255,6 +259,30 @@ namespace Dt.Base
                     ls.Add(col.Name);
                 }
                 ((CList)_fv["GroupName"]).Data = ls;
+            }
+        }
+
+        void OnFilterCfgTemp(Mi mi)
+        {
+            if (mi.ID == "默认")
+            {
+                FvDesignKit.AddXamlToCText((CText)_fv["FilterCfgXaml"], "<a:FilterCfg />");
+            }
+            else
+            {
+                FvDesignKit.AddXamlToCText((CText)_fv["FilterCfgXaml"], "<a:FilterCfg FilterCols=\"xm\" EnablePinYin=\"true\" IsRealtime=\"true\" />");
+            }
+        }
+
+        void OnApplyFilterCfg(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(_lv.FilterCfgXaml))
+            {
+                _lv.FilterCfg = null;
+            }
+            else
+            {
+                _lv.FilterCfg = Kit.LoadXaml<FilterCfg>(_lv.FilterCfgXaml);
             }
         }
     }

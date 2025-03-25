@@ -29,6 +29,22 @@
                 </StackPanel>
             </a:CBar>
             <a:CText ID="ViewXaml" ShowTitle="False" AcceptsReturn="True" RowSpan="6" />
+            
+            <a:CBar Title="筛选框">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="+模板">
+                        <a:Ex.Menu>
+                            <a:Menu>
+                                <a:Mi ID="默认" Click="OnFilterCfgTemp" />
+                                <a:Mi ID="自定义" Click="OnFilterCfgTemp" />
+                            </a:Menu>
+                        </a:Ex.Menu>
+                    </Button>
+                    <Button Content="应用" Click="OnApplyFilterCfg" />
+                </StackPanel>
+            </a:CBar>
+            <a:CText ID="FilterCfgXaml" ShowTitle="False" AcceptsReturn="True" RowSpan="2" />
+            
             <a:CList Title="视图类型" ID="ViewMode" TitleWidth="90" />
             <a:CList Title="选择模式" ID="SelectionMode" TitleWidth="90" />
             <a:CList Title="分组列名" ID="GroupName" IsEditable="True" ColSpan="0.6" TitleWidth="90" />
