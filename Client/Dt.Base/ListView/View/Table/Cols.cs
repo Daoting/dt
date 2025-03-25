@@ -17,6 +17,7 @@ using System.Collections.Specialized;
 using System.Globalization;
 using System.Text;
 using System.Text.Json;
+using System.Xml;
 using Windows.UI;
 using Windows.UI.Text;
 #endregion
@@ -42,7 +43,7 @@ namespace Dt.Base
         /// 列布局变化事件，调整列宽、列序、隐藏列后触发
         /// </summary>
         public event Action LayoutChanged;
-        
+
         /// <summary>
         /// 获取设置点击列头是否可以排序
         /// </summary>
@@ -171,7 +172,7 @@ namespace Dt.Base
             }
         }
         #endregion
-        
+
         /// <summary>
         /// 列总宽
         /// </summary>
@@ -185,7 +186,7 @@ namespace Dt.Base
             FixWidth(_maxWidth);
             ColWidthChanged?.Invoke();
         }
-        
+
         /// <summary>
         /// 列集合变化、Col.ID变化等引起的重新加载
         /// </summary>
@@ -219,7 +220,7 @@ namespace Dt.Base
             {
                 if (col.Visibility == Visibility.Collapsed)
                     continue;
-                
+
                 var str = col.Width;
                 double w = 0;
 
@@ -271,7 +272,7 @@ namespace Dt.Base
                 {
                     if (col.Visibility == Visibility.Collapsed)
                         continue;
-                    
+
                     if (col.ActualWidth > 0)
                     {
                         col.Left = TotalWidth;
@@ -370,7 +371,7 @@ namespace Dt.Base
                     p_writer.WritePropertyName("Visibility");
                     p_writer.WriteBooleanValue(false);
                 }
-                
+
                 if (col.Foreground != Res.默认前景)
                 {
                     p_writer.WritePropertyName("Foreground");
@@ -448,7 +449,7 @@ namespace Dt.Base
                         case "Visibility":
                             col.Visibility = p_reader.ReadAsBool() ? Visibility.Visible : Visibility.Collapsed;
                             break;
-                            
+
                         case "Foreground":
                             var str = p_reader.ReadAsString();
                             try
@@ -492,6 +493,52 @@ namespace Dt.Base
                 }
                 Add(col);
             }
+        }
+
+        internal string ExportXaml()
+        {
+            var sb = new StringBuilder();
+            using (XmlWriter xw = XmlWriter.Create(sb, new XmlWriterSettings() { OmitXmlDeclaration = true, Indent = true }))
+            {
+                xw.WriteStartElement("a", "Cols", "dt");
+                xw.WriteAttributeString("xmlns", "x", null, "xaml");
+
+                if (!AllowSorting)
+                    xw.WriteAttributeString("AllowSorting", "false");
+                if (HideIndex)
+                    xw.WriteAttributeString("HideIndex", "true");
+
+                foreach (var col in this.OfType<Col>())
+                {
+                    xw.WriteStartElement("a", "Col", null);
+                    xw.WriteAttributeString("ID", col.ID);
+                    if (!string.IsNullOrEmpty(col.Title))
+                        xw.WriteAttributeString("Title", col.Title);
+                    if (!string.IsNullOrEmpty(col.Width))
+                        xw.WriteAttributeString("Width", col.Width);
+                    if (!col.AllowSorting)
+                        xw.WriteAttributeString("AllowSorting", "false");
+                    if (!string.IsNullOrEmpty(col.Call))
+                        xw.WriteAttributeString("Call", col.Call);
+                    if (!string.IsNullOrEmpty(col.Format))
+                        xw.WriteAttributeString("Format", col.Format);
+                    if (col.Visibility == Visibility.Collapsed)
+                        xw.WriteAttributeString("Visibility", "false");
+                    if (col.FontWeight != FontWeights.Normal)
+                        xw.WriteAttributeString("FontWeight", col.FontWeight.Weight.ToString());
+                    if (col.FontStyle != FontStyle.Normal)
+                        xw.WriteAttributeString("FontStyle", ((int)col.FontStyle).ToString());
+                    if (col.FontSize != 16d)
+                        xw.WriteAttributeString("FontSize", col.FontSize.ToString());
+                    xw.WriteEndElement();
+                }
+
+                xw.WriteEndElement();
+                xw.Flush();
+            }
+
+            // 去掉冗余的命名空间，Kit.LoadXaml已自动添加
+            return sb.Replace(" xmlns:a=\"dt\"", "").Replace(" xmlns:x=\"xaml\"", "").ToString();
         }
 
         void OnColsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

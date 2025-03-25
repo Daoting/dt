@@ -64,6 +64,12 @@ namespace Dt.Base
 
         public void Jz(string p_xaml)
         {
+            if (_lv != null)
+            {
+                if (_lv.View is Cols cs)
+                    cs.LayoutChanged -= OnColsChanged;
+            }
+            
             if (!string.IsNullOrEmpty(p_xaml))
             {
                 _lv = Kit.LoadXaml<Lv>(p_xaml);
@@ -106,6 +112,9 @@ namespace Dt.Base
 
             _tabMain.Content = _lv;
             _fv.Data = _lv;
+
+            if (_lv.View is Cols cols)
+                cols.LayoutChanged += OnColsChanged;
         }
         
         void OnCopyXaml()
@@ -125,12 +134,18 @@ namespace Dt.Base
 
         void OnApplyView(object sender, RoutedEventArgs e)
         {
-
+            Jz(_lv.ExportXaml());
         }
 
-        void OnViewTemp(Mi obj)
+        void OnViewTemp(Mi mi)
         {
 
+        }
+        
+        void OnColsChanged()
+        {
+            if (_lv.View is Cols cols)
+                _fv["ViewXaml"].Val = cols.ExportXaml();
         }
     }
 }

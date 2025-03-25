@@ -45,7 +45,6 @@ namespace Dt.Base
             var sb = new StringBuilder();
             using (XmlWriter xw = XmlWriter.Create(sb, new XmlWriterSettings() { OmitXmlDeclaration = true, Indent = true }))
             {
-                // 可能为QueryFv
                 xw.WriteStartElement("a", "Lv", "dt");
                 xw.WriteAttributeString("xmlns", "x", null, "xaml");
 

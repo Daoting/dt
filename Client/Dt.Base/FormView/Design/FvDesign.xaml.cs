@@ -68,6 +68,12 @@ namespace Dt.Base
 
         public void Jz(string p_xaml)
         {
+            if (_fv != null)
+            {
+                _fv.CellClick -= (e) => FvDesignKit.LoadCellProps(e, _fvProp);
+                _fv = null;
+            }
+            
             if (!string.IsNullOrEmpty(p_xaml))
             {
                 _fv = _info.IsQueryFv ? Kit.LoadXaml<QueryFv>(p_xaml) : Kit.LoadXaml<Fv>(p_xaml);
