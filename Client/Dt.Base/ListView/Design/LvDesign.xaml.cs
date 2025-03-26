@@ -107,7 +107,7 @@ namespace Dt.Base
                         }
                         else if (ch.LocalName == "Lv.FilterCfg")
                         {
-                            _lv.FilterCfgXaml = FvDesignKit.GetNodeXml(ch, false);
+                            _lv.FilterCfgXaml = FvDesignKit.GetNodeXml(ch, true);
                         }
                     }
                 }

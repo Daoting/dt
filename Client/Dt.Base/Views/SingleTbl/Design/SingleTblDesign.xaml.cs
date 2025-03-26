@@ -68,9 +68,19 @@ namespace Dt.Base.Views
                 _fvMain["QueryFvXaml"].Val = xaml;
         }
 
-        void EditListXaml(object sender, RoutedEventArgs e)
+        async void EditListXaml(object sender, RoutedEventArgs e)
         {
+            var info = new LvDesignInfo { Xaml = _cfg.ListCfg.Xaml, };
+            var cols = new List<EntityCol>();
+            foreach (var col in _cfg.Table.Columns)
+            {
+                cols.Add(new EntityCol(col.Name, col.Type));
+            }
+            info.Cols = cols;
 
+            var xaml = await LvDesign.ShowDlg(info);
+            if (!string.IsNullOrEmpty(xaml))
+                _fvList["Xaml"].Val = xaml;
         }
 
         async void EditFormXaml(object sender, RoutedEventArgs e)
