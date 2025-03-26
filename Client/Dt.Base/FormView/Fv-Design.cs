@@ -68,8 +68,8 @@ namespace Dt.Base
             using (XmlWriter xw = XmlWriter.Create(sb, new XmlWriterSettings() { OmitXmlDeclaration = true, Indent = true }))
             {
                 // 可能为QueryFv
-                xw.WriteStartElement("a", GetType().Name, "using:Dt.Base");
-                xw.WriteAttributeString("xmlns", "x", null, "http://schemas.microsoft.com/winfx/2006/xaml");
+                xw.WriteStartElement("a", GetType().Name, "dt");
+                xw.WriteAttributeString("xmlns", "x", null, "xaml");
                 
                 // Kit.LoadXaml已自动添加
                 //xw.WriteStartElement("a", GetType().Name, "using:Dt.Base");
