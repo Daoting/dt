@@ -1,13 +1,16 @@
 <Rpt cols="46,128,125,154,160">
 	<Params>
 		<Xaml>
-			<![CDATA[<a:CList ID="菜单组" SrcID="id" TgtID="parent_id">
+			<![CDATA[
+<a:QueryFv>
+			<a:CList ID="菜单组" SrcID="id" TgtID="parent_id">
     <a:CList.Sql>
         <a:Sql>
 select id,name from cm_menu where is_group=true and parent_id is null
         </a:Sql>
     </a:CList.Sql>
 </a:CList>
+</a:QueryFv>
 ]]>
 		</Xaml>
 		<List>

@@ -1,6 +1,9 @@
 <Rpt cols="80,150,206">
   <Params>
-    <Xaml><![CDATA[<a:CText ID="普通文本" />
+    <Xaml>
+		<![CDATA[
+<a:QueryFv>
+	<a:CText ID="普通文本" />
 <a:CBool ID="选择" />
 <a:CNum ID="数值" />
 <a:CDate ID="今天" />
@@ -13,7 +16,9 @@
     <x:String>选项五</x:String>
     <x:String>选项六</x:String>
 </a:CList.Items>
-</a:CList>]]></Xaml>
+</a:CList>
+</a:QueryFv>
+]]></Xaml>
     <List>
       <Param name="普通文本" />
       <Param name="选择" type="bool" val="true" />

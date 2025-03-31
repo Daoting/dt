@@ -1,7 +1,9 @@
 <Rpt cols="80,142,223">
   <Params>
     <Xaml>
-	  <![CDATA[            <a:CBar Title="演示静态选项，通过基础选项增删并缓存到本地库" />
+	  <![CDATA[
+<a:QueryFv>
+	  <a:CBar Title="演示静态选项，通过基础选项增删并缓存到本地库" />
             <a:CList ID="code" Title="民族" Ex="Option#民族" />
             <a:CList ID="degree" Title="学历" Ex="Option#学历" />
             
@@ -49,7 +51,7 @@ WHERE
             <a:CBar Title="演示多个CList联动、sql变量赋值、占位符替换" />
             <a:CList ID="parent" Title="父亲" SrcID="父名#id#-#-" TgtID="-#parentid#child1#child2">
                 <a:CList.Sql>
-                    <a:Sql>select * from demo_父表</a:Sql>
+                    <a:Sql>select * from crud_父表</a:Sql>
                 </a:CList.Sql>
                 <DataTemplate>
                     <a:Dot ID="父名" Padding="10" />
@@ -61,7 +63,7 @@ WHERE
 SELECT
 	大儿名
 FROM
-	demo_大儿
+	crud_大儿
 WHERE
 	parent_id = @[parentid]
                     </a:Sql>
@@ -76,7 +78,7 @@ WHERE
 SELECT
 	小儿名
 FROM
-	demo_小儿
+	crud_小儿
 WHERE
 	group_id = #[parentid]#
                     </a:Sql>
@@ -93,9 +95,9 @@ WHERE
 SELECT
 	*
 FROM
-	demo_父表
+	crud_父表
 WHERE
-	id = @RptValueCall.GetMaxID(demo_父表)
+	id = @RptValueCall.GetMaxID(crud_父表)
                     </a:Sql>
                 </a:CList.Sql>
                 <DataTemplate>
@@ -117,7 +119,9 @@ WHERE
                     <a:Col ID="params" Title="视图参数" />
                     <a:Col ID="note" Title="功能说明" />
                 </a:Cols>
-            </a:CList>]]></Xaml>
+            </a:CList>
+</a:QueryFv>
+			]]></Xaml>
     <List>
       <Param name="code" val="汉族" />
       <Param name="degree" val="本科" />

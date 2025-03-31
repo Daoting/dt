@@ -28,19 +28,21 @@
             <a:CList ID="role" Title="角色">
                 <a:CList.Sql>
                     <a:Sql Svc="fsm">
-                        SELECT
-                        *
-                        FROM
-                        cm_role
-                        WHERE
-                        ID IN (
-                        SELECT
-                        role_id
-                        FROM
-                        cm_user_role
-                        WHERE
-                        user_id = @userid
-                        )
+                        <![CDATA[
+SELECT
+    *
+FROM
+    cm_role
+WHERE
+    ID IN (
+        SELECT
+            role_id
+        FROM
+            cm_user_role
+        WHERE
+            user_id = @userid
+    )
+                        ]]>
                     </a:Sql>
                 </a:CList.Sql>
                 <DataTemplate>
@@ -58,7 +60,7 @@
                 SrcID="父名#id#-#-"
                 TgtID="-#parentid#child1#child2">
                 <a:CList.Sql>
-                    <a:Sql>select * from demo_父表</a:Sql>
+                    <a:Sql>select * from crud_父表</a:Sql>
                 </a:CList.Sql>
                 <DataTemplate>
                     <a:Dot ID="父名" Padding="10" />
@@ -67,12 +69,14 @@
             <a:CList ID="child1" Title="大儿" SrcID="大儿名">
                 <a:CList.Sql>
                     <a:Sql>
-                        SELECT
-                        大儿名
-                        FROM
-                        demo_大儿
-                        WHERE
-                        parent_id = @[parentid]
+                        <![CDATA[
+SELECT
+    大儿名
+FROM
+    crud_大儿
+WHERE
+    parent_id = @[parentid]
+                        ]]>
                     </a:Sql>
                 </a:CList.Sql>
                 <DataTemplate>
@@ -82,12 +86,14 @@
             <a:CList ID="child2" Title="小儿" SrcID="小儿名">
                 <a:CList.Sql>
                     <a:Sql>
-                        SELECT
-                        小儿名
-                        FROM
-                        demo_小儿
-                        WHERE
-                        group_id = #[parentid]#
+                        <![CDATA[
+SELECT
+    小儿名
+FROM
+    crud_小儿
+WHERE
+    group_id = #[parentid]#
+                        ]]>
                     </a:Sql>
                 </a:CList.Sql>
                 <DataTemplate>
@@ -99,12 +105,14 @@
             <a:CList ID="maxparent" Title="ID最大行" SrcID="父名">
                 <a:CList.Sql>
                     <a:Sql>
-                        SELECT
-                        *
-                        FROM
-                        demo_父表
-                        WHERE
-                        id = @RptValueCall.GetMaxID(demo_父表)
+                        <![CDATA[
+SELECT
+    *
+FROM
+    crud_父表
+WHERE
+    id = @RptValueCall.GetMaxID(crud_父表)
+                        ]]>
                     </a:Sql>
                 </a:CList.Sql>
                 <DataTemplate>

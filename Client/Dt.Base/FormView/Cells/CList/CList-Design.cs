@@ -71,7 +71,7 @@ namespace Dt.Base
                 p_xw.WriteAttributeString("LocalDb", Sql.LocalDb);
             if (!string.IsNullOrEmpty(Sql.Svc))
                 p_xw.WriteAttributeString("Svc", Sql.Svc);
-            p_xw.WriteString(Sql.SqlStr);
+            p_xw.WriteCData(Sql.SqlStr);
 
             p_xw.WriteEndElement();
             p_xw.WriteEndElement();

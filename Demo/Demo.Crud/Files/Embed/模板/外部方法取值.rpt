@@ -1,8 +1,8 @@
 <Rpt cols="80,191,191">
   <Params autoxaml="true">
     <List>
-      <Param name="Crud表最大ID" type="double" val="@RptValueCall.GetMaxID(demo_crud)" />
-      <Param name="父表最大ID" val="@RptValueCall.GetMaxID(demo_父表)" />
+      <Param name="Crud表最大ID" type="double" val="@RptValueCall.GetMaxID(crud_基础)" />
+      <Param name="父表最大ID" val="@RptValueCall.GetMaxID(crud_父表)" />
       <Param name="随机数1" val="@RptValueCall.GetRandom()" />
       <Param name="随机数2" val="@RptValueCall.GetRandom" />
     </List>
@@ -22,9 +22,9 @@
     <Text row="4" col="2" val=":Param(随机数2)" />
     <Text row="7" col="1" colspan="2" val="单元格值来自外部方法" fontsize="20" bold="True" horalign="Center" lbs="None" tbs="None" rbs="None" bbs="None" />
     <Text row="8" col="1" val="Crud表最大ID" />
-    <Text row="8" col="2" val="@RptValueCall.GetMaxID(demo_crud)" />
+    <Text row="8" col="2" val="@RptValueCall.GetMaxID(crud_基础)" />
     <Text row="9" col="1" val="父表最大ID" />
-    <Text row="9" col="2" val="@RptValueCall.GetMaxID(demo_父表)" />
+    <Text row="9" col="2" val="@RptValueCall.GetMaxID(crud_父表)" />
     <Text row="10" col="1" val="随机数1" />
     <Text row="10" col="2" val="@RptValueCall.GetRandom()" />
     <Text row="11" col="1" val="随机数2" />

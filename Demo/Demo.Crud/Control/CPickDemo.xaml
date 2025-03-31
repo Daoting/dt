@@ -10,12 +10,14 @@
             <a:CPick ID="menu" Title="菜单" Placeholder="请输入菜单名包含的文字">
                 <a:CPick.Sql>
                     <a:Sql>
-                        SELECT
-                        *
-                        FROM
-                        cm_menu
-                        WHERE
-                        name LIKE '%#input#%'
+                        <![CDATA[
+SELECT
+    *
+FROM
+    cm_menu
+WHERE
+    name LIKE '%#input#%'
+                        ]]>
                     </a:Sql>
                 </a:CPick.Sql>
                 <a:Cols>
@@ -34,7 +36,16 @@
                 SrcID="父名#id#-#-"
                 TgtID="-#parentid#child1#child2">
                 <a:CPick.Sql>
-                    <a:Sql>select * from demo_父表 where 父名 LIKE '%#input#%'</a:Sql>
+                    <a:Sql>
+                        <![CDATA[
+SELECT
+    *
+FROM
+    crud_父表
+WHERE
+    父名 LIKE '%#input#%'
+                        ]]>
+                    </a:Sql>
                 </a:CPick.Sql>
                 <DataTemplate>
                     <a:Dot ID="父名" Padding="10" />
@@ -43,13 +54,15 @@
             <a:CPick ID="child1" Title="大儿" SrcID="大儿名">
                 <a:CPick.Sql>
                     <a:Sql>
-                        SELECT
-                        大儿名
-                        FROM
-                        demo_大儿
-                        WHERE
-                        parent_id = @[parentid]
-                        AND 大儿名 LIKE '%#input#%'
+                        <![CDATA[
+SELECT
+    大儿名
+FROM
+    crud_大儿
+WHERE
+    parent_id = @[parentid]
+    AND 大儿名 LIKE '%#input#%'
+                        ]]>
                     </a:Sql>
                 </a:CPick.Sql>
                 <DataTemplate>
@@ -59,13 +72,15 @@
             <a:CPick ID="child2" Title="小儿" SrcID="小儿名">
                 <a:CPick.Sql>
                     <a:Sql>
-                        SELECT
-                        小儿名
-                        FROM
-                        demo_小儿
-                        WHERE
-                        group_id = #[parentid]#
-                        AND 小儿名 LIKE '%#input#%'
+                        <![CDATA[
+SELECT
+    小儿名
+FROM
+    crud_小儿
+WHERE
+    group_id = #[parentid]#
+    AND 小儿名 LIKE '%#input#%'
+                        ]]>
                     </a:Sql>
                 </a:CPick.Sql>
                 <DataTemplate>
@@ -77,12 +92,14 @@
             <a:CPick ID="localmenu" Title="菜单" Placeholder="请输入菜单名包含的文字">
                 <a:CPick.Sql>
                     <a:Sql LocalDb="menu">
-                        SELECT
-                        *
-                        FROM
-                        OmMenu
-                        WHERE
-                        name LIKE '%#input#%'
+                        <![CDATA[
+SELECT
+    *
+FROM
+    OmMenu
+WHERE
+    name LIKE '%#input#%'
+                        ]]>
                     </a:Sql>
                 </a:CPick.Sql>
                 <a:Cols>

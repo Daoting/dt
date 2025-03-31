@@ -14,19 +14,23 @@
             TgtID="prcd_id#prcdname">
             <a:CList.Sql>
                 <a:Sql>
-                    SELECT
-                    0 AS ID,
-                    '全部' AS NAME,
-                    0 AS dispidx
-                    FROM
-                    cm_wfd_prc UNION
-                    SELECT ID,
-                    NAME,
-                    dispidx
-                    FROM
-                    cm_wfd_prc
-                    ORDER BY
-                    dispidx
+                    <![CDATA[
+SELECT
+    0 AS ID,
+    '全部' AS NAME,
+    0 AS dispidx
+FROM
+    cm_wfd_prc
+UNION
+SELECT
+    ID,
+    NAME,
+    dispidx
+FROM
+    cm_wfd_prc
+ORDER BY
+    dispidx
+                    ]]>
                 </a:Sql>
             </a:CList.Sql>
         </a:CList>

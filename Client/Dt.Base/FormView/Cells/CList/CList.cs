@@ -140,16 +140,16 @@ namespace Dt.Base
         /// <para>   input：CPick中输入的过滤串</para>
         /// <para>   [列名]：当前Fv数据源的列值</para>
         /// 
-        /// <para>2. 调用外部方法取值： 外部类名.方法(参数)，如RptValueCall.GetMaxID(demo_父表)</para>
+        /// <para>2. 调用外部方法取值： 外部类名.方法(参数)，如RptValueCall.GetMaxID(crud_父表)</para>
         /// <para>
         /// SELECT
         /// 	大儿名
         /// FROM
-        /// 	demo_大儿
+        /// 	crud_大儿
         /// WHERE
         /// 	parent_id = @[parentid]
         ///     AND name LIKE '#input#%'
-        ///     AND id = @RptValueCall.GetMaxID(demo_大儿)
+        ///     AND id = @RptValueCall.GetMaxID(crud_大儿)
         ///     AND owner = @userid
         /// </para>
         /// </summary>
