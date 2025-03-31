@@ -14,14 +14,20 @@
     <a:Main>
         <a:Tabs>
             <a:Tab Title="主区">
-                <TextBlock Text="主区内容" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <TextBlock
+                    Text="主区内容"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
             <a:Tab Title="右区">
-                <TextBlock Text="右区内容" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <TextBlock
+                    Text="右区内容"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" />
             </a:Tab>
         </a:Tabs>
     </a:Pane>

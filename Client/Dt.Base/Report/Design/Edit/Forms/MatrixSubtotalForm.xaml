@@ -10,7 +10,7 @@
             <rpt:MatrixForm x:Name="_fvMtx" />
             <a:Fv x:Name="_fv">
                 <a:CBar Title="小计" />
-                <a:CNum ID="span" Title="小计跨度" Minimum="1" IsInteger="True" />
+                <a:CNum ID="span" Title="小计跨度" IsInteger="True" Minimum="1" />
                 <a:CBool ID="beforelevel" Title="显示在层次之前" />
                 <Button Content="新建子小计" Click="OnAddTotal" />
                 <Button Content="删除小计" Click="OnDelTotal" />

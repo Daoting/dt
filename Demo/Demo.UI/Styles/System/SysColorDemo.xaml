@@ -4,30 +4,51 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <ScrollViewer HorizontalScrollMode="Disabled"
-                  HorizontalScrollBarVisibility="Disabled"
-                  VerticalScrollMode="Auto"
-                  VerticalScrollBarVisibility="Auto"
-                  ZoomMode="Disabled">
+    <ScrollViewer
+        HorizontalScrollBarVisibility="Disabled"
+        HorizontalScrollMode="Disabled"
+        VerticalScrollBarVisibility="Auto"
+        VerticalScrollMode="Auto"
+        ZoomMode="Disabled">
         <StackPanel Margin="20" Spacing="20">
             <ColorPicker
                 ColorSpectrumShape="Box"
-                IsMoreButtonVisible="False"
-                IsColorSliderVisible="True"
-                IsColorChannelTextInputVisible="True"
-                IsHexInputVisible="True"
+                HorizontalAlignment="Left"
                 IsAlphaEnabled="False"
                 IsAlphaSliderVisible="True"
-                IsAlphaTextInputVisible="True" 
-                HorizontalAlignment="Left" />
-            
-            <FlipView Width="300" Height="200" HorizontalAlignment="Left">
-                <TextBlock Text="&#xE001;" FontFamily="{StaticResource IconFont}" FontSize="60" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                <TextBlock Text="&#xE002;" FontFamily="{StaticResource IconFont}" FontSize="60" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                <TextBlock Text="&#xE003;" FontFamily="{StaticResource IconFont}" FontSize="60" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                <TextBlock Text="&#xE004;" FontFamily="{StaticResource IconFont}" FontSize="60" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                IsAlphaTextInputVisible="True"
+                IsColorChannelTextInputVisible="True"
+                IsColorSliderVisible="True"
+                IsHexInputVisible="True"
+                IsMoreButtonVisible="False" />
+
+            <FlipView Height="200" HorizontalAlignment="Left" Width="300">
+                <TextBlock
+                    Text="&#xE001;"
+                    FontFamily="{StaticResource IconFont}"
+                    FontSize="60"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" />
+                <TextBlock
+                    Text="&#xE002;"
+                    FontFamily="{StaticResource IconFont}"
+                    FontSize="60"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" />
+                <TextBlock
+                    Text="&#xE003;"
+                    FontFamily="{StaticResource IconFont}"
+                    FontSize="60"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" />
+                <TextBlock
+                    Text="&#xE004;"
+                    FontFamily="{StaticResource IconFont}"
+                    FontSize="60"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" />
             </FlipView>
-            
+
         </StackPanel>
     </ScrollViewer>
 </a:Win>

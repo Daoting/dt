@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base">
 
     <StackPanel Margin="20" Spacing="20">
-        <CalendarDatePicker PlaceholderText="Pick a date" Header="日历" />
+        <CalendarDatePicker Header="日历" PlaceholderText="Pick a date" />
         <DatePicker Header="选择日期" />
         <TimePicker Header="选择时间" MinuteIncrement="15" />
     </StackPanel>

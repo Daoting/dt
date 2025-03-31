@@ -7,18 +7,18 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="Excel">
+            <a:Tab Title="Excel" Order="1">
                 <a:Excel x:Name="_excel" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv Data="{Binding ElementName=_chart}">
                     <a:CBar Title="选中Excel样例中部分区域，完成以下设置，然后" />
                     <Button Content="添加图表图片" Click="OnAddChart" />
-                    
+
                     <a:CBar Title="图表设置" />
                     <a:CFree RowSpan="10" ShowTitle="False">
                         <a:Chart x:Name="_chart">

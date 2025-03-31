@@ -7,17 +7,19 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="Excel">
+            <a:Tab Title="Excel" Order="1">
                 <a:Excel x:Name="_excel" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv>
                     <a:CFree Title="文档主题">
-                        <ComboBox x:Name="comboThemes" SelectionChanged="comboThemes_SelectionChanged" />
+                        <ComboBox
+                            x:Name="comboThemes"
+                            SelectionChanged="comboThemes_SelectionChanged" />
                     </a:CFree>
                     <a:CFree Title="颜色类型">
                         <ComboBox x:Name="ThemeColorType" />
@@ -26,7 +28,13 @@
                         <ComboBox x:Name="ThemeColorIndex" />
                     </a:CFree>
                     <a:CFree Title="亮度">
-                        <Slider x:Name="ThemeColorBrightness" Minimum="-100" Maximum="100" SmallChange="5" LargeChange="10" Value="40" />
+                        <Slider
+                            x:Name="ThemeColorBrightness"
+                            LargeChange="10"
+                            Maximum="100"
+                            Minimum="-100"
+                            SmallChange="5"
+                            Value="40" />
                     </a:CFree>
                     <Button Content="应用到背景" Click="setBackgroundButton_Click" />
                     <Button Content="应用到前景" Click="setForegroundButton_Click" />

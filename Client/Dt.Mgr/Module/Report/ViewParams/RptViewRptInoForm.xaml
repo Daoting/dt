@@ -12,7 +12,7 @@
         </a:Menu>
     </a:Dlg.Menu>
 
-    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+    <a:Fv x:Name="_fv" Create="Add" Delete="Delete" Save="Save">
         <a:CBar Title="报表模板Uri">
             <a:Menu HorizontalAlignment="Right">
                 <a:Mi ID="选择" Icon="打开" Call="OnDefault" />

@@ -12,9 +12,14 @@
     </a:Dlg.Menu>
 
     <a:Fv x:Name="_fv">
-        <a:CList ID="Type" Title="格类型" ViewMode="Tile" LoadData="OnLoadType" MinItemWidth="100">
+        <a:CList
+            ID="Type"
+            Title="格类型"
+            LoadData="OnLoadType"
+            MinItemWidth="100"
+            ViewMode="Tile">
             <DataTemplate>
-                <a:Dot ID="Name" Padding="10"/>
+                <a:Dot ID="Name" Padding="10" />
             </DataTemplate>
         </a:CList>
     </a:Fv>

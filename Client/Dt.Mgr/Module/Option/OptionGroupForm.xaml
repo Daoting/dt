@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Title="选项分组">
 
-    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+    <a:Fv x:Name="_fv" Create="Add" Delete="Delete" Save="Save">
         <a:CText ID="name" Title="分组名称" />
     </a:Fv>
 </a:Form>

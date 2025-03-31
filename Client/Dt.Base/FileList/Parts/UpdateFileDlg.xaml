@@ -6,7 +6,7 @@
     Title="更新方式">
 
     <StackPanel>
-        <a:BtnItem Icon="文件夹" Title="选择更新文件" Click="OnSelect" />
-        <a:BtnItem Icon="曲别针" Title="上传更新文件" Click="OnUpload" />
+        <a:BtnItem Title="选择更新文件" Icon="文件夹" Click="OnSelect" />
+        <a:BtnItem Title="上传更新文件" Icon="曲别针" Click="OnUpload" />
     </StackPanel>
 </a:Dlg>

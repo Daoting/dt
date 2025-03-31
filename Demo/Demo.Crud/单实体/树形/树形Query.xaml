@@ -8,8 +8,20 @@
 
     <a:QueryFv x:Name="_fv">
         <a:CBar Title="序列" />
-        <a:CNum ID="序列_min" IsInteger="True" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-        <a:CNum ID="序列_max" IsInteger="True" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CNum
+            ID="序列_min"
+            ColSpan="0.5"
+            IsInteger="True"
+            Query="Editable"
+            QueryFlag="Floor"
+            ShowTitle="False" />
+        <a:CNum
+            ID="序列_max"
+            ColSpan="0.5"
+            IsInteger="True"
+            Query="Editable"
+            QueryFlag="Ceil"
+            ShowTitle="False" />
         <a:CText ID="名称" Query="Editable" QueryFlag="Contains" />
         <a:CText ID="限长4" Query="Editable" QueryFlag="Contains" />
         <a:CText ID="不重复" Query="Editable" QueryFlag="Contains" />
@@ -20,10 +32,30 @@
         <a:CBool ID="发布插入事件" Query="Editable" QueryFlag="Equal" />
         <a:CBool ID="发布删除事件" Query="Editable" QueryFlag="Equal" />
         <a:CBar Title="创建时间" />
-        <a:CDate ID="创建时间_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-        <a:CDate ID="创建时间_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate
+            ID="创建时间_min"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Floor"
+            ShowTitle="False" />
+        <a:CDate
+            ID="创建时间_max"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Ceil"
+            ShowTitle="False" />
         <a:CBar Title="修改时间" />
-        <a:CDate ID="修改时间_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-        <a:CDate ID="修改时间_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate
+            ID="修改时间_min"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Floor"
+            ShowTitle="False" />
+        <a:CDate
+            ID="修改时间_max"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Ceil"
+            ShowTitle="False" />
     </a:QueryFv>
 </a:Tab>

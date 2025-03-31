@@ -7,7 +7,11 @@
 
     <a:Dlg.Menu>
         <a:Menu>
-            <a:Mi ID="启动" Icon="播放" Click="OnStart" IsEnabled="{Binding HasSelected,ElementName=_lv}" />
+            <a:Mi
+                ID="启动"
+                Icon="播放"
+                Click="OnStart"
+                IsEnabled="{Binding HasSelected, ElementName=_lv}" />
         </a:Menu>
     </a:Dlg.Menu>
 

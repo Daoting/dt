@@ -4,11 +4,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
     Title="选项列表">
-    
+
     <a:Lv x:Name="_lv">
         <a:Cols>
-            <a:Col ID="Name" Title="选项名称" Width="*" AllowSorting="False" />
-            <a:Col ID="GroupName" Title="所属分组" Width="200" AllowSorting="False" />
+            <a:Col ID="Name" Title="选项名称" AllowSorting="False" Width="*" />
+            <a:Col
+                ID="GroupName"
+                Title="所属分组"
+                AllowSorting="False"
+                Width="200" />
         </a:Cols>
     </a:Lv>
 </a:List>

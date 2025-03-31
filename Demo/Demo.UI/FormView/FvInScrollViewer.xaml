@@ -6,10 +6,10 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="格">
+            <a:Tab Title="格" Order="1">
                 <ScrollViewer x:Name="_sv">
                     <StackPanel>
-                        <Border x:Name="_top" Height="100" Background="Gray" />
+                        <Border x:Name="_top" Background="Gray" Height="100" />
                         <a:Fv x:Name="_fv">
                             <a:CBar Title="基本格" />
                             <a:CText ID="txt1" Title="文本框" />
@@ -19,7 +19,7 @@
                             <a:CText ID="txt5" Title="文本框" />
                             <a:CText ID="txt6" Title="文本框" />
                         </a:Fv>
-                        <Border x:Name="_bottom" Height="100" Background="Gray" />
+                        <Border x:Name="_bottom" Background="Gray" Height="100" />
                     </StackPanel>
                 </ScrollViewer>
             </a:Tab>
@@ -27,7 +27,7 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv>
                     <StackPanel Orientation="Horizontal">
                         <Button Content="随机滚动" Click="OnScroll" />

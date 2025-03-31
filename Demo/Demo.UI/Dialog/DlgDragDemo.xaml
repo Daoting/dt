@@ -13,19 +13,58 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal">
-            <Border Width="100" Height="100" Background="LightGray" Padding="4" PointerPressed="OnPointerPressed1">
-                <TextBlock Text="拖动此区域，只拖拽结束时处理" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <Border
+                Background="LightGray"
+                Height="100"
+                Padding="4"
+                PointerPressed="OnPointerPressed1"
+                Width="100">
+                <TextBlock
+                    Text="拖动此区域，只拖拽结束时处理"
+                    HorizontalAlignment="Center"
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center" />
             </Border>
-            <Border Width="100" Height="100" Background="Green" Padding="4" Margin="20,0,20,0" PointerPressed="OnPointerPressed2">
-                <TextBlock Text="拖动此区域，显示拖拽过程的不同状态" TextWrapping="Wrap" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <Border
+                Background="Green"
+                Height="100"
+                Margin="20,0,20,0"
+                Padding="4"
+                PointerPressed="OnPointerPressed2"
+                Width="100">
+                <TextBlock
+                    Text="拖动此区域，显示拖拽过程的不同状态"
+                    Foreground="White"
+                    HorizontalAlignment="Center"
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center" />
             </Border>
-            <Border Width="100" Height="100" Background="Red" Padding="4" PointerPressed="OnPointerPressed3">
-                <TextBlock Text="拖动此区域，自定义拖拽图标和不同状态" TextWrapping="Wrap" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <Border
+                Background="Red"
+                Height="100"
+                Padding="4"
+                PointerPressed="OnPointerPressed3"
+                Width="100">
+                <TextBlock
+                    Text="拖动此区域，自定义拖拽图标和不同状态"
+                    Foreground="White"
+                    HorizontalAlignment="Center"
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center" />
             </Border>
         </StackPanel>
 
-        <Border x:Name="_bdTgt" BorderBrush="Black" BorderThickness="2" Width="400" Height="400" Grid.Row="2">
-            <TextBlock Text="目标区域" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Border
+            x:Name="_bdTgt"
+            BorderBrush="Black"
+            BorderThickness="2"
+            Height="400"
+            Width="400"
+            Grid.Row="2">
+            <TextBlock
+                Text="目标区域"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
         </Border>
     </Grid>
 </a:Win>

@@ -9,7 +9,7 @@
             <a:CBar Title="演示静态选项，通过基础选项增删并缓存到本地库" />
             <a:CList ID="code" Title="民族" Ex="Option#民族" />
             <a:CList ID="degree" Title="学历" Ex="Option#学历" />
-            
+
             <a:CBar Title="演示sql查询并取name列填充当前列" />
             <a:CList ID="menu" Title="菜单">
                 <a:CList.Sql>
@@ -28,19 +28,19 @@
             <a:CList ID="role" Title="角色">
                 <a:CList.Sql>
                     <a:Sql Svc="fsm">
-SELECT
-    *
-FROM
-    cm_role
-WHERE
-    ID IN (
-        SELECT
-            role_id
-        FROM
-            cm_user_role
-        WHERE
-            user_id = @userid
-    )
+                        SELECT
+                        *
+                        FROM
+                        cm_role
+                        WHERE
+                        ID IN (
+                        SELECT
+                        role_id
+                        FROM
+                        cm_user_role
+                        WHERE
+                        user_id = @userid
+                        )
                     </a:Sql>
                 </a:CList.Sql>
                 <DataTemplate>
@@ -52,7 +52,11 @@ WHERE
             </a:CList>
 
             <a:CBar Title="演示多个CList联动、sql变量赋值、占位符替换" />
-            <a:CList ID="parent" Title="父亲" SrcID="父名#id#-#-" TgtID="-#parentid#child1#child2">
+            <a:CList
+                ID="parent"
+                Title="父亲"
+                SrcID="父名#id#-#-"
+                TgtID="-#parentid#child1#child2">
                 <a:CList.Sql>
                     <a:Sql>select * from demo_父表</a:Sql>
                 </a:CList.Sql>
@@ -63,12 +67,12 @@ WHERE
             <a:CList ID="child1" Title="大儿" SrcID="大儿名">
                 <a:CList.Sql>
                     <a:Sql>
-SELECT
-	大儿名
-FROM
-	demo_大儿
-WHERE
-	parent_id = @[parentid]
+                        SELECT
+                        大儿名
+                        FROM
+                        demo_大儿
+                        WHERE
+                        parent_id = @[parentid]
                     </a:Sql>
                 </a:CList.Sql>
                 <DataTemplate>
@@ -78,12 +82,12 @@ WHERE
             <a:CList ID="child2" Title="小儿" SrcID="小儿名">
                 <a:CList.Sql>
                     <a:Sql>
-SELECT
-	小儿名
-FROM
-	demo_小儿
-WHERE
-	group_id = #[parentid]#
+                        SELECT
+                        小儿名
+                        FROM
+                        demo_小儿
+                        WHERE
+                        group_id = #[parentid]#
                     </a:Sql>
                 </a:CList.Sql>
                 <DataTemplate>
@@ -95,19 +99,19 @@ WHERE
             <a:CList ID="maxparent" Title="ID最大行" SrcID="父名">
                 <a:CList.Sql>
                     <a:Sql>
-SELECT
-	*
-FROM
-	demo_父表
-WHERE
-	id = @RptValueCall.GetMaxID(demo_父表)
+                        SELECT
+                        *
+                        FROM
+                        demo_父表
+                        WHERE
+                        id = @RptValueCall.GetMaxID(demo_父表)
                     </a:Sql>
                 </a:CList.Sql>
                 <DataTemplate>
                     <a:Dot ID="父名" Padding="10" />
                 </DataTemplate>
             </a:CList>
-            
+
             <a:CBar Title="演示本地库查询，除指定库名外其余相同" />
             <a:CList ID="localmenu" Title="菜单">
                 <a:CList.Sql>

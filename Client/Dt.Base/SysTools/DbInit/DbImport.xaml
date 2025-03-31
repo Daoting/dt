@@ -15,14 +15,28 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Button x:Name="_btnDt" Content="导入初始表结构及数据" Click="OnDt" Background="Green" Style="{StaticResource 浅色按钮}" HorizontalAlignment="Stretch" />
-            <Button x:Name="_btnOther" Content="导　入　其　它" Click="OnOther" Background="{StaticResource 主蓝}" Style="{StaticResource 浅色按钮}" HorizontalAlignment="Stretch" Grid.Column="1" />
+            <Button
+                x:Name="_btnDt"
+                Content="导入初始表结构及数据"
+                Background="Green"
+                Click="OnDt"
+                HorizontalAlignment="Stretch"
+                Style="{StaticResource 浅色按钮}" />
+            <Button
+                x:Name="_btnOther"
+                Content="导　入　其　它"
+                Background="{StaticResource 主蓝}"
+                Click="OnOther"
+                HorizontalAlignment="Stretch"
+                Style="{StaticResource 浅色按钮}"
+                Grid.Column="1" />
         </Grid>
-        <TextBox x:Name="_tbInfo"
-                 AcceptsReturn="True"
-                 TextWrapping="Wrap"
-                 ScrollViewer.VerticalScrollMode="Enabled"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                 Grid.Row="1" />
+        <TextBox
+            x:Name="_tbInfo"
+            AcceptsReturn="True"
+            TextWrapping="Wrap"
+            Grid.Row="1"
+            ScrollViewer.VerticalScrollBarVisibility="Auto"
+            ScrollViewer.VerticalScrollMode="Enabled" />
     </Grid>
 </a:Tab>

@@ -10,7 +10,11 @@
             <rpt:MatrixForm x:Name="_fvMtx" />
             <a:Fv x:Name="_fv">
                 <a:CBar Title="矩阵层次" />
-                <a:CList ID="field" Title="关联字段" RefreshData="True" LoadData="OnLoadField" />
+                <a:CList
+                    ID="field"
+                    Title="关联字段"
+                    LoadData="OnLoadField"
+                    RefreshData="True" />
                 <Button Content="新建子层次" Click="OnAddLevel" />
                 <Button Content="新建小计" Click="OnAddTotal" />
                 <Button Content="新建静态标题" Click="OnAddTitle" />

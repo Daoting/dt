@@ -6,7 +6,7 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="树">
+            <a:Tab Title="树" Order="1">
                 <a:Tv x:Name="_tv">
                     <DataTemplate>
                         <a:Dot ID="name" />
@@ -17,16 +17,16 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv Data="{Binding ElementName=_tv}">
                     <a:CBar Title="数据源" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="Table" Click="OnLoadTbl" />
                         <Button Content="对象树" Click="OnLoadData" />
                     </StackPanel>
-                    
+
                     <a:CBar Title="属性" />
-                    <a:CList Title="选择模式" ID="SelectionMode" />
+                    <a:CList ID="SelectionMode" Title="选择模式" />
                     <a:CBool ID="ShowRowLine" Title="显示行分割线" />
                     <a:CBool ID="IsVirtualized" Title="采用虚拟化" />
                     <a:CNum ID="Indent" Title="层缩进值" />
@@ -56,7 +56,7 @@
                     <CheckBox Content="行单击事件" Click="OnRowClick" />
                     <CheckBox Content="选择变化事件" Click="OnSelectionChangedClick" />
                     <CheckBox Content="行双击事件" Click="OnRowDoubleClick" />
-                    
+
                     <a:CBar Title="操作" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="折叠所有节点" Click="OnCollapseAll" />

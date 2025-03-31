@@ -8,20 +8,20 @@
         <DataTemplate x:Key="label">
             <StackPanel>
                 <TextBlock>
-                        <Run Text="Series:" />
-                        <Run Text="{Binding Series}" />
+                    <Run Text="Series:" />
+                    <Run Text="{Binding Series}" />
                 </TextBlock>
                 <TextBlock>
-                        <Run Text="Day:" />
-                        <Run Text="{Binding [XValues]}" />
+                    <Run Text="Day:" />
+                    <Run Text="{Binding [XValues]}" />
                 </TextBlock>
                 <TextBlock>
-                        <Run Text="Low:" />
-                        <Run Text="{Binding [LowValues]}" />
+                    <Run Text="Low:" />
+                    <Run Text="{Binding [LowValues]}" />
                 </TextBlock>
                 <TextBlock>
-                        <Run Text="High:" />
-                        <Run Text="{Binding [HighValues]}" />
+                    <Run Text="High:" />
+                    <Run Text="{Binding [HighValues]}" />
                 </TextBlock>
             </StackPanel>
         </DataTemplate>

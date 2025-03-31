@@ -18,14 +18,19 @@
             </Grid.ColumnDefinitions>
             <Grid x:Name="_gridLocal" Grid.Column="1" />
         </Grid>
-        <TextBlock x:Name="_tbInfo" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
-        <Button Content="挂    断"
-                Click="OnEnd"
-                Foreground="White"
-                HorizontalAlignment="Stretch"
-                Height="50"
-                FontWeight="Bold"
-                Background="Red"
-                Grid.Row="1" />
+        <TextBlock
+            x:Name="_tbInfo"
+            Foreground="White"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center" />
+        <Button
+            Content="挂    断"
+            Background="Red"
+            Click="OnEnd"
+            FontWeight="Bold"
+            Foreground="White"
+            Height="50"
+            HorizontalAlignment="Stretch"
+            Grid.Row="1" />
     </Grid>
 </a:Dlg>

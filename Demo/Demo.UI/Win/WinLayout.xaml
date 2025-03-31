@@ -6,23 +6,28 @@
     x:Name="_win">
 
     <a:Main>
-        <a:Tabs x:Name="_tabs" >
-            <a:Tab Order="1" Title="窗口属性" HeaderDoubleClick="OnHeaderDoubleClick">
+        <a:Tabs x:Name="_tabs">
+            <a:Tab
+                Title="窗口属性"
+                HeaderDoubleClick="OnHeaderDoubleClick"
+                Order="1">
                 <StackPanel Margin="10">
-                    <TextBox Text="{Binding Title,Mode=TwoWay,ElementName=_win}" />
+                    <TextBox Text="{Binding Title, Mode=TwoWay, ElementName=_win}" />
                     <Button Content="切换图标" Click="OnToggleIcon" />
                     <Button Content="子窗口" Click="OnNewWin" />
                     <Button Content="带参数子窗口" Click="OnParamsWin" />
-                    <CheckBox Content="Win模式显示标题栏" IsChecked="{Binding ShowHeader,Mode=TwoWay,ElementName=_tabs}" />
+                    <CheckBox
+                        Content="Win模式显示标题栏"
+                        IsChecked="{Binding ShowHeader, Mode=TwoWay, ElementName=_tabs}" />
                     <CheckBox x:Name="_cbClosing" Content="禁止关闭" />
                 </StackPanel>
             </a:Tab>
-            <a:Tab Title="不可拖动" CanFloat="False"/>
+            <a:Tab Title="不可拖动" CanFloat="False" />
         </a:Tabs>
     </a:Main>
     <a:Pane InitWidth="500">
         <a:Tabs InitHeight="600">
-            <a:Tab x:Name="_tabAttr" Order="2" Title="Tab属性">
+            <a:Tab x:Name="_tabAttr" Title="Tab属性" Order="2">
                 <a:Tab.Menu>
                     <a:Menu>
                         <a:Mi ID="保存" Icon="保存" />
@@ -30,8 +35,10 @@
                     </a:Menu>
                 </a:Tab.Menu>
                 <StackPanel Margin="10">
-                    <TextBox Text="{Binding Title,Mode=TwoWay,ElementName=_tabAttr}" />
-                    <CheckBox Content="固定" IsChecked="{Binding IsPinned,Mode=TwoWay,ElementName=_tabAttr}" />
+                    <TextBox Text="{Binding Title, Mode=TwoWay, ElementName=_tabAttr}" />
+                    <CheckBox
+                        Content="固定"
+                        IsChecked="{Binding IsPinned, Mode=TwoWay, ElementName=_tabAttr}" />
                 </StackPanel>
             </a:Tab>
             <a:Tab Title="左上二" />
@@ -49,8 +56,8 @@
             <a:Tab Title="右侧标签二" />
             <a:Tab Title="右侧标签三" />
             <a:Tab Title="右侧标签四" />
-            <a:Tab Title="右停靠一" IsPinned="False"/>
-            <a:Tab Title="右停靠二" IsPinned="False"/>
+            <a:Tab Title="右停靠一" IsPinned="False" />
+            <a:Tab Title="右停靠二" IsPinned="False" />
         </a:Tabs>
     </a:Pane>
     <a:Pane InitHeight="200" Pos="Bottom">
@@ -59,7 +66,7 @@
             <a:Tab Title="底部标签二" />
         </a:Tabs>
     </a:Pane>
-    <a:Pane Pos="Floating" FloatPos="Center" FloatSize="400, 300">
+    <a:Pane FloatPos="Center" FloatSize="400, 300" Pos="Floating">
         <a:Tabs>
             <a:Tab Title="浮动标签一" />
             <a:Tab Title="浮动标签二" />

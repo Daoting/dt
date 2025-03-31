@@ -9,5 +9,5 @@
         <a:NlItems x:Key="_placehold" />
         <a:FilterCfg x:Key="_filter" />
     </a:Dlg.Resources>
-    
+
 </a:Dlg>

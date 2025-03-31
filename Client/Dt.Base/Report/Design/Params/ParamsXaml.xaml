@@ -25,15 +25,18 @@
         <a:CBar Title="查询面板Xaml" Grid.Row="1">
             <Button Content="设计" Click="OnDesign" HorizontalAlignment="Right" />
         </a:CBar>
-        <TextBox x:Name="_tbXaml"
-                 TextChanged="OnXamlChanged"
-                 VerticalAlignment="Stretch"
-                 HorizontalAlignment="Stretch"
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                 AcceptsReturn="True"
-                 TextWrapping="Wrap"
-                 Grid.Row="2" />
-        <a:CBar Title="显示查询面板优先级：类名 > Xaml > 自动生成Xaml，都无则不显示查询面板，直接查询，显示报表" Grid.Row="3" />
+        <TextBox
+            x:Name="_tbXaml"
+            AcceptsReturn="True"
+            HorizontalAlignment="Stretch"
+            TextChanged="OnXamlChanged"
+            TextWrapping="Wrap"
+            VerticalAlignment="Stretch"
+            Grid.Row="2"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        <a:CBar
+            Title="显示查询面板优先级：类名 &gt; Xaml &gt; 自动生成Xaml，都无则不显示查询面板，直接查询，显示报表"
+            Grid.Row="3" />
     </Grid>
 </a:Tab>

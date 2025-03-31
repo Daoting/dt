@@ -15,6 +15,11 @@
         <a:CBar>
             <TextBlock Text="* 确保该用户具有增删库权限" Foreground="Red" />
         </a:CBar>
-        <Button Content="连　　　　接" Click="OnConnect" Background="Green" Style="{StaticResource 浅色按钮}" HorizontalAlignment="Stretch" />
+        <Button
+            Content="连　　　　接"
+            Background="Green"
+            Click="OnConnect"
+            HorizontalAlignment="Stretch"
+            Style="{StaticResource 浅色按钮}" />
     </a:Fv>
 </a:Tab>

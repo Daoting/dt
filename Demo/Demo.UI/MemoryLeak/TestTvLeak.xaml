@@ -6,7 +6,7 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="树">
+            <a:Tab Title="树" Order="1">
                 <a:Tv x:Name="_tv">
                     <DataTemplate>
                         <a:Dot ID="name" />
@@ -17,14 +17,14 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv>
                     <a:CBar Title="数据源" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="Table" Click="OnLoadTbl" />
                         <Button Content="对象树" Click="OnLoadData" />
                     </StackPanel>
-                    
+
                     <a:CFree Title="筛选框">
                         <StackPanel Orientation="Horizontal">
                             <Button Content="默认" Click="OnFilter" />
@@ -33,7 +33,7 @@
                             <Button Content="隐藏" Click="OnDelFilter" />
                         </StackPanel>
                     </a:CFree>
-                    
+
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

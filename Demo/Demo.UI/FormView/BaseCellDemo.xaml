@@ -6,7 +6,7 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="格">
+            <a:Tab Title="格" Order="1">
                 <a:Fv x:Name="_fv">
                     <a:CBar Title="基本格" />
                     <a:CText ID="txt" Title="文本框" AutoCookie="True" Placeholder="文本框" />
@@ -18,12 +18,16 @@
                     <a:CPassword ID="pwd" Title="密码" />
 
                     <a:CBar Title="日期格" />
-                    <a:CDate ID="date" Title="日期"/>
-                    <a:CDate ID="time" Title="时间" Format="HH:mm:ss"/>
+                    <a:CDate ID="date" Title="日期" />
+                    <a:CDate ID="time" Title="时间" Format="HH:mm:ss" />
                     <a:CDate ID="datetime" Title="日期时间" Format="yyyy-MM-dd HH:mm:ss" />
                     <a:CDate ID="datestr" Title="日期串" />
-                    <a:CDate ID="datetouch" Title="触摸模式日期" Format="yyyy-MM-dd HH:mm:ss" AlwaysTouchPicker="True" />
-                    
+                    <a:CDate
+                        ID="datetouch"
+                        Title="触摸模式日期"
+                        AlwaysTouchPicker="True"
+                        Format="yyyy-MM-dd HH:mm:ss" />
+
                     <a:CBar Title="布尔格" />
                     <a:CBool ID="check" Title="bool选择框" />
                     <a:CBool ID="checkint" Title="整数选择框">
@@ -34,30 +38,51 @@
                             <x:Int32>0</x:Int32>
                         </a:CBool.FalseVal>
                     </a:CBool>
-                    <a:CBool ID="checkstr" Title="字符串选择框" TrueVal="男" FalseVal="女" />
+                    <a:CBool ID="checkstr" Title="字符串选择框" FalseVal="女" TrueVal="男" />
                     <a:CBool ID="checkswitch" Title="开关" IsSwitch="True" />
                     <a:CBool ID="checktitle" Title="标题在选择框后" ShowTitle="False" />
 
                     <a:CBar Title="掩码" />
-                    <a:CMask ID="masknum" Title="数字型" MaskType="Numeric" Mask="d6" />
-                    <a:CMask ID="maskregex" Title="正则表达式" MaskType="RegEx" Mask="\d{3}-\d{2}-\d{4}" />
-                    <a:CMask ID="maskreg" Title="简单正则" MaskType="Regular" Mask="\d\d\d-\d\d-\d\d\d\d" />
-                    <a:CMask ID="masksimple" Title="简单表达式" MaskType="Simple" Mask="000-00-0000" />
-                    <a:CMask ID="maskdate" Title="日期时间" MaskType="DateTime" Mask="d, dddd" />
+                    <a:CMask ID="masknum" Title="数字型" Mask="d6" MaskType="Numeric" />
+                    <a:CMask
+                        ID="maskregex"
+                        Title="正则表达式"
+                        Mask="\d{3}-\d{2}-\d{4}"
+                        MaskType="RegEx" />
+                    <a:CMask
+                        ID="maskreg"
+                        Title="简单正则"
+                        Mask="\d\d\d-\d\d-\d\d\d\d"
+                        MaskType="Regular" />
+                    <a:CMask
+                        ID="masksimple"
+                        Title="简单表达式"
+                        Mask="000-00-0000"
+                        MaskType="Simple" />
+                    <a:CMask
+                        ID="maskdate"
+                        Title="日期时间"
+                        Mask="d, dddd"
+                        MaskType="DateTime" />
                     <a:CNum ID="numcust" Title="格式数字" Placeholder="填写数字" />
-                    
+
                     <a:CBar Title="链接格" />
                     <a:CLink Title="默认链接格" />
-                    <a:CLink RowSpan="2" ColSpan="1">
+                    <a:CLink ColSpan="1" RowSpan="2">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="ms-appx:///Images/logo.png" Width="50" Height="50" Margin="0,0,20,0" Stretch="Uniform" />
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Image
+                                Height="50"
+                                Margin="0,0,20,0"
+                                Source="ms-appx:///Images/logo.png"
+                                Stretch="Uniform"
+                                Width="50" />
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <TextBlock Text="李世杰" Foreground="Black" />
                                 <TextBlock Text="1870****504" Style="{StaticResource 小灰}" />
                             </StackPanel>
                         </StackPanel>
                     </a:CLink>
-                    <a:CLink x:Name="_link" Title="切换内容" ColSpan="1" Call="OnToggleLink" />
+                    <a:CLink x:Name="_link" Title="切换内容" Call="OnToggleLink" ColSpan="1" />
 
                     <a:CBar Title="提示信息格" />
                     <a:CTip ID="tip" Title="普通只读信息" />
@@ -82,14 +107,16 @@
                             </a:Mi>
                         </a:Menu>
                     </a:CBar>
-                    <a:CBar Title="分隔栏&#10;第二行&#10;第三行" RowSpan="2" />
+                    <a:CBar
+                        Title="分隔栏&#10;第二行&#10;第三行"
+                        RowSpan="2" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -102,9 +129,21 @@
                             <Button Content="普通对象" Click="OnObj" />
                             <Button Content="空数据源" Click="OnNull" />
                         </StackPanel>
-                        <a:CBool Title="表单只读" ID="IsReadOnly" ShowTitle="False" ColSpan="0.33" />
-                        <a:CBool Title="设计模式" ID="IsDesignMode" ShowTitle="False" ColSpan="0.33" />
-                        <a:CBool Title="自动焦点" ID="AutoFocus" ShowTitle="False" ColSpan="0.33" />
+                        <a:CBool
+                            ID="IsReadOnly"
+                            Title="表单只读"
+                            ColSpan="0.33"
+                            ShowTitle="False" />
+                        <a:CBool
+                            ID="IsDesignMode"
+                            Title="设计模式"
+                            ColSpan="0.33"
+                            ShowTitle="False" />
+                        <a:CBool
+                            ID="AutoFocus"
+                            Title="自动焦点"
+                            ColSpan="0.33"
+                            ShowTitle="False" />
                         <StackPanel Orientation="Horizontal">
                             <Button Content="警告信息" Click="OnWarn" />
                             <Button Content="提示信息" Click="OnMsg" />

@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Title="报表">
 
-    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+    <a:Fv x:Name="_fv" Create="Add" Delete="Delete" Save="Save">
         <a:CText ID="name" Title="报表名称" />
         <a:CText ID="note" Title="报表描述" />
         <a:CTip ID="ctime" Title="创建时间" />

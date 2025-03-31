@@ -5,7 +5,25 @@
     xmlns:a="using:Dt.Base"
     Title="样例">
 
-    <a:NavList x:Name="_navControl" Title="控件" Order="1" Icon="词典" To="NewWin" ViewMode="Tile" a:Ex.Dock="Left" />
-    <a:NavList x:Name="_navTools" Title="工具" Order="2" Icon="修理" To="NewWin" />
-    <a:NavList x:Name="_navModule" Title="综合" Order="3" Icon="搬运工" To="NewWin" a:Ex.Dock="Right" />
+    <a:NavList
+        x:Name="_navControl"
+        Title="控件"
+        Icon="词典"
+        Order="1"
+        To="NewWin"
+        ViewMode="Tile"
+        a:Ex.Dock="Left" />
+    <a:NavList
+        x:Name="_navTools"
+        Title="工具"
+        Icon="修理"
+        Order="2"
+        To="NewWin" />
+    <a:NavList
+        x:Name="_navModule"
+        Title="综合"
+        Icon="搬运工"
+        Order="3"
+        To="NewWin"
+        a:Ex.Dock="Right" />
 </a:Win>

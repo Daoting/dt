@@ -6,7 +6,11 @@
 
     <a:Fv>
         <a:CFree Title="可以回退">
-            <CheckBox x:Name="_cbBack" HorizontalAlignment="Center" MinWidth="30" Click="OnBackClick" />
+            <CheckBox
+                x:Name="_cbBack"
+                Click="OnBackClick"
+                HorizontalAlignment="Center"
+                MinWidth="30" />
         </a:CFree>
     </a:Fv>
 </UserControl>

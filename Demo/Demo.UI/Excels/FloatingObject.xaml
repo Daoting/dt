@@ -6,14 +6,14 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="Excel">
+            <a:Tab Title="Excel" Order="1">
                 <a:Excel x:Name="_excel" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv>
                     <Button Content="添加矩形" Click="AddRectangleButton_Click" />
                     <Button Content="添加椭圆" Click="AddEllipseButton_Click" />

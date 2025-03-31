@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Title="人员">
 
-    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+    <a:Fv x:Name="_fv" Create="Add" Delete="Delete" Save="Save">
         <a:CText ID="姓名" />
         <a:CDate ID="出生日期" />
         <a:CList ID="性别" />

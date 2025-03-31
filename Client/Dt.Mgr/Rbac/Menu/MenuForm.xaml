@@ -11,17 +11,37 @@
                 <a:Mi ID="菜单" Icon="文件" Call="AddMi" />
                 <a:Mi ID="分组" Icon="文件夹" Call="AddGroup" />
             </a:Mi>
-            <a:Mi ID="保存" Icon="保存" Call="Save" IsEnabled="{Binding IsDirty,ElementName=_fv}" />
+            <a:Mi
+                ID="保存"
+                Icon="保存"
+                Call="Save"
+                IsEnabled="{Binding IsDirty, ElementName=_fv}" />
             <a:Mi ID="删除" Icon="删除" Call="Delete" />
             <a:Mi ID="预览" Icon="点击" Call="OnOpen" />
         </a:Menu>
     </a:Form.Menu>
 
-    <a:Fv x:Name="_fv" DataChanged="OnFvDataChanged" Save="Save" Create="AddMi" Delete="Delete">
+    <a:Fv
+        x:Name="_fv"
+        Create="AddMi"
+        DataChanged="OnFvDataChanged"
+        Delete="Delete"
+        Save="Save">
         <a:CText ID="name" Title="名称" />
         <a:CIcon ID="icon" Title="图标" />
-        <a:CTree ID="parentname" Title="所属菜单" RefreshData="true" SrcID="id" TgtID="parent_id" LoadData="OnLoadTreeGroup" />
-        <a:CList ID="view_name" Title="视图名称" SrcID="alias" IsEditable="True" LoadData="OnLoadViewName">
+        <a:CTree
+            ID="parentname"
+            Title="所属菜单"
+            SrcID="id"
+            TgtID="parent_id"
+            LoadData="OnLoadTreeGroup"
+            RefreshData="true" />
+        <a:CList
+            ID="view_name"
+            Title="视图名称"
+            SrcID="alias"
+            IsEditable="True"
+            LoadData="OnLoadViewName">
             <DataTemplate>
                 <StackPanel Margin="10">
                     <a:Dot ID="alias" />
@@ -30,9 +50,16 @@
             </DataTemplate>
         </a:CList>
         <a:CBar Title="视图参数">
-            <Button Content="编辑" Click="OnEditParam" HorizontalAlignment="Right" />
+            <Button
+                Content="编辑"
+                Click="OnEditParam"
+                HorizontalAlignment="Right" />
         </a:CBar>
-        <a:CText ID="params" ShowTitle="False" AcceptsReturn="True" RowSpan="4" />
+        <a:CText
+            ID="params"
+            AcceptsReturn="True"
+            RowSpan="4"
+            ShowTitle="False" />
         <a:CText ID="note" Title="功能说明" AcceptsReturn="True" RowSpan="2" />
         <a:CBool ID="is_locked" Title="锁定不可用" />
         <a:CDate ID="ctime" Title="创建时间" IsReadOnly="True" />

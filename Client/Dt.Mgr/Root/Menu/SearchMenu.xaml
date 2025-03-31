@@ -10,13 +10,29 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <a:Lv x:Name="_lv" SelectionMode="None" ItemClick="OnItemClick" ItemHeight="NaN" Grid.Row="1">
+        <a:Lv
+            x:Name="_lv"
+            ItemClick="OnItemClick"
+            ItemHeight="NaN"
+            SelectionMode="None"
+            Grid.Row="1">
             <DataTemplate>
-                <Grid Padding="10" ColumnDefinitions="Auto,*" MinHeight="60">
-                    <a:Dot ID="Icon" Call="Def.Icon" FontSize="30" Foreground="{StaticResource 主蓝}" Margin="0,0,10,0" VerticalAlignment="Center" />
+                <Grid ColumnDefinitions="Auto,*" MinHeight="60" Padding="10">
+                    <a:Dot
+                        ID="Icon"
+                        Call="Def.Icon"
+                        FontSize="30"
+                        Foreground="{StaticResource 主蓝}"
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center" />
                     <StackPanel VerticalAlignment="Center" Grid.Column="1">
                         <a:Dot ID="Name" VerticalAlignment="Center" />
-                        <a:Dot ID="Note" Call="Def.小灰" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" />
+                        <a:Dot
+                            ID="Note"
+                            Call="Def.小灰"
+                            HorizontalAlignment="Left"
+                            TextWrapping="Wrap"
+                            VerticalAlignment="Top" />
                     </StackPanel>
                 </Grid>
             </DataTemplate>

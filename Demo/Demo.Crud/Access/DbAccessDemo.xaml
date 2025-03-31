@@ -28,13 +28,14 @@
             <Button Content="批量增更" Click="OnBatch" />
             <Button Content="批量删" Click="OnBatchDel" />
         </StackPanel>
-        
-        <a:CFree RowSpan="5" ColSpan="0" ShowTitle="False">
-            <TextBox x:Name="_tbInfo"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"
-                     ScrollViewer.VerticalScrollMode="Enabled"
-                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+
+        <a:CFree ColSpan="0" RowSpan="5" ShowTitle="False">
+            <TextBox
+                x:Name="_tbInfo"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollMode="Enabled" />
         </a:CFree>
     </a:Fv>
 </a:Win>

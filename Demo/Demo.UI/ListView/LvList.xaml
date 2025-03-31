@@ -6,7 +6,7 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="列表">
+            <a:Tab Title="列表" Order="1">
                 <a:Lv x:Name="_lv" PullToRefresh="true">
                     <DataTemplate>
                         <Grid Padding="6">
@@ -18,16 +18,24 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <Border Background="{StaticResource 主蓝}" Height="50" Width="50" VerticalAlignment="Center">
-                                <TextBlock Text="&#xE060;"
-                                           FontFamily="{StaticResource IconFont}"
-                                           FontSize="30"
-                                           Foreground="White"
-                                           VerticalAlignment="Center"
-                                           TextAlignment="Center" />
+                            <Border
+                                Background="{StaticResource 主蓝}"
+                                Height="50"
+                                VerticalAlignment="Center"
+                                Width="50">
+                                <TextBlock
+                                    Text="&#xE060;"
+                                    FontFamily="{StaticResource IconFont}"
+                                    FontSize="30"
+                                    Foreground="White"
+                                    TextAlignment="Center"
+                                    VerticalAlignment="Center" />
                             </Border>
 
-                            <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
+                            <StackPanel
+                                Margin="10,0,0,0"
+                                VerticalAlignment="Center"
+                                Grid.Column="1">
                                 <Grid>
                                     <a:Dot ID="xm" Call="Def.黑白" HorizontalAlignment="Left" />
                                     <a:Dot ID="bumen" Call="Def.蓝白" HorizontalAlignment="Right" />
@@ -37,7 +45,7 @@
                                     <a:Dot ID="chushengrq" Margin="20,0,0,0" />
                                 </StackPanel>
                             </StackPanel>
-                            <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
+                            <StackPanel Grid.ColumnSpan="2" Grid.Row="1">
                                 <a:Dot ID="shenfenzh" />
                                 <a:Dot ID="note" Call="Def.小灰" />
                             </StackPanel>
@@ -49,17 +57,17 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv Data="{Binding ElementName=_lv}">
                     <a:CBar Title="数据源" />
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="10行" Tag="10" Click="OnLoadData" />
-                        <Button Content="100行" Tag="100" Click="OnLoadData" />
-                        <Button Content="1000行" Tag="1000" Click="OnLoadData" />
+                        <Button Content="10行" Click="OnLoadData" Tag="10" />
+                        <Button Content="100行" Click="OnLoadData" Tag="100" />
+                        <Button Content="1000行" Click="OnLoadData" Tag="1000" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Button Content="空数据源" Click="OnLoadNull" />
-                        <Button Content="10000行" Tag="10000" Click="OnLoadData" />
+                        <Button Content="10000行" Click="OnLoadData" Tag="10000" />
                     </StackPanel>
                     <a:CBar Title="分组" />
                     <StackPanel Orientation="Horizontal">
@@ -67,12 +75,12 @@
                         <Button Content="删除分组" Click="OnDelGroup" />
                     </StackPanel>
                     <a:CBar Title="属性" />
-                    <a:CList Title="视图类型" ID="ViewMode" />
-                    <a:CList Title="选择模式" ID="SelectionMode" />
-                    <a:CBool Title="显示分组导航" ID="ShowGroupHeader" />
-                    <a:CBool Title="显示行分割线" ID="ShowItemBorder" />
-                    <a:CNum Title="行/项目高" ID="ItemHeight" />
-                    <a:CBool Title="允许下拉刷新" ID="PullToRefresh" />
+                    <a:CList ID="ViewMode" Title="视图类型" />
+                    <a:CList ID="SelectionMode" Title="选择模式" />
+                    <a:CBool ID="ShowGroupHeader" Title="显示分组导航" />
+                    <a:CBool ID="ShowItemBorder" Title="显示行分割线" />
+                    <a:CNum ID="ItemHeight" Title="行/项目高" />
+                    <a:CBool ID="PullToRefresh" Title="允许下拉刷新" />
                     <a:CBar Title="其他" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="自动行高" Click="OnAutoHeight" />

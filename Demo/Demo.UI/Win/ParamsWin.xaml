@@ -4,5 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <TextBlock x:Name="_tb" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    <TextBlock
+        x:Name="_tb"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center" />
 </a:Win>

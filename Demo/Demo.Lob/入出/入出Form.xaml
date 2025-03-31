@@ -6,7 +6,7 @@
     xmlns:b="using:Dt.Mgr"
     Title="入出表单">
 
-    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+    <a:Fv x:Name="_fv" Create="Add" Delete="Delete" Save="Save">
         <a:CTip ID="单号" />
         <a:CTip ID="部门名称" />
         <a:CList ID="供应商" SrcID="id#名称" TgtID="供应商id#供应商" ViewMode="Table">
@@ -43,7 +43,7 @@
                         <a:Col ID="数量" />
                         <a:Col ID="单价" />
                         <a:Col ID="金额" />
-                        
+
                         <a:Col ID="随货单号" />
                         <a:Col ID="发票号" />
                         <a:Col ID="发票日期" />
@@ -55,7 +55,11 @@
             </a:Fi.Lv>
             <a:Fi.Fv>
                 <a:Fv x:Name="_fv详单">
-                    <a:CList ID="物资名称" GroupName="物资分类" SrcID="id#名称#规格#产地" TgtID="物资id#物资名称#规格#产地">
+                    <a:CList
+                        ID="物资名称"
+                        SrcID="id#名称#规格#产地"
+                        TgtID="物资id#物资名称#规格#产地"
+                        GroupName="物资分类">
                         <a:CList.Sql>
                             <a:Sql>select * from v_物资目录</a:Sql>
                         </a:CList.Sql>
@@ -73,7 +77,7 @@
                     <a:CNum ID="数量" />
                     <a:CNum ID="单价" />
                     <a:CNum ID="金额" />
-                    
+
                     <a:CText ID="随货单号" />
                     <a:CText ID="发票号" />
                     <a:CDate ID="发票日期" />

@@ -9,7 +9,12 @@
             <a:Tab Title="下拉刷新">
                 <Grid RowDefinitions="Auto,*">
                     <StackPanel Orientation="Horizontal">
-                        <CheckBox x:Name="_cb" Content="启用下拉以刷新" IsChecked="True" Margin="10,0,40,0" Click="OnPullToRefreshCheck" />
+                        <CheckBox
+                            x:Name="_cb"
+                            Content="启用下拉以刷新"
+                            Click="OnPullToRefreshCheck"
+                            IsChecked="True"
+                            Margin="10,0,40,0" />
                         <Button Content="模拟下拉刷新" Click="OnRequestRefresh" />
                     </StackPanel>
                     <a:Lv x:Name="_lv" PullToRefresh="True" Grid.Row="1">
@@ -23,16 +28,24 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <Border Background="{StaticResource 主蓝}" Height="50" Width="50" VerticalAlignment="Center">
-                                    <TextBlock Text="&#xE060;"
-                                           FontFamily="{StaticResource IconFont}"
-                                           FontSize="30"
-                                           Foreground="White"
-                                           VerticalAlignment="Center"
-                                           TextAlignment="Center" />
+                                <Border
+                                    Background="{StaticResource 主蓝}"
+                                    Height="50"
+                                    VerticalAlignment="Center"
+                                    Width="50">
+                                    <TextBlock
+                                        Text="&#xE060;"
+                                        FontFamily="{StaticResource IconFont}"
+                                        FontSize="30"
+                                        Foreground="White"
+                                        TextAlignment="Center"
+                                        VerticalAlignment="Center" />
                                 </Border>
 
-                                <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
+                                <StackPanel
+                                    Margin="10,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Grid.Column="1">
                                     <Grid>
                                         <a:Dot ID="xm" Call="Def.黑白" HorizontalAlignment="Left" />
                                         <a:Dot ID="bumen" Call="Def.蓝白" HorizontalAlignment="Right" />
@@ -42,7 +55,7 @@
                                         <a:Dot ID="chushengrq" Margin="20,0,0,0" />
                                     </StackPanel>
                                 </StackPanel>
-                                <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
+                                <StackPanel Grid.ColumnSpan="2" Grid.Row="1">
                                     <a:Dot ID="shenfenzh" />
                                     <a:Dot ID="note" Call="Def.小灰" />
                                 </StackPanel>
@@ -50,7 +63,7 @@
                         </DataTemplate>
                     </a:Lv>
                 </Grid>
-                
+
             </a:Tab>
         </a:Tabs>
     </a:Main>

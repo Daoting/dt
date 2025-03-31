@@ -5,7 +5,12 @@
     xmlns:a="using:Dt.Base"
     xmlns:s="using:Demo.UI">
 
-    <StackPanel x:Name="_sp" Margin="10">
+    <StackPanel
+        x:Name="_sp"
+        Margin="10"
+        Canvas.Left="0"
+        Grid.Column="1"
+        Grid.Row="1">
         <Button Content="测试1" Click="OnTest1" />
         <Button Content="测试2" Click="OnTest2" />
     </StackPanel>

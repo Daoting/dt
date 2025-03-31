@@ -7,19 +7,34 @@
     <Grid>
         <a:DockPanel x:Name="RootDockPanel">
             <Border Background="Red" Width="160" a:DockPanel.Dock="Left">
-                <TextBlock Text="停靠左侧" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <TextBlock
+                    Text="停靠左侧"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" />
             </Border>
             <Border Background="Green" Width="160" a:DockPanel.Dock="Right">
-                <TextBlock Text="停靠右侧" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <TextBlock
+                    Text="停靠右侧"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" />
             </Border>
             <Border Background="Blue" Height="80" a:DockPanel.Dock="Top">
-                <TextBlock Text="停靠上部" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <TextBlock
+                    Text="停靠上部"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" />
             </Border>
             <Border Background="Yellow" Height="80" a:DockPanel.Dock="Bottom">
-                <TextBlock Text="停靠下部" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <TextBlock
+                    Text="停靠下部"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" />
             </Border>
             <Border Background="Gray">
-                <TextBlock Text="内容填充" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <TextBlock
+                    Text="内容填充"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" />
             </Border>
         </a:DockPanel>
     </Grid>

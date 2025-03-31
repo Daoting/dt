@@ -10,12 +10,16 @@
             <a:Mi ID="确定" Icon="保存" Call="OnOk" />
         </a:Menu>
     </a:Dlg.Menu>
-    
+
     <Grid RowDefinitions="40,170,40,*">
         <a:CBar Title="报表列表">
             <Button Content="添加" Click="OnAddRpt" HorizontalAlignment="Right" />
         </a:CBar>
-        <a:Lv x:Name="_lvRpt" SelectionChanged="OnRptSelectionChanged" ItemDoubleClick="OnRptDoubleClick" Grid.Row="1">
+        <a:Lv
+            x:Name="_lvRpt"
+            ItemDoubleClick="OnRptDoubleClick"
+            SelectionChanged="OnRptSelectionChanged"
+            Grid.Row="1">
             <a:Ex.Menu>
                 <a:Menu>
                     <a:Mi ID="编辑" Icon="编辑" Click="OnEditRpt" />
@@ -27,9 +31,16 @@
             </a:Cols>
         </a:Lv>
         <a:CBar Title="参数列表" Grid.Row="2">
-            <Button Content="添加" Click="OnAddParams" HorizontalAlignment="Right" />
+            <Button
+                Content="添加"
+                Click="OnAddParams"
+                HorizontalAlignment="Right" />
         </a:CBar>
-        <a:Lv x:Name="_lvParams" SelectionChanged="OnParamsSelectionChanged" ItemDoubleClick="OnParamsDoubleClick" Grid.Row="3">
+        <a:Lv
+            x:Name="_lvParams"
+            ItemDoubleClick="OnParamsDoubleClick"
+            SelectionChanged="OnParamsSelectionChanged"
+            Grid.Row="3">
             <a:Ex.Menu>
                 <a:Menu>
                     <a:Mi ID="编辑" Icon="编辑" Click="OnEditParams" />

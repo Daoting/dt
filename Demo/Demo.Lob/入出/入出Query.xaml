@@ -13,19 +13,47 @@
             </a:CTree.Sql>
             <DataTemplate>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="&#xE067;" FontFamily="{StaticResource IconFont}" Margin="4,0,4,0" VerticalAlignment="Center" />
+                    <TextBlock
+                        Text="&#xE067;"
+                        FontFamily="{StaticResource IconFont}"
+                        Margin="4,0,4,0"
+                        VerticalAlignment="Center" />
                     <a:Dot ID="编码" />
                     <a:Dot ID="名称" />
                 </StackPanel>
             </DataTemplate>
         </a:CTree>
-        <a:CTip ID="部门id" Query="ReadOnly" QueryFlag="Equal" Visibility="Collapsed" />
+        <a:CTip
+            ID="部门id"
+            Query="ReadOnly"
+            QueryFlag="Equal"
+            Visibility="Collapsed" />
         <a:CBar Title="填制日期" />
-        <a:CDate ID="填制日期_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-        <a:CDate ID="填制日期_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate
+            ID="填制日期_min"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Floor"
+            ShowTitle="False" />
+        <a:CDate
+            ID="填制日期_max"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Ceil"
+            ShowTitle="False" />
         <a:CBar Title="审核日期" />
-        <a:CDate ID="审核日期_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-        <a:CDate ID="审核日期_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate
+            ID="审核日期_min"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Floor"
+            ShowTitle="False" />
+        <a:CDate
+            ID="审核日期_max"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Ceil"
+            ShowTitle="False" />
         <a:CList ID="状态" Query="Editable" QueryFlag="Ignore" />
     </a:QueryFv>
 </a:Tab>

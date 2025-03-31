@@ -10,21 +10,33 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <ScrollViewer HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" Grid.Row="1">
+        <ScrollViewer
+            HorizontalScrollBarVisibility="Disabled"
+            HorizontalScrollMode="Disabled"
+            VerticalScrollBarVisibility="Auto"
+            VerticalScrollMode="Auto"
+            Grid.Row="1">
             <StackPanel x:Name="_sp">
-                <a:Lv x:Name="_lvFix"
-                      ItemClick="OnFixClick"
-                      ViewMode="Tile"
-                      SelectionMode="None"
-                      ItemHeight="50"
-                      BorderBrush="{StaticResource 浅灰2}"
-                      BorderThickness="0,1,0,0">
+                <a:Lv
+                    x:Name="_lvFix"
+                    BorderBrush="{StaticResource 浅灰2}"
+                    BorderThickness="0,1,0,0"
+                    ItemClick="OnFixClick"
+                    ItemHeight="50"
+                    SelectionMode="None"
+                    ViewMode="Tile">
                     <DataTemplate>
-                        <a:Dot Foreground="{StaticResource 主蓝}" HorizontalAlignment="Center" />
+                        <a:Dot
+                            Foreground="{StaticResource 主蓝}"
+                            HorizontalAlignment="Center" />
                     </DataTemplate>
                 </a:Lv>
-                <a:CBar Margin="0,10,0,0" Title="搜索历史">
-                    <Button Content="&#xE00A;" Click="OnClearHis" Style="{StaticResource 字符按钮}" HorizontalAlignment="Right" />
+                <a:CBar Title="搜索历史" Margin="0,10,0,0">
+                    <Button
+                        Content="&#xE00A;"
+                        Click="OnClearHis"
+                        HorizontalAlignment="Right"
+                        Style="{StaticResource 字符按钮}" />
                 </a:CBar>
                 <a:Lv x:Name="_lvHis" ItemClick="OnHisClick">
                     <DataTemplate>
@@ -34,7 +46,11 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <a:Dot ID="Content" Foreground="{StaticResource 主蓝}" />
-                            <Button Content="&#xE009;" Click="OnDelHis" Style="{StaticResource 字符按钮}" Grid.Column="1" />
+                            <Button
+                                Content="&#xE009;"
+                                Click="OnDelHis"
+                                Style="{StaticResource 字符按钮}"
+                                Grid.Column="1" />
                         </Grid>
                     </DataTemplate>
                 </a:Lv>

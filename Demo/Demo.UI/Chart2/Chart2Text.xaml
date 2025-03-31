@@ -13,7 +13,7 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="1" Title="属性">
+            <a:Tab Title="属性" Order="1">
                 <StackPanel>
                     <Button Content="文本" Click="OnDef" />
                     <Button Content="文本格式" Click="OnFormat" />

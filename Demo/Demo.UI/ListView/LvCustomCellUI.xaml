@@ -6,12 +6,33 @@
 
     <a:Win.Resources>
         <a:Cols x:Key="GridView">
-            <a:Col ID="style" Title="样式" Call="LvCustomUI.ApplyStyle" Width="150" />
+            <a:Col
+                ID="style"
+                Title="样式"
+                Call="LvCustomUI.ApplyStyle"
+                Width="150" />
             <a:Col ID="line" Title="曲线" Call="LvCustomUI.曲线" Width="150" />
-            <a:Col ID="shengao" Title="多次处理" Call="LvCustomUI.背景,LvCustomUI.前景" Width="100" />
-            <a:Col ID="async" Title="异步设置" Call="LvCustomUI.AsyncFunc" Width="100" />
-            <a:Col ID="date" Title="修改默认UI" Call="LvCustomUI.ModiDef" Width="160" />
-            <a:Col ID="format" Title="Format参数" Call="LvCustomUI.Format" Format="n4" Width="110" />
+            <a:Col
+                ID="shengao"
+                Title="多次处理"
+                Call="LvCustomUI.背景,LvCustomUI.前景"
+                Width="100" />
+            <a:Col
+                ID="async"
+                Title="异步设置"
+                Call="LvCustomUI.AsyncFunc"
+                Width="100" />
+            <a:Col
+                ID="date"
+                Title="修改默认UI"
+                Call="LvCustomUI.ModiDef"
+                Width="160" />
+            <a:Col
+                ID="format"
+                Title="Format参数"
+                Call="LvCustomUI.Format"
+                Format="n4"
+                Width="110" />
             <a:Col ID="warning" Title="重写内置方法" Call="Def.Warning" />
         </a:Cols>
 
@@ -36,14 +57,14 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="列表">
+            <a:Tab Title="列表" Order="1">
                 <a:Lv x:Name="_lv" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv>
                     <a:CBar Title="视图类型" />
                     <StackPanel Orientation="Horizontal">

@@ -18,8 +18,14 @@
             </a:CList.Items>
         </a:CList>
         <a:CNum ID="num" Title="数值" Decimals="4" Placeholder="填写数字" />
-        <a:CDate ID="date" Title="日期"/>
-        <a:CPick ID="query" Title="只查询" Search="OnSearch" Placeholder="请输入姓名或拼音简码" SrcID="xm#bh" TgtID="-#hm">
+        <a:CDate ID="date" Title="日期" />
+        <a:CPick
+            ID="query"
+            Title="只查询"
+            SrcID="xm#bh"
+            TgtID="-#hm"
+            Placeholder="请输入姓名或拼音简码"
+            Search="OnSearch">
             <a:Cols>
                 <a:Col ID="bh" Title="编号" Width="80" />
                 <a:Col ID="xm" Title="姓名" />
@@ -29,8 +35,8 @@
         </a:CPick>
         <a:CText ID="hm" Title="编号" />
         <a:CTree ID="tree" Title="普通树" LoadData="OnLoadTreeData" />
-        <a:CIcon ID="icon" Title="枚举图标"/>
-        <a:CColor ID="color" Title="颜色"/>
+        <a:CIcon ID="icon" Title="枚举图标" />
+        <a:CColor ID="color" Title="颜色" />
         <a:CTip ID="tip" Title="普通只读信息" Click="OnTipClick" />
     </a:Fv>
 </a:Win>

@@ -5,6 +5,6 @@
     xmlns:a="using:Dt.Base"
     xmlns:v="using:Dt.Base.Views">
 
-    <v:SingleTblQuery x:Name="_query" a:Ex.Dock="Left" Order="1" />
+    <v:SingleTblQuery x:Name="_query" Order="1" a:Ex.Dock="Left" />
     <v:SingleTblList x:Name="_list" />
 </a:Win>

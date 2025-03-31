@@ -7,14 +7,14 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="Excel">
+            <a:Tab Title="Excel" Order="1">
                 <a:Excel x:Name="_excel" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv Data="{Binding ElementName=_excel}">
                     <a:CBool ID="Protect" Title="只读" />
                     <a:CText ID="ActiveSheet.RowCount" Title="总行数" />
@@ -23,7 +23,9 @@
                     <a:CList ID="ActiveSheet.SelectionUnit" Title="选择单位" />
                     <a:CBool ID="ActiveSheet.ShowGridLine" Title="显示网格线" />
                     <a:CFree Title="网格线颜色">
-                        <ComboBox x:Name="_cbGridlineColor" SelectionChanged="borderColor_SelectionChanged" />
+                        <ComboBox
+                            x:Name="_cbGridlineColor"
+                            SelectionChanged="borderColor_SelectionChanged" />
                     </a:CFree>
                     <a:CList ID="ScrollBarTrackPolicy" Title="滚动栏跟踪方式" />
                     <a:CBool ID="IsBusy" Title="忙状态" />
@@ -39,19 +41,25 @@
                         <Button Content="添加行头" Click="btnAddRowHeader_Click" />
                         <Button Content="删除行头" Click="btnRemoveRowHeader_Click" />
                     </StackPanel>
-                    
+
                     <a:CBar Title="冻结" />
                     <a:CText ID="ActiveSheet.FrozenRowCount" Title="冻结行数" />
                     <a:CText ID="ActiveSheet.FrozenTrailingRowCount" Title="冻结尾行数" />
                     <a:CText ID="ActiveSheet.FrozenColumnCount" Title="冻结列数" />
                     <a:CText ID="ActiveSheet.FrozenTrailingColumnCount" Title="冻结尾列数" />
-                    
+
                     <a:CBar Title="当前格" />
-                    <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
-                        <CheckBox x:Name="_cbColCanResize" Content="列宽可调" Click="OnColumnCanResize" />
-                        <CheckBox x:Name="_cbRowCanResize" Content="行高可调" Click="OnRowCanResize" />
+                    <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
+                        <CheckBox
+                            x:Name="_cbColCanResize"
+                            Content="列宽可调"
+                            Click="OnColumnCanResize" />
+                        <CheckBox
+                            x:Name="_cbRowCanResize"
+                            Content="行高可调"
+                            Click="OnRowCanResize" />
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                    <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
                         <CheckBox Content="下划线样式" Click="showUnderLine_Checked" />
                         <CheckBox Content="删除线样式" Click="showStrickLine_Checked" />
                     </StackPanel>
@@ -65,22 +73,24 @@
                         <Button Content="设置边框" Click="setBorderButton_Click" />
                         <Button Content="清除边框" Click="clearBorderButton_Click" />
                     </StackPanel>
-                    
+
                     <a:CBar Title="当前区域" />
                     <StackPanel Orientation="Horizontal">
                         <Button x:Name="btnMerge" Content="合并" Click="OnMergeClick" />
                         <Button x:Name="btnUnMerge" Content="拆分" Click="OnUnMergeClick" />
                     </StackPanel>
-                    
+
                     <a:CBar Title="内嵌表格" />
                     <a:CFree Title="表格样式">
-                        <ComboBox x:Name="_cbTableStyle" SelectionChanged="cboTableStyle_SelectionChanged" />
+                        <ComboBox
+                            x:Name="_cbTableStyle"
+                            SelectionChanged="cboTableStyle_SelectionChanged" />
                     </a:CFree>
                     <StackPanel Orientation="Horizontal">
                         <Button Content="添加表格" Click="btnAddTable_Click" />
                         <Button Content="移除表格" Click="btnRemoveTable_Click" />
                     </StackPanel>
-                    
+
                     <a:CBar Title="插入元素" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="矩形" Click="AddRectangleButton_Click" />
@@ -88,7 +98,7 @@
                         <Button Content="图片" Click="AddPictureButton_Click" />
                         <Button Content="边框" Click="AddBorderButton_Click" />
                     </StackPanel>
-                    
+
                     <a:CBar Title="工作表" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="添加" Click="btnAdd_Click" />

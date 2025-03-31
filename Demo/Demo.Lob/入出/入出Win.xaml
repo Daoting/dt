@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     xmlns:l="using:Demo.Lob">
 
-    <l:入出Query x:Name="_query" a:Ex.Dock="Left" Order="1" />
+    <l:入出Query x:Name="_query" Order="1" a:Ex.Dock="Left" />
     <l:入出List x:Name="_parentList" />
     <l:入出详单List x:Name="_详单List" a:Ex.Dock="Bottom" />
 </a:Win>

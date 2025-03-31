@@ -2,47 +2,62 @@
     x:Class="Demo.UI.FontDemo"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    xmlns:a="using:Dt.Base">
+    mc:Ignorable="d">
 
-    <ScrollViewer HorizontalScrollMode="Disabled"
-                  HorizontalScrollBarVisibility="Disabled"
-                  VerticalScrollMode="Auto"
-                  VerticalScrollBarVisibility="Auto"
-                  ZoomMode="Disabled">
+    <ScrollViewer
+        HorizontalScrollBarVisibility="Disabled"
+        HorizontalScrollMode="Disabled"
+        VerticalScrollBarVisibility="Auto"
+        VerticalScrollMode="Auto"
+        ZoomMode="Disabled">
         <StackPanel Margin="20" Spacing="20">
             <StackPanel Background="{StaticResource 浅灰1}" Padding="10" Spacing="10">
                 <TextBlock Text="默认字：16px，小四，xaml中不需要指定FontSize" />
-                <TextBlock Text="&lt;TextBlock Text=&quot;内容&quot; /&gt;" IsTextSelectionEnabled="True" />
+                <TextBlock
+                    Text="&lt;TextBlock Text=&quot;内容&quot; /&gt;"
+                    IsTextSelectionEnabled="True" />
             </StackPanel>
             <StackPanel Background="{StaticResource 浅灰1}" Padding="10" Spacing="10">
                 <TextBlock Text="标题字：20px，小三" FontSize="{StaticResource 标题字}" />
-                <TextBlock Text="FontSize=&quot;{StaticResource 标题字}&quot;" IsTextSelectionEnabled="True" />
+                <TextBlock
+                    Text="FontSize=&quot;{StaticResource 标题字}&quot;"
+                    IsTextSelectionEnabled="True" />
             </StackPanel>
             <StackPanel Background="{StaticResource 浅灰1}" Padding="10" Spacing="10">
                 <TextBlock Text="小字：14px，五号，说明性文字用" FontSize="{StaticResource 小字}" />
-                <TextBlock Text="FontSize=&quot;{StaticResource 小字}&quot;" IsTextSelectionEnabled="True" />
+                <TextBlock
+                    Text="FontSize=&quot;{StaticResource 小字}&quot;"
+                    IsTextSelectionEnabled="True" />
             </StackPanel>
             <StackPanel Background="{StaticResource 浅灰1}" Padding="10" Spacing="10">
                 <TextBlock Text="小灰：深灰2，14px" Style="{StaticResource 小灰}" />
-                <TextBlock Text="FontSize=&quot;{StaticResource 小灰}&quot;" IsTextSelectionEnabled="True" />
+                <TextBlock
+                    Text="FontSize=&quot;{StaticResource 小灰}&quot;"
+                    IsTextSelectionEnabled="True" />
             </StackPanel>
 
             <StackPanel Background="{StaticResource 浅灰1}" Padding="10" Spacing="10">
                 <TextBlock Text="特小字：12px，小五，辅助说明文字用" FontSize="{StaticResource 特小字}" />
-                <TextBlock Text="FontSize=&quot;{StaticResource 特小字}&quot;" IsTextSelectionEnabled="True" />
+                <TextBlock
+                    Text="FontSize=&quot;{StaticResource 特小字}&quot;"
+                    IsTextSelectionEnabled="True" />
             </StackPanel>
 
             <StackPanel Background="{StaticResource 浅灰1}" Padding="10" Spacing="10">
                 <TextBlock Text="大字：24px，小二，大字体醒目用" FontSize="{StaticResource 大字}" />
-                <TextBlock Text="FontSize=&quot;{StaticResource 大字}&quot;" IsTextSelectionEnabled="True" />
+                <TextBlock
+                    Text="FontSize=&quot;{StaticResource 大字}&quot;"
+                    IsTextSelectionEnabled="True" />
             </StackPanel>
 
             <StackPanel Background="{StaticResource 浅灰1}" Padding="10" Spacing="10">
                 <TextBlock Text="特大字：32px，小一" FontSize="{StaticResource 特大字}" />
-                <TextBlock Text="FontSize=&quot;{StaticResource 特大字}&quot;" IsTextSelectionEnabled="True" />
+                <TextBlock
+                    Text="FontSize=&quot;{StaticResource 特大字}&quot;"
+                    IsTextSelectionEnabled="True" />
             </StackPanel>
         </StackPanel>
     </ScrollViewer>

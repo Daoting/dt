@@ -15,7 +15,7 @@
             <a:Col ID="hunfou" Title="婚否" Width="60" />
             <a:Col ID="shengao" Title="身高" Width="100" />
             <a:Col ID="bumen" Title="所属部门" Width="160" />
-            <a:Col ID="note" Title="备注" Width="200" RowSpan="2" />
+            <a:Col ID="note" Title="备注" RowSpan="2" Width="200" />
         </a:Cols>
 
         <DataTemplate x:Key="ListView">
@@ -28,25 +28,30 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Border Background="{StaticResource 主蓝}"
+                <Border
+                    Background="{StaticResource 主蓝}"
                     Height="50"
-                    Width="50"
-                    VerticalAlignment="Center">
-                    <TextBlock Text="{Binding Index}"
-                           FontSize="30"
-                           Foreground="White"
-                           VerticalAlignment="Center"
-                           TextAlignment="Center" />
+                    VerticalAlignment="Center"
+                    Width="50">
+                    <TextBlock
+                        Text="{Binding Index}"
+                        FontSize="30"
+                        Foreground="White"
+                        TextAlignment="Center"
+                        VerticalAlignment="Center" />
                 </Border>
 
-                <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
+                <StackPanel
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center"
+                    Grid.Column="1">
                     <a:Dot ID="xm" />
                     <StackPanel Orientation="Horizontal">
                         <a:Dot ID="xb" />
                         <a:Dot ID="chushengrq" Margin="20,0,0,0" />
                     </StackPanel>
                 </StackPanel>
-                <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
+                <StackPanel Grid.ColumnSpan="2" Grid.Row="1">
                     <a:Dot ID="shenfenzh" />
                     <a:Dot ID="bumen" />
                     <a:Dot ID="note" Call="Def.小灰" />
@@ -60,11 +65,12 @@
                     <ColumnDefinition Width="50" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="&#xE060;"
-                        FontFamily="{StaticResource IconFont}"
-                        FontSize="30"
-                        VerticalAlignment="Center"
-                        TextAlignment="Center" />
+                <TextBlock
+                    Text="&#xE060;"
+                    FontFamily="{StaticResource IconFont}"
+                    FontSize="30"
+                    TextAlignment="Center"
+                    VerticalAlignment="Center" />
                 <StackPanel Margin="10,0,0,0" Grid.Column="1">
                     <a:Dot ID="xm" />
                     <a:Dot ID="xb" />
@@ -73,24 +79,24 @@
             </Grid>
         </DataTemplate>
     </a:Win.Resources>
-    
+
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="表格">
+            <a:Tab Title="表格" Order="1">
                 <a:Lv x:Name="_lv" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv Data="{Binding ElementName=_lv}">
                     <a:CBar Title="数据源" />
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="10行" Tag="10" Click="OnLoadData" />
-                        <Button Content="百行" Tag="100" Click="OnLoadData" />
-                        <Button Content="千行" Tag="1000" Click="OnLoadData" />
-                        <Button Content="万行" Tag="10000" Click="OnLoadData" />
+                        <Button Content="10行" Click="OnLoadData" Tag="10" />
+                        <Button Content="百行" Click="OnLoadData" Tag="100" />
+                        <Button Content="千行" Click="OnLoadData" Tag="1000" />
+                        <Button Content="万行" Click="OnLoadData" Tag="10000" />
                         <Button Content="空" Click="OnLoadNull" />
                     </StackPanel>
                     <a:CBar Title="视图类型" />

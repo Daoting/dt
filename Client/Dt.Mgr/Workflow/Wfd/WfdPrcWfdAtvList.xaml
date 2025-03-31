@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
     Title="活动列表">
-    
+
     <a:Lv x:Name="_lv">
         <a:Cols>
             <a:Col ID="name" Title="活动名称" />

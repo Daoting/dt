@@ -14,7 +14,7 @@
             <a:Col ID="hunfou" Title="婚否" Width="60" />
             <a:Col ID="shengao" Title="身高" Width="100" />
             <a:Col ID="bumen" Title="所属部门" Width="160" />
-            <a:Col ID="note" Title="备注" Width="200" RowSpan="2" />
+            <a:Col ID="note" Title="备注" RowSpan="2" Width="200" />
         </a:Cols>
 
         <DataTemplate x:Key="ListView">
@@ -27,25 +27,30 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Border Background="{StaticResource 主蓝}"
-                        Height="50"
-                        Width="50"
-                        VerticalAlignment="Center">
-                    <TextBlock Text="{Binding Index}"
-                               FontSize="30"
-                               Foreground="White"
-                               VerticalAlignment="Center"
-                               TextAlignment="Center" />
+                <Border
+                    Background="{StaticResource 主蓝}"
+                    Height="50"
+                    VerticalAlignment="Center"
+                    Width="50">
+                    <TextBlock
+                        Text="{Binding Index}"
+                        FontSize="30"
+                        Foreground="White"
+                        TextAlignment="Center"
+                        VerticalAlignment="Center" />
                 </Border>
 
-                <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
+                <StackPanel
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center"
+                    Grid.Column="1">
                     <a:Dot ID="xm" />
                     <StackPanel Orientation="Horizontal">
                         <a:Dot ID="xb" />
                         <a:Dot ID="chushengrq" Margin="20,0,0,0" />
                     </StackPanel>
                 </StackPanel>
-                <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
+                <StackPanel Grid.ColumnSpan="2" Grid.Row="1">
                     <a:Dot ID="shenfenzh" />
                     <a:Dot ID="bumen" />
                     <a:Dot ID="note" Call="Def.小灰" />
@@ -59,11 +64,12 @@
                     <ColumnDefinition Width="50" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="&#xE060;"
-                            FontFamily="{StaticResource IconFont}"
-                            FontSize="30"
-                            VerticalAlignment="Center"
-                            TextAlignment="Center" />
+                <TextBlock
+                    Text="&#xE060;"
+                    FontFamily="{StaticResource IconFont}"
+                    FontSize="30"
+                    TextAlignment="Center"
+                    VerticalAlignment="Center" />
                 <StackPanel Margin="10,0,0,0" Grid.Column="1">
                     <a:Dot ID="xm" />
                     <a:Dot ID="xb" />
@@ -88,14 +94,14 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="列表">
+            <a:Tab Title="列表" Order="1">
                 <a:Lv x:Name="_lv" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv Data="{Binding ElementName=_lv}">
                     <a:CBar Title="视图类型" />
                     <StackPanel Orientation="Horizontal">
@@ -108,14 +114,14 @@
 
                     <a:CBar Title="数据源" />
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="10行" Tag="10" Click="OnLoadData" />
-                        <Button Content="100行" Tag="100" Click="OnLoadData" />
-                        <Button Content="1000行" Tag="1000" Click="OnLoadData" />
-                        <Button Content="10000行" Tag="10000" Click="OnLoadData" />
+                        <Button Content="10行" Click="OnLoadData" Tag="10" />
+                        <Button Content="100行" Click="OnLoadData" Tag="100" />
+                        <Button Content="1000行" Click="OnLoadData" Tag="1000" />
+                        <Button Content="10000行" Click="OnLoadData" Tag="10000" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="10对象" Tag="10" Click="OnLoadObjs" />
-                        <Button Content="1000对象" Tag="1000" Click="OnLoadObjs" />
+                        <Button Content="10对象" Click="OnLoadObjs" Tag="10" />
+                        <Button Content="1000对象" Click="OnLoadObjs" Tag="1000" />
                         <Button Content="空数据源" Click="OnLoadNull" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
@@ -130,12 +136,12 @@
                     </StackPanel>
 
                     <a:CBar Title="属性" />
-                    <a:CList Title="选择模式" ID="SelectionMode" />
-                    <a:CBool Title="显示分组导航" ID="ShowGroupHeader" />
-                    <a:CBool Title="自动滚动到底端" ID="AutoScrollBottom" />
-                    <a:CBool Title="显示行分割线" ID="ShowItemBorder" />
-                    <a:CNum Title="行/项目高" ID="ItemHeight" />
-                    <a:CNum Title="磁贴最小宽度" ID="MinItemWidth" />
+                    <a:CList ID="SelectionMode" Title="选择模式" />
+                    <a:CBool ID="ShowGroupHeader" Title="显示分组导航" />
+                    <a:CBool ID="AutoScrollBottom" Title="自动滚动到底端" />
+                    <a:CBool ID="ShowItemBorder" Title="显示行分割线" />
+                    <a:CNum ID="ItemHeight" Title="行/项目高" />
+                    <a:CNum ID="MinItemWidth" Title="磁贴最小宽度" />
                     <a:CFree Title="鼠标进入背景色">
                         <StackPanel Orientation="Horizontal">
                             <Button Content="无色" Click="OnNoEnteredBrush" />
@@ -182,7 +188,10 @@
                     <StackPanel Orientation="Horizontal">
                         <Button Content="添加行" Click="OnAddRow" />
                         <Button Content="插入多行" Click="OnInsertRows" />
-                        <Button Content="删除当前行" Click="OnDeleteRow" IsEnabled="{Binding HasSelected,ElementName=_lv}" />
+                        <Button
+                            Content="删除当前行"
+                            Click="OnDeleteRow"
+                            IsEnabled="{Binding HasSelected, ElementName=_lv}" />
                         <Button Content="无选择行" Click="OnSelectNull" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">

@@ -4,18 +4,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-	<a:Tab Title="CPick">
-		<a:Fv x:Name="_fv">
+    <a:Tab Title="CPick">
+        <a:Fv x:Name="_fv">
             <a:CBar Title="演示过滤菜单名，查询并取name列填充当前列" />
             <a:CPick ID="menu" Title="菜单" Placeholder="请输入菜单名包含的文字">
                 <a:CPick.Sql>
                     <a:Sql>
-SELECT
-	*
-FROM
-	cm_menu
-WHERE
-	name LIKE '%#input#%'
+                        SELECT
+                        *
+                        FROM
+                        cm_menu
+                        WHERE
+                        name LIKE '%#input#%'
                     </a:Sql>
                 </a:CPick.Sql>
                 <a:Cols>
@@ -28,7 +28,11 @@ WHERE
             </a:CPick>
 
             <a:CBar Title="演示多个CPick联动、sql变量赋值、占位符替换" />
-            <a:CPick ID="parent" Title="父亲" SrcID="父名#id#-#-" TgtID="-#parentid#child1#child2">
+            <a:CPick
+                ID="parent"
+                Title="父亲"
+                SrcID="父名#id#-#-"
+                TgtID="-#parentid#child1#child2">
                 <a:CPick.Sql>
                     <a:Sql>select * from demo_父表 where 父名 LIKE '%#input#%'</a:Sql>
                 </a:CPick.Sql>
@@ -39,13 +43,13 @@ WHERE
             <a:CPick ID="child1" Title="大儿" SrcID="大儿名">
                 <a:CPick.Sql>
                     <a:Sql>
-SELECT
-	大儿名
-FROM
-	demo_大儿
-WHERE
-	parent_id = @[parentid]
-    AND 大儿名 LIKE '%#input#%'
+                        SELECT
+                        大儿名
+                        FROM
+                        demo_大儿
+                        WHERE
+                        parent_id = @[parentid]
+                        AND 大儿名 LIKE '%#input#%'
                     </a:Sql>
                 </a:CPick.Sql>
                 <DataTemplate>
@@ -55,13 +59,13 @@ WHERE
             <a:CPick ID="child2" Title="小儿" SrcID="小儿名">
                 <a:CPick.Sql>
                     <a:Sql>
-SELECT
-	小儿名
-FROM
-	demo_小儿
-WHERE
-	group_id = #[parentid]#
-    AND 小儿名 LIKE '%#input#%'
+                        SELECT
+                        小儿名
+                        FROM
+                        demo_小儿
+                        WHERE
+                        group_id = #[parentid]#
+                        AND 小儿名 LIKE '%#input#%'
                     </a:Sql>
                 </a:CPick.Sql>
                 <DataTemplate>
@@ -73,12 +77,12 @@ WHERE
             <a:CPick ID="localmenu" Title="菜单" Placeholder="请输入菜单名包含的文字">
                 <a:CPick.Sql>
                     <a:Sql LocalDb="menu">
-SELECT
-	*
-FROM
-	OmMenu
-WHERE
-	name LIKE '%#input#%'                        
+                        SELECT
+                        *
+                        FROM
+                        OmMenu
+                        WHERE
+                        name LIKE '%#input#%'
                     </a:Sql>
                 </a:CPick.Sql>
                 <a:Cols>
@@ -90,5 +94,5 @@ WHERE
                 </a:Cols>
             </a:CPick>
         </a:Fv>
-	</a:Tab>
+    </a:Tab>
 </a:Win>

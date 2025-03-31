@@ -7,17 +7,21 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="Excel">
+            <a:Tab Title="Excel" Order="1">
                 <a:Excel x:Name="_excel" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv>
                     <a:CFree Title="格式化串">
-                        <TextBox x:Name="_tbFormat" Text="##,##0" Grid.Column="1" Margin="0,0,0,-2" />
+                        <TextBox
+                            x:Name="_tbFormat"
+                            Text="##,##0"
+                            Margin="0,0,0,-2"
+                            Grid.Column="1" />
                     </a:CFree>
                     <Button Content="应用格式" Click="setFormatButton_Click" />
                     <Button Content="清除格式" Click="clearFormatButton_Click" />

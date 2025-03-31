@@ -7,35 +7,39 @@
     Icon="漏斗">
 
     <a:QueryFv x:Name="_fv">
-        <a:CList ID="prcdname" Title="流程模板" SrcID="id#name" TgtID="prcd_id#prcdname">
+        <a:CList
+            ID="prcdname"
+            Title="流程模板"
+            SrcID="id#name"
+            TgtID="prcd_id#prcdname">
             <a:CList.Sql>
                 <a:Sql>
-SELECT
-	0 AS ID,
-	'全部' AS NAME,
-	0 AS dispidx 
-FROM
-	cm_wfd_prc UNION
-SELECT ID,
-	NAME,
-	dispidx 
-FROM
-	cm_wfd_prc 
-ORDER BY
-	dispidx
+                    SELECT
+                    0 AS ID,
+                    '全部' AS NAME,
+                    0 AS dispidx
+                    FROM
+                    cm_wfd_prc UNION
+                    SELECT ID,
+                    NAME,
+                    dispidx
+                    FROM
+                    cm_wfd_prc
+                    ORDER BY
+                    dispidx
                 </a:Sql>
             </a:CList.Sql>
         </a:CList>
         <a:CList ID="status" Title="状态" />
         <a:CText ID="name" Title="流转单名称" />
         <a:CBar Title="时间范围">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="本月" Click="OnMonthClick"/>
-                <Button Content="本季度" Click="OnQuarterClick"/>
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button Content="本月" Click="OnMonthClick" />
+                <Button Content="本季度" Click="OnQuarterClick" />
                 <Button Content="本年" Click="OnYearClick" />
             </StackPanel>
         </a:CBar>
-        <a:CDate ID="start" ShowTitle="False" ColSpan="0.5" />
-        <a:CDate ID="end" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate ID="start" ColSpan="0.5" ShowTitle="False" />
+        <a:CDate ID="end" ColSpan="0.5" ShowTitle="False" />
     </a:QueryFv>
 </a:Tab>

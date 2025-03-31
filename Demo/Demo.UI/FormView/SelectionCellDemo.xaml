@@ -6,15 +6,30 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="格">
+            <a:Tab Title="格" Order="1">
                 <a:Fv x:Name="_fv">
                     <a:CBar Title="树形格" />
                     <a:CTree ID="tree" Title="普通树" LoadData="OnLoadTreeData" />
-                    <a:CTree ID="treedata" Title="动态树" RefreshData="true" LoadData="OnLoadTreeData" />
-                    <a:CTree ID="treefill" Title="填充其它列值" SrcID="id#name" TgtID="treefillid#-" LoadData="OnLoadTreeData" />
+                    <a:CTree
+                        ID="treedata"
+                        Title="动态树"
+                        LoadData="OnLoadTreeData"
+                        RefreshData="true" />
+                    <a:CTree
+                        ID="treefill"
+                        Title="填充其它列值"
+                        SrcID="id#name"
+                        TgtID="treefillid#-"
+                        LoadData="OnLoadTreeData" />
 
                     <a:CBar Title="选择器" />
-                    <a:CPick ID="query" Title="只查询" Search="OnSearch" Placeholder="请输入姓名或拼音简码" SrcID="xm#bh" TgtID="-#hm">
+                    <a:CPick
+                        ID="query"
+                        Title="只查询"
+                        SrcID="xm#bh"
+                        TgtID="-#hm"
+                        Placeholder="请输入姓名或拼音简码"
+                        Search="OnSearch">
                         <a:Cols>
                             <a:Col ID="bh" Title="编号" Width="80" />
                             <a:Col ID="xm" Title="姓名" />
@@ -23,7 +38,14 @@
                         </a:Cols>
                     </a:CPick>
                     <a:CText ID="hm" Title="编号" />
-                    <a:CPick ID="valid" Title="验证选项" Search="OnSearch" Picking="OnPicking" Placeholder="禁止选择李姓人员" SrcID="xm#bh" TgtID="-#hm">
+                    <a:CPick
+                        ID="valid"
+                        Title="验证选项"
+                        SrcID="xm#bh"
+                        TgtID="-#hm"
+                        Picking="OnPicking"
+                        Placeholder="禁止选择李姓人员"
+                        Search="OnSearch">
                         <a:Cols>
                             <a:Col ID="bh" Title="编号" Width="80" />
                             <a:Col ID="xm" Title="姓名" />
@@ -31,36 +53,52 @@
                             <a:Col ID="shenfenzh" Title="身份证号码" Width="200" />
                         </a:Cols>
                     </a:CPick>
-                    <a:CPick ID="custom" Title="自定义筛选" Search="OnSearch" ShowButton="True" BtnClick="OnBtnClick" Placeholder="请输入姓名或拼音简码" SrcID="xm#bh" TgtID="-#hm">
+                    <a:CPick
+                        ID="custom"
+                        Title="自定义筛选"
+                        SrcID="xm#bh"
+                        TgtID="-#hm"
+                        BtnClick="OnBtnClick"
+                        Placeholder="请输入姓名或拼音简码"
+                        Search="OnSearch"
+                        ShowButton="True">
                         <a:Cols>
                             <a:Col ID="bh" Title="编号" Width="80" />
                             <a:Col ID="xm" Title="姓名" />
                             <a:Col ID="bumen" Title="所属部门" Width="160" />
                         </a:Cols>
                     </a:CPick>
-                    
+
                     <a:CBar Title="图标颜色格" />
-                    <a:CIcon ID="icon" Title="枚举图标"/>
-                    <a:CIcon ID="iconint" Title="整数图标"/>
-                    <a:CIcon ID="iconstr" Title="名称图标"/>
-                    <a:CColor ID="color" Title="颜色"/>
-                    <a:CColor ID="colorstr" Title="颜色字符串"/>
-                    <a:CColor ID="colorbrush" Title="颜色画刷"/>
+                    <a:CIcon ID="icon" Title="枚举图标" />
+                    <a:CIcon ID="iconint" Title="整数图标" />
+                    <a:CIcon ID="iconstr" Title="名称图标" />
+                    <a:CColor ID="color" Title="颜色" />
+                    <a:CColor ID="colorstr" Title="颜色字符串" />
+                    <a:CColor ID="colorbrush" Title="颜色画刷" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <a:Fv x:Name="_pbFv">
-                        <a:CBool Title="表单只读" ID="IsReadOnly" ShowTitle="False" ColSpan="0.5" />
-                        <a:CBool Title="设计模式" ID="IsDesignMode" ShowTitle="False" ColSpan="0.5" />
+                        <a:CBool
+                            ID="IsReadOnly"
+                            Title="表单只读"
+                            ColSpan="0.5"
+                            ShowTitle="False" />
+                        <a:CBool
+                            ID="IsDesignMode"
+                            Title="设计模式"
+                            ColSpan="0.5"
+                            ShowTitle="False" />
                         <a:CBar Title="单元格" />
                     </a:Fv>
                     <a:Fv x:Name="_pbCell" Grid.Row="1" />

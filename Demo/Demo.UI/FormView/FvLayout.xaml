@@ -6,25 +6,25 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="表单布局">
+            <a:Tab Title="表单布局" Order="1">
                 <a:Fv x:Name="_fv" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <StackPanel>
                     <a:Fv x:Name="_ob">
-                        <a:CText Title="列标题" ID="Title" />
-                        <a:CBool Title="列名垂直显示" ID="IsVerticalTitle" />
-                        <a:CBool Title="显示标题列" ID="ShowTitle" />
-                        <a:CNum Title="列名宽度" ID="TitleWidth" />
-                        <a:CNum Title="行数(-1自动)" ID="RowSpan" IsInteger="True" />
+                        <a:CText ID="Title" Title="列标题" />
+                        <a:CBool ID="IsVerticalTitle" Title="列名垂直显示" />
+                        <a:CBool ID="ShowTitle" Title="显示标题列" />
+                        <a:CNum ID="TitleWidth" Title="列名宽度" />
+                        <a:CNum ID="RowSpan" Title="行数(-1自动)" IsInteger="True" />
                         <a:CBar Title="占用列比例0~1，0表水平填充，1表占满整列" />
                         <a:CNum ID="ColSpan" ShowTitle="False" />
-                        <a:CList Title="可见" ID="Visibility" />
-                        <a:CList Title="查询比较符" ID="Query" />
+                        <a:CList ID="Visibility" Title="可见" />
+                        <a:CList ID="Query" Title="查询比较符" />
                         <a:CBar Title="单元格增删" />
                         <StackPanel Orientation="Horizontal">
                             <Button Content="添加一个" Click="OnAddClick" />
@@ -38,10 +38,10 @@
                         </StackPanel>
                     </a:Fv>
                     <a:Fv x:Name="_bv" Data="{Binding ElementName=_fv}">
-                        <a:CNum Title="最大列数" ID="MaxColCount" IsInteger="True" />
+                        <a:CNum ID="MaxColCount" Title="最大列数" IsInteger="True" />
                     </a:Fv>
                 </StackPanel>
-                
+
             </a:Tab>
         </a:Tabs>
     </a:Pane>

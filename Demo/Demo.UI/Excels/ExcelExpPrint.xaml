@@ -14,7 +14,9 @@
             <Button Content="CSV" Click="SaveCsvFile" />
         </StackPanel>
 
-        <a:CBar Title="页面设置(对下面的打印和导出Pdf有效)&#10;所有尺寸单位：0.01英寸" RowSpan="2" />
+        <a:CBar
+            Title="页面设置(对下面的打印和导出Pdf有效)&#10;所有尺寸单位：0.01英寸"
+            RowSpan="2" />
         <a:CList ID="PaperSize.MediaSize" Title="纸张类型" />
         <a:CList ID="Orientation" Title="方向" />
         <a:CList ID="ShowRowHeader" Title="行头" />
@@ -22,12 +24,14 @@
         <a:CBool ID="ShowBorder" Title="外边框" />
         <a:CBool ID="ShowGridLine" Title="打印网格" />
 
-        <a:CNum ID="Margin.Top" IsInteger="True" Title="上边距" />
-        <a:CNum ID="Margin.Bottom" IsInteger="True" Title="下边距" />
-        <a:CNum ID="Margin.Left" IsInteger="True" Title="左边距" />
-        <a:CNum ID="Margin.Right" IsInteger="True" Title="右边距" />
+        <a:CNum ID="Margin.Top" Title="上边距" IsInteger="True" />
+        <a:CNum ID="Margin.Bottom" Title="下边距" IsInteger="True" />
+        <a:CNum ID="Margin.Left" Title="左边距" IsInteger="True" />
+        <a:CNum ID="Margin.Right" Title="右边距" IsInteger="True" />
 
-        <a:CBar Title="导出Pdf，设置每个Sheet.PrintInfo可控制：&#10;纸张大小、边距、行头列头、只导出区域等" RowSpan="2" />
+        <a:CBar
+            Title="导出Pdf，设置每个Sheet.PrintInfo可控制：&#10;纸张大小、边距、行头列头、只导出区域等"
+            RowSpan="2" />
         <StackPanel Orientation="Horizontal">
             <Button Content="预览导出" Click="OnPreviewPdf" />
             <Button Content="预览选择区域" Click="OnPreviewArea" />
@@ -37,7 +41,9 @@
             <Button Content="导出选择区域" Click="OnSavePdfArea" />
         </StackPanel>
 
-        <a:CBar Title="打印，设置PrintInfo可控制：&#10;纸张大小、边距、行头列头、打印区域等" RowSpan="2" />
+        <a:CBar
+            Title="打印，设置PrintInfo可控制：&#10;纸张大小、边距、行头列头、打印区域等"
+            RowSpan="2" />
         <StackPanel Orientation="Horizontal">
             <Button Content="打印Sheet" Click="OnPrintExcel" />
             <Button Content="打印选择区域" Click="OnPrintArea" />

@@ -7,11 +7,15 @@
 
     <a:Tv x:Name="_tv">
         <DataTemplate>
-			<StackPanel Orientation="Horizontal">
-				<TextBlock Text="&#xE067;" FontFamily="{StaticResource IconFont}" Margin="4,0,4,0" VerticalAlignment="Center" />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    Text="&#xE067;"
+                    FontFamily="{StaticResource IconFont}"
+                    Margin="4,0,4,0"
+                    VerticalAlignment="Center" />
                 <a:Dot ID="编码" />
-				<a:Dot ID="名称" />
-			</StackPanel>
+                <a:Dot ID="名称" />
+            </StackPanel>
         </DataTemplate>
     </a:Tv>
 </a:Tree>

@@ -12,25 +12,47 @@
     </a:Dlg.Menu>
 
     <Grid ColumnDefinitions="150,*" RowDefinitions="*,Auto">
-        <a:Lv x:Name="_lvApp" ItemClick="OnItemClick" BorderThickness="0,0,1,0" BorderBrush="{StaticResource 浅灰2}">
+        <a:Lv
+            x:Name="_lvApp"
+            BorderBrush="{StaticResource 浅灰2}"
+            BorderThickness="0,0,1,0"
+            ItemClick="OnItemClick">
             <DataTemplate>
                 <a:Dot ID="AppName" Margin="10" />
             </DataTemplate>
         </a:Lv>
-        <a:Lv x:Name="_lvFile" ItemDoubleClick="OnDblClick" Grid.Column="1">
+        <a:Lv
+            x:Name="_lvFile"
+            ItemDoubleClick="OnDblClick"
+            Grid.Column="1">
             <DataTemplate>
                 <StackPanel Margin="10">
                     <a:Dot ID="Name" />
-                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                    <StackPanel Margin="0,6,0,0" Orientation="Horizontal">
                         <a:Dot ID="Date" Call="Def.小灰" />
                         <a:Dot ID="Size" Call="Def.小灰" Margin="60,0,0,0" />
                     </StackPanel>
                 </StackPanel>
             </DataTemplate>
         </a:Lv>
-        <Grid Padding="10,6,0,6" Grid.Row="1" Grid.ColumnSpan="2" BorderThickness="0,1,0,0" BorderBrush="{StaticResource 浅灰2}" Background="{StaticResource 浅灰1}">
-            <TextBlock x:Name="_tb" IsTextSelectionEnabled="True" VerticalAlignment="Center" Margin="0,0,40,0" TextWrapping="Wrap" />
-            <Button Content="&#xE007;" Style="{StaticResource 字符按钮}" Click="CopyPath" HorizontalAlignment="Right" />
+        <Grid
+            Background="{StaticResource 浅灰1}"
+            BorderBrush="{StaticResource 浅灰2}"
+            BorderThickness="0,1,0,0"
+            Padding="10,6,0,6"
+            Grid.ColumnSpan="2"
+            Grid.Row="1">
+            <TextBlock
+                x:Name="_tb"
+                IsTextSelectionEnabled="True"
+                Margin="0,0,40,0"
+                TextWrapping="Wrap"
+                VerticalAlignment="Center" />
+            <Button
+                Content="&#xE007;"
+                Click="CopyPath"
+                HorizontalAlignment="Right"
+                Style="{StaticResource 字符按钮}" />
         </Grid>
     </Grid>
 </a:Dlg>

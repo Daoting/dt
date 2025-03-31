@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Title="普通表单">
 
-    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+    <a:Fv x:Name="_fv" Create="Add" Delete="Delete" Save="Save">
         <a:CText ID="父名" />
     </a:Fv>
 </a:Form>

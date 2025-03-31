@@ -11,12 +11,36 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="0.1*" />
         </Grid.RowDefinitions>
-        <FlipView x:Name="_fv" Margin="20" Background="Transparent">
-            <TextBlock Text="第一页" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
-            <TextBlock Text="第二页" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
-            <TextBlock Text="第三页" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
-            <TextBlock Text="请稍等..." FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" />
+        <FlipView x:Name="_fv" Background="Transparent" Margin="20">
+            <TextBlock
+                Text="第一页"
+                FontSize="32"
+                Foreground="White"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
+            <TextBlock
+                Text="第二页"
+                FontSize="32"
+                Foreground="White"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
+            <TextBlock
+                Text="第三页"
+                FontSize="32"
+                Foreground="White"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
+            <TextBlock
+                Text="请稍等..."
+                FontSize="32"
+                Foreground="White"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
         </FlipView>
-        <StackPanel x:Name="_sp" Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1" />
+        <StackPanel
+            x:Name="_sp"
+            HorizontalAlignment="Center"
+            Orientation="Horizontal"
+            Grid.Row="1" />
     </Grid>
 </a:Dlg>

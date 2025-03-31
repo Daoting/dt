@@ -5,8 +5,23 @@
     xmlns:a="using:Dt.Base">
 
     <a:Fv x:Name="_fv">
-        <a:CBool ID="1" Title="接收新任务" IsSwitch="True" TrueVal="true" FalseVal="false" />
-        <a:CBool ID="2" Title="接收新发布通知" IsSwitch="True" TrueVal="true" FalseVal="false" />
-        <a:CBool ID="3" Title="接收新消息" IsSwitch="True" TrueVal="true" FalseVal="false" />
+        <a:CBool
+            ID="1"
+            Title="接收新任务"
+            FalseVal="false"
+            IsSwitch="True"
+            TrueVal="true" />
+        <a:CBool
+            ID="2"
+            Title="接收新发布通知"
+            FalseVal="false"
+            IsSwitch="True"
+            TrueVal="true" />
+        <a:CBool
+            ID="3"
+            Title="接收新消息"
+            FalseVal="false"
+            IsSwitch="True"
+            TrueVal="true" />
     </a:Fv>
 </UserControl>

@@ -6,6 +6,9 @@
     xmlns:l="using:Demo.UI">
 
     <Grid>
-        <TextBlock Text="涉及服务连接，请参考Dt.MgrDemo项目中的报表部分！" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <TextBlock
+            Text="涉及服务连接，请参考Dt.MgrDemo项目中的报表部分！"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center" />
     </Grid>
 </a:Win>

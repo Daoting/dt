@@ -6,22 +6,31 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="表单">
+            <a:Tab Title="表单" Order="1">
                 <a:Fv x:Name="_fv">
-                    <a:CBar RowSpan="-1" Background="White" ColSpan="1">
+                    <a:CBar Background="White" ColSpan="1" RowSpan="-1">
                         <StackPanel>
-                            <Grid Padding="10,0,0,0"
-                                  Background="{StaticResource 浅灰1}"
-                                  BorderBrush="{StaticResource 浅灰2}"
-                                  BorderThickness="0,0,0,1">
+                            <Grid
+                                Background="{StaticResource 浅灰1}"
+                                BorderBrush="{StaticResource 浅灰2}"
+                                BorderThickness="0,0,0,1"
+                                Padding="10,0,0,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="&#xE02D;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                <TextBlock
+                                    Text="&#xE02D;"
+                                    FontFamily="{StaticResource IconFont}"
+                                    Margin="0,0,4,0"
+                                    VerticalAlignment="Center" />
                                 <TextBlock Text="表格" VerticalAlignment="Center" Grid.Column="1" />
-                                <Button Content="&#xE038;" Style="{StaticResource 字符按钮}" HorizontalAlignment="Right" Grid.Column="2" />
+                                <Button
+                                    Content="&#xE038;"
+                                    HorizontalAlignment="Right"
+                                    Style="{StaticResource 字符按钮}"
+                                    Grid.Column="2" />
                             </Grid>
                             <a:Lv x:Name="_lvTbl" ViewMode="Table">
                                 <a:Ex.Menu>
@@ -36,20 +45,29 @@
                             </a:Lv>
                         </StackPanel>
                     </a:CBar>
-                    <a:CBar RowSpan="-1" Background="White" ColSpan="1">
+                    <a:CBar Background="White" ColSpan="1" RowSpan="-1">
                         <StackPanel>
-                            <Grid Padding="10,0,0,0"
-                                  Background="{StaticResource 浅灰1}"
-                                  BorderBrush="{StaticResource 浅灰2}"
-                                  BorderThickness="0,0,0,1">
+                            <Grid
+                                Background="{StaticResource 浅灰1}"
+                                BorderBrush="{StaticResource 浅灰2}"
+                                BorderThickness="0,0,0,1"
+                                Padding="10,0,0,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="&#xE02D;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                <TextBlock
+                                    Text="&#xE02D;"
+                                    FontFamily="{StaticResource IconFont}"
+                                    Margin="0,0,4,0"
+                                    VerticalAlignment="Center" />
                                 <TextBlock Text="列表" VerticalAlignment="Center" Grid.Column="1" />
-                                <Button Content="&#xE038;" Style="{StaticResource 字符按钮}" HorizontalAlignment="Right" Grid.Column="2" />
+                                <Button
+                                    Content="&#xE038;"
+                                    HorizontalAlignment="Right"
+                                    Style="{StaticResource 字符按钮}"
+                                    Grid.Column="2" />
                             </Grid>
                             <a:Lv x:Name="_lvList">
                                 <a:Ex.Menu>
@@ -67,25 +85,30 @@
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
-                                        <Border Background="{StaticResource 主蓝}"
-                                                Height="50"
-                                                Width="50"
-                                                VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding Index}"
-                                                       FontSize="30"
-                                                       Foreground="White"
-                                                       VerticalAlignment="Center"
-                                                       TextAlignment="Center" />
+                                        <Border
+                                            Background="{StaticResource 主蓝}"
+                                            Height="50"
+                                            VerticalAlignment="Center"
+                                            Width="50">
+                                            <TextBlock
+                                                Text="{Binding Index}"
+                                                FontSize="30"
+                                                Foreground="White"
+                                                TextAlignment="Center"
+                                                VerticalAlignment="Center" />
                                         </Border>
 
-                                        <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
+                                        <StackPanel
+                                            Margin="10,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Grid.Column="1">
                                             <a:Dot ID="xm" />
                                             <StackPanel Orientation="Horizontal">
                                                 <a:Dot ID="xb" />
                                                 <a:Dot ID="chushengrq" Margin="20,0,0,0" />
                                             </StackPanel>
                                         </StackPanel>
-                                        <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
+                                        <StackPanel Grid.ColumnSpan="2" Grid.Row="1">
                                             <a:Dot ID="shenfenzh" />
                                             <a:Dot ID="bumen" />
                                             <a:Dot ID="note" Call="Def.小灰" />
@@ -95,22 +118,31 @@
                             </a:Lv>
                         </StackPanel>
                     </a:CBar>
-                    <a:CBar RowSpan="-1" Background="White" ColSpan="1">
+                    <a:CBar Background="White" ColSpan="1" RowSpan="-1">
                         <StackPanel>
-                            <Grid Padding="10,0,0,0"
-                                  Background="{StaticResource 浅灰1}"
-                                  BorderBrush="{StaticResource 浅灰2}"
-                                  BorderThickness="0,0,0,1">
+                            <Grid
+                                Background="{StaticResource 浅灰1}"
+                                BorderBrush="{StaticResource 浅灰2}"
+                                BorderThickness="0,0,0,1"
+                                Padding="10,0,0,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="&#xE02D;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                <TextBlock
+                                    Text="&#xE02D;"
+                                    FontFamily="{StaticResource IconFont}"
+                                    Margin="0,0,4,0"
+                                    VerticalAlignment="Center" />
                                 <TextBlock Text="磁贴" VerticalAlignment="Center" Grid.Column="1" />
-                                <Button Content="&#xE038;" Style="{StaticResource 字符按钮}" HorizontalAlignment="Right" Grid.Column="2" />
+                                <Button
+                                    Content="&#xE038;"
+                                    HorizontalAlignment="Right"
+                                    Style="{StaticResource 字符按钮}"
+                                    Grid.Column="2" />
                             </Grid>
-                            <a:Lv x:Name="_lvTile" ViewMode="Tile" SelectionMode="None">
+                            <a:Lv x:Name="_lvTile" SelectionMode="None" ViewMode="Tile">
                                 <a:Ex.Menu>
                                     <a:Menu>
                                         <a:Mi ID="删除" Icon="删除" />
@@ -128,11 +160,11 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv>
-                    <Button Content="2行" Tag="2" Click="OnLoadData" />
-                    <Button Content="10行" Tag="10" Click="OnLoadData" />
-                    <Button Content="100行" Tag="100" Click="OnLoadData" />
+                    <Button Content="2行" Click="OnLoadData" Tag="2" />
+                    <Button Content="10行" Click="OnLoadData" Tag="10" />
+                    <Button Content="100行" Click="OnLoadData" Tag="100" />
                     <Button Content="空数据源" Click="OnLoadNull" />
                 </a:Fv>
             </a:Tab>

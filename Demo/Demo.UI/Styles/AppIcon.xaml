@@ -7,7 +7,7 @@
 
     <StackPanel>
         <a:Fv x:Name="_fv">
-            <a:CIcon ID="icon" Title="选择图标"/>
+            <a:CIcon ID="icon" Title="选择图标" />
             <Button Content="生成iOS图片" Click="OnIOS" />
             <Button Content="生成android图片" Click="OnDroid" />
             <Button Content="生成uwp图片" Click="OnUwp" />
@@ -15,7 +15,12 @@
             <Button Content="生成logo图片" Click="OnLogo" />
         </a:Fv>
         <Border x:Name="_bd">
-            <TextBlock x:Name="_tb" FontFamily="{StaticResource IconFont}" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            <TextBlock
+                x:Name="_tb"
+                FontFamily="{StaticResource IconFont}"
+                Foreground="White"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
         </Border>
     </StackPanel>
 </a:Win>

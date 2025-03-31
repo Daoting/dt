@@ -7,8 +7,8 @@
 
     <a:Dlg.Menu>
         <a:Menu>
-            <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Call="OnAdd" />
-            <a:Mi ID="撤消" Icon="撤消" Cmd="{Binding CmdUndo,ElementName=_fv}" />
+            <a:Mi ID="增加" Icon="加号" Call="OnAdd" ShowInPhone="Icon" />
+            <a:Mi ID="撤消" Icon="撤消" Cmd="{Binding CmdUndo, ElementName=_fv}" />
             <a:Mi ID="删除" Icon="删除" Call="OnDel" />
         </a:Menu>
     </a:Dlg.Menu>
@@ -26,7 +26,7 @@
             </a:CList.Items>
         </a:CList>
         <a:CBar Title="缺省值">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                 <Button Content="内部变量" Click="OnExpression" />
                 <Button Content="外部方法" Click="OnCustom" />
             </StackPanel>

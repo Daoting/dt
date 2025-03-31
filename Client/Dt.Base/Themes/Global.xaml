@@ -6,9 +6,9 @@
     <!-- 全局公共部分，包括常量、公共画刷、转换器 -->
 
     <!--
-    *****************************************************************
-    常量
-    *****************************************************************
+        *****************************************************************
+        常量
+        *****************************************************************
     -->
     <!-- 字体大小 -->
     <!-- 小一，24磅 -->
@@ -34,47 +34,47 @@
     <FontFamily x:Key="IconFont">ms-appx:///icon.ttf#DtIcon</FontFamily>
 
     <!--
-    *****************************************************************
-    公共画刷
-    *****************************************************************
+        *****************************************************************
+        公共画刷
+        *****************************************************************
     -->
     <SolidColorBrush x:Key="主蓝" Color="#FF1BA1E2" />
     <SolidColorBrush x:Key="默认背景" Color="White" />
     <SolidColorBrush x:Key="默认前景" Color="Black" />
 
-    <SolidColorBrush x:Key="暗遮罩" Color="#19000000"/>
-    <SolidColorBrush x:Key="深暗遮罩" Color="#33000000"/>
-    <SolidColorBrush x:Key="亮遮罩" Color="#19FFFFFF"/>
-    <SolidColorBrush x:Key="深亮遮罩" Color="#33FFFFFF"/>
-    <SolidColorBrush x:Key="黄遮罩" Color="#19FFFF00"/>
-    <SolidColorBrush x:Key="深黄遮罩" Color="#33FFFF00"/>
+    <SolidColorBrush x:Key="暗遮罩" Color="#19000000" />
+    <SolidColorBrush x:Key="深暗遮罩" Color="#33000000" />
+    <SolidColorBrush x:Key="亮遮罩" Color="#19FFFFFF" />
+    <SolidColorBrush x:Key="深亮遮罩" Color="#33FFFFFF" />
+    <SolidColorBrush x:Key="黄遮罩" Color="#19FFFF00" />
+    <SolidColorBrush x:Key="深黄遮罩" Color="#33FFFF00" />
 
-    <SolidColorBrush x:Key="浅灰1" Color="#FFF1F1F1"/>
-    <SolidColorBrush x:Key="浅灰2" Color="#FFE0E0E0"/>
+    <SolidColorBrush x:Key="浅灰1" Color="#FFF1F1F1" />
+    <SolidColorBrush x:Key="浅灰2" Color="#FFE0E0E0" />
 
-    <SolidColorBrush x:Key="中灰1" Color="#FFD6D6D6"/>
-    <SolidColorBrush x:Key="中灰2" Color="#FFC3C3C3"/>
+    <SolidColorBrush x:Key="中灰1" Color="#FFD6D6D6" />
+    <SolidColorBrush x:Key="中灰2" Color="#FFC3C3C3" />
 
-    <SolidColorBrush x:Key="深灰1" Color="#FF9D9D9D"/>
-    <SolidColorBrush x:Key="深灰2" Color="#FF969696"/>
+    <SolidColorBrush x:Key="深灰1" Color="#FF9D9D9D" />
+    <SolidColorBrush x:Key="深灰2" Color="#FF969696" />
 
-    <SolidColorBrush x:Key="亮蓝" Color="#FF0056FF"/>
-    <SolidColorBrush x:Key="亮红" Color="#FFFF4500"/>
+    <SolidColorBrush x:Key="亮蓝" Color="#FF0056FF" />
+    <SolidColorBrush x:Key="亮红" Color="#FFFF4500" />
 
-    <SolidColorBrush x:Key="浅黄" Color="#FFFFFDC5"/>
-    <SolidColorBrush x:Key="中黄" Color="#FFFFE466"/>
-    <SolidColorBrush x:Key="深黄" Color="#FFFFD202"/>
+    <SolidColorBrush x:Key="浅黄" Color="#FFFFFDC5" />
+    <SolidColorBrush x:Key="中黄" Color="#FFFFE466" />
+    <SolidColorBrush x:Key="深黄" Color="#FFFFD202" />
 
-    <SolidColorBrush x:Key="中绿" Color="#FF43B756"/>
-    <SolidColorBrush x:Key="浅绿" Color="#FFDAFBD7"/>
-    <SolidColorBrush x:Key="湖蓝" Color="#FF2DB6C9"/>
-    <SolidColorBrush x:Key="浅蓝" Color="#FFD5E9FD"/>
-    <SolidColorBrush x:Key="深蓝" Color="#FF005297"/>
+    <SolidColorBrush x:Key="中绿" Color="#FF43B756" />
+    <SolidColorBrush x:Key="浅绿" Color="#FFDAFBD7" />
+    <SolidColorBrush x:Key="湖蓝" Color="#FF2DB6C9" />
+    <SolidColorBrush x:Key="浅蓝" Color="#FFD5E9FD" />
+    <SolidColorBrush x:Key="深蓝" Color="#FF005297" />
 
     <!--
-    *****************************************************************
-    转换器
-    *****************************************************************
+        *****************************************************************
+        转换器
+        *****************************************************************
     -->
     <!-- bool到Visibility的转换 -->
     <a:BoolToVisibilityConverter x:Key="CvBoolToVisible" />
@@ -92,17 +92,17 @@
     <a:ObjectToVisibilityConverter x:Key="CvObjectToVisible" />
     <!-- object取反到Visibility的转换，0或false返回Visible -->
     <a:RObjectToVisibilityConverter x:Key="CvObjectToCollapsed" />
-    <!-- 自适应时间转换器，如 昨天，09:13, 2015-04-09-->
+    <!-- 自适应时间转换器，如 昨天，09:13, 2015-04-09 -->
     <a:AutoDateTimeConverter x:Key="CvAutoDate" />
-    <!-- 日期转换器，如 2015-04-09-->
+    <!-- 日期转换器，如 2015-04-09 -->
     <a:DateConverter x:Key="CvDate" />
-    <!-- 日期转换器，如 2015-04-09 07:30-->
+    <!-- 日期转换器，如 2015-04-09 07:30 -->
     <a:DateConverter x:Key="CvDateTime" Format="yyyy-MM-dd HH:mm" />
-    <!-- 日期转换器，如 2015-04-09 07:30:12-->
+    <!-- 日期转换器，如 2015-04-09 07:30:12 -->
     <a:DateConverter x:Key="CvDateFull" Format="yyyy-MM-dd HH:mm:ss" />
-    <!-- 日期转换器，如 07:30-->
+    <!-- 日期转换器，如 07:30 -->
     <a:DateConverter x:Key="CvTime" Format="HH:mm" />
-    <!-- 日期转换器，如 07:30:12-->
+    <!-- 日期转换器，如 07:30:12 -->
     <a:DateConverter x:Key="CvTimeFull" Format="HH:mm:ss" />
     <!-- bool取反的转换 -->
     <a:BoolToggleConverter x:Key="CvBoolReverse" />
@@ -129,46 +129,48 @@
 
 
     <!--
-    *****************************************************************
-    系统控件样式
-    *****************************************************************
+        *****************************************************************
+        系统控件样式
+        *****************************************************************
     -->
 
-    <!--**************************** 系统控件全局样式 ****************************-->
+    <!-- **************************** 系统控件全局样式 **************************** -->
     <Style TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
+        <Setter Property="FontSize" Value="{StaticResource 默认字}" />
     </Style>
 
     <!-- 默认边框2，不设置MinHeight在uwp中有PlaceHolder时高度变化 -->
-     <Style TargetType="TextBox">
-        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
-        <Setter Property="Padding" Value="10,7,10,7"/>
-        <Setter Property="MinHeight" Value="40"/>
+    <Style TargetType="TextBox">
+        <Setter Property="FontSize" Value="{StaticResource 默认字}" />
+        <Setter Property="Padding" Value="10,7,10,7" />
+        <Setter Property="MinHeight" Value="40" />
     </Style>
 
     <!-- 高度40 -->
     <Style x:Key="DefaultButton" TargetType="Button">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{StaticResource 主蓝}"/>
-        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
-        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Foreground" Value="{StaticResource 主蓝}" />
+        <Setter Property="FontSize" Value="{StaticResource 默认字}" />
+        <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Padding" Value="10,9,10,9" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Grid x:Name="RootGrid"
-                          Background="{TemplateBinding Background}"
-                          BorderBrush="{TemplateBinding BorderBrush}"
-                          BorderThickness="{TemplateBinding BorderThickness}">
+                    <Grid
+                        x:Name="RootGrid"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
                         <Rectangle x:Name="Rect" IsHitTestVisible="False" />
-                        <ContentPresenter x:Name="ContentPresenter"
-                                          Content="{TemplateBinding Content}"
-                                          Margin="{TemplateBinding Padding}"
-                                          FontFamily="{TemplateBinding FontFamily}"
-                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        <ContentPresenter
+                            x:Name="ContentPresenter"
+                            Content="{TemplateBinding Content}"
+                            FontFamily="{TemplateBinding FontFamily}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            Margin="{TemplateBinding Padding}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
@@ -195,25 +197,27 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="Button" BasedOn="{StaticResource DefaultButton}" />
+    <Style
+        BasedOn="{StaticResource DefaultButton}"
+        TargetType="Button" />
 
     <Style TargetType="CheckBox">
-        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
-    </Style>
-    
-    <Style TargetType="PasswordBox">
-        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
-        <Setter Property="Padding" Value="10,7,10,7"/>
-        <Setter Property="MinHeight" Value="40"/>
+        <Setter Property="FontSize" Value="{StaticResource 默认字}" />
     </Style>
 
-    <!--**************************** TextBlock ****************************-->
-    <!--Lv中默认文本-->
+    <Style TargetType="PasswordBox">
+        <Setter Property="FontSize" Value="{StaticResource 默认字}" />
+        <Setter Property="Padding" Value="10,7,10,7" />
+        <Setter Property="MinHeight" Value="40" />
+    </Style>
+
+    <!-- **************************** TextBlock **************************** -->
+    <!-- Lv中默认文本 -->
     <Style x:Key="LvTextBlock" TargetType="TextBlock">
-        <!--不要设置字体大小-->
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-        <Setter Property="TextWrapping" Value="Wrap"/>
+        <!-- 不要设置字体大小 -->
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
 
     <Style x:Key="小灰" TargetType="TextBlock">
@@ -221,24 +225,28 @@
         <Setter Property="FontSize" Value="{StaticResource 小字}" />
     </Style>
 
-    <!--**************************** TextBox ****************************-->
+    <!-- **************************** TextBox **************************** -->
     <!-- 无边框 -->
     <Style x:Key="FvTextBox" TargetType="TextBox">
-        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Padding" Value="10,9,10,9"/>
-        <Setter Property="MinHeight" Value="40"/>
-        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
-        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="FontSize" Value="{StaticResource 默认字}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="10,9,10,9" />
+        <Setter Property="MinHeight" Value="40" />
+        <Setter
+            Property="ScrollViewer.HorizontalScrollBarVisibility"
+            Value="Auto" />
+        <Setter
+            Property="ScrollViewer.VerticalScrollBarVisibility"
+            Value="Auto" />
     </Style>
 
-    <!--**************************** Button ****************************-->
-    <!--字符按钮-->
+    <!-- **************************** Button **************************** -->
+    <!-- 字符按钮 -->
     <Style x:Key="字符按钮" TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="FontSize" Value="20" />
-        <!--宽高 40 X 40-->
+        <!-- 宽高 40 X 40 -->
         <Setter Property="Padding" Value="10" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -249,16 +257,17 @@
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
                         <Rectangle x:Name="Rect" IsHitTestVisible="False" />
-                        <TextBlock Text="{TemplateBinding Content}"
-                                   FontFamily="{StaticResource IconFont}"
-                                   FontSize="{TemplateBinding FontSize}"
-                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                   Margin="{TemplateBinding Padding}" />
+                        <TextBlock
+                            Text="{TemplateBinding Content}"
+                            FontFamily="{StaticResource IconFont}"
+                            FontSize="{TemplateBinding FontSize}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            Margin="{TemplateBinding Padding}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="Normal" />
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
                                         <Setter Target="Rect.Fill" Value="{StaticResource 中黄}" />
@@ -282,12 +291,12 @@
         </Setter>
     </Style>
 
-    <!--深色背景的字符按钮-->
+    <!-- 深色背景的字符按钮 -->
     <Style x:Key="浅字符按钮" TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource 默认背景}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="FontSize" Value="20" />
-        <!--宽高 40 X 40-->
+        <!-- 宽高 40 X 40 -->
         <Setter Property="Padding" Value="10" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -298,16 +307,17 @@
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
                         <Rectangle x:Name="Rect" IsHitTestVisible="False" />
-                        <TextBlock Text="{TemplateBinding Content}"
-                                   FontFamily="{StaticResource IconFont}"
-                                   FontSize="{TemplateBinding FontSize}"
-                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                   Margin="{TemplateBinding Padding}" />
+                        <TextBlock
+                            Text="{TemplateBinding Content}"
+                            FontFamily="{StaticResource IconFont}"
+                            FontSize="{TemplateBinding FontSize}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            Margin="{TemplateBinding Padding}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="Normal" />
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
                                         <Setter Target="Rect.Fill" Value="{StaticResource 亮遮罩}" />
@@ -331,11 +341,11 @@
         </Setter>
     </Style>
 
-    <!--深色背景下的按钮-->
+    <!-- 深色背景下的按钮 -->
     <Style x:Key="浅色按钮" TargetType="Button">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="FontSize" Value="{StaticResource 默认字}"/>
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontSize" Value="{StaticResource 默认字}" />
         <Setter Property="BorderBrush" Value="{StaticResource 深亮遮罩}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="10" />
@@ -345,14 +355,19 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
-                        <Border x:Name="Rect" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" IsHitTestVisible="False" />
-                        <ContentPresenter x:Name="ContentPresenter"
-                                          Content="{TemplateBinding Content}"
-                                          ContentTransitions="{TemplateBinding ContentTransitions}"
-                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          Margin="{TemplateBinding Padding}"
-                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        <Border
+                            x:Name="Rect"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            IsHitTestVisible="False" />
+                        <ContentPresenter
+                            x:Name="ContentPresenter"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            ContentTransitions="{TemplateBinding ContentTransitions}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            Margin="{TemplateBinding Padding}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
@@ -381,12 +396,12 @@
         </Setter>
     </Style>
 
-    <!--****************************** Dot ******************************-->
+    <!-- ****************************** Dot ****************************** -->
     <Style x:Key="DotCellStyle" TargetType="a:Dot">
-        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}"/>
-        <Setter Property="BorderThickness" Value="0,0,1,1"/>
-        <Setter Property="Padding" Value="10,4,10,4"/>
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}" />
+        <Setter Property="BorderThickness" Value="0,0,1,1" />
+        <Setter Property="Padding" Value="10,4,10,4" />
     </Style>
 
-    <!--****************************** 数据模板 ******************************-->
+    <!-- ****************************** 数据模板 ****************************** -->
 </ResourceDictionary>

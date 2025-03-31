@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Title="编辑分组">
 
-    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+    <a:Fv x:Name="_fv" Create="Add" Delete="Delete" Save="Save">
         <a:CText ID="name" Title="组名" />
         <a:CText ID="note" Title="组描述" />
     </a:Fv>

@@ -7,19 +7,31 @@
 
     <a:Dlg.Menu>
         <a:Menu>
-            <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Click="OnAdd" />
-            <a:Mi ID="撤消" Icon="撤消" Cmd="{Binding CmdUndo,ElementName=_fv}" />
+            <a:Mi ID="增加" Icon="加号" Click="OnAdd" ShowInPhone="Icon" />
+            <a:Mi ID="撤消" Icon="撤消" Cmd="{Binding CmdUndo, ElementName=_fv}" />
             <a:Mi ID="删除" Icon="删除" Click="OnDel" />
         </a:Menu>
     </a:Dlg.Menu>
 
     <a:Fv x:Name="_fv">
-        <a:CBar RowSpan="-1" Background="White">
+        <a:CBar Background="White" RowSpan="-1">
             <Grid ColumnDefinitions="40,*">
-                <Border Background="{StaticResource 浅灰1}" BorderBrush="{StaticResource 浅灰2}" BorderThickness="0,0,1,0">
-                    <TextBlock Text="数据源" VerticalAlignment="Center" TextWrapping="Wrap" Width="20" HorizontalAlignment="Center" />
+                <Border
+                    Background="{StaticResource 浅灰1}"
+                    BorderBrush="{StaticResource 浅灰2}"
+                    BorderThickness="0,0,1,0">
+                    <TextBlock
+                        Text="数据源"
+                        HorizontalAlignment="Center"
+                        TextWrapping="Wrap"
+                        VerticalAlignment="Center"
+                        Width="20" />
                 </Border>
-                <a:Lv x:Name="_lv" ItemClick="OnItemClick" ViewMode="Tile" Grid.Column="1">
+                <a:Lv
+                    x:Name="_lv"
+                    ItemClick="OnItemClick"
+                    ViewMode="Tile"
+                    Grid.Column="1">
                     <DataTemplate>
                         <a:Dot ID="name" Padding="10" />
                     </DataTemplate>
@@ -27,15 +39,25 @@
             </Grid>
         </a:CBar>
         <a:CBar Title="Sql">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                 <Button Content="美化" Click="OnFormatSql" />
                 <Button Content="查询测试" Click="OnQuerySql" />
             </StackPanel>
         </a:CBar>
-        <a:CText ID="sql" ShowTitle="False" AcceptsReturn="True" ColSpan="0" RowSpan="10" />
+        <a:CText
+            ID="sql"
+            AcceptsReturn="True"
+            ColSpan="0"
+            RowSpan="10"
+            ShowTitle="False" />
         <a:CText ID="name" Title="数据名称" />
         <a:CText ID="srv" Title="服务名称" Placeholder="空时使用实体系统当前服务名" />
         <a:CBar Title="列名，逗号隔开，可在【查询测试】时自动填写" />
-        <a:CText ID="cols" ShowTitle="False" AcceptsReturn="True" ColSpan="0" RowSpan="2" />
+        <a:CText
+            ID="cols"
+            AcceptsReturn="True"
+            ColSpan="0"
+            RowSpan="2"
+            ShowTitle="False" />
     </a:Fv>
 </a:Dlg>

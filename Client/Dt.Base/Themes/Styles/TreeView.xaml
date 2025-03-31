@@ -4,20 +4,21 @@
     xmlns:a="using:Dt.Base">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Global.xaml"/>
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Global.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <!--Tv-->
+    <!-- Tv -->
     <Style TargetType="a:Tv">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:Tv">
-                    <Border x:Name="Border"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            Padding="{TemplateBinding Padding}" />
+                    <Border
+                        x:Name="Border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

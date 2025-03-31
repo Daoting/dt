@@ -10,7 +10,7 @@
             <rpt:MatrixForm x:Name="_fvMtx" />
             <a:Fv x:Name="_fv">
                 <a:CBar Title="静态标题" />
-                <a:CNum ID="span" Title="标题跨度" Minimum="1" IsInteger="True" />
+                <a:CNum ID="span" Title="标题跨度" IsInteger="True" Minimum="1" />
                 <Button Content="新建子标题" Click="OnAddTitle" />
                 <Button Content="删除标题" Click="OnDelTitle" />
             </a:Fv>

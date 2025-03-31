@@ -12,9 +12,9 @@
     </a:Dlg.Menu>
 
     <a:Lv x:Name="_lv" ItemDoubleClick="OnItemDoubleClick">
-		<a:Cols>
-			<a:Col ID="名称" />
-			<a:Col ID="单号前缀" />
-		</a:Cols>
-	</a:Lv>
+        <a:Cols>
+            <a:Col ID="名称" />
+            <a:Col ID="单号前缀" />
+        </a:Cols>
+    </a:Lv>
 </a:Dlg>

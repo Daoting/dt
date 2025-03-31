@@ -5,6 +5,18 @@
     xmlns:a="using:Dt.Base"
     Title="业务样例">
 
-    <a:NavList x:Name="_navBase" Title="基础" Order="1" Icon="搬运工" To="NewWin" a:Ex.Dock="Left" />
-    <a:NavList x:Name="_navWf" Title="流程" Order="2" Icon="双绞线" To="NewWin" a:Ex.Dock="Right" />
+    <a:NavList
+        x:Name="_navBase"
+        Title="基础"
+        Icon="搬运工"
+        Order="1"
+        To="NewWin"
+        a:Ex.Dock="Left" />
+    <a:NavList
+        x:Name="_navWf"
+        Title="流程"
+        Icon="双绞线"
+        Order="2"
+        To="NewWin"
+        a:Ex.Dock="Right" />
 </a:Win>

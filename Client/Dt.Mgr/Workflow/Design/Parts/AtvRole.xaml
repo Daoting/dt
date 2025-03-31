@@ -5,15 +5,28 @@
     xmlns:a="using:Dt.Base">
 
     <StackPanel>
-        <Grid Padding="10,0,0,0" Background="{StaticResource 浅灰1}" BorderBrush="{StaticResource 浅灰2}" BorderThickness="0,0,0,1">
+        <Grid
+            Background="{StaticResource 浅灰1}"
+            BorderBrush="{StaticResource 浅灰2}"
+            BorderThickness="0,0,0,1"
+            Padding="10,0,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBlock Text="&#xE02D;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Margin="0,0,4,0" />
+            <TextBlock
+                Text="&#xE02D;"
+                FontFamily="{StaticResource IconFont}"
+                Margin="0,0,4,0"
+                VerticalAlignment="Center" />
             <TextBlock Text="角色授权" VerticalAlignment="Center" Grid.Column="1" />
-            <Button Content="&#xE038;" Style="{StaticResource 字符按钮}" Click="OnAddRole" HorizontalAlignment="Right" Grid.Column="2" />
+            <Button
+                Content="&#xE038;"
+                Click="OnAddRole"
+                HorizontalAlignment="Right"
+                Style="{StaticResource 字符按钮}"
+                Grid.Column="2" />
         </Grid>
         <a:Lv x:Name="_lv">
             <a:Ex.Menu>

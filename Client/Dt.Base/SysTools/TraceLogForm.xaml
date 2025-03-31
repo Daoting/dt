@@ -12,16 +12,22 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <TextBlock x:Name="_tbInfo" IsTextSelectionEnabled="True" Margin="10" />
-        <Grid Background="{StaticResource 浅灰1}" BorderBrush="{StaticResource 浅灰2}" BorderThickness="1" Margin="0,0,-1,0" Grid.Row="1">
-            <TextBlock Text="内容" VerticalAlignment="Center" Margin="10,0,10,0" />
+        <Grid
+            Background="{StaticResource 浅灰1}"
+            BorderBrush="{StaticResource 浅灰2}"
+            BorderThickness="1"
+            Margin="0,0,-1,0"
+            Grid.Row="1">
+            <TextBlock Text="内容" Margin="10,0,10,0" VerticalAlignment="Center" />
             <Button Content="提取sql" Click="CopySql" HorizontalAlignment="Right" />
         </Grid>
-        <TextBox x:Name="_tb"
-                 AcceptsReturn="True"
-                 VerticalAlignment="Stretch"
-                 BorderThickness="0"
-                 TextWrapping="Wrap"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                 Grid.Row="2"/>
+        <TextBox
+            x:Name="_tb"
+            AcceptsReturn="True"
+            BorderThickness="0"
+            TextWrapping="Wrap"
+            VerticalAlignment="Stretch"
+            Grid.Row="2"
+            ScrollViewer.VerticalScrollBarVisibility="Auto" />
     </Grid>
 </a:Tab>

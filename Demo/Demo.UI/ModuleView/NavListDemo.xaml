@@ -6,33 +6,43 @@
 
     <a:Win.Resources>
         <DataTemplate x:Key="CustomView">
-            <Grid Padding="10" MinHeight="60">
+            <Grid MinHeight="60" Padding="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <a:Dot ID="Icon"
-                       FontSize="20"
-                       Padding="10"
-                       Margin="0,0,10,0"
-                       Foreground="White"
-                       Background="{StaticResource 主蓝}"
-                       VerticalAlignment="Center" />
+                <a:Dot
+                    ID="Icon"
+                    Background="{StaticResource 主蓝}"
+                    FontSize="20"
+                    Foreground="White"
+                    Margin="0,0,10,0"
+                    Padding="10"
+                    VerticalAlignment="Center" />
                 <StackPanel VerticalAlignment="Center" Grid.Column="1">
                     <a:Dot ID="Title" />
-                    <a:Dot ID="Desc" Call="Def.小灰" VerticalAlignment="Top" HorizontalAlignment="Left" />
+                    <a:Dot
+                        ID="Desc"
+                        Call="Def.小灰"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top" />
                 </StackPanel>
-                <a:Dot ID="Warning" Call="Def.Warning" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="1" />
+                <a:Dot
+                    ID="Warning"
+                    Call="Def.Warning"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Grid.Column="1" />
             </Grid>
         </DataTemplate>
     </a:Win.Resources>
 
     <a:NavList x:Name="_nav" Order="1" a:Ex.Dock="Left" />
 
-    <a:Tab Order="2" Title="属性" a:Ex.Dock="Right">
+    <a:Tab Title="属性" Order="2" a:Ex.Dock="Right">
         <a:Fv Data="{Binding ElementName=_nav}">
-            <a:CList Title="目标位置" ID="To" />
-            <a:CList Title="视图类型" ID="ViewMode" />
+            <a:CList ID="To" Title="目标位置" />
+            <a:CList ID="ViewMode" Title="视图类型" />
             <a:CBar Title="数据源" />
             <StackPanel Orientation="Horizontal">
                 <Button Content="标题图标描述" Click="OnTitleIconDesc" />
@@ -51,7 +61,7 @@
                 <Button Content="默认模板" Click="OnDefaultTemp" />
             </StackPanel>
             <a:CBar Title="项高" />
-            <a:CNum Title="项高" ID="ItemHeight" />
+            <a:CNum ID="ItemHeight" Title="项高" />
             <Button Content="自动项高" Click="OnAutoHeight" />
         </a:Fv>
     </a:Tab>

@@ -33,16 +33,25 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <a:Dot ID="Photo" Call="Def.Image" Width="40" Height="40" VerticalAlignment="Top" />
-                <!--Data不能写在Style中-->
+                <a:Dot
+                    ID="Photo"
+                    Call="Def.Image"
+                    Height="40"
+                    VerticalAlignment="Top"
+                    Width="40" />
+                <!-- Data不能写在Style中 -->
                 <Path Data="M0,3 L4,0 L4,6" Style="{StaticResource OtherPath}" />
-                <StackPanel HorizontalAlignment="Left" Margin="0,0,100,0" Grid.Column="2">
-                    <a:Dot ID="Content"
-                           Tapped="OnMsgTapped"
-                           RightTapped="OnMsgRightTapped"
-                           Foreground="White"
-                           Background="{StaticResource 中绿}"
-                           Padding="10" />
+                <StackPanel
+                    HorizontalAlignment="Left"
+                    Margin="0,0,100,0"
+                    Grid.Column="2">
+                    <a:Dot
+                        ID="Content"
+                        Background="{StaticResource 中绿}"
+                        Foreground="White"
+                        Padding="10"
+                        RightTapped="OnMsgRightTapped"
+                        Tapped="OnMsgTapped" />
                     <a:Dot ID="stime" Call="Def.AutoDate,Def.小灰" />
                 </StackPanel>
             </Grid>
@@ -55,23 +64,30 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <a:Dot ID="Photo" Call="Def.Image" Width="40" Height="40" VerticalAlignment="Top" />
-                <!--Data不能写在Style中-->
+                <a:Dot
+                    ID="Photo"
+                    Call="Def.Image"
+                    Height="40"
+                    VerticalAlignment="Top"
+                    Width="40" />
+                <!-- Data不能写在Style中 -->
                 <Path Data="M0,3 L4,0 L4,6" Style="{StaticResource OtherPath}" />
-                <StackPanel HorizontalAlignment="Left" Margin="0,0,100,0" Grid.Column="2">
-                    <a:FileList Data="{Binding [Content]}"
-                                RightTapped="OnFileRightTapped"
-                                HorizontalAlignment="Left"
-                                BorderBrush="{StaticResource 中绿}" />
+                <StackPanel
+                    HorizontalAlignment="Left"
+                    Margin="0,0,100,0"
+                    Grid.Column="2">
+                    <a:FileList
+                        BorderBrush="{StaticResource 中绿}"
+                        Data="{Binding [Content]}"
+                        HorizontalAlignment="Left"
+                        RightTapped="OnFileRightTapped" />
                     <a:Dot ID="stime" Call="Def.AutoDate,Def.小灰" />
                 </StackPanel>
             </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="OtherLinkTemplate">
-            <Grid>
-
-            </Grid>
+            <Grid />
         </DataTemplate>
 
         <DataTemplate x:Key="MyMsgTemplate">
@@ -82,17 +98,24 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel HorizontalAlignment="Right" Margin="100,0,0,0">
-                    <a:Dot ID="Content"
-                           Tapped="OnMsgTapped"
-                           RightTapped="OnMsgRightTapped"
-                           Foreground="White"
-                           Background="{StaticResource 主蓝}"
-                           Padding="10" />
+                    <a:Dot
+                        ID="Content"
+                        Background="{StaticResource 主蓝}"
+                        Foreground="White"
+                        Padding="10"
+                        RightTapped="OnMsgRightTapped"
+                        Tapped="OnMsgTapped" />
                     <a:Dot ID="stime" Call="Def.AutoDate,Def.小灰" />
                 </StackPanel>
-                <!--Data不能写在Style中-->
+                <!-- Data不能写在Style中 -->
                 <Path Data="M0,0 L4,3 L0,6" Style="{StaticResource MyPath}" />
-                <a:Dot ID="Photo" Call="Def.Image" Width="40" Height="40" VerticalAlignment="Top" Grid.Column="2" />
+                <a:Dot
+                    ID="Photo"
+                    Call="Def.Image"
+                    Height="40"
+                    VerticalAlignment="Top"
+                    Width="40"
+                    Grid.Column="2" />
             </Grid>
         </DataTemplate>
 
@@ -104,37 +127,43 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel HorizontalAlignment="Right" Margin="100,0,0,0">
-                    <a:FileList Data="{Binding [Content]}"
-                                RightTapped="OnFileRightTapped"
-                                FixedVolume="chat"
-                                HorizontalAlignment="Left"
-                                BorderBrush="{StaticResource 主蓝}" />
+                    <a:FileList
+                        BorderBrush="{StaticResource 主蓝}"
+                        Data="{Binding [Content]}"
+                        FixedVolume="chat"
+                        HorizontalAlignment="Left"
+                        RightTapped="OnFileRightTapped" />
                     <a:Dot ID="stime" Call="Def.AutoDate,Def.小灰" />
                 </StackPanel>
-                <!--Data不能写在Style中-->
+                <!-- Data不能写在Style中 -->
                 <Path Data="M0,0 L4,3 L0,6" Style="{StaticResource MyPath}" />
-                <a:Dot ID="Photo" Call="Def.Image" Width="40" Height="40" VerticalAlignment="Top" Grid.Column="2" />
+                <a:Dot
+                    ID="Photo"
+                    Call="Def.Image"
+                    Height="40"
+                    VerticalAlignment="Top"
+                    Width="40"
+                    Grid.Column="2" />
             </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="MyLinkTemplate">
-            <Grid>
-
-            </Grid>
+            <Grid />
         </DataTemplate>
     </UserControl.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <a:Lv x:Name="_lv"
-              SelectionMode="None"
-              ShowItemBorder="False"
-              AutoScrollBottom="True"
-              EnteredBrush="{x:Null}"
-              PressedBrush="{x:Null}" />
+        <a:Lv
+            x:Name="_lv"
+            AutoScrollBottom="True"
+            EnteredBrush="{x:Null}"
+            PressedBrush="{x:Null}"
+            SelectionMode="None"
+            ShowItemBorder="False" />
         <chat:ChatInputBar x:Name="_inputBar" Grid.Row="1" />
     </Grid>
 </UserControl>

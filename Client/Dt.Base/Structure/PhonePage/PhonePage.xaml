@@ -1,6 +1,4 @@
 ﻿<Page
     x:Class="Dt.Base.PhonePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-</Page>
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" />

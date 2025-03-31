@@ -12,18 +12,31 @@
     </a:Dlg.Menu>
 
     <Grid>
-        <ScrollViewer x:Name="_sv"
-                      HorizontalScrollMode="Enabled"
-                      HorizontalScrollBarVisibility="Auto"
-                      VerticalScrollMode="Enabled"
-                      VerticalScrollBarVisibility="Auto"
-                      IsHorizontalRailEnabled="False"
-                      IsVerticalRailEnabled="False"
-                      ZoomMode="Enabled"
-                      DoubleTapped="OnDoubleTapped">
+        <ScrollViewer
+            x:Name="_sv"
+            DoubleTapped="OnDoubleTapped"
+            HorizontalScrollBarVisibility="Auto"
+            HorizontalScrollMode="Enabled"
+            IsHorizontalRailEnabled="False"
+            IsVerticalRailEnabled="False"
+            VerticalScrollBarVisibility="Auto"
+            VerticalScrollMode="Enabled"
+            ZoomMode="Enabled">
             <Image x:Name="_img" Stretch="None" />
         </ScrollViewer>
-        <Button x:Name="_btnPre" Content="&#xE010;" Style="{StaticResource 字符按钮}" Click="OnPreClick" HorizontalAlignment="Left" VerticalAlignment="Center" />
-        <Button x:Name="_btnNext" Content="&#xE011;" Style="{StaticResource 字符按钮}" Click="OnNextClick" HorizontalAlignment="Right" VerticalAlignment="Center" />
+        <Button
+            x:Name="_btnPre"
+            Content="&#xE010;"
+            Click="OnPreClick"
+            HorizontalAlignment="Left"
+            Style="{StaticResource 字符按钮}"
+            VerticalAlignment="Center" />
+        <Button
+            x:Name="_btnNext"
+            Content="&#xE011;"
+            Click="OnNextClick"
+            HorizontalAlignment="Right"
+            Style="{StaticResource 字符按钮}"
+            VerticalAlignment="Center" />
     </Grid>
 </a:Dlg>

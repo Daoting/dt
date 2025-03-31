@@ -6,11 +6,15 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="树">
+            <a:Tab Title="树" Order="1">
                 <a:Tv x:Name="_tv">
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <a:Dot ID="icon" Call="TvItemStyleUI.图标" Margin="10,0,10,0" VerticalAlignment="Center" />
+                            <a:Dot
+                                ID="icon"
+                                Call="TvItemStyleUI.图标"
+                                Margin="10,0,10,0"
+                                VerticalAlignment="Center" />
                             <StackPanel Margin="0,10,0,10">
                                 <a:Dot ID="name" />
                                 <a:Dot ID="code" />
@@ -23,7 +27,7 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv>
                     <a:CBar RowSpan="4">
                         <StackPanel Margin="10">

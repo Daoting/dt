@@ -11,10 +11,11 @@
         </a:Menu>
     </a:Dlg.Menu>
 
-    <TextBox x:Name="_tb"
-             AcceptsReturn="True"
-             TextWrapping="Wrap"
-             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-             ScrollViewer.VerticalScrollBarVisibility="Auto" />
+    <TextBox
+        x:Name="_tb"
+        AcceptsReturn="True"
+        TextWrapping="Wrap"
+        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+        ScrollViewer.VerticalScrollBarVisibility="Auto" />
 
 </a:Dlg>

@@ -15,16 +15,26 @@
             <a:Col ID="shenfenzh" Title="身份证号码" Width="200" />
             <a:Col ID="xb" Title="性别" Width="60" />
         </a:Cols>
-        
+
         <a:Cols x:Key="列头多行">
             <a:Col ID="xm" Title="姓名" />
             <a:Col ID="bh" Title="编号" Width="80" />
             <a:Col ID="chushengrq" Title="出生&#10;日期" />
             <a:Col ID="shenfenzh" Title="身份&#10;证号@码" Width="200" />
-            <a:Col ID="xb" Title="性别" Width="60" FontSize="12" />
+            <a:Col ID="xb" Title="性别" FontSize="12" Width="60" />
             <a:Col ID="hunfou" Title="婚否" Width="60" />
-            <a:Col ID="shengao" Title="身高" Width="60" FontStyle="Italic" FontWeight="Bold" />
-            <a:Col ID="bumen" Title="所属部门" Width="100" Foreground="White" Background="Gray" />
+            <a:Col
+                ID="shengao"
+                Title="身高"
+                FontStyle="Italic"
+                FontWeight="Bold"
+                Width="60" />
+            <a:Col
+                ID="bumen"
+                Title="所属部门"
+                Background="Gray"
+                Foreground="White"
+                Width="100" />
             <a:Col ID="note" Title="备注" Width="150" />
         </a:Cols>
 
@@ -39,24 +49,24 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="表格">
+            <a:Tab Title="表格" Order="1">
                 <a:Lv x:Name="_lv" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv Data="{Binding ElementName=_lv}">
                     <a:CBar Title="数据源" />
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="10行" Tag="10" Click="OnLoadData" />
-                        <Button Content="100行" Tag="100" Click="OnLoadData" />
-                        <Button Content="1000行" Tag="1000" Click="OnLoadData" />
+                        <Button Content="10行" Click="OnLoadData" Tag="10" />
+                        <Button Content="100行" Click="OnLoadData" Tag="100" />
+                        <Button Content="1000行" Click="OnLoadData" Tag="1000" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Button Content="空数据源" Click="OnLoadNull" />
-                        <Button Content="10000行" Tag="10000" Click="OnLoadData" />
+                        <Button Content="10000行" Click="OnLoadData" Tag="10000" />
                     </StackPanel>
                     <a:CBar Title="分组" />
                     <StackPanel Orientation="Horizontal">
@@ -64,11 +74,11 @@
                         <Button Content="删除分组" Click="OnDelGroup" />
                     </StackPanel>
                     <a:CBar Title="属性" />
-                    <a:CList Title="视图类型" ID="ViewMode" />
-                    <a:CList Title="选择模式" ID="SelectionMode" />
-                    <a:CBool Title="显示分组导航" ID="ShowGroupHeader" />
-                    <a:CBool Title="显示行分割线" ID="ShowItemBorder" />
-                    <a:CNum Title="行/项目高" ID="ItemHeight" />
+                    <a:CList ID="ViewMode" Title="视图类型" />
+                    <a:CList ID="SelectionMode" Title="选择模式" />
+                    <a:CBool ID="ShowGroupHeader" Title="显示分组导航" />
+                    <a:CBool ID="ShowItemBorder" Title="显示行分割线" />
+                    <a:CNum ID="ItemHeight" Title="行/项目高" />
                     <a:CBar Title="列定义" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="列头多行" Click="OnToggleView" Tag="列头多行" />

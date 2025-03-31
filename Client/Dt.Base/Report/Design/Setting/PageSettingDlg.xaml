@@ -7,21 +7,69 @@
 
     <a:Dlg.Menu>
         <a:Menu>
-            <a:Mi ID="撤消" Icon="撤消" Cmd="{Binding CmdUndo,ElementName=_fv}" />
+            <a:Mi ID="撤消" Icon="撤消" Cmd="{Binding CmdUndo, ElementName=_fv}" />
         </a:Menu>
     </a:Dlg.Menu>
     <a:Fv x:Name="_fv">
-        <a:CBar Title="所有尺寸单位：0.01英寸&#10;默认纸张A4：827 X 1169 &#10;默认边距：70,100,70,100" RowSpan="2" />
-        <a:CList ID="papername" Title="标准纸张" AfterSelect="OnPaperChanged" TitleWidth="90" />
-        <a:CNum ID="width" Title="页面宽度" Minimum="0" IsInteger="True" TitleWidth="90" ColSpan="0.5" />
-        <a:CNum ID="height" Title="页面高度" Minimum="0" IsInteger="True" TitleWidth="90" ColSpan="0.5" />
-        <a:CNum ID="LeftMargin" Title="左边距" Minimum="0" IsInteger="True" TitleWidth="90" ColSpan="0.5" />
-        <a:CNum ID="TopMargin" Title="上边距" Minimum="0" IsInteger="True" TitleWidth="90" ColSpan="0.5" />
-        <a:CNum ID="RightMargin" Title="右边距" Minimum="0" IsInteger="True" TitleWidth="90" ColSpan="0.5" />
-        <a:CNum ID="BottomMargin" Title="下边距" Minimum="0" IsInteger="True" TitleWidth="90" ColSpan="0.5" />
+        <a:CBar
+            Title="所有尺寸单位：0.01英寸&#10;默认纸张A4：827 X 1169 &#10;默认边距：70,100,70,100"
+            RowSpan="2" />
+        <a:CList
+            ID="papername"
+            Title="标准纸张"
+            AfterSelect="OnPaperChanged"
+            TitleWidth="90" />
+        <a:CNum
+            ID="width"
+            Title="页面宽度"
+            ColSpan="0.5"
+            IsInteger="True"
+            Minimum="0"
+            TitleWidth="90" />
+        <a:CNum
+            ID="height"
+            Title="页面高度"
+            ColSpan="0.5"
+            IsInteger="True"
+            Minimum="0"
+            TitleWidth="90" />
+        <a:CNum
+            ID="LeftMargin"
+            Title="左边距"
+            ColSpan="0.5"
+            IsInteger="True"
+            Minimum="0"
+            TitleWidth="90" />
+        <a:CNum
+            ID="TopMargin"
+            Title="上边距"
+            ColSpan="0.5"
+            IsInteger="True"
+            Minimum="0"
+            TitleWidth="90" />
+        <a:CNum
+            ID="RightMargin"
+            Title="右边距"
+            ColSpan="0.5"
+            IsInteger="True"
+            Minimum="0"
+            TitleWidth="90" />
+        <a:CNum
+            ID="BottomMargin"
+            Title="下边距"
+            ColSpan="0.5"
+            IsInteger="True"
+            Minimum="0"
+            TitleWidth="90" />
         <a:CBool ID="LandScape" Title="纸张横向" ShowTitle="False" />
         <a:CBool ID="AutoPaperSize" Title="自动调整纸张大小，确保只一页" ShowTitle="False" />
-        <CheckBox x:Name="_cbHeader" Content="采用默认页眉：报表名称居中显示、带下划线" Click="OnDefHeader" />
-        <CheckBox x:Name="_cbFooter" Content="采用默认页脚：居中显示页码" Click="OnDefFooter" />
+        <CheckBox
+            x:Name="_cbHeader"
+            Content="采用默认页眉：报表名称居中显示、带下划线"
+            Click="OnDefHeader" />
+        <CheckBox
+            x:Name="_cbFooter"
+            Content="采用默认页脚：居中显示页码"
+            Click="OnDefFooter" />
     </a:Fv>
 </a:Dlg>

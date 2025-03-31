@@ -8,7 +8,11 @@
         <a:Tabs>
             <a:Tab Title="查找">
                 <a:QueryFv x:Name="_fv">
-                    <a:CList ID="statusname" Title="状态" SrcID="id#str" TgtID="status#statusname">
+                    <a:CList
+                        ID="statusname"
+                        Title="状态"
+                        SrcID="id#str"
+                        TgtID="status#statusname">
                         <a:CList.Items>
                             <a:IDStr ID="0" Str="流转中" />
                             <a:IDStr ID="1" Str="已完成" />
@@ -16,17 +20,32 @@
                             <a:IDStr ID="3" Str="全部" />
                         </a:CList.Items>
                     </a:CList>
-                    <a:CList ID="prcdname" Title="工作流程" SrcID="id#name" TgtID="prcd_id#prcdname" LoadData="OnLoadPrcd" />
+                    <a:CList
+                        ID="prcdname"
+                        Title="工作流程"
+                        SrcID="id#name"
+                        TgtID="prcd_id#prcdname"
+                        LoadData="OnLoadPrcd" />
                     <a:CBar Title="时间范围">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <Button Content="本月" Click="OnMonthClick"/>
-                            <Button Content="本季度" Click="OnQuarterClick"/>
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                            <Button Content="本月" Click="OnMonthClick" />
+                            <Button Content="本季度" Click="OnQuarterClick" />
                             <Button Content="本年" Click="OnYearClick" />
                         </StackPanel>
                     </a:CBar>
-                    <a:CDate ID="start" ShowTitle="False" Query="ReadOnly" QueryFlag="Floor" ColSpan="0.5" />
-                    <a:CDate ID="end" ShowTitle="False" Query="ReadOnly" QueryFlag="Ceil" ColSpan="0.5" />
-                    
+                    <a:CDate
+                        ID="start"
+                        ColSpan="0.5"
+                        Query="ReadOnly"
+                        QueryFlag="Floor"
+                        ShowTitle="False" />
+                    <a:CDate
+                        ID="end"
+                        ColSpan="0.5"
+                        Query="ReadOnly"
+                        QueryFlag="Ceil"
+                        ShowTitle="False" />
+
                     <a:CBool ID="type" Title="所有经办（同一任务多次经手）" ShowTitle="False" />
                 </a:QueryFv>
             </a:Tab>
@@ -45,12 +64,20 @@
                         </a:Menu>
                     </a:Ex.Menu>
                     <a:Cols>
-                        <a:Col ID="status" Title="　" Call="HistoryTaskUI.FormatStatus" Width="42" />
+                        <a:Col
+                            ID="status"
+                            Title="　"
+                            Call="HistoryTaskUI.FormatStatus"
+                            Width="42" />
                         <a:Col ID="prcname" Title="工作流程" />
                         <a:Col ID="atvname" Title="任务名称" />
                         <a:Col ID="formname" Title="表单内容" Width="*" />
                         <a:Col ID="sender" Title="发送者" />
-                        <a:Col ID="stime" Title="发送时间" Width="170" Format="yyyy-MM-dd HH:mm:ss" />
+                        <a:Col
+                            ID="stime"
+                            Title="发送时间"
+                            Format="yyyy-MM-dd HH:mm:ss"
+                            Width="170" />
                     </a:Cols>
                 </a:Lv>
             </a:Tab>

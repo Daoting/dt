@@ -7,27 +7,35 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="Excel">
+            <a:Tab Title="Excel" Order="1">
                 <a:Excel x:Name="_excel" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv>
                     <a:CBar Title="分组" />
                     <Button Content="添加分组" Click="groupButton_Click" />
                     <Button Content="取消分组" Click="ungroupButton_Click" />
                     <Button Content="展开分组" Click="showDetailButton_Click" />
                     <Button Content="折叠分组" Click="hideDetailButton_Click" />
-                    <CheckBox x:Name="_cbRow" Content="汇总行在分组底部" Click="summaryRow_Checked" Margin="10,0" />
-                    <CheckBox x:Name="_cbColumn" Content="汇总列在分组右部" Click="summaryColumn_Checked" Margin="10,0" />
+                    <CheckBox
+                        x:Name="_cbRow"
+                        Content="汇总行在分组底部"
+                        Click="summaryRow_Checked"
+                        Margin="10,0" />
+                    <CheckBox
+                        x:Name="_cbColumn"
+                        Content="汇总列在分组右部"
+                        Click="summaryColumn_Checked"
+                        Margin="10,0" />
 
                     <a:CBar Title="排序" />
                     <CheckBox x:Name="_cbSort" Content="列间排序" />
-                    <Button Content="升序 A->Z" Click="asc_Click" />
-                    <Button Content="降序 Z->A" Click="desc_Click" />
+                    <Button Content="升序 A-&gt;Z" Click="asc_Click" />
+                    <Button Content="降序 Z-&gt;A" Click="desc_Click" />
                 </a:Fv>
             </a:Tab>
             <l:ExcelExpPrint Order="3" />

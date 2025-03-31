@@ -6,18 +6,24 @@
 
     <a:Win.Resources>
         <DataTemplate x:Key="lbl">
-            <Border Background="White" CornerRadius="2" BorderBrush="Black" BorderThickness="0.5">
+            <Border
+                Background="White"
+                BorderBrush="Black"
+                BorderThickness="0.5"
+                CornerRadius="2">
                 <TextBlock Foreground="Black" Margin="2">
-                  <Run Text="{Binding Name}" />
-                  <Run Text="{Binding}" />
-                  <Run Text="%" />
+                    <Run Text="{Binding Name}" />
+                    <Run Text="{Binding}" />
+                    <Run Text="%" />
                 </TextBlock>
             </Border>
         </DataTemplate>
         <DataTemplate x:Key="lbl1">
-            <TextBlock FontSize="{StaticResource 小字}" Text="{Binding DataObject.Version}" />
+            <TextBlock
+                Text="{Binding DataObject.Version}"
+                FontSize="{StaticResource 小字}" />
         </DataTemplate>
     </a:Win.Resources>
-    
+
     <a:Chart x:Name="_chart" />
 </a:Win>

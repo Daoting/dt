@@ -7,13 +7,22 @@
     Icon="漏斗">
 
     <a:QueryFv x:Name="_fv">
-        <a:CTree ID="所属部门" Query="ReadOnly" QueryFlag="Equal" SrcID="id#名称" TgtID="部门id#所属部门">
+        <a:CTree
+            ID="所属部门"
+            SrcID="id#名称"
+            TgtID="部门id#所属部门"
+            Query="ReadOnly"
+            QueryFlag="Equal">
             <a:CTree.Sql>
                 <a:Sql>select id,编码,名称,上级id from 部门 where 撤档时间 is null order by 编码</a:Sql>
             </a:CTree.Sql>
             <DataTemplate>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="&#xE067;" FontFamily="{StaticResource IconFont}" Margin="4,0,4,0" VerticalAlignment="Center" />
+                    <TextBlock
+                        Text="&#xE067;"
+                        FontFamily="{StaticResource IconFont}"
+                        Margin="4,0,4,0"
+                        VerticalAlignment="Center" />
                     <a:Dot ID="编码" />
                     <a:Dot ID="名称" />
                 </StackPanel>

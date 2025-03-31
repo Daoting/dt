@@ -7,7 +7,7 @@
 
     <a:Tab.Menu>
         <a:Menu>
-            <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Call="OnAdd" />
+            <a:Mi ID="增加" Icon="加号" Call="OnAdd" ShowInPhone="Icon" />
             <a:Mi ID="更新缓存" Icon="刷新" Call="OnRefresh" />
         </a:Menu>
     </a:Tab.Menu>

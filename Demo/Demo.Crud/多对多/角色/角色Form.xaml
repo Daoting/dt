@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Title="角色表单">
 
-    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+    <a:Fv x:Name="_fv" Create="Add" Delete="Delete" Save="Save">
         <a:CText ID="角色名称" />
         <a:CText ID="角色描述" />
     </a:Fv>

@@ -6,9 +6,13 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="文件列表">
-                <ScrollViewer HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
-                    <a:FileList x:Name="_fl" UploadFinished="OnUploadFinished" ColCount="3" >
+            <a:Tab Title="文件列表" Order="1">
+                <ScrollViewer
+                    HorizontalScrollBarVisibility="Disabled"
+                    HorizontalScrollMode="Disabled"
+                    VerticalScrollBarVisibility="Auto"
+                    VerticalScrollMode="Auto">
+                    <a:FileList x:Name="_fl" ColCount="3" UploadFinished="OnUploadFinished">
                         <a:Ex.Menu>
                             <a:Menu>
                                 <a:Mi ID="分享" Icon="分享" Cmd="{Binding CmdShare}" Scope="Phone" />
@@ -24,8 +28,10 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
-                <a:Fv Data="{Binding ElementName=_fl}" DataContext="{Binding ElementName=_fl}">
+            <a:Tab Title="属性" Order="2">
+                <a:Fv
+                    Data="{Binding ElementName=_fl}"
+                    DataContext="{Binding ElementName=_fl}">
                     <a:CBar Title="命令" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="上传" Command="{Binding CmdAddFile}" />
@@ -42,12 +48,16 @@
                         <Button Content="删除所有缓存文件" Click="OnDelTemp" />
                         <Button Content="删除上传历史Cookie" Click="OnClear" />
                     </StackPanel>
-                    <a:CNum Title="列数" ID="ColCount" IsInteger="True" Minimum="1" />
-                    
-                    <a:CNum Title="文件数量上限" ID="MaxFileCount" IsInteger="True" Minimum="1" />
-                    <a:CText Title="固定卷名" ID="FixedVolume" />
-                    <a:CNum Title="图像高度" ID="ImageHeight" Minimum="0" />
-                    <a:CBool Title="可交互" ID="EnableClick" />
+                    <a:CNum ID="ColCount" Title="列数" IsInteger="True" Minimum="1" />
+
+                    <a:CNum
+                        ID="MaxFileCount"
+                        Title="文件数量上限"
+                        IsInteger="True"
+                        Minimum="1" />
+                    <a:CText ID="FixedVolume" Title="固定卷名" />
+                    <a:CNum ID="ImageHeight" Title="图像高度" Minimum="0" />
+                    <a:CBool ID="EnableClick" Title="可交互" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="增加文件项间距" Click="OnAddPadding" />
                         <Button Content="减小文件项间距" Click="OnDelPadding" />

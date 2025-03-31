@@ -6,18 +6,40 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="查询面板">
-                <a:QueryFv x:Name="_fv" Width="450" HorizontalAlignment="Left">
+            <a:Tab Title="查询面板" Order="1">
+                <a:QueryFv x:Name="_fv" HorizontalAlignment="Left" Width="450">
                     <a:CText ID="字符串" Query="Editable" QueryFlag="Contains" />
                     <a:CNum ID="数值" Query="Editable" QueryFlag="Greater" />
                     <a:CNum ID="可空数值" Query="Editable" QueryFlag="Less" />
                     <a:CDate ID="可空时间" Query="Editable" QueryFlag="Equal" />
                     <a:CBar Title="时间范围-比较符只读" />
-                    <a:CDate ID="时间_min" Query="ReadOnly" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-                    <a:CDate ID="时间_max" Query="ReadOnly" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+                    <a:CDate
+                        ID="时间_min"
+                        ColSpan="0.5"
+                        Query="ReadOnly"
+                        QueryFlag="Floor"
+                        ShowTitle="False" />
+                    <a:CDate
+                        ID="时间_max"
+                        ColSpan="0.5"
+                        Query="ReadOnly"
+                        QueryFlag="Ceil"
+                        ShowTitle="False" />
                     <a:CBar Title="整数范围" />
-                    <a:CNum ID="值_min" IsInteger="True" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-                    <a:CNum ID="值_max" IsInteger="True" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+                    <a:CNum
+                        ID="值_min"
+                        ColSpan="0.5"
+                        IsInteger="True"
+                        Query="Editable"
+                        QueryFlag="Floor"
+                        ShowTitle="False" />
+                    <a:CNum
+                        ID="值_max"
+                        ColSpan="0.5"
+                        IsInteger="True"
+                        Query="Editable"
+                        QueryFlag="Ceil"
+                        ShowTitle="False" />
                     <a:CText ID="忽略" Query="Editable" />
                 </a:QueryFv>
             </a:Tab>
@@ -25,20 +47,23 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <a:Fv x:Name="_fvFull">
-                        <a:CBool Title="允许模糊搜索" ID="AllowFuzzySearch" ShowTitle="False" />
-                        <a:CBool Title="允许切换条件之间的与或关系" ID="EnableToggleIsAnd" ShowTitle="False" />
+                        <a:CBool ID="AllowFuzzySearch" Title="允许模糊搜索" ShowTitle="False" />
+                        <a:CBool
+                            ID="EnableToggleIsAnd"
+                            Title="允许切换条件之间的与或关系"
+                            ShowTitle="False" />
                         <a:CBar Title="单元格" />
                     </a:Fv>
                     <a:Fv x:Name="_fvCell" Grid.Row="1">
-                        <a:CList Title="查询比较符" ID="Query" />
-                        <a:CList Title="比较符" ID="QueryFlag" />
+                        <a:CList ID="Query" Title="查询比较符" />
+                        <a:CList ID="QueryFlag" Title="比较符" />
                     </a:Fv>
                 </Grid>
             </a:Tab>

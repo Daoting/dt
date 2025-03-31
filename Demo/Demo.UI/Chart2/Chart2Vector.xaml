@@ -13,7 +13,7 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="1" Title="属性">
+            <a:Tab Title="属性" Order="1">
                 <StackPanel>
                     <Button Content="向量" Click="OnDef" />
                     <Button Content="向量颜色图" Click="OnColor" />

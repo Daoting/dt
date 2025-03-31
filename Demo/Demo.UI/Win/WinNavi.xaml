@@ -7,7 +7,7 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="主区">
+            <a:Tab Title="主区" Order="1">
                 <StackPanel Margin="10">
                     <Button Content="左上" Click="OnNavi" />
                     <Button Content="左下,右停靠" Click="OnNavi" />

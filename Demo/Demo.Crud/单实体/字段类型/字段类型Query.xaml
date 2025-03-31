@@ -9,26 +9,90 @@
     <a:QueryFv x:Name="_fv">
         <a:CText ID="字符串" Query="Editable" QueryFlag="Contains" />
         <a:CBar Title="整型" />
-        <a:CNum ID="整型_min" IsInteger="True" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-        <a:CNum ID="整型_max" IsInteger="True" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CNum
+            ID="整型_min"
+            ColSpan="0.5"
+            IsInteger="True"
+            Query="Editable"
+            QueryFlag="Floor"
+            ShowTitle="False" />
+        <a:CNum
+            ID="整型_max"
+            ColSpan="0.5"
+            IsInteger="True"
+            Query="Editable"
+            QueryFlag="Ceil"
+            ShowTitle="False" />
         <a:CBar Title="可空整型" />
-        <a:CNum ID="可空整型_min" IsInteger="True" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-        <a:CNum ID="可空整型_max" IsInteger="True" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CNum
+            ID="可空整型_min"
+            ColSpan="0.5"
+            IsInteger="True"
+            Query="Editable"
+            QueryFlag="Floor"
+            ShowTitle="False" />
+        <a:CNum
+            ID="可空整型_max"
+            ColSpan="0.5"
+            IsInteger="True"
+            Query="Editable"
+            QueryFlag="Ceil"
+            ShowTitle="False" />
         <a:CBool ID="布尔" Query="Editable" QueryFlag="Equal" />
         <a:CBool ID="可空布尔" Query="Editable" QueryFlag="Equal" />
         <a:CBar Title="日期时间" />
-        <a:CDate ID="日期时间_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-        <a:CDate ID="日期时间_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate
+            ID="日期时间_min"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Floor"
+            ShowTitle="False" />
+        <a:CDate
+            ID="日期时间_max"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Ceil"
+            ShowTitle="False" />
         <a:CBar Title="可空时间" />
-        <a:CDate ID="可空时间_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-        <a:CDate ID="可空时间_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate
+            ID="可空时间_min"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Floor"
+            ShowTitle="False" />
+        <a:CDate
+            ID="可空时间_max"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Ceil"
+            ShowTitle="False" />
         <a:CList ID="枚举" Query="Editable" QueryFlag="Equal" />
         <a:CList ID="可空枚举" Query="Editable" QueryFlag="Equal" />
         <a:CBar Title="单精度" />
-        <a:CNum ID="单精度_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-        <a:CNum ID="单精度_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CNum
+            ID="单精度_min"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Floor"
+            ShowTitle="False" />
+        <a:CNum
+            ID="单精度_max"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Ceil"
+            ShowTitle="False" />
         <a:CBar Title="可空单精度" />
-        <a:CNum ID="可空单精度_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-        <a:CNum ID="可空单精度_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CNum
+            ID="可空单精度_min"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Floor"
+            ShowTitle="False" />
+        <a:CNum
+            ID="可空单精度_max"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Ceil"
+            ShowTitle="False" />
     </a:QueryFv>
 </a:Tab>

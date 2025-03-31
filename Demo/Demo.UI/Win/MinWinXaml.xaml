@@ -7,7 +7,7 @@
     <a:Tab Title="左区" a:Ex.Dock="Left">
         <Button Content="导航到【主区/右区】" Click="OnGoto" Margin="40" />
     </a:Tab>
-    
+
     <a:Tab Title="主区">
         <TextBlock Margin="10">
             <LineBreak />
@@ -19,15 +19,22 @@
             <Run Text="   也无法自动保存历史布局！" /><LineBreak />
         </TextBlock>
     </a:Tab>
-    
+
     <a:Tabs a:Ex.Dock="Right">
         <a:Tab Title="右区">
-            <TextBlock Text="右区" TextWrapping="Wrap" Margin="10" />
+            <TextBlock Text="右区" Margin="10" TextWrapping="Wrap" />
         </a:Tab>
         <a:Tab Title="右二">
-            <TextBlock Text="右二" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBlock
+                Text="右二"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" />
         </a:Tab>
     </a:Tabs>
-    
-    <TextBlock Text="底部内容" a:Ex.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+    <TextBlock
+        Text="底部内容"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        a:Ex.Dock="Bottom" />
 </a:Win>

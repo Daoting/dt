@@ -8,7 +8,10 @@
         <StackPanel>
             <a:Fv x:Name="_fv">
                 <a:CBar Title="表格">
-                    <Button Content="删除表格" Click="OnDeleteTbl" HorizontalAlignment="Right" />
+                    <Button
+                        Content="删除表格"
+                        Click="OnDeleteTbl"
+                        HorizontalAlignment="Right" />
                 </a:CBar>
                 <a:CList ID="tbl" Title="数据源" />
                 <a:CBar Title="分页时每页重复输出" />
@@ -16,14 +19,40 @@
                     <Button x:Name="_btnHeader" Click="OnToggleHeader" />
                     <Button x:Name="_btnFooter" Click="OnToggleFooter" />
                 </StackPanel>
-                <a:CBool ID="repeatcolheader" Title="垂直分页时在每页重复输出列头" ShowTitle="False" />
-                <a:CNum ID="repeatrowheadercols" Title="水平分页时在每页重复输出行头的列数" TitleWidth="300" Minimum="0" IsInteger="True" />
-                <a:CBool ID="repeatcolfooter" Title="垂直分页时在每页重复输出列尾" ShowTitle="False" />
+                <a:CBool
+                    ID="repeatcolheader"
+                    Title="垂直分页时在每页重复输出列头"
+                    ShowTitle="False" />
+                <a:CNum
+                    ID="repeatrowheadercols"
+                    Title="水平分页时在每页重复输出行头的列数"
+                    IsInteger="True"
+                    Minimum="0"
+                    TitleWidth="300" />
+                <a:CBool
+                    ID="repeatcolfooter"
+                    Title="垂直分页时在每页重复输出列尾"
+                    ShowTitle="False" />
 
                 <a:CBar Title="单页并排多列表格" />
-                <a:CNum ID="rowbreakcount" Title="换列时行数，0不换列，-1满页换列" TitleWidth="280" Minimum="-1" IsInteger="True" />
-                <a:CNum ID="colbreakcount" Title="换行时列数，换列行数非0时有效" TitleWidth="280" Minimum="1" IsInteger="True" />
-                <a:CNum ID="minrowcount" Title="每页固定行数，不够加空行" TitleWidth="280" Minimum="0" IsInteger="True" />
+                <a:CNum
+                    ID="rowbreakcount"
+                    Title="换列时行数，0不换列，-1满页换列"
+                    IsInteger="True"
+                    Minimum="-1"
+                    TitleWidth="280" />
+                <a:CNum
+                    ID="colbreakcount"
+                    Title="换行时列数，换列行数非0时有效"
+                    IsInteger="True"
+                    Minimum="1"
+                    TitleWidth="280" />
+                <a:CNum
+                    ID="minrowcount"
+                    Title="每页固定行数，不够加空行"
+                    IsInteger="True"
+                    Minimum="0"
+                    TitleWidth="280" />
                 <a:CBar Title="行操作" />
                 <StackPanel Orientation="Horizontal">
                     <Button Content="之前插入行" Click="OnInsertRow" Tag="Before" />

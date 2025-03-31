@@ -6,10 +6,16 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="表格">
+            <a:Tab Title="表格" Order="1">
                 <a:Lv x:Name="_lv" AutoSaveCols="True">
                     <a:Cols>
-                        <a:Col ID="bh" Title="编号" Width="80" Foreground="White" Background="Black" FontSize="12" />
+                        <a:Col
+                            ID="bh"
+                            Title="编号"
+                            Background="Black"
+                            FontSize="12"
+                            Foreground="White"
+                            Width="80" />
                         <a:Col ID="xm" Title="姓名" />
                         <a:Col ID="hunfou" Title="婚否" Call="SaveColsCall.Format" />
                         <a:Col ID="bumen" Title="所属部门" Width="0.5*" />
@@ -21,12 +27,18 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv Data="{Binding ElementName=_lv}">
                     <a:CBar Title="属性" />
-                    <a:CList Title="选择模式" ID="SelectionMode" />
-                    <a:CBool ID="ShowReportMenu" Title="表格视图左上脚显示报表相关的菜单项" ShowTitle="False" />
-                    <a:CBool ID="AutoSaveCols" Title="是否自动保存调整后的列宽、列序、隐藏列" ShowTitle="False" />
+                    <a:CList ID="SelectionMode" Title="选择模式" />
+                    <a:CBool
+                        ID="ShowReportMenu"
+                        Title="表格视图左上脚显示报表相关的菜单项"
+                        ShowTitle="False" />
+                    <a:CBool
+                        ID="AutoSaveCols"
+                        Title="是否自动保存调整后的列宽、列序、隐藏列"
+                        ShowTitle="False" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

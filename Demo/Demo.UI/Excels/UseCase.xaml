@@ -14,32 +14,41 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="1" Title="属性">
+            <a:Tab Title="属性" Order="1">
                 <a:Fv>
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="月报xls" Tag="MonthProfit.xlsx" Click="OnLoadFile" />
-                        <Button Content="月报xml" Tag="MonthProfit.ssxml" Click="OnLoadFile" />
+                        <Button Content="月报xls" Click="OnLoadFile" Tag="MonthProfit.xlsx" />
+                        <Button Content="月报xml" Click="OnLoadFile" Tag="MonthProfit.ssxml" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="课程表xls" Tag="StudentCalendar.xlsx" Click="OnLoadFile" />
-                        <Button Content="课程表xml" Tag="StudentCalendar.ssxml" Click="OnLoadFile" />
+                        <Button
+                            Content="课程表xls"
+                            Click="OnLoadFile"
+                            Tag="StudentCalendar.xlsx" />
+                        <Button
+                            Content="课程表xml"
+                            Click="OnLoadFile"
+                            Tag="StudentCalendar.ssxml" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="表单xls" Tag="1040.xlsx" Click="OnLoadFile" />
-                        <Button Content="表单xml" Tag="1040.ssxml" Click="OnLoadFile" />
+                        <Button Content="表单xls" Click="OnLoadFile" Tag="1040.xlsx" />
+                        <Button Content="表单xml" Click="OnLoadFile" Tag="1040.ssxml" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="结婚预算xls" Tag="Wedding.xlsx" Click="OnLoadFile" />
-                        <Button Content="结婚预算xml" Tag="Wedding.ssxml" Click="OnLoadFile" />
+                        <Button Content="结婚预算xls" Click="OnLoadFile" Tag="Wedding.xlsx" />
+                        <Button Content="结婚预算xml" Click="OnLoadFile" Tag="Wedding.ssxml" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="消费趋势xls" Tag="Expense.xlsx" Click="OnLoadFile" />
-                        <Button Content="消费趋势xml" Tag="Expense.ssxml" Click="OnLoadFile" />
+                        <Button Content="消费趋势xls" Click="OnLoadFile" Tag="Expense.xlsx" />
+                        <Button Content="消费趋势xml" Click="OnLoadFile" Tag="Expense.ssxml" />
                         <Button Content="消费趋势格式化" Click="OnConditionalFormat" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="汽车维修跟踪xls" Tag="CarRepair.xlsx" Click="OnLoadFile" />
-                        <Button Content="汽车维修跟踪xml" Tag="CarRepair.ssxml" Click="OnLoadFile" />
+                        <Button Content="汽车维修跟踪xls" Click="OnLoadFile" Tag="CarRepair.xlsx" />
+                        <Button
+                            Content="汽车维修跟踪xml"
+                            Click="OnLoadFile"
+                            Tag="CarRepair.ssxml" />
                     </StackPanel>
                 </a:Fv>
             </a:Tab>

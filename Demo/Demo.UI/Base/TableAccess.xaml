@@ -35,11 +35,12 @@
             <Button Content="移除列" Click="OnRemoveCol" />
         </StackPanel>
         <a:CFree RowSpan="5" ShowTitle="False">
-            <TextBox x:Name="_tbInfo"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"
-                     ScrollViewer.VerticalScrollMode="Enabled"
-                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+            <TextBox
+                x:Name="_tbInfo"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollMode="Enabled" />
         </a:CFree>
     </a:Fv>
 </a:Win>

@@ -7,24 +7,31 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="Excel">
+            <a:Tab Title="Excel" Order="1">
                 <a:Excel x:Name="_excel" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv>
                     <a:CBar Title="查询" />
-                    <TextBox x:Name="_tbSearch" PlaceholderText="查询内容" KeyUp="txtSearch_KeyUp" />
+                    <TextBox
+                        x:Name="_tbSearch"
+                        KeyUp="txtSearch_KeyUp"
+                        PlaceholderText="查询内容" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="查询" Click="btnSearch_Click" />
                         <Button Content="清除" Click="btnClearSearch_Click" />
                     </StackPanel>
                     <a:CBar Title="增删改" />
                     <StackPanel Orientation="Horizontal">
-                        <Button x:Name="_btnUpdate" Content="保存" Click="btnUpdate_Click" IsEnabled="False" />
+                        <Button
+                            x:Name="_btnUpdate"
+                            Content="保存"
+                            Click="btnUpdate_Click"
+                            IsEnabled="False" />
                         <Button Content="删除" Click="btnDelete_Click" />
                         <Button Content="添加" Click="btnAdd_Click" />
                     </StackPanel>

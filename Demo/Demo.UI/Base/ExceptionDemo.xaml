@@ -12,7 +12,7 @@
         <Button Content="直接业务异常消息" Click="ThrowMsgSync" />
         <Button Content="显示异常位置方法名" Click="ThrowMethod" />
         <Button Content="未处理异常" Click="ThrowUnhandleSync" />
-        
+
         <a:CBar Title="客户端异步异常" />
         <Button Content="主线程异步业务异常" Click="ThrowAsync" />
         <Button Content="显示主线程异步异常位置方法名" Click="ThrowMethodAsync" />

@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     xmlns:l="using:Dt.Mgr.Rbac">
 
-    <a:FuzzySearch x:Name="_query" a:Ex.Dock="Left" Order="1">
+    <a:FuzzySearch x:Name="_query" Order="1" a:Ex.Dock="Left">
         <x:String>全部</x:String>
     </a:FuzzySearch>
     <l:GroupList x:Name="_mainList" />

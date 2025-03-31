@@ -8,25 +8,25 @@
 
     <a:Dlg.Menu>
         <a:Menu>
-            <a:Mi ID="10行" Tag="10" Click="OnLoadData" />
-			<a:Mi ID="百行" Tag="100" Click="OnLoadData" />
-			<a:Mi ID="千行" Tag="1000" Click="OnLoadData" />
-			<a:Mi ID="万行" Tag="10000" Click="OnLoadData" />
-			<a:Mi ID="空" Click="OnLoadNull" />
+            <a:Mi ID="10行" Click="OnLoadData" Tag="10" />
+            <a:Mi ID="百行" Click="OnLoadData" Tag="100" />
+            <a:Mi ID="千行" Click="OnLoadData" Tag="1000" />
+            <a:Mi ID="万行" Click="OnLoadData" Tag="10000" />
+            <a:Mi ID="空" Click="OnLoadNull" />
         </a:Menu>
     </a:Dlg.Menu>
 
-	<a:Lv x:Name="_lv">
-		<a:Cols>
-			<a:Col ID="xm" Title="姓名" />
-			<a:Col ID="bh" Title="编号" Width="80" />
-			<a:Col ID="chushengrq" Title="出生日期" />
-			<a:Col ID="shenfenzh" Title="身份证号码" Width="200" />
-			<a:Col ID="xb" Title="性别" Width="60" />
-			<a:Col ID="hunfou" Title="婚否" Width="60" />
-			<a:Col ID="shengao" Title="身高" Width="100" />
-			<a:Col ID="bumen" Title="所属部门" Width="160" />
-			<a:Col ID="note" Title="备注" Width="200" RowSpan="2" />
-		</a:Cols>
-	</a:Lv>
+    <a:Lv x:Name="_lv">
+        <a:Cols>
+            <a:Col ID="xm" Title="姓名" />
+            <a:Col ID="bh" Title="编号" Width="80" />
+            <a:Col ID="chushengrq" Title="出生日期" />
+            <a:Col ID="shenfenzh" Title="身份证号码" Width="200" />
+            <a:Col ID="xb" Title="性别" Width="60" />
+            <a:Col ID="hunfou" Title="婚否" Width="60" />
+            <a:Col ID="shengao" Title="身高" Width="100" />
+            <a:Col ID="bumen" Title="所属部门" Width="160" />
+            <a:Col ID="note" Title="备注" RowSpan="2" Width="200" />
+        </a:Cols>
+    </a:Lv>
 </a:Dlg>

@@ -11,7 +11,7 @@
             <a:Dot ID="name" Padding="10" />
         </DataTemplate>
     </a:Dlg.Resources>
-    
+
     <a:Dlg.Menu>
         <a:Menu x:Name="_m">
             <a:Mi ID="发送" Icon="发出" Click="OnSend" />
@@ -23,8 +23,12 @@
         <ScrollViewer>
             <StackPanel x:Name="_pnl" />
         </ScrollViewer>
-        <TextBox x:Name="_tbNote" AcceptsReturn="True" Height="80" PlaceholderText="留言" Grid.Row="1" />
+        <TextBox
+            x:Name="_tbNote"
+            AcceptsReturn="True"
+            Height="80"
+            PlaceholderText="留言"
+            Grid.Row="1" />
     </Grid>
 </a:Dlg>
 
-    

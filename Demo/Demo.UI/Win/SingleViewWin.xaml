@@ -18,22 +18,22 @@
                     <Button Content="切换图标" Click="OnToggleIcon" />
                     <Button Content="子窗口" Click="OnNewWin" />
                     <Button Content="带参数子窗口" Click="OnParamsWin" />
-                    <CheckBox Content="Win模式显示标题栏" IsChecked="{Binding ShowHeader,Mode=TwoWay,ElementName=_tabs}" />
+                    <CheckBox
+                        Content="Win模式显示标题栏"
+                        IsChecked="{Binding ShowHeader, Mode=TwoWay, ElementName=_tabs}" />
                     <CheckBox x:Name="_cbClosing" Content="禁止关闭" />
                     <TextBlock Text="标签位置" Margin="0,20,0,0" />
                     <StackPanel Orientation="Horizontal">
-                        <RadioButton Content="底部" GroupName="pos" Tag="3" Click="OnTabClick" />
-                        <RadioButton Content="左侧" GroupName="pos" Tag="0" Click="OnTabClick" />
-                        <RadioButton Content="右侧" GroupName="pos" Tag="2" Click="OnTabClick" />
-                        <RadioButton Content="顶部" GroupName="pos" Tag="1" Click="OnTabClick" />
-                        <RadioButton Content="左上角" GroupName="pos" Tag="4" Click="OnTabClick" />
+                        <RadioButton Content="底部" Click="OnTabClick" GroupName="pos" Tag="3" />
+                        <RadioButton Content="左侧" Click="OnTabClick" GroupName="pos" Tag="0" />
+                        <RadioButton Content="右侧" Click="OnTabClick" GroupName="pos" Tag="2" />
+                        <RadioButton Content="顶部" Click="OnTabClick" GroupName="pos" Tag="1" />
+                        <RadioButton Content="左上角" Click="OnTabClick" GroupName="pos" Tag="4" />
                     </StackPanel>
                 </StackPanel>
             </a:Tab>
-            <a:Tab Title="主区2">
-            </a:Tab>
-            <a:Tab Title="主区3">
-            </a:Tab>
+            <a:Tab Title="主区2" />
+            <a:Tab Title="主区3" />
         </a:Tabs>
     </a:Main>
 </a:Win>

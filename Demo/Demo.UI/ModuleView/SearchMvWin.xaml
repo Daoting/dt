@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     xmlns:l="using:Demo.UI">
 
-    <a:FuzzySearch Search="OnSearch" Order="1" a:Ex.Dock="Left">
+    <a:FuzzySearch Order="1" Search="OnSearch" a:Ex.Dock="Left">
         <x:String>选项一</x:String>
         <x:String>选项二</x:String>
         <x:String>选项三</x:String>

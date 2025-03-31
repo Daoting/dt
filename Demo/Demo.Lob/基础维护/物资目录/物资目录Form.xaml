@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Title="表单">
 
-    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+    <a:Fv x:Name="_fv" Create="Add" Delete="Delete" Save="Save">
         <a:CList ID="物资分类" SrcID="id#名称" TgtID="分类id#物资分类">
             <a:CList.Sql>
                 <a:Sql>select 名称,id from 物资分类</a:Sql>

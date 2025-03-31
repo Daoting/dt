@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Title="表单">
 
-    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+    <a:Fv x:Name="_fv" Create="Add" Delete="Delete" Save="Save">
         <a:CText ID="字符串" />
         <a:CNum ID="整型" IsInteger="True" />
         <a:CNum ID="可空整型" IsInteger="True" />

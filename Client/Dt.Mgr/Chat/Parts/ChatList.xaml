@@ -16,7 +16,12 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <a:Dot ID="photo" Call="Def.Image" Width="50" Height="50" Margin="0,0,10,0" />
+                <a:Dot
+                    ID="photo"
+                    Call="Def.Image"
+                    Height="50"
+                    Margin="0,0,10,0"
+                    Width="50" />
                 <StackPanel VerticalAlignment="Center" Grid.Column="1">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -25,8 +30,20 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <a:Dot ID="OtherName" />
-                        <Ellipse Visibility="{Binding [Unread], Converter={StaticResource CvBoolToVisible}}" Fill="Red" Height="8" Width="8" Margin="4,4,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="1" />
-                        <a:Dot ID="stime" Call="Def.AutoDate,Def.小灰" VerticalAlignment="Center" Grid.Column="2" />
+                        <Ellipse
+                            Fill="Red"
+                            Height="8"
+                            HorizontalAlignment="Left"
+                            Margin="4,4,0,0"
+                            VerticalAlignment="Top"
+                            Visibility="{Binding [Unread], Converter={StaticResource CvBoolToVisible}}"
+                            Width="8"
+                            Grid.Column="1" />
+                        <a:Dot
+                            ID="stime"
+                            Call="Def.AutoDate,Def.小灰"
+                            VerticalAlignment="Center"
+                            Grid.Column="2" />
                     </Grid>
                     <a:Dot ID="msg" Call="Def.小灰" Height="18" />
                 </StackPanel>

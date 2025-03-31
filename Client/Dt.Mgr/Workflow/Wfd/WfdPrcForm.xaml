@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Title="流程模板">
 
-    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+    <a:Fv x:Name="_fv" Create="Add" Delete="Delete" Save="Save">
         <a:CText ID="name" Title="流程名称" />
         <a:CText ID="note" Title="描述" />
         <a:CTip ID="ctime" Title="创建时间" />

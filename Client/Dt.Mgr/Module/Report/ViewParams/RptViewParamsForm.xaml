@@ -12,7 +12,7 @@
         </a:Menu>
     </a:Dlg.Menu>
 
-    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+    <a:Fv x:Name="_fv" Create="Add" Delete="Delete" Save="Save">
         <a:CText ID="name" Title="参数名" />
         <a:CText ID="val" Title="值" />
     </a:Fv>

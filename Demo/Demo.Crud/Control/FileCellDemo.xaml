@@ -6,7 +6,7 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="格">
+            <a:Tab Title="格" Order="1">
                 <a:Fv x:Name="_fv">
                     <a:CFile ID="file0" Title="无文件" />
                     <a:CText ID="txt" Title="文本框" />
@@ -30,7 +30,12 @@
                         </a:Ex.Menu>
                     </a:CFile>
                     <a:CFile ID="file3" Title="多类型文件" />
-                    <a:CFile ID="file4" Title="多图像" ImageHeight="82" ColCount="2" ImageStretch="UniformToFill" />
+                    <a:CFile
+                        ID="file4"
+                        Title="多图像"
+                        ColCount="2"
+                        ImageHeight="82"
+                        ImageStretch="UniformToFill" />
                     <a:CBar Title="图像格" />
                     <a:CImage ID="img1" Title="图像" />
                     <a:CImage ID="img2" Title="无图像" />

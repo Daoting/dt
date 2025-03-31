@@ -17,9 +17,9 @@
             <TextBox x:Name="_tb" PlaceholderText="自定义，如：#FF1BA1E2" />
             <Button Content="确定" Click="OnCustom" Grid.Column="1" />
         </Grid>
-        <a:Lv x:Name="_lv" ViewMode="Tile" MinItemWidth="40" Grid.Row="1">
+        <a:Lv x:Name="_lv" MinItemWidth="40" ViewMode="Tile" Grid.Row="1">
             <DataTemplate>
-                <a:Dot ID="color" Width="40" Height="40" />
+                <a:Dot ID="color" Height="40" Width="40" />
             </DataTemplate>
         </a:Lv>
     </Grid>

@@ -6,7 +6,7 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="编辑">
+            <a:Tab Title="编辑" Order="1">
                 <a:Tab.Menu>
                     <a:Menu x:Name="_menu">
                         <a:Mi ID="新建" Icon="文件" Call="OnNewFile" />
@@ -14,7 +14,12 @@
                         <a:Mi ID="保存" Icon="保存" Call="OnSave" />
                         <a:Mi ID="撤消" Icon="撤消" />
                         <a:Mi ID="重做" Icon="重做" />
-                        <a:Mi ID="Xml" Icon="HtmL" Call="OnShowEditDlg" ShowBtn="True" BtnCall="OnCopyXml" />
+                        <a:Mi
+                            ID="Xml"
+                            Icon="HtmL"
+                            BtnCall="OnCopyXml"
+                            Call="OnShowEditDlg"
+                            ShowBtn="True" />
                         <a:Mi ID="设置" Icon="设置">
                             <a:Mi ID="参数定义" Icon="信件" Call="OnParams" />
                             <a:MiSplit />
@@ -28,24 +33,25 @@
                             <a:Mi ID="导入" Icon="导入" Call="OnImport" />
                             <a:Mi ID="导出" Icon="导出" Call="OnExport" />
                             <a:MiSplit />
-                            <a:Mi ID="网格" IsCheckable="True" Call="OnCheckChanged" />
+                            <a:Mi ID="网格" Call="OnCheckChanged" IsCheckable="True" />
                             <a:Mi ID="复制Xml" Icon="复制" Call="OnCopyXml" />
                         </a:Mi>
                         <a:Mi ID="预览" Icon="门卫" Call="OnPreview" />
                     </a:Menu>
                 </a:Tab.Menu>
-                <a:Excel x:Name="_excel"
-                     TabStripInsertTab="False"
-                     TabStripEditable="False"
-                     ShowDecoration="True"
-                     CanUserDragDrop="False" />
+                <a:Excel
+                    x:Name="_excel"
+                    CanUserDragDrop="False"
+                    ShowDecoration="True"
+                    TabStripEditable="False"
+                    TabStripInsertTab="False" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab x:Name="_tabItem" Order="2" Title="报表项" />
-            <a:Tab x:Name="_tabCell" Order="3" Title="单元格" />
+            <a:Tab x:Name="_tabItem" Title="报表项" Order="2" />
+            <a:Tab x:Name="_tabCell" Title="单元格" Order="3" />
         </a:Tabs>
     </a:Pane>
 </a:Win>

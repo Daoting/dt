@@ -40,7 +40,7 @@
             <Button Content="根据ID直接删除" Click="OnDirectDelVir" />
             <Button Content="根据ID通过实体系统删除" Click="OnDelByIDVir" />
         </StackPanel>
-        
+
         <a:CBar Title="父子实体" />
         <StackPanel Orientation="Horizontal">
             <Button Content="增加新父子" Click="OnInsertWithChild" />
@@ -55,11 +55,12 @@
         <Button Content="GetFromCacheFirst查询" Click="OnCacheByKey" />
 
         <a:CFree RowSpan="3" ShowTitle="False">
-            <TextBox x:Name="_tbInfo"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"
-                     ScrollViewer.VerticalScrollMode="Enabled"
-                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+            <TextBox
+                x:Name="_tbInfo"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollMode="Enabled" />
         </a:CFree>
     </a:Fv>
 </a:Win>

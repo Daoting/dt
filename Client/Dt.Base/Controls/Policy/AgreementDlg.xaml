@@ -6,11 +6,23 @@
 
     <ScrollViewer HorizontalScrollMode="Disabled">
         <StackPanel Padding="20">
-            <TextBlock x:Name="_tbTitle" TextAlignment="Center" FontSize="24" FontWeight="Bold" />
-            <TextBlock x:Name="_tbUpdate" TextAlignment="Right" FontWeight="Bold" Margin="0,10,0,10" />
+            <TextBlock
+                x:Name="_tbTitle"
+                FontSize="24"
+                FontWeight="Bold"
+                TextAlignment="Center" />
+            <TextBlock
+                x:Name="_tbUpdate"
+                FontWeight="Bold"
+                Margin="0,10,0,10"
+                TextAlignment="Right" />
             <TextBlock x:Name="_tbContent" TextWrapping="Wrap" />
-            <TextBlock x:Name="_tbApp" TextAlignment="Right" FontWeight="Bold" Margin="0,20,0,0" />
-            <TextBlock x:Name="_tbCompany" TextAlignment="Right" FontWeight="Bold" />
+            <TextBlock
+                x:Name="_tbApp"
+                FontWeight="Bold"
+                Margin="0,20,0,0"
+                TextAlignment="Right" />
+            <TextBlock x:Name="_tbCompany" FontWeight="Bold" TextAlignment="Right" />
         </StackPanel>
     </ScrollViewer>
 </a:Dlg>

@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Title="编辑参数">
 
-    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+    <a:Fv x:Name="_fv" Create="Add" Delete="Delete" Save="Save">
         <a:CText ID="name" Title="参数名称" />
         <a:CText ID="value" Title="参数缺省值" />
         <a:CText ID="note" Title="参数描述" AcceptsReturn="True" RowSpan="2" />

@@ -8,7 +8,10 @@
 
     <Border Background="White" CornerRadius="10">
         <StackPanel Margin="20" Spacing="20">
-            <TextBlock x:Name="_tbTitle" HorizontalAlignment="Center" FontSize="24" />
+            <TextBlock
+                x:Name="_tbTitle"
+                FontSize="24"
+                HorizontalAlignment="Center" />
             <StackPanel>
                 <TextBlock Text="在使用应用前，请您仔细阅读" TextWrapping="NoWrap" />
                 <StackPanel Orientation="Horizontal">
@@ -22,8 +25,17 @@
             </StackPanel>
 
             <StackPanel>
-                <Button Content="同意" Click="OnAgree" Background="Green" Style="{StaticResource 浅色按钮}" HorizontalAlignment="Stretch" />
-                <Button Content="不同意并退出" Click="OnNo" Foreground="Gray" HorizontalAlignment="Stretch" />
+                <Button
+                    Content="同意"
+                    Background="Green"
+                    Click="OnAgree"
+                    HorizontalAlignment="Stretch"
+                    Style="{StaticResource 浅色按钮}" />
+                <Button
+                    Content="不同意并退出"
+                    Click="OnNo"
+                    Foreground="Gray"
+                    HorizontalAlignment="Stretch" />
             </StackPanel>
         </StackPanel>
     </Border>

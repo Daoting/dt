@@ -13,8 +13,11 @@
         <DataTemplate x:Key="ListView">
             <StackPanel Padding="10">
                 <a:Dot ID="xm" />
-                <StackPanel Orientation="Horizontal" >
-                    <TextBlock Text="身高" Style="{StaticResource 小灰}" VerticalAlignment="Center" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        Text="身高"
+                        Style="{StaticResource 小灰}"
+                        VerticalAlignment="Center" />
                     <a:Dot ID="Shengao" Margin="10,0,0,0" />
                 </StackPanel>
             </StackPanel>
@@ -23,14 +26,17 @@
         <DataTemplate x:Key="TileView">
             <StackPanel Padding="10">
                 <a:Dot ID="xm" />
-                <StackPanel Orientation="Horizontal" >
-                    <TextBlock Text="身高" Style="{StaticResource 小灰}" VerticalAlignment="Center" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        Text="身高"
+                        Style="{StaticResource 小灰}"
+                        VerticalAlignment="Center" />
                     <a:Dot ID="Shengao" Margin="10,0,0,0" />
                 </StackPanel>
             </StackPanel>
         </DataTemplate>
     </a:Win.Resources>
-    
+
     <a:Main>
         <a:Tabs>
             <a:Tab Title="列表">
@@ -38,28 +44,43 @@
                     <DataTemplate>
                         <StackPanel Padding="10">
                             <a:Dot ID="xm" />
-                            <StackPanel Orientation="Horizontal" >
-                                <TextBlock Text="身高" Style="{StaticResource 小灰}" VerticalAlignment="Center" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                    Text="身高"
+                                    Style="{StaticResource 小灰}"
+                                    VerticalAlignment="Center" />
                                 <a:Dot ID="Shengao" Margin="10,0,0,0" />
                             </StackPanel>
                         </StackPanel>
                     </DataTemplate>
                     <a:Lv.GroupTemplate>
                         <DataTemplate>
-                            <StackPanel Padding="10,0,10,0" Orientation="Horizontal">
-                                <StackPanel Orientation="Horizontal" Padding="10,4,10,4" Background="Black">
+                            <StackPanel Orientation="Horizontal" Padding="10,0,10,0">
+                                <StackPanel
+                                    Background="Black"
+                                    Orientation="Horizontal"
+                                    Padding="10,4,10,4">
                                     <TextBlock Text="人数" Foreground="White" />
                                     <TextBlock Text="{Binding Count}" Foreground="White" />
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal" Padding="10,4,10,4" Background="{StaticResource 主蓝}">
+                                <StackPanel
+                                    Background="{StaticResource 主蓝}"
+                                    Orientation="Horizontal"
+                                    Padding="10,4,10,4">
                                     <TextBlock Text="平均身高" Foreground="White" />
                                     <TextBlock Text="{Binding Average}" Foreground="White" />
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal" Padding="10,4,10,4" Background="Gray">
+                                <StackPanel
+                                    Background="Gray"
+                                    Orientation="Horizontal"
+                                    Padding="10,4,10,4">
                                     <TextBlock Text="最高" Foreground="White" />
                                     <TextBlock Text="{Binding Max}" Foreground="White" />
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal" Padding="10,4,10,4" Background="Green">
+                                <StackPanel
+                                    Background="Green"
+                                    Orientation="Horizontal"
+                                    Padding="10,4,10,4">
                                     <TextBlock Text="最矮" Foreground="White" />
                                     <TextBlock Text="{Binding Min}" Foreground="White" />
                                 </StackPanel>
@@ -83,9 +104,9 @@
 
                     <a:CBar Title="数据源" />
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="10行" Tag="10" Click="OnLoadData" />
-                        <Button Content="100行" Tag="100" Click="OnLoadData" />
-                        <Button Content="1000行" Tag="1000" Click="OnLoadData" />
+                        <Button Content="10行" Click="OnLoadData" Tag="10" />
+                        <Button Content="100行" Click="OnLoadData" Tag="100" />
+                        <Button Content="1000行" Click="OnLoadData" Tag="1000" />
                     </StackPanel>
                 </a:Fv>
             </a:Tab>

@@ -9,15 +9,21 @@
             <a:Mi ID="保存" Icon="保存" Click="OnOK" ShowInPhone="Icon" />
         </a:Menu>
     </a:Dlg.Menu>
-    
+
     <Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
+        <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-			<RowDefinition Height="*" />
-		</Grid.RowDefinitions>
-		<a:Fv x:Name="_fvMain">
-            <a:CList ID="EntityCls" Title="实体类型" SrcID="cls" LoadData="OnLoadEntityCls" GroupName="group" Changed="OnClsChanged">
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <a:Fv x:Name="_fvMain">
+            <a:CList
+                ID="EntityCls"
+                Title="实体类型"
+                SrcID="cls"
+                Changed="OnClsChanged"
+                GroupName="group"
+                LoadData="OnLoadEntityCls">
                 <DataTemplate>
                     <StackPanel Margin="10">
                         <a:Dot ID="cls" />
@@ -26,27 +32,55 @@
                 </DataTemplate>
             </a:CList>
             <a:CBar Title="查询面板">
-                <Button Content="设计" Click="EditQueryFvXaml" HorizontalAlignment="Right" />
+                <Button
+                    Content="设计"
+                    Click="EditQueryFvXaml"
+                    HorizontalAlignment="Right" />
             </a:CBar>
-            <a:CText ID="QueryFvXaml" Placeholder="Xaml空时自动生成" AcceptsReturn="True" ShowTitle="False" RowSpan="4" />
+            <a:CText
+                ID="QueryFvXaml"
+                AcceptsReturn="True"
+                Placeholder="Xaml空时自动生成"
+                RowSpan="4"
+                ShowTitle="False" />
         </a:Fv>
         <a:Fv x:Name="_fvList" Grid.Row="1">
             <a:CBar Title="列表">
-                <Button Content="设计" Click="EditListXaml" HorizontalAlignment="Right" />
+                <Button
+                    Content="设计"
+                    Click="EditListXaml"
+                    HorizontalAlignment="Right" />
             </a:CBar>
-            <a:CText ID="Xaml" Placeholder="Xaml空时自动生成" AcceptsReturn="True" ShowTitle="False" RowSpan="4" />
+            <a:CText
+                ID="Xaml"
+                AcceptsReturn="True"
+                Placeholder="Xaml空时自动生成"
+                RowSpan="4"
+                ShowTitle="False" />
             <a:CBar ColSpan="0.25">
                 <TextBlock Text="显示菜单项" />
             </a:CBar>
             <a:CBool ID="ShowAddMi" Title="增加" ColSpan="0.25" ShowTitle="False" />
             <a:CBool ID="ShowDelMi" Title="删除" ColSpan="0.25" ShowTitle="False" />
-            <a:CBool ID="ShowMultiSelMi" Title="多选" ColSpan="0.25" ShowTitle="False" />
+            <a:CBool
+                ID="ShowMultiSelMi"
+                Title="多选"
+                ColSpan="0.25"
+                ShowTitle="False" />
         </a:Fv>
         <a:Fv x:Name="_fvForm" Grid.Row="2">
             <a:CBar Title="表单">
-                <Button Content="设计" Click="EditFormXaml" HorizontalAlignment="Right" />
+                <Button
+                    Content="设计"
+                    Click="EditFormXaml"
+                    HorizontalAlignment="Right" />
             </a:CBar>
-            <a:CText ID="Xaml" Placeholder="Xaml空时自动生成" AcceptsReturn="True" ShowTitle="False" RowSpan="4" />
+            <a:CText
+                ID="Xaml"
+                AcceptsReturn="True"
+                Placeholder="Xaml空时自动生成"
+                RowSpan="4"
+                ShowTitle="False" />
             <a:CBar ColSpan="0.25">
                 <TextBlock Text="显示菜单项" />
             </a:CBar>

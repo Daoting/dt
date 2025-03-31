@@ -5,9 +5,9 @@
     xmlns:a="using:Dt.Base"
     xmlns:l="using:Dt.Mgr.Workflow">
 
-    <l:WfiPrcQuery x:Name="_query" a:Ex.Dock="Left" Order="1" />
+    <l:WfiPrcQuery x:Name="_query" Order="1" a:Ex.Dock="Left" />
     <l:WfiPrcList x:Name="_parentList" />
-    <a:Pane Pos="Right" InitWidth="600">
+    <a:Pane InitWidth="600" Pos="Right">
         <a:Tabs>
             <l:WfiPrcWfiAtvList x:Name="_wfiAtvList" />
         </a:Tabs>

@@ -11,11 +11,14 @@
             <a:Tab Title="实时日志">
                 <a:Tab.Menu>
                     <a:Menu x:Name="_menu">
-                        <a:Mi ID="Sqlite" IsCheckable="True" Click="OnSqlite" />
+                        <a:Mi ID="Sqlite" Click="OnSqlite" IsCheckable="True" />
                         <a:Mi ID="清空" Icon="删除" Click="OnClear" />
                     </a:Menu>
                 </a:Tab.Menu>
-                <a:Lv x:Name="_lv" ItemClick="OnOutputClick" AutoScrollBottom="True">
+                <a:Lv
+                    x:Name="_lv"
+                    AutoScrollBottom="True"
+                    ItemClick="OnOutputClick">
                     <DataTemplate>
                         <a:Dot Call="LogCellUI.FormatItem" Padding="6" />
                     </DataTemplate>

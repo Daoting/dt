@@ -7,14 +7,48 @@
     Icon="漏斗">
 
     <a:QueryFv x:Name="_fv">
-        <a:CText ID="name" Title="流程名称" Query="Editable" QueryFlag="Contains" />
-        <a:CBool ID="is_locked" Title="已锁定不能创建流程实例" ShowTitle="False" Query="ReadOnly" QueryFlag="Equal" />
-        <a:CBool ID="singleton" Title="同一时刻只允许有一个激活的流程实例" ShowTitle="False" Query="ReadOnly" QueryFlag="Equal" />
+        <a:CText
+            ID="name"
+            Title="流程名称"
+            Query="Editable"
+            QueryFlag="Contains" />
+        <a:CBool
+            ID="is_locked"
+            Title="已锁定不能创建流程实例"
+            Query="ReadOnly"
+            QueryFlag="Equal"
+            ShowTitle="False" />
+        <a:CBool
+            ID="singleton"
+            Title="同一时刻只允许有一个激活的流程实例"
+            Query="ReadOnly"
+            QueryFlag="Equal"
+            ShowTitle="False" />
         <a:CBar Title="创建时间" />
-        <a:CDate ID="ctime_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-        <a:CDate ID="ctime_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate
+            ID="ctime_min"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Floor"
+            ShowTitle="False" />
+        <a:CDate
+            ID="ctime_max"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Ceil"
+            ShowTitle="False" />
         <a:CBar Title="最后修改时间" />
-        <a:CDate ID="mtime_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-        <a:CDate ID="mtime_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate
+            ID="mtime_min"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Floor"
+            ShowTitle="False" />
+        <a:CDate
+            ID="mtime_max"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Ceil"
+            ShowTitle="False" />
     </a:QueryFv>
 </a:Tab>

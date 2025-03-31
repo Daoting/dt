@@ -12,7 +12,7 @@
         </a:Menu>
     </a:Dlg.Menu>
 
-    <a:Lv x:Name="_lv" ItemClick="OnItemClick" >
+    <a:Lv x:Name="_lv" ItemClick="OnItemClick">
         <a:Cols>
             <a:Col ID="ischecked" Title="选择" Width="60" />
             <a:Col ID="title" Title="列名" Width="250" />

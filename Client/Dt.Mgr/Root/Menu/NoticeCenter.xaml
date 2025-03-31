@@ -15,18 +15,21 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Grid x:Name="RootGrid" Background="Transparent">
-                            <TextBlock x:Name="ElementTitle"
-                               Text="&#xE009;"
-                               FontFamily="{StaticResource IconFont}"
-                               FontSize="16"
-                               Foreground="{StaticResource 浅灰2}" />
+                            <TextBlock
+                                x:Name="ElementTitle"
+                                Text="&#xE009;"
+                                FontFamily="{StaticResource IconFont}"
+                                FontSize="16"
+                                Foreground="{StaticResource 浅灰2}" />
 
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
-                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="Normal" />
                                     <VisualState x:Name="PointerOver">
                                         <VisualState.Setters>
-                                            <Setter Target="ElementTitle.Foreground" Value="{StaticResource 亮蓝}" />
+                                            <Setter
+                                                Target="ElementTitle.Foreground"
+                                                Value="{StaticResource 亮蓝}" />
                                         </VisualState.Setters>
                                     </VisualState>
                                     <VisualState x:Name="Pressed">
@@ -43,19 +46,22 @@
             </Setter>
         </Style>
     </a:Tab.Resources>
-    
+
     <a:Tab.Menu>
         <a:Menu>
-            <a:Mi ID="清空" Icon="删除" ShowInPhone="Icon" Call="OnClear" />
+            <a:Mi ID="清空" Icon="删除" Call="OnClear" ShowInPhone="Icon" />
         </a:Menu>
     </a:Tab.Menu>
-    
-    <a:Lv x:Name="_lv" SelectionMode="None" ItemClick="OnItemClick">
+
+    <a:Lv x:Name="_lv" ItemClick="OnItemClick" SelectionMode="None">
         <DataTemplate>
             <StackPanel Padding="12">
                 <Grid>
                     <a:Dot ID="time" Call="Def.小灰" />
-                    <Button Style="{StaticResource CloseButton}" HorizontalAlignment="Right" Click="OnCloseItem" />
+                    <Button
+                        Click="OnCloseItem"
+                        HorizontalAlignment="Right"
+                        Style="{StaticResource CloseButton}" />
                 </Grid>
                 <a:Dot ID="message" Foreground="{Binding Data.Cells[level].Val}" />
             </StackPanel>

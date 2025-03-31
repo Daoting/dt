@@ -14,5 +14,5 @@
         <Image x:Name="_img" Height="200" />
         <!--<MediaPlayerElement x:Name="_mp" AreTransportControlsEnabled="True" Height="300" />-->
     </StackPanel>
-    
+
 </a:Win>

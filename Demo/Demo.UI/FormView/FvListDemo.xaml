@@ -6,7 +6,7 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="格">
+            <a:Tab Title="格" Order="1">
                 <a:Fv x:Name="_fv">
                     <a:CBar Title="Items" />
                     <a:CList ID="liststr" Title="字符串列表">
@@ -36,12 +36,15 @@
                             <a:IDStr ID="2" Str="选项三" />
                         </a:CList.Items>
                     </a:CList>
-                    
+
                     <a:CBar Title="枚举" />
                     <a:CList ID="listenum1" Title="自动枚举列表" />
                     <a:CList ID="sex" Title="性别" />
-                    <a:CList ID="listenum2" Title="手动设置枚举" Ex="EnumData#Dt.Base.DlgPlacement,Dt.Base" />
-                    
+                    <a:CList
+                        ID="listenum2"
+                        Title="手动设置枚举"
+                        Ex="EnumData#Dt.Base.DlgPlacement,Dt.Base" />
+
                     <a:CBar Title="LoadData" />
                     <a:CList ID="listobj" Title="对象列表" LoadData="OnLoadPersons">
                         <DataTemplate>
@@ -50,27 +53,49 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Border Background="{StaticResource 主蓝}" Height="50" Width="50" VerticalAlignment="Center">
-                                    <TextBlock Text="&#xE060;"
-                                               FontFamily="{StaticResource IconFont}"
-                                               FontSize="30"
-                                               Foreground="White"
-                                               VerticalAlignment="Center"
-                                               TextAlignment="Center" />
+                                <Border
+                                    Background="{StaticResource 主蓝}"
+                                    Height="50"
+                                    VerticalAlignment="Center"
+                                    Width="50">
+                                    <TextBlock
+                                        Text="&#xE060;"
+                                        FontFamily="{StaticResource IconFont}"
+                                        FontSize="30"
+                                        Foreground="White"
+                                        TextAlignment="Center"
+                                        VerticalAlignment="Center" />
                                 </Border>
-                                <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
+                                <StackPanel
+                                    Margin="10,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Grid.Column="1">
                                     <a:Dot ID="xm" />
-                                    <a:Dot ID="note" Call="Def.小灰" MaxHeight="60" VerticalAlignment="Top" HorizontalAlignment="Left" />
+                                    <a:Dot
+                                        ID="note"
+                                        Call="Def.小灰"
+                                        HorizontalAlignment="Left"
+                                        MaxHeight="60"
+                                        VerticalAlignment="Top" />
                                 </StackPanel>
                             </Grid>
                         </DataTemplate>
                     </a:CList>
-                    <a:CList ID="listrow" Title="模拟IDString" SrcID="id" TgtID="listrowid" LoadData="OnLoadDataTable" AfterSelect="OnSelectedRow" />
+                    <a:CList
+                        ID="listrow"
+                        Title="模拟IDString"
+                        SrcID="id"
+                        TgtID="listrowid"
+                        AfterSelect="OnSelectedRow"
+                        LoadData="OnLoadDataTable" />
 
                     <a:CBar Title="筛选排序" />
-                    <a:CList ID="filter" Title="筛选" LoadData="OnLoadPerTbl" SrcID="xm">
+                    <a:CList ID="filter" Title="筛选" SrcID="xm" LoadData="OnLoadPerTbl">
                         <a:CList.FilterCfg>
-                            <a:FilterCfg EnablePinYin="True" IsRealtime="True" Placeholder="拼音简码或包含的文字" />
+                            <a:FilterCfg
+                                EnablePinYin="True"
+                                IsRealtime="True"
+                                Placeholder="拼音简码或包含的文字" />
                         </a:CList.FilterCfg>
                         <a:Cols>
                             <a:Col ID="bh" Title="编号" Width="80" />
@@ -97,9 +122,16 @@
                             </a:Menu>
                         </a:CList.Toolbar>
                     </a:CList>
-                    <a:CList ID="filterorder" Title="筛选排序多选" SelectionMode="Multiple" LoadData="OnLoadPersons">
+                    <a:CList
+                        ID="filterorder"
+                        Title="筛选排序多选"
+                        LoadData="OnLoadPersons"
+                        SelectionMode="Multiple">
                         <a:CList.FilterCfg>
-                            <a:FilterCfg EnablePinYin="True" IsRealtime="True" Placeholder="拼音简码或包含的文字" />
+                            <a:FilterCfg
+                                EnablePinYin="True"
+                                IsRealtime="True"
+                                Placeholder="拼音简码或包含的文字" />
                         </a:CList.FilterCfg>
                         <a:CList.Toolbar>
                             <a:Menu>
@@ -114,15 +146,23 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <a:Fv x:Name="_pbFv">
-                        <a:CBool Title="表单只读" ID="IsReadOnly" ShowTitle="False" ColSpan="0.5" />
-                        <a:CBool Title="设计模式" ID="IsDesignMode" ShowTitle="False" ColSpan="0.5" />
+                        <a:CBool
+                            ID="IsReadOnly"
+                            Title="表单只读"
+                            ColSpan="0.5"
+                            ShowTitle="False" />
+                        <a:CBool
+                            ID="IsDesignMode"
+                            Title="设计模式"
+                            ColSpan="0.5"
+                            ShowTitle="False" />
                         <a:CBar Title="单元格" />
                     </a:Fv>
                     <a:Fv x:Name="_pbCell" Grid.Row="1" />

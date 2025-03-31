@@ -10,41 +10,50 @@
             <a:Mi ID="确定" Icon="保存" Click="OnSave" />
         </a:Menu>
     </a:Dlg.Menu>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition Height="40" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid Background="{StaticResource 浅灰1}" BorderBrush="{StaticResource 浅灰2}" BorderThickness="1">
+        <Grid
+            Background="{StaticResource 浅灰1}"
+            BorderBrush="{StaticResource 浅灰2}"
+            BorderThickness="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <TextBlock Text="数据源" Margin="10,0,0,0" VerticalAlignment="Center" />
-            <ComboBox x:Name="_dataSets"
-                      HorizontalAlignment="Stretch"
-                      VerticalAlignment="Stretch"
-                      Background="White"
-                      BorderBrush="{StaticResource 浅灰2}"
-                      BorderThickness="1,0,0,0"
-                      Grid.Column="1" />
+            <ComboBox
+                x:Name="_dataSets"
+                Background="White"
+                BorderBrush="{StaticResource 浅灰2}"
+                BorderThickness="1,0,0,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Grid.Column="1" />
         </Grid>
-        <Grid Background="{StaticResource 浅灰1}" BorderBrush="{StaticResource 浅灰2}" BorderThickness="1,0,1,1" Grid.Row="1">
+        <Grid
+            Background="{StaticResource 浅灰1}"
+            BorderBrush="{StaticResource 浅灰2}"
+            BorderThickness="1,0,1,1"
+            Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <TextBlock Text="方法" Margin="10,0,0,0" VerticalAlignment="Center" />
-            <ComboBox x:Name="_func"
-                      SelectedIndex="0"
-                      HorizontalAlignment="Stretch"
-                      VerticalAlignment="Stretch"
-                      Background="White"
-                      BorderBrush="{StaticResource 浅灰2}"
-                      BorderThickness="1,0,0,0"
-                      Grid.Column="1">
+            <ComboBox
+                x:Name="_func"
+                Background="White"
+                BorderBrush="{StaticResource 浅灰2}"
+                BorderThickness="1,0,0,0"
+                HorizontalAlignment="Stretch"
+                SelectedIndex="0"
+                VerticalAlignment="Stretch"
+                Grid.Column="1">
                 <ComboBoxItem Content="数据" />
                 <ComboBoxItem Content="合计" />
                 <ComboBoxItem Content="最大" />
@@ -58,7 +67,7 @@
 
         <a:Lv x:Name="_lv" ItemDoubleClick="OnDoubleClick" Grid.Row="2">
             <DataTemplate>
-                <a:Dot ID="name" Padding="10"/>
+                <a:Dot ID="name" Padding="10" />
             </DataTemplate>
         </a:Lv>
     </Grid>

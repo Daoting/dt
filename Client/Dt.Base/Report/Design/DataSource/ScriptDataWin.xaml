@@ -7,10 +7,15 @@
 
     <a:Pane InitWidth="250">
         <a:Tabs>
-            <a:Tab Order="1" Title="数据源">
+            <a:Tab Title="数据源" Order="1">
                 <a:Tab.Menu>
                     <a:Menu>
-                        <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Scope="Phone" Click="OnAdd" />
+                        <a:Mi
+                            ID="增加"
+                            Icon="加号"
+                            Click="OnAdd"
+                            Scope="Phone"
+                            ShowInPhone="Icon" />
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Lv x:Name="_lv" ItemClick="OnItemClick">
@@ -26,15 +31,19 @@
             <a:Tab Title="编辑">
                 <a:Tab.Menu>
                     <a:Menu>
-                        <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Click="OnAdd" />
-                        <a:Mi ID="撤消" Icon="撤消" Cmd="{Binding CmdUndo,ElementName=_fv}" />
+                        <a:Mi ID="增加" Icon="加号" Click="OnAdd" ShowInPhone="Icon" />
+                        <a:Mi ID="撤消" Icon="撤消" Cmd="{Binding CmdUndo, ElementName=_fv}" />
                         <a:Mi ID="删除" Icon="删除" Click="OnDel" />
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Fv x:Name="_fv">
                     <a:CText ID="name" Title="数据名称" />
                     <a:CBar Title="列名，逗号隔开" />
-                    <a:CText ID="cols" ShowTitle="False" AcceptsReturn="True" RowSpan="8" />
+                    <a:CText
+                        ID="cols"
+                        AcceptsReturn="True"
+                        RowSpan="8"
+                        ShowTitle="False" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

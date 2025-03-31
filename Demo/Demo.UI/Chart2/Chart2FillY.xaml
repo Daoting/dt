@@ -13,7 +13,7 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="1" Title="属性">
+            <a:Tab Title="属性" Order="1">
                 <StackPanel>
                     <Button Content="Y填充图" Click="OnFillY" />
                     <Button Content="散点构造Y填充图" Click="OnValues" />

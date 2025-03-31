@@ -10,7 +10,10 @@
             <Button Content="错误对话框" Click="OnClicked2" />
         </StackPanel>
         <a:CBar Title="提示信息对话框" />
-        <TextBox x:Name="_tb" PlaceholderText="文本框内容含4出警告框" TextChanged="OnTextChanged" />
+        <TextBox
+            x:Name="_tb"
+            PlaceholderText="文本框内容含4出警告框"
+            TextChanged="OnTextChanged" />
         <Button x:Name="_btn" Content="显示消息框" Click="OnMsgClick" />
 
         <a:CBar Title="其它" />

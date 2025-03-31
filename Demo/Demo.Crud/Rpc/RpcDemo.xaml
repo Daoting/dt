@@ -17,11 +17,12 @@
             <Button Content="服务端推送给自己(需标准服务)" Click="OnPush" />
         </StackPanel>
         <a:CFree RowSpan="8" ShowTitle="False">
-            <TextBox x:Name="_tbInfo"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"
-                     ScrollViewer.VerticalScrollMode="Enabled"
-                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+            <TextBox
+                x:Name="_tbInfo"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollMode="Enabled" />
         </a:CFree>
     </a:Fv>
 </a:Win>

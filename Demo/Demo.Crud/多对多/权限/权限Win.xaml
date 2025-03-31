@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     xmlns:l="using:Demo.Crud">
 
-    <l:权限Query x:Name="_query" a:Ex.Dock="Left" Order="1" />
+    <l:权限Query x:Name="_query" Order="1" a:Ex.Dock="Left" />
     <l:权限List x:Name="_mainList" />
     <l:权限角色List x:Name="_角色List" a:Ex.Dock="Right" />
 </a:Win>

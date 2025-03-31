@@ -7,8 +7,11 @@
 
     <a:Pane InitWidth="260">
         <a:Tabs InitHeight="300">
-            <a:Tab Order="1" Title="模块列表">
-                <a:Lv x:Name="_lvModule" ItemClick="OnModuleItemClick" ItemHeight="NaN">
+            <a:Tab Title="模块列表" Order="1">
+                <a:Lv
+                    x:Name="_lvModule"
+                    ItemClick="OnModuleItemClick"
+                    ItemHeight="NaN">
                     <DataTemplate>
                         <StackPanel Padding="10">
                             <a:Dot ID="name" />
@@ -20,7 +23,10 @@
         </a:Tabs>
         <a:Tabs InitHeight="300">
             <a:Tab Title="功能列表">
-                <a:Lv x:Name="_lvFunc" ItemClick="OnFuncItemClick" ItemHeight="NaN">
+                <a:Lv
+                    x:Name="_lvFunc"
+                    ItemClick="OnFuncItemClick"
+                    ItemHeight="NaN">
                     <DataTemplate>
                         <StackPanel Padding="10">
                             <a:Dot ID="name" />

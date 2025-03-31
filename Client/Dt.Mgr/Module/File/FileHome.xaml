@@ -8,7 +8,7 @@
     <l:FolderPage x:Name="_tabPub" Order="2" a:Ex.Dock="Left" />
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="最近使用">
+            <a:Tab Title="最近使用" Order="1">
                 <a:Tab.Menu>
                     <a:Menu>
                         <a:Mi ID="清空" Icon="删除" Click="OnClearHis" />

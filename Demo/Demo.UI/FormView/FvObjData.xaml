@@ -6,7 +6,7 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="2" Title="表单">
+            <a:Tab Title="表单" Order="2">
                 <a:Fv x:Name="_fv">
                     <a:CNum ID="BorderThickness.Bottom" Title="多级路径" />
                     <a:CText ID="ActualHeight" Title="实际高度(只读)" />
@@ -20,7 +20,7 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="1" Title="目标对象">
+            <a:Tab Title="目标对象" Order="1">
                 <a:Fv>
                     <a:CBar Title="设置数据源" />
                     <StackPanel Orientation="Horizontal">
@@ -33,10 +33,10 @@
                         <Button Content="调整字体" Click="OnFontSize" />
                         <Button Content="调整名称" Click="OnName" />
                     </StackPanel>
-                    
+
                     <a:CBar Title="输出" />
                     <a:CBar RowSpan="5">
-                        <TextBox x:Name="_tbOut" TextWrapping="Wrap" AcceptsReturn="True" />
+                        <TextBox x:Name="_tbOut" AcceptsReturn="True" TextWrapping="Wrap" />
                     </a:CBar>
                     <TextBox x:Name="_tb" Text="目标文本框" />
                 </a:Fv>

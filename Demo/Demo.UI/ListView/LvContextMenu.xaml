@@ -14,9 +14,9 @@
             <a:Col ID="hunfou" Title="婚否" Width="50" />
             <a:Col ID="shengao" Title="身高" Width="100" />
             <a:Col ID="bumen" Title="所属部门" Width="160" />
-            <a:Col ID="note" Title="备注" Width="200" RowSpan="2" />
+            <a:Col ID="note" Title="备注" RowSpan="2" Width="200" />
         </a:Cols>
-        
+
         <DataTemplate x:Key="ListView">
             <Grid Padding="6">
                 <Grid.ColumnDefinitions>
@@ -27,23 +27,31 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Border Background="{StaticResource 主蓝}" Height="50" Width="50" VerticalAlignment="Center">
-                    <TextBlock Text="&#xE060;"
-                                FontFamily="{StaticResource IconFont}"
-                                FontSize="30"
-                                Foreground="White"
-                                VerticalAlignment="Center"
-                                TextAlignment="Center" />
+                <Border
+                    Background="{StaticResource 主蓝}"
+                    Height="50"
+                    VerticalAlignment="Center"
+                    Width="50">
+                    <TextBlock
+                        Text="&#xE060;"
+                        FontFamily="{StaticResource IconFont}"
+                        FontSize="30"
+                        Foreground="White"
+                        TextAlignment="Center"
+                        VerticalAlignment="Center" />
                 </Border>
 
-                <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
+                <StackPanel
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center"
+                    Grid.Column="1">
                     <a:Dot ID="xm" />
                     <StackPanel Orientation="Horizontal">
                         <a:Dot ID="xb" />
                         <a:Dot ID="chushengrq" Margin="20,0,0,0" />
                     </StackPanel>
                 </StackPanel>
-                <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
+                <StackPanel Grid.ColumnSpan="2" Grid.Row="1">
                     <a:Dot ID="shenfenzh" />
                     <a:Dot ID="bumen" />
                     <a:Dot ID="note" Call="Def.小灰" />
@@ -57,11 +65,12 @@
                     <ColumnDefinition Width="50" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="&#xE060;"
-                           FontFamily="{StaticResource IconFont}"
-                           FontSize="30"
-                           VerticalAlignment="Center"
-                           TextAlignment="Center" />
+                <TextBlock
+                    Text="&#xE060;"
+                    FontFamily="{StaticResource IconFont}"
+                    FontSize="30"
+                    TextAlignment="Center"
+                    VerticalAlignment="Center" />
                 <StackPanel Margin="10,0,0,0" Grid.Column="1">
                     <a:Dot ID="xm" />
                     <a:Dot ID="xb" />
@@ -70,10 +79,10 @@
             </Grid>
         </DataTemplate>
     </a:Win.Resources>
-    
+
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="列表">
+            <a:Tab Title="列表" Order="1">
                 <a:Lv x:Name="_lv">
                     <a:Ex.Menu>
                         <a:Menu>
@@ -100,7 +109,7 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv Data="{Binding ElementName=_lv}">
                     <a:CBar Title="视图类型" />
                     <StackPanel Orientation="Horizontal">
@@ -119,7 +128,7 @@
                         <Button Content="切换菜单" Click="OnChangeMenu" />
                         <Button Content="无菜单" Click="OnNoMenu" />
                     </StackPanel>
-                    <a:CList Title="选择模式" ID="SelectionMode" />
+                    <a:CList ID="SelectionMode" Title="选择模式" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

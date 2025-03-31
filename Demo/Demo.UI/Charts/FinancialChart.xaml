@@ -6,18 +6,22 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="图表样例">
+            <a:Tab Title="图表样例" Order="1">
                 <a:Chart x:Name="_chart" ChartType="Candle">
                     <a:Chart.Data>
                         <a:ChartData>
-                            <a:HighLowOpenCloseSeries SymbolSize="9,9"
-                                                      SymbolStrokeThickness="2"
-                                                    XValueBinding="{Binding Time}"
-                                                    HighValueBinding="{Binding High}"
-                                                    LowValueBinding="{Binding Low}"
-                                                    OpenValueBinding="{Binding Open}"
-                                                    CloseValueBinding="{Binding Close}" />
-                            <a:XYDataSeries  AxisY="Volume" XValueBinding="{Binding Time}" ValueBinding="{Binding Volume}" />
+                            <a:HighLowOpenCloseSeries
+                                CloseValueBinding="{Binding Close}"
+                                HighValueBinding="{Binding High}"
+                                LowValueBinding="{Binding Low}"
+                                OpenValueBinding="{Binding Open}"
+                                SymbolSize="9,9"
+                                SymbolStrokeThickness="2"
+                                XValueBinding="{Binding Time}" />
+                            <a:XYDataSeries
+                                AxisY="Volume"
+                                ValueBinding="{Binding Volume}"
+                                XValueBinding="{Binding Time}" />
                         </a:ChartData>
                     </a:Chart.Data>
                     <a:ChartLegend x:Name="_legend" />
@@ -27,7 +31,7 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <StackPanel>
                     <a:Fv>
                         <Button x:Name="btnNew" Content="NewData" Click="btnNew_Click" />

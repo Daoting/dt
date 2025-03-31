@@ -6,14 +6,14 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="Pdf浏览器">
+            <a:Tab Title="Pdf浏览器" Order="1">
                 <a:PdfView x:Name="_pdf" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv Data="{Binding ElementName=_pdf}">
                     <a:CBar Title="加载" />
                     <StackPanel Orientation="Horizontal">

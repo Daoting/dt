@@ -9,6 +9,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
     </Grid>
 </a:Dlg>

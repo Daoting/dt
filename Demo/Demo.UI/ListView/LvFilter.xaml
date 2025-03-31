@@ -6,18 +6,28 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="表格">
+            <a:Tab Title="表格" Order="1">
                 <a:Lv x:Name="_lv" ViewMode="Table">
                     <a:Cols>
                         <a:Col ID="xm" Title="姓名" />
                         <a:Col ID="bh" Title="编号" Width="80" />
                         <a:Col ID="chushengrq" Title="出生日期" />
                         <a:Col ID="shenfenzh" Title="身份证号码" Width="200" />
-                        <a:Col ID="xb" Title="性别" Width="60" FontSize="12" />
+                        <a:Col ID="xb" Title="性别" FontSize="12" Width="60" />
                         <a:Col ID="hunfou" Title="婚否" Width="60" />
-                        <a:Col ID="shengao" Title="身高" Width="60" FontStyle="Italic" FontWeight="Bold" />
-                        <a:Col ID="bumen" Title="所属部门" Width="100" Foreground="White" Background="Gray" />
-                        <a:Col ID="note" Title="备注" Width="150" RowSpan="2" />
+                        <a:Col
+                            ID="shengao"
+                            Title="身高"
+                            FontStyle="Italic"
+                            FontWeight="Bold"
+                            Width="60" />
+                        <a:Col
+                            ID="bumen"
+                            Title="所属部门"
+                            Background="Gray"
+                            Foreground="White"
+                            Width="100" />
+                        <a:Col ID="note" Title="备注" RowSpan="2" Width="150" />
                     </a:Cols>
                 </a:Lv>
             </a:Tab>
@@ -25,7 +35,7 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv>
                     <Button Content="清空过滤" Click="OnClearFilter" />
                     <a:CBar Title="linq过滤串" />

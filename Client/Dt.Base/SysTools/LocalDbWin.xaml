@@ -7,7 +7,7 @@
 
     <a:Pane>
         <a:Tabs InitHeight="300">
-            <a:Tab Order="1" Title="库">
+            <a:Tab Title="库" Order="1">
                 <a:Lv x:Name="_lvDb" ItemClick="OnDbClick">
                     <a:Ex.Menu>
                         <a:Menu>
@@ -39,8 +39,16 @@
             <a:Tab Title="数据">
                 <a:Tab.Menu>
                     <a:Menu>
-                        <a:Mi ID="删除" Icon="删除" Click="OnDel" IsEnabled="{Binding HasSelected,ElementName=_lvData}" />
-                        <a:Mi ID="多选" Icon="全选" IsCheckable="True" a:Ex.LvMultiSelect="{Binding ElementName=_lvData}" />
+                        <a:Mi
+                            ID="删除"
+                            Icon="删除"
+                            Click="OnDel"
+                            IsEnabled="{Binding HasSelected, ElementName=_lvData}" />
+                        <a:Mi
+                            ID="多选"
+                            Icon="全选"
+                            IsCheckable="True"
+                            a:Ex.LvMultiSelect="{Binding ElementName=_lvData}" />
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Lv x:Name="_lvData" AutoCreateCol="True" />

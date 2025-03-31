@@ -5,9 +5,9 @@
     xmlns:a="using:Dt.Base">
 
     <a:RptTab x:Name="_rpt" Title="RptTab" Order="1" />
-    <a:Tab Order="2" Title="属性" a:Ex.Dock="Right">
+    <a:Tab Title="属性" Order="2" a:Ex.Dock="Right">
         <a:Fv Data="{Binding ElementName=_rpt}">
-            <a:CBool Title="报表采用Pdf格式" ID="IsPdf" ShowTitle="False" />
+            <a:CBool ID="IsPdf" Title="报表采用Pdf格式" ShowTitle="False" />
             <a:CBar Title="报表模板位置" />
             <StackPanel Orientation="Horizontal">
                 <Button Content="本地库" Click="OnLocal" />

@@ -8,10 +8,15 @@
         <DataTemplate x:Key="FolderTemplate">
             <Grid Padding="10">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="&#xE067;" FontFamily="{StaticResource IconFont}" FontSize="30" Margin="4,0,10,0" VerticalAlignment="Center" />
+                <TextBlock
+                    Text="&#xE067;"
+                    FontFamily="{StaticResource IconFont}"
+                    FontSize="30"
+                    Margin="4,0,10,0"
+                    VerticalAlignment="Center" />
                 <StackPanel Grid.Column="1">
                     <TextBlock Text="{Binding [name]}" TextWrapping="NoWrap" />
                     <a:Dot ID="ctime" Call="Def.AutoDate,Def.小灰" />
@@ -20,14 +25,17 @@
         </DataTemplate>
 
         <DataTemplate x:Key="FileTemplate">
-            <a:FileList Data="{Binding [Info]}" OpenedFile="OnOpenedFile" BorderBrush="Transparent" />
+            <a:FileList
+                BorderBrush="Transparent"
+                Data="{Binding [Info]}"
+                OpenedFile="OnOpenedFile" />
         </DataTemplate>
     </a:Tab.Resources>
 
     <a:Lv x:Name="_lv" ItemClick="OnItemClick">
         <a:Ex.Menu>
             <a:Menu x:Name="_m" Opening="OnMenuOpening">
-                <a:Mi ID="保存" Icon="保存" Click="OnSaveAs"/>
+                <a:Mi ID="保存" Icon="保存" Click="OnSaveAs" />
                 <a:Mi ID="分享" Icon="分享" Click="OnShare" />
                 <a:Mi ID="重命名" Icon="审核" Click="OnEditFolder" />
                 <a:Mi ID="移到" Icon="导入" Click="OnMove" />

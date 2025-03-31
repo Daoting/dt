@@ -7,13 +7,13 @@
 
     <a:Tab.Menu>
         <a:Menu>
-            <a:Mi ID="搜索" Icon="搜索" ShowInPhone="Icon" Click="OnSearch" />
+            <a:Mi ID="搜索" Icon="搜索" Click="OnSearch" ShowInPhone="Icon" />
         </a:Menu>
     </a:Tab.Menu>
 
     <StackPanel>
-        <a:BtnItem Icon="文件" Title="公共文件" Click="OnPublicFile" />
-        <a:BtnItem Icon="对比" Title="我的文件" Click="OnMyFile" />
-        <a:BtnItem Icon="词典" Title="素材库" Click="OnResFile" />
+        <a:BtnItem Title="公共文件" Icon="文件" Click="OnPublicFile" />
+        <a:BtnItem Title="我的文件" Icon="对比" Click="OnMyFile" />
+        <a:BtnItem Title="素材库" Icon="词典" Click="OnResFile" />
     </StackPanel>
 </a:Tab>

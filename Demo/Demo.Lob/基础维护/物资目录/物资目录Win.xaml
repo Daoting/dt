@@ -7,7 +7,7 @@
 
     <a:Tabs a:Ex.Dock="Left">
         <l:物资分类List x:Name="_list分类" Order="1" />
-        <l:物资目录Query x:Name="_query"  Order="2" />
+        <l:物资目录Query x:Name="_query" Order="2" />
     </a:Tabs>
     <l:物资目录List x:Name="_list" />
 </a:Win>

@@ -13,7 +13,7 @@
                         <a:Mi ID="搜索" Icon="搜索" ShowInPhone="Icon" />
                         <a:Mi ID="选择项" Icon="pos机" IsCheckable="True" />
                         <a:Mi ID="无图标" />
-                        <a:Mi ID="设置" Icon="设置" ShowBtn="True" BtnCall="OnBtnCall" />
+                        <a:Mi ID="设置" Icon="设置" BtnCall="OnBtnCall" ShowBtn="True" />
                         <a:MiSplit />
                         <a:Mi ID="含子项" Icon="文件夹">
                             <a:Mi ID="修改" Icon="修改" />
@@ -31,20 +31,20 @@
                             <a:Mi ID="选择项" IsCheckable="True" />
                         </a:Mi>
                         <a:Mi ID="分组单选" Icon="文件夹">
-                            <a:Mi ID="选项1" IsCheckable="True" GroupName="Test" />
-                            <a:Mi ID="选项2" IsCheckable="True" GroupName="Test" />
-                            <a:Mi ID="选项3" IsCheckable="True" GroupName="Test" />
-                            <a:Mi ID="选项4" IsCheckable="True" GroupName="Test" />
+                            <a:Mi ID="选项1" GroupName="Test" IsCheckable="True" />
+                            <a:Mi ID="选项2" GroupName="Test" IsCheckable="True" />
+                            <a:Mi ID="选项3" GroupName="Test" IsCheckable="True" />
+                            <a:Mi ID="选项4" GroupName="Test" IsCheckable="True" />
                         </a:Mi>
                     </a:Menu>
                 </a:Tab.Menu>
-                
+
                 <a:Fv x:Name="_fv">
                     <a:CBar Title="选择菜单项" />
-                    <a:CFree RowSpan ="4" ShowTitle="false">
+                    <a:CFree RowSpan="4" ShowTitle="false">
                         <a:Lv x:Name="_lv" ViewMode="Tile">
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Margin="10">
+                                <StackPanel Margin="10" Orientation="Horizontal">
                                     <a:Dot ID="Icon" Margin="0,0,10,0" Width="20" />
                                     <a:Dot ID="ID" />
                                 </StackPanel>
@@ -52,14 +52,14 @@
                         </a:Lv>
                     </a:CFree>
                     <a:CBar Title="菜单项属性" />
-                    <a:CList Title="显示模式" ID="Visibility" />
-                    <a:CBool Title="可用" ID="IsEnabled" />
-                    <a:CText Title="标题" ID="ID" />
-                    <a:CList Title="图标" ID="Icon" />
-                    <a:CBool Title="是否为可选择" ID="IsCheckable" />
-                    <a:CList Title="手机显示内容" ID="ShowInPhone" />
-                    <a:CBool Title="点击后不关闭" ID="StaysOpenOnClick" />
-                    <a:CBool Title="显示更多按钮" ID="ShowBtn" />
+                    <a:CList ID="Visibility" Title="显示模式" />
+                    <a:CBool ID="IsEnabled" Title="可用" />
+                    <a:CText ID="ID" Title="标题" />
+                    <a:CList ID="Icon" Title="图标" />
+                    <a:CBool ID="IsCheckable" Title="是否为可选择" />
+                    <a:CList ID="ShowInPhone" Title="手机显示内容" />
+                    <a:CBool ID="StaysOpenOnClick" Title="点击后不关闭" />
+                    <a:CBool ID="ShowBtn" Title="显示更多按钮" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

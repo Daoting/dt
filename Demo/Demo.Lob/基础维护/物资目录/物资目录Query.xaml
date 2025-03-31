@@ -11,17 +11,59 @@
         <a:CText ID="规格" Query="Editable" QueryFlag="Contains" />
         <a:CText ID="产地" Query="Editable" QueryFlag="Contains" />
         <a:CBar Title="成本价" />
-        <a:CNum ID="成本价_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-        <a:CNum ID="成本价_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CNum
+            ID="成本价_min"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Floor"
+            ShowTitle="False" />
+        <a:CNum
+            ID="成本价_max"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Ceil"
+            ShowTitle="False" />
         <a:CList ID="核算方式" Query="Editable" QueryFlag="Equal" />
         <a:CBar Title="摊销月数" />
-        <a:CNum ID="摊销月数_min" IsInteger="True" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-        <a:CNum ID="摊销月数_max" IsInteger="True" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CNum
+            ID="摊销月数_min"
+            ColSpan="0.5"
+            IsInteger="True"
+            Query="Editable"
+            QueryFlag="Floor"
+            ShowTitle="False" />
+        <a:CNum
+            ID="摊销月数_max"
+            ColSpan="0.5"
+            IsInteger="True"
+            Query="Editable"
+            QueryFlag="Ceil"
+            ShowTitle="False" />
         <a:CBar Title="建档时间" />
-        <a:CDate ID="建档时间_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-        <a:CDate ID="建档时间_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate
+            ID="建档时间_min"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Floor"
+            ShowTitle="False" />
+        <a:CDate
+            ID="建档时间_max"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Ceil"
+            ShowTitle="False" />
         <a:CBar Title="撤档时间" />
-        <a:CDate ID="撤档时间_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-        <a:CDate ID="撤档时间_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate
+            ID="撤档时间_min"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Floor"
+            ShowTitle="False" />
+        <a:CDate
+            ID="撤档时间_max"
+            ColSpan="0.5"
+            Query="Editable"
+            QueryFlag="Ceil"
+            ShowTitle="False" />
     </a:QueryFv>
 </a:Tab>

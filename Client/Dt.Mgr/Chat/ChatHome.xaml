@@ -7,10 +7,10 @@
 
     <a:Pane>
         <a:Tabs>
-            <a:Tab Order="1" Title="消息">
+            <a:Tab Title="消息" Order="1">
                 <chat:ChatList ItemClick="OnItemClick" />
             </a:Tab>
-            <a:Tab Order="2" Title="联系人">
+            <a:Tab Title="联系人" Order="2">
                 <chat:ChatMemberList ItemClick="OnItemClick" />
             </a:Tab>
         </a:Tabs>

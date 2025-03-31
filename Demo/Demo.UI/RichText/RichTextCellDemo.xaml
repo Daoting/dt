@@ -6,7 +6,7 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="格">
+            <a:Tab Title="格" Order="1">
                 <a:Fv x:Name="_fv">
                     <a:CHtml ID="html" Title="Html" />
                     <a:CMarkdown ID="md" Title="Markdown" />
@@ -16,15 +16,23 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <a:Fv x:Name="_pbFv">
-                        <a:CBool Title="表单只读" ID="IsReadOnly" ShowTitle="False" ColSpan="0.5" />
-                        <a:CBool Title="设计模式" ID="IsDesignMode" ShowTitle="False" ColSpan="0.5" />
+                        <a:CBool
+                            ID="IsReadOnly"
+                            Title="表单只读"
+                            ColSpan="0.5"
+                            ShowTitle="False" />
+                        <a:CBool
+                            ID="IsDesignMode"
+                            Title="设计模式"
+                            ColSpan="0.5"
+                            ShowTitle="False" />
                         <a:CBar Title="单元格" />
                     </a:Fv>
                     <a:Fv x:Name="_pbCell" Grid.Row="1" />

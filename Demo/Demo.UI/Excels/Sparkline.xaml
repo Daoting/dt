@@ -7,17 +7,17 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="Excel">
+            <a:Tab Title="Excel" Order="1">
                 <a:Excel x:Name="_excel" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv>
                     <a:CFree Title="图表位置">
-                        <TextBox Text="0,0" x:Name="_tbPosition" />
+                        <TextBox x:Name="_tbPosition" Text="0,0" />
                     </a:CFree>
                     <a:CFree Title="类型">
                         <ComboBox x:Name="_cbSparklineType" />

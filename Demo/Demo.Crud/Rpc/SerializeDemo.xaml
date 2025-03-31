@@ -68,7 +68,7 @@
             <Button Content="收object列表" Click="GetObjectList" />
             <Button Content="发object列表" Click="SetObjectList" />
         </StackPanel>
-        
+
         <a:CBar Title="Table类型" />
         <StackPanel Orientation="Horizontal">
             <Button Content="返回Table" Click="GetTable" />
@@ -103,21 +103,22 @@
         <Button Content="发送Dict列表" Click="SendDictList" />
 
         <a:CBar Title="任意类型" />
-        <Button Content="返回非内置对象" Click="GetCustomBase"/>
-        <Button Content="发送非内置对象" Click="SetCustomBase"/>
-        <Button Content="返回非内置对象列表" Click="GetCustomList"/>
-        <Button Content="发送非内置对象列表" Click="SetCustomList"/>
+        <Button Content="返回非内置对象" Click="GetCustomBase" />
+        <Button Content="发送非内置对象" Click="SetCustomBase" />
+        <Button Content="返回非内置对象列表" Click="GetCustomList" />
+        <Button Content="发送非内置对象列表" Click="SetCustomList" />
         <Button Content="返回嵌套对象" Click="GetCustomCombine" />
         <Button Content="发送嵌套对象" Click="SetCustomCombine" />
         <Button Content="返回复杂嵌套对象" Click="GetContainCustom" />
         <Button Content="发送复杂嵌套对象" Click="SetContainCustom" />
 
-        <a:CFree RowSpan="5" ColSpan="0" ShowTitle="False">
-            <TextBox x:Name="_tbInfo"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"
-                     ScrollViewer.VerticalScrollMode="Enabled"
-                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        <a:CFree ColSpan="0" RowSpan="5" ShowTitle="False">
+            <TextBox
+                x:Name="_tbInfo"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollMode="Enabled" />
         </a:CFree>
     </a:Fv>
 </a:Win>

@@ -8,7 +8,7 @@
         <a:CBar Title="单元格值">
             <Button Content="清空" Click="OnClearVal" />
         </a:CBar>
-        <a:CText ID="val" ShowTitle="False" AcceptsReturn="True" RowSpan="3" />
+        <a:CText ID="val" AcceptsReturn="True" RowSpan="3" ShowTitle="False" />
         <StackPanel Orientation="Horizontal">
             <Button Content="+数据源" Click="OnAddDataVal" />
             <Button Content="+参数" Click="OnAddParamVal" />
@@ -21,30 +21,84 @@
         </StackPanel>
         <a:CBool ID="handleclick" Title="点击时执行脚本" ShowTitle="False" />
         <a:CBar Title="自动合并重复值的格" />
-        <a:CBool ID="hidetopdup" Title="纵向合并" ShowTitle="False" ColSpan="0.5" />
-        <a:CBool ID="hideleftdup" Title="横向合并" ShowTitle="False" ColSpan="0.5" />
+        <a:CBool
+            ID="hidetopdup"
+            Title="纵向合并"
+            ColSpan="0.5"
+            ShowTitle="False" />
+        <a:CBool
+            ID="hideleftdup"
+            Title="横向合并"
+            ColSpan="0.5"
+            ShowTitle="False" />
 
         <a:CBar Title="样式" />
-        <a:CBool ID="wordwrap" Title="自动换行" ShowTitle="False" ColSpan="0.5" />
-        <a:CBool ID="autoheight" Title="自动行高(低效)" ShowTitle="False" ColSpan="0.5" />
-        <a:CBool ID="bold" Title="粗体" ShowTitle="False" ColSpan="0.5" />
-        <a:CBool ID="italic" Title="斜体" ShowTitle="False" ColSpan="0.5" />
-        <a:CBool ID="underline" Title="下划线" ShowTitle="False" ColSpan="0.5" />
-        <a:CBool ID="strikeout" Title="删除线" ShowTitle="False" ColSpan="0.5" />
+        <a:CBool ID="wordwrap" Title="自动换行" ColSpan="0.5" ShowTitle="False" />
+        <a:CBool
+            ID="autoheight"
+            Title="自动行高(低效)"
+            ColSpan="0.5"
+            ShowTitle="False" />
+        <a:CBool ID="bold" Title="粗体" ColSpan="0.5" ShowTitle="False" />
+        <a:CBool ID="italic" Title="斜体" ColSpan="0.5" ShowTitle="False" />
+        <a:CBool ID="underline" Title="下划线" ColSpan="0.5" ShowTitle="False" />
+        <a:CBool ID="strikeout" Title="删除线" ColSpan="0.5" ShowTitle="False" />
         <a:CText ID="fontfamily" Title="字体" TitleWidth="70" />
-        <a:CNum ID="fontsize" Title="字号" Minimum="0" IsInteger="True" TitleWidth="70" ColSpan="0.5" />
-        <a:CNum ID="margin" Title="缩进" Minimum="0" IsInteger="True" TitleWidth="70" ColSpan="0.5" />
-        <a:CList ID="horalign" Title="水平" Ex="EnumData#Dt.Cells.Data.CellHorizontalAlignment,Dt.Cells.Data" TitleWidth="70" ColSpan="0.5" />
-        <a:CList ID="veralign" Title="垂直" Ex="EnumData#Dt.Cells.Data.CellVerticalAlignment,Dt.Cells.Data" TitleWidth="70" ColSpan="0.5" />
-        <a:CColor ID="foreground" Title="前景" TitleWidth="70" ColSpan="0.5" />
-        <a:CColor ID="background" Title="背景" TitleWidth="70" ColSpan="0.5" />
-        <a:CList ID="lbs" Title="左边框" Ex="EnumData#Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data" TitleWidth="70" ColSpan="0.6" />
-        <a:CColor ID="lbc" ShowTitle="False" ColSpan="0.4" />
-        <a:CList ID="tbs" Title="上边框" Ex="EnumData#Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data" TitleWidth="70" ColSpan="0.6" />
-        <a:CColor ID="tbc" ShowTitle="False" ColSpan="0.4" />
-        <a:CList ID="rbs" Title="右边框" Ex="EnumData#Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data" TitleWidth="70" ColSpan="0.6" />
-        <a:CColor ID="rbc" ShowTitle="False" ColSpan="0.4" />
-        <a:CList ID="bbs" Title="下边框" Ex="EnumData#Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data" TitleWidth="70" ColSpan="0.6" />
-        <a:CColor ID="bbc" ShowTitle="False" ColSpan="0.4" />
+        <a:CNum
+            ID="fontsize"
+            Title="字号"
+            ColSpan="0.5"
+            IsInteger="True"
+            Minimum="0"
+            TitleWidth="70" />
+        <a:CNum
+            ID="margin"
+            Title="缩进"
+            ColSpan="0.5"
+            IsInteger="True"
+            Minimum="0"
+            TitleWidth="70" />
+        <a:CList
+            ID="horalign"
+            Title="水平"
+            ColSpan="0.5"
+            Ex="EnumData#Dt.Cells.Data.CellHorizontalAlignment,Dt.Cells.Data"
+            TitleWidth="70" />
+        <a:CList
+            ID="veralign"
+            Title="垂直"
+            ColSpan="0.5"
+            Ex="EnumData#Dt.Cells.Data.CellVerticalAlignment,Dt.Cells.Data"
+            TitleWidth="70" />
+        <a:CColor ID="foreground" Title="前景" ColSpan="0.5" TitleWidth="70" />
+        <a:CColor ID="background" Title="背景" ColSpan="0.5" TitleWidth="70" />
+        <a:CList
+            ID="lbs"
+            Title="左边框"
+            ColSpan="0.6"
+            Ex="EnumData#Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data"
+            TitleWidth="70" />
+        <a:CColor ID="lbc" ColSpan="0.4" ShowTitle="False" />
+        <a:CList
+            ID="tbs"
+            Title="上边框"
+            ColSpan="0.6"
+            Ex="EnumData#Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data"
+            TitleWidth="70" />
+        <a:CColor ID="tbc" ColSpan="0.4" ShowTitle="False" />
+        <a:CList
+            ID="rbs"
+            Title="右边框"
+            ColSpan="0.6"
+            Ex="EnumData#Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data"
+            TitleWidth="70" />
+        <a:CColor ID="rbc" ColSpan="0.4" ShowTitle="False" />
+        <a:CList
+            ID="bbs"
+            Title="下边框"
+            ColSpan="0.6"
+            Ex="EnumData#Dt.Cells.Data.BorderLineStyle,Dt.Cells.Data"
+            TitleWidth="70" />
+        <a:CColor ID="bbc" ColSpan="0.4" ShowTitle="False" />
     </a:Fv>
 </UserControl>

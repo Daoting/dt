@@ -7,7 +7,12 @@
     <a:Tab x:Name="_tabMain" Title="表单">
         <a:Tab.Menu>
             <a:Menu>
-                <a:Mi ID="Xaml" Icon="HtmL" Call="OnShowEditXaml" ShowBtn="True" BtnCall="OnCopyXaml" />
+                <a:Mi
+                    ID="Xaml"
+                    Icon="HtmL"
+                    BtnCall="OnCopyXaml"
+                    Call="OnShowEditXaml"
+                    ShowBtn="True" />
                 <a:Mi ID="确定" Icon="保存" Call="OnSave" />
             </a:Menu>
         </a:Tab.Menu>
@@ -15,7 +20,7 @@
     <a:Tab Title="属性" a:Ex.Dock="Right">
         <a:Fv x:Name="_fv">
             <a:CBar Title="行视图">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                     <Button Content="+模板">
                         <a:Ex.Menu>
                             <a:Menu>
@@ -28,10 +33,14 @@
                     <Button Content="应用" Click="OnApplyView" />
                 </StackPanel>
             </a:CBar>
-            <a:CText ID="ViewXaml" ShowTitle="False" AcceptsReturn="True" RowSpan="6" />
-            
+            <a:CText
+                ID="ViewXaml"
+                AcceptsReturn="True"
+                RowSpan="6"
+                ShowTitle="False" />
+
             <a:CBar Title="筛选框">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                     <Button Content="+模板">
                         <a:Ex.Menu>
                             <a:Menu>
@@ -43,23 +52,66 @@
                     <Button Content="应用" Click="OnApplyFilterCfg" />
                 </StackPanel>
             </a:CBar>
-            <a:CText ID="FilterCfgXaml" ShowTitle="False" AcceptsReturn="True" RowSpan="2" />
-            
-            <a:CList Title="视图类型" ID="ViewMode" TitleWidth="90" />
-            <a:CList Title="选择模式" ID="SelectionMode" TitleWidth="90" />
-            <a:CList Title="分组列名" ID="GroupName" IsEditable="True" ColSpan="0.6" TitleWidth="90" />
-            <a:CBool Title="显示分组导航" ID="ShowGroupHeader" ShowTitle="False" ColSpan="0.4" />
-            <a:CNum Title="行高，0取第一行高，NaN自动" ID="ItemHeight" TitleWidth="240" />
-            <a:CNum Title="磁贴项最小宽度，默认160" ID="MinItemWidth" TitleWidth="240" />
-            <a:CBool ID="ShowReportMenu" Title="表格视图左上脚显示报表相关的菜单项" ShowTitle="False" />
-            <a:CBool ID="AutoSaveCols" Title="自动保存调整后的列宽、列序、隐藏列" ShowTitle="False" />
-            <a:CBool Title="显示行分割线" ID="ShowItemBorder" ShowTitle="False" ColSpan="0.5" />
-            <a:CBool Title="自动生成列" ID="AutoCreateCol" ShowTitle="False" ColSpan="0.5" />
-            <a:CBool Title="允许下拉刷新" ID="PullToRefresh" ShowTitle="False" ColSpan="0.5" />
-            <a:CBool Title="自动滚动到底端" ID="AutoScrollBottom" ShowTitle="False" ColSpan="0.5" />
+            <a:CText
+                ID="FilterCfgXaml"
+                AcceptsReturn="True"
+                RowSpan="2"
+                ShowTitle="False" />
+
+            <a:CList ID="ViewMode" Title="视图类型" TitleWidth="90" />
+            <a:CList ID="SelectionMode" Title="选择模式" TitleWidth="90" />
+            <a:CList
+                ID="GroupName"
+                Title="分组列名"
+                ColSpan="0.6"
+                IsEditable="True"
+                TitleWidth="90" />
+            <a:CBool
+                ID="ShowGroupHeader"
+                Title="显示分组导航"
+                ColSpan="0.4"
+                ShowTitle="False" />
+            <a:CNum ID="ItemHeight" Title="行高，0取第一行高，NaN自动" TitleWidth="240" />
+            <a:CNum ID="MinItemWidth" Title="磁贴项最小宽度，默认160" TitleWidth="240" />
+            <a:CBool
+                ID="ShowReportMenu"
+                Title="表格视图左上脚显示报表相关的菜单项"
+                ShowTitle="False" />
+            <a:CBool
+                ID="AutoSaveCols"
+                Title="自动保存调整后的列宽、列序、隐藏列"
+                ShowTitle="False" />
+            <a:CBool
+                ID="ShowItemBorder"
+                Title="显示行分割线"
+                ColSpan="0.5"
+                ShowTitle="False" />
+            <a:CBool
+                ID="AutoCreateCol"
+                Title="自动生成列"
+                ColSpan="0.5"
+                ShowTitle="False" />
+            <a:CBool
+                ID="PullToRefresh"
+                Title="允许下拉刷新"
+                ColSpan="0.5"
+                ShowTitle="False" />
+            <a:CBool
+                ID="AutoScrollBottom"
+                Title="自动滚动到底端"
+                ColSpan="0.5"
+                ShowTitle="False" />
             <a:CBar Title="列表视图的表格样式" />
-            <a:CBool Title="显示列头" ID="ShowListHeader" ShowTitle="False" ColSpan="0.5" />
-            <a:CBool Title="显示Dot边框" ID="ShowDotBorder" ShowTitle="False" ColSpan="0.5" />
+            <a:CBool
+                ID="ShowListHeader"
+                Title="显示列头"
+                ColSpan="0.5"
+                ShowTitle="False" />
+            <a:CBool
+                ID="ShowDotBorder"
+                Title="显示Dot边框"
+                ColSpan="0.5"
+                ShowTitle="False" />
         </a:Fv>
     </a:Tab>
 </a:Win>

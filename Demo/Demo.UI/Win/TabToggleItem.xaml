@@ -6,10 +6,13 @@
 
     <a:Tab.Menu>
         <a:Menu>
-            <a:Mi ID="保存" Icon="保存" IsEnabled="{Binding IsChecked,ElementName=_cbSave}" />
+            <a:Mi
+                ID="保存"
+                Icon="保存"
+                IsEnabled="{Binding IsChecked, ElementName=_cbSave}" />
         </a:Menu>
     </a:Tab.Menu>
-    
+
     <StackPanel Padding="10" Spacing="10">
         <Button Content="切换左区新Tab" Click="OnToggle1" />
         <Button Content="左区返回首页" Click="OnBackToHome" />

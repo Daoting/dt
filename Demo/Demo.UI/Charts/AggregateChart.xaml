@@ -6,14 +6,14 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="图表样例">
+            <a:Tab Title="图表样例" Order="1">
                 <a:Chart x:Name="_chart" />
             </a:Tab>
         </a:Tabs>
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <StackPanel>
                     <a:Fv>
                         <a:CFree Title="聚合方法">

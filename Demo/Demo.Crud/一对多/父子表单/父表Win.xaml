@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     xmlns:l="using:Demo.Crud">
 
-    <l:父表Query x:Name="_query" a:Ex.Dock="Left" Order="1" />
+    <l:父表Query x:Name="_query" Order="1" a:Ex.Dock="Left" />
     <l:父表List x:Name="_parentList" />
     <a:Tabs a:Ex.Dock="Bottom">
         <l:父表大儿List x:Name="_大儿List" />

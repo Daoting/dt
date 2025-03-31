@@ -6,7 +6,7 @@
 
     <a:Win.Resources>
         <DataTemplate x:Key="背景">
-            <Border Padding="6" Background="{StaticResource 主蓝}">
+            <Border Background="{StaticResource 主蓝}" Padding="6">
                 <a:Dot ID="name" Foreground="White" />
             </Border>
         </DataTemplate>
@@ -14,36 +14,36 @@
         <DataTemplate x:Key="文字">
             <a:Dot ID="name" Margin="6" />
         </DataTemplate>
-        
+
         <DataTemplate x:Key="椭圆">
             <Grid>
-                <Ellipse Stretch="Fill" Fill="{StaticResource 主蓝}" />
+                <Ellipse Fill="{StaticResource 主蓝}" Stretch="Fill" />
                 <a:Dot ID="name" Margin="16" />
             </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="随机1">
-            <Border Padding="6" Background="{StaticResource 主蓝}" Height="60">
+            <Border Background="{StaticResource 主蓝}" Height="60" Padding="6">
                 <a:Dot ID="name" Foreground="White" VerticalAlignment="Center" />
             </Border>
         </DataTemplate>
 
         <DataTemplate x:Key="随机2">
-            <Border Padding="6" Background="{StaticResource 主蓝}" Height="100">
+            <Border Background="{StaticResource 主蓝}" Height="100" Padding="6">
                 <a:Dot ID="name" Foreground="White" VerticalAlignment="Center" />
             </Border>
         </DataTemplate>
 
         <DataTemplate x:Key="随机3">
-            <Border Padding="6" Background="{StaticResource 主蓝}" Height="140">
+            <Border Background="{StaticResource 主蓝}" Height="140" Padding="6">
                 <a:Dot ID="name" Foreground="White" VerticalAlignment="Center" />
             </Border>
         </DataTemplate>
     </a:Win.Resources>
-    
+
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="树状图表">
+            <a:Tab Title="树状图表" Order="1">
                 <a:TreeDiagram x:Name="_td">
                     <a:Ex.Menu>
                         <a:Menu>
@@ -64,7 +64,7 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv Data="{Binding ElementName=_td}">
                     <a:CBar Title="数据源" />
                     <StackPanel Orientation="Horizontal">
@@ -81,9 +81,9 @@
                         <Button Content="椭圆背景" Click="OnStyle3" />
                         <Button Content="节点随机高度" Click="OnStyle4" />
                     </StackPanel>
-                    
+
                     <a:CBar Title="属性" />
-                    <a:CList Title="选择模式" ID="SelectionMode" />
+                    <a:CList ID="SelectionMode" Title="选择模式" />
                     <a:CFree Title="鼠标进入背景色">
                         <StackPanel Orientation="Horizontal">
                             <Button Content="无色" Click="OnNoEnteredBrush" />
@@ -98,12 +98,12 @@
                             <Button Content="默认色" Click="OnDefPressedBrush" />
                         </StackPanel>
                     </a:CFree>
-                    
+
                     <a:CBar Title="附加事件" />
                     <CheckBox Content="行单击事件" Click="OnRowClick" />
                     <CheckBox Content="选择变化事件" Click="OnSelectionChangedClick" />
                     <CheckBox Content="行双击事件" Click="OnRowDoubleClick" />
-                    
+
                     <a:CBar Title="上下文菜单" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="按钮" Click="OnBtnEvent" />

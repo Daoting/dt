@@ -19,38 +19,45 @@
             </Grid.ColumnDefinitions>
             <Grid x:Name="_gridLocal" Grid.Column="1" />
         </Grid>
-        <TextBlock x:Name="_tbInfo" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBlock
+            x:Name="_tbInfo"
+            Foreground="White"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center" />
         <Grid x:Name="_gridBtn" Height="50" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Button Content="拒    绝"
-                    Click="OnRefuse"
-                    Foreground="White"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    FontWeight="Bold"
-                    Background="Red" />
-            <Button Content="接    听"
-                    Click="OnAccept"
-                    Foreground="White"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    FontWeight="Bold"
-                    Background="Green"
-                    Grid.Column="2" />
-        </Grid>
-        <Button x:Name="_btnEnd"
-                Content="挂    断"
-                Click="OnEnd"
+            <Button
+                Content="拒    绝"
+                Background="Red"
+                Click="OnRefuse"
+                FontWeight="Bold"
                 Foreground="White"
                 HorizontalAlignment="Stretch"
-                Height="50"
+                VerticalAlignment="Stretch" />
+            <Button
+                Content="接    听"
+                Background="Green"
+                Click="OnAccept"
                 FontWeight="Bold"
-                Background="Red"
-                Grid.Row="2"
-                Visibility="Collapsed" />
+                Foreground="White"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Grid.Column="2" />
+        </Grid>
+        <Button
+            x:Name="_btnEnd"
+            Content="挂    断"
+            Background="Red"
+            Click="OnEnd"
+            FontWeight="Bold"
+            Foreground="White"
+            Height="50"
+            HorizontalAlignment="Stretch"
+            Visibility="Collapsed"
+            Grid.Row="2" />
     </Grid>
 </a:Dlg>

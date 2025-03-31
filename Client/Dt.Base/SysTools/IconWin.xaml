@@ -4,13 +4,22 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <Grid MaxWidth="800" Margin="0,-1,0,0">
+    <Grid Margin="0,-1,0,0" MaxWidth="800">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <a:SearchBox x:Name="_sb" Search="OnSearch" Placeholder="请输入名称或简码" IsRealtime="True" />
-        <a:Lv x:Name="_lv" ViewMode="Tile" BorderThickness="1,0,1,0" BorderBrush="{StaticResource 浅灰2}" Grid.Row="1">
+        <a:SearchBox
+            x:Name="_sb"
+            IsRealtime="True"
+            Placeholder="请输入名称或简码"
+            Search="OnSearch" />
+        <a:Lv
+            x:Name="_lv"
+            BorderBrush="{StaticResource 浅灰2}"
+            BorderThickness="1,0,1,0"
+            ViewMode="Tile"
+            Grid.Row="1">
             <a:Ex.Menu>
                 <a:Menu>
                     <a:Mi ID="复制Icons值" Icon="地址" Click="OnCopyIcons" />
@@ -20,9 +29,9 @@
                 </a:Menu>
             </a:Ex.Menu>
             <DataTemplate>
-                <StackPanel Padding="10" Height="90">
+                <StackPanel Height="90" Padding="10">
                     <a:Dot ID="Icon" FontSize="40" HorizontalAlignment="Center" />
-                    <a:Dot ID="FullName" Margin="0,8,0,0" HorizontalAlignment="Center" />
+                    <a:Dot ID="FullName" HorizontalAlignment="Center" Margin="0,8,0,0" />
                 </StackPanel>
             </DataTemplate>
         </a:Lv>

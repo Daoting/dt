@@ -6,7 +6,7 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="表单">
+            <a:Tab Title="表单" Order="1">
                 <a:Fv x:Name="_fv">
                     <a:CNum ID="num" Title="数值x10" Call="TenTimesMid" IsInteger="True" />
                     <a:CNum ID="style" Title="值影响样式" Call="StyleMid" IsInteger="True" />
@@ -25,7 +25,7 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv>
                     <a:CBar Title="设置数据源" />
                     <StackPanel Orientation="Horizontal">

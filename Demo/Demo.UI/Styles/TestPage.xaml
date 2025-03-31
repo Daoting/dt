@@ -7,7 +7,7 @@
 
     <Grid Background="White">
         <StackPanel>
-            <TextBlock Text="Hello, world!" Margin="20" FontSize="30" />
+            <TextBlock Text="Hello, world!" FontSize="30" Margin="20" />
             <Button Content="启动" Click="OnStart" />
         </StackPanel>
     </Grid>

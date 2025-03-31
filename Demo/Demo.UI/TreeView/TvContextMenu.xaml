@@ -6,7 +6,7 @@
 
     <a:Main>
         <a:Tabs>
-            <a:Tab Order="1" Title="树">
+            <a:Tab Title="树" Order="1">
                 <a:Tv x:Name="_tv">
                     <a:Ex.Menu>
                         <a:Menu>
@@ -27,7 +27,7 @@
     </a:Main>
     <a:Pane Pos="Right">
         <a:Tabs>
-            <a:Tab Order="2" Title="属性">
+            <a:Tab Title="属性" Order="2">
                 <a:Fv Data="{Binding ElementName=_tv}">
                     <a:CBar Title="触发事件方式" />
                     <StackPanel Orientation="Horizontal">
@@ -39,7 +39,7 @@
                         <Button Content="切换菜单" Click="OnChangeMenu" />
                         <Button Content="无菜单" Click="OnNoMenu" />
                     </StackPanel>
-                    <a:CList Title="选择模式" ID="SelectionMode" />
+                    <a:CList ID="SelectionMode" Title="选择模式" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

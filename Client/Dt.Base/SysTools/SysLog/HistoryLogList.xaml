@@ -9,18 +9,46 @@
         <a:Menu>
             <a:Mi ID="本应用日志" Icon="选日" Click="OnSelectSelf" />
             <a:Mi ID="其它位置" Icon="文件夹" Click="OnOpenFile" />
-            <a:Mi ID="其它应用" Icon="应用" Click="OnSelectOther" Visibility="Collapsed" />
+            <a:Mi
+                ID="其它应用"
+                Icon="应用"
+                Click="OnSelectOther"
+                Visibility="Collapsed" />
         </a:Menu>
     </a:Tab.Menu>
     <Grid RowDefinitions="Auto,*">
-        <StackPanel Orientation="Horizontal" Spacing="20" Background="{StaticResource 浅灰1}" BorderThickness="0,0,0,1" BorderBrush="{StaticResource 浅灰2}" Padding="10,0,10,0">
-            <Button Content="&#xE02B;" Style="{StaticResource 字符按钮}" Click="OnFirstPage" />
-            <Button Content="&#xE010;" Style="{StaticResource 字符按钮}" Click="OnPrePage" />
+        <StackPanel
+            Background="{StaticResource 浅灰1}"
+            BorderBrush="{StaticResource 浅灰2}"
+            BorderThickness="0,0,0,1"
+            Orientation="Horizontal"
+            Padding="10,0,10,0"
+            Spacing="20">
+            <Button
+                Content="&#xE02B;"
+                Click="OnFirstPage"
+                Style="{StaticResource 字符按钮}" />
+            <Button
+                Content="&#xE010;"
+                Click="OnPrePage"
+                Style="{StaticResource 字符按钮}" />
             <TextBox x:Name="_tbPageNum" Text="0" KeyUp="OnNumKeyUp" />
-            <TextBlock x:Name="_tbTotalPage" Text="/ 0 页" VerticalAlignment="Center" />
-            <Button Content="&#xE011;" Style="{StaticResource 字符按钮}" Click="OnNextPage" />
-            <Button Content="&#xE030;" Style="{StaticResource 字符按钮}" Click="OnLastPage" />
-            <TextBlock x:Name="_tbTotalRow" Text="❌ 未加载日志文件" VerticalAlignment="Center" />
+            <TextBlock
+                x:Name="_tbTotalPage"
+                Text="/ 0 页"
+                VerticalAlignment="Center" />
+            <Button
+                Content="&#xE011;"
+                Click="OnNextPage"
+                Style="{StaticResource 字符按钮}" />
+            <Button
+                Content="&#xE030;"
+                Click="OnLastPage"
+                Style="{StaticResource 字符按钮}" />
+            <TextBlock
+                x:Name="_tbTotalRow"
+                Text="❌ 未加载日志文件"
+                VerticalAlignment="Center" />
         </StackPanel>
         <a:Lv x:Name="_lv" ItemClick="OnOutputClick" Grid.Row="1">
             <DataTemplate>

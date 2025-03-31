@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Title="表单">
 
-    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+    <a:Fv x:Name="_fv" Create="Add" Delete="Delete" Save="Save">
         <a:CText ID="名称" />
         <a:CText ID="执照号" />
         <a:CDate ID="执照效期" />

@@ -8,10 +8,15 @@
         <DataTemplate x:Key="FolderTemplate">
             <Grid Padding="10">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="&#xE067;" FontFamily="{StaticResource IconFont}" FontSize="30" Margin="4,0,10,0" VerticalAlignment="Center" />
+                <TextBlock
+                    Text="&#xE067;"
+                    FontFamily="{StaticResource IconFont}"
+                    FontSize="30"
+                    Margin="4,0,10,0"
+                    VerticalAlignment="Center" />
                 <StackPanel Grid.Column="1">
                     <TextBlock Text="{Binding [name]}" TextWrapping="NoWrap" />
                     <a:Dot ID="ctime" Call="Def.AutoDate,Def.小灰" />
@@ -20,7 +25,10 @@
         </DataTemplate>
 
         <DataTemplate x:Key="FileTemplate">
-            <a:FileList Data="{Binding [Info]}" EnableClick="False" BorderBrush="Transparent" />
+            <a:FileList
+                BorderBrush="Transparent"
+                Data="{Binding [Info]}"
+                EnableClick="False" />
         </DataTemplate>
     </a:Tab.Resources>
 

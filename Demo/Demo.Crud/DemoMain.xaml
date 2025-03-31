@@ -6,7 +6,19 @@
     xmlns:l="using:Demo.Crud"
     Title="管理样例">
 
-    <a:NavList x:Name="_navBase" Title="基础" Order="1" Icon="搬运工" To="NewWin" a:Ex.Dock="Left" />
+    <a:NavList
+        x:Name="_navBase"
+        Title="基础"
+        Icon="搬运工"
+        Order="1"
+        To="NewWin"
+        a:Ex.Dock="Left" />
     <l:RptHome Order="2" />
-    <a:NavList x:Name="_navEntity" Title="实体" Order="3" Icon="词典" To="NewWin" a:Ex.Dock="Right" />
+    <a:NavList
+        x:Name="_navEntity"
+        Title="实体"
+        Icon="词典"
+        Order="3"
+        To="NewWin"
+        a:Ex.Dock="Right" />
 </a:Win>
