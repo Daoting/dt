@@ -16,7 +16,7 @@ SELECT
 FROM
     cm_menu
 WHERE
-    name LIKE '%#input#%'
+    name LIKE '%#{input}#%'
                         ]]>
                     </a:Sql>
                 </a:CPick.Sql>
@@ -43,7 +43,7 @@ SELECT
 FROM
     crud_父表
 WHERE
-    父名 LIKE '%#input#%'
+    父名 LIKE '%#{input}#%'
                         ]]>
                     </a:Sql>
                 </a:CPick.Sql>
@@ -60,8 +60,8 @@ SELECT
 FROM
     crud_大儿
 WHERE
-    parent_id = @[parentid]
-    AND 大儿名 LIKE '%#input#%'
+    parent_id = @parentid
+    AND 大儿名 LIKE '%#{input}#%'
                         ]]>
                     </a:Sql>
                 </a:CPick.Sql>
@@ -78,8 +78,8 @@ SELECT
 FROM
     crud_小儿
 WHERE
-    group_id = #[parentid]#
-    AND 小儿名 LIKE '%#input#%'
+    group_id = #parentid#
+    AND 小儿名 LIKE '%#{input}#%'
                         ]]>
                     </a:Sql>
                 </a:CPick.Sql>
@@ -98,7 +98,7 @@ SELECT
 FROM
     OmMenu
 WHERE
-    name LIKE '%#input#%'
+    name LIKE '%#{input}#%'
                         ]]>
                     </a:Sql>
                 </a:CPick.Sql>

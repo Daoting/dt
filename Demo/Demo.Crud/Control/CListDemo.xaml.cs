@@ -37,6 +37,9 @@ namespace Demo.Crud
                 { "maxparent", typeof(string) },
                 { "localmenu", typeof(string) },
             };
+            CList ls = new CList();
+            var a = ls.Sql;
+
         }
     }
 }

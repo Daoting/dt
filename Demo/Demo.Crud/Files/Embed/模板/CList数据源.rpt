@@ -36,7 +36,7 @@ WHERE
         FROM
             cm_user_role
         WHERE
-            user_id = @userid
+            user_id = @{userid}
     )
                     </a:Sql>
                 </a:CList.Sql>
@@ -65,7 +65,7 @@ SELECT
 FROM
 	crud_大儿
 WHERE
-	parent_id = @[parentid]
+	parent_id = @parentid
                     </a:Sql>
                 </a:CList.Sql>
                 <DataTemplate>
@@ -80,7 +80,7 @@ SELECT
 FROM
 	crud_小儿
 WHERE
-	group_id = #[parentid]#
+	group_id = #parentid#
                     </a:Sql>
                 </a:CList.Sql>
                 <DataTemplate>

@@ -12,7 +12,7 @@ SELECT
 FROM
 	cm_menu
 WHERE
-	name LIKE '%#input#%'
+	name LIKE '%#{input}#%'
                     </a:Sql>
                 </a:CPick.Sql>
                 <a:Cols>
@@ -27,7 +27,7 @@ WHERE
             <a:CBar Title="演示多个CPick联动、sql变量赋值、占位符替换" />
             <a:CPick ID="parent" Title="父亲" SrcID="父名#id#-#-" TgtID="-#parentid#child1#child2">
                 <a:CPick.Sql>
-                    <a:Sql>select * from crud_父表 where 父名 LIKE '%#input#%'</a:Sql>
+                    <a:Sql>select * from crud_父表 where 父名 LIKE '%#{input}#%'</a:Sql>
                 </a:CPick.Sql>
                 <DataTemplate>
                     <a:Dot ID="父名" Padding="10" />
@@ -41,8 +41,8 @@ SELECT
 FROM
 	crud_大儿
 WHERE
-	parent_id = @[parentid]
-    AND 大儿名 LIKE '%#input#%'
+	parent_id = @parentid
+    AND 大儿名 LIKE '%#{input}#%'
                     </a:Sql>
                 </a:CPick.Sql>
                 <DataTemplate>
@@ -57,8 +57,8 @@ SELECT
 FROM
 	crud_小儿
 WHERE
-	group_id = #[parentid]#
-    AND 小儿名 LIKE '%#input#%'
+	group_id = #parentid#
+    AND 小儿名 LIKE '%#{input}#%'
                     </a:Sql>
                 </a:CPick.Sql>
                 <DataTemplate>
@@ -75,7 +75,7 @@ SELECT
 FROM
 	OmMenu
 WHERE
-	name LIKE '%#input#%'                        
+	name LIKE '%#{input}#%'                        
                     </a:Sql>
                 </a:CPick.Sql>
                 <a:Cols>

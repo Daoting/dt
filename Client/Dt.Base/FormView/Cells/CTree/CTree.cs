@@ -144,24 +144,28 @@ namespace Dt.Base
 
         #region 属性
         /// <summary>
-        /// 获取设置数据源Sql属性，方便在xaml中设置，select语句可包含变量或占位符，变量以@开头，占位符首尾添加#，它们内容格式相同，分两类：
-        /// <para>1. 内部表达式取值：</para>
-        /// <para>   userid：当前登录ID</para>
-        /// <para>   username：当前登录名</para>
-        /// <para>   input：CPick中输入的过滤串</para>
-        /// <para>   [列名]：当前Fv数据源的列值</para>
-        /// 
-        /// <para>2. 调用外部方法取值： 外部类名.方法(参数)，如RptValueCall.GetMaxID(crud_父表)</para>
+        /// 获取设置数据源的select语句，sql可包含 变量 或 占位符
+        /// <para>1. 变量以@开头：</para>
+        /// <para>    @属性名，取Fv数据源的属性值，以Sql参数方式查询</para>
+        /// <para>    @类名.方法(串参数或无)，调用有ValueCall标签的类的静态方法取值，以Sql参数方式查询</para>
+        /// <para>    @{键}，支持键：userid username input，当前用户ID、用户名、CPick中输入的过滤串</para>
+        /// <para>    如：@parentid  @RptValueCall.GetMaxID(crud_父表)  @{input}</para>
+        /// <para></para>
+        /// <para>2. 占位符首尾添加#：</para>
+        /// <para>    #属性名#，取Fv数据源的属性值，查询前替换占位符的值</para>
+        /// <para>    #类名.方法(串参数或无)#，调用有ValueCall标签的类的静态方法取值替换占位符</para>
+        /// <para>    #{键}#，和变量相同，用键值替换占位符</para>
+        /// <para>    如：#parentid#  #RptValueCall.GetMaxID(crud_父表)# #{input}#</para>
         /// <para>
         /// SELECT
         /// 	大儿名
         /// FROM
         /// 	crud_大儿
         /// WHERE
-        /// 	parent_id = @[parentid]
-        ///     AND name LIKE '#input#%'
+        /// 	parent_id = @parentid
+        ///     AND name LIKE '#{input}#%'
         ///     AND id = @RptValueCall.GetMaxID(crud_大儿)
-        ///     AND owner = @userid
+        ///     AND owner = @{userid}
         /// </para>
         /// </summary>
         public Sql Sql
