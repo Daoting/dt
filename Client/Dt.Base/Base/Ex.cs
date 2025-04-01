@@ -168,6 +168,23 @@ namespace Dt.Base
         {
             d.SetValue(ItemsXamlProperty, value);
         }
+
+        internal static readonly DependencyProperty SqlXamlProperty =
+            DependencyProperty.RegisterAttached(
+                "SqlXaml",
+                typeof(Sql),
+                typeof(Ex),
+                new PropertyMetadata(null));
+
+        internal static Sql GetSqlXaml(Control d)
+        {
+            return (Sql)d.GetValue(SqlXamlProperty);
+        }
+
+        internal static void SetSqlXaml(Control d, Sql value)
+        {
+            d.SetValue(SqlXamlProperty, value);
+        }
         #endregion
 
         #region 元素宽度

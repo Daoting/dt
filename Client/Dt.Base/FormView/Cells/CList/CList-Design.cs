@@ -39,6 +39,15 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 设计时用，xaml定义Sql
+        /// </summary>
+        public Sql SqlXaml
+        {
+            get { return Dt.Base.Ex.GetSqlXaml(this); }
+            set { Dt.Base.Ex.SetSqlXaml(this, value); }
+        }
+
+        /// <summary>
         /// 设计时用，行视图的xaml
         /// </summary>
         public string ViewXaml
@@ -46,35 +55,35 @@ namespace Dt.Base
             get { return _lv.ViewXaml; }
             set { _lv.ViewXaml = value; }
         }
-        
+
         protected override void ExportCustomXaml(XmlWriter p_xw)
         {
             if (!string.IsNullOrEmpty(ViewXaml))
             {
                 FvDesignKit.CopyXml(p_xw, ViewXaml);
             }
-            
+
             if (!string.IsNullOrEmpty(ItemsXaml))
             {
                 p_xw.WriteStartElement("a", "CList.Items", null);
                 FvDesignKit.CopyXml(p_xw, ItemsXaml);
                 p_xw.WriteEndElement();
             }
-            
-            if (Sql == null || string.IsNullOrEmpty(Sql.SqlStr))
-                return;
 
-            p_xw.WriteStartElement("a", "CList.Sql", null);
-            p_xw.WriteStartElement("a", "Sql", null);
+            if (SqlXaml != null && !string.IsNullOrEmpty(SqlXaml.SqlStr))
+            {
+                p_xw.WriteStartElement("a", "CList.Sql", null);
+                p_xw.WriteStartElement("a", "Sql", null);
 
-            if (!string.IsNullOrEmpty(Sql.LocalDb))
-                p_xw.WriteAttributeString("LocalDb", Sql.LocalDb);
-            if (!string.IsNullOrEmpty(Sql.Svc))
-                p_xw.WriteAttributeString("Svc", Sql.Svc);
-            p_xw.WriteCData(Sql.SqlStr);
+                if (!string.IsNullOrEmpty(SqlXaml.LocalDb))
+                    p_xw.WriteAttributeString("LocalDb", SqlXaml.LocalDb);
+                if (!string.IsNullOrEmpty(SqlXaml.Svc))
+                    p_xw.WriteAttributeString("Svc", SqlXaml.Svc);
+                p_xw.WriteCData(SqlXaml.SqlStr);
 
-            p_xw.WriteEndElement();
-            p_xw.WriteEndElement();
+                p_xw.WriteEndElement();
+                p_xw.WriteEndElement();
+            }
         }
 
         public override FvCell CreateDesignCell(CellPropertyInfo p_info)
@@ -97,10 +106,10 @@ namespace Dt.Base
         {
             AddViewDesignCells(p_items);
             AddItemsDesignCells(p_items);
-            
+
             // 空时无法绑定
-            if (Sql == null)
-                Sql = new Sql();
+            if (SqlXaml == null)
+                SqlXaml = new Sql();
 
             AddSqlDesignCells(p_items);
         }
@@ -113,6 +122,29 @@ namespace Dt.Base
                 if (node.LocalName == "CList.Items")
                 {
                     ItemsXaml = FvDesignKit.GetNodeXml(node, true);
+                }
+                else if (node.LocalName == "CList.Sql"
+                    && node.HasChildNodes
+                    && node.ChildNodes[0].LocalName == "Sql")
+                {
+                    if (SqlXaml == null)
+                        SqlXaml = new Sql();
+
+                    var cn = node.ChildNodes[0];
+                    foreach (var attr in cn.Attributes.OfType<XmlAttribute>())
+                    {
+                        if (attr.LocalName == "LocalDb")
+                            SqlXaml.LocalDb = attr.Value;
+                        else if (attr.LocalName == "Svc")
+                            SqlXaml.Svc = attr.Value;
+                        else if (attr.LocalName == "SqlStr")
+                            SqlXaml.SqlStr = attr.Value;
+                    }
+
+                    if (cn.HasChildNodes)
+                    {
+                        SqlXaml.SqlStr = cn.ChildNodes[0].InnerText;
+                    }
                 }
                 else if (!node.LocalName.StartsWith("CList."))
                 {
@@ -161,11 +193,11 @@ namespace Dt.Base
     </Grid>
 </DataTemplate>");
             m.Add(mi);
-            
+
             Dt.Base.Ex.SetMenu(btn, m);
             bar.Content = btn;
         }
-        
+
         void AddItemsDesignCells(FvItems p_items)
         {
             CBar bar = new CBar { Title = "对象列表" };
@@ -199,16 +231,16 @@ namespace Dt.Base
 
         internal static void AddSqlDesignCells(FvItems p_items)
         {
-            CBar bar = new CBar { Title = "数据源Sql，语句可包含变量或占位符\n变量：@userid @username @[列名]\n占位符：#input#，输入的过滤串", RowSpan = 2 };
+            CBar bar = new CBar { Title = "数据源Sql，可包含变量或占位符" };
             p_items.Add(bar);
 
             CText text = new CText
             {
-                ID = "Sql.SqlStr",
+                ID = "SqlXaml.SqlStr",
                 ShowTitle = false,
                 AcceptsReturn = true,
                 RowSpan = 6,
-                Placeholder = "SELECT\r\n\ttitle\r\nFROM\r\n\tdemo_tbl\r\nWHERE\r\n\tparent_id = @[parentid]\r\n    AND name LIKE '#input#%'\r\n    AND id = @RptValueCall.GetMaxID(demo_tbl)\r\n    AND owner = @userid",
+                Placeholder = "1. 变量以@开头，以Sql参数方式查询\n2. 占位符首尾添加#，查询前自动替换占位符\n3. @属性名  #属性名#    取Fv数据源的属性值\n4. @{userid}  #{userid}#    当前用户ID\n5. @{userid}  #{userid}#    当前用户ID\n6. @{input}  #{input}#    CPick中输入的过滤串\n7. @类名.方法(参数或无)    #类名.方法(参数或无)#\n    调用有ValueCall标签的类的静态方法取值",
             };
             p_items.Add(text);
 
@@ -225,7 +257,7 @@ namespace Dt.Base
 
             var ct = new CText
             {
-                ID = "Sql.LocalDb",
+                ID = "SqlXaml.LocalDb",
                 ShowTitle = false,
                 ColSpan = 0.5,
                 Placeholder = "本地sqlite库名",
@@ -234,7 +266,7 @@ namespace Dt.Base
 
             ct = new CText
             {
-                ID = "Sql.Svc",
+                ID = "SqlXaml.Svc",
                 ShowTitle = false,
                 ColSpan = 0.5,
                 Placeholder = "服务名，空为当前服务",

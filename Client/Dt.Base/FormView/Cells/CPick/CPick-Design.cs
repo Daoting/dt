@@ -38,6 +38,15 @@ namespace Dt.Base
             set { _lv.ViewXaml = value; }
         }
 
+        /// <summary>
+        /// 设计时用，xaml定义Sql
+        /// </summary>
+        public Sql SqlXaml
+        {
+            get { return Dt.Base.Ex.GetSqlXaml(this); }
+            set { Dt.Base.Ex.SetSqlXaml(this, value); }
+        }
+
         protected override void ExportCustomXaml(XmlWriter p_xw)
         {
             if (!string.IsNullOrEmpty(ViewXaml))
@@ -45,20 +54,20 @@ namespace Dt.Base
                 FvDesignKit.CopyXml(p_xw, ViewXaml);
             }
 
-            if (Sql == null || string.IsNullOrEmpty(Sql.SqlStr))
-                return;
+            if (SqlXaml != null && !string.IsNullOrEmpty(SqlXaml.SqlStr))
+            {
+                p_xw.WriteStartElement("a", "CPick.Sql", null);
+                p_xw.WriteStartElement("a", "Sql", null);
 
-            p_xw.WriteStartElement("a", "CPick.Sql", null);
-            p_xw.WriteStartElement("a", "Sql", null);
+                if (!string.IsNullOrEmpty(SqlXaml.LocalDb))
+                    p_xw.WriteAttributeString("LocalDb", SqlXaml.LocalDb);
+                if (!string.IsNullOrEmpty(SqlXaml.Svc))
+                    p_xw.WriteAttributeString("Svc", SqlXaml.Svc);
+                p_xw.WriteCData(SqlXaml.SqlStr);
 
-            if (!string.IsNullOrEmpty(Sql.LocalDb))
-                p_xw.WriteAttributeString("LocalDb", Sql.LocalDb);
-            if (!string.IsNullOrEmpty(Sql.Svc))
-                p_xw.WriteAttributeString("Svc", Sql.Svc);
-            p_xw.WriteCData(Sql.SqlStr);
-
-            p_xw.WriteEndElement();
-            p_xw.WriteEndElement();
+                p_xw.WriteEndElement();
+                p_xw.WriteEndElement();
+            }
         }
 
         public override void AddCustomDesignCells(FvItems p_items)
@@ -66,8 +75,8 @@ namespace Dt.Base
             CList.AddViewDesignCells(p_items);
 
             // 空时无法绑定
-            if (Sql == null)
-                Sql = new Sql();
+            if (SqlXaml == null)
+                SqlXaml = new Sql();
 
             CList.AddSqlDesignCells(p_items);
         }
@@ -77,7 +86,31 @@ namespace Dt.Base
             for (int i = 0; i < p_node.ChildNodes.Count; i++)
             {
                 var node = p_node.ChildNodes[i];
-                if (!node.LocalName.StartsWith("CPick."))
+
+                if (node.LocalName == "CPick.Sql"
+                    && node.HasChildNodes
+                    && node.ChildNodes[0].LocalName == "Sql")
+                {
+                    if (SqlXaml == null)
+                        SqlXaml = new Sql();
+
+                    var cn = node.ChildNodes[0];
+                    foreach (var attr in cn.Attributes.OfType<XmlAttribute>())
+                    {
+                        if (attr.LocalName == "LocalDb")
+                            SqlXaml.LocalDb = attr.Value;
+                        else if (attr.LocalName == "Svc")
+                            SqlXaml.Svc = attr.Value;
+                        else if (attr.LocalName == "SqlStr")
+                            SqlXaml.SqlStr = attr.Value;
+                    }
+
+                    if (cn.HasChildNodes)
+                    {
+                        SqlXaml.SqlStr = cn.ChildNodes[0].InnerText;
+                    }
+                }
+                else if (!node.LocalName.StartsWith("CPick."))
                 {
                     ViewXaml = FvDesignKit.GetNodeXml(node, false);
                 }
