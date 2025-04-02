@@ -19,7 +19,7 @@ namespace Dt.Base
 {
     /// <summary>
     /// PhoneUI时的空白页，动态添加页面内容
-    /// PhonePage.xaml文件不可删除，虽无用但uwp报错！
+    /// PhonePage.xaml文件不可删除，虽无用但uwp报错！已放在Register.xaml中注册类型！！！
     /// </summary>
     public partial class PhonePage : Page
     {

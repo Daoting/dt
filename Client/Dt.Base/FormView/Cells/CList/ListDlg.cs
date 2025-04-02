@@ -198,7 +198,7 @@ namespace Dt.Base
                                 if (pi != null)
                                     pi.SetValue(tgtObj, tgtVal);
                             }
-                            
+
                             // 对于联动的CList CPick CTree，清空其下拉数据源
                             if (srcID == "-")
                             {

@@ -1,0 +1,15 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:v="using:Dt.Base.Views">
+
+    <!-- WinUI中注册xaml类型用，禁止删除 -->
+    <!-- 否则当 类型实例用在xaml中 或 XamlReader.Load 时无法生成实例，报 XamlType中缺少该类型 -->
+    <!-- 继承Page 或 Win 的类型无xaml文件时未调用OnApplyTemplate不显示，但继承Dlg的无影响 -->
+
+    <a:PhonePage x:Key="PhonePage" />
+    <a:NlItems x:Key="NlItems" />
+    <a:FilterCfg x:Key="FilterCfg" />
+    <v:OneToManyWin x:Key="OneToManyWin" />
+</ResourceDictionary>
