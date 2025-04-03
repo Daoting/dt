@@ -4,12 +4,17 @@
     xmlns:a="using:Dt.Base"
     xmlns:v="using:Dt.Base.Views">
 
-    <!-- WinUI中注册xaml类型用，禁止删除 -->
-    <!-- 否则当 类型实例用在xaml中 或 XamlReader.Load 时无法生成实例，报 XamlType中缺少该类型 -->
-    <!-- 继承Page 或 Win 的类型无xaml文件时未调用OnApplyTemplate不显示，但继承Dlg的无影响 -->
+    <!-- WinUI中注册xaml类型用，自动在 XamlTypeInfo.g.cs 中生成，禁止删除 -->
+    <!-- 1. 当 UI类 无xaml文件，也未被任何其它UI类作为属性引用，只是纯代码类时，XamlTypeInfo.g.cs 中不会包含该类型信息 -->
+    <!-- 2. 普通类型在xaml串中 XamlReader.Load 时，若该类型未在任何xaml文件中引用，报 XamlType中缺少该类型 -->
+    <!-- 以上情况的类型需要在此定义，可在 XamlTypeInfo.g.cs 中包含 -->
+    <!-- 否则：UI类实例无法放在可视树上(未调用ApplyTemplate，无法设置Style) -->
 
     <a:PhonePage x:Key="PhonePage" />
     <a:NlItems x:Key="NlItems" />
     <a:FilterCfg x:Key="FilterCfg" />
+
+    <v:EntityList x:Key="EntityList" />
+    <v:EntityQuery x:Key="EntityQuery" />
     <v:OneToManyWin x:Key="OneToManyWin" />
 </ResourceDictionary>

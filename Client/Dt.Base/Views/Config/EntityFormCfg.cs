@@ -17,7 +17,21 @@ namespace Dt.Base
 {
     public class EntityFormCfg
     {
+        EntityCfg _owner;
+        string _title;
+
+        public EntityFormCfg(EntityCfg p_owner)
+        {
+            _owner = p_owner;
+        }
+
         public string Xaml { get; set; }
+
+        public string Title
+        {
+            get => _title ??= Type.GetType(_owner.Cls).Name.TrimEnd('X') + "列表";
+            set => _title = value;
+        }
 
         public bool ShowAddMi { get; set; } = true;
 

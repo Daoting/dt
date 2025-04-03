@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Base.Tools;
+using Dt.Base.Views;
 using Dt.Core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -26,33 +27,30 @@ namespace Demo.UI
         }
 
 
-        async void OnTest1(object sender, RoutedEventArgs e)
+        void OnTest1(object sender, RoutedEventArgs e)
         {
-            var xaml = await LvDesign.ShowDlg(new LvDesignInfo
-            {
-                Xaml =
-                @"<a:Lv><a:Cols>
-            <a:Col ID=""bh"" Title=""编号"" Width=""80"" />
-            <a:Col ID=""xm"" Title=""姓名"" />
-            <a:Col ID=""hunfou"" Title=""婚否"" Width=""60"" />
-            <a:Col ID=""chushengrq"" Title=""出生日期"" />
-        </a:Cols></a:Lv>",
-                Cols = new List<EntityCol>
-                {
-                    new EntityCol("bh", typeof(int)),
-                    new EntityCol ("xm", typeof(string)),
-                    new EntityCol ("hunfou", typeof(bool)),
-                    new EntityCol ("chushengrq", typeof(DateTime)),
-                    new EntityCol ("shengao", typeof(double)),
-                    new EntityCol ("photo", typeof(Icons)),
-                }
-            });
-            Log.Debug(xaml);
+            OneToManyCfg cfg = new OneToManyCfg();
+            cfg.ParentCfg = new EntityCfg { Cls = "Demo.Base.父表X,Demo.Base" };
+            cfg.ChildCfgs.Add(new EntityCfg { Cls = "Demo.Base.大儿X,Demo.Base" });
+            cfg.ChildCfgs.Add(new EntityCfg { Cls = "Demo.Base.小儿X,Demo.Base" });
+            Kit.OpenView("通用一对多视图", "Test", p_params: cfg);
         }
 
         void OnTest2(object sender, RoutedEventArgs e)
         {
-
+            //OneToManyCfg cfg = new OneToManyCfg();
+            //cfg.ParentCfg = new EntityCfg { Cls = "Demo.Base.父表X,Demo.Base" };
+            //cfg.ChildCfgs.Add(new EntityCfg { Cls = "Demo.Base.大儿X,Demo.Base" });
+            //cfg.ChildCfgs.Add(new EntityCfg { Cls = "Demo.Base.小儿X,Demo.Base" });
+            //OneToManyWin win = new OneToManyWin(cfg);
+            //Dlg dlg = new Dlg { IsPinned = true };
+            //dlg.LoadWin(win);
+            //dlg.Show();
+            //new TestDlg().Show();
+            CList ls = new CList { Items = { "111", "222", "333" } };
+            //new ListDlg(ls).Show();
         }
     }
+    
+    
 }
