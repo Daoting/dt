@@ -44,6 +44,16 @@ namespace Dt.Base
         public EntityFormCfg FormCfg { get; }
 
         /// <summary>
+        /// 一对多时子实体的父表字段名
+        /// </summary>
+        public string ParentID { get; set; }
+
+        /// <summary>
+        /// 是否一对多的子表
+        /// </summary>
+        public bool IsChild => !string.IsNullOrEmpty(ParentID);
+        
+        /// <summary>
         /// 实体对应的表模型
         /// </summary>
         public TableSchema Table => _model.Schema;
@@ -69,7 +79,7 @@ namespace Dt.Base
             return (Table)task.GetType().GetProperty("Result").GetValue(task);
         }
 
-        internal async Task<object> New()
+        internal async Task<Entity> New()
         {
             object[] tgtParams = null;
 
@@ -103,9 +113,9 @@ namespace Dt.Base
                 {
                     var task = (Task)fun.Invoke(null, tgtParams);
                     await task;
-                    return task.GetType().GetProperty("Result").GetValue(task);
+                    return task.GetType().GetProperty("Result").GetValue(task) as Entity;
                 }
-                return fun.Invoke(null, tgtParams);
+                return fun.Invoke(null, tgtParams) as Entity;
             }
 
             // 无静态方法，调用构造函数
@@ -144,7 +154,7 @@ namespace Dt.Base
             }
 
             if (tgtParams != null)
-                return Activator.CreateInstance(_entityType, tgtParams);
+                return Activator.CreateInstance(_entityType, tgtParams) as Entity;
             return null;
         }
 

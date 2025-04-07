@@ -14,7 +14,8 @@
     <a:NlItems x:Key="NlItems" />
     <a:FilterCfg x:Key="FilterCfg" />
 
-    <v:EntityList x:Key="EntityList" />
     <v:EntityQuery x:Key="EntityQuery" />
+    <v:EntityList x:Key="EntityList" />
+    <v:EntityForm x:Key="EntityForm" />
     <v:OneToManyWin x:Key="OneToManyWin" />
 </ResourceDictionary>

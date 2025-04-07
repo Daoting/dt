@@ -99,6 +99,7 @@ namespace Dt.Base.Views
                     if (e.Action == FormAction.Open && !_childForms.TryGetValue(list.Cfg.Cls, out form))
                     {
                         form = new EntityForm { OwnWin = this };
+                        form.LoadCfg(list.Cfg);
                         form.UpdateList += e => _ = list.Refresh(e.ID);
                         _childForms.Add(list.Cfg.Cls, form);
                     }

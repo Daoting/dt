@@ -51,7 +51,14 @@ namespace Dt.Base.Views
 
         protected override async Task OnQuery()
         {
-            if (_clause == null)
+            if (_cfg.IsChild)
+            {
+                if (_parentID > 0)
+                    _lv.Data = await _cfg.Query($"where {_cfg.ParentID}={_parentID}");
+                else
+                    _lv.Data = null;
+            }
+            else if (_clause == null)
             {
                 _lv.Data = await _cfg.Query(null);
             }
@@ -67,6 +74,10 @@ namespace Dt.Base.Views
             StringBuilder sb = new StringBuilder("<a:Lv>\n<a:Cols>");
             foreach (var col in _cfg.Table.Columns)
             {
+                // 过滤掉父表ID列
+                if (_cfg.IsChild && col.Name.Equals(_cfg.ParentID, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
                 string title = "";
 
                 // 字段名中文时不再需要Title

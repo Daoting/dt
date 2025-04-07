@@ -7,9 +7,6 @@
 #endregion
 
 #region 引用命名
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Markup;
 using System.Text;
 #endregion
 
@@ -53,7 +50,13 @@ namespace Dt.Base.Views
 
         protected override async Task OnAdd()
         {
-            _fv.Data = await _cfg.New();
+            var en = await _cfg.New();
+            if (_cfg.IsChild && _args.ParentID.HasValue)
+            {
+                // 子表单
+                en[_cfg.ParentID] = _args.ParentID.Value;
+            }
+            _fv.Data = en;
         }
 
         protected override async Task OnGet()
@@ -66,6 +69,10 @@ namespace Dt.Base.Views
             StringBuilder sb = new StringBuilder("<a:Fv>");
             foreach (var col in _cfg.Table.Columns)
             {
+                // 过滤掉父表ID列
+                if (_cfg.IsChild && col.Name.Equals(_cfg.ParentID, StringComparison.OrdinalIgnoreCase))
+                    continue;
+                
                 string title;
                 if (col.IsEnumCol)
                 {
