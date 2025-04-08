@@ -69,9 +69,9 @@ namespace Dt.Base
                 var tb = CreateTrimmedTextBlock();
                 _set = c =>
                 {
-                    var str = c.Data.ToString();
+                    var str = c.Data?.ToString();
                     tb.Text = str;
-                    c.Dot.ToggleVisible(str == "");
+                    c.Dot.ToggleVisible(string.IsNullOrEmpty(str));
                 };
                 return tb;
             }
