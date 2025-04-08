@@ -22,11 +22,36 @@ namespace Dt.Base
             ListCfg = new EntityListCfg(this);
             FormCfg = new EntityFormCfg(this);
         }
-        
+
         /// <summary>
         /// 实体类全名，包括程序集名称
         /// </summary>
-        public string Cls { get; set; }
+        public string Cls
+        {
+            get => _cls;
+            set
+            {
+                if (_cls != value)
+                {
+                    _cls = value;
+                    if (!string.IsNullOrEmpty(_cls))
+                    {
+                        _entityType = Type.GetType(_cls);
+                        var task = EntitySchema.Get(_entityType);
+                        task.Wait();
+                        _model = task.Result;
+                        // EntityX<TEntity> 获取静态方法
+                        _genericType = typeof(EntityX<>).MakeGenericType(_entityType);
+                    }
+                    else
+                    {
+                        _entityType = null;
+                        _model = null;
+                        _genericType = null;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// 查询面板的xaml
@@ -36,42 +61,34 @@ namespace Dt.Base
         /// <summary>
         /// 列表配置
         /// </summary>
-        public EntityListCfg ListCfg { get; }
+        public EntityListCfg ListCfg { get; set; }
 
         /// <summary>
         /// 表单配置
         /// </summary>
-        public EntityFormCfg FormCfg { get; }
+        public EntityFormCfg FormCfg { get; set; }
 
         /// <summary>
-        /// 一对多时子实体的父表字段名
+        /// 一对多时子实体的父表主键字段名
         /// </summary>
         public string ParentID { get; set; }
 
         /// <summary>
         /// 是否一对多的子表
         /// </summary>
-        public bool IsChild => !string.IsNullOrEmpty(ParentID);
-        
+        public bool IsChild { get; set; }
+
         /// <summary>
         /// 实体对应的表模型
         /// </summary>
-        public TableSchema Table => _model.Schema;
+        public TableSchema Table => _model?.Schema;
 
         /// <summary>
         /// 实体类型
         /// </summary>
         public Type EntityType => _entityType;
 
-        internal async Task Init()
-        {
-            _entityType = Type.GetType(Cls);
-            _model = await EntitySchema.Get(_entityType);
-            // EntityX<TEntity> 获取静态方法
-            _genericType = typeof(EntityX<>).MakeGenericType(_entityType);
-        }
-
-        internal async Task<Table> Query(string p_whereOrSqlOrSp, object p_params = null)
+        public async Task<Table> Query(string p_whereOrSqlOrSp, object p_params = null)
         {
             var fun = _genericType.GetMethod("Query", BindingFlags.Public | BindingFlags.Static);
             var task = (Task)fun.Invoke(null, new object[] { p_whereOrSqlOrSp, p_params });
@@ -79,7 +96,7 @@ namespace Dt.Base
             return (Table)task.GetType().GetProperty("Result").GetValue(task);
         }
 
-        internal async Task<Entity> New()
+        public async Task<Entity> New()
         {
             object[] tgtParams = null;
 
@@ -163,14 +180,79 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_id">主键值</param>
         /// <returns>返回实体对象或null</returns>
-        internal async Task<object> GetByID(object p_id)
+        public async Task<object> GetByID(object p_id)
         {
             var fun = _genericType.GetMethod("GetByID", BindingFlags.Public | BindingFlags.Static);
             var task = (Task)fun.Invoke(null, new object[] { p_id });
             await task;
             return task.GetType().GetProperty("Result").GetValue(task);
         }
-        
+
+        /// <summary>
+        /// 序列化为json字符串
+        /// </summary>
+        /// <returns></returns>
+        public string Serialize()
+        {
+            using (var stream = new MemoryStream())
+            using (var writer = new Utf8JsonWriter(stream, JsonOptions.UnsafeWriter))
+            {
+                writer.WriteStartObject();
+                DoSerialize(writer);
+                writer.WriteEndObject();
+                writer.Flush();
+                return Encoding.UTF8.GetString(stream.ToArray());
+            }
+        }
+
+        /// <summary>
+        /// 序列化为json
+        /// </summary>
+        /// <param name="writer"></param>
+        public void DoSerialize(Utf8JsonWriter writer)
+        {
+            if (!string.IsNullOrEmpty(Cls))
+                writer.WriteString("Cls", Cls);
+            if (!string.IsNullOrEmpty(QueryFvXaml))
+                writer.WriteString("QueryFvXaml", QueryFvXaml);
+            if (!string.IsNullOrEmpty(ParentID))
+                writer.WriteString("ParentID", ParentID);
+            if (IsChild)
+                writer.WriteBoolean("IsChild", true);
+
+            if (ListCfg.IsChanged)
+            {
+                writer.WriteStartObject("ListCfg");
+                if (!string.IsNullOrEmpty(ListCfg.Xaml))
+                    writer.WriteString("Xaml", ListCfg.Xaml);
+                if (!ListCfg.ShowAddMi)
+                    writer.WriteBoolean("ShowAddMi", ListCfg.ShowAddMi);
+                if (!ListCfg.ShowDelMi)
+                    writer.WriteBoolean("ShowDelMi", ListCfg.ShowDelMi);
+                if (!ListCfg.ShowMultiSelMi)
+                    writer.WriteBoolean("ShowMultiSelMi", ListCfg.ShowMultiSelMi);
+                if (!ListCfg.IsCustomTitle)
+                    writer.WriteString("Title", ListCfg.Title);
+            }
+
+            if (FormCfg.IsChanged)
+            {
+                writer.WriteStartObject("FormCfg");
+                if (!string.IsNullOrEmpty(FormCfg.Xaml))
+                    writer.WriteString("Xaml", FormCfg.Xaml);
+                if (!FormCfg.ShowAddMi)
+                    writer.WriteBoolean("ShowAddMi", FormCfg.ShowAddMi);
+                if (!FormCfg.ShowDelMi)
+                    writer.WriteBoolean("ShowDelMi", FormCfg.ShowDelMi);
+                if (!FormCfg.ShowSaveMi)
+                    writer.WriteBoolean("ShowSaveMi", FormCfg.ShowSaveMi);
+                if (!FormCfg.IsCustomTitle)
+                    writer.WriteString("Title", ListCfg.Title);
+                writer.WriteEndObject();
+            }
+        }
+
+        string _cls;
         EntitySchema _model;
         Type _entityType;
         // EntityX<TEntity> 获取静态方法

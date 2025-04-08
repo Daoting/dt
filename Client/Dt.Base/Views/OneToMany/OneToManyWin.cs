@@ -63,10 +63,8 @@ namespace Dt.Base.Views
             _parentForm = new EntityForm { Title = _cfg.ParentCfg.FormCfg.Title, OwnWin = this };
         }
         
-        async void LoadCfg()
+        void LoadCfg()
         {
-            await _cfg.Init();
-
             _query.LoadCfg(_cfg.ParentCfg);
             _query.Query += e =>
             {

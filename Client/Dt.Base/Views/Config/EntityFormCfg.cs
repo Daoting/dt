@@ -39,6 +39,8 @@ namespace Dt.Base
 
         public bool ShowDelMi { get; set; } = true;
 
-        public bool IsChanged => !string.IsNullOrEmpty(Xaml) || !ShowAddMi || !ShowDelMi || !ShowSaveMi;
+        public bool IsChanged => !string.IsNullOrEmpty(Xaml) || !ShowAddMi || !ShowDelMi || !ShowSaveMi || !string.IsNullOrEmpty(_title);
+
+        public bool IsCustomTitle => !string.IsNullOrEmpty(_title);
     }
 }

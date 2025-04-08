@@ -39,6 +39,8 @@ namespace Dt.Base
 
         public bool ShowMultiSelMi { get; set; } = true;
 
-        public bool IsChanged => !string.IsNullOrEmpty(Xaml) || !ShowAddMi || !ShowDelMi || !ShowMultiSelMi;
+        public bool IsChanged => !string.IsNullOrEmpty(Xaml) || !ShowAddMi || !ShowDelMi || !ShowMultiSelMi || !string.IsNullOrEmpty(_title);
+        
+        public bool IsCustomTitle => !string.IsNullOrEmpty(_title);
     }
 }

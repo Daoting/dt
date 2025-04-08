@@ -18,15 +18,34 @@ namespace Dt.Base
     public class OneToManyCfg
     {
         public EntityCfg ParentCfg { get; set; }
-        
-        public List<EntityCfg> ChildCfgs { get; } = new List<EntityCfg>();
 
-        internal async Task Init()
+        public Nl<EntityCfg> ChildCfgs { get; } = new Nl<EntityCfg>();
+
+        internal string Serialize()
         {
-            await ParentCfg.Init();
-            foreach (var cfg in ChildCfgs)
+            using (var stream = new MemoryStream())
+            using (var writer = new Utf8JsonWriter(stream, JsonOptions.UnsafeWriter))
             {
-                await cfg.Init();
+                writer.WriteStartObject();
+                if (ParentCfg != null)
+                {
+                    writer.WriteStartObject("ParentCfg");
+                    ParentCfg.DoSerialize(writer);
+                    writer.WriteEndObject();
+                }
+
+                writer.WriteStartArray("ChildCfgs");
+                foreach (var cfg in ChildCfgs)
+                {
+                    writer.WriteStartObject();
+                    cfg.DoSerialize(writer);
+                    writer.WriteEndObject();
+                }
+                writer.WriteEndArray();
+                
+                writer.WriteEndObject();
+                writer.Flush();
+                return Encoding.UTF8.GetString(stream.ToArray());
             }
         }
     }

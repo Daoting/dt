@@ -36,21 +36,14 @@ namespace Demo.UI
             Kit.OpenView("通用一对多视图", "Test", p_params: cfg);
         }
 
-        void OnTest2(object sender, RoutedEventArgs e)
+        async void OnTest2(object sender, RoutedEventArgs e)
         {
-            //OneToManyCfg cfg = new OneToManyCfg();
-            //cfg.ParentCfg = new EntityCfg { Cls = "Demo.Base.父表X,Demo.Base" };
-            //cfg.ChildCfgs.Add(new EntityCfg { Cls = "Demo.Base.大儿X,Demo.Base" });
-            //cfg.ChildCfgs.Add(new EntityCfg { Cls = "Demo.Base.小儿X,Demo.Base" });
-            //OneToManyWin win = new OneToManyWin(cfg);
-            //Dlg dlg = new Dlg { IsPinned = true };
-            //dlg.LoadWin(win);
-            //dlg.Show();
-            //new TestDlg().Show();
-            CList ls = new CList { Items = { "111", "222", "333" } };
-            //new ListDlg(ls).Show();
+            EntityDesign dlg = new EntityDesign();
+            var cfg = new EntityCfg { IsChild = true };
+            var json = await dlg.ShowDlg(cfg.Serialize());
+            Kit.Debug(json);
         }
     }
-    
-    
+
+
 }
