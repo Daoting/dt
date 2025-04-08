@@ -27,13 +27,15 @@ namespace Demo.UI
         }
 
 
-        void OnTest1(object sender, RoutedEventArgs e)
+        async void OnTest1(object sender, RoutedEventArgs e)
         {
             OneToManyCfg cfg = new OneToManyCfg();
             cfg.ParentCfg = new EntityCfg { Cls = "Demo.Base.父表X,Demo.Base" };
-            cfg.ChildCfgs.Add(new EntityCfg { Cls = "Demo.Base.大儿X,Demo.Base", ParentID = "parent_id" });
-            cfg.ChildCfgs.Add(new EntityCfg { Cls = "Demo.Base.小儿X,Demo.Base", ParentID = "group_id" });
-            Kit.OpenView("通用一对多视图", "Test", p_params: cfg);
+            cfg.ChildCfgs.Add(new EntityCfg { Cls = "Demo.Base.大儿X,Demo.Base", ParentID = "parent_id", IsChild = true });
+            cfg.ChildCfgs.Add(new EntityCfg { Cls = "Demo.Base.小儿X,Demo.Base", ParentID = "group_id", IsChild = true });
+            //Kit.OpenView("通用一对多视图", "Test", p_params: cfg);
+            var json = await new OneToManyDesign().ShowDlg(cfg.Serialize());
+            Kit.Debug(json);
         }
 
         async void OnTest2(object sender, RoutedEventArgs e)

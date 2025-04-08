@@ -7,21 +7,32 @@
 #endregion
 
 #region 引用命名
-using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 #endregion
 
 namespace Dt.Base
 {
+    /// <summary>
+    /// 一对多关系配置
+    /// </summary>
     public class OneToManyCfg
     {
-        public EntityCfg ParentCfg { get; set; }
+        /// <summary>
+        /// 一对多关系的父实体配置
+        /// </summary>
+        public EntityCfg ParentCfg { get; set; } = new EntityCfg();
 
-        public Nl<EntityCfg> ChildCfgs { get; } = new Nl<EntityCfg>();
+        /// <summary>
+        /// 一对多关系的子实体配置
+        /// </summary>
+        public Nl<EntityCfg> ChildCfgs { get; set; } = new Nl<EntityCfg>();
 
-        internal string Serialize()
+        /// <summary>
+        /// 序列化
+        /// </summary>
+        /// <returns></returns>
+        public string Serialize()
         {
             using (var stream = new MemoryStream())
             using (var writer = new Utf8JsonWriter(stream, JsonOptions.UnsafeWriter))
@@ -47,6 +58,38 @@ namespace Dt.Base
                 writer.Flush();
                 return Encoding.UTF8.GetString(stream.ToArray());
             }
+        }
+
+        /// <summary>
+        /// 反序列化
+        /// </summary>
+        /// <param name="p_json"></param>
+        /// <returns></returns>
+        public static OneToManyCfg Deserialize(string p_json)
+        {
+            if (string.IsNullOrEmpty(p_json))
+                return new OneToManyCfg();
+            
+            var cfg = JsonSerializer.Deserialize<OneToManyCfg>(p_json);
+            if (cfg.ParentCfg != null)
+            {
+                if (cfg.ParentCfg.ListCfg != null)
+                    cfg.ParentCfg.ListCfg.Owner = cfg.ParentCfg;
+                if (cfg.ParentCfg.FormCfg != null)
+                    cfg.ParentCfg.FormCfg.Owner = cfg.ParentCfg;
+            }
+            
+            if (cfg.ChildCfgs != null && cfg.ChildCfgs.Count > 0)
+            {
+                foreach (var childCfg in cfg.ChildCfgs)
+                {
+                    if (childCfg.ListCfg != null)
+                        childCfg.ListCfg.Owner = childCfg;
+                    if (childCfg.FormCfg != null)
+                        childCfg.FormCfg.Owner = childCfg;
+                }
+            }
+            return cfg;
         }
     }
 }

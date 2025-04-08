@@ -7,7 +7,7 @@
 
     <a:Dlg.Menu>
         <a:Menu>
-            <a:Mi ID="保存" Icon="保存" Click="OnOK" ShowInPhone="Icon" />
+            <a:Mi ID="确定" Icon="保存" Click="OnOK" ShowInPhone="Icon" />
         </a:Menu>
     </a:Dlg.Menu>
 
@@ -16,19 +16,28 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <a:Fv x:Name="_fv">
-            <a:CTip ID="父实体" Click="OnEditParent" />
+        <a:Fv
+            x:Name="_fv"
+            BorderBrush="{StaticResource 浅灰2}"
+            BorderThickness="0,0,0,1">
+            <a:CTip ID="Cls" Title="父实体" Click="OnEditParent" />
             <a:CBar Title="子实体">
-                <Button
-                    Content="+添加"
-                    Click="OnAddChild"
-                    HorizontalAlignment="Right" />
+                <a:Menu HorizontalAlignment="Right">
+                    <a:Mi ID="增加" Icon="加号" Call="OnAddChild" />
+                    <a:Mi ID="删除" Icon="删除" Click="OnDelChild" />
+                </a:Menu>
             </a:CBar>
         </a:Fv>
-        <a:Lv x:Name="_lv" Grid.Row="1">
+        <a:Lv x:Name="_lv" ItemDoubleClick="OnItemDbClick" Grid.Row="1">
+            <a:Ex.Menu>
+                <a:Menu>
+                    <a:Mi ID="编辑" Icon="编辑" Click="OnEditChild" />
+                    <a:Mi ID="删除" Icon="删除" Click="OnDelChild" />
+                </a:Menu>
+            </a:Ex.Menu>
             <a:Cols>
-                <a:Col ID="Cls" Title="实体类全名" Width="150" />
-                <a:Col ID="ParentID" Title="父表主键字段名" Width="*" />
+                <a:Col ID="Cls" Title="实体类全名" Width="260" />
+                <a:Col ID="ParentID" Title="父表关联字段" Width="*" />
             </a:Cols>
         </a:Lv>
     </Grid>

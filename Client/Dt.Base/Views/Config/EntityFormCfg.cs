@@ -17,19 +17,20 @@ namespace Dt.Base
 {
     public class EntityFormCfg
     {
-        EntityCfg _owner;
         string _title;
-
-        public EntityFormCfg(EntityCfg p_owner)
-        {
-            _owner = p_owner;
-        }
-
+        
         public string Xaml { get; set; }
 
         public string Title
         {
-            get => _title ??= Type.GetType(_owner.Cls).Name.TrimEnd('X') + "列表";
+            get
+            {
+                if (!string.IsNullOrEmpty(_title))
+                    return _title;
+                if (Owner != null && !string.IsNullOrEmpty(Owner.Cls))
+                    return Type.GetType(Owner.Cls).Name.TrimEnd('X') + "表单";
+                return "表单";
+            }
             set => _title = value;
         }
 
@@ -42,5 +43,7 @@ namespace Dt.Base
         public bool IsChanged => !string.IsNullOrEmpty(Xaml) || !ShowAddMi || !ShowDelMi || !ShowSaveMi || !string.IsNullOrEmpty(_title);
 
         public bool IsCustomTitle => !string.IsNullOrEmpty(_title);
+
+        public EntityCfg Owner { get; set; }
     }
 }

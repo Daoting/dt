@@ -19,10 +19,10 @@ namespace Dt.Base
     {
         public EntityCfg()
         {
-            ListCfg = new EntityListCfg(this);
-            FormCfg = new EntityFormCfg(this);
+            ListCfg = new EntityListCfg { Owner = this };
+            FormCfg = new EntityFormCfg { Owner = this };
         }
-
+        
         /// <summary>
         /// 实体类全名，包括程序集名称
         /// </summary>
@@ -233,6 +233,7 @@ namespace Dt.Base
                     writer.WriteBoolean("ShowMultiSelMi", ListCfg.ShowMultiSelMi);
                 if (!ListCfg.IsCustomTitle)
                     writer.WriteString("Title", ListCfg.Title);
+                writer.WriteEndObject();
             }
 
             if (FormCfg.IsChanged)
@@ -252,6 +253,24 @@ namespace Dt.Base
             }
         }
 
+        /// <summary>
+        /// 反序列化json字符串为对象
+        /// </summary>
+        /// <param name="p_json"></param>
+        /// <returns></returns>
+        public static EntityCfg Deserialize(string p_json)
+        {
+            if (string.IsNullOrEmpty(p_json))
+                return new EntityCfg();
+
+            var cfg = JsonSerializer.Deserialize<EntityCfg>(p_json);
+            if (cfg.ListCfg != null)
+                cfg.ListCfg.Owner = cfg;
+            if (cfg.FormCfg != null)
+                cfg.FormCfg.Owner = cfg;
+            return cfg;
+        }
+        
         string _cls;
         EntitySchema _model;
         Type _entityType;

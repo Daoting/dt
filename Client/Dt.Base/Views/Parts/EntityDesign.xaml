@@ -43,7 +43,11 @@
                 Placeholder="Xaml空时自动生成"
                 RowSpan="4"
                 ShowTitle="False" />
-            <a:CText ID="ParentID" Title="父表主键字段" Visibility="Collapsed" />
+            <a:CList
+                ID="ParentID"
+                Title="父表关联字段"
+                LoadData="OnLoadKeyCols"
+                Visibility="Collapsed" />
         </a:Fv>
         <a:Fv x:Name="_fvList" Grid.Row="1">
             <a:CBar Title="列表">

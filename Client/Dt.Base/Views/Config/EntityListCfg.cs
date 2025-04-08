@@ -17,22 +17,23 @@ namespace Dt.Base
 {
     public class EntityListCfg
     {
-        EntityCfg _owner;
         string _title;
-        
-        public EntityListCfg(EntityCfg p_owner)
-        {
-            _owner = p_owner;
-        }
 
         public string Xaml { get; set; }
 
         public string Title
         {
-            get => _title ??= Type.GetType(_owner.Cls).Name.TrimEnd('X') + "列表";
+            get
+            {
+                if (!string.IsNullOrEmpty(_title))
+                    return _title;
+                if (Owner != null && !string.IsNullOrEmpty(Owner.Cls))
+                    return Type.GetType(Owner.Cls).Name.TrimEnd('X') + "列表";
+                return "列表";
+            }
             set => _title = value;
         }
-        
+
         public bool ShowAddMi { get; set; } = true;
 
         public bool ShowDelMi { get; set; } = true;
@@ -40,7 +41,9 @@ namespace Dt.Base
         public bool ShowMultiSelMi { get; set; } = true;
 
         public bool IsChanged => !string.IsNullOrEmpty(Xaml) || !ShowAddMi || !ShowDelMi || !ShowMultiSelMi || !string.IsNullOrEmpty(_title);
-        
+
         public bool IsCustomTitle => !string.IsNullOrEmpty(_title);
+
+        public EntityCfg Owner { get; set; }
     }
 }

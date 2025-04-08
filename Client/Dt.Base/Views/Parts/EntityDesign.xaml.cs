@@ -22,22 +22,19 @@ namespace Dt.Base.Views
         {
             InitializeComponent();
             IsPinned = true;
+            ShowVeil = true;
         }
 
         public async Task<string> ShowDlg(string p_params)
         {
-            if (!string.IsNullOrEmpty(p_params))
-                _cfg = JsonSerializer.Deserialize<EntityCfg>(p_params);
-            else
-                _cfg = new EntityCfg();
-                        
+            _cfg = EntityCfg.Deserialize(p_params);
             if (_cfg.IsChild)
             {
                 _barQuery.Visibility = Visibility.Collapsed;
                 _fvMain["QueryFvXaml"].Visibility = Visibility.Collapsed;
                 _fvMain["ParentID"].Visibility = Visibility.Visible;
             }
-            
+
             _fvMain.Data = _cfg;
             _fvList.Data = _cfg.ListCfg;
             _fvForm.Data = _cfg.FormCfg;
@@ -75,7 +72,7 @@ namespace Dt.Base.Views
         async void EditListXaml(object sender, RoutedEventArgs e)
         {
             var info = new LvDesignInfo { Xaml = _cfg.ListCfg.Xaml, };
-            if (_cfg.Table!= null)
+            if (_cfg.Table != null)
             {
                 var cols = new List<EntityCol>();
                 foreach (var col in _cfg.Table.Columns)
@@ -114,11 +111,12 @@ namespace Dt.Base.Views
             {
                 string prefix = "Tbl-";
                 _entityCls = new Table { { "cls" }, { "tbl" }, { "group" } };
-                foreach (var item in Kit.AllAliasTypes)
+                var ls = from item in Kit.AllAliasTypes
+                         where item.Key.StartsWith(prefix)
+                         orderby item.Value.Name
+                         select item;
+                foreach (var item in ls)
                 {
-                    if (!item.Key.StartsWith(prefix))
-                        continue;
-
                     int index = item.Value.AssemblyQualifiedName.IndexOf(", Version=");
                     _entityCls.AddRow(new
                     {
@@ -130,7 +128,7 @@ namespace Dt.Base.Views
 
                 foreach (var item in Kit.AllSqliteDbs)
                 {
-                    foreach (var tbl in item.Value.Tables)
+                    foreach (var tbl in item.Value.Tables.OrderBy(t => t.Name))
                     {
                         int index = tbl.AssemblyQualifiedName.IndexOf(", Version=");
                         _entityCls.AddRow(new
@@ -148,21 +146,39 @@ namespace Dt.Base.Views
 
         async void OnClsChanged(FvCell arg1, object arg2)
         {
+            var list = (CList)_fvMain["ParentID"];
+            list.Value = null;
+            list.Data = null;
+
             if (!string.IsNullOrEmpty(_cfg.QueryFvXaml)
+                || _cfg.ParentID != null
                 || _cfg.ListCfg.IsChanged
                 || _cfg.FormCfg.IsChanged)
             {
                 if (await Kit.Confirm("实体类型已修改，是否清空所有配置？"))
                 {
                     _cfg.QueryFvXaml = null;
-                    _cfg.ListCfg = new EntityListCfg(_cfg);
-                    _cfg.FormCfg = new EntityFormCfg(_cfg);
+                    _cfg.ListCfg = new EntityListCfg { Owner = _cfg };
+                    _cfg.FormCfg = new EntityFormCfg { Owner = _cfg };
 
                     _fvMain.Data = null;
                     _fvMain.Data = _cfg;
                     _fvList.Data = _cfg.ListCfg;
                     _fvForm.Data = _cfg.FormCfg;
                 }
+            }
+        }
+
+        void OnLoadKeyCols(CList arg1, AsyncArgs arg2)
+        {
+            if (_cfg.Table != null)
+            {
+                var cols = new Nl<string>();
+                foreach (var col in _cfg.Table.Columns)
+                {
+                    cols.Add(col.Name);
+                }
+                arg1.Data = cols;
             }
         }
     }

@@ -24,7 +24,7 @@ namespace Dt.Base.Views
         Dictionary<string, EntityForm> _childForms = new Dictionary<string, EntityForm>();
 
         public OneToManyWin(string p_jsonCfg)
-            : this(JsonSerializer.Deserialize<OneToManyCfg>(p_jsonCfg))
+            : this(OneToManyCfg.Deserialize(p_jsonCfg))
         { }
 
         public OneToManyWin(OneToManyCfg p_cfg)
