@@ -13,6 +13,7 @@ using System.Text.Json;
 
 namespace Dt.Base.Views
 {
+    [ViewParamsEditor("通用单表视图")]
     public sealed partial class EntityDesign : Dlg, IViewParamsEditor
     {
         static Table _entityCls;

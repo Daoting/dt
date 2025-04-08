@@ -17,5 +17,6 @@
     <v:EntityQuery x:Key="EntityQuery" />
     <v:EntityList x:Key="EntityList" />
     <v:EntityForm x:Key="EntityForm" />
+    <v:SingleTblWin x:Key="SingleTblWin" />
     <v:OneToManyWin x:Key="OneToManyWin" />
 </ResourceDictionary>

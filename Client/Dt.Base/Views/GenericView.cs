@@ -20,7 +20,7 @@ namespace Dt.Base
         /// <param name="p_cfg">视图配置</param>
         /// <param name="p_title">标题</param>
         /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
-        public static object OpenSingleTbl(SingleTblCfg p_cfg, string p_title = null)
+        public static object OpenSingleTbl(EntityCfg p_cfg, string p_title = null)
         {
             return Kit.OpenView("通用单表视图", p_title: p_title, p_params: p_cfg);
         }

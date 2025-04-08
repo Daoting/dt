@@ -78,7 +78,7 @@ namespace Demo.Crud
                 new Nav("字段类型", typeof(字段类型Win)) { Desc = "框架根据字段类型生成的默认查询，方便后续修改" },
                 new Nav("通用单表视图")
                 { 
-                    Callback = (o, e) => GenericView.OpenSingleTbl(new SingleTblCfg { EntityCls = "Demo.Base.基础X,Demo.Base" }),
+                    Callback = (o, e) => GenericView.OpenSingleTbl(new EntityCfg { Cls = "Demo.Base.基础X,Demo.Base" }),
                     Desc = "只提供参数无需另外代码，实现单表的增删改查"
                 },
             };
