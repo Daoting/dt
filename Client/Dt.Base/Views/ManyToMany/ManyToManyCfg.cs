@@ -14,19 +14,19 @@ using System.Text.Json;
 namespace Dt.Base
 {
     /// <summary>
-    /// 一对多关系配置
+    /// 多对多关系配置
     /// </summary>
-    public class OneToManyCfg
+    public class ManyToManyCfg
     {
         /// <summary>
-        /// 一对多关系的父实体配置
+        /// 多对多关系的主实体配置
         /// </summary>
-        public EntityCfg ParentCfg { get; set; } = new EntityCfg();
+        public EntityCfg MainCfg { get; set; } = new EntityCfg();
 
         /// <summary>
-        /// 一对多关系的子实体配置
+        /// 多对多关系的关联实体配置
         /// </summary>
-        public Nl<EntityCfg> ChildCfgs { get; set; } = new Nl<EntityCfg>();
+        public Nl<RelatedEntityCfg> RelatedCfgs { get; set; } = new Nl<RelatedEntityCfg>();
 
         /// <summary>
         /// 序列化
@@ -39,15 +39,15 @@ namespace Dt.Base
             {
                 writer.WriteStartObject();
 
-                writer.WriteStartObject("ParentCfg");
-                if (ParentCfg != null)
-                    ParentCfg.DoSerialize(writer);
+                writer.WriteStartObject("MainCfg");
+                if (MainCfg != null)
+                    MainCfg.DoSerialize(writer);
                 writer.WriteEndObject();
-                
-                writer.WriteStartArray("ChildCfgs");
-                if (ChildCfgs != null && ChildCfgs.Count > 0)
+
+                writer.WriteStartArray("RelatedCfgs");
+                if (RelatedCfgs != null && RelatedCfgs.Count > 0)
                 {
-                    foreach (var cfg in ChildCfgs)
+                    foreach (var cfg in RelatedCfgs)
                     {
                         writer.WriteStartObject();
                         cfg.DoSerialize(writer);
@@ -67,30 +67,20 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_json"></param>
         /// <returns></returns>
-        public static OneToManyCfg Deserialize(string p_json)
+        public static ManyToManyCfg Deserialize(string p_json)
         {
             if (string.IsNullOrEmpty(p_json))
-                return new OneToManyCfg();
+                return new ManyToManyCfg();
 
-            var cfg = JsonSerializer.Deserialize<OneToManyCfg>(p_json);
-            if (cfg.ParentCfg != null)
+            var cfg = JsonSerializer.Deserialize<ManyToManyCfg>(p_json);
+            if (cfg.MainCfg != null)
             {
-                if (cfg.ParentCfg.ListCfg != null)
-                    cfg.ParentCfg.ListCfg.Owner = cfg.ParentCfg;
-                if (cfg.ParentCfg.FormCfg != null)
-                    cfg.ParentCfg.FormCfg.Owner = cfg.ParentCfg;
+                if (cfg.MainCfg.ListCfg != null)
+                    cfg.MainCfg.ListCfg.Owner = cfg.MainCfg;
+                if (cfg.MainCfg.FormCfg != null)
+                    cfg.MainCfg.FormCfg.Owner = cfg.MainCfg;
             }
-
-            if (cfg.ChildCfgs != null && cfg.ChildCfgs.Count > 0)
-            {
-                foreach (var childCfg in cfg.ChildCfgs)
-                {
-                    if (childCfg.ListCfg != null)
-                        childCfg.ListCfg.Owner = childCfg;
-                    if (childCfg.FormCfg != null)
-                        childCfg.FormCfg.Owner = childCfg;
-                }
-            }
+            
             return cfg;
         }
     }

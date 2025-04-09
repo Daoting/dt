@@ -133,6 +133,11 @@ namespace Demo.Crud
                 new Nav("角色", typeof(角色Win)) { Desc = "主实体对多个关联实体" },
                 new Nav("用户", typeof(用户Win)) { Desc = "用户对角色" },
                 new Nav("权限", typeof(权限Win)) { Desc = "权限对角色" },
+                new Nav("通用多对多视图")
+                {
+                    Callback = (o, e) => GenericView.OpenManyToMany(CreateManyToManyCfg()),
+                    Desc = "只提供参数无需另外代码，实现多对多表的增删改查"
+                },
             };
             group.Title = "多对多框架";
             ds.Add(group);
@@ -145,6 +150,29 @@ namespace Demo.Crud
             cfg.ParentCfg = new EntityCfg { Cls = "Demo.Base.父表X,Demo.Base" };
             cfg.ChildCfgs.Add(new EntityCfg { Cls = "Demo.Base.大儿X,Demo.Base", ParentID = "parent_id", IsChild = true });
             cfg.ChildCfgs.Add(new EntityCfg { Cls = "Demo.Base.小儿X,Demo.Base", ParentID = "group_id", IsChild = true });
+            return cfg;
+        }
+
+        ManyToManyCfg CreateManyToManyCfg()
+        {
+            var cfg = new ManyToManyCfg();
+            cfg.MainCfg = new EntityCfg { Cls = "Demo.Base.角色X,Demo.Base" };
+            cfg.RelatedCfgs.Add(
+                new RelatedEntityCfg
+                {
+                    RelatedCls = "Demo.Base.用户X,Demo.Base",
+                    MiddleCls = "Demo.Base.用户角色X,Demo.Base",
+                    MainFk = "role_id",
+                    RelatedFk = "user_id"
+                });
+            cfg.RelatedCfgs.Add(
+                new RelatedEntityCfg
+                {
+                    RelatedCls = "Demo.Base.权限X,Demo.Base",
+                    MiddleCls = "Demo.Base.角色权限X,Demo.Base",
+                    MainFk = "role_id",
+                    RelatedFk = "prv_id"
+                });
             return cfg;
         }
     }

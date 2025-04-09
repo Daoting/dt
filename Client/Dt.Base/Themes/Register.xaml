@@ -19,4 +19,7 @@
     <v:EntityForm x:Key="EntityForm" />
     <v:SingleTblWin x:Key="SingleTblWin" />
     <v:OneToManyWin x:Key="OneToManyWin" />
+    <v:ManyToManyWin x:Key="ManyToManyWin" />
+    <v:RelatedEntityList x:Key="RelatedEntityList" />
+    <v:AddRelationDlg x:Key="AddRelationDlg" />
 </ResourceDictionary>
