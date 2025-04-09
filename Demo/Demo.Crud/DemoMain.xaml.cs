@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dt.Base;
+using Dt.Base.Views;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -77,8 +78,22 @@ namespace Demo.Crud
                 new Nav("树形单实体", typeof(树形Win)) { Desc = "树形单表的增删改查框架" },
                 new Nav("字段类型", typeof(字段类型Win)) { Desc = "框架根据字段类型生成的默认查询，方便后续修改" },
                 new Nav("通用单表视图")
-                { 
+                {
                     Callback = (o, e) => GenericView.OpenSingleTbl(new EntityCfg { Cls = "Demo.Base.基础X,Demo.Base" }),
+                    Desc = "只提供参数无需另外代码，实现单表的增删改查"
+                },
+                new Nav("通用单表视图参数编辑")
+                {
+                    Callback = async (o, e) =>
+                    {
+                        var cfg = new EntityCfg { Cls = "Demo.Base.基础X,Demo.Base" };
+                        var json = await new EntityDesign().ShowDlg(cfg.Serialize());
+                        if (!string.IsNullOrEmpty(json))
+                        {
+                            Kit.Msg("json请查看日志");
+                            Log.Debug(json);
+                        }
+                    },
                     Desc = "只提供参数无需另外代码，实现单表的增删改查"
                 },
             };
@@ -89,6 +104,26 @@ namespace Demo.Crud
             {
                 new Nav("普通表单", typeof(普通Win)) { Desc = "" },
                 new Nav("父子表单", typeof(父表Win)) { Desc = "" },
+                new Nav("通用一对多视图")
+                {
+                    Callback = (o, e) => GenericView.OpenOneToMany(CreateOneToManyCfg()),
+                    Desc = "只提供参数无需另外代码，实现一对多表的增删改查"
+                },
+
+                new Nav("通用一对多视图参数编辑")
+                {
+                    Callback = async (o, e) =>
+                    {
+                        var cfg = CreateOneToManyCfg();
+                        var json = await new OneToManyDesign().ShowDlg(cfg.Serialize());
+                        if (!string.IsNullOrEmpty(json))
+                        {
+                            Kit.Msg("json请查看日志");
+                            Log.Debug(json);
+                        }
+                    },
+                    Desc = "只提供参数无需另外代码，实现一对多表的增删改查"
+                },
             };
             group.Title = "一对多框架";
             ds.Add(group);
@@ -102,6 +137,15 @@ namespace Demo.Crud
             group.Title = "多对多框架";
             ds.Add(group);
             _navEntity.Data = ds;
+        }
+
+        OneToManyCfg CreateOneToManyCfg()
+        {
+            OneToManyCfg cfg = new OneToManyCfg();
+            cfg.ParentCfg = new EntityCfg { Cls = "Demo.Base.父表X,Demo.Base" };
+            cfg.ChildCfgs.Add(new EntityCfg { Cls = "Demo.Base.大儿X,Demo.Base", ParentID = "parent_id", IsChild = true });
+            cfg.ChildCfgs.Add(new EntityCfg { Cls = "Demo.Base.小儿X,Demo.Base", ParentID = "group_id", IsChild = true });
+            return cfg;
         }
     }
 }
