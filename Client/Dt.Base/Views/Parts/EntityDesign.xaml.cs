@@ -16,7 +16,6 @@ namespace Dt.Base.Views
     [ViewParamsEditor("通用单表视图")]
     public sealed partial class EntityDesign : Dlg, IViewParamsEditor
     {
-        static Table _entityCls;
         EntityCfg _cfg;
 
         public EntityDesign()
@@ -108,6 +107,42 @@ namespace Dt.Base.Views
 
         void OnLoadEntityCls(CList p_list, AsyncArgs p_args)
         {
+            p_list.Data = GetAllEntityCls();
+        }
+
+        void OnClsChanged(FvCell arg1, object arg2)
+        {
+            // 清空父表关联字段
+            var list = (CList)_fvMain["ParentID"];
+            list.Value = null;
+            list.Data = null;
+
+            // 清空旧配置，避免数据不一致
+            _cfg.QueryFvXaml = null;
+            _cfg.ListCfg = new EntityListCfg { Owner = _cfg };
+            _cfg.FormCfg = new EntityFormCfg { Owner = _cfg };
+
+            _fvMain.Data = null;
+            _fvMain.Data = _cfg;
+            _fvList.Data = _cfg.ListCfg;
+            _fvForm.Data = _cfg.FormCfg;
+        }
+
+        void OnLoadKeyCols(CList arg1, AsyncArgs arg2)
+        {
+            if (_cfg.Table != null)
+            {
+                var cols = new Nl<string>();
+                foreach (var col in _cfg.Table.Columns)
+                {
+                    cols.Add(col.Name);
+                }
+                arg1.Data = cols;
+            }
+        }
+
+        public static Table GetAllEntityCls()
+        {
             if (_entityCls == null)
             {
                 string prefix = "Tbl-";
@@ -142,38 +177,8 @@ namespace Dt.Base.Views
                 }
             }
 
-            p_list.Data = _entityCls;
+            return _entityCls;
         }
-
-        void OnClsChanged(FvCell arg1, object arg2)
-        {
-            // 清空父表关联字段
-            var list = (CList)_fvMain["ParentID"];
-            list.Value = null;
-            list.Data = null;
-
-            // 清空旧配置，避免数据不一致
-            _cfg.QueryFvXaml = null;
-            _cfg.ListCfg = new EntityListCfg { Owner = _cfg };
-            _cfg.FormCfg = new EntityFormCfg { Owner = _cfg };
-
-            _fvMain.Data = null;
-            _fvMain.Data = _cfg;
-            _fvList.Data = _cfg.ListCfg;
-            _fvForm.Data = _cfg.FormCfg;
-        }
-
-        void OnLoadKeyCols(CList arg1, AsyncArgs arg2)
-        {
-            if (_cfg.Table != null)
-            {
-                var cols = new Nl<string>();
-                foreach (var col in _cfg.Table.Columns)
-                {
-                    cols.Add(col.Name);
-                }
-                arg1.Data = cols;
-            }
-        }
+        static Table _entityCls;
     }
 }

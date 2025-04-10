@@ -138,6 +138,21 @@ namespace Demo.Crud
                     Callback = (o, e) => GenericView.OpenManyToMany(CreateManyToManyCfg()),
                     Desc = "只提供参数无需另外代码，实现多对多表的增删改查"
                 },
+
+                new Nav("通用多对多视图参数编辑")
+                {
+                    Callback = async (o, e) =>
+                    {
+                        var cfg = CreateManyToManyCfg();
+                        var json = await new ManyToManyDesign().ShowDlg(cfg.Serialize());
+                        if (!string.IsNullOrEmpty(json))
+                        {
+                            Kit.Msg("json请查看日志");
+                            Log.Debug(json);
+                        }
+                    },
+                    Desc = "只提供参数无需另外代码，实现多对多表的增删改查"
+                },
             };
             group.Title = "多对多框架";
             ds.Add(group);

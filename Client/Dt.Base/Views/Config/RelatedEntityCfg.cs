@@ -15,6 +15,9 @@ using System.Text.Json.Serialization;
 
 namespace Dt.Base
 {
+    /// <summary>
+    /// 多对多关联实体配置
+    /// </summary>
     public class RelatedEntityCfg
     {
         #region 变量
@@ -80,7 +83,7 @@ namespace Dt.Base
                         task.Wait();
                         _middleModel = task.Result;
                         // EntityX<TEntity> 获取静态方法
-                        _genericMiddleType = typeof(EntityX<>).MakeGenericType(_relatedType);
+                        _genericMiddleType = typeof(EntityX<>).MakeGenericType(_middleType);
                     }
                     else
                     {
@@ -174,6 +177,8 @@ namespace Dt.Base
 
         public TableSchema Table => _relatedModel?.Schema;
 
+        public TableSchema MiddleTable => _middleModel?.Schema;
+        
         /// <summary>
         /// 查询已关联数据
         /// </summary>
@@ -249,6 +254,23 @@ namespace Dt.Base
             return tbl.Delete();
         }
 
+        /// <summary>
+        /// 序列化为json字符串
+        /// </summary>
+        /// <returns></returns>
+        public string Serialize()
+        {
+            using (var stream = new MemoryStream())
+            using (var writer = new Utf8JsonWriter(stream, JsonOptions.UnsafeWriter))
+            {
+                writer.WriteStartObject();
+                DoSerialize(writer);
+                writer.WriteEndObject();
+                writer.Flush();
+                return Encoding.UTF8.GetString(stream.ToArray());
+            }
+        }
+        
         /// <summary>
         /// 序列化为json
         /// </summary>
