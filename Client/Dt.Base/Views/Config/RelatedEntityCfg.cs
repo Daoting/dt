@@ -151,13 +151,25 @@ namespace Dt.Base
                 }
             }
         }
-        
+
+        /// <summary>
+        /// 关联或未关联列表的XAML
+        /// </summary>
         public string ListXaml { get; set; }
 
+        /// <summary>
+        /// 是否显示添加菜单
+        /// </summary>
         public bool ShowAddMi { get; set; } = true;
 
+        /// <summary>
+        /// 是否显示删除菜单
+        /// </summary>
         public bool ShowDelMi { get; set; } = true;
 
+        /// <summary>
+        /// 是否显示多选菜单
+        /// </summary>
         public bool ShowMultiSelMi { get; set; } = true;
 
         public TableSchema Table => _relatedModel?.Schema;
@@ -192,6 +204,12 @@ namespace Dt.Base
             return (Table)task.GetType().GetProperty("Result").GetValue(task);
         }
 
+        /// <summary>
+        /// 添加关联
+        /// </summary>
+        /// <param name="p_relatedFks"></param>
+        /// <param name="p_mainFk"></param>
+        /// <returns></returns>
         public Task<bool> AddRelation(List<long> p_relatedFks, long p_mainFk)
         {
             var tblType = typeof(Table<>).MakeGenericType(_middleType);
@@ -206,6 +224,58 @@ namespace Dt.Base
                 tbl.Add(en);
             }
             return tbl.Save();
+        }
+
+        /// <summary>
+        /// 删除关联
+        /// </summary>
+        /// <param name="p_relatedFks"></param>
+        /// <param name="p_mainFk"></param>
+        /// <returns></returns>
+        public Task<bool> DelRelation(List<long> p_relatedFks, long p_mainFk)
+        {
+            var tblType = typeof(Table<>).MakeGenericType(_middleType);
+            var tbl = Activator.CreateInstance(tblType) as Table;
+
+            var defVal = CreateParams(_middleType);
+            foreach (var fk in p_relatedFks)
+            {
+                var en = Activator.CreateInstance(_middleType, defVal) as Row;
+                en[MainFk] = p_mainFk;
+                en[RelatedFk] = fk;
+                en.AcceptChanges();
+                tbl.Add(en);
+            }
+            return tbl.Delete();
+        }
+
+        /// <summary>
+        /// 序列化为json
+        /// </summary>
+        /// <param name="writer"></param>
+        public void DoSerialize(Utf8JsonWriter writer)
+        {
+            if (!string.IsNullOrEmpty(_relatedCls))
+                writer.WriteString("RelatedCls", _relatedCls);
+            if (!string.IsNullOrEmpty(_middleCls))
+                writer.WriteString("MiddleCls", _middleCls);
+            if (!string.IsNullOrEmpty(MainFk))
+                writer.WriteString("MainFk", MainFk);
+            if (!string.IsNullOrEmpty(RelatedFk))
+                writer.WriteString("RelatedFk", RelatedFk);
+            if (!string.IsNullOrEmpty(_tabTitle) && _tabTitle != GetTabTitle())
+                writer.WriteString("TabTitle", _tabTitle);
+            if (!string.IsNullOrEmpty(_selectDlgTitle) && _selectDlgTitle != GetSelectDlgTitle())
+                writer.WriteString("SelectDlgTitle", _selectDlgTitle);
+            if (!string.IsNullOrEmpty(ListXaml))
+                writer.WriteString("ListXaml", ListXaml);
+
+            if (!ShowAddMi)
+                writer.WriteBoolean("ShowAddMi", ShowAddMi);
+            if (!ShowDelMi)
+                writer.WriteBoolean("ShowDelMi", ShowDelMi);
+            if (!ShowMultiSelMi)
+                writer.WriteBoolean("ShowMultiSelMi", ShowMultiSelMi);
         }
 
         /// <summary>
@@ -244,27 +314,6 @@ namespace Dt.Base
                 }
             }
             return tgtParams;
-        }
-
-        public async Task<bool> DelRelation(List<long> p_relatedFks, long p_mainFk)
-        {
-            return true;
-        }
-
-        /// <summary>
-        /// 序列化为json
-        /// </summary>
-        /// <param name="writer"></param>
-        public void DoSerialize(Utf8JsonWriter writer)
-        {
-            if (!string.IsNullOrEmpty(_relatedCls))
-                writer.WriteString("RelatedCls", _relatedCls);
-            if (!string.IsNullOrEmpty(_middleCls))
-                writer.WriteString("MiddleCls", _middleCls);
-            if (!string.IsNullOrEmpty(MainFk))
-                writer.WriteString("MainFk", MainFk);
-            if (!string.IsNullOrEmpty(RelatedFk))
-                writer.WriteString("RelatedFk", RelatedFk);
         }
 
         string GetTabTitle()

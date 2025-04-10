@@ -23,6 +23,7 @@ namespace Dt.Base.Views
             Title = p_cfg.SelectDlgTitle;
             
             _lv = RelatedEntityList.CreateLv(p_cfg);
+            _lv.SelectionMode = SelectionMode.Multiple;
             Content = _lv;
             Menu = Menu.New(Mi.确定(OnOK));
 
