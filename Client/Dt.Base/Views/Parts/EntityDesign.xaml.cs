@@ -145,29 +145,22 @@ namespace Dt.Base.Views
             p_list.Data = _entityCls;
         }
 
-        async void OnClsChanged(FvCell arg1, object arg2)
+        void OnClsChanged(FvCell arg1, object arg2)
         {
+            // 清空父表关联字段
             var list = (CList)_fvMain["ParentID"];
             list.Value = null;
             list.Data = null;
 
-            if (!string.IsNullOrEmpty(_cfg.QueryFvXaml)
-                || _cfg.ParentID != null
-                || _cfg.ListCfg.IsChanged
-                || _cfg.FormCfg.IsChanged)
-            {
-                if (await Kit.Confirm("实体类型已修改，是否清空所有配置？"))
-                {
-                    _cfg.QueryFvXaml = null;
-                    _cfg.ListCfg = new EntityListCfg { Owner = _cfg };
-                    _cfg.FormCfg = new EntityFormCfg { Owner = _cfg };
+            // 清空旧配置，避免数据不一致
+            _cfg.QueryFvXaml = null;
+            _cfg.ListCfg = new EntityListCfg { Owner = _cfg };
+            _cfg.FormCfg = new EntityFormCfg { Owner = _cfg };
 
-                    _fvMain.Data = null;
-                    _fvMain.Data = _cfg;
-                    _fvList.Data = _cfg.ListCfg;
-                    _fvForm.Data = _cfg.FormCfg;
-                }
-            }
+            _fvMain.Data = null;
+            _fvMain.Data = _cfg;
+            _fvList.Data = _cfg.ListCfg;
+            _fvForm.Data = _cfg.FormCfg;
         }
 
         void OnLoadKeyCols(CList arg1, AsyncArgs arg2)

@@ -52,7 +52,7 @@ namespace Dt.Base.Views
             _relatedLists = new List<RelatedEntityList>();
             foreach (var cfg in _cfg.RelatedCfgs)
             {
-                var list = new RelatedEntityList { Title = cfg.Title };
+                var list = new RelatedEntityList { Title = cfg.TabTitle };
                 _relatedLists.Add(list);
                 tabs.Items.Add(list);
             }

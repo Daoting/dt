@@ -17,6 +17,21 @@ namespace Dt.Base
 {
     public class RelatedEntityCfg
     {
+        #region 变量
+        string _relatedCls;
+        EntitySchema _relatedModel;
+        Type _relatedType;
+        // EntityX<TEntity> 获取静态方法
+        Type _genericRelatedType;
+
+        string _middleCls;
+        EntitySchema _middleModel;
+        Type _middleType;
+        Type _genericMiddleType;
+        string _tabTitle;
+        string _selectDlgTitle;
+        #endregion
+
         /// <summary>
         /// 关联实体类全名，包括程序集名称
         /// </summary>
@@ -87,8 +102,56 @@ namespace Dt.Base
         /// </summary>
         public string RelatedFk { get; set; }
 
-        public string Title { get; set; }
+        /// <summary>
+        /// Tab标题
+        /// </summary>
+        public string TabTitle
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(_tabTitle))
+                    return _tabTitle;
+                return GetTabTitle();
+            }
+            set
+            {
+                var def = GetTabTitle();
+                if (value == def)
+                {
+                    _tabTitle = null;
+                }
+                else if (_tabTitle != value)
+                {
+                    _tabTitle = value;
+                }
+            }
+        }
 
+        /// <summary>
+        /// 选择对话框标题
+        /// </summary>
+        public string SelectDlgTitle
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(_selectDlgTitle))
+                    return _selectDlgTitle;
+                return GetSelectDlgTitle();
+            }
+            set
+            {
+                var def = GetSelectDlgTitle();
+                if (value == def)
+                {
+                    _selectDlgTitle = null;
+                }
+                else if (_selectDlgTitle != value)
+                {
+                    _selectDlgTitle = value;
+                }
+            }
+        }
+        
         public string ListXaml { get; set; }
 
         public bool ShowAddMi { get; set; } = true;
@@ -106,7 +169,7 @@ namespace Dt.Base
         /// <returns></returns>
         public Task<Table> QueryRelated(long p_mainID)
         {
-            var sql = $"where exists ( select {MainFk} from {_middleModel.Schema.Name} b where a.ID = b.{RelatedFk} and {MainFk}={p_mainID}";
+            var sql = $"where exists ( select {MainFk} from {_middleModel.Schema.Name} b where a.ID = b.{RelatedFk} and {MainFk}={p_mainID} )";
             return Query(sql);
         }
 
@@ -117,10 +180,10 @@ namespace Dt.Base
         /// <returns></returns>
         public Task<Table> QueryUnrelated(long p_mainID)
         {
-            var sql = $"where not exists ( select {MainFk} from {_middleModel.Schema.Name} b where a.ID = b.{RelatedFk} and {MainFk}={p_mainID}";
+            var sql = $"where not exists ( select {MainFk} from {_middleModel.Schema.Name} b where a.ID = b.{RelatedFk} and {MainFk}={p_mainID} )";
             return Query(sql);
         }
-        
+
         public async Task<Table> Query(string p_whereOrSqlOrSp, object p_params = null)
         {
             var fun = _genericRelatedType.GetMethod("Query", BindingFlags.Public | BindingFlags.Static);
@@ -133,7 +196,7 @@ namespace Dt.Base
         {
             var tblType = typeof(Table<>).MakeGenericType(_middleType);
             var tbl = Activator.CreateInstance(tblType) as Table;
-            
+
             var defVal = CreateParams(_middleType);
             foreach (var fk in p_relatedFks)
             {
@@ -182,7 +245,7 @@ namespace Dt.Base
             }
             return tgtParams;
         }
-        
+
         public async Task<bool> DelRelation(List<long> p_relatedFks, long p_mainFk)
         {
             return true;
@@ -204,16 +267,18 @@ namespace Dt.Base
                 writer.WriteString("RelatedFk", RelatedFk);
         }
 
-        
-        string _relatedCls;
-        EntitySchema _relatedModel;
-        Type _relatedType;
-        // EntityX<TEntity> 获取静态方法
-        Type _genericRelatedType;
+        string GetTabTitle()
+        {
+            if (_relatedType != null)
+                return "关联" + _relatedType.Name.TrimEnd('X');
+            return "列表";
+        }
 
-        string _middleCls;
-        EntitySchema _middleModel;
-        Type _middleType;
-        Type _genericMiddleType;
+        string GetSelectDlgTitle()
+        {
+            if (_relatedType != null)
+                return "选择" + _relatedType.Name.TrimEnd('X');
+            return "选择";
+        }
     }
 }

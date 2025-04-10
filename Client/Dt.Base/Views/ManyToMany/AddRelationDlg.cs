@@ -20,6 +20,8 @@ namespace Dt.Base.Views
 
         public async Task<bool> Show(RelatedEntityCfg p_cfg, long p_releatedID, FrameworkElement p_target)
         {
+            Title = p_cfg.SelectDlgTitle;
+            
             _lv = RelatedEntityList.CreateLv(p_cfg);
             Content = _lv;
             Menu = Menu.New(Mi.确定(OnOK));

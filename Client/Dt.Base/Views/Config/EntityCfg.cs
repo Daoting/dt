@@ -10,13 +10,20 @@
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 #endregion
 
 namespace Dt.Base
 {
     public class EntityCfg
     {
+        #region 变量
+        string _cls;
+        EntitySchema _model;
+        Type _entityType;
+        // EntityX<TEntity> 获取静态方法
+        Type _genericType;
+        #endregion
+        
         public EntityCfg()
         {
             ListCfg = new EntityListCfg { Owner = this };
@@ -88,6 +95,12 @@ namespace Dt.Base
         /// </summary>
         public Type EntityType => _entityType;
 
+        /// <summary>
+        /// 调用EntityX`TEntity`的Query方法
+        /// </summary>
+        /// <param name="p_whereOrSqlOrSp"></param>
+        /// <param name="p_params"></param>
+        /// <returns></returns>
         public async Task<Table> Query(string p_whereOrSqlOrSp, object p_params = null)
         {
             var fun = _genericType.GetMethod("Query", BindingFlags.Public | BindingFlags.Static);
@@ -96,6 +109,10 @@ namespace Dt.Base
             return (Table)task.GetType().GetProperty("Result").GetValue(task);
         }
 
+        /// <summary>
+        /// 创建实体对象，优先调用静态方法New()，若无则调用构造函数
+        /// </summary>
+        /// <returns></returns>
         public async Task<Entity> New()
         {
             object[] tgtParams = null;
@@ -270,11 +287,5 @@ namespace Dt.Base
                 cfg.FormCfg.Owner = cfg;
             return cfg;
         }
-        
-        string _cls;
-        EntitySchema _model;
-        Type _entityType;
-        // EntityX<TEntity> 获取静态方法
-        Type _genericType;
     }
 }

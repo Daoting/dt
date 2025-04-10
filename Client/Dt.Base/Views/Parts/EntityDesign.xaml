@@ -62,6 +62,7 @@
                 Placeholder="Xaml空时自动生成"
                 RowSpan="4"
                 ShowTitle="False" />
+            <a:CText ID="Title" Title="标题" TitleWidth="114" />
             <a:CBar ColSpan="0.25">
                 <TextBlock Text="显示菜单项" />
             </a:CBar>
@@ -86,6 +87,7 @@
                 Placeholder="Xaml空时自动生成"
                 RowSpan="4"
                 ShowTitle="False" />
+            <a:CText ID="Title" Title="标题" TitleWidth="114" />
             <a:CBar ColSpan="0.25">
                 <TextBlock Text="显示菜单项" />
             </a:CBar>
