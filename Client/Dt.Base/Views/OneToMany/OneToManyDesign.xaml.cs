@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using System.Text.Json;
 #endregion
@@ -36,6 +37,7 @@ namespace Dt.Base.Views
             _cfg = OneToManyCfg.Deserialize(p_params);
             _fv.Data = _cfg.ParentCfg;
             _lv.Data = _cfg.ChildCfgs;
+            _cb.IsChecked = _cfg.IsUnionForm;
             if (await ShowAsync())
             {
                 return GetResult();
@@ -122,6 +124,11 @@ namespace Dt.Base.Views
                     _cfg.ChildCfgs.Insert(idx, ncfg);
                 }
             }
+        }
+
+        void OnUnionClick(object sender, RoutedEventArgs e)
+        {
+            _cfg.IsUnionForm = _cb.IsChecked == true;
         }
     }
 }

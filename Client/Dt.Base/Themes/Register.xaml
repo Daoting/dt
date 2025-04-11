@@ -22,4 +22,5 @@
     <v:ManyToManyWin x:Key="ManyToManyWin" />
     <v:RelatedEntityList x:Key="RelatedEntityList" />
     <v:AddRelationDlg x:Key="AddRelationDlg" />
+    <v:EntityUnionForm x:Key="EntityUnionForm" />
 </ResourceDictionary>

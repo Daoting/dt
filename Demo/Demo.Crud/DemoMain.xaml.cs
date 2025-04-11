@@ -63,9 +63,9 @@ namespace Demo.Crud
             var ds = new Nl<GroupData<Nav>>();
             var group = new GroupData<Nav>
             {
-                new Nav("实体基础", typeof(AccessDemo)) { Desc = "客户端实体增删改查，领域事件的定义、发布、处理，虚拟实体及父子实体的增删改查，实体缓存、领域服务等" },
+                new Nav("实体基础", typeof(AccessDemo)) { Desc = "客户端实体、虚拟实体、父子实体的增删改查、缓存、领域事件等" },
                 new Nav("Sqlite实体", typeof(SqliteAccessDemo)) { Desc = "Sqlite实体除了无缓存和无序列外，其余功能都包括"},
-                new Nav("服务端实体", typeof(SvcAccessDemo)) { Desc = "服务端实体增删改查，领域事件的定义、发布、处理，虚拟实体及父子实体的增删改查，实体缓存等" },
+                new Nav("服务端实体", typeof(SvcAccessDemo)) { Desc = "服务端实体、虚拟实体、父子实体的增删改查、缓存、领域事件等" },
                 new Nav("直连数据库", typeof(DbAccessDemo)) { Desc = "客户端直连数据库进行实体增删改查，可切换不同库"},
             };
             group.Title = "基础";
@@ -82,7 +82,7 @@ namespace Demo.Crud
                     Callback = (o, e) => GenericView.OpenSingleTbl(new EntityCfg { Cls = "Demo.Base.基础X,Demo.Base" }),
                     Desc = "只提供参数无需另外代码，实现单表的增删改查"
                 },
-                new Nav("通用单表视图参数编辑")
+                new Nav("视图参数编辑")
                 {
                     Callback = async (o, e) =>
                     {
@@ -94,7 +94,7 @@ namespace Demo.Crud
                             Log.Debug(json);
                         }
                     },
-                    Desc = "只提供参数无需另外代码，实现单表的增删改查"
+                    Desc = "通用单表视图参数编辑"
                 },
             };
             group.Title = "单实体框架";
@@ -102,15 +102,15 @@ namespace Demo.Crud
 
             group = new GroupData<Nav>
             {
-                new Nav("普通表单", typeof(普通Win)) { Desc = "" },
-                new Nav("父子表单", typeof(父表Win)) { Desc = "" },
+                new Nav("普通表单", typeof(普通Win)) { Desc = "一对多实体增删改查" },
+                new Nav("父子表单", typeof(父表Win)) { Desc = "一对多实体增删改查，表单统一处理父子增删改" },
                 new Nav("通用一对多视图")
                 {
                     Callback = (o, e) => GenericView.OpenOneToMany(CreateOneToManyCfg()),
                     Desc = "只提供参数无需另外代码，实现一对多表的增删改查"
                 },
 
-                new Nav("通用一对多视图参数编辑")
+                new Nav("视图参数编辑")
                 {
                     Callback = async (o, e) =>
                     {
@@ -122,7 +122,7 @@ namespace Demo.Crud
                             Log.Debug(json);
                         }
                     },
-                    Desc = "只提供参数无需另外代码，实现一对多表的增删改查"
+                    Desc = "通用一对多视图参数编辑"
                 },
             };
             group.Title = "一对多框架";
@@ -139,7 +139,7 @@ namespace Demo.Crud
                     Desc = "只提供参数无需另外代码，实现多对多表的增删改查"
                 },
 
-                new Nav("通用多对多视图参数编辑")
+                new Nav("视图参数编辑")
                 {
                     Callback = async (o, e) =>
                     {
@@ -151,7 +151,7 @@ namespace Demo.Crud
                             Log.Debug(json);
                         }
                     },
-                    Desc = "只提供参数无需另外代码，实现多对多表的增删改查"
+                    Desc = "通用多对多视图参数编辑"
                 },
             };
             group.Title = "多对多框架";
@@ -162,6 +162,7 @@ namespace Demo.Crud
         OneToManyCfg CreateOneToManyCfg()
         {
             OneToManyCfg cfg = new OneToManyCfg();
+            cfg.IsUnionForm = true;
             cfg.ParentCfg = new EntityCfg { Cls = "Demo.Base.父表X,Demo.Base" };
             cfg.ChildCfgs.Add(new EntityCfg { Cls = "Demo.Base.大儿X,Demo.Base", ParentID = "parent_id", IsChild = true });
             cfg.ChildCfgs.Add(new EntityCfg { Cls = "Demo.Base.小儿X,Demo.Base", ParentID = "group_id", IsChild = true });

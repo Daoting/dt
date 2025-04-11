@@ -21,6 +21,7 @@ namespace Dt.Base.Views
         EntityList _parentList;
         List<EntityList> _childLists;
         EntityForm _parentForm;
+        EntityUnionForm _unionForm;
         Dictionary<string, EntityForm> _childForms = new Dictionary<string, EntityForm>();
 
         public OneToManyWin(string p_jsonCfg)
@@ -54,15 +55,25 @@ namespace Dt.Base.Views
             foreach (var cfg in _cfg.ChildCfgs)
             {
                 var list = new EntityList { Title = cfg.ListCfg.Title };
+                // 父子表单时，子表单不显示操作菜单
+                if (_cfg.IsUnionForm)
+                {
+                    cfg.ListCfg.ShowAddMi = false;
+                    cfg.ListCfg.ShowDelMi = false;
+                    cfg.ListCfg.ShowMultiSelMi = false;
+                }
                 _childLists.Add(list);
                 tabs.Items.Add(list);
             }
             Ex.SetDock(tabs, PanePosition.Bottom);
             Items.Add(tabs);
 
-            _parentForm = new EntityForm { Title = _cfg.ParentCfg.FormCfg.Title, OwnWin = this };
+            if (_cfg.IsUnionForm)
+                _unionForm = new EntityUnionForm { Title = _cfg.ParentCfg.FormCfg.Title, OwnWin = this };
+            else
+                _parentForm = new EntityForm { Title = _cfg.ParentCfg.FormCfg.Title, OwnWin = this };
         }
-        
+
         void LoadCfg()
         {
             _query.LoadCfg(_cfg.ParentCfg);
@@ -73,36 +84,65 @@ namespace Dt.Base.Views
             };
 
             _parentList.LoadCfg(_cfg.ParentCfg);
-            _parentList.Msg += e => _ = _parentForm.Query(e);
+            _parentList.Msg += async e =>
+            {
+                if (_parentForm != null)
+                    await _parentForm.Query(e);
+                else if (_unionForm != null)
+                    await _unionForm.Query(e);
+            };
             string tabsTitle = string.Join(",", _childLists.Select(e => e.Title));
             _parentList.Navi += () => NaviTo(tabsTitle);
 
-            _parentForm.LoadCfg(_cfg.ParentCfg);
-            _parentForm.UpdateList += e => _ = _parentList.Refresh(e.ID);
-            _parentForm.UpdateRelated += e =>
+            if (_parentForm != null)
             {
-                foreach (var list in _childLists)
+                // 非父子表单
+                _parentForm.LoadCfg(_cfg.ParentCfg);
+                _parentForm.UpdateList += e => _ = _parentList.Refresh(e.ID);
+                _parentForm.UpdateRelated += e =>
                 {
-                    list.Query(e.ID);
-                }
-            };
-
-            for (int i = 0; i < _childLists.Count; i++)
-            {
-                var list = _childLists[i];
-                list.LoadCfg(_cfg.ChildCfgs[i]);
-                list.Msg += e =>
-                {
-                    EntityForm form = null;
-                    if (e.Action == FormAction.Open && !_childForms.TryGetValue(list.Cfg.Cls, out form))
+                    foreach (var list in _childLists)
                     {
-                        form = new EntityForm { OwnWin = this };
-                        form.LoadCfg(list.Cfg);
-                        form.UpdateList += e => _ = list.Refresh(e.ID);
-                        _childForms.Add(list.Cfg.Cls, form);
+                        list.Query(e.ID);
                     }
-                    _ = form?.Query(e);
                 };
+
+                for (int i = 0; i < _childLists.Count; i++)
+                {
+                    var list = _childLists[i];
+                    list.LoadCfg(_cfg.ChildCfgs[i]);
+                    list.Msg += e =>
+                    {
+                        EntityForm form = null;
+                        if (e.Action == FormAction.Open && !_childForms.TryGetValue(list.Cfg.Cls, out form))
+                        {
+                            form = new EntityForm { OwnWin = this };
+                            form.LoadCfg(list.Cfg);
+                            form.UpdateList += e => _ = list.Refresh(e.ID);
+                            _childForms.Add(list.Cfg.Cls, form);
+                        }
+                        _ = form?.Query(e);
+                    };
+                }
+            }
+            else if (_unionForm != null)
+            {
+                // 父子表单
+                _unionForm.LoadCfg(_cfg);
+                _unionForm.UpdateList += e => _ = _parentList.Refresh(e.ID);
+                _unionForm.UpdateRelated += e =>
+                {
+                    foreach (var list in _childLists)
+                    {
+                        list.Query(e.ID);
+                    }
+                };
+
+                for (int i = 0; i < _childLists.Count; i++)
+                {
+                    var list = _childLists[i];
+                    list.LoadCfg(_cfg.ChildCfgs[i]);
+                }
             }
         }
     }

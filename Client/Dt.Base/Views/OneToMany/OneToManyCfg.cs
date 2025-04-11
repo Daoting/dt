@@ -29,6 +29,11 @@ namespace Dt.Base
         public Nl<EntityCfg> ChildCfgs { get; set; } = new Nl<EntityCfg>();
 
         /// <summary>
+        /// 是否采用父子表单
+        /// </summary>
+        public bool IsUnionForm { get; set; }
+        
+        /// <summary>
         /// 序列化
         /// </summary>
         /// <returns></returns>
@@ -39,6 +44,9 @@ namespace Dt.Base
             {
                 writer.WriteStartObject();
 
+                if (IsUnionForm)
+                    writer.WriteBoolean("IsUnionForm", true);
+                
                 writer.WriteStartObject("ParentCfg");
                 if (ParentCfg != null)
                     ParentCfg.DoSerialize(writer);

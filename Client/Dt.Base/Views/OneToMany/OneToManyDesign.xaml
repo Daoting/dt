@@ -15,6 +15,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <a:Fv
             x:Name="_fv"
@@ -40,5 +41,16 @@
                 <a:Col ID="ParentID" Title="父表关联字段" Width="*" />
             </a:Cols>
         </a:Lv>
+        <Border
+            BorderBrush="{StaticResource 浅灰2}"
+            BorderThickness="1"
+            Grid.Row="2">
+            <CheckBox
+                x:Name="_cb"
+                Content="采用父子表单"
+                Click="OnUnionClick"
+                Margin="10,6,0,6"
+                Grid.Row="2" />
+        </Border>
     </Grid>
 </a:Dlg>

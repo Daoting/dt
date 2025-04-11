@@ -23,13 +23,13 @@ namespace Dt.Base
         // EntityX<TEntity> 获取静态方法
         Type _genericType;
         #endregion
-        
+
         public EntityCfg()
         {
             ListCfg = new EntityListCfg { Owner = this };
             FormCfg = new EntityFormCfg { Owner = this };
         }
-        
+
         /// <summary>
         /// 实体类全名，包括程序集名称
         /// </summary>
@@ -203,6 +203,132 @@ namespace Dt.Base
             var task = (Task)fun.Invoke(null, new object[] { p_id });
             await task;
             return task.GetType().GetProperty("Result").GetValue(task);
+        }
+
+        /// <summary>
+        /// 创建Lv，优先用xaml配置创建，无xaml根据实体表结构创建
+        /// </summary>
+        /// <returns></returns>
+        public Lv BuildLv()
+        {
+            if (!string.IsNullOrEmpty(ListCfg.Xaml))
+            {
+                Lv lv = Kit.LoadXaml<Lv>(ListCfg.Xaml);
+                if (lv == null)
+                    Throw.Msg($"加载Lv的xaml时错误：\n{ListCfg.Xaml}");
+                return lv;
+            }
+
+            StringBuilder sb = new StringBuilder("<a:Lv>\n<a:Cols>");
+            foreach (var col in _model.Schema.Columns)
+            {
+                // 过滤掉父表ID列
+                if (IsChild && col.Name.Equals(ParentID, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                string title = "";
+
+                // 字段名中文时不再需要Title
+                if (!string.IsNullOrEmpty(col.Comments)
+                    && !col.IsChinessName)
+                {
+                    if (col.IsEnumCol)
+                    {
+                        string tpName = col.GetEnumName();
+                        title = $" Title=\"{col.Comments.Substring(tpName.Length + 2)}\"";
+                    }
+                    else
+                    {
+                        title = $" Title=\"{col.Comments}\"";
+                    }
+                }
+
+                if (sb.Length > 0)
+                    sb.AppendLine();
+                sb.Append($"<a:Col ID=\"{col.Name.ToLower()}\"{title} />");
+            }
+            sb.Append("\n</a:Cols>\n</a:Lv>");
+            return Kit.LoadXaml<Lv>(sb.ToString());
+        }
+
+        /// <summary>
+        /// 创建Fv，优先用xaml配置创建，无xaml根据实体表结构创建
+        /// </summary>
+        /// <returns></returns>
+        public Fv BuildFv()
+        {
+            if (!string.IsNullOrEmpty(FormCfg.Xaml))
+            {
+                Fv fv = Kit.LoadXaml<Fv>(FormCfg.Xaml);
+                if (fv == null)
+                    Throw.Msg($"加载Fv的xaml时错误：{FormCfg.Xaml}");
+                return fv;
+            }
+            
+            StringBuilder sb = new StringBuilder("<a:Fv>");
+            foreach (var col in _model.Schema.Columns)
+            {
+                // 过滤掉父表ID列
+                if (IsChild && col.Name.Equals(ParentID, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                string title;
+                if (col.IsEnumCol)
+                {
+                    // 枚举 CList
+                    if (col.IsChinessName)
+                    {
+                        title = "";
+                    }
+                    else
+                    {
+                        string tpName = col.GetEnumName();
+                        title = col.Comments.Substring(tpName.Length + 2);
+                        title = string.IsNullOrEmpty(title) ? "" : $" Title=\"{title}\"";
+                    }
+                    sb.Append($"<a:CList ID=\"{col.Name.ToLower()}\"{title} />");
+                    continue;
+                }
+
+                // 字段名中文时不再需要Title
+                if (!string.IsNullOrEmpty(col.Comments) && !col.IsChinessName)
+                {
+                    title = $" Title=\"{col.Comments}\"";
+                }
+                else
+                {
+                    title = "";
+                }
+
+                // 按照字段类型生成FvCell
+                Type tp = col.Type;
+                if (col.Type.IsGenericType && col.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    tp = col.Type.GetGenericArguments()[0];
+
+                if (tp == typeof(bool))
+                {
+                    sb.Append($"<a:CBool ID=\"{col.Name.ToLower()}\"{title} />");
+                }
+                else if (tp == typeof(int) || tp == typeof(long) || tp == typeof(short))
+                {
+                    sb.Append($"<a:CNum ID=\"{col.Name.ToLower()}\"{title} IsInteger=\"True\" />");
+                }
+                else if (tp == typeof(float) || tp == typeof(double))
+                {
+                    sb.Append($"<a:CNum ID=\"{col.Name.ToLower()}\"{title} />");
+                }
+                else if (tp == typeof(DateTime))
+                {
+                    sb.Append($"<a:CDate ID=\"{col.Name.ToLower()}\"{title} />");
+                }
+                else
+                {
+                    sb.Append($"<a:CText ID=\"{col.Name.ToLower()}\"{title} />");
+                }
+            }
+
+            sb.Append("</a:Fv>");
+            return Kit.LoadXaml<Fv>(sb.ToString());
         }
 
         /// <summary>
