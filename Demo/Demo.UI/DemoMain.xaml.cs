@@ -41,51 +41,53 @@ namespace Demo.UI
         {
             Nl<GroupData<Nav>> ds = new Nl<GroupData<Nav>>();
 
-            #region 框架结构
+            #region 窗口
             var group = new GroupData<Nav>
             {
                 new Nav("空白窗口", typeof(BlankWin)) { Desc = "窗口内容为空" },
                 new Nav("主区窗口", typeof(SingleViewWin)) { Desc = "有标题栏的空白窗口" },
                 new Nav("动态主区窗口", typeof(ToggleWinCenter)) { Desc = "左区联动切换主区内容" },
                 new Nav("三区窗口", typeof(ThreePanelWin)) { Desc = "左区、主区、右区" },
-                new Nav("xaml精简写法", typeof(MinWinXaml)) { Desc = "Tab、Tabs或普通元素可直接放在Win下，用Ex.Dock指定停靠位置" },
+                new Nav("xaml精简写法", typeof(MinWinXaml), Icons.Html) { Desc = "Tab、Tabs或普通元素可直接放在Win下，用Ex.Dock指定停靠位置" },
                 new Nav("窗口布局", typeof(WinLayout)) { Desc = "只Win模式：窗口内的所有Tab可拖动并自动停靠" },
                 new Nav("窗口内导航", typeof(WinNavi)) { Desc = "只Phone模式：窗口内的所有Tab可互相导航" },
                 new Nav("Tab区域内导航", typeof(TabNavi)) { Desc = "导航时支持带遮罩的模式视图、导航参数、导航结果" },
-                new Nav("对话框", typeof(DlgHome)) { Desc = "模拟传统对话框" },
-                new Nav("提示信息", typeof(NotifyDemo)) { Desc = "普通信息、警告信息、Toast通知、后台任务" },
             };
-            group.Title = "框架结构";
+            group.Title = "窗口";
             ds.Add(group);
             #endregion
 
-            #region 基础控件
-            group = new GroupData<Nav>
-            {
-                new Nav("表单Fv", typeof(FvHome)) { Desc = "表单、单元格、编辑器、自动布局" },
-                new Nav("列表Lv", typeof(LvHome)) { Desc = "三种视图、两类数据源、各种变形" },
-                new Nav("树", typeof(TvHome)) { Desc = "传统树，自定义节点样式、节点内容" },
-                new Nav("菜单", typeof(MenuHome)) { Desc = "菜单、工具栏、上下文菜单" },
-                new Nav("Excel", typeof(ExcelHome)) { Desc = "模拟Excel的常用功能" },
-                new Nav("报表", typeof(RptHome)) { Desc = "报表模板设计、预览、导出、打印" },
-                new Nav("图表1", typeof(ChartHome)) { Desc = "柱线饼等9大类40种不同图表，支持嵌入Excel" },
-                new Nav("图表2", typeof(Chart2Home)) { Desc = "ScottPlot开源图表，高性能、交互性强" },
-                new Nav("Pdf及富文本", typeof(PdfHome)) { Desc = "Pdf预览、导入、导出、打印，Html、Markdown格式的编辑及浏览" },
-                new Nav("杂项", typeof(MiscHome)) { Desc = "分隔栏、可停靠面板等" },
-            };
-            group.Title = "基础控件";
-            ds.Add(group);
-            #endregion
+            ds.Add(GetGroup(typeof(DlgHome), "对话框", "模拟传统对话框"));
+            ds.Add(GetGroup(typeof(FvHome), "表单Fv", "表单、单元格、编辑器、自动布局"));
+            ds.Add(GetGroup(typeof(LvHome), "列表Lv", "三种视图、两类数据源、各种变形"));
+            ds.Add(GetGroup(typeof(TvHome), "树", "传统树，自定义节点样式、节点内容"));
+            ds.Add(GetGroup(typeof(MenuHome), "菜单", "菜单、工具栏、上下文菜单"));
+            ds.Add(GetGroup(typeof(ExcelHome), "Excel", "模拟Excel的常用功能"));
+            ds.Add(GetGroup(typeof(RptHome), "报表", "报表模板设计、预览、导出、打印"));
+            ds.Add(GetGroup(typeof(ChartHome), "图表1", "柱线饼等9大类40种不同图表，支持嵌入Excel"));
+            ds.Add(GetGroup(typeof(Chart2Home), "图表2", "ScottPlot开源图表，高性能、交互性强"));
+            ds.Add(GetGroup(typeof(PdfHome), "Pdf及富文本", "Pdf预览、导入、导出、打印，Html、Markdown格式的编辑及浏览"));
+            ds.Add(GetGroup(typeof(MiscHome), "杂项", "分隔栏、可停靠面板等"));
             
             _navControl.Data = ds;
         }
 
+        GroupData<Nav> GetGroup(Type p_homeType, string p_title, string p_desc, Icons p_icon = Icons.None)
+        {
+            var group = new GroupData<Nav> { Title = p_title };
+            group.Add(new Nav(p_title, p_homeType, p_icon) { Desc = p_desc });
+            var prop = p_homeType.GetProperty("Dir", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+            if (prop != null && prop.GetValue(null) is Nl<Nav> dir)
+                group.AddRange(dir);
+            return group;
+        }
+        
         void LoadModuleList()
         {
             _navModule.Data = new Nl<Nav>
             {
-                new Nav("功能列表视图", typeof(NavListDemo)) { Desc = "通过功能项打开新窗口或切换主区内容" },
-                new Nav("通用搜索视图", typeof(SearchMvWin)) { Desc = "包括固定搜索项、历史搜索项、搜索事件、导航等功能" },
+                new Nav("功能列表NavList", typeof(NavListDemo)) { Desc = "通过功能项打开新窗口或切换主区内容" },
+                new Nav("模糊搜索FuzzySearch", typeof(SearchMvWin)) { Desc = "包括固定搜索项、历史搜索项、搜索事件、导航等功能" },
                 new Nav("日志", typeof(LogDemo)) { Desc = "可通过AppStub.LogSetting设置日志输出，支持输出到Console、Trace或保存到文件" },
                 new Nav("数据表操作", typeof(TableAccess)) { Desc = "Table, Row, Col, Cell的常用方法" },
                 new Nav("异常处理", typeof(ExceptionDemo)) { Desc = "客户端同步、异步异常及处理" },

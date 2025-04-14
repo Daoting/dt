@@ -23,13 +23,15 @@ namespace Demo.UI
         public DlgHome()
         {
             InitializeComponent();
-            _nav.Data = new Nl<Nav>
-            {
-                new Nav("自定义对话框", typeof(DlgDemo), Icons.日历) { Desc = "对话框常用属性" },
-                new Nav("常用对话框", typeof(SysDlgDemo), Icons.Bug),
-                new Nav("请稍等对话框", typeof(BusyDlgDemo), Icons.Wifi),
-                new Nav("拖拽标志", typeof(DlgDragDemo), Icons.定位) { Desc = "拖拽目标元素时对话框作为标志显示拖拽状态" },
-            };
+            _nav.Data = Dir;
         }
+
+        public static Nl<Nav> Dir { get; } = new Nl<Nav>
+        {
+            new Nav("自定义对话框", typeof(DlgDemo), Icons.日历) { Desc = "对话框常用属性" },
+            new Nav("常用对话框", typeof(SysDlgDemo), Icons.Bug),
+            new Nav("请稍等对话框", typeof(BusyDlgDemo), Icons.Wifi),
+            new Nav("拖拽标志", typeof(DlgDragDemo), Icons.定位) { Desc = "拖拽目标元素时对话框作为标志显示拖拽状态" },
+        };
     }
 }

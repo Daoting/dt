@@ -23,15 +23,17 @@ namespace Demo.UI
         public PdfHome()
         {
             InitializeComponent();
-            _nav.Data = new Nl<Nav>
-            {
-                new Nav("Pdf浏览器", typeof(PdfViewDemo), Icons.Pdf) { Desc = "浏览Pdf内容" },
-                new Nav("Pdf打印", typeof(PrintPdfDemo), Icons.打印) { Desc = "" },
-                new Nav("Excel导出Pdf", typeof(ChartExcel), Icons.日历) { Desc = "Excel导出Pdf、打印" },
-                new Nav("Html", typeof(HtmlBoxDemo), Icons.Html) { Desc = "Html格式富文本的编辑及浏览" },
-                new Nav("Markdown", typeof(MarkdownBoxDemo), Icons.Ppt) { Desc = "Markdown格式富文本的编辑及浏览" },
-                new Nav("富文本格", typeof(RichTextCellDemo), Icons.Word) { Desc = "CHtml CMarkdown格" },
-            };
+            _nav.Data = Dir;
         }
+
+        public static Nl<Nav> Dir { get; } = new Nl<Nav>
+        {
+            new Nav("Pdf浏览器", typeof(PdfViewDemo), Icons.Pdf) { Desc = "浏览Pdf内容" },
+            new Nav("Pdf打印", typeof(PrintPdfDemo), Icons.打印) { Desc = "" },
+            new Nav("Excel导出Pdf", typeof(ChartExcel), Icons.日历) { Desc = "Excel导出Pdf、打印" },
+            new Nav("Html", typeof(HtmlBoxDemo), Icons.Html) { Desc = "Html格式富文本的编辑及浏览" },
+            new Nav("Markdown", typeof(MarkdownBoxDemo), Icons.Ppt) { Desc = "Markdown格式富文本的编辑及浏览" },
+            new Nav("富文本格", typeof(RichTextCellDemo), Icons.Word) { Desc = "CHtml CMarkdown格" },
+        };
     }
 }

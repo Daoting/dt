@@ -9,6 +9,7 @@
         x:Name="_navControl"
         Title="控件"
         Icon="词典"
+        ItemHeight="120"
         Order="1"
         To="NewWin"
         ViewMode="Tile" />
