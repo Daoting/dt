@@ -44,14 +44,14 @@ namespace Demo.UI
             #region 窗口
             var group = new GroupData<Nav>
             {
-                new Nav("空白窗口", typeof(BlankWin)) { Desc = "窗口内容为空" },
-                new Nav("主区窗口", typeof(SingleViewWin)) { Desc = "有标题栏的空白窗口" },
-                new Nav("动态主区窗口", typeof(ToggleWinCenter)) { Desc = "左区联动切换主区内容" },
-                new Nav("三区窗口", typeof(ThreePanelWin)) { Desc = "左区、主区、右区" },
+                new Nav("空白窗口", typeof(BlankWin), Icons.新窗口) { Desc = "窗口内容为空" },
+                new Nav("主区窗口", typeof(SingleViewWin), Icons.打开新窗口) { Desc = "有标题栏的空白窗口" },
+                new Nav("动态主区窗口", typeof(ToggleWinCenter), Icons.停靠左侧) { Desc = "左区联动切换主区内容" },
+                new Nav("三区窗口", typeof(ThreePanelWin), Icons.预览链接) { Desc = "左区、主区、右区" },
                 new Nav("xaml精简写法", typeof(MinWinXaml), Icons.Html) { Desc = "Tab、Tabs或普通元素可直接放在Win下，用Ex.Dock指定停靠位置" },
-                new Nav("窗口布局", typeof(WinLayout)) { Desc = "只Win模式：窗口内的所有Tab可拖动并自动停靠" },
-                new Nav("窗口内导航", typeof(WinNavi)) { Desc = "只Phone模式：窗口内的所有Tab可互相导航" },
-                new Nav("Tab区域内导航", typeof(TabNavi)) { Desc = "导航时支持带遮罩的模式视图、导航参数、导航结果" },
+                new Nav("窗口布局", typeof(WinLayout), Icons.打开面板) { Desc = "只Win模式：窗口内的所有Tab可拖动并自动停靠" },
+                new Nav("窗口内导航", typeof(WinNavi), Icons.手机) { Desc = "只Phone模式：窗口内的所有Tab可互相导航" },
+                new Nav("Tab区域内导航", typeof(TabNavi), Icons.关闭面板) { Desc = "导航时支持带遮罩的模式视图、导航参数、导航结果" },
             };
             group.Title = "窗口";
             ds.Add(group);
@@ -72,10 +72,10 @@ namespace Demo.UI
             _navControl.Data = ds;
         }
 
-        GroupData<Nav> GetGroup(Type p_homeType, string p_title, string p_desc, Icons p_icon = Icons.None)
+        GroupData<Nav> GetGroup(Type p_homeType, string p_title, string p_desc)
         {
             var group = new GroupData<Nav> { Title = p_title };
-            group.Add(new Nav(p_title, p_homeType, p_icon) { Desc = p_desc });
+            group.Add(new Nav("总览", p_homeType, Icons.主页) { Desc = p_desc });
             var prop = p_homeType.GetProperty("Dir", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
             if (prop != null && prop.GetValue(null) is Nl<Nav> dir)
                 group.AddRange(dir);
