@@ -86,7 +86,7 @@ namespace Demo.UI
         {
             _navModule.Data = new Nl<Nav>
             {
-                new Nav("功能列表NavList", typeof(NavListDemo)) { Desc = "通过功能项打开新窗口或切换主区内容" },
+                new Nav("功能列表NavList", typeof(NavListDemo)) { Desc = "通过功能项打开新窗口或切换主区内容，Lv始终真实行/项绘制(IRowView方式)" },
                 new Nav("模糊搜索FuzzySearch", typeof(SearchMvWin)) { Desc = "包括固定搜索项、历史搜索项、搜索事件、导航等功能" },
                 new Nav("日志", typeof(LogDemo)) { Desc = "可通过AppStub.LogSetting设置日志输出，支持输出到Console、Trace或保存到文件" },
                 new Nav("数据表操作", typeof(TableAccess)) { Desc = "Table, Row, Col, Cell的常用方法" },

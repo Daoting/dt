@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml;
 namespace Dt.Base
 {
     /// <summary>
-    /// 功能列表
+    /// 功能列表，内部Lv始终真实行/项绘制(IRowView方式)
     /// </summary>
     public partial class NavList : Tab, IDestroy
     {
@@ -60,8 +60,6 @@ namespace Dt.Base
         {
             InitializeComponent();
 
-            // 默认采用自动行高，因数据行数较少！
-            _lv.ItemHeight = double.NaN;
             _lv.View = new NavRowView(this);
         }
         #endregion
@@ -109,8 +107,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置行/项目高度，0时以第一项高度为准，NaN时自动高度
-        /// <para>默认NaN：因数据行数较少，每项的内容多少不同！</para>
+        /// 获取设置行/项目高度，0时以第一项高度为准，NaN时自动调整高度(性能差)，默认0
         /// </summary>
         public double ItemHeight
         {

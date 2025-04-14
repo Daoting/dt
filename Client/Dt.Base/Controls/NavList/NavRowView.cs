@@ -40,30 +40,19 @@ namespace Dt.Base
 
         UIElement CreateListRow(Nav p_nav)
         {
-            Grid grid = new Grid { Padding = new Thickness(10), MinHeight = 60 };
-
-            if (!string.IsNullOrEmpty(p_nav.Title) && !string.IsNullOrEmpty(p_nav.Desc))
+            Grid grid = new Grid
             {
-                var sp = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
-                sp.Children.Add(CreateTitle(p_nav));
-                sp.Children.Add(CreateDesc(p_nav));
-                grid.Children.Add(sp);
-            }
-            else if (!string.IsNullOrEmpty(p_nav.Title))
-            {
-                grid.Children.Add(CreateTitle(p_nav));
-            }
-            else if (!string.IsNullOrEmpty(p_nav.Desc))
-            {
-                grid.Children.Add(CreateDesc(p_nav));
-            }
+                Padding = new Thickness(10),
+                MinHeight = 60,
+                ColumnDefinitions =
+                {
+                    new ColumnDefinition { Width = GridLength.Auto },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                },
+            };
 
             if (p_nav.Icon != Icons.None)
             {
-                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-                Grid.SetColumn(grid.Children[0] as FrameworkElement, 1);
-
                 grid.Children.Add(new TextBlock
                 {
                     Text = Res.GetIconChar(p_nav.Icon),
@@ -75,12 +64,35 @@ namespace Dt.Base
                 });
             }
 
+            var sp = new Grid
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                RowDefinitions =
+                {
+                    new RowDefinition { Height = GridLength.Auto },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
+                },
+            };
+            Grid.SetColumn(sp, 1);
+            grid.Children.Add(sp);
+
+            if (!string.IsNullOrEmpty(p_nav.Title))
+            {
+                sp.Children.Add(CreateTitle(p_nav));
+            }
+
+            if (!string.IsNullOrEmpty(p_nav.Desc))
+            {
+                var desc = CreateDesc(p_nav);
+                Grid.SetRow(desc, 1);
+                sp.Children.Add(desc);
+            }
+
             if (!string.IsNullOrEmpty(p_nav.Warning))
             {
                 var g = CreateWarning(p_nav);
+                Grid.SetColumn(g, 1);
                 grid.Children.Add(g);
-                if (p_nav.Icon != Icons.None)
-                    Grid.SetColumn(g, 1);
             }
             return grid;
         }
@@ -89,7 +101,16 @@ namespace Dt.Base
         {
             Grid grid = new Grid { Padding = new Thickness(12), MinHeight = 80 };
 
-            var sp = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
+            var sp = new Grid
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                RowDefinitions =
+                {
+                    new RowDefinition { Height = GridLength.Auto },
+                    new RowDefinition { Height = GridLength.Auto },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
+                },
+            };
             if (p_nav.Icon != Icons.None)
             {
                 sp.Children.Add(new TextBlock
@@ -107,6 +128,7 @@ namespace Dt.Base
             {
                 var title = CreateTitle(p_nav);
                 title.HorizontalAlignment = HorizontalAlignment.Center;
+                Grid.SetRow(title, 1);
                 sp.Children.Add(title);
             }
 
@@ -114,6 +136,7 @@ namespace Dt.Base
             {
                 var desc = CreateDesc(p_nav);
                 desc.HorizontalAlignment = HorizontalAlignment.Center;
+                Grid.SetRow(desc, 2);
                 sp.Children.Add(desc);
             }
             grid.Children.Add(sp);
@@ -140,7 +163,7 @@ namespace Dt.Base
 
         TextBlock CreateDesc(Nav p_nav)
         {
-            return new TextBlock
+            var tb = new TextBlock
             {
                 Text = p_nav.Desc,
                 FontSize = Res.小字,
@@ -150,6 +173,24 @@ namespace Dt.Base
                 TextTrimming = TextTrimming.CharacterEllipsis,
                 TextWrapping = TextWrapping.Wrap,
             };
+
+#if WIN
+            // 当固定行高时，需要处理提示被截断的长文本
+            if (_owner.ItemHeight > 0)
+                tb.IsTextTrimmedChanged += OnIsTextTrimmedChanged;
+#endif
+            return tb;
+        }
+
+        /// <summary>
+        /// 提示被截断的长文本
+        /// </summary>
+        /// <param name="p_tb"></param>
+        /// <param name="e"></param>
+        static void OnIsTextTrimmedChanged(TextBlock p_tb, IsTextTrimmedChangedEventArgs e)
+        {
+            p_tb.IsTextTrimmedChanged -= OnIsTextTrimmedChanged;
+            ToolTipService.SetToolTip(p_tb, p_tb.Text);
         }
 
         Grid CreateWarning(Nav p_nav)
