@@ -229,20 +229,23 @@ namespace Dt.Base.Tools
 #if WIN
         public static void ChangeMainWinSize(int p_width, int p_height)
         {
-            int left;
-            // 宽度莫名少一丢丢
-            int width = p_width + 12;
+            // 宽度莫名少一丢丢，已正常！！！
+            //int width = p_width + 12;
 
+            // 边框2
+            int height = p_height - Kit.MainWin.AppWindow.TitleBar.Height + 2;
+            
             // 先最大化获取屏蔽宽度
             var presenter = (Microsoft.UI.Windowing.OverlappedPresenter)Kit.MainWin.AppWindow.Presenter;
             if (presenter.State != Microsoft.UI.Windowing.OverlappedPresenterState.Maximized)
                 presenter.Maximize();
-            left = (int)Kit.MainWin.Bounds.Width - width;
+            int left = ((int)Kit.MainWin.Bounds.Width - p_width) / 2;
+            int top = ((int)Kit.MainWin.Bounds.Height - height) / 2;
 
             presenter.Restore();
             // 用 Resize MoveAndResize 不准
-            Kit.MainWin.AppWindow.ResizeClient(new Windows.Graphics.SizeInt32(width, p_height - Kit.MainWin.AppWindow.TitleBar.Height));
-            Kit.MainWin.AppWindow.Move(new Windows.Graphics.PointInt32(left, 0));
+            Kit.MainWin.AppWindow.ResizeClient(new Windows.Graphics.SizeInt32(p_width, height));
+            Kit.MainWin.AppWindow.Move(new Windows.Graphics.PointInt32(left, top));
         }
 
         public static void ToggleAlwaysOnTop()
