@@ -41,7 +41,7 @@
                 ID="QueryFvXaml"
                 AcceptsReturn="True"
                 Placeholder="Xaml空时自动生成"
-                RowSpan="4"
+                RowSpan="2"
                 ShowTitle="False" />
             <a:CList
                 ID="ParentID"
@@ -60,7 +60,7 @@
                 ID="Xaml"
                 AcceptsReturn="True"
                 Placeholder="Xaml空时自动生成"
-                RowSpan="4"
+                RowSpan="2"
                 ShowTitle="False" />
             <a:CText ID="Title" Title="标题" TitleWidth="114" />
             <a:CBar ColSpan="0.25">
@@ -85,7 +85,7 @@
                 ID="Xaml"
                 AcceptsReturn="True"
                 Placeholder="Xaml空时自动生成"
-                RowSpan="4"
+                RowSpan="2"
                 ShowTitle="False" />
             <a:CText ID="Title" Title="标题" TitleWidth="114" />
             <a:CBar ColSpan="0.25">

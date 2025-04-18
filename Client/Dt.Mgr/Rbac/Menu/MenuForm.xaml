@@ -58,9 +58,9 @@
         <a:CText
             ID="params"
             AcceptsReturn="True"
-            RowSpan="4"
+            RowSpan="3"
             ShowTitle="False" />
-        <a:CText ID="note" Title="功能说明" AcceptsReturn="True" RowSpan="2" />
+        <a:CText ID="note" Title="功能说明" AcceptsReturn="True" />
         <a:CBool ID="is_locked" Title="锁定不可用" />
         <a:CDate ID="ctime" Title="创建时间" IsReadOnly="True" />
         <a:CDate ID="mtime" Title="修改时间" IsReadOnly="True" />
