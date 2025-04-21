@@ -183,7 +183,7 @@ namespace Dt.Core
             {
                 SetDefaultStyle(value as Control);
                 _contentBorder.Child = value;
-                
+
 #if WIN
                 // 因非调试状态切换两UI模式时造成闪退！Win上始终自定义标题栏
                 if (value is Frame frame)
@@ -387,9 +387,12 @@ namespace Dt.Core
 #if WIN
         static void OnWindowSizeChanged(object sender, Microsoft.UI.Xaml.WindowSizeChangedEventArgs e)
         {
-            SaveWinState();
+            OnWindowSizeChanged(e.Size.Width);
+        }
 
-            bool isPhoneUI = e.Size.Width < _maxPhoneUIWidth;
+        static void OnWindowSizeChanged(double p_width)
+        {
+            bool isPhoneUI = p_width < _maxPhoneUIWidth;
             if (isPhoneUI == Kit.IsPhoneUI)
                 return;
 
@@ -441,7 +444,29 @@ namespace Dt.Core
         #region 窗口
 #if WIN
         const string _maximizeFlagFile = "maximize.flag";
-        static bool _lastMaximized;
+        const string _phoneUIFlagFile = "phoneui.flag";
+
+        /// <summary>
+        /// 调整主窗口大小
+        /// </summary>
+        /// <param name="p_width"></param>
+        /// <param name="p_height"></param>
+        public static void ChangeMainWinSize(int p_width, int p_height)
+        {
+            // 取消窗口大小变化事件，因触发多次
+            MainWin.SizeChanged -= OnWindowSizeChanged;
+
+            // 获取屏幕居中位置
+            var area = Microsoft.UI.Windowing.DisplayArea.Primary;
+            int left = ((int)area.OuterBounds.Width - p_width) / 2;
+            int top = ((int)area.OuterBounds.Height - p_height) / 2;
+            
+            // 用 MoveAndResize 不准，宽高莫名少一丢丢，未发现规律
+            MainWin.AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(left, top, p_width + 16, p_height + 8));
+
+            MainWin.SizeChanged += OnWindowSizeChanged;
+            OnWindowSizeChanged(p_width);
+        }
 
         /// <summary>
         /// 自定义窗口
@@ -450,46 +475,66 @@ namespace Dt.Core
         {
             // 自定义窗口标题
             MainWin.ExtendsContentIntoTitleBar = true;
-            LoadWinState();
-        }
+            MainWin.Closed += OnSaveWinState;
 
-        /// <summary>
-        /// 若窗口历史为最大化，启动时调整为最大化
-        /// </summary>
-        static void LoadWinState()
-        {
+            // 加载历史窗口大小状态：最大化、PhoneUI、普通，普通设置 1280 X 720
             if (File.Exists(Path.Combine(Kit.CachePath, _maximizeFlagFile)))
             {
                 var presenter = (Microsoft.UI.Windowing.OverlappedPresenter)MainWin.AppWindow.Presenter;
                 presenter.Maximize();
-                _lastMaximized = true;
+            }
+            else if (File.Exists(Path.Combine(Kit.CachePath, _phoneUIFlagFile)))
+            {
+                ChangeMainWinSize(480, 850);
+            }
+            else
+            {
+                ChangeMainWinSize(1280, 720);
             }
         }
 
         /// <summary>
-        /// 记录最大化窗口标志
+        /// 窗口关闭时，记录窗口大小状态：最大化、PhoneUI、普通
         /// </summary>
-        static void SaveWinState()
+        static void OnSaveWinState(object sender, WindowEventArgs args)
         {
+            var maxFile = Path.Combine(Kit.CachePath, _maximizeFlagFile);
+            bool existMaxFile = File.Exists(maxFile);
             var isMaximized = ((Microsoft.UI.Windowing.OverlappedPresenter)MainWin.AppWindow.Presenter).State == Microsoft.UI.Windowing.OverlappedPresenterState.Maximized;
-            if (isMaximized == _lastMaximized)
-                return;
-
-            _lastMaximized = isMaximized;
-            var flag = Path.Combine(Kit.CachePath, _maximizeFlagFile);
             if (isMaximized)
             {
-                if (!File.Exists(flag))
+                if (!existMaxFile)
                 {
                     // 空的标志文件
-                    File.Create(flag).Close();
+                    File.Create(maxFile).Close();
                 }
+                return;
             }
-            else if (File.Exists(flag))
+
+            if (existMaxFile)
             {
                 try
                 {
-                    File.Delete(flag);
+                    File.Delete(maxFile);
+                }
+                catch { }
+            }
+
+            var phoneFile = Path.Combine(Kit.CachePath, _phoneUIFlagFile);
+            bool existPhoneFile = File.Exists(phoneFile);
+            if (Kit.IsPhoneUI)
+            {
+                if (!existPhoneFile)
+                {
+                    // 空的标志文件
+                    File.Create(phoneFile).Close();
+                }
+            }
+            else if (existPhoneFile)
+            {
+                try
+                {
+                    File.Delete(phoneFile);
                 }
                 catch { }
             }
