@@ -23,13 +23,16 @@ namespace Dt.Core
         /// </summary>
         /// <typeparam name="T">对象类型</typeparam>
         /// <param name="p_alias">别名</param>
+        /// <param name="p_params">构造方法参数</param>
         /// <returns>返回共享类型的实例对象</returns>
-        public static T GetShareObj<T>(string p_alias)
+        public static T GetShareObj<T>(string p_alias, object[] p_params = null)
         {
             var tp = _typeAlias.GetTypeByAlias(typeof(ShareAttribute), p_alias);
             if (tp == null)
                 Throw.Msg($"别名为{p_alias}的共享类型不存在！");
-            return (T)Activator.CreateInstance(tp);
+            if (p_params == null)
+                return (T)Activator.CreateInstance(tp);
+            return (T)Activator.CreateInstance(tp, p_params);
         }
 
         /// <summary>
@@ -37,10 +40,11 @@ namespace Dt.Core
         /// </summary>
         /// <typeparam name="T">对象类型</typeparam>
         /// <param name="p_enumAlias">别名取枚举成员名称</param>
+        /// <param name="p_params">构造方法参数</param>
         /// <returns>返回共享类型的实例对象</returns>
-        public static T GetShareObj<T>(Enum p_enumAlias)
+        public static T GetShareObj<T>(Enum p_enumAlias, object[] p_params = null)
         {
-            return GetShareObj<T>(p_enumAlias.ToString());
+            return GetShareObj<T>(p_enumAlias.ToString(), p_params);
         }
 
         /// <summary>
@@ -103,7 +107,7 @@ namespace Dt.Core
         {
             return _typeAlias.GetTypeByAlias(typeof(ViewParamsEditorAttribute), p_alias);
         }
-        
+
         /// <summary>
         /// 根据类型别名和方法名获取方法定义，取列表中第一个匹配项
         /// </summary>
@@ -138,7 +142,7 @@ namespace Dt.Core
         {
             return _typeAlias.GetAllTypesByAttrType(p_attrType);
         }
-        
+
         /// <summary>
         /// 发布本地事件
         /// </summary>
@@ -154,13 +158,13 @@ namespace Dt.Core
                 foreach (var tp in ls)
                 {
                     var mi = tp.GetMethod("Handle");
-                    if (mi != null )
+                    if (mi != null)
                     {
                         try
                         {
                             // 按顺序调用
                             var tgt = Activator.CreateInstance(tp);
-                            await(Task)mi.Invoke(tgt, new object[] { p_event });
+                            await (Task)mi.Invoke(tgt, new object[] { p_event });
                         }
                         catch (Exception e)
                         {
@@ -185,7 +189,7 @@ namespace Dt.Core
         /// 所有本地库的结构信息
         /// </summary>
         public static IReadOnlyDictionary<string, SqliteTblsInfo> AllSqliteDbs => _typeAlias.AllSqliteDbs;
-        
+
         /// <summary>
         /// 获取某本地库的结构信息
         /// </summary>
