@@ -119,7 +119,7 @@ namespace Dt.Core
         public static MethodInfo GetMethodByAlias(Type p_attrType, string p_alias, string p_methodName, BindingFlags p_flags)
         {
             var tp = _typeAlias.GetTypeByAlias(p_attrType, p_alias);
-            return tp.GetMethod(p_methodName, p_flags);
+            return tp?.GetMethod(p_methodName, p_flags);
         }
 
         /// <summary>

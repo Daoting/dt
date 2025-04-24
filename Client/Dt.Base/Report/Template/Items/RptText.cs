@@ -461,7 +461,8 @@ namespace Dt.Base.Report
                     {
                         RptExpression exp = new RptExpression();
                         exp.Func = RptExpFunc.Call;
-                        exp.VarName = str.ToLower().Substring(1);
+                        // 保持原始大小写，否则类型字典无法匹配
+                        exp.VarName = str.Substring(1);
                         Placeholder |= PlaceholderType.Call;
                         Expressions.Add(exp);
                     }
