@@ -1,9 +1,9 @@
 ﻿<a:Win
-    x:Class="Dt.Base.Report.ScriptDataWin"
+    x:Class="Dt.Base.Report.DbDataWin"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    Title="脚本数据源">
+    Title="Db数据源">
 
     <a:Pane InitWidth="250">
         <a:Tabs>
@@ -38,14 +38,29 @@
                 </a:Tab.Menu>
                 <a:Fv x:Name="_fv">
                     <a:CText ID="name" Title="数据名称" />
-                    <a:CBar Title="列名，逗号隔开" />
+                    <a:CText ID="srv" Title="服务名称" Placeholder="空时使用实体系统当前服务名" />
+                    <a:CBar Title="Sql">
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                            <Button Content="美化" Click="OnFormatSql" />
+                            <Button Content="查询测试" Click="OnQuerySql" />
+                        </StackPanel>
+                    </a:CBar>
+                    <a:CText
+                        ID="sql"
+                        AcceptsReturn="True"
+                        ColSpan="0"
+                        RowSpan="10"
+                        ShowTitle="False" />
+                    <a:CBar Title="列名，逗号隔开，可在【查询测试】时自动填写" />
                     <a:CText
                         ID="cols"
                         AcceptsReturn="True"
-                        RowSpan="8"
+                        ColSpan="0"
+                        RowSpan="2"
                         ShowTitle="False" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>
     </a:Main>
+
 </a:Win>

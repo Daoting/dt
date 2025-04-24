@@ -164,7 +164,7 @@ namespace Dt.Base.Report
 
         void OnDbData()
         {
-            new DbDataDlg().ShowDlg(Info);
+            DbDataWin.ShowDlg(Info);
         }
 
         void OnScriptData()

@@ -20,28 +20,35 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Base.Report
 {
-    public sealed partial class DbDataDlg : Dlg
+    public sealed partial class DbDataWin : Win
     {
         RptDesignInfo _info;
 
-        public DbDataDlg()
+        public DbDataWin(RptDesignInfo p_info)
         {
             InitializeComponent();
-            IsPinned = true;
-        }
-        
-        public void ShowDlg(RptDesignInfo p_info)
-        {
             _info = p_info;
             _lv.Filter = OnFilter;
             _lv.Data = _info.Root.Data.DataSet;
-
+        }
+        
+        public static void ShowDlg(RptDesignInfo p_info)
+        {
             if (!Kit.IsPhoneUI)
             {
-                Width = 900;
-                Height = 740;
+                Dlg dlg = new Dlg
+                {
+                    IsPinned = true,
+                    Width = 1000,
+                    Height = 700,
+                };
+                dlg.LoadWin(new DbDataWin(p_info));
+                dlg.Show();
             }
-            Show();
+            else
+            {
+                Kit.OpenWin(typeof(DbDataWin), null, Icons.数据库, p_info);
+            }
         }
         
         bool OnFilter(object obj)

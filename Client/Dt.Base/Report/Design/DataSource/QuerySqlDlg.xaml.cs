@@ -32,8 +32,8 @@ namespace Dt.Base.Report
             
             if (!Kit.IsPhoneUI)
             {
-                Width = 1000;
-                Height = 650;
+                Width = 900;
+                Height = 600;
             }
             Show();
         }
