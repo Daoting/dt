@@ -11,7 +11,7 @@
             <a:Fv x:Name="_fv">
                 <a:CBar Title="小计" />
                 <a:CNum ID="span" Title="小计跨度" IsInteger="True" Minimum="1" />
-                <a:CBool ID="beforelevel" Title="显示在层次之前" />
+                <a:CBool ID="beforelevel" Title="显示在层次之前" ShowTitle="False" />
                 <Button Content="新建子小计" Click="OnAddTotal" />
                 <Button Content="删除小计" Click="OnDelTotal" />
             </a:Fv>
