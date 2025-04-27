@@ -20,7 +20,7 @@ namespace Dt.Base
     /// 提供报表模板三种方式优先级：
     /// 1. 直接提供RptRoot对象，内部使用，如报表编辑时预览
     /// 2. 重写 ReadTemplate 方法，模板在其他位置时
-    /// 3. 默认通过Uri查询模板，支持3种格式：local ms-appx embedded
+    /// 3. 默认通过Uri查询模板，支持4种格式：rpt local ms-appx embedded
     /// </summary>
     public class RptInfo : RptInfoBase
     {

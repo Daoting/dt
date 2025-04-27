@@ -18,7 +18,7 @@ namespace Dt.Base
     /// 提供报表模板三种方式优先级：
     /// 1. 直接提供RptRoot对象，内部使用，如报表编辑时预览
     /// 2. 重写 ReadTemplate 方法，模板在其他位置时
-    /// 3. 默认通过Uri查询模板，支持3种格式：local ms-appx embedded
+    /// 3. 默认通过Uri查询模板，支持4种格式：rpt local ms-appx embedded
     /// </summary>
     public abstract class RptInfoBase
     {
@@ -26,7 +26,8 @@ namespace Dt.Base
         protected RptUriType _uriType;
 
         /// <summary>
-        /// 获取设置报表模板路径，作为唯一标识，支持3种格式：
+        /// 获取设置报表模板路径，作为唯一标识，支持4种格式：
+        /// <para>cm_rpt表：rpt://模板名称</para>
         /// <para>本地sqlite库：local://库名/模板名称</para>
         /// <para>内容文件：ms-appx:///Dt.UIDemo/Report/模板名称.rpt，android不支持路径中文</para>
         /// <para>嵌入资源：embedded://程序集名/完整路径.模板名称.rpt</para>
