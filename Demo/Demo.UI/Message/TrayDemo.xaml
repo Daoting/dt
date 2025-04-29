@@ -1,0 +1,14 @@
+﻿<a:Win
+    x:Class="Demo.UI.TrayDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <StackPanel x:Name="_sp" Margin="10">
+        <Button Content="普通托盘通知" Click="OnShowMsg" />
+        <Button Content="警告样式托盘通知" Click="OnShowWarn" />
+
+        <Button Content="提示信息未点击按钮关闭后放入托盘通知" Click="OnMoveToTray" />
+        <Button Content="提示信息同步放入托盘通知" Click="OnShowSync" />
+    </StackPanel>
+</a:Win>

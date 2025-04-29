@@ -1,0 +1,11 @@
+﻿<a:Win
+    x:Class="Demo.UI.ToastDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <StackPanel x:Name="_sp" Margin="10">
+        <Button Content="普通Toast通知" Click="OnCommonToast" />
+        <Button Content="带自启动的Toast通知" Click="OnParamsToast" />
+    </StackPanel>
+</a:Win>

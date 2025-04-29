@@ -74,9 +74,9 @@ namespace Dt.Core
         public Action<NotifyInfo> LinkCallback { get; set; }
 
         /// <summary>
-        /// 关闭时若未点击链接按钮则触发，常用来放入通知
+        /// 关闭时若未点击链接按钮则触发，常用来放入托盘通知
         /// </summary>
-        public Action<NotifyInfo> ToNotice { get; set; }
+        public Action<NotifyInfo> ToTray { get; set; }
     }
 
     /// <summary>

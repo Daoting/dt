@@ -1,0 +1,12 @@
+﻿<a:Win
+    x:Class="Demo.UI.BgJogDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <StackPanel x:Name="_sp" Margin="10">
+        <TextBlock x:Name="_tbJob" Text="后台任务" />
+        <CheckBox x:Name="_cbBgJob" Content="启用后台任务" Click="OnToggleBgJob" />
+        <Button x:Name="_btnBgJob" Content="调用后台任务" Click="OnRunBgJob" />
+    </StackPanel>
+</a:Win>

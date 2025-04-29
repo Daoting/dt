@@ -308,27 +308,27 @@ namespace Dt.Mgr.Chat
                 Kit.CloseNotify(e);
             };
 
-            notify.ToNotice = e =>
+            notify.ToTray = e =>
             {
                 LetterX l = (LetterX)e.Tag;
-                using (Notice.Data.Defer())
+                using (Kit.AllTrayMsg.Defer())
                 {
                     // 关闭所有对方为同一人的提示
                     int index = 0;
-                    while (index < Notice.Data.Count)
+                    while (index < Kit.AllTrayMsg.Count)
                     {
-                        if (Notice.Data[index].Tag is NotifyInfo ni
+                        if (Kit.AllTrayMsg[index].Tag is NotifyInfo ni
                             && ni.Tag is LetterX letter
                             && letter.OtherID == l.OtherID)
                         {
-                            Notice.Data.RemoveAt(index);
+                            Kit.AllTrayMsg.RemoveAt(index);
                         }
                         else
                         {
                             index++;
                         }
                     }
-                    Notice.Add(e);
+                    Kit.TrayMsg(e);
                 }
             };
 

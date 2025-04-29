@@ -184,10 +184,10 @@ namespace Dt.Base
             await Task.CompletedTask;
 #endif
 
-            // 未点击链接按钮时触发ToNotice回调，常用来放入通知
-            if (_info.ToNotice != null && !_clickedLink)
+            // 未点击链接按钮时触发ToNotice回调，常用来放入托盘通知
+            if (_info.ToTray != null && !_clickedLink)
             {
-                _info.ToNotice(_info);
+                _info.ToTray(_info);
             }
         }
 

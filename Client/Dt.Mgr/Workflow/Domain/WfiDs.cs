@@ -988,7 +988,7 @@ namespace Dt.Mgr.Workflow
                 AtWf.OpenFormWin(p_itemID);
                 Kit.CloseNotify(e);
             };
-            notify.ToNotice = e => Notice.Add(e);
+            notify.ToTray = e => Kit.TrayMsg(e);
 
             Kit.Notify(notify);
         }

@@ -74,6 +74,32 @@ namespace Dt.Core
         public static IList<NotifyInfo> NotifyList => _ui.NotifyList;
         #endregion
 
+        #region 托盘通知
+        /// <summary>
+        /// 获取托盘通知列表
+        /// </summary>
+        public static Table AllTrayMsg => _ui.AllTrayMsg;
+
+        /// <summary>
+        /// 发布新托盘通知
+        /// </summary>
+        /// <param name="p_content">通知内容</param>
+        /// <param name="p_isWarning">是否为警告通知</param>
+        public static void TrayMsg(string p_content, bool p_isWarning = false)
+        {
+            _ui.TrayMsg(p_content, p_isWarning);
+        }
+
+        /// <summary>
+        /// 发布新托盘通知
+        /// </summary>
+        /// <param name="p_notify">消息提示实例</param>
+        public static void TrayMsg(NotifyInfo p_notify)
+        {
+            _ui.TrayMsg(p_notify);
+        }
+        #endregion
+
         #region 窗口对话框
         /// <summary>
         /// 显示确认对话框

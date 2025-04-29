@@ -61,6 +61,26 @@ namespace Dt.Core
         void CloseNotify(NotifyInfo p_notify);
         #endregion
 
+        #region 托盘通知
+        /// <summary>
+        /// 获取托盘通知列表
+        /// </summary>
+        Table AllTrayMsg { get; }
+
+        /// <summary>
+        /// 发布新托盘通知
+        /// </summary>
+        /// <param name="p_content">通知内容</param>
+        /// <param name="p_isWarning">是否为警告通知</param>
+        void TrayMsg(string p_content, bool p_isWarning);
+
+        /// <summary>
+        /// 发布新托盘通知
+        /// </summary>
+        /// <param name="p_notify">消息提示实例</param>
+        void TrayMsg(NotifyInfo p_notify);
+        #endregion
+        
         #region 窗口对话框
         /// <summary>
         /// 加载根内容，支持任意类型的UIElement，特殊类型有：

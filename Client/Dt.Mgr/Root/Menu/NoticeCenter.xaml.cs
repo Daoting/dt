@@ -18,7 +18,7 @@ namespace Dt.Mgr.Home
         public NoticeCenter()
         {
             InitializeComponent();
-            _lv.Data = Notice.Data;
+            _lv.Data = Kit.AllTrayMsg;
         }
 
         void OnItemClick(ItemClickArgs e)
@@ -27,18 +27,18 @@ namespace Dt.Mgr.Home
                 && ni.LinkCallback != null)
             {
                 ni.LinkCallback.Invoke(ni);
-                Notice.Data.Remove(e.Row);
+                Kit.AllTrayMsg.Remove(e.Row);
             }
         }
 
         void OnClear()
         {
-            Notice.Data.Clear();
+            Kit.AllTrayMsg.Clear();
         }
 
         void OnCloseItem(object sender, RoutedEventArgs e)
         {
-            Notice.Data.Remove(((LvItem)((Button)sender).DataContext).Row);
+            Kit.AllTrayMsg.Remove(((LvItem)((Button)sender).DataContext).Row);
         }
     }
 }

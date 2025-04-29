@@ -60,6 +60,7 @@ namespace Demo.UI
             ds.Add(GetGroup(typeof(DlgHome), "对话框", "模拟传统对话框"));
             ds.Add(GetGroup(typeof(FvHome), "表单Fv", "表单、单元格、编辑器、自动布局"));
             ds.Add(GetGroup(typeof(LvHome), "列表Lv", "三种视图、两类数据源、各种变形"));
+            ds.Add(GetGroup(typeof(MsgHome), "消息", "提示信息、Toast通知、托盘通知"));
             ds.Add(GetGroup(typeof(TvHome), "树", "传统树，自定义节点样式、节点内容"));
             ds.Add(GetGroup(typeof(MenuHome), "菜单", "菜单、工具栏、上下文菜单"));
             ds.Add(GetGroup(typeof(ExcelHome), "Excel", "模拟Excel的常用功能"));
@@ -91,7 +92,7 @@ namespace Demo.UI
                 new Nav("日志", typeof(LogDemo)) { Desc = "可通过AppStub.LogSetting设置日志输出，支持输出到Console、Trace或保存到文件" },
                 new Nav("数据表操作", typeof(TableAccess)) { Desc = "Table, Row, Col, Cell的常用方法" },
                 new Nav("异常处理", typeof(ExceptionDemo)) { Desc = "客户端同步、异步异常及处理" },
-                new Nav("本地事件", typeof(LocalEventDemo)) { Desc = "客户端全局事件定义及处理" },
+                new Nav("后台任务", typeof(BgJogDemo), Icons.命令) { Desc = "后台任务的提示信息" },
                 new Nav("多语言", typeof(LocalizationDemo)) { Desc = "文字本地化" },
             };
         }

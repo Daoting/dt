@@ -65,7 +65,7 @@ namespace Dt.Mgr
             var item = new Tray { Icon = Icons.铃铛, MinWidth = 80 };
             ToolTipService.SetToolTip(item, "通知");
             item.Click += BtnNoticeClick;
-            Notice.Data.CollectionChanged += (s, e) => item.Digit = Notice.Data.Count;
+            Kit.AllTrayMsg.CollectionChanged += (s, e) => item.Digit = Kit.AllTrayMsg.Count;
             return item;
         }
 
@@ -87,31 +87,5 @@ namespace Dt.Mgr
             }
             _dlgNotice.Show();
         }
-    }
-
-    public static class Notice
-    {
-        /// <summary>
-        /// 添加到通知
-        /// </summary>
-        /// <param name="p_info"></param>
-        public static void Add(NotifyInfo p_info)
-        {
-            var row = Data.NewRow(new
-            { 
-                time = Kit.Now.ToString("HH:mm:ss"),
-                message = p_info.Message,
-                level = p_info.NotifyType == NotifyType.Warning ? Res.RedBrush : Res.BlackBrush,
-            });
-            row.Tag = p_info;
-            Data.Insert(0, row);
-        }
-
-        public static readonly Table Data = new Table
-        {
-            { "time" },
-            { "message" },
-            { "level", typeof(SolidColorBrush) },
-        };
     }
 }
