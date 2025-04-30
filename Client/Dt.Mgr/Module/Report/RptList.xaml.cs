@@ -23,7 +23,7 @@ namespace Dt.Mgr.Module
 
         protected override async Task OnQuery()
         {
-            var query = _clause.FuzzyOrWhere;
+            var query = _clause?.FuzzyOrWhere;
             if (string.IsNullOrEmpty(query) || query == "#全部")
             {
                 _lv.Data = await RptX.Query("select id,name,note,ctime,mtime from cm_rpt order by name");

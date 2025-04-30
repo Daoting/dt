@@ -61,6 +61,32 @@ namespace Dt.Mgr.Workflow
 
         protected override void InitHook()
         {
+            OnSaving(async () =>
+            {
+                Throw.IfEmpty(Name, "流程名称不可为空！", cName);
+
+                if ((IsAdded || Cells["name"].IsChanged)
+                    && await GetCount($"where name='{Name}'") > 0)
+                {
+                    Throw.Msg("流程名称重复！", cName);
+                }
+
+                if (!IsAdded && Cells["name"].IsChanged)
+                {
+                    if (!await Kit.Confirm("流程名称可能被流程表单引用，\r\n确认要修改吗？"))
+                        Throw.Msg("已取消保存！");
+                }
+                
+                if (IsAdded)
+                {
+                    Ctime = Mtime = Kit.Now;
+                }
+                else
+                {
+                    Mtime = Kit.Now;
+                }
+            });
+            
             OnDeleting(async () =>
             {
                 int cnt = await WfiPrcX.GetCount($"where prcd_id={ID}");
