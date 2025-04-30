@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Mgr.Chat;
 using Microsoft.UI.Xaml;
 #endregion
 
@@ -19,14 +20,31 @@ namespace Demo.UI
             InitializeComponent();
         }
         
-        void OnCommonToast(object sender, RoutedEventArgs e)
+        void OnChat(object sender, RoutedEventArgs e)
         {
-            Kit.Toast("普通通知", "无启动参数\r\n" + DateTime.Now.ToString());
+            ChatDs.SendLetter(1, new LetterInfo
+            {
+                ID = Kit.NewGuid,
+                SenderID = Kit.UserID,
+                SenderName = Kit.UserName,
+                LetterType = LetterType.Image,
+                Content = "[[\"photo/1.jpg\",\"1\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]]",
+                SendTime = Kit.Now,
+            });
         }
 
-        void OnParamsToast(object sender, RoutedEventArgs e)
+        void OnSysMsg(object sender, RoutedEventArgs e)
         {
-            Kit.Toast("带自启动参数的通知", "点击打开LvHome\r\n" + DateTime.Now.ToString(), new AutoStartInfo { WinType = typeof(LvHome).AssemblyQualifiedName, Title = "列表" });
+            AtMsg.SendMsg(1, "Hello");
+        }
+
+        void OnCmdMsg(object sender, RoutedEventArgs e)
+        {
+            AtMsg.SendCmd(1, new MsgInfo
+            {
+                MethodName = "PushApi.Hello",
+                Params = new List<object> { "参数字符串" },
+            });
         }
     }
 }

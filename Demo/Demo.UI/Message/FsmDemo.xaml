@@ -5,7 +5,8 @@
     xmlns:a="using:Dt.Base">
 
     <StackPanel x:Name="_sp" Margin="10">
-        <Button Content="普通Toast通知" Click="OnCommonToast" />
-        <Button Content="带自启动的Toast通知" Click="OnParamsToast" />
+        <Button Content="聊天消息：向admin发送图片" Click="OnChat" />
+        <Button Content="系统消息：向admin发送Hello" Click="OnSysMsg" />
+        <Button Content="指令消息：向admin发送PushApi.Hello指令" Click="OnCmdMsg" />
     </StackPanel>
 </a:Win>

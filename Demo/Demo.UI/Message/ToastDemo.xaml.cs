@@ -26,7 +26,13 @@ namespace Demo.UI
 
         void OnParamsToast(object sender, RoutedEventArgs e)
         {
-            Kit.Toast("带自启动参数的通知", "点击打开LvHome\r\n" + DateTime.Now.ToString(), new AutoStartInfo { WinType = typeof(LvHome).AssemblyQualifiedName, Title = "列表" });
+            Kit.Toast("带自启动参数的通知",
+                "点击打开LvHome\r\n" + DateTime.Now.ToString(),
+                new AutoStartInfo
+                {
+                    WinType = typeof(LvHome).AssemblyQualifiedName,
+                    Title = "列表"
+                });
         }
     }
 }
