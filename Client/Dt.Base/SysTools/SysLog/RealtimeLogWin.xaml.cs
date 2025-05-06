@@ -103,8 +103,9 @@ namespace Dt.Base.Tools
 
             e.Set += c =>
             {
-                var r = c.Data as TraceLogItem;
-
+                if (c.Data is not TraceLogItem r)
+                    return;
+                
                 tbInfo.Text = r.Info;
                 switch (r.Log.Level)
                 {
