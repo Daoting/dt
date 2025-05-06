@@ -49,7 +49,6 @@ namespace Dt.Base.ListView
             {
                 // 过滤掉忽略的
                 if (cell == null
-                    || cell.Query == QueryType.Disable
                     || cell.QueryFlag == CompFlag.Ignore)
                     continue;
 

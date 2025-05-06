@@ -144,8 +144,7 @@ namespace Dt.Base
             foreach (var cell in Fv.IDCells)
             {
                 // 过滤掉忽略的
-                if (cell.Query == QueryType.Disable
-                    || cell.QueryFlag == CompFlag.Ignore)
+                if (cell.QueryFlag == CompFlag.Ignore)
                     continue;
 
                 var id = cell.ID;
@@ -172,9 +171,11 @@ namespace Dt.Base
 
                 // 单字段多条件查询，形如：xxx_min, xxx_max
                 var name = id;
-                int pos = id.LastIndexOf("_");
-                if (pos > -1)
-                    name = id.Substring(0, pos);
+                if (id.EndsWith("_min", StringComparison.OrdinalIgnoreCase)
+                    || id.EndsWith("_max", StringComparison.OrdinalIgnoreCase))
+                {
+                    name = id.Substring(0, id.Length - 3);
+                }
 
                 // 表结构中没有该列
                 if (!cols.Contains(name))

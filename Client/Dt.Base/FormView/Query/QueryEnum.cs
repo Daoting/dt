@@ -17,7 +17,7 @@ namespace Dt.Base
     public enum QueryType
     {
         /// <summary>
-        /// 禁止查询
+        /// 不显示比较操作符，是否参与查询取决于 QueryFlag == Ignore
         /// </summary>
         Disable,
 

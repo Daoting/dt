@@ -220,8 +220,7 @@ namespace Dt.Base
             foreach (var cell in IDCells)
             {
                 // 过滤掉非查询的
-                if (cell.Query == QueryType.Disable
-                    || cell.QueryFlag == CompFlag.Ignore)
+                if (cell.QueryFlag == CompFlag.Ignore)
                     continue;
 
                 dt[cell.ID] = cell.QueryFlag;
@@ -242,9 +241,6 @@ namespace Dt.Base
 
             foreach (var cell in IDCells)
             {
-                if (cell.Query == QueryType.Disable)
-                    continue;
-
                 if (_lastCompFlag.TryGetValue(cell.ID, out var flag))
                     cell.QueryFlag = flag;
             }
