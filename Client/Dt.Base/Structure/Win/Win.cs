@@ -55,6 +55,18 @@ namespace Dt.Base
             typeof(Win),
             new PropertyMetadata(false));
 
+        public static readonly DependencyProperty AutoUnpinSideProperty = DependencyProperty.Register(
+            "AutoUnpinSide",
+            typeof(bool),
+            typeof(Win),
+            new PropertyMetadata(false));
+
+        public static readonly DependencyProperty MinWidthOfMainProperty = DependencyProperty.Register(
+            "MinWidthOfMain",
+            typeof(double),
+            typeof(Win),
+            new PropertyMetadata(480d));
+        
         public static readonly DependencyProperty AllowResetLayoutProperty = DependencyProperty.Register(
             "AllowResetLayout",
             typeof(bool),
@@ -189,6 +201,24 @@ namespace Dt.Base
             set { SetValue(AutoSaveLayoutProperty, value); }
         }
 
+        /// <summary>
+        /// 获取设置是否自动取消窗口两侧面板的固定状态，默认false
+        /// </summary>
+        public bool AutoUnpinSide
+        {
+            get { return (bool)GetValue(AutoUnpinSideProperty); }
+            set { SetValue(AutoUnpinSideProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置主区的最小宽度，AutoUnpinSide == true时有效，默认480
+        /// </summary>
+        public double MinWidthOfMain
+        {
+            get { return (double)GetValue(MinWidthOfMainProperty); }
+            set { SetValue(MinWidthOfMainProperty, value); }
+        }
+        
         /// <summary>
         /// 获取内容元素集合
         /// </summary>
@@ -1043,8 +1073,8 @@ namespace Dt.Base
         void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             // 快速调整主窗口大小时卡顿崩溃
-            //if (e.NewSize.Width != e.PreviousSize.Width)
-            //    _layout?.OnWidthChanged(e.NewSize.Width);
+            if (AutoUnpinSide && e.NewSize.Width != e.PreviousSize.Width)
+                _layout?.OnWidthChanged(e.NewSize.Width);
 
             if (_rootCompass != null)
             {

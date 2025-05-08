@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
     xmlns:home="using:Dt.Mgr.Home"
-    xmlns:wf="using:Dt.Mgr.Workflow">
+    xmlns:wf="using:Dt.Mgr.Workflow"
+    AutoUnpinSide="True">
 
     <home:HomeMenu x:Name="_menu" Order="1" a:Ex.Dock="Left" />
     <wf:CurrentTasks Order="2" />
