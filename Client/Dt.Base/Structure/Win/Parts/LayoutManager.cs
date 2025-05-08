@@ -160,7 +160,7 @@ namespace Dt.Base.Docking
                     tabs.Items.Clear();
             }
         }
-        
+
         public Dictionary<string, Tab> AllTabs => _tabs;
         #endregion
 
@@ -298,24 +298,8 @@ namespace Dt.Base.Docking
                         continue;
                     }
 
-                    // 停靠在四周
-                    Pane p = new Pane();
-                    if (dock == PanePosition.Left)
-                    {
-                        p.Pos = PanePosition.Left;
-                        lefts.Add(p);
-                    }
-                    else if (dock == PanePosition.Right)
-                    {
-                        p.Pos = PanePosition.Right;
-                        rights.Add(p);
-                    }
-                    else
-                    {
-                        p.Pos = dock;
-                        topBottom.Add(p);
-                    }
-
+                    // 统一放入 Tabs > Pane
+                    Pane p = new Pane { Pos = dock };
                     if (obj is Tab tab)
                     {
                         Tabs tabs = new Tabs();
@@ -333,6 +317,30 @@ namespace Dt.Base.Docking
                         p.Items.Add(ts);
                     }
                     ExtractItems(p);
+                    
+                    // 挑出自动隐藏Tab
+                    foreach (var hideTab in GetHideItems(p))
+                    {
+                        if (dock == PanePosition.Left)
+                            leftHide.Add(hideTab);
+                        else if (dock == PanePosition.Right)
+                            rightHide.Add(hideTab);
+                        else if (dock == PanePosition.Top)
+                            topHide.Add(hideTab);
+                        else if (dock == PanePosition.Bottom)
+                            bottomHide.Add(hideTab);
+                    }
+
+                    if (!IsRemoved(p))
+                    {
+                        // 停靠在四周
+                        if (dock == PanePosition.Left)
+                            lefts.Add(p);
+                        else if (dock == PanePosition.Right)
+                            rights.Add(p);
+                        else
+                            topBottom.Add(p);
+                    }
                 }
             }
 
@@ -1301,7 +1309,8 @@ namespace Dt.Base.Docking
                 // 因之前已将IsPinned = false的所有Tab移除
                 if (tabs != null && tabs.Items.Count > 0)
                     return false;
-                else if ((di = item as Pane) != null)
+
+                if ((di = item as Pane) != null)
                 {
                     if (!IsRemoved(di))
                         return false;
