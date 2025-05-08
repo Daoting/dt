@@ -66,7 +66,7 @@ namespace Dt.Base
             typeof(double),
             typeof(Win),
             new PropertyMetadata(480d));
-        
+
         public static readonly DependencyProperty AllowResetLayoutProperty = DependencyProperty.Register(
             "AllowResetLayout",
             typeof(bool),
@@ -90,7 +90,7 @@ namespace Dt.Base
             typeof(bool),
             typeof(Win),
             new PropertyMetadata(false));
-        
+
         public readonly static DependencyProperty IsActivedProperty = DependencyProperty.Register(
             "IsActived",
             typeof(bool),
@@ -218,7 +218,7 @@ namespace Dt.Base
             get { return (double)GetValue(MinWidthOfMainProperty); }
             set { SetValue(MinWidthOfMainProperty, value); }
         }
-        
+
         /// <summary>
         /// 获取内容元素集合
         /// </summary>
@@ -478,7 +478,8 @@ namespace Dt.Base
             }
             else if (e.CollectionChange == CollectionChange.ItemRemoved)
             {
-                RootPanel.Children.RemoveAt(e.Index + 1);
+                if (RootPanel.Children.Count > e.Index + 1)
+                    RootPanel.Children.RemoveAt(e.Index + 1);
             }
             else
             {
@@ -1357,7 +1358,7 @@ namespace Dt.Base
         {
             Destroyed?.Invoke(this);
         }
-        
+
         internal void DetachEvent()
         {
             Items.ItemsChanged -= OnItemsChanged;
