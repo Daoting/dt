@@ -15,13 +15,11 @@
         <a:CBool
             ID="is_locked"
             Title="已锁定不能创建流程实例"
-            Query="ReadOnly"
             QueryFlag="Equal"
             ShowTitle="False" />
         <a:CBool
             ID="singleton"
             Title="同一时刻只允许有一个激活的流程实例"
-            Query="ReadOnly"
             QueryFlag="Equal"
             ShowTitle="False" />
         <a:CBar Title="创建时间" />
