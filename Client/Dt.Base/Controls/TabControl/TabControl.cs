@@ -320,6 +320,28 @@ namespace Dt.Base
         #endregion
 
         #region Items管理
+        /// <summary>
+        /// 彻底清除所有子项
+        /// </summary>
+        internal void ClearItems()
+        {
+            Items.ItemsChanged -= OnItemsChanged;
+
+            // 确保 SelectedContent 为null，因绑定到UI，否则再次添加到可视树时会引发异常
+            SelectedItem = null;
+            
+            Items.Clear();
+            if (_itemsPanel != null)
+                _itemsPanel.Children.Clear();
+            if (_dlg != null)
+            {
+                _dlg.Close();
+                _dlg.Destroy();
+                _dlg = null;
+            }
+            Items.ItemsChanged += OnItemsChanged;
+        }
+
         void OnItemsChanged(object sender, ItemListChangedArgs e)
         {
             if (e.CollectionChange == CollectionChange.ItemInserted)

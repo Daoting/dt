@@ -1073,7 +1073,6 @@ namespace Dt.Base
 
         void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            // 快速调整主窗口大小时卡顿崩溃
             if (AutoUnpinSide && e.NewSize.Width != e.PreviousSize.Width)
                 _layout?.OnWidthChanged(e.NewSize.Width);
 

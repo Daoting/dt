@@ -157,7 +157,7 @@ namespace Dt.Base.Docking
                 if (item is IPaneList child)
                     ClearItems(child);
                 else if (item is TabControl tabs)
-                    tabs.Items.Clear();
+                    tabs.ClearItems();
             }
         }
 
@@ -1165,10 +1165,10 @@ namespace Dt.Base.Docking
         {
             ClearItems(_owner.CenterItem);
             ClearItems(_owner);
-            _owner.LeftAutoHide?.Items.Clear();
-            _owner.RightAutoHide?.Items.Clear();
-            _owner.TopAutoHide?.Items.Clear();
-            _owner.BottomAutoHide?.Items.Clear();
+            _owner.LeftAutoHide?.ClearItems();
+            _owner.RightAutoHide?.ClearItems();
+            _owner.TopAutoHide?.ClearItems();
+            _owner.BottomAutoHide?.ClearItems();
             _owner.RootPanel.Clear();
             _owner.ClearWindows();
         }
