@@ -340,6 +340,9 @@ namespace Dt.Base
                 _dlg = null;
             }
             Items.ItemsChanged += OnItemsChanged;
+
+            // AutoHideTab 中重置边距
+            OnItemsChanged();
         }
 
         void OnItemsChanged(object sender, ItemListChangedArgs e)

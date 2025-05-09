@@ -845,6 +845,9 @@ namespace Dt.Base.Docking
                 || !_tabs.TryGetValue(attr.Value, out tab))
                 return new Tab();
 
+            // 避免旧Tabs的影响
+            tab.Owner = null;
+            
             tab.Title = attr.Value;
             attr = p_elem.Attribute("Name");
             if (attr != null && !string.IsNullOrEmpty(attr.Value))
@@ -884,8 +887,7 @@ namespace Dt.Base.Docking
             else
                 tab.ClearValue(Tab.PopWidthProperty);
 
-            // 避免旧Tabs的影响
-            tab.Owner = null;
+            
             // 清除旧的选择标志
             tab.ClearValue(Tab.IsSelectedProperty);
             return tab;
