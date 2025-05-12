@@ -1112,7 +1112,7 @@ namespace Dt.Base
         {
             get
             {
-                if (_owner.UseAsDisplayFormat || FocusManager.GetFocusedElement() as ContentControl == _owner)
+                if (_owner.UseAsDisplayFormat || FocusManager.GetFocusedElement(Kit.RootGrid.XamlRoot) as ContentControl == _owner)
                     return _masker.DisplayText;
 
                 // 显示掩码后的实际值

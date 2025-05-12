@@ -74,7 +74,7 @@ namespace Dt.Base.Docking
 
         bool HasKeyboardFocus
         {
-            get { return (FocusManager.GetFocusedElement() as Control == this); }
+            get { return (FocusManager.GetFocusedElement(Kit.RootGrid.XamlRoot) as Control == this); }
         }
 
         /// <summary>

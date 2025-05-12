@@ -39,20 +39,18 @@
         <Otherwise>
             <!-- 非windows引用包 -->
             <ItemGroup>
-                <PackageReference Include="Uno.WinUI" Version="5.4.39" PrivateAssets="none" />
-                <!-- ScottPlot需要 -->
-                <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.8" />
+                <PackageReference Include="Uno.WinUI" Version="6.0.465" PrivateAssets="none" />
                 <!-- 对应CommunityToolkit.WinUI.Lottie库，渲染Adobe AfterEffects json动画，内部引用SkiaSharp包实现LottieVisualSource -->
-                <PackageReference Include="Uno.WinUI.Lottie" Version="5.4.39" />
+                <PackageReference Include="Uno.WinUI.Lottie" Version="6.0.465" />
             </ItemGroup>
         </Otherwise>
     </Choose>
 
     <!-- android引用包 -->
     <ItemGroup Condition="$(IsAndroid)">
-        <PackageReference Include="Square.OkHttp3" Version="4.12.0.1" />
+        <PackageReference Include="Square.OkHttp3" Version="4.12.0.9" />
         <!-- WorkManager后台任务引用 -->
-        <PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.8.1.6" />
+        <PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.9.0.5" />
     </ItemGroup>
 
     <!-- Essentials不支持 gtk(linux) wasm -->

@@ -296,7 +296,7 @@ namespace Dt.Base
         /// <returns>true 在内部</returns>
         public static bool IsFocusInside(this UIElement source)
         {
-            var focusedElement = FocusManager.GetFocusedElement() as UIElement;
+            var focusedElement = FocusManager.GetFocusedElement(Kit.RootGrid.XamlRoot) as UIElement;
             while ((focusedElement != null) && (focusedElement != source))
             {
                 focusedElement = focusedElement.GetParent();
@@ -311,7 +311,7 @@ namespace Dt.Base
         /// <returns>true 在当前元素上</returns>
         public static bool IsFocused(this UIElement source)
         {
-            return ((source != null) && (source == FocusManager.GetFocusedElement() as UIElement));
+            return ((source != null) && (source == FocusManager.GetFocusedElement(Kit.RootGrid.XamlRoot) as UIElement));
         }
         #endregion
 
@@ -637,7 +637,7 @@ namespace Dt.Base
         /// <returns></returns>
         public static bool IsKeyboardFocusWithin(this UIElement element)
         {
-            DependencyObject focusedElement = FocusManager.GetFocusedElement() as DependencyObject;
+            DependencyObject focusedElement = FocusManager.GetFocusedElement(Kit.RootGrid.XamlRoot) as DependencyObject;
             return ((focusedElement != null) && element.IsAncestorOf(focusedElement));
         }
 
