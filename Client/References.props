@@ -31,7 +31,7 @@
             <!-- windows引用包 -->
             <ItemGroup>
                 <!-- ScottPlot需要 -->
-                <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.8" />
+                <PackageReference Include="SkiaSharp.Views.WinUI" Version="2.88.9" />
                 <!-- Lottie动画已正常，Microsoft.Graphics.Win2D需1.2.0以上版本，Microsoft.Maui.Essentials已间接引用 -->
                 <PackageReference Include="CommunityToolkit.WinUI.Lottie" Version="8.1.240821" />
             </ItemGroup>
@@ -43,6 +43,8 @@
                 <PackageReference Include="Uno.WinUI" Version="5.5.95" PrivateAssets="none" />
                 <!-- 对应CommunityToolkit.WinUI.Lottie库，渲染Adobe AfterEffects json动画，内部引用SkiaSharp包实现LottieVisualSource -->
                 <PackageReference Include="Uno.WinUI.Lottie" Version="5.5.95" />
+                <!-- ScottPlot需要 -->
+                <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="2.88.9" />
             </ItemGroup>
         </Otherwise>
     </Choose>
