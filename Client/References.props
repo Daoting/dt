@@ -39,9 +39,10 @@
         <Otherwise>
             <!-- 非windows引用包 -->
             <ItemGroup>
-                <PackageReference Include="Uno.WinUI" Version="6.0.465" PrivateAssets="none" />
+                <!-- 高于5.5.95版本，android不占用顶部状态栏和底部导航栏的设置无效 -->
+                <PackageReference Include="Uno.WinUI" Version="5.5.95" PrivateAssets="none" />
                 <!-- 对应CommunityToolkit.WinUI.Lottie库，渲染Adobe AfterEffects json动画，内部引用SkiaSharp包实现LottieVisualSource -->
-                <PackageReference Include="Uno.WinUI.Lottie" Version="6.0.465" />
+                <PackageReference Include="Uno.WinUI.Lottie" Version="5.5.95" />
             </ItemGroup>
         </Otherwise>
     </Choose>
@@ -50,7 +51,7 @@
     <ItemGroup Condition="$(IsAndroid)">
         <PackageReference Include="Square.OkHttp3" Version="4.12.0.9" />
         <!-- WorkManager后台任务引用 -->
-        <PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.9.0.5" />
+        <PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.8.1.6" />
     </ItemGroup>
 
     <!-- Essentials不支持 gtk(linux) wasm -->

@@ -14,11 +14,6 @@
 			</ItemGroup>
 		</Otherwise>
 	</Choose>
-
-	<!-- 非windows引用包 -->
-	<ItemGroup Condition="!$(IsWin)">
-		<PackageReference Include="Uno.WinUI" Version="6.0.465" />
-	</ItemGroup>
 	
 	<!-- 所有App引用 -->
 	<ItemGroup Condition="$(AppType) != ''">
