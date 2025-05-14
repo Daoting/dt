@@ -126,10 +126,14 @@ namespace Dt.Core
 #elif ANDROID
             // .net6.0 后 Window.Bounds 不包含顶部状态栏高度！！！
             // Android上已设置不占用顶部状态栏和底部导航栏，但 Window.Bounds 包含顶部状态栏高度！
-            //var res = Android.App.Application.Context.Resources;
-            //int resourceId = res.GetIdentifier("status_bar_height", "dimen", "android");
-            //if (resourceId > 0)
-            //    StatusBarHeight = (int)(res.GetDimensionPixelSize(resourceId) / res.DisplayMetrics.Density);
+            // uno5.5.95后以上设置无效，全屏，用边距确保不占用状态栏，
+            var res = Android.App.Application.Context.Resources;
+            int resourceId = res.GetIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0)
+            {
+                StatusBarHeight = (int)(res.GetDimensionPixelSize(resourceId) / res.DisplayMetrics.Density);
+                RootGrid.Padding = new Thickness(0, StatusBarHeight, 0, 0);
+            }
 #endif
 
             // 桌面版系统支持Phone模式和Win模式自适应，ios android 不支持，只Phone模式

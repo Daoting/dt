@@ -32,7 +32,6 @@ namespace Demo
         WindowSoftInputMode = SoftInput.AdjustPan | SoftInput.StateHidden)]
     public class MainActivity : BaseAppActivity
     {
-        // styles.xml 中已设置不占用顶部状态栏和底部导航栏，windowTranslucentStatus windowTranslucentNavigation
     }
 
     [Application(LargeHeap = true, HardwareAccelerated = true)]
