@@ -205,34 +205,35 @@ namespace Dt.Base
             accs.Add(accelerator);
             
 #else
-            // gtk wasm wpf的全局快捷键
-            UITree.MainWin.CoreWindow.KeyDown += OnGlobalKeyDown;
+            // gtk wasm wpf的全局快捷键，Window.CoreWindow 始终为null
+            //UITree.MainWin.CoreWindow.KeyDown += OnGlobalKeyDown;
+            UITree.ContentBorder.AddHandler(Border.KeyDownEvent, (KeyEventHandler)OnGlobalKeyDown, true);
 #endif
         }
 
-        void OnGlobalKeyDown(CoreWindow sender, KeyEventArgs args)
+        void OnGlobalKeyDown(object sender, KeyRoutedEventArgs e)
         {
             // 全局快捷键辅助键 Ctrl
             if (!InputKit.IsCtrlPressed)
                 return;
 
-            switch (args.VirtualKey)
+            switch (e.Key)
             {
                 case VirtualKey.Enter:
                     // Ctrl + 回车 系统
-                    args.Handled = true;
+                    e.Handled = true;
                     SysTrace.ShowSysBox();
                     break;
 
                 case VirtualKey.Left:
                     // Ctrl + ← 动态日志
-                    args.Handled = true;
+                    e.Handled = true;
                     SysTrace.ShowLogBox();
                     break;
 
                 case VirtualKey.Right:
                     // Ctrl + → 打开LocalState路径
-                    args.Handled = true;
+                    e.Handled = true;
                     SysTrace.OpenLocalPath();
                     break;
             }

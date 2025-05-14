@@ -219,6 +219,11 @@ namespace Dt.Core
         /// phone状态栏高度
         /// </summary>
         public static int StatusBarHeight = 0;
+
+        /// <summary>
+        /// 内容元素的容器
+        /// </summary>
+        internal static Border ContentBorder => _contentBorder;
         #endregion
 
         #region 对话框

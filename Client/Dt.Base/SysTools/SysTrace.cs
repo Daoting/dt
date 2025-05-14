@@ -181,7 +181,6 @@ namespace Dt.Base.Tools
             {
                 if (_dlg == null)
                 {
-                    var win = new RealtimeLogWin();
                     _dlg = new Dlg
                     {
                         Title = "实时日志",
@@ -191,10 +190,17 @@ namespace Dt.Base.Tools
                         Width = 755,
                         Height = Kit.ViewHeight / 2
                     };
+                    _dlg.Show();
+
+                    // 初次后加载Win，否则bug
+                    var win = new RealtimeLogWin();
                     _dlg.LoadWin(win);
                     _dlg.Closed += (s, e) => win.ClearData();
                 }
-                _dlg.Show();
+                else
+                {
+                    _dlg.Show();
+                }
             }
         }
 
