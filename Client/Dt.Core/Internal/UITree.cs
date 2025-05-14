@@ -137,14 +137,14 @@ namespace Dt.Core
 #endif
 
             // 桌面版系统支持Phone模式和Win模式自适应，ios android 不支持，只Phone模式
-            // 因无法区分gtk和wasm所在的OS，都当作桌面版处理，跑在手机端的wasm也可自适应
+            // 因无法区分linux和wasm所在的OS，都当作桌面版处理，跑在手机端的wasm也可自适应
 #if WIN
             MainWin.SizeChanged += OnWindowSizeChanged;
             Kit.IsPhoneUI = MainWin.Bounds.Width < _maxPhoneUIWidth;
 #elif WASM || SKIA
-            // gtk 和 wasm 上Window.Bounds初始为(0,0)
+            // skia 和 wasm 上Window.Bounds初始为(0,0)
             // wasm 上 MainWin.SizeChanged 事件初次不触发，触发顺序：OnRootSizeChanged OnWindowSizeChanged
-            // gtk 上 MainWin.SizeChanged 事件初次触发两次，第一次(1,1)，触发顺序：OnWindowSizeChanged OnRootSizeChanged
+            // skia 上 MainWin.SizeChanged 事件初次触发两次，第一次(1,1)，触发顺序：OnWindowSizeChanged OnRootSizeChanged
             // 故只附加 RootGrid.SizeChanged
             RootGrid.SizeChanged += OnRootSizeChanged;
 #endif

@@ -151,7 +151,7 @@ namespace Dt.Base.Tools
             if (file == null)
                 return;
 
-            // gtk wpf
+            // linux wpf
             var folder = await StorageFolder.GetFolderFromPathAsync(Kit.DataPath);
             var temp = await folder.TryGetItemAsync(fileName) as StorageFile;
             if (temp != null)

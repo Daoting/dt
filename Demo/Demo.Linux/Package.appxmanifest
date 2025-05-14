@@ -12,8 +12,8 @@
     Version="1.0.0.0" />
 
   <Properties>
-    <DisplayName>搬运工-gtk</DisplayName>
-    <PublisherDisplayName>搬运工-gtk</PublisherDisplayName>
+    <DisplayName>搬运工-linux</DisplayName>
+    <PublisherDisplayName>搬运工-linux</PublisherDisplayName>
   </Properties>
 
   <Dependencies>
@@ -30,8 +30,8 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="搬运工-gtk"
-        Description="搬运工-gtk">
+        DisplayName="搬运工-linux"
+        Description="搬运工-linux">
         <uap:SplashScreen />
       </uap:VisualElements>
     </Application>

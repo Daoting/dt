@@ -20,8 +20,8 @@ namespace Dt.Core
         Android,
 
         Wasm,
-        
-        Gtk,
+
+        Linux,
         
         Wpf
     }

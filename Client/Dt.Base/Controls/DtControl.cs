@@ -39,7 +39,7 @@ namespace Dt.Base
         // wasm:
         // ApplyTemplate(父子) -> Loaded(父子) -> OnLoadTemplate(父子) -> OnFirstLoaded(父子) -> MeasureOverride(父子) -> ArrangeOverride(父子) -> SizeChanged(子父)
         //
-        // skia(wpf gtk):
+        // skia(wpf linux):
         // ApplyTemplate(父子) -> OnLoadTemplate(父子) -> Loaded(父子) -> OnFirstLoaded(父子)             -> SizeChanged(子父)
         //                                            -> MeasureOverride(父子) -> ArrangeOverride(父子)
         //

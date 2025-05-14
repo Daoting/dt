@@ -220,7 +220,7 @@ namespace Dt.Core
         static void AttachUnhandledException()
         {
             // wpf已处理DispatcherUnhandledException事件
-            // gtk已在内部处理，无需在dt中处理
+            // linux未处理
         }
 #endif
 

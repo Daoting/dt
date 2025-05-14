@@ -45,7 +45,7 @@ namespace Dt.Core
 #elif WASM
                 return AppType.Wasm;
 #else
-                return Stub.AppType == "gtk" ? AppType.Gtk : AppType.Wpf;
+                return Stub.AppType == "linux" ? AppType.Linux : AppType.Wpf;
 #endif
             }
         }

@@ -42,7 +42,7 @@ namespace Dt.Base
 #elif WASM
             _client = new HttpClient();
 #elif SKIA
-            // gtk wpf
+            // linux wpf
             _client = new HttpClient(new HttpClientHandler
             {
                 // 验证时服务端证书始终有效！

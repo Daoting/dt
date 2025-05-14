@@ -75,7 +75,7 @@
 		</When>
 		<Otherwise>
 			<PropertyGroup>
-				<!-- gtk wpf -->
+				<!-- linux wpf -->
 				<IsSkia>true</IsSkia>
 				<DefineConstants>$(DefineConstants);SKIA;ENABLECURSOR</DefineConstants>
 			</PropertyGroup>

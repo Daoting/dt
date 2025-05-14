@@ -155,7 +155,7 @@ namespace Dt.Core
         /// <returns></returns>
         public Task<Stream> GetStream()
         {
-            // gtk wpf
+            // linux wpf
             return Task.FromResult((Stream)new FileStream(FilePath, FileMode.Open, FileAccess.Read));
         }
 #endif

@@ -31,17 +31,15 @@
 		<PackageReference Include="Xamarin.Google.Android.Material" Version="1.10.0.2" />
 	</ItemGroup>
 	
-	<ItemGroup Condition="$(AppType) == 'gtk'">
-		<!-- 后续版本不再支持gtk -->
-		<PackageReference Include="Uno.WinUI.Skia.Gtk" Version="6.0.465" />
+	<ItemGroup Condition="$(AppType) == 'linux'">
+		<!-- 5.6.99后续版本不再支持gtk -->
+		<PackageReference Include="Uno.WinUI.Skia.Linux.FrameBuffer" Version="6.0.465" />
 		<PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="3.119.0" />
 		<PackageReference Include="SkiaSharp.Skottie" Version="3.119.0" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(AppType) == 'wpf'">
 		<PackageReference Include="Uno.WinUI.Skia.Wpf" Version="6.0.465" />
-		<PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="3.119.0" />
-		<PackageReference Include="SkiaSharp.Skottie" Version="3.119.0" />
 	</ItemGroup>
 	
 	<ItemGroup Condition="$(AppType) == 'wasm'">

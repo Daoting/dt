@@ -26,7 +26,7 @@ using System.Text;
 namespace Dt.Base
 {
     /// <summary>
-    /// wasm gtk wpf文件上传
+    /// wasm linux wpf文件上传
     /// </summary>
     public static class Uploader
     {
@@ -44,7 +44,7 @@ namespace Dt.Base
             // 识别wasm客户端，允许跨域请求
             _client.DefaultRequestHeaders.Add("dt-wasm", "");
 #elif SKIA
-            // gtk wpf
+            // linux wpf
             _client = new HttpClient(new HttpClientHandler
             {
                 // 验证时服务端证书始终有效！

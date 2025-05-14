@@ -205,7 +205,7 @@ namespace Dt.Base
             accs.Add(accelerator);
             
 #else
-            // gtk wasm wpf的全局快捷键，Window.CoreWindow 始终为null
+            // linux wasm wpf的全局快捷键，Window.CoreWindow 始终为null
             //UITree.MainWin.CoreWindow.KeyDown += OnGlobalKeyDown;
             UITree.ContentBorder.AddHandler(Border.KeyDownEvent, (KeyEventHandler)OnGlobalKeyDown, true);
 #endif

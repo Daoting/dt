@@ -137,7 +137,7 @@ namespace Demo.UI
                         c.FontWeight = FontWeights.Bold;
                         c.FontStyle = FontStyle.Italic;
                         break;
-                    case AppType.Gtk:
+                    case AppType.Linux:
                         c.Background = Res.亮蓝;
                         c.FontWeight = FontWeights.Normal;
                         c.FontStyle = FontStyle.Normal;
