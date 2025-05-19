@@ -1,8 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Dt.Sdk">
     <PropertyGroup>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <OutputType>Library</OutputType>
+        <IsPackable>true</IsPackable>
+        <!-- win默认将所有图片文件包含为Content，取消设置，否则嵌入的图片资源重复包含为Content -->
+        <__WindowsAppSdkDefaultImageIncludes Condition="$(IsWinAppSdk)" />
     </PropertyGroup>
-    
+
     <Import Project="..\..\..\Tools\File\InfrasPkg.props" Condition="exists('..\..\..\Tools\File\InfrasPkg.props')" />
 
     <ItemGroup>
@@ -94,16 +98,16 @@
         <EmbeddedResource Include="Res\FunctionInformation.xml" />
         <EmbeddedResource Include="Res\FunctionInformation.zh_CN.xml" />
     </ItemGroup>
-    
-	<ItemGroup>
-		<!--PrivateAssets避免引用项目的 nuget 包-->
-		<ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" PrivateAssets="all" />
-		<ProjectReference Include="..\Dt.Xls\Dt.Xls.csproj" PrivateAssets="all" />
-		<ProjectReference Include="..\Dt.Pdf\Dt.Pdf.csproj" PrivateAssets="all" />
-		<ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" PrivateAssets="all" />
-		<ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj" PrivateAssets="all" />
+
+    <ItemGroup>
+        <!--PrivateAssets避免引用项目的 nuget 包-->
+        <ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" PrivateAssets="all" />
+        <ProjectReference Include="..\Dt.Xls\Dt.Xls.csproj" PrivateAssets="all" />
+        <ProjectReference Include="..\Dt.Pdf\Dt.Pdf.csproj" PrivateAssets="all" />
+        <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" PrivateAssets="all" />
+        <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj" PrivateAssets="all" />
         <ProjectReference Include="..\Dt.Toolkit\Dt.Toolkit.csproj" PrivateAssets="all" />
-	</ItemGroup>
+    </ItemGroup>
 
     <ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
         <!-- GMImagePicker.Xamarin不再升级，升.net6.0不兼容，合并 -->

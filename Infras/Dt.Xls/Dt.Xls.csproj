@@ -1,6 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Dt.Sdk">
 	<PropertyGroup>
 		<Description>Xls文件格式(搬运工客户端)</Description>
+        <OutputType>Library</OutputType>
 	</PropertyGroup>
     <Import Project="..\DelXmlFiles.props" />
 	<ItemGroup>
