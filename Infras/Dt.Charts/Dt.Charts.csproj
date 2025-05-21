@@ -2,6 +2,5 @@
 	<PropertyGroup>
 		<Description>图表控件库(搬运工客户端)</Description>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-        <OutputType>Library</OutputType>
 	</PropertyGroup>
 </Project>

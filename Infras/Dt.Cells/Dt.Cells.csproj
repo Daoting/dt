@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Dt.Sdk">
     <PropertyGroup>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
-        <OutputType>Library</OutputType>
         <IsPackable>true</IsPackable>
         <!-- win默认将所有图片文件包含为Content，取消设置，否则嵌入的图片资源重复包含为Content -->
         <__WindowsAppSdkDefaultImageIncludes Condition="$(IsWinAppSdk)" />
