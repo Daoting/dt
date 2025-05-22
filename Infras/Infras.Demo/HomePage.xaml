@@ -3,20 +3,23 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <StackPanel Background="White" Spacing="20" Margin="0,70,0,0">
+    <StackPanel Background="White" Margin="0,70,0,0" Spacing="20">
         <StackPanel Orientation="Horizontal" Spacing="20">
-            <Button Click="OnBlank" Content="空内容" FontFamily="Microsoft YaHei UI" />
-            <Button Click="OnChart" Content="图表" />
-            <Button Content="xls" Tag="MonthProfit.xlsx" Click="OnLoadFile" />
-            <Button Content="xml" Tag="MonthProfit.ssxml" Click="OnLoadFile" />
+            <Button Content="空内容" Click="OnBlank" />
+            <Button Content="图表" Click="OnChart" />
+            <Button Content="xls" Click="OnLoadFile" Tag="MonthProfit.xlsx" />
+            <Button Content="xml" Click="OnLoadFile" Tag="MonthProfit.ssxml" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Spacing="20">
-            <Button Click="OnMutiTab" Content="分组排序" />
-            <Button Click="OnSparkline" Content="迷你图" />
+            <Button Content="分组排序" Click="OnMutiTab" FontWeight="Bold" />
+            <Button Content="迷你图" Click="OnSparkline" FontWeight="Thin" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Spacing="20">
-            <Button Click="OnPieStacked" Content="饼图" />
-            <Button Click="OnExportPdf" Content="导出打印" />
+            <Button Content="饼图" Click="OnPieStacked" FontWeight="Black" />
+            <Button Content="导出打印" Click="OnExportPdf" FontWeight="Light" />
+            <TextBlock
+                Text="&#xE008;"
+                FontFamily="ms-appx:///Assets/Fonts/icon.ttf#DtIcon" />
         </StackPanel>
     </StackPanel>
 </Page>

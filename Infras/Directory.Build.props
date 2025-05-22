@@ -1,9 +1,13 @@
 ﻿<Project>
     <PropertyGroup>
-        <!-- 修改目标框架后需重启VS有效 -->
-         <!-- <TargetFrameworks>net9.0-ios;net9.0-android;net9.0-windows10.0.26100;net9.0-browserwasm;net9.0-desktop</TargetFrameworks>  -->
-        <TargetFrameworks>net9.0-android</TargetFrameworks>
-        
+        <!-- 单目标框架：复制sln，文件名加平台后缀 -->
+        <TargetFrameworks Condition="$(SolutionName.Contains('-win'))">net9.0-windows10.0.26100</TargetFrameworks>
+        <TargetFrameworks Condition="$(SolutionName.Contains('-android'))">net9.0-android</TargetFrameworks>
+        <TargetFrameworks Condition="$(SolutionName.Contains('-ios'))">net9.0-ios</TargetFrameworks>
+        <TargetFrameworks Condition="$(SolutionName.Contains('-wasm'))">net9.0-browserwasm</TargetFrameworks>
+        <TargetFrameworks Condition="$(SolutionName.Contains('-desktop'))">net9.0-desktop</TargetFrameworks>
+        <TargetFrameworks Condition="$(TargetFrameworks) == ''">net9.0-ios;net9.0-android;net9.0-windows10.0.26100;net9.0-browserwasm;net9.0-desktop</TargetFrameworks>
+
         <NoWarn>$(NoWarn);1591;8785;NU1701;Uno0001;0252;NETSDK1206</NoWarn>
         <!-- 始终禁止xbf嵌入到pri文件，默认debug时不嵌入，release时嵌入，嵌入时包升级会造成引用项目都必须重新编译 -->
         <DisableEmbeddedXbf>true</DisableEmbeddedXbf>
@@ -20,10 +24,10 @@
     </ItemGroup>
 
     <ItemGroup Condition="$(IsWinAppSdk)">
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250401001" PrivateAssets="none" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.3916" PrivateAssets="none" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250513003" PrivateAssets="none" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4188" PrivateAssets="none" />
     </ItemGroup>
-
+    
     <ItemGroup Condition="$(IsAndroid)">
         <PackageReference Include="Uno.WinUI.Runtime.Skia.Android" Version="6.0.465" PrivateAssets="none" />
     </ItemGroup>
@@ -61,7 +65,7 @@
     <ItemGroup Condition="$(IsDesktop) AND $(IsExe) != 'true'">
         <PackageReference Include="Uno.WinUI" Version="6.0.465" PrivateAssets="none" />
     </ItemGroup>
-    
+
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
         <!-- 和Deterministic配合，调试程序时使用github源文件，不使用本地源文件 -->
         <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>

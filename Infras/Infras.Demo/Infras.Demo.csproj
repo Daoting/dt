@@ -1,8 +1,31 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Dt.Sdk">
+    <PropertyGroup>
+        <IsExe>true</IsExe>
+        <!-- 不输出Dt.BuildTools中的本地网站 -->
+        <NotIncludeWebPages>true</NotIncludeWebPages>
+
+        <!-- Display name -->
+        <ApplicationTitle>Excel样例</ApplicationTitle>
+        <!-- App Identifier -->
+        <ApplicationId>com.companyname.UnoApp1</ApplicationId>
+        <!-- Versions -->
+        <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+        <ApplicationVersion>1</ApplicationVersion>
+        <!-- Package Publisher -->
+        <ApplicationPublisher>Daoting</ApplicationPublisher>
+        <!-- Package Description -->
+        <Description>UnoApp1 powered by Uno Platform.</Description>
+        <Platforms>AnyCPU;x64</Platforms>
+    </PropertyGroup>
+
     <ItemGroup>
         <EmbeddedResource Include="Res\**" />
+
+        <UnoIcon Include="Assets\Icons\icon.svg" ForegroundFile="Assets\Icons\icon_foreground.svg"
+                 ForegroundScale="0.7" AndroidForegroundScale="0.5" Color="#1BA1E2" />
+        <UnoSplashScreen Include="Assets\Icons\splash_screen.svg" BaseSize="128,128" Color="#1BA1E2" AndroidScale="0.7" />
     </ItemGroup>
-    
+
     <ItemGroup>
         <ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" />
         <ProjectReference Include="..\Dt.Xls\Dt.Xls.csproj" />
@@ -11,4 +34,5 @@
         <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj" />
         <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj" />
     </ItemGroup>
+
 </Project>
