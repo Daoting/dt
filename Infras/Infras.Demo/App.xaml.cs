@@ -30,7 +30,7 @@ namespace Infras.Demo
         {
             Window win;
 #if WIN
-            win = new Window();
+            win = new Window { Title = "ExcelÑùÀý" };
 #else
             win = Microsoft.UI.Xaml.Window.Current;
 #endif

@@ -7,7 +7,7 @@
         <!-- Display name -->
         <ApplicationTitle>Excel样例</ApplicationTitle>
         <!-- App Identifier -->
-        <ApplicationId>dt.Infras</ApplicationId>
+        <ApplicationId>dt.Infras.Demo</ApplicationId>
         <!-- Versions -->
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>

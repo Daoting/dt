@@ -11,12 +11,12 @@
             <Button Content="xml" Click="OnLoadFile" Tag="MonthProfit.ssxml" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Spacing="20">
-            <Button Content="分组排序" Click="OnMutiTab" FontWeight="Bold" />
-            <Button Content="迷你图" Click="OnSparkline" FontWeight="Thin" />
+            <Button Content="分组排序" Click="OnMutiTab" />
+            <Button Content="迷你图" Click="OnSparkline" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Spacing="20">
-            <Button Content="饼图" Click="OnPieStacked" FontWeight="Black" />
-            <Button Content="导出打印" Click="OnExportPdf" FontWeight="Light" />
+            <Button Content="饼图" Click="OnPieStacked" />
+            <Button Content="导出打印" Click="OnExportPdf" />
             <TextBlock
                 Text="&#xE008;"
                 FontFamily="ms-appx:///Assets/Fonts/icon.ttf#DtIcon" />
