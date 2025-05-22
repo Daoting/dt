@@ -1,7 +1,0 @@
-{
-  "profiles": {
-    "Infras.Win": {
-      "commandName": "MsixPackage"
-    }
-  }
-}
