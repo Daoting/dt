@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.Pdf", "Dt.Pdf\Dt.Pdf.csproj", "{B189D8C4-9D14-4292-B96A-ECA8E111CA3D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.CalcEngine", "Dt.CalcEngine\Dt.CalcEngine.csproj", "{AB4E1164-DF98-4747-AC93-3AC1D194E4A4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.Pdf", "Dt.Pdf\Dt.Pdf.csproj", "{B189D8C4-9D14-4292-B96A-ECA8E111CA3D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dt.Charts", "Dt.Charts\Dt.Charts.csproj", "{F053BB5B-77BC-4AC7-9158-164B903A3008}"
 EndProject
