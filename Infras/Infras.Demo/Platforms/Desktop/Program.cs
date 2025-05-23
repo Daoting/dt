@@ -1,13 +1,10 @@
 using Uno.UI.Hosting;
-using UnoApp1;
-
-App.InitializeLogging();
+using Infras.Demo;
 
 var host = UnoPlatformHostBuilder.Create()
     .App(() => new App())
     .UseX11()
     .UseLinuxFrameBuffer()
-    .UseMacOS()
     .UseWin32()
     .Build();
 

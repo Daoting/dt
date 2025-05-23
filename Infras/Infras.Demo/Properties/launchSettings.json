@@ -27,7 +27,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Infras.Demo (WinAppSDK Packaged)": {
+    "Infras.Demo (WinAppSDK)": {
       "commandName": "MsixPackage",
       "compatibleTargetFramework": "windows"
     },
