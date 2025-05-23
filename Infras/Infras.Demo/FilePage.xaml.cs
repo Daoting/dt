@@ -25,7 +25,7 @@ namespace Infras.Demo
 
             var file = e.Parameter.ToString();
             var assembly = typeof(FilePage).Assembly;
-            using (var stream = assembly.GetManifestResourceStream($"{assembly.GetName().Name}.Res.{file}"))
+            using (var stream = assembly.GetManifestResourceStream($"{assembly.GetName().Name}.Bag.{file}"))
             {
                 if (file.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
                     await _excel.OpenExcel(stream);

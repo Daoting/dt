@@ -19,10 +19,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Res\**" />
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" />
         <ProjectReference Include="..\Dt.Xls\Dt.Xls.csproj" />
         <ProjectReference Include="..\Dt.Pdf\Dt.Pdf.csproj" />
