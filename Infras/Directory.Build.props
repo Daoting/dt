@@ -50,6 +50,7 @@
 
     <ItemGroup Condition="$(IsDesktop) AND $(IsExe) == 'true'">
         <PackageReference Include="Uno.WinUI.Runtime.Skia.Linux.FrameBuffer" Version="6.0.465" />
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.MacOS" Version="6.0.465" />
         <PackageReference Include="Uno.WinUI.Runtime.Skia.Win32" Version="6.0.465" />
         <PackageReference Include="Uno.WinUI.Runtime.Skia.Wpf" Version="6.0.465" />
         <PackageReference Include="Uno.WinUI.Runtime.Skia.X11" Version="6.0.465" />
