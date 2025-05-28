@@ -1,5 +1,5 @@
 <linker>
-  <assembly fullname="UnoApp1" />
+  <assembly fullname="Infras.Demo" />
 
   <!--
   Uncomment this section when using JSON.NET
