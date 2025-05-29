@@ -15,7 +15,8 @@
         ZoomMode="Disabled">
         <StackPanel Margin="20" Spacing="20">
             <StackPanel Background="{StaticResource 浅灰1}" Padding="10" Spacing="10">
-                <TextBlock Text="默认字：16px，小四，xaml中不需要指定FontSize" />
+                <TextBlock Text="默认字：16px，小四，win上Segoe UI，其他HarmonyOS Sans" />
+                <TextBlock Text="xaml中不需要指定FontSize，FontFamily" />
                 <TextBlock
                     Text="&lt;TextBlock Text=&quot;内容&quot; /&gt;"
                     IsTextSelectionEnabled="True" />
@@ -58,6 +59,16 @@
                 <TextBlock
                     Text="FontSize=&quot;{StaticResource 特大字}&quot;"
                     IsTextSelectionEnabled="True" />
+            </StackPanel>
+
+            <StackPanel Background="{StaticResource 浅灰1}" Padding="10" Spacing="10">
+                <TextBlock
+                    Text="默认字体粗细：win的Segoe UI支持所有级别；HarmonyOS Sans因打包文件大，暂支持Normal Bold" />
+                <TextBlock Text="最细Thin" FontWeight="Thin" />
+                <TextBlock Text="细Light" FontWeight="Light" />
+                <TextBlock Text="默认Normal" FontWeight="Normal" />
+                <TextBlock Text="加粗Bold" FontWeight="Bold" />
+                <TextBlock Text="黑粗Black" FontWeight="Black" />
             </StackPanel>
         </StackPanel>
     </ScrollViewer>
