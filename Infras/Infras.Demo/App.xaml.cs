@@ -21,8 +21,8 @@ namespace Infras.Demo
         {
             InitializeComponent();
 
-#if !WIN && !WASM
-            global::Uno.UI.FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/HarmonySans.ttf#HarmonyOS Sans";
+#if !WIN
+            global::Uno.UI.FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/HarmonySans.ttf";
 #endif
         }
 

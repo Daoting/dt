@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Dt.CalcEngine": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:57082;http://localhost:57083"
+    }
+  }
+}
