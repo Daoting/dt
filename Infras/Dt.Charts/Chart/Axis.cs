@@ -268,9 +268,6 @@ namespace Dt.Charts
             set { base.SetValue(FontSizeProperty, (double)value); }
         }
 
-#if ANDROID
-    new
-#endif
         public Brush Foreground
         {
             get { return (Brush)base.GetValue(ForegroundProperty); }

@@ -284,9 +284,6 @@ namespace Dt.Charts
             get { return _labelRect; }
         }
 
-#if IOS
-    new
-#endif
         public HLOCAppearance Appearance
         {
             get { return app; }

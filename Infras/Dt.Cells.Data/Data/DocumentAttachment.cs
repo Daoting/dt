@@ -84,7 +84,7 @@ namespace Dt.Cells.Data
                 if ((value != null) && value.CanRead)
                 {
                     byte[] buffer = new byte[value.Length];
-                    value.Read(buffer, 0, buffer.Length);
+                    value.ReadExactly(buffer);
                     if (this.fileStream != null)
                     {
                         ((Stream) this.fileStream).Close();

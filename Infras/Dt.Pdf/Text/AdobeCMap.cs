@@ -145,7 +145,7 @@ namespace Dt.Pdf.Text
                         throw new PdfArgumentNullException("Embedded resource " + name + " cannot be found.");
                     }
                     byte[] buffer = new byte[(int) stream.Length];
-                    stream.Read(buffer, 0, buffer.Length);
+                    stream.ReadExactly(buffer);
                     buffer = FlateUtility.FlateDecode(buffer, true);
                     StringBuilder builder = new StringBuilder();
                     for (int i = 0; i < buffer.Length; i += 2)

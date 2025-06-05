@@ -60,7 +60,7 @@ namespace Dt.Pdf
             byte[] buffer = new byte[this.stream.Length];
             long position = this.stream.Position;
             this.stream.Seek(0L, SeekOrigin.Begin);
-            this.stream.Read(buffer, 0, buffer.Length);
+            this.stream.ReadExactly(buffer);
             if (position != this.stream.Position)
             {
                 this.stream.Seek(position, SeekOrigin.Begin);

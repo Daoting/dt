@@ -642,9 +642,6 @@ namespace Dt.Base
         /// <summary>
         /// Gets the undo manager for the control.
         /// </summary>
-#if IOS
-        new
-#endif
         public UndoManager UndoManager
         {
             get

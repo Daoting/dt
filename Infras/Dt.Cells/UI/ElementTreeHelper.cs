@@ -20,6 +20,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Dt.Base;
 #endregion
 
 namespace Dt.Cells.UI
@@ -28,7 +29,7 @@ namespace Dt.Cells.UI
     {
         public static DependencyObject GetKeyboardFocusedElement()
         {
-            return (FocusManager.GetFocusedElement() as DependencyObject);
+            return GetFocusedElement() as DependencyObject;
         }
 
         public static DependencyObject GetParent(DependencyObject element)
@@ -45,7 +46,7 @@ namespace Dt.Cells.UI
             DependencyObject parent = VisualTreeHelper.GetParent(element);
             if ((parent == null) && (element is FrameworkElement))
             {
-                DependencyObject obj3 = ((FrameworkElement) element).Parent;
+                DependencyObject obj3 = ((FrameworkElement)element).Parent;
                 if (obj3 is Microsoft.UI.Xaml.Controls.Primitives.Popup)
                 {
                     return obj3;
@@ -54,7 +55,7 @@ namespace Dt.Cells.UI
             return parent;
         }
 
-        public static T GetParentOrSelf<T>(DependencyObject element) where T: class
+        public static T GetParentOrSelf<T>(DependencyObject element) where T : class
         {
             T local = default(T);
             while ((local == null) && (element != null))
@@ -67,7 +68,7 @@ namespace Dt.Cells.UI
 
         public static bool IsFocused(Control targetElement)
         {
-            return (FocusManager.GetFocusedElement() as Control == targetElement);
+            return GetFocusedElement() as Control == targetElement;
         }
 
         public static bool IsKeyboardFocusWithin(UIElement targetElement)
@@ -80,6 +81,15 @@ namespace Dt.Cells.UI
                 }
             }
             return false;
+        }
+
+        static object GetFocusedElement()
+        {
+            if (ExcelKit.MainWin.Content is UIElement elem)
+            {
+                return FocusManager.GetFocusedElement(elem.XamlRoot);
+            }
+            return null;
         }
     }
 }

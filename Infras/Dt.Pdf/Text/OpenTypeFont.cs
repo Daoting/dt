@@ -458,7 +458,7 @@ namespace Dt.Pdf.Text
                 using (Stream stream = FlateUtility.GetResource("icon.otf"))
                 {
                     byte[] buffer = new byte[(int)stream.Length];
-                    stream.Read(buffer, 0, buffer.Length);
+                    stream.ReadExactly(buffer);
 
                     _iconFont = OpenTypeFont.Load(new OpenTypeFontReader(buffer));
                     _iconFont.Encoding = "Identity-H";

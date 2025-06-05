@@ -222,7 +222,7 @@ namespace Dt.Cells.Data
                 {
                     byte[] buffer = new byte[stream.Length];
                     stream.Seek(0L, SeekOrigin.Begin);
-                    stream.Read(buffer, 0, (int)stream.Length);
+                    stream.ReadExactly(buffer);
                     return buffer;
                 }
             }
@@ -253,7 +253,7 @@ namespace Dt.Cells.Data
         {
             byte[] buffer = new byte[imageStream.Length];
             imageStream.Seek(0L, SeekOrigin.Begin);
-            imageStream.Read(buffer, 0, (int)imageStream.Length);
+            imageStream.ReadExactly(buffer);
             ImageByteArrayBase64String = Convert.ToBase64String(buffer);
             BitmapImage image = new BitmapImage();
             Utility.InitImageSource(image, imageStream);
@@ -336,7 +336,7 @@ namespace Dt.Cells.Data
                 {
                     byte[] buffer = new byte[stream.Length];
                     stream.Seek(0L, SeekOrigin.Begin);
-                    stream.Read(buffer, 0, (int)stream.Length);
+                    stream.ReadExactly(buffer);
                     Serializer.SerializeObj(Convert.ToBase64String(buffer), "ImageSource", writer);
                 }
             }

@@ -55,7 +55,7 @@ namespace Dt.Pdf.Text
                 throw new PdfArgumentNullException("fontStream");
             }
             byte[] buffer = new byte[(int)fontStream.Length];
-            fontStream.Read(buffer, 0, buffer.Length);
+            fontStream.ReadExactly(buffer);
 
             // hdt 替换原有的XmlSerializer，Release版不支持
             CT_SimpleFont font;

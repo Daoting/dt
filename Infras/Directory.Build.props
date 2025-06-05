@@ -1,8 +1,8 @@
 <Project>
     <PropertyGroup>
         <!-- 解决方案右键菜单 - 设置框架，修改后自动重新加载，快、方便 -->
-        <TargetFrameworks>net9.0-android;net9.0-ios;net9.0-windows10.0.26100;net9.0-desktop;net9.0-browserwasm</TargetFrameworks>
-
+        <TargetFrameworks>net9.0-android;net9.0-ios;net9.0-windows10.0.19041;net9.0-desktop;net9.0-browserwasm</TargetFrameworks>
+        
         <NoWarn>$(NoWarn);1591;8785;NU1701;Uno0001;0252;NETSDK1206</NoWarn>
         <!-- 始终禁止xbf嵌入到pri文件，默认debug时不嵌入，release时嵌入，嵌入时包升级会造成引用项目都必须重新编译 -->
         <DisableEmbeddedXbf>true</DisableEmbeddedXbf>
@@ -12,61 +12,77 @@
         <IsToolkit Condition="$(TargetFramework.Contains('netstandard2.0'))">true</IsToolkit>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <UnoVersion>6.0.704</UnoVersion>
+    </PropertyGroup>
+        
+    <!-- WinAppSdk -->
+    <ItemGroup Condition="$(IsWinAppSdk)">
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250513003" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4188" />
+    </ItemGroup>
+
+    <!-- 非WinAppSdk引用 -->
+    <ItemGroup Condition="!$(IsWinAppSdk)">
+        <PackageReference Include="Uno.WinUI" Version="$(UnoVersion)" />
+        <PackageReference Include="Uno.WinUI.Graphics2DSK" Version="$(UnoVersion)" />
+    </ItemGroup>
+    
     <!-- 所有App引用 -->
     <ItemGroup Condition="$(IsExe) == 'true'">
         <PackageReference Include="Dt.BuildTools" Version="1.5.0" />
         <PackageReference Include="Uno.Resizetizer" Version="1.8.1" />
     </ItemGroup>
 
-    <ItemGroup Condition="$(IsWinAppSdk)">
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250513003" PrivateAssets="none" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4188" PrivateAssets="none" />
-    </ItemGroup>
-    
-    <ItemGroup Condition="$(IsAndroid)">
-        <PackageReference Include="Uno.WinUI.Runtime.Skia.Android" Version="6.0.465" PrivateAssets="none" />
+    <!-- Android -->
+    <ItemGroup Condition="$(IsAndroid) AND $(IsExe) != 'true'">
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.Android" Version="$(UnoVersion)" PrivateAssets="all" IncludeAssets="build" />
     </ItemGroup>
 
     <ItemGroup Condition="$(IsAndroid) AND $(IsExe) == 'true'">
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.Android" Version="$(UnoVersion)" />
         <PackageReference Include="Xamarin.Google.Android.Material" Version="1.10.0.2" />
         <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.14" />
     </ItemGroup>
 
-    <ItemGroup Condition="$(IsIOS)">
-        <PackageReference Include="Uno.WinUI.Runtime.Skia.AppleUIKit" Version="6.0.465" PrivateAssets="none" />
+    <!-- IOS -->
+    <ItemGroup Condition="$(IsIOS) AND $(IsExe) != 'true'">
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.AppleUIKit" Version="$(UnoVersion)" PrivateAssets="all" IncludeAssets="build" />
     </ItemGroup>
 
-    <ItemGroup Condition="$(IsBrowserWasm)">
-        <PackageReference Include="Uno.WinUI.Runtime.Skia.WebAssembly.Browser" Version="6.0.465" PrivateAssets="none" />
+    <ItemGroup Condition="$(IsIOS) AND $(IsExe) == 'true'">
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.AppleUIKit" Version="$(UnoVersion)" />
+    </ItemGroup>
+
+    <!-- Wasm -->
+    <ItemGroup Condition="$(IsBrowserWasm) AND $(IsExe) != 'true'">
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.WebAssembly.Browser" Version="$(UnoVersion)" PrivateAssets="all" IncludeAssets="build" />
     </ItemGroup>
 
     <ItemGroup Condition="$(IsBrowserWasm) AND $(IsExe) == 'true'">
-        <PackageReference Include="Uno.WinUI.Runtime.Skia.WebAssembly.Browser" Version="6.0.465" />
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.WebAssembly.Browser" Version="$(UnoVersion)" />
         <PackageReference Include="Uno.Wasm.Bootstrap" Version="9.0.16" />
         <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="9.0.16" />
-        <PackageReference Include="Uno.WinUI.Runtime.WebAssembly" Version="6.0.465" PrivateAssets="all" IncludeAssets="none" ExcludeAssets="all" />
+        <PackageReference Include="Uno.WinUI.Runtime.WebAssembly" Version="$(UnoVersion)" PrivateAssets="all" IncludeAssets="none" ExcludeAssets="all" />
         <!-- 不引用link出错 -->
         <PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.15" />
         <!-- 不引用启动出错 -->
         <PackageReference Include="Uno.UI.HotDesign" Version="1.11.182"  />
     </ItemGroup>
 
+    <!-- Desktop -->
     <ItemGroup Condition="$(IsDesktop) AND $(IsExe) == 'true'">
-        <PackageReference Include="Uno.WinUI.Runtime.Skia.Linux.FrameBuffer" Version="6.0.465" />
-        <PackageReference Include="Uno.WinUI.Runtime.Skia.MacOS" Version="6.0.465" />
-        <PackageReference Include="Uno.WinUI.Runtime.Skia.Win32" Version="6.0.465" />
-        <PackageReference Include="Uno.WinUI.Runtime.Skia.Wpf" Version="6.0.465" />
-        <PackageReference Include="Uno.WinUI.Runtime.Skia.X11" Version="6.0.465" />
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.Linux.FrameBuffer" Version="$(UnoVersion)" />
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.MacOS" Version="$(UnoVersion)" />
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.Win32" Version="$(UnoVersion)" />
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.Wpf" Version="$(UnoVersion)" />
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.X11" Version="$(UnoVersion)" />
 
         <!-- Enable WPF Hardware acceleration over RDP, only if not specified by the project -->
         <RuntimeHostConfigurationOption
 				Include="Switch.System.Windows.Media.EnableHardwareAccelerationInRdp"
 				Value="true"
 				Exclude="@(RuntimeHostConfigurationOption)" />
-    </ItemGroup>
-
-    <ItemGroup Condition="$(IsDesktop) AND $(IsExe) != 'true'">
-        <PackageReference Include="Uno.WinUI" Version="6.0.465" PrivateAssets="none" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">

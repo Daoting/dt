@@ -510,7 +510,7 @@ namespace Dt.Cells.Data
                 if (stream != null)
                 {
                     byte[] buffer = new byte[stream.Length];
-                    stream.Read(buffer, 0, buffer.Length);
+                    stream.ReadExactly(buffer);
                     Image instance = Image.GetInstance(buffer);
                     this.imageCaches.Add(source, instance);
                     stream.Dispose();

@@ -419,9 +419,6 @@ namespace Dt.Base
             set { base.SetValue(ConnectionStyleProperty, value); }
         }
 
-#if ANDROID
-    new
-#endif
         internal RenderContext Context { get; set; }
 
         internal Dictionary<DependencyProperty, object> CurrentStyleDict
@@ -465,9 +462,6 @@ namespace Dt.Base
             }
         }
 
-#if ANDROID
-    new
-#endif
         public SeriesDisplay Display
         {
             get { return (SeriesDisplay)base.GetValue(DisplayProperty); }
@@ -1519,9 +1513,6 @@ namespace Dt.Base
             }
         }
 
-#if ANDROID
-    new
-#endif
         protected void Invalidate()
         {
             Dirty = true;

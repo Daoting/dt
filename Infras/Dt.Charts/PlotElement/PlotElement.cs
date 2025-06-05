@@ -297,9 +297,6 @@ namespace Dt.Charts
             set { base.Style = value; }
         }
 
-#if IOS
-    new
-#endif
         public Point Center
         {
             get { return _center; }
@@ -422,9 +419,6 @@ namespace Dt.Charts
             }
         }
 
-#if ANDROID
-        new
-#endif
         internal virtual object Clone()
         {
             PlotElement clone = new PlotElement();

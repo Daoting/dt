@@ -2380,7 +2380,7 @@ namespace Dt.Cells.Data
                             WriteAttr("type", "Image", writer);
                             byte[] buffer = new byte[stream.Length];
                             stream.Seek(0L, (SeekOrigin)SeekOrigin.Begin);
-                            stream.Read(buffer, 0, (int)stream.Length);
+                            stream.ReadExactly(buffer);
                             string str = Convert.ToBase64String(buffer);
                             WriteAttr("value", str, writer);
                         }

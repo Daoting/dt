@@ -3271,7 +3271,7 @@ namespace Dt.Cells.Data
                                 Stream stream = Utility.GetImageStream(imageSource, ImageFormat.Png, PictureSerializationMode.Normal);
                                 byte[] buffer = new byte[stream.Length];
                                 stream.Seek(0L, (SeekOrigin)SeekOrigin.Begin);
-                                stream.Read(buffer, 0, (int)stream.Length);
+                                stream.ReadExactly(buffer);
                                 ExcelImage image2 = new ExcelImage(picture.Name, ImageType.PNG, buffer)
                                 {
                                     Anchor = this.GetExcelAnchor(picture, worksheet.ExcelSheetType),
@@ -3290,7 +3290,7 @@ namespace Dt.Cells.Data
                                 Stream stream = Utility.GetBmpStream(bmp);
                                 byte[] buffer = new byte[stream.Length];
                                 stream.Seek(0L, (SeekOrigin)SeekOrigin.Begin);
-                                stream.Read(buffer, 0, (int)stream.Length);
+                                stream.ReadExactly(buffer);
                                 ExcelImage image = new ExcelImage(picture.Name, ImageType.PNG, buffer)
                                 {
                                     Anchor = this.GetExcelAnchor(picture, worksheet.ExcelSheetType),

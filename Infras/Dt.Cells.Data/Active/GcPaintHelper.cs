@@ -716,7 +716,7 @@ namespace Dt.Cells.Data
                 Stream resource = FormatIconsHelper.GetResource(iconObject.IconSetType, iconObject.IndexOfIcon);
                 resource.Seek(0L, (SeekOrigin) SeekOrigin.Begin);
                 byte[] buffer = new byte[(int) resource.Length];
-                resource.Read(buffer, 0, buffer.Length);
+                resource.ReadExactly(buffer);
                 Image instance = Image.GetInstance(buffer);
                 g.AddImage(instance, x, y, width, height);
             }
