@@ -2,12 +2,15 @@
     <PropertyGroup>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <IsPackable>true</IsPackable>
-        <!-- win默认将所有图片文件包含为Content，取消设置，否则嵌入的图片资源重复包含为Content -->
-        <__WindowsAppSdkDefaultImageIncludes Condition="$(IsWinAppSdk)" />
     </PropertyGroup>
 
     <Import Project="..\..\..\Tools\File\InfrasPkg.props" Condition="exists('..\..\..\Tools\File\InfrasPkg.props')" />
 
+    <ItemGroup Condition="$(IsWinAppSdk)">
+        <!-- win默认将所有图片文件包含为Content，图片已嵌入，移除Icons下所有图片内容，否则重复 -->
+        <Content Remove="Icons\**" />
+    </ItemGroup>
+    
     <ItemGroup>
         <EmbeddedResource Include="Icons\AutoFillIndicator.png" />
         <EmbeddedResource Include="Icons\BottomCenterGrip.png" />
