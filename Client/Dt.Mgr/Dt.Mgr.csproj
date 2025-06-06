@@ -1,4 +1,8 @@
 ﻿<Project Sdk="Dt.Sdk">
+    <PropertyGroup>
+        <IsPackable>true</IsPackable>
+    </PropertyGroup>
+    
     <Import Project="..\..\..\Tools\File\ClientPkg.props" Condition="exists('..\..\..\Tools\File\ClientPkg.props')" />
 
     <ItemGroup>

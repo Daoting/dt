@@ -1,0 +1,52 @@
+﻿<Project>
+    <PropertyGroup>
+        <UnoVersion>6.0.704</UnoVersion>
+    </PropertyGroup>
+    
+    <!-- exe项目引用包 -->
+    
+    <ItemGroup Condition="$(IsExe) == 'true'">
+        <PackageReference Include="Dt.BuildTools" Version="1.5.0" />
+        <PackageReference Include="Uno.Resizetizer" Version="1.8.1" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(IsWinAppSdk) AND $(IsExe) == 'true'">
+        <PackageReference Include="Dt.Tasks" Version="4.0.0" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(IsAndroid) AND $(IsExe) == 'true'">
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.Android" Version="$(UnoVersion)" />
+        <PackageReference Include="Xamarin.Google.Android.Material" Version="1.10.0.2" />
+        <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.14" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(IsIOS) AND $(IsExe) == 'true'">
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.AppleUIKit" Version="$(UnoVersion)" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(IsBrowserWasm) AND $(IsExe) == 'true'">
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.WebAssembly.Browser" Version="$(UnoVersion)" />
+        <PackageReference Include="Uno.Wasm.Bootstrap" Version="9.0.16" />
+        <PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="9.0.16" />
+        <PackageReference Include="Uno.WinUI.Runtime.WebAssembly" Version="$(UnoVersion)" PrivateAssets="all" IncludeAssets="none" ExcludeAssets="all" />
+        <!-- 不引用link出错 -->
+        <PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.15" />
+        <!-- 不引用启动出错 -->
+        <PackageReference Include="Uno.UI.HotDesign" Version="1.11.182"  />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(IsDesktop) AND $(IsExe) == 'true'">
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.Linux.FrameBuffer" Version="$(UnoVersion)" />
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.MacOS" Version="$(UnoVersion)" />
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.Win32" Version="$(UnoVersion)" />
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.Wpf" Version="$(UnoVersion)" />
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.X11" Version="$(UnoVersion)" />
+
+        <!-- Enable WPF Hardware acceleration over RDP, only if not specified by the project -->
+        <RuntimeHostConfigurationOption
+				Include="Switch.System.Windows.Media.EnableHardwareAccelerationInRdp"
+				Value="true"
+				Exclude="@(RuntimeHostConfigurationOption)" />
+    </ItemGroup>
+    
+</Project>
