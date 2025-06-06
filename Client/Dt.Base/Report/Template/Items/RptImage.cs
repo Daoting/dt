@@ -95,7 +95,7 @@ namespace Dt.Base.Report
             using (var stream = await file.OpenStreamForReadAsync())
             {
                 byte[] buffer = new byte[stream.Length];
-                stream.Read(buffer, 0, (int)stream.Length);
+                await stream.ReadExactlyAsync(buffer);
                 ImgData = buffer;
             }
             Root?.OnImageChanged(this);

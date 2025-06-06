@@ -75,7 +75,7 @@ namespace Dt.Base.Report
 
         void OnXamlChanged(object sender, TextChangedEventArgs e)
         {
-#if WIN || SKIA
+#if WIN || DESKTOP
             _dlg.Info.Root.Params.XamlRow["xaml"] = _tbXaml.Text.Trim().Replace('\r', '\n');
 #else
             _dlg.Info.Root.Params.XamlRow["xaml"] = _tbXaml.Text.Trim();

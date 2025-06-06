@@ -504,9 +504,6 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置连线的实际区域
         /// </summary>
-#if IOS
-        new
-#endif
         internal Rect Bounds
         {
             get { return _bounds; }

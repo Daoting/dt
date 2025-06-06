@@ -64,7 +64,7 @@ namespace Dt.Base.TreeViews
             if (!_owner.IsVirtualized)
                 LoaRealRows();
 
-#if WIN || SKIA || WASM
+#if WIN || DESKTOP || WASM
             _owner.KeyDown += OnKeyDown;
 #endif
         }
@@ -117,7 +117,7 @@ namespace Dt.Base.TreeViews
         /// </summary>
         internal void Destroy()
         {
-#if WIN || SKIA || WASM
+#if WIN || DESKTOP || WASM
             _owner.KeyDown -= OnKeyDown;
 #endif
             ClearAllRows();

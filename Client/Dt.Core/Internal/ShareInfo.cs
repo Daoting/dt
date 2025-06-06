@@ -123,7 +123,7 @@ namespace Dt.Core
                 _shareOperation.ReportCompleted();
                 _shareOperation = null;
             }
-#elif WASM || SKIA
+#elif WASM || DESKTOP
 
 #else
             Application.Current.Exit();

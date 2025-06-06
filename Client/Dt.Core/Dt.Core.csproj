@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Dt.Sdk">
 	<ItemGroup>
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Dict.cs" Link="Base\Collection\Dict.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Cell.cs" Link="Base\Collection\Table\Cell.cs" />

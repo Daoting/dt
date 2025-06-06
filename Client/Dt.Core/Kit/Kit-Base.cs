@@ -104,7 +104,7 @@ namespace Dt.Core
         public static void Debug(string p_msg)
         {
 #if DEBUG
-#if WASM || SKIA
+#if WASM || DESKTOP
             Console.WriteLine(p_msg);
 #else
             System.Diagnostics.Debug.WriteLine(p_msg);

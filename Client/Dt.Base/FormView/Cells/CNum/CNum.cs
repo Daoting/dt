@@ -448,9 +448,6 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置当前控件是否已获得焦点
         /// </summary>
-#if ANDROID
-        new
-#endif
         public bool IsFocused
         {
             get { return (bool)GetValue(IsFocusedProperty); }

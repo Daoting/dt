@@ -170,7 +170,7 @@ namespace Dt.Base.Tools
                 Kit.Warn("文件保存失败！");
             }
         }
-#elif SKIA
+#elif DESKTOP
         async void OnSaveAs(Mi e)
         {
             var fi = e.Data.To<LocalFileItem>();

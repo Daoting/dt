@@ -660,7 +660,7 @@ namespace Dt.Base
             if (FileType == FileItemType.Image || FileType == FileItemType.Video)
             {
                 BitmapImage bmp = new BitmapImage();
-#if WIN || SKIA || WASM
+#if WIN || DESKTOP || WASM
                 StorageFile sf = null;
                 if (!string.IsNullOrEmpty(p_file.ThumbPath))
                 {

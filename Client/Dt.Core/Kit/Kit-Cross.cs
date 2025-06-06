@@ -31,7 +31,7 @@ namespace Dt.Core
         /// <param name="p_filePath">文件完整路径</param>
         public static Task OpenFile(string p_filePath)
         {
-#if WASM || SKIA
+#if WASM || DESKTOP
             return Task.CompletedTask;
 #else
             // 默认关联程序打开
@@ -87,7 +87,7 @@ namespace Dt.Core
 
             DataTransferManager.ShowShareUI();
             return Task.CompletedTask;
-#elif SKIA
+#elif DESKTOP
             return Task.CompletedTask;
 #else
             var request = new ShareTextRequest
@@ -109,7 +109,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Task ShareFile(string p_filePath, string p_title = null)
         {
-#if WASM || SKIA
+#if WASM || DESKTOP
             return Task.CompletedTask;
 #else
             return Share.RequestAsync(new ShareFileRequest

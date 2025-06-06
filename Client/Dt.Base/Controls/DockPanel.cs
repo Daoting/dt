@@ -7,15 +7,6 @@ using Microsoft.UI.Xaml.Controls;
 
 #endregion
 
-#if ANDROID
-using View = Android.Views.View;
-#elif IOS
-using UIKit;
-using View = UIKit.UIView;
-#else
-using View = Microsoft.UI.Xaml.UIElement;
-#endif
-
 namespace Dt.Base
 {
     /// <summary>
@@ -39,7 +30,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>
-        public static DockPosition GetDock(View element)
+        public static DockPosition GetDock(UIElement element)
         {
             if (element == null)
             {

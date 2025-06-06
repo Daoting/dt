@@ -291,12 +291,7 @@ namespace Dt.Base
                 return;
 
             // 日期选择器
-#if IOS || ANDROID
-            // 平台自带的效果好
-            NativeDatePickerFlyout fly = new NativeDatePickerFlyout();
-#else
             DatePickerFlyout fly = new DatePickerFlyout();
-#endif
 
             fly.Date = Value;
             fly.DatePicked += (s, args) => Value = args.NewDate.DateTime;
@@ -330,11 +325,7 @@ namespace Dt.Base
             if (showDateFly)
             {
                 // 日期选择器
-#if IOS || ANDROID
-                NativeDatePickerFlyout fly = new NativeDatePickerFlyout();
-#else
                 DatePickerFlyout fly = new DatePickerFlyout();
-#endif
                 fly.Date = Value;
                 fly.DatePicked += (s, args) => Value = args.NewDate.DateTime.Date + (Value - Value.Date);
                 fly.ShowAt(_grid);

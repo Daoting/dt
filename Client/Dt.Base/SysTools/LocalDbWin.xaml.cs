@@ -138,7 +138,7 @@ namespace Dt.Base.Tools
                 Kit.Warn("文件保存失败！");
             }
         }
-#elif SKIA
+#elif DESKTOP
         async void OnBackup(Mi e)
         {
             var row = e.Row;

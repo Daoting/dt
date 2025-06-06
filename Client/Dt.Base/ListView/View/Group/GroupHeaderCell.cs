@@ -81,9 +81,6 @@ namespace Dt.Base.ListView
         /// <summary>
         /// 水平位置
         /// </summary>
-#if ANDROID
-        new
-#endif
         internal double Left { get; set; }
 
         internal void Destroy()

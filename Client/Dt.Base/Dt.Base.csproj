@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Dt.Sdk">
     <ItemGroup>
         <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
     </ItemGroup>

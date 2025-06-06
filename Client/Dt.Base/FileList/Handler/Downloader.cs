@@ -41,7 +41,7 @@ namespace Dt.Base
             });
 #elif WASM
             _client = new HttpClient();
-#elif SKIA
+#elif DESKTOP
             // linux wpf
             _client = new HttpClient(new HttpClientHandler
             {

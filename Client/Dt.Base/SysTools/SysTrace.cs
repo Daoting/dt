@@ -114,7 +114,7 @@ namespace Dt.Base.Tools
                         dlg.Close();
                 } },
                 
-#if WIN || WASM || SKIA
+#if WIN || WASM || DESKTOP
                 new Nav("打开本地文件目录", Icons.文件夹) { Desc = "快捷键：Ctrl + →", Callback = (s, n) =>
                 {
                     OpenLocalPath();

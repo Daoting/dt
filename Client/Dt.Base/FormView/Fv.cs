@@ -121,9 +121,6 @@ namespace Dt.Base
         /// <summary>
         /// 删除事件
         /// </summary>
-#if IOS
-        new
-#endif
         public event Action Delete;
 
         /// <summary>

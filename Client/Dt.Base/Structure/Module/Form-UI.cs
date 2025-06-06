@@ -85,9 +85,6 @@ namespace Dt.Base
         /// <summary>
         /// 获取表单数据是否已修改
         /// </summary>
-#if ANDROID
-        new
-#endif
         public bool IsDirty
         {
             get { return (bool)GetValue(IsDirtyProperty); }

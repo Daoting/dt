@@ -258,7 +258,7 @@ namespace Dt.Base
             // windows换行符只有\r，每次向TextBox赋值时 \r\n 或 \n 都被强制替换为 \r
             // 其它平台换行符只有 \n，wasm每次向TextBox赋值时 \r\n 被强制替换为 \n，ios android不强制替换
 
-#if WIN || SKIA
+#if WIN || DESKTOP
             if (!((CText)m.Cell).AcceptsReturn || m.Val == null)
                 return m.Val;
 

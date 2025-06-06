@@ -66,7 +66,7 @@ namespace Dt.Mgr.Chat
             var files = await Kit.PickFiles();
             if (files != null && files.Count > 0)
                 Owner.SendFiles(files);
-#elif WASM || SKIA
+#elif WASM || DESKTOP
             if (_menu == null)
             {
                 _menu = new Menu { IsContextMenu = true };

@@ -124,7 +124,7 @@ namespace Dt.Base.ListView
             PointerWheelChanged += OnPointerWheelChanged;
 #endif
 
-#if WIN || SKIA || WASM
+#if WIN || DESKTOP || WASM
             _owner.KeyDown += OnKeyDown;
 #endif
         }

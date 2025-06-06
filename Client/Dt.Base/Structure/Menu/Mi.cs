@@ -251,9 +251,6 @@ namespace Dt.Base
         /// <summary>
         /// 点击事件
         /// </summary>
-#if ANDROID
-        new
-#endif
         public event Action<Mi> Click;
 
         /// <summary>

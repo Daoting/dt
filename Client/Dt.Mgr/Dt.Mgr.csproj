@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Dt.Sdk">
     <Import Project="..\..\..\Tools\File\ClientPkg.props" Condition="exists('..\..\..\Tools\File\ClientPkg.props')" />
 
     <ItemGroup>
@@ -11,26 +11,7 @@
         <Using Include="Dt.Base.SelectionMode" Alias="SelectionMode" />
     </ItemGroup>
     
-    <!-- 停止wasm的WebRtc -->
     <ItemGroup>
-        <None Include="Chat\WebRTC\VideoCaller.xaml" />
-        <Page Remove="Chat\WebRTC\VideoCaller.xaml" />
-
-        <None Include="Chat\WebRTC\VideoCaller.xaml.cs" />
-        <Compile Remove="Chat\WebRTC\VideoCaller.xaml.cs" />
-
-        <None Include="Chat\WebRTC\VideoRecver.xaml" />
-        <Page Remove="Chat\WebRTC\VideoRecver.xaml" />
-
-        <None Include="Chat\WebRTC\VideoRecver.xaml.cs" />
-        <Compile Remove="Chat\WebRTC\VideoRecver.xaml.cs" />
-
-        <None Include="Chat\WebRTC\WebRtcApi.cs" />
-        <Compile Remove="Chat\WebRTC\WebRtcApi.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Content Remove="Chat\WebRTC\WebRTC通信流程.png" />
         <Content Remove="Rbac\Domain\rbac.png" />
         <None Include="Rbac\Domain\rbac.png" />
     </ItemGroup>

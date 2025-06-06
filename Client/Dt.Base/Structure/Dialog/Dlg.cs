@@ -344,9 +344,6 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置面板x位置
         /// </summary>
-#if ANDROID
-        new
-#endif
         public double Left
         {
             get { return (double)GetValue(LeftProperty); }
@@ -356,9 +353,6 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置面板y位置
         /// </summary>
-#if ANDROID
-        new
-#endif
         public double Top
         {
             get { return (double)GetValue(TopProperty); }

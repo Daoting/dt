@@ -1,7 +1,11 @@
 ﻿<Project>
+    <PropertyGroup>
+        <UnoVersion>6.0.704</UnoVersion>
+    </PropertyGroup>
+    
     <!-- 公共引用包 -->
     <ItemGroup>
-        <PackageReference Include="Dt.Infras" Version="4.0.3" />
+        <PackageReference Include="Dt.Infras" Version="5.0.0" />
         <PackageReference Include="ScottPlot" Version="5.0.40" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.0.2" />
@@ -26,49 +30,68 @@
         <!-- <PackageReference Include="Uno.Extensions.Localization.WinUI" Version="4.0.0" /> -->
     </ItemGroup>
 
-    <Choose>
-        <When Condition="$(IsWin)">
-            <!-- windows引用包 -->
-            <ItemGroup>
-                <!-- Lottie动画已正常，Microsoft.Graphics.Win2D需1.2.0以上版本，Microsoft.Maui.Essentials已间接引用 -->
-                <PackageReference Include="CommunityToolkit.WinUI.Lottie" Version="8.1.240821" />
-                <!-- ScottPlot需要 -->
-                <PackageReference Include="SkiaSharp.Views.WinUI" Version="3.119.0" />
-            </ItemGroup>
-        </When>
-        <Otherwise>
-            <!-- 非windows引用包 -->
-            <ItemGroup>
-                <PackageReference Include="Uno.WinUI" Version="6.0.465" PrivateAssets="none" />
-                <!-- 对应CommunityToolkit.WinUI.Lottie库，渲染Adobe AfterEffects json动画，内部引用SkiaSharp包实现LottieVisualSource -->
-                <PackageReference Include="Uno.WinUI.Lottie" Version="6.0.465" />
-                <!-- ScottPlot Lottie都引用，注意版本匹配 -->
-                <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="3.119.0" />
-                <PackageReference Include="SkiaSharp.Skottie" Version="3.119.0" />
-            </ItemGroup>
-        </Otherwise>
-    </Choose>
+    <!-- WinAppSdk -->
+    <ItemGroup Condition="$(IsWinAppSdk)">
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250513003" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4188" />
+        <!-- Lottie动画已正常，Microsoft.Graphics.Win2D需1.2.0以上版本，Microsoft.Maui.Essentials已间接引用 -->
+        <PackageReference Include="CommunityToolkit.WinUI.Lottie" Version="8.1.240821" />
+        <!-- ScottPlot需要 -->
+        <PackageReference Include="SkiaSharp.Views.WinUI" Version="3.119.0" />
+    </ItemGroup>
 
-    <!-- android引用包 -->
+    <!-- 非WinAppSdk引用 -->
+    <ItemGroup Condition="!$(IsWinAppSdk)">
+        <PackageReference Include="Uno.WinUI" Version="$(UnoVersion)" />
+        <PackageReference Include="Uno.WinUI.Graphics2DSK" Version="$(UnoVersion)" />
+        <!-- 对应CommunityToolkit.WinUI.Lottie库，渲染Adobe AfterEffects json动画，内部引用SkiaSharp包实现LottieVisualSource -->
+        <PackageReference Include="Uno.WinUI.Lottie" Version="$(UnoVersion)" />
+        <!-- ScottPlot Lottie都引用，注意版本匹配 -->
+        <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="3.119.0" />
+        <PackageReference Include="SkiaSharp.Skottie" Version="3.119.0" />
+    </ItemGroup>
+    
+    <!-- Android -->
     <ItemGroup Condition="$(IsAndroid)">
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.Android" Version="$(UnoVersion)" />
         <PackageReference Include="Square.OkHttp3" Version="4.12.0.9" />
         <!-- WorkManager后台任务引用 -->
         <PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.9.0.5" />
     </ItemGroup>
 
+    <!-- IOS -->
+    <ItemGroup Condition="$(IsIOS)">
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.AppleUIKit" Version="$(UnoVersion)" />
+    </ItemGroup>
+
+    <!-- Wasm -->
+    <ItemGroup Condition="$(IsBrowserWasm)">
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.WebAssembly.Browser" Version="$(UnoVersion)" PrivateAssets="all" IncludeAssets="build" />
+    </ItemGroup>
+
+    <!-- Desktop -->
+    <ItemGroup Condition="$(IsDesktop)">
+        
+    </ItemGroup>
+    
     <!-- Essentials不支持 linux wasm -->
-    <ItemGroup Condition="!$(IsWasm) and !$(IsSkia)">
+    <ItemGroup Condition="!$(IsBrowserWasm) and !$(IsDesktop)">
         <!-- UseMauiEssentials已无用，间接引用 Microsoft.Graphics.Win2D 的版本对CommunityToolkit.WinUI.Lottie有影响，需1.2.0以上版本 -->
         <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.61" />
     </ItemGroup>
 
-    <!-- 引用包控制
-    IncludeAssets：将使用这些资产，默认 all
-    ExcludeAssets：不会使用这些资产，默认 none
+    <!-- 引用控制
+    IncludeAssets：使用包或项目的哪些资产，默认 all
+    ExcludeAssets：排除使用包或项目的哪些资产，默认 none
     PrivateAssets：将使用这些资产，但它们不会流入上级项目，默认 contentfiles;analyzers;build
     
-    PrivateAssets="none" 用在 PackageReference 时，上级项目的包被更高级项目引用时，所有资产都会流入更高级项目
-    PrivateAssets="all" 用在 ProjectReference 时，避免打包上级项目时引用该项目的nuget包
+    PrivateAssets="none"
+	用在 PackageReference 时，上级项目的包被更高级项目引用时，所有资产都会流入更高级项目
+    如打包Dt.Client时，若引用的Uno.WinUI包PrivateAssets="none"，Uno.WinUI包的所有资产都会流入引用Dt.Client包的项目
+	
+	PrivateAssets="all"
+	用在 ProjectReference 时，避免打包上级项目时引用该项目的nuget包
+	如打包Dt.Client时，引用Dt.Core、Dt.Base项目时设置PrivateAssets="all"，Dt.Client包就不会引用Dt.Core、Dt.Base的nuget包
                    
     所有选项：contentfiles analyzers build compile runtime buildTransitive native none all
     -->

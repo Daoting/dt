@@ -141,7 +141,7 @@ namespace Dt.Core
 #if WIN
             MainWin.SizeChanged += OnWindowSizeChanged;
             Kit.IsPhoneUI = MainWin.Bounds.Width < _maxPhoneUIWidth;
-#elif WASM || SKIA
+#elif WASM || DESKTOP
             // skia 和 wasm 上Window.Bounds初始为(0,0)
             // wasm 上 MainWin.SizeChanged 事件初次不触发，触发顺序：OnRootSizeChanged OnWindowSizeChanged
             // skia 上 MainWin.SizeChanged 事件初次触发两次，第一次(1,1)，触发顺序：OnWindowSizeChanged OnRootSizeChanged
@@ -429,7 +429,7 @@ namespace Dt.Core
                 //MainWin.ExtendsContentIntoTitleBar = !isPhoneUI;
             }));
         }
-#elif WASM || SKIA
+#elif WASM || DESKTOP
         static void OnRootSizeChanged(object sender, SizeChangedEventArgs e)
         {
             bool isPhoneUI = e.NewSize.Width < _maxPhoneUIWidth;

@@ -98,9 +98,6 @@ namespace Dt.Base.ListView
         /// <summary>
         /// 在面板上的垂直位置
         /// </summary>
-#if ANDROID
-        new
-#endif
         internal double Top { get; set; }
 
         protected override void OnLoadTemplate()

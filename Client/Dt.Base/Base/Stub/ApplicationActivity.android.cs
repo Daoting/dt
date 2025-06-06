@@ -20,7 +20,7 @@ namespace Dt.Base
     /// 启动调用顺序：
     /// NativeApplication.OnCreate -> ApplicationActivity.OnCreate -> App.OnLaunched -> DefaultStub.OnLaunched
     /// </summary>
-    public class BaseAppActivity : ApplicationActivity
+    public class BaseAppActivity : Microsoft.UI.Xaml.ApplicationActivity
     {
         protected override void OnCreate(Bundle bundle)
         {

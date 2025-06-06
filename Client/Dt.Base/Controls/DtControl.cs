@@ -76,7 +76,7 @@ namespace Dt.Base
         {
         }
 
-#if WIN || SKIA
+#if WIN || DESKTOP
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -87,7 +87,7 @@ namespace Dt.Base
         void OnLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnLoaded;
-#if !WIN && !SKIA
+#if !WIN && !DESKTOP
             OnLoadTemplate();
 #endif
             OnFirstLoaded();

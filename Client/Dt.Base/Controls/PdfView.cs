@@ -65,7 +65,7 @@ namespace Dt.Base
             FileName = p_file.Name;
             Stream stream = await p_file.OpenStreamForReadAsync();
             byte[] buffer = new byte[stream.Length];
-            stream.Read(buffer, 0, (int)stream.Length);
+            await stream.ReadExactlyAsync(buffer);
             var asBase64 = Convert.ToBase64String(buffer);
             _ = RunScript(GetOpenScript(asBase64));
         }

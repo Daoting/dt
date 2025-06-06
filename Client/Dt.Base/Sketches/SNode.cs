@@ -158,9 +158,6 @@ namespace Dt.Base
         /// <summary>
         /// 图元点击事件
         /// </summary>
-#if ANDROID
-        new
-#endif
         public event EventHandler Click;
 
         #endregion

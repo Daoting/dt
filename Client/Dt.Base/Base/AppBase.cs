@@ -45,22 +45,22 @@ namespace Dt.Base
             Kit.OnUnhandledException(ex);
         }
         
-#if IOS
-        public override bool OpenUrl(UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options)
-        {
-            _stub.OpenUrl(p_app, p_url, p_options);
-            return true;
-        }
+//#if IOS
+//        public override bool OpenUrl(UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options)
+//        {
+//            _stub.OpenUrl(p_app, p_url, p_options);
+//            return true;
+//        }
 
-        public override void DidEnterBackground(UIApplication application)
-        {
-            BgJob.OnEnterBackground();
-        }
+//        public override void DidEnterBackground(UIApplication application)
+//        {
+//            BgJob.OnEnterBackground();
+//        }
 
-        public override void ReceivedLocalNotification(UIApplication p_app, UILocalNotification p_notification)
-        {
-            _stub.ReceivedLocalNotification(p_app, p_notification);
-        }
-#endif
+//        public override void ReceivedLocalNotification(UIApplication p_app, UILocalNotification p_notification)
+//        {
+//            _stub.ReceivedLocalNotification(p_app, p_notification);
+//        }
+//#endif
     }
 }

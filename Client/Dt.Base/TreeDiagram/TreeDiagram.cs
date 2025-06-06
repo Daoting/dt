@@ -387,9 +387,6 @@ namespace Dt.Base
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <returns></returns>
-#if ANDROID
-        new
-#endif
         public TEntity Selected<TEntity>()
         where TEntity : Entity
         {

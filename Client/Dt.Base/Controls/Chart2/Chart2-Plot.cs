@@ -27,9 +27,6 @@ namespace Dt.Base
         /// <summary>
         /// 添加绘图元素
         /// </summary>
-#if ANDROID || IOS
-        new
-#endif
         public PlottableAdder Add => _plot.Add;
 
         /// <summary>
@@ -40,9 +37,6 @@ namespace Dt.Base
         public RenderManager RenderManager => _plot.RenderManager;
         public RenderDetails LastRender => _plot.RenderManager.LastRender;
 
-#if ANDROID
-        new
-#endif
         public LayoutManager Layout => _plot.Layout;
 
         /// <summary>

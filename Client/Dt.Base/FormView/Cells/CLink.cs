@@ -31,9 +31,6 @@ namespace Dt.Base
         /// <summary>
         /// 点击链接事件
         /// </summary>
-#if ANDROID
-        new
-#endif
         public event Action<CLink> Click;
 
         /// <summary>

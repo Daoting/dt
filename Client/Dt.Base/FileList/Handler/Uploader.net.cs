@@ -1,4 +1,4 @@
-﻿#if WASM || SKIA
+﻿#if WASM || DESKTOP
 #region 文件描述
 /******************************************************************************
 * 创建: Daoting
@@ -43,7 +43,7 @@ namespace Dt.Base
             _client = new HttpClient();
             // 识别wasm客户端，允许跨域请求
             _client.DefaultRequestHeaders.Add("dt-wasm", "");
-#elif SKIA
+#elif DESKTOP
             // linux wpf
             _client = new HttpClient(new HttpClientHandler
             {

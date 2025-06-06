@@ -368,7 +368,7 @@ namespace Dt.Base
                 () => Kit.PickFiles(p_androidFileTypes),
 #elif IOS
                 () => Kit.PickFiles(p_iosFileTypes),
-#elif WASM || SKIA
+#elif WASM || DESKTOP
                 () => Kit.PickFiles(p_uwpFileTypes),
 #endif
 
@@ -378,7 +378,7 @@ namespace Dt.Base
                 () => Kit.PickFile(p_androidFileTypes));
 #elif IOS
                 () => Kit.PickFile(p_iosFileTypes));
-#elif WASM || SKIA
+#elif WASM || DESKTOP
                 () => Kit.PickFile(p_uwpFileTypes));
 #endif
         }

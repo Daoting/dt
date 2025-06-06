@@ -156,7 +156,7 @@ namespace Dt.Base
 
             // win上KeyUp事件有怪异：Tab跳两格、CList选择后跳两格
             // 手机上KeyDown事件不触发！！！
-#if WIN || WASM || SKIA
+#if WIN || WASM || DESKTOP
             _tb.KeyDown += OnKeyDown;
 #else
             _tb.KeyUp += OnKeyDown;

@@ -43,7 +43,7 @@ namespace Dt.Base.FormView
             FrameworkElement con = (FrameworkElement)e.OldValue;
             if (con != null)
             {
-#if WIN || WASM || SKIA
+#if WIN || WASM || DESKTOP
                 con.KeyDown -= pnl.OnKeyDown;
 #else
                 con.KeyUp -= pnl.OnKeyDown;
@@ -56,7 +56,7 @@ namespace Dt.Base.FormView
             {
                 // win上KeyUp事件有怪异：Tab跳两格、CList选择后跳两格
                 // 手机上KeyDown事件不触发！！！
-#if WIN || WASM || SKIA
+#if WIN || WASM || DESKTOP
                 con.KeyDown += pnl.OnKeyDown;
 #else
                 con.KeyUp += pnl.OnKeyDown;
