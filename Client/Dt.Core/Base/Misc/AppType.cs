@@ -21,8 +21,6 @@ namespace Dt.Core
 
         Wasm,
 
-        Linux,
-        
-        Wpf
+        Desktop,
     }
 }

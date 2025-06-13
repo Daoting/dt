@@ -137,15 +137,10 @@ namespace Demo.UI
                         c.FontWeight = FontWeights.Bold;
                         c.FontStyle = FontStyle.Italic;
                         break;
-                    case AppType.Linux:
+                    default:
                         c.Background = Res.亮蓝;
                         c.FontWeight = FontWeights.Normal;
                         c.FontStyle = FontStyle.Normal;
-                        break;
-                    default:
-                        c.Background = Res.GreenBrush;
-                        c.FontWeight = FontWeights.Black;
-                        c.FontStyle = FontStyle.Oblique;
                         break;
                 }
             };

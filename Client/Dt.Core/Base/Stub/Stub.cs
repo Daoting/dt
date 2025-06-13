@@ -57,10 +57,5 @@ namespace Dt.Core
         /// 内部访问存根实例
         /// </summary>
         internal static Stub Inst { get; private set; }
-
-        /// <summary>
-        /// 应用类型
-        /// </summary>
-        internal static string AppType;
     }
 }
