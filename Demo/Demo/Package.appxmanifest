@@ -25,11 +25,11 @@
 		  EntryPoint="$targetentrypoint$">
 			<uap:VisualElements />
 			<Extensions>
-				<!--<Extension Category="windows.backgroundTasks" EntryPoint="Dt.Tasks.TimeTriggeredTask">
+				<Extension Category="windows.backgroundTasks" EntryPoint="Dt.Tasks.TimeTriggeredTask">
                     <BackgroundTasks>
                         <Task Type="timer"/>
                     </BackgroundTasks>
-                </Extension>-->
+                </Extension>
 
 				<!--单击Toast通知激活的 CLSID-->
 				<desktop:Extension Category="windows.toastNotificationActivation">
@@ -40,7 +40,7 @@
 				<com:Extension Category="windows.comServer">
 					<com:ComServer>
 						<!-- Executable切记不加路径，exe名大小写敏感，Arguments固定，否则AppNotificationManager.Register注册失败 -->
-						<com:ExeServer Executable="TestSdk.exe" Arguments="----AppNotificationActivated:" DisplayName="Toast activator">
+						<com:ExeServer Executable="Demo.exe" Arguments="----AppNotificationActivated:" DisplayName="Toast activator">
 							<com:Class Id="10ab3dd3-6a3c-41b1-93a2-5fde2f2c7111" />
 						</com:ExeServer>
 					</com:ComServer>
@@ -56,12 +56,12 @@
 	</Capabilities>
 
 	<!-- VS调试时总提示不能中断，暂注释 -->
-	<!--<Extensions>
+	<Extensions>
         <Extension Category="windows.activatableClass.inProcessServer">
             <InProcessServer>
                 <Path>WinRT.Host.dll</Path>
                 <ActivatableClass ActivatableClassId="Dt.Tasks.TimeTriggeredTask" ThreadingModel="both" />
             </InProcessServer>
         </Extension>
-    </Extensions>-->
+    </Extensions>
 </Package>

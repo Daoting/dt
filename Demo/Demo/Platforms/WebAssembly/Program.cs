@@ -1,5 +1,5 @@
 using Uno.UI.Hosting;
-using TestSdk;
+using Demo;
 
 var host = UnoPlatformHostBuilder.Create()
     .App(() => new App())
