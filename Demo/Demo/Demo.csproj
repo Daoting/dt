@@ -1,0 +1,44 @@
+<Project Sdk="Dt.Sdk">
+	<PropertyGroup>
+		<IsExe>true</IsExe>
+
+		<!-- Display name -->
+		<ApplicationTitle>搬运工</ApplicationTitle>
+		<!-- App Identifier -->
+		<ApplicationId>dt.Demo</ApplicationId>
+		<!-- Versions -->
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationVersion>1</ApplicationVersion>
+		<!-- Package Publisher -->
+		<ApplicationPublisher>Daoting</ApplicationPublisher>
+		<!-- Package Description -->
+		<Description>搬运工样例.</Description>
+	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="Config.json" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="Config.json" />
+	</ItemGroup>
+
+	<Import Project="..\..\Client\Dt.Client.props" />
+	
+	<ItemGroup>
+		<ProjectReference Include="..\Demo.Base\Demo.Base.csproj" />
+		<ProjectReference Include="..\Demo.UI\Demo.UI.csproj" />
+		<ProjectReference Include="..\Demo.Crud\Demo.Crud.csproj" />
+		<ProjectReference Include="..\Demo.Lob\Demo.Lob.csproj" />
+	</ItemGroup>
+
+	<!-- 确保使用github源码调试dt包 -->
+	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
+		<!-- 将包中的pdb文件复制到输出目录，默认不复制 -->
+		<CopyDebugSymbolFilesFromPackages>true</CopyDebugSymbolFilesFromPackages>
+		<!-- 将输出目录的pdb文件复制到Appx，默认不复制，只WinUI有效 -->
+		<AppxPackageIncludePrivateSymbols>true</AppxPackageIncludePrivateSymbols>
+	</PropertyGroup>
+	
+	<Target Name="CheckPlatform" BeforeTargets="BeforeBuild">
+		<Message Text="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')): $(Abc)" Importance="high" />
+	</Target>
+</Project>

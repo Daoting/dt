@@ -1,0 +1,10 @@
+{
+  "background_color": "#ffffff",
+  "description": "TestSdk",
+  "display": "standalone",
+  "name": "TestSdk",
+  "short_name": "TestSdk",
+  "start_url": "/index.html",
+  "theme_color": "#ffffff",
+  "scope": "/"
+}
