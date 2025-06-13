@@ -37,7 +37,7 @@ namespace Dt.Core.Rpc
 
         static BaseRpc()
         {
-#if SERVER || WIN
+#if SERVER || WIN || DESKTOP
             _client = new HttpClient(new HttpClientHandler
             {
                 // 验证时服务端证书始终有效！
@@ -49,13 +49,6 @@ namespace Dt.Core.Rpc
 
 #elif WASM
             _client = new HttpClient();
-#elif SKIA
-            // linux wpf
-            _client = new HttpClient(new HttpClientHandler
-            {
-                // 验证时服务端证书始终有效！
-                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
-            });
 #endif
 
 
