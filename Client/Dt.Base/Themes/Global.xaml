@@ -31,7 +31,7 @@
 
     <!-- 自定义字体库写法 https://platform.uno/docs/articles/features/custom-fonts.html -->
     <!-- 自定义图标字体库，从uno4.7统一写法 -->
-    <FontFamily x:Key="IconFont">ms-appx:///icon.ttf#DtIcon</FontFamily>
+    <FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</FontFamily>
 
     <!--
         *****************************************************************
