@@ -12,7 +12,7 @@
                 <!-- Dt默认样式 -->
                 <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Global.xaml" />
                 <!-- App样式，可覆盖以上样式 -->
-                <ResourceDictionary Source="ms-appx:///Demo.Entry/Stub/Global.xaml" />
+                <ResourceDictionary Source="ms-appx:///Stub/Global.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </a:AppBase.Resources>
