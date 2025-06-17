@@ -32,7 +32,8 @@
 
     <!-- WinAppSdk -->
     <ItemGroup Condition="$(IsWinAppSdk)">
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250513003" />
+        <!-- 1.7版本主线程异步异常会崩溃 -->
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250602001" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4188" />
         <!-- Lottie动画已正常，Microsoft.Graphics.Win2D需1.2.0以上版本，Microsoft.Maui.Essentials已间接引用 -->
         <PackageReference Include="CommunityToolkit.WinUI.Lottie" Version="8.1.240821" />
