@@ -9,13 +9,10 @@
 #region 引用命名
 using Android.App;
 using Android.Content;
-using Android.Content.PM;
+using Android.OS;
 using Android.Runtime;
 using Android.Views;
-using Android.OS;
-using Android.Widget;
-using Dt.Base;
-using System;
+using Microsoft.UI.Xaml;
 #endregion
 
 namespace Demo
@@ -32,13 +29,12 @@ namespace Demo
         ConfigurationChanges = global::Uno.UI.ActivityHelper.AllConfigChanges,
         // 控制软键盘
         WindowSoftInputMode = SoftInput.AdjustPan | SoftInput.StateHidden)]
-    public class MainActivity : BaseAppActivity
+    public class MainActivity : ApplicationActivity
     {
-        protected override void OnCreate(Bundle savedInstanceState)
+        protected override void OnCreate(Bundle bundle)
         {
-            global::AndroidX.Core.SplashScreen.SplashScreen.InstallSplashScreen(this);
-
-            base.OnCreate(savedInstanceState);
+            base.OnCreate(bundle);
+            AndroidActivity.OnCreate(this, bundle);
         }
     }
 
@@ -49,7 +45,7 @@ namespace Demo
         HardwareAccelerated = true,
         Theme = "@style/Theme.App.Starting"
     )]
-    public class MainApplication : Microsoft.UI.Xaml.NativeApplication
+    public class MainApplication : NativeApplication
     {
         public MainApplication(IntPtr javaReference, JniHandleOwnership transfer)
             : base(() => new App(), javaReference, transfer)

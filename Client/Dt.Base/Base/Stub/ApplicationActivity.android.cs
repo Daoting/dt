@@ -8,10 +8,9 @@
 #endregion
 
 #region 引用命名
+using Android.App;
 using Android.Content;
 using Android.OS;
-using Microsoft.UI.Xaml;
-using System.Reflection;
 #endregion
 
 namespace Dt.Base
@@ -20,18 +19,22 @@ namespace Dt.Base
     /// 启动调用顺序：
     /// NativeApplication.OnCreate -> ApplicationActivity.OnCreate -> App.OnLaunched -> DefaultStub.OnLaunched
     /// </summary>
-    public class BaseAppActivity : Microsoft.UI.Xaml.ApplicationActivity
+    public static class AndroidActivity
     {
-        protected override void OnCreate(Bundle bundle)
+        /// <summary>
+        /// Uno.WinUI.Runtime.Skia.Android包的 Microsoft.UI.Xaml.ApplicationActivity 只能在exe项目中使用
+        /// </summary>
+        /// <param name="activity"></param>
+        /// <param name="bundle"></param>
+        public static void OnCreate(Activity activity, Bundle bundle)
         {
-            base.OnCreate(bundle);
-
-            BgJob.MainActivity = GetType();
+            BgJob.MainActivity = activity.GetType();
 
             // 确保 Permissions.RequestAsync 调用时正常
-            Microsoft.Maui.ApplicationModel.Platform.Init(this, bundle);
-
-            var it = Intent;
+            Microsoft.Maui.ApplicationModel.Platform.Init(activity, bundle);
+            global::AndroidX.Core.SplashScreen.SplashScreen.InstallSplashScreen(activity);
+            
+            var it = activity.Intent;
             switch (it.Action)
             {
                 case Intent.ActionMain:
@@ -42,7 +45,7 @@ namespace Dt.Base
                 case Intent.ActionSend:
                     // 接收分享内容
                     if (it.Type != null)
-                        ReceiveShare();
+                        ReceiveShare(it);
                     break;
 
                 case BgJob.ActionToast:
@@ -54,9 +57,8 @@ namespace Dt.Base
             }
         }
 
-        void ReceiveShare()
+        static void ReceiveShare(Intent it)
         {
-            var it = Intent;
             ShareInfo info = new ShareInfo();
             string tp = it.Type;
 
