@@ -31,7 +31,7 @@ namespace Dt.Base
             ((HtmlBox)d).ApplyNavigate(true);
         }
 
-        internal static string FolderPath = "web";
+        const string _folderPath = "Assets/Html";
         #endregion
 
         #region 变量
@@ -116,7 +116,7 @@ namespace Dt.Base
             settings.IsScriptEnabled = true;
             settings.AreDevToolsEnabled = false;
 
-            CoreWebView2.SetVirtualHostNameToFolderMapping("html", FolderPath, CoreWebView2HostResourceAccessKind.Allow);
+            CoreWebView2.SetVirtualHostNameToFolderMapping("html", _folderPath, CoreWebView2HostResourceAccessKind.Allow);
             CoreWebView2.NavigationCompleted += OnNavigationCompleted;
             _isInited = true;
             ApplyNavigate(false);

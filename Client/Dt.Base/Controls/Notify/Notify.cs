@@ -89,6 +89,31 @@ namespace Dt.Base
                 Kit.RunAsync(() => _notifyList.Remove(p_notify));
         }
 
-        internal static readonly ItemList<NotifyInfo> _notifyList = new ItemList<NotifyInfo>();
+        #region 静态内容
+        static readonly ItemList<NotifyInfo> _notifyList;
+        
+        static DefUICallback()
+        {
+            _notifyList = new ItemList<NotifyInfo>();
+            _notifyList.ItemsChanged += OnNotifyItemsChanged;
+        }
+
+        static void OnNotifyItemsChanged(object sender, ItemListChangedArgs e)
+        {
+            if (e.CollectionChange == CollectionChange.ItemInserted || e.CollectionChange == CollectionChange.ItemChanged)
+            {
+                var info = ((ItemList<NotifyInfo>)sender)[e.Index];
+                UITree.NotifyPanel.Children.Insert(e.Index, new NotifyItem(info));
+            }
+            else if (e.CollectionChange == CollectionChange.ItemRemoved)
+            {
+                UITree.NotifyPanel.Children.RemoveAt(e.Index);
+            }
+            else
+            {
+                UITree.NotifyPanel.Children.Clear();
+            }
+        }
+        #endregion
     }
 }

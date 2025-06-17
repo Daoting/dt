@@ -31,7 +31,7 @@ namespace Dt.Base
             ((MarkdownBox)d).ApplyNavigate(true);
         }
 
-        internal static string FolderPath = "web";
+        const string _folderPath = "Assets/Markdown";
         #endregion
 
         #region 变量
@@ -91,7 +91,7 @@ namespace Dt.Base
             settings.IsScriptEnabled = true;
             settings.AreDevToolsEnabled = false;
 
-            CoreWebView2.SetVirtualHostNameToFolderMapping("md", FolderPath, CoreWebView2HostResourceAccessKind.Allow);
+            CoreWebView2.SetVirtualHostNameToFolderMapping("md", _folderPath, CoreWebView2HostResourceAccessKind.Allow);
             CoreWebView2.NavigationCompleted += OnNavigationCompleted;
             _isInited = true;
             ApplyNavigate(false);

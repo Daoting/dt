@@ -27,7 +27,7 @@ namespace Dt.Base
            typeof(PdfView),
            new PropertyMetadata(null));
 
-        internal static string FolderPath = "web";
+        const string _folderPath = "Assets/Pdf";
         #endregion
 
         #region 变量
@@ -171,7 +171,7 @@ namespace Dt.Base
             settings.IsScriptEnabled = true;
             settings.AreDevToolsEnabled = false;
 
-            CoreWebView2.SetVirtualHostNameToFolderMapping("pdf", FolderPath, CoreWebView2HostResourceAccessKind.Allow);
+            CoreWebView2.SetVirtualHostNameToFolderMapping("pdf", _folderPath, CoreWebView2HostResourceAccessKind.Allow);
             CoreWebView2.NavigationCompleted += (s, e) =>
             {
                 _inNaviCompleted = true;

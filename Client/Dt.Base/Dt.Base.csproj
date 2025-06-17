@@ -11,8 +11,4 @@
         <EmbeddedResource Include="..\..\Service\src\Dt.Core\Internal\InitMode\InitSql\postgresql-init.sql" Link="SysTools\DbInit\Sql\postgresql-init.sql" />
         <EmbeddedResource Include="..\..\Service\src\Dt.Core\Internal\InitMode\InitSql\sqlserver-init.sql" Link="SysTools\DbInit\Sql\sqlserver-init.sql" />
     </ItemGroup>
-
-    <ItemGroup Condition="exists('..\..\..\Tools\File\TestWinDocking.cs')">
-        <Compile Include="..\..\..\Tools\File\TestWinDocking.cs" Link="Structure\Win\Parts\TestWinDocking.cs" />
-    </ItemGroup>
 </Project>
