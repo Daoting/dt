@@ -21,6 +21,9 @@ namespace Dt.Base
             // 原来在Global.xaml中定义，Frame内部使用NativeFramePresenter承载
             Uno.UI.FeatureConfiguration.Style.ConfigureNativeFrameNavigation();
 
+            // 非WinAppSdk平台统一SkiaSharp绘制，HarmonyOS Sans字体作为默认字体，开源字体无版权问题
+            global::Uno.UI.FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/HarmonySans.ttf";
+            
             //InitializeLogging();
         }
 
