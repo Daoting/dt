@@ -3,7 +3,7 @@
         <!-- 解决方案右键菜单 - 设置框架，修改后自动重新加载，快、方便 -->
         <TargetFrameworks>net9.0-android;net9.0-ios;net9.0-windows10.0.19041;net9.0-desktop;net9.0-browserwasm</TargetFrameworks>
         
-        <NoWarn>$(NoWarn);1591;8785;NU1701;Uno0001;0252;NETSDK1206</NoWarn>
+        <NoWarn>$(NoWarn);1591;8785;NU1701;Uno0001;0252;NETSDK1206;IL2090;IL2067;IL2070;IL2026;IL2075;IL2072;IL2062;IL2091;IL2087;IL2057;IL2080;IL2090;IL2060;IL2096;IL2077</NoWarn>
         <!-- 始终禁止xbf嵌入到pri文件，默认debug时不嵌入，release时嵌入，嵌入时包升级会造成引用项目都必须重新编译 -->
         <DisableEmbeddedXbf>true</DisableEmbeddedXbf>
 
