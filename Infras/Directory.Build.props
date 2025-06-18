@@ -28,7 +28,6 @@
     <!-- 非WinAppSdk引用 -->
     <ItemGroup Condition="!$(IsWinAppSdk)">
         <PackageReference Include="Uno.WinUI" Version="$(UnoVersion)" />
-        <PackageReference Include="Uno.WinUI.Graphics2DSK" Version="$(UnoVersion)" />
     </ItemGroup>
     
     <!-- 所有App引用 -->
