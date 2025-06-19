@@ -12,6 +12,7 @@ using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
+using Dt.Base;
 using Microsoft.UI.Xaml;
 #endregion
 
@@ -35,6 +36,7 @@ namespace Demo
         {
             base.OnCreate(bundle);
             AndroidActivity.OnCreate(this, bundle);
+            global::AndroidX.Core.SplashScreen.SplashScreen.InstallSplashScreen(this);
         }
     }
 

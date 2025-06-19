@@ -32,7 +32,6 @@ namespace Dt.Base
 
             // 确保 Permissions.RequestAsync 调用时正常
             Microsoft.Maui.ApplicationModel.Platform.Init(activity, bundle);
-            global::AndroidX.Core.SplashScreen.SplashScreen.InstallSplashScreen(activity);
             
             var it = activity.Intent;
             switch (it.Action)
