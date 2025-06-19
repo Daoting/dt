@@ -72,4 +72,30 @@
 				Value="true"
 				Exclude="@(RuntimeHostConfigurationOption)" />
     </ItemGroup>
+
+    <!-- exe项目debug时复制dt的pdb文件，确保可使用github源码调试dt包 -->
+    <ItemGroup Condition="'$(Configuration)'=='Debug' AND $(IsExe) == 'true' AND $(IsWinAppSdk)">
+        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)../lib/net9.0-windows10.0.19041/*.pdb" />
+    </ItemGroup>
+    
+    <ItemGroup Condition="'$(Configuration)'=='Debug' AND $(IsExe) == 'true' AND $(IsAndroid)">
+        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)../lib/net9.0-android35.0/*.pdb" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)'=='Debug' AND $(IsExe) == 'true' AND $(IsIOS)">
+        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)../lib/net9.0-ios18.0/*.pdb" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)'=='Debug' AND $(IsExe) == 'true' AND $(IsBrowserWasm)">
+        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)../lib/net9.0-browserwasm1.0/*.pdb" />
+    </ItemGroup>
+    
+    <ItemGroup Condition="'$(Configuration)'=='Debug' AND $(IsExe) == 'true' AND $(IsDesktop)">
+        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)../lib/net9.0-desktop1.0/*.pdb" />
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Debug' AND $(IsWinAppSdk) AND $(IsExe) == 'true'">
+        <!-- 将输出目录的pdb文件复制到Appx，默认不复制，只WinUI有效 -->
+        <AppxPackageIncludePrivateSymbols>true</AppxPackageIncludePrivateSymbols>
+    </PropertyGroup>
 </Project>
