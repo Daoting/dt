@@ -21,15 +21,13 @@
 	  <Content Include="Config.json" />
 	</ItemGroup>
 
-	<Import Project="..\..\Client\Dt.Client.props" />
-	
 	<ItemGroup>
 		<ProjectReference Include="..\Demo.Base\Demo.Base.csproj" />
 		<ProjectReference Include="..\Demo.UI\Demo.UI.csproj" />
 		<ProjectReference Include="..\Demo.Crud\Demo.Crud.csproj" />
 		<ProjectReference Include="..\Demo.Lob\Demo.Lob.csproj" />
 	</ItemGroup>
-
+	
 	<!-- 确保使用github源码调试dt包 -->
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
 		<!-- 将包中的pdb文件复制到输出目录，默认不复制 -->

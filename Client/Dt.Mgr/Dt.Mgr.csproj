@@ -18,5 +18,6 @@
     <ItemGroup>
         <Content Remove="Rbac\Domain\rbac.png" />
         <None Include="Rbac\Domain\rbac.png" />
+        <None Include="..\..\..\Tools\File\NuGet.md" Condition="exists('..\..\..\Tools\File\NuGet.md')" />
     </ItemGroup>
 </Project>

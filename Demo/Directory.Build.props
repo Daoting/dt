@@ -1,7 +1,7 @@
 <Project>
 	<PropertyGroup>
 		<!-- 解决方案右键菜单 - 设置框架，修改后自动重新加载，快、方便 -->
-		<TargetFrameworks>net9.0-windows10.0.19041</TargetFrameworks>
+		<TargetFrameworks>net9.0-android;net9.0-ios;net9.0-windows10.0.19041;net9.0-desktop;net9.0-browserwasm</TargetFrameworks>
 
 		<!-- 启用全局using -->
 		<ImplicitUsings>enable</ImplicitUsings>
@@ -34,7 +34,7 @@
 		<ProjectReference Include="..\..\Client\Dt.Mgr\Dt.Mgr.csproj" />
 	</ItemGroup>
 	
-	<Import Project="..\..\Client\Dt.Client.props" Condition="$(IsExe) == 'true'" />
+	<Import Project="..\Client\Dt.Client.targets" Condition="$(SolutionName) != 'Demo'" />
 
 	<ItemGroup>
 		<Using Include="Dt.Core" />

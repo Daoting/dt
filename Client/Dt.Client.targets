@@ -4,7 +4,6 @@
     </PropertyGroup>
     
     <!-- exe项目引用包 -->
-    
     <ItemGroup Condition="$(IsExe) == 'true'">
         <PackageReference Include="Dt.BuildTools" Version="1.5.0" />
         <PackageReference Include="Uno.Resizetizer" Version="1.8.1" />
@@ -14,15 +13,31 @@
         <PackageReference Include="Dt.Tasks" Version="4.0.0" />
     </ItemGroup>
 
+    <!-- Android -->
+    <ItemGroup Condition="$(IsAndroid) AND $(IsExe) != 'true'">
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.Android" Version="$(UnoVersion)" PrivateAssets="all" IncludeAssets="build" />
+    </ItemGroup>
+    
     <ItemGroup Condition="$(IsAndroid) AND $(IsExe) == 'true'">
         <PackageReference Include="Uno.WinUI.Runtime.Skia.Android" Version="$(UnoVersion)" />
         <PackageReference Include="Xamarin.Google.Android.Material" Version="1.10.0.2" />
+        <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.14" />
     </ItemGroup>
 
+    <!-- IOS -->
+    <ItemGroup Condition="$(IsIOS) AND $(IsExe) != 'true'">
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.AppleUIKit" Version="$(UnoVersion)" PrivateAssets="all" IncludeAssets="build" />
+    </ItemGroup>
+    
     <ItemGroup Condition="$(IsIOS) AND $(IsExe) == 'true'">
         <PackageReference Include="Uno.WinUI.Runtime.Skia.AppleUIKit" Version="$(UnoVersion)" />
     </ItemGroup>
 
+    <!-- Wasm -->
+    <ItemGroup Condition="$(IsBrowserWasm) AND $(IsExe) != 'true'">
+        <PackageReference Include="Uno.WinUI.Runtime.Skia.WebAssembly.Browser" Version="$(UnoVersion)" PrivateAssets="all" IncludeAssets="build" />
+    </ItemGroup>
+    
     <ItemGroup Condition="$(IsBrowserWasm) AND $(IsExe) == 'true'">
         <PackageReference Include="Uno.WinUI.Runtime.Skia.WebAssembly.Browser" Version="$(UnoVersion)" />
         <PackageReference Include="Uno.Wasm.Bootstrap" Version="9.0.16" />
@@ -32,6 +47,16 @@
         <PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.15" />
         <!-- 不引用启动出错 -->
         <PackageReference Include="Uno.UI.HotDesign" Version="1.11.182"  />
+    </ItemGroup>
+
+    <!-- Desktop -->
+    <ItemGroup Condition="$(IsDesktop)">
+        <PackageReference Include="Uno.WinUI.MediaPlayer.Skia.Win32" Version="$(UnoVersion)" />
+        <PackageReference Include="Uno.WinUI.MediaPlayer.Skia.X11" Version="$(UnoVersion)" />
+        <PackageReference Include="Uno.WinUI.WebView.Skia.X11" Version="$(UnoVersion)" />
+        <!-- CoreWebView2同时存在于 Microsoft.Web.WebView2.Core 和 Uno.UI 中，Dt.Sdk中使用别名 -->
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3240.44" Aliases="mswebview2" />
+        <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.21" />
     </ItemGroup>
 
     <ItemGroup Condition="$(IsDesktop) AND $(IsExe) == 'true'">
@@ -47,5 +72,4 @@
 				Value="true"
 				Exclude="@(RuntimeHostConfigurationOption)" />
     </ItemGroup>
-    
 </Project>
