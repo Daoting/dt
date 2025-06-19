@@ -53,34 +53,4 @@
 
     <!-- 包引用，独立文件方便升级 -->
     <Import Project="References.props" Condition="exists('References.props')" />
-
-    <!--
-    Microsoft.Common.CurrentVersion.targets 中定义了系统Targets及顺序：
-    BeforeBuild;
-    
-    BuildOnlySettings;
-    PrepareForBuild;
-    PreBuildEvent;
-    ResolveReferences;
-    PrepareResources;
-    ResolveKeySource;
-    Compile;
-    ExportWindowsMDFile;
-    UnmanagedUnregistration;
-    GenerateSerializationAssemblies;
-    CreateSatelliteAssemblies;
-    GenerateManifests;
-    GetTargetPath;
-    PrepareForRun;
-    UnmanagedRegistration;
-    IncrementalClean;
-    PostBuildEvent;
-      
-    AfterBuild;
-    
-    BeforeRebuild;
-    Clean;
-    Build;
-    AfterRebuild;
-    -->
 </Project>

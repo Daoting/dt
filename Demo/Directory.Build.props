@@ -53,5 +53,4 @@
 			<EmbeddedResource Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 		</ItemGroup>
 	</Target>
-
 </Project>
