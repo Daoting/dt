@@ -10,6 +10,10 @@
         <!-- win默认将所有图片文件包含为Content，图片已嵌入，移除Icons下所有图片内容，否则重复 -->
         <Content Remove="Icons\**" />
     </ItemGroup>
+
+    <ItemGroup Condition="exists('..\..\..\Tools\File\TestCornerPanel.cs')">
+      <Compile Include="..\..\..\Tools\File\TestCornerPanel.cs" Link="Viewport\Header\TestCornerPanel.cs" />
+    </ItemGroup>
     
     <ItemGroup>
         <EmbeddedResource Include="Icons\AutoFillIndicator.png" />
