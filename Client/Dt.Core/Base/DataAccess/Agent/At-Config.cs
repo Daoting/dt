@@ -137,18 +137,29 @@ namespace Dt.Core
             return sai;
         }
 
+#if WASM
         internal static void InitConfig()
         {
-#if WASM
-            // wasm不支持直连数据库，不使用Config.json，在Config.js配置
-            InitWasmConfig();
+            // wasm不支持直连数据库，因启动时读取配置，不使用Config.json，使用Config.js
+            // UnoAppManifest.displayName 在AppManifest.js中设置
+            // DtConfig.server 在Config.js配置，AppManifest.js每次会动态生成，无法在其设置
+            Kit.Title = Kit.InvokeJS("UnoAppManifest.displayName");
+            var server = Kit.InvokeJS("DtConfig.server");
+            if (!string.IsNullOrEmpty(server))
+            {
+                _svcUrlInfo = new SvcUrlInfo(server);
+                _originAI = _currentAI = GetAccessInfo(AccessType.Service, "cm");
+            }
+            Console.WriteLine($"标题：{(Kit.Title == null ? "" : Kit.Title)}\r\n服务：{(server == null ? "" : server)}");
+        }
 #else
-
+        internal static void InitConfig()
+        {
             string config;
 #if ANDROID
             try
             {
-                using (var sr = new StreamReader(Android.App.Application.Context.Assets.Open("Config.json")))
+                using (var sr = new StreamReader(Android.App.Application.Context.Assets.Open("Assets/Config.json")))
                 {
                     config = sr.ReadToEnd();
                 }
@@ -159,7 +170,7 @@ namespace Dt.Core
                 return;
             }
 #else
-            var path = Path.Combine(AppContext.BaseDirectory, "Config.json");
+            var path = Path.Combine(AppContext.BaseDirectory, "Assets", "Config.json");
             if (!File.Exists(path))
             {
                 // throw时无提示信息
@@ -297,25 +308,8 @@ namespace Dt.Core
             }
             Kit.Debug(fw);
 #endif
-#endif
         }
-
-        static void InitWasmConfig()
-        {
-#if WASM
-            // wasm不支持直连数据库，因启动时读取配置，不使用Config.json，使用Config.js
-            // UnoAppManifest.displayName 在AppManifest.js中设置
-            // DtConfig.server 在Config.js配置，AppManifest.js每次会动态生成，无法在其设置
-            Kit.Title = Kit.InvokeJS("UnoAppManifest.displayName");
-            var server = Kit.InvokeJS("DtConfig.server");
-            if (!string.IsNullOrEmpty(server))
-            {
-                _svcUrlInfo = new SvcUrlInfo(server);
-                _originAI = _currentAI = GetAccessInfo(AccessType.Service, "cm");
-            }
-            Console.WriteLine($"标题：{(Kit.Title == null ? "" : Kit.Title)}\r\n服务：{(server == null ? "" : server)}");
 #endif
-        }
 
         static SvcUrlInfo _svcUrlInfo;
         static IAccessInfo _originAI;

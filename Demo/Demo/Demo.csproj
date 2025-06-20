@@ -14,9 +14,6 @@
 		<!-- Package Description -->
 		<Description>搬运工样例.</Description>
 	</PropertyGroup>
-	<ItemGroup>
-	  <Content Include="Config.json" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Demo.Base\Demo.Base.csproj" />
