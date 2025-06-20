@@ -9,12 +9,13 @@
 #region 引用命名
 using System.Diagnostics;
 using System.Reflection;
+using Windows.Storage;
 #endregion
 
 namespace Dt.Core
 {
     /// <summary>
-    /// 嵌入资源文件工具
+    /// 嵌入资源文件、内容文件的工具
     /// </summary>
     public partial class Kit
     {
@@ -49,7 +50,7 @@ namespace Dt.Core
                 throw new ArgumentNullException(nameof(p_asm), "嵌入文件的程序集不能为空");
             if (string.IsNullOrEmpty(p_filePath))
                 throw new ArgumentNullException(nameof(p_filePath), "嵌入文件名不能为空");
-            
+
             Stream stream = p_asm.GetManifestResourceStream(p_asm.GetName().Name + "." + p_filePath);
             if (stream == null)
                 throw new Exception("未找到资源文件：" + p_filePath);
@@ -87,7 +88,7 @@ namespace Dt.Core
                 throw new ArgumentNullException(nameof(p_asm), "嵌入文件的程序集不能为空");
             if (string.IsNullOrEmpty(p_filePath))
                 throw new ArgumentNullException(nameof(p_filePath), "嵌入文件名不能为空");
-            
+
             try
             {
                 using (var stream = p_asm.GetManifestResourceStream(p_asm.GetName().Name + "." + p_filePath))
@@ -100,6 +101,41 @@ namespace Dt.Core
             {
                 throw new Exception("未找到资源文件：" + p_filePath);
             }
+        }
+
+        /// <summary>
+        /// 读取内容文件的文本内容，文件路径如：ms-appx:///Demo.UI/Assets/dt.json
+        /// </summary>
+        /// <param name="p_fileUri">如：ms-appx:///Demo.UI/Assets/dt.json</param>
+        /// <returns></returns>
+        public static async Task<string> GetContentFileText(string p_fileUri)
+        {
+            using (var stream = await GetContentFileStream(p_fileUri))
+            using (var reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        /// <summary>
+        /// 读取内容文件的文件流，需要在外部关闭流，文件路径如：ms-appx:///Demo.UI/Assets/dt.json
+        /// </summary>
+        /// <param name="p_fileUri">如：ms-appx:///Demo.UI/Assets/dt.json</param>
+        /// <returns></returns>
+        public static async Task<Stream> GetContentFileStream(string p_fileUri)
+        {
+            StorageFile file = null;
+            try
+            {
+                file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(p_fileUri));
+            }
+            catch { }
+            
+            if (file != null)
+                return await file.OpenStreamForReadAsync();
+
+            Throw.Msg("未找到文件：" + p_fileUri);
+            return null;
         }
     }
 }
