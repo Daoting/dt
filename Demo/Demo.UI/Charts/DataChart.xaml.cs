@@ -32,25 +32,25 @@ namespace Demo.UI
 
         void OnLoadData1(object sender, RoutedEventArgs e)
         {
-            Table tbl = Table.Create(ResKit.GetStream("成绩.json"));
+            Table tbl = Table.Create(Kit.GetBagFileStream("成绩.json"));
             _chart.LoadMatrix(tbl, "xm", "subject", "score");
         }
 
         void OnLoadData2(object sender, RoutedEventArgs e)
         {
-            Table tbl = Table.Create(ResKit.GetStream("成绩.json"));
+            Table tbl = Table.Create(Kit.GetBagFileStream("成绩.json"));
             _chart.LoadMatrix(tbl, "subject", "xm", "score");
         }
 
         void OnLoadData3(object sender, RoutedEventArgs e)
         {
-            Table tbl = Table.Create(ResKit.GetStream("成绩(交叉表).json"));
+            Table tbl = Table.Create(Kit.GetBagFileStream("成绩(交叉表).json"));
             _chart.LoadTable(tbl, "姓名", "语文");
         }
 
         void OnLoadData4(object sender, RoutedEventArgs e)
         {
-            Table tbl = Table.Create(ResKit.GetStream("成绩(交叉表).json"));
+            Table tbl = Table.Create(Kit.GetBagFileStream("成绩(交叉表).json"));
             _chart.LoadTable(tbl, "姓名", new List<string> { "语文", "数学", "外语" });
         }
     }

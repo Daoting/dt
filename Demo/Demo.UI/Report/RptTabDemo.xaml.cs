@@ -29,7 +29,7 @@ namespace Demo.UI
             if (cnt == 0)
             {
                 string define = null;
-                var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Demo.UI/Files/Content/zh.rpt"));
+                var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Demo.UI/Assets/zh.rpt"));
                 using (var stream = await file.OpenStreamForReadAsync())
                 using (var reader = new StreamReader(stream))
                 {
@@ -44,27 +44,27 @@ namespace Demo.UI
 
         void OnContent(object sender, RoutedEventArgs e)
         {
-            _rpt.LoadReport(new RptInfo { Uri = "ms-appx:///Demo.UI/Files/Content/zh.rpt" });
+            _rpt.LoadReport(new RptInfo { Uri = "ms-appx:///Demo.UI/Assets/zh.rpt" });
         }
 
         void OnEmbedded(object sender, RoutedEventArgs e)
         {
-            _rpt.LoadReport(new RptInfo { Uri = "embedded://Demo.UI/Demo.UI.Files.Embed.模板.综合.rpt" });
+            _rpt.LoadReport(new RptInfo { Uri = "embedded://Demo.UI/Demo.UI.Bag.模板.综合.rpt" });
         }
 
         void OnNoMenu(object sender, RoutedEventArgs e)
         {
-            _rpt.LoadReport(new RptInfo { Uri = "embedded://Demo.UI/Demo.UI.Files.Embed.模板.无工具栏.rpt" });
+            _rpt.LoadReport(new RptInfo { Uri = "embedded://Demo.UI/Demo.UI.Bag.模板.无工具栏.rpt" });
         }
 
         void OnContextMenu(object sender, RoutedEventArgs e)
         {
-            _rpt.LoadReport(new RptInfo { Uri = "embedded://Demo.UI/Demo.UI.Files.Embed.模板.右键菜单.rpt" });
+            _rpt.LoadReport(new RptInfo { Uri = "embedded://Demo.UI/Demo.UI.Bag.模板.右键菜单.rpt" });
         }
 
         void OnCustomMenu(object sender, RoutedEventArgs e)
         {
-            _rpt.LoadReport(new RptInfo { Uri = "embedded://Demo.UI/Demo.UI.Files.Embed.模板.交互脚本.rpt" });
+            _rpt.LoadReport(new RptInfo { Uri = "embedded://Demo.UI/Demo.UI.Bag.模板.交互脚本.rpt" });
         }
     }
 }

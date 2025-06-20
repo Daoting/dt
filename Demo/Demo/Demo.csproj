@@ -15,9 +15,6 @@
 		<Description>搬运工样例.</Description>
 	</PropertyGroup>
 	<ItemGroup>
-	  <None Remove="Config.json" />
-	</ItemGroup>
-	<ItemGroup>
 	  <Content Include="Config.json" />
 	</ItemGroup>
 
@@ -27,8 +24,4 @@
 		<ProjectReference Include="..\Demo.Crud\Demo.Crud.csproj" />
 		<ProjectReference Include="..\Demo.Lob\Demo.Lob.csproj" />
 	</ItemGroup>
-	
-	<Target Name="CheckPlatform" BeforeTargets="BeforeBuild">
-		<Message Text="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')): $(Abc)" Importance="high" />
-	</Target>
 </Project>

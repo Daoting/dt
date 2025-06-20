@@ -23,12 +23,12 @@ namespace Demo.UI
 
         void OnPrintFile(object sender, RoutedEventArgs e)
         {
-            Kit.PrintPdf("ms-appx:///Demo.UI/Files/Content/dt.pdf");
+            Kit.PrintPdf("ms-appx:///Demo.UI/Assets/dt.pdf");
         }
 
         void OnPrintLocal(object sender, RoutedEventArgs e)
         {
-            Kit.PrintPdf("D:\\Dt\\Demo\\UIDemo\\Demo.UI\\Files\\Content\\dt.pdf");
+            Kit.PrintPdf("D:\\Dt\\Master\\Demo\\Demo.UI\\Assets\\dt.pdf");
         }
 
         void OnPrintLocal2(object sender, RoutedEventArgs e)
@@ -45,7 +45,7 @@ namespace Demo.UI
 
         async void OnDirectPrint(object sender, RoutedEventArgs e)
         {
-            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Demo.UI/Files/Content/dt.pdf"));
+            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Demo.UI/Assets/dt.pdf"));
             Stream stream = await file.OpenStreamForReadAsync();
             PdfPrinter printer = new PdfPrinter();
             printer.Print(stream, file.Name);

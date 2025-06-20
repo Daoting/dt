@@ -33,7 +33,7 @@ namespace Demo.UI
         {
             return Task.Run(() =>
             {
-                using (var stream = typeof(RptHome).Assembly.GetManifestResourceStream($"Demo.UI.Files.Embed.数据源.{p_name}.json"))
+                using (var stream = Kit.GetBagFileStream($"数据源.{p_name}.json"))
                 {
                     return Table.Create(stream);
                 }
@@ -64,7 +64,7 @@ namespace Demo.UI
         {
             return Task.Run(() =>
             {
-                using (var stream = typeof(RptHome).Assembly.GetManifestResourceStream($"Demo.UI.Files.Embed.数据源.{p_name}.json"))
+                using (var stream = Kit.GetBagFileStream($"数据源.{p_name}.json"))
                 {
                     var tbl = Table.Create(stream);
                     var tgt = Table.Clone(tbl);
@@ -154,7 +154,7 @@ namespace Demo.UI
                 {
                     var info = new RptInfo
                     {
-                        Uri = "embedded://Demo.UI/Demo.UI.Files.Embed.模板.交互脚本.rpt",
+                        Uri = "embedded://Demo.UI/Demo.UI.Bag.模板.交互脚本.rpt",
                     };
                     _curParams = new Dict { { "parentid", row.Str("id") }, { "parentname", row.Str("name") } };
                     

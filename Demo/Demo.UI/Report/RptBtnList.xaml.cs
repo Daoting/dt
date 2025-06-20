@@ -56,7 +56,7 @@ namespace Demo.UI
         void OnShowInTab(object sender, RoutedEventArgs e)
         {
             string name = ((Button)sender).Content.ToString();
-            var uri = $"embedded://Demo.UI/Demo.UI.Files.Embed.模板.{name}.rpt";
+            var uri = $"embedded://Demo.UI/Demo.UI.Bag.模板.{name}.rpt";
             _tab.IsPdf = (bool)_cbPdf.IsChecked;
             _tab.LoadReport(new RptInfo { Uri = uri });
             NaviTo(_tab);
@@ -65,14 +65,14 @@ namespace Demo.UI
         void OnShowInWin(object sender, RoutedEventArgs e)
         {
             string name = ((Button)sender).Content.ToString();
-            var uri = $"embedded://Demo.UI/Demo.UI.Files.Embed.模板.{name}.rpt";
+            var uri = $"embedded://Demo.UI/Demo.UI.Bag.模板.{name}.rpt";
             Rpt.Show(new RptInfo { Uri = uri }, (bool)_cbPdf.IsChecked);
         }
         
         void OnShowEditor(object sender, RoutedEventArgs e)
         {
             string name = ((Button)sender).Content.ToString();
-            var uri = $"embedded://Demo.UI/Demo.UI.Files.Embed.模板.{name}.rpt";
+            var uri = $"embedded://Demo.UI/Demo.UI.Bag.模板.{name}.rpt";
             _ = Rpt.ShowDesign(new RptDesignInfo { Uri = uri, ShowNewFile = true, ShowOpenFile = true, ShowSave = true });
         }
     }

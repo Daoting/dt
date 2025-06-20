@@ -35,7 +35,7 @@ namespace Demo.UI
             InitializeComponent();
 
             var data = new CSVData();
-            data.Read(ResKit.GetStream("browsers.csv"), false);
+            data.Read(Kit.GetBagFileStream("browsers.csv"), false);
 
             int len = data.Length;
             var vdata = new VersionInfo[len];

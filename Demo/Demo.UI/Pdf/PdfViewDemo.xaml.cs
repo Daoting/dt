@@ -34,7 +34,7 @@ namespace Demo.UI
 
         async void LoadPdf()
         {
-            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Demo.UI/Files/Content/dt.pdf"));
+            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Demo.UI/Assets/dt.pdf"));
             _pdf.Open(file);
         }
 

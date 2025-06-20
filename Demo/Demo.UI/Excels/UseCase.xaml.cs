@@ -47,7 +47,7 @@ namespace Demo.UI
         async void OnLoadFile(object sender, RoutedEventArgs e)
         {
             var file = ((Button)sender).Tag.ToString();
-            using(var stream = ResKit.GetStream("Excel." + file))
+            using(var stream = Kit.GetBagFileStream("Excel." + file))
             {
                 if (file.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
                     await _excel.OpenExcel(stream);

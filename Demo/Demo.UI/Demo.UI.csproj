@@ -1,8 +1,5 @@
 ﻿<Project Sdk="Dt.Sdk">
 	<ItemGroup>
-		<Content Include="Files\Content\**" />
-		<EmbeddedResource Include="Files\Embed\**" />
-
 		<EmbeddedResource Include="appsettings.json" />
 		<PRIResource Include="Strings\**\*.resw" />
 	</ItemGroup>
