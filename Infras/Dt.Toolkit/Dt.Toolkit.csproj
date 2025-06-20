@@ -4,8 +4,4 @@
 		<OutputType>Library</OutputType>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	</PropertyGroup>
-
-    <ItemGroup Condition="exists('..\..\..\Tools\File\TestSqlFormatter.cs')">
-        <Compile Include="..\..\..\Tools\File\TestSqlFormatter.cs" Link="Sql\TestSqlFormatter.cs" />
-    </ItemGroup>
 </Project>
