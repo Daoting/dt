@@ -61,10 +61,6 @@
 		<Compile Include="..\..\Service\src\Dt.Core\Rpc\Client\Rpc\UnaryRpc.cs" Link="Rpc\Client\UnaryRpc.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Rpc\RpcKit.cs" Link="Rpc\RpcKit.cs" />
 	</ItemGroup>
-
-    <ItemGroup Condition="exists('..\..\..\Tools\File\TestStreamRpc.cs')">
-        <Compile Include="..\..\..\Tools\File\TestStreamRpc.cs" Link="Rpc\Handler\TestStreamRpc.cs" />
-    </ItemGroup>
     
 	<ItemGroup>
 		<None Include="..\..\Service\src\Dt.Core\Internal\Serialize\JsonRpc结构.txt" Link="Internal\Serialize\JsonRpc结构.txt" />
