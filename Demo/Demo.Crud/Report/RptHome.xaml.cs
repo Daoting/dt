@@ -38,7 +38,7 @@ namespace Demo.Crud
         void OnBtnClick(object sender, RoutedEventArgs e)
         {
             string name = ((Button)sender).Content.ToString();
-            var uri = $"embedded://Demo.Crud/Demo.Crud.Files.Embed.模板.{name}.rpt";
+            var uri = $"embedded://Demo.Crud/Demo.Crud.Bag.模板.{name}.rpt";
             if ((bool)_cb.IsChecked)
             {
                 _ = Rpt.ShowDesign(new RptDesignInfo { Uri = uri, ShowNewFile = true, ShowOpenFile = true, ShowSave = true });
@@ -51,7 +51,7 @@ namespace Demo.Crud
 
         void OnTest(object sender, RoutedEventArgs e)
         {
-            var txt = ResKit.GetText("模板.内部变量.rpt");
+            var txt = Kit.GetBagFileText("模板.内部变量.rpt");
             Kit.Msg(txt);
         }
     }

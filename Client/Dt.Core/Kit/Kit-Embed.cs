@@ -19,7 +19,7 @@ namespace Dt.Core
     public partial class Kit
     {
         /// <summary>
-        /// 返回当前调用所属程序集中的嵌入文件的文件流，需要在外部关闭流，文件在项目的 Bag 目录
+        /// 返回当前调用者所属程序集中的嵌入文件的文件流，需要在外部关闭流，文件在项目的 Bag 目录
         /// </summary>
         /// <param name="p_fileName">文件名，不包含Bag，当文件在Bag子目录时，需要添加子目录前缀。如：Excel.1040.xlsx，文件1040.xlsx在Bag\Excel目录</param>
         /// <returns></returns>
@@ -57,7 +57,7 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 返回当前调用所属程序集的嵌入文件的内容，文件在项目的 Bag 目录
+        /// 返回当前调用者所属程序集的嵌入文件的内容，文件在项目的 Bag 目录
         /// </summary>
         /// <param name="p_fileName">文件名，不包含Bag，当文件在Bag子目录时，需要添加子目录前缀。如：Json.Abc.txt，文件Abc.txt在Bag\Json 目录</param>
         /// <returns></returns>
@@ -74,7 +74,7 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 返回当前调用所属程序集的嵌入文件的内容
+        /// 返回程序集中的嵌入文件的内容
         /// </summary>
         /// <param name="p_asm">程序集</param>
         /// <param name="p_filePath">文件名，包含目录，如：Bag.Json.Abc.txt，文件Abc.txt在Bag\Json 目录</param>
