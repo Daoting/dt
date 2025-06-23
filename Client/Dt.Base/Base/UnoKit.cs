@@ -8,7 +8,7 @@
 #endregion
 
 #region 引用命名
-
+using Uno.UI;
 #endregion
 
 namespace Dt.Base
@@ -17,12 +17,19 @@ namespace Dt.Base
     {
         public static void Init()
         {
+            // 非WinAppSdk平台统一Skia渲染：
+            
+            // Skia渲染时默认true，和WinUI一致Frame不保存旧页面。为提高返回时的性能，设置为false
+            // https://platform.uno/docs/articles/controls/Frame.html
+            FeatureConfiguration.Frame.UseWinUIBehavior = false;
+
+            // Skia渲染时HarmonyOS Sans字体作为默认字体，开源字体无版权问题
+            FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/HarmonySans.ttf";
+
+            // Skia渲染后无用
             // Frame CommandBar AppBarButton采用本地样式及动画
             // 原来在Global.xaml中定义，Frame内部使用NativeFramePresenter承载
-            Uno.UI.FeatureConfiguration.Style.ConfigureNativeFrameNavigation();
-
-            // 非WinAppSdk平台统一SkiaSharp绘制，HarmonyOS Sans字体作为默认字体，开源字体无版权问题
-            global::Uno.UI.FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/HarmonySans.ttf";
+            //FeatureConfiguration.Style.ConfigureNativeFrameNavigation();
             
             //InitializeLogging();
         }
