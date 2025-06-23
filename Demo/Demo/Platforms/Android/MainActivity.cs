@@ -23,7 +23,6 @@ namespace Demo
         new[] { Intent.ActionSend },
         Categories = new[] { Intent.CategoryDefault },
         DataMimeTypes = new[] { "image/*", "text/plain", "video/*", "audio/*", "*/*" })]
-
     [Activity(
         MainLauncher = true,
         // 横竖屏模式改变、屏幕大小变化、键盘可用性等所有改变时不重新启动activity
@@ -34,9 +33,9 @@ namespace Demo
     {
         protected override void OnCreate(Bundle bundle)
         {
-            base.OnCreate(bundle);
             AndroidActivity.OnCreate(this, bundle);
             global::AndroidX.Core.SplashScreen.SplashScreen.InstallSplashScreen(this);
+            base.OnCreate(bundle);
         }
     }
 
