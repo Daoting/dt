@@ -1,4 +1,5 @@
 ﻿using Dt.Base;
+using Dt.Base.Tools;
 
 namespace Demo.UI
 {
@@ -15,6 +16,7 @@ namespace Demo.UI
             //    Child = new TestInvoke { Title = "子", Output = _tb }
             //};
             //_pre.Content = ti;
+            SysTrace.ShowLogBox();
         }
     }
 }

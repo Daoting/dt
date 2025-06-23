@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base">
 
     <StackPanel Margin="10">
-        <TextBlock Text="xaml方式，查看输出" />
+        <TextBlock Text="测试不同平台控件虚方法的调用顺序，查看实时日志" />
         <a:TestInvoke Title="父">
             <a:TestInvoke Title="子" />
         </a:TestInvoke>
