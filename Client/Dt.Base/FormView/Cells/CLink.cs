@@ -43,8 +43,9 @@ namespace Dt.Base
         /// <summary>
         /// 切换内容
         /// </summary>
-        protected override void OnLoadTemplate()
+        protected override void OnApplyTemplate()
         {
+            base.OnApplyTemplate();
             Grid root = (Grid)GetTemplateChild("RootGrid");
             if (root == null)
                 return;

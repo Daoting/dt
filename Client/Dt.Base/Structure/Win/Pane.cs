@@ -25,7 +25,7 @@ namespace Dt.Base
     /// 可停靠项，内部子项为 Tabs 或 Pane
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public sealed partial class Pane : DtControl, IPaneList
+    public sealed partial class Pane : Control, IPaneList
     {
         #region 静态内容
         public static readonly DependencyProperty PosProperty = DependencyProperty.Register(
@@ -501,8 +501,9 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-        protected override void OnLoadTemplate()
+        protected override void OnApplyTemplate()
         {
+            base.OnApplyTemplate();
             _itemsPanel = (TabItemPanel)GetTemplateChild("TabItemPanel");
             _itemsPanel.Owner = this;
             var resizer = (GridResizer)GetTemplateChild("Resizer");

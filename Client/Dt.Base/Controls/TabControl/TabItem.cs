@@ -21,7 +21,7 @@ namespace Dt.Base
     /// TabControl 中的可选标签项
     /// </summary>
     [ContentProperty(Name = "Content")]
-    public partial class TabItem : DtControl
+    public partial class TabItem : Control
     {
         #region 静态内容
         /// <summary>
@@ -188,8 +188,9 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-        protected override void OnLoadTemplate()
+        protected override void OnApplyTemplate()
         {
+            base.OnApplyTemplate();
             _isLoaded = true;
             _header = (RotateContent)GetTemplateChild("ElementHeader");
             _rcOuter = (Rectangle)GetTemplateChild("NormalBorder");

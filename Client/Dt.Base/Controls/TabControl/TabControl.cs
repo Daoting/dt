@@ -26,14 +26,14 @@ namespace Dt.Base
     /// 选项卡控件
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class TabControl : DtControl
+    public partial class TabControl : Control
     {
         #region 静态内容
         public static readonly DependencyProperty TabStripPlacementProperty = DependencyProperty.Register(
             "TabStripPlacement",
             typeof(ItemPlacement),
             typeof(TabControl),
-            new PropertyMetadata(ItemPlacement.Bottom, new PropertyChangedCallback(OnTabStripPlacementChanged)));
+            new PropertyMetadata(ItemPlacement.Bottom, OnTabStripPlacementChanged));
 
         public readonly static DependencyProperty AllowSwapItemProperty = DependencyProperty.Register(
             "AllowSwapItem",
@@ -302,8 +302,9 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-        protected override void OnLoadTemplate()
+        protected override void OnApplyTemplate()
         {
+            base.OnApplyTemplate();
             _mainGrid = (Grid)GetTemplateChild("MainGrid");
             _itemsPanel = (StackPanel)GetTemplateChild("ItemsPanel");
             _contentPresenter = (SizedPresenter)GetTemplateChild("TabContent");

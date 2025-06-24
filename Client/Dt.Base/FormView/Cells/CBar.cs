@@ -24,7 +24,7 @@ namespace Dt.Base
     /// 单元格分隔行，可以Fv之外单独使用
     /// </summary>
     [ContentProperty(Name = "Content")]
-    public partial class CBar : DtControl, IFvCell
+    public partial class CBar : Control, IFvCell
     {
         #region 静态成员
         const string _prefix = "🔶 ";
@@ -91,7 +91,7 @@ namespace Dt.Base
 
         static void OnContentPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((CBar)d).OnLoadTemplate();
+            ((CBar)d).OnApplyTemplate();
         }
         #endregion
 
@@ -227,8 +227,9 @@ namespace Dt.Base
                 ContentXaml = FvDesignKit.GetNodeXml(p_node.ChildNodes[0], false);
         }
 
-        protected override void OnLoadTemplate()
+        protected override void OnApplyTemplate()
         {
+            base.OnApplyTemplate();
             Grid root = (Grid)GetTemplateChild("RootGrid");
             if (root == null)
                 return;

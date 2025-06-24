@@ -28,7 +28,7 @@ namespace Dt.Base
     /// 可停靠多区域窗口
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class Win : DtControl, IPaneList, IDestroy
+    public partial class Win : Control, IPaneList, IDestroy
     {
         #region 静态内容
         public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
@@ -450,8 +450,9 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-        protected override void OnLoadTemplate()
+        protected override void OnApplyTemplate()
         {
+            base.OnApplyTemplate();
             RootPanel = (PanePanel)GetTemplateChild("RootPanel");
             RootPanel.Init(CenterItem);
 

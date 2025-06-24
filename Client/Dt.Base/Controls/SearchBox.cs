@@ -11,7 +11,7 @@ namespace Dt.Base
     /// <summary>
     /// 查询文本框
     /// </summary>
-    public partial class SearchBox : DtControl
+    public partial class SearchBox : Control
     {
         public static readonly DependencyProperty IsRealtimeProperty = DependencyProperty.Register(
             "IsRealtime",
@@ -82,8 +82,9 @@ namespace Dt.Base
             }
         }
 
-        protected override void OnLoadTemplate()
+        protected override void OnApplyTemplate()
         {
+            base.OnApplyTemplate();
             var bd = (Border)GetTemplateChild("Border");
             bd.Child = _tb;
             _tb.TextChanged += OnTextChanged;

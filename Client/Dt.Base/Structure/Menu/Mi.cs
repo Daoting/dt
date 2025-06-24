@@ -26,7 +26,7 @@ namespace Dt.Base
     /// 菜单项
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class Mi : DtControl
+    public partial class Mi : Control
     {
         #region 静态内容
         public static readonly DependencyProperty IDProperty = DependencyProperty.Register(
@@ -469,8 +469,9 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-        protected override void OnLoadTemplate()
+        protected override void OnApplyTemplate()
         {
+            base.OnApplyTemplate();
             CanExecuteApply();
             ChangeState(MenuItemState.Normal);
             UpdateRoleState();

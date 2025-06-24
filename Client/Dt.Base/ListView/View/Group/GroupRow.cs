@@ -21,7 +21,7 @@ namespace Dt.Base.ListView
     /// <summary>
     /// 分组行
     /// </summary>
-    public partial class GroupRow : DtControl, ILvDestroy
+    public partial class GroupRow : Control, ILvDestroy
     {
         #region 静态内容
         public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
@@ -100,8 +100,9 @@ namespace Dt.Base.ListView
         /// </summary>
         internal double Top { get; set; }
 
-        protected override void OnLoadTemplate()
+        protected override void OnApplyTemplate()
         {
+            base.OnApplyTemplate();
             if (IsFirst)
                 ((Rectangle)GetTemplateChild("Rect")).Visibility = Visibility.Collapsed;
         }

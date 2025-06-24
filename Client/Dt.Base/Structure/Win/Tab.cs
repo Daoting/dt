@@ -120,6 +120,7 @@ namespace Dt.Base
                 DefaultStyleKey = typeof(Tab);
             else
                 Style = (Style)Res.WinRes["WinTab"];
+            Loaded += OnLoaded;
         }
         #endregion
 
@@ -302,12 +303,12 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-        protected override void OnLoadTemplate()
+        protected override void OnApplyTemplate()
         {
             if (Kit.IsPhoneUI)
                 InitPhoneUITemplate();
             else
-                base.OnLoadTemplate();
+                base.OnApplyTemplate();
         }
 
         void InitPhoneUITemplate()
@@ -332,6 +333,19 @@ namespace Dt.Base
             Button btn = GetTemplateChild("BackButton") as Button;
             if (btn != null)
                 btn.Click += (s, e) => _ = Backward();
+        }
+
+        void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnLoaded;
+            OnFirstLoaded();
+        }
+
+        /// <summary>
+        /// 只在第一次Loaded事件时调用
+        /// </summary>
+        protected virtual void OnFirstLoaded()
+        {
         }
         #endregion
 
