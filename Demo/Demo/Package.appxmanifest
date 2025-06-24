@@ -25,11 +25,11 @@
 		  EntryPoint="$targetentrypoint$">
 			<uap:VisualElements />
 			<Extensions>
-				<Extension Category="windows.backgroundTasks" EntryPoint="Dt.Tasks.TimeTriggeredTask">
+				<!--<Extension Category="windows.backgroundTasks" EntryPoint="Dt.Tasks.TimeTriggeredTask">
                     <BackgroundTasks>
                         <Task Type="timer"/>
                     </BackgroundTasks>
-                </Extension>
+                </Extension>-->
 
 				<!--单击Toast通知激活的 CLSID-->
 				<desktop:Extension Category="windows.toastNotificationActivation">
@@ -56,12 +56,12 @@
 	</Capabilities>
 
 	<!-- VS调试时总提示不能中断，暂注释 -->
-	<Extensions>
+	<!--<Extensions>
         <Extension Category="windows.activatableClass.inProcessServer">
             <InProcessServer>
                 <Path>WinRT.Host.dll</Path>
                 <ActivatableClass ActivatableClassId="Dt.Tasks.TimeTriggeredTask" ThreadingModel="both" />
             </InProcessServer>
         </Extension>
-    </Extensions>
+    </Extensions>-->
 </Package>
