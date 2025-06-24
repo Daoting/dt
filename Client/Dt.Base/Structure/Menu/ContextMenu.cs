@@ -23,7 +23,7 @@ namespace Dt.Base
     /// <summary>
     /// 上下文菜单相关
     /// </summary>
-    public partial class Menu : DtControl
+    public partial class Menu : Control
     {
         #region 静态内容
         public static readonly DependencyProperty ContextTargetProperty = DependencyProperty.Register(

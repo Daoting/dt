@@ -35,6 +35,7 @@ namespace Dt.Mgr.Rbac
                 Placeholder = "文字或拼音简码",
                 IsRealtime = true,
             };
+            Loaded += OnFirstLoaded;
         }
 
         public MenuX SelectedMenu => _tv.Selected<MenuX>();
@@ -43,9 +44,10 @@ namespace Dt.Mgr.Rbac
         {
             _tv.SelectByID(p_id);
         }
-        
-        protected override void OnFirstLoaded()
+
+        void OnFirstLoaded(object sender, RoutedEventArgs e)
         {
+            Loaded -= OnFirstLoaded;
             _tv.FixedRoot = new MenuX(ID: 0, Name: "菜单", IsGroup: true);
             _ = Refresh();
         }

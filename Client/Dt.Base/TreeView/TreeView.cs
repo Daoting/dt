@@ -29,7 +29,7 @@ namespace Dt.Base
     /// 树控件
     /// </summary>
     [ContentProperty(Name = nameof(View))]
-    public partial class Tv : DtControl, IViewItemHost, IMenuHost
+    public partial class Tv : Control, IViewItemHost, IMenuHost
     {
         #region 静态内容
         public readonly static DependencyProperty ViewProperty = DependencyProperty.Register(
@@ -166,6 +166,7 @@ namespace Dt.Base
             RootItems = new TvRootItems(this);
             _selectedRows = new ObservableCollection<TvItem>();
             _selectedRows.CollectionChanged += OnSelectedItemsChanged;
+            Loaded += OnFirstLoaded;
         }
         #endregion
 
@@ -779,8 +780,9 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-        protected override void OnLoadTemplate()
+        protected override void OnApplyTemplate()
         {
+            base.OnApplyTemplate();
             _panel = new TvPanel(this);
             var root = (Border)GetTemplateChild("Border");
 
@@ -809,8 +811,9 @@ namespace Dt.Base
             _isLoaded = true;
         }
 
-        protected override void OnFirstLoaded()
+        void OnFirstLoaded(object sender, RoutedEventArgs e)
         {
+            Loaded -= OnFirstLoaded;
             Focus(FocusState.Programmatic);
             KeyDown += OnKeyDown;
         }
