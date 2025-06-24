@@ -91,7 +91,7 @@ namespace Dt.Base
 
         static void OnContentPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((CBar)d).OnApplyTemplate();
+            ((CBar)d).LoadContent();
         }
         #endregion
 
@@ -229,7 +229,11 @@ namespace Dt.Base
 
         protected override void OnApplyTemplate()
         {
-            base.OnApplyTemplate();
+            LoadContent();
+        }
+        
+        protected virtual void LoadContent()
+        { 
             Grid root = (Grid)GetTemplateChild("RootGrid");
             if (root == null)
                 return;

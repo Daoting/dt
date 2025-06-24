@@ -43,9 +43,8 @@ namespace Dt.Base
         /// <summary>
         /// 切换内容
         /// </summary>
-        protected override void OnApplyTemplate()
+        protected override void LoadContent()
         {
-            base.OnApplyTemplate();
             Grid root = (Grid)GetTemplateChild("RootGrid");
             if (root == null)
                 return;
@@ -54,7 +53,8 @@ namespace Dt.Base
             if (root.Children.Count > 2)
                 root.Children.RemoveAt(2);
 
-            if (Content is string title)
+            string title = !string.IsNullOrEmpty(Title) ? Title : Content as string;
+            if (!string.IsNullOrEmpty(title))
             {
                 TextBlock tb = new TextBlock
                 {
