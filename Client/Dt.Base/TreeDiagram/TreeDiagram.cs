@@ -32,7 +32,7 @@ namespace Dt.Base
     /// 树状图表控件
     /// </summary>
     [ContentProperty(Name = nameof(View))]
-    public partial class TreeDiagram : Control, IViewItemHost, IMenuHost
+    public partial class TreeDiagram : DtControl, IViewItemHost, IMenuHost
     {
         #region 静态内容
         public readonly static DependencyProperty DataProperty = DependencyProperty.Register(
@@ -153,7 +153,6 @@ namespace Dt.Base
             RootItems = new TdRootItems(this);
             _selectedRows = new ObservableCollection<TdItem>();
             _selectedRows.CollectionChanged += OnSelectedItemsChanged;
-            Loaded += OnFirstLoaded;
         }
         #endregion
 
@@ -543,9 +542,8 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-        protected override void OnApplyTemplate()
+        protected override void OnLoadTemplate()
         {
-            base.OnApplyTemplate();
             _panel = new TdPanel(this);
             var root = (Border)GetTemplateChild("Border");
 
@@ -572,9 +570,8 @@ namespace Dt.Base
             _isLoaded = true;
         }
 
-        void OnFirstLoaded(object sender, RoutedEventArgs e)
+        protected override void OnFirstLoaded()
         {
-            Loaded -= OnFirstLoaded;
             Focus(FocusState.Programmatic);
         }
 

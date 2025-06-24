@@ -19,7 +19,7 @@ namespace Dt.Base
     /// <summary>
     /// 单元格
     /// </summary>
-    public partial class FvCell : Control, IFvCell
+    public partial class FvCell : DtControl, IFvCell
     {
         #region 静态内容
         // 8个中文字，原140，fifo调，现6个中文字
@@ -325,9 +325,8 @@ namespace Dt.Base
         #endregion
 
         #region 重写方法
-        protected override void OnApplyTemplate()
+        protected override void OnLoadTemplate()
         {
-            base.OnApplyTemplate();
             _panel = (CellPanel)GetTemplateChild("Panel");
             _panel?.SetOwner(this);
 

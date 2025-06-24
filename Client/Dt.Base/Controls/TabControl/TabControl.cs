@@ -26,7 +26,7 @@ namespace Dt.Base
     /// 选项卡控件
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class TabControl : Control
+    public partial class TabControl : DtControl
     {
         #region 静态内容
         public static readonly DependencyProperty TabStripPlacementProperty = DependencyProperty.Register(
@@ -302,9 +302,8 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-        protected override void OnApplyTemplate()
+        protected override void OnLoadTemplate()
         {
-            base.OnApplyTemplate();
             _mainGrid = (Grid)GetTemplateChild("MainGrid");
             _itemsPanel = (StackPanel)GetTemplateChild("ItemsPanel");
             _contentPresenter = (SizedPresenter)GetTemplateChild("TabContent");

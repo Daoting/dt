@@ -411,9 +411,9 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-        protected override void OnApplyTemplate()
+        protected override void OnLoadTemplate()
         {
-            base.OnApplyTemplate();
+            base.OnLoadTemplate();
             var header = (TabHeader)GetTemplateChild("HeaderElement");
             header.Owner = this;
             var resizer = (GridResizer)GetTemplateChild("Resizer");

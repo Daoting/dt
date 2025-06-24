@@ -24,7 +24,7 @@ namespace Dt.Base
     /// 表单控件
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class Fv : Control
+    public partial class Fv : DtControl
     {
         #region 静态内容
         public static readonly DependencyProperty IsReadOnlyProperty = DependencyProperty.Register(
@@ -372,9 +372,8 @@ namespace Dt.Base
         #endregion
 
         #region 重写方法
-        protected override void OnApplyTemplate()
+        protected override void OnLoadTemplate()
         {
-            base.OnApplyTemplate();
             var root = (Border)GetTemplateChild("Border");
 
             // win模式查询范围限制在Tabs内，phone模式限制在Tab内

@@ -25,7 +25,7 @@ namespace Dt.Base
     /// <summary>
     /// 桌面容器
     /// </summary>
-    public partial class Desktop : Control
+    public partial class Desktop : DtControl
     {
         #region 静态成员
         // 和edge标签宽度相同
@@ -323,9 +323,8 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-        protected override void OnApplyTemplate()
+        protected override void OnLoadTemplate()
         {
-            base.OnApplyTemplate();
             _gridContent = (Grid)GetTemplateChild("ContentGrid");
             _gridTaskbar = (Grid)GetTemplateChild("TaskbarGrid");
             _taskbarPanel = (StackPanel)GetTemplateChild("TaskbarPanel");

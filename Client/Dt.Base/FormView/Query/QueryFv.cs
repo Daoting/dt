@@ -149,9 +149,9 @@ namespace Dt.Base
         #endregion
 
         #region 重写方法
-        protected override void OnApplyTemplate()
+        protected override void OnLoadTemplate()
         {
-            base.OnApplyTemplate();
+            base.OnLoadTemplate();
 
             var btn = (Button)GetTemplateChild("BtnQuery");
             if (btn != null)
