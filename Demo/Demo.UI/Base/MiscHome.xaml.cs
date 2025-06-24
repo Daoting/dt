@@ -32,7 +32,7 @@ namespace Demo.UI
             new Nav("基础事件", typeof(RouteEventDemo), Icons.汉堡),
             new Nav("分隔栏", typeof(SplitterDemo), Icons.分组),
             new Nav("可停靠面板", typeof(DockPanelDemo), Icons.全选) { Desc = "停靠式窗口的布局面板" },
-            new Nav("控件虚方法顺序", typeof(TestInvokeDemo), Icons.乐谱) { Desc = "测试不同平台控件虚方法的调用顺序" },
+            new Nav("控件事件调用顺序", typeof(TestInvokeDemo), Icons.乐谱) { Desc = "测试不同平台控件主要事件的调用顺序" },
         };
     }
 }

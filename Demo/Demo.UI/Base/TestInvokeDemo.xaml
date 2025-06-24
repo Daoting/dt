@@ -5,9 +5,26 @@
     xmlns:a="using:Dt.Base">
 
     <StackPanel Margin="10">
-        <TextBlock Text="测试不同平台控件虚方法的调用顺序，查看实时日志" />
-        <a:TestInvoke Title="父">
-            <a:TestInvoke Title="子" />
+        <TextBlock Text="测试不同平台控件主要事件的调用顺序" Margin="0,0,0,40" />
+        <TextBlock Text="单个控件" />
+        <a:TestInvoke x:Name="_one" />
+
+        <TextBlock Text="父子控件" Margin="0,40,0,0" />
+        <a:TestInvoke x:Name="_par" Title="父">
+            <a:TestInvoke x:Name="_child" Title="子" />
         </a:TestInvoke>
+
+        <TextBlock Text="多级嵌套控件" Margin="0,40,0,0" />
+        <a:TestInvoke x:Name="_first" Title="父">
+            <a:TestInvoke x:Name="_sec" Title="子">
+                <a:TestInvoke x:Name="_third" Title="孙" />
+            </a:TestInvoke>
+        </a:TestInvoke>
+
+        <Button Content="查看调用顺序" Click="OnTest" Margin="0,40,0,0" />
+        <TextBlock
+            x:Name="_result"
+            IsTextSelectionEnabled="True"
+            TextWrapping="Wrap" />
     </StackPanel>
 </a:Win>

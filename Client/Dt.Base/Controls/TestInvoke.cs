@@ -12,6 +12,7 @@ using Windows.Foundation;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
+using System.Text;
 #endregion
 
 namespace Dt.Base
@@ -26,7 +27,7 @@ namespace Dt.Base
             "Title",
             typeof(string),
             typeof(TestInvoke),
-            new PropertyMetadata("父"));
+            new PropertyMetadata(""));
 
         public readonly static DependencyProperty ChildProperty = DependencyProperty.Register(
             "Child",
@@ -56,15 +57,12 @@ namespace Dt.Base
             set { SetValue(ChildProperty, value); }
         }
 
-        public TextBlock Output { get; set; }
+        public StringBuilder Output { get; set; }
 
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            OnOutput("ApplyTemplate");
-#if WIN
-            OnOutput("OnLoadTemplate");
-#endif
+            OnOutput("OnApplyTemplate");
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -83,9 +81,6 @@ namespace Dt.Base
         {
             Loaded -= OnLoaded;
             OnOutput("Loaded");
-#if !WIN
-            OnOutput("OnLoadTemplate");
-#endif
             OnOutput("OnFirstLoaded");
         }
 
@@ -98,7 +93,12 @@ namespace Dt.Base
         {
             Log.Debug(Title + p_invoke);
             if (Output != null)
-                Output.Text += $"\r\n{Title}{p_invoke}";
+            {
+                if (Output.Length > 0)
+                    Output.Append($" -> {Title}{p_invoke}");
+                else
+                    Output.Append($"{Title}{p_invoke}");
+            }
         }
     }
 }

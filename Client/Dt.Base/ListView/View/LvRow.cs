@@ -75,7 +75,7 @@ namespace Dt.Base.ListView
         {
             if (_row != null)
             {
-                _row.ValueChanged = null;
+                //_row.ValueChanged = null;
                 _row = null;
             }
             
