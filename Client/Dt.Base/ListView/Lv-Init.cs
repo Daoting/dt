@@ -65,6 +65,7 @@ namespace Dt.Base
         // 2. 后因增加下拉刷新功能，RefreshContainer 在 Loaded 事件动态添加时，在iOS上下拉刷新功能无效
         // 3. 因 uno 无法在 OnApplyTemplate 中查找父元素，先假设无外部滚动栏动态添加元素，在 Loaded 事件中再处理外部滚动栏的情况
         //    外部滚动栏情况非常少，故效率不受影响
+        //    skia渲染在 OnApplyTemplate 中可以查找父元素，已放弃上述在 Loaded 事件中的再处理！！！
         /************************************************************************************************************************************/
 
 
@@ -73,11 +74,8 @@ namespace Dt.Base
             base.OnApplyTemplate();
             _root = (Border)GetTemplateChild("Border");
 
-            ScrollViewer sv;
-
-#if WIN
-            // win模式可查找父元素，查询范围限制在Tabs内
-            sv = this.FindParentInWin<ScrollViewer>();
+            // win模式查询范围限制在Tabs内，phone模式限制在Tab内
+            var sv = this.FindParentInWin<ScrollViewer>();
             if (sv == null)
             {
                 // 内部滚动栏
@@ -101,22 +99,6 @@ namespace Dt.Base
                 // 因phone模式Lv所属的Tab始终不变
                 _sizedPresenter = sv.FindParentInWin<SizedPresenter>();
             }
-#else
-            // uno无法查找父元素，假设无外部滚动栏，在 Loaded 事件中再处理外部滚动栏的情况
-            sv = new ScrollViewer();
-            if (PullToRefresh)
-            {
-                // 只有滚动栏在内部时支持下拉刷新
-                var rc = new RefreshContainer { Content = sv };
-                _root.Child = rc;
-                rc.RefreshRequested += OnRefreshRequested;
-            }
-            else
-            {
-                _root.Child = sv;
-            }
-#endif
-
             sv.HorizontalScrollMode = ScrollMode.Auto;
             sv.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
             sv.VerticalScrollMode = ScrollMode.Auto;
@@ -129,36 +111,6 @@ namespace Dt.Base
         void OnLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnLoaded;
-
-#if !WIN
-            // 处理外部滚动栏的情况，因 uno 在 OnApplyTemplate 方法中无法查找父元素
-            // win模式查询范围限制在Tabs内，phone模式限制在Tab内
-            var sv = this.FindParentInWin<ScrollViewer>();
-            if (sv != null)
-            {
-                if (_root.Child is RefreshContainer rc)
-                {
-                    rc.RefreshRequested -= OnRefreshRequested;
-                    rc.Content = null;
-                }
-                Scroll.Content = null;
-                _root.Child = _panel;
-
-                if (Kit.IsPhoneUI)
-                {
-                    // 参见win.xaml：win模式在Tabs定义，phone模式在Tab定义
-                    // 因phone模式Lv所属的Tab始终不变
-                    _sizedPresenter = sv.FindParentInWin<SizedPresenter>();
-                }
-
-                sv.HorizontalScrollMode = ScrollMode.Auto;
-                sv.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
-                sv.VerticalScrollMode = ScrollMode.Auto;
-                sv.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-                _panel.ToggleScrollViewer(sv);
-                Scroll = sv;
-            }
-#endif
 
             // 滚动到顶部或底部时添加分页数据
             if (PageData != null)
