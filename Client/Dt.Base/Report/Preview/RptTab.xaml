@@ -1,5 +1,0 @@
-﻿<a:Tab
-    x:Class="Dt.Base.RptTab"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base" />

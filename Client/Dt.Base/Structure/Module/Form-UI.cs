@@ -21,7 +21,7 @@ namespace Dt.Base
     /// 表单对话框
     /// </summary>
     [ContentProperty(Name = nameof(MainFv))]
-    public abstract partial class Form : Dlg
+    public partial class Form : Dlg
     {
         #region 静态成员
         public readonly static DependencyProperty MainFvProperty = DependencyProperty.Register(

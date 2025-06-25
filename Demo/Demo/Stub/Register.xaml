@@ -1,0 +1,92 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:v="using:Dt.Base.Views">
+
+    <!--
+        WinAppSdk生成项目时会自动在obj目录生成 XamlTypeInfo.g.cs，包含项目中xaml文件用到的所有类型信息。
+        若缺少类型信息，InitializeComponent() 或 XamlReader.Load 时出错，报 XamlType中缺少该类型 或 System.ExecutionEngineException 错误。
+        每个项目会都生成 XamlTypeInfo.g.cs，但新版只在exe项目中查找类型信息。
+        因此，exe项目中必须包含所有项目中 在xaml文件 或 XamlReader.Load 中出现的类型，否则会报错。
+        
+        以下情况不会在exe项目中 XamlTypeInfo.g.cs 中包含类型信息：
+        1. exe项目中xaml文件未出现的类型不包含，这些类型若其它lib项目的xaml文件出现则报错
+        2. 当 UI类 无xaml文件，也未被任何其它UI类作为属性引用，只是纯代码类时，不会包含，造成该UI类实例无法放在可视树上(未调用ApplyTemplate，无法设置Style)
+        3. 普通类型在xaml串中 XamlReader.Load 时，若该类型未在任何xaml文件中引用，报 XamlType中缺少该类型
+        
+        为了避免上述情况导致的错误，以下类型在此注册，确保在 XamlTypeInfo.g.cs 中包含。禁止删除！
+    -->
+
+    <a:Excel x:Key="Excel" />
+    <a:Chart x:Key="Chart" />
+    <a:ChartLegend x:Key="ChartLegend" />
+
+    <a:Win x:Key="Win" />
+    <a:Pane x:Key="Pane" />
+    <a:Main x:Key="Main" />
+    <a:Tabs x:Key="Tabs" />
+    <a:PhoneTabs x:Key="PhoneTabs" />
+    <a:Tab x:Key="Tab" />
+    <a:Dlg x:Key="Dlg" />
+
+    <a:PhonePage x:Key="PhonePage" />
+    <a:Chart2 x:Key="Chart2" />
+    <a:TabControl x:Key="TabControl" />
+    <a:TabItem x:Key="TabItem" />
+    <a:BtnItem x:Key="BtnItem" />
+    <a:SearchBox x:Key="SearchBox" />
+    <a:FileList x:Key="FileList" />
+
+    <a:Fv x:Key="Fv" />
+    <a:CBar x:Key="CBar" />
+    <a:CText x:Key="CText" />
+    <a:CList x:Key="CList" />
+    <a:CColor x:Key="CColor" />
+    <a:CDate x:Key="CDate" />
+    <a:CHtml x:Key="CHtml" />
+    <a:CIcon x:Key="CIcon" />
+    <a:CMarkdown x:Key="CMarkdown" />
+    <a:CMask x:Key="CMask" />
+    <a:CNum x:Key="CNum" />
+    <a:CPick x:Key="CPick" />
+    <a:CTree x:Key="CTree" />
+    <a:CBool x:Key="CBool" />
+    <a:CFile x:Key="CFile" />
+    <a:CFree x:Key="CFree" />
+    <a:CImage x:Key="CImage" />
+    <a:CLink x:Key="CLink" />
+    <a:CPassword x:Key="CPassword" />
+    <a:CTip x:Key="CTip" />
+
+    <a:Lv x:Key="Lv" />
+    <a:Cols x:Key="Cols" />
+    <a:Col x:Key="Col" />
+    <a:Dot x:Key="Dot" />
+    <a:Tv x:Key="Tv" />
+    <a:TreeDiagram x:Key="TreeDiagram" />
+
+    <a:Menu x:Key="Menu" />
+    <a:Mi x:Key="Mi" />
+    <a:MiSplit x:Key="MiSplit" />
+
+    <a:Form x:Key="Form" />
+    <a:List x:Key="List" />
+    <a:Tree x:Key="Tree" />
+
+    <a:RptTab x:Key="RptTab" />
+    <a:RptQuery x:Key="RptQuery" />
+
+    <a:NlItems x:Key="NlItems" />
+    <a:FilterCfg x:Key="FilterCfg" />
+
+    <v:EntityQuery x:Key="EntityQuery" />
+    <v:EntityList x:Key="EntityList" />
+    <v:EntityForm x:Key="EntityForm" />
+    <v:SingleTblWin x:Key="SingleTblWin" />
+    <v:OneToManyWin x:Key="OneToManyWin" />
+    <v:ManyToManyWin x:Key="ManyToManyWin" />
+    <v:RelatedEntityList x:Key="RelatedEntityList" />
+    <v:AddRelationDlg x:Key="AddRelationDlg" />
+    <v:EntityUnionForm x:Key="EntityUnionForm" />
+</ResourceDictionary>

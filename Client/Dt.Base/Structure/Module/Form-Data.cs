@@ -18,7 +18,7 @@ namespace Dt.Base
     /// <summary>
     /// 表单对话框
     /// </summary>
-    public abstract partial class Form : Dlg
+    public partial class Form : Dlg
     {
         #region 变量
         protected LvMsgArgs _args;
@@ -274,23 +274,20 @@ namespace Dt.Base
         /// <summary>
         /// 增加实体
         /// </summary>
-        protected abstract Task OnAdd();
+        protected virtual Task OnAdd() => Task.CompletedTask;
 
         /// <summary>
         /// 加载实体数据源
         /// </summary>
         /// <returns></returns>
-        protected abstract Task OnGet();
+        protected virtual Task OnGet() => Task.CompletedTask;
 
         /// <summary>
         /// 增加子实体
         /// </summary>
         /// <param name="p_fv"></param>
         /// <returns></returns>
-        protected virtual Task OnAddChild(Fv p_fv)
-        {
-            return Task.CompletedTask;
-        }
+        protected virtual Task OnAddChild(Fv p_fv) => Task.CompletedTask;
 
         /// <summary>
         /// 清空数据源

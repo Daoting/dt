@@ -19,7 +19,7 @@ namespace Dt.Base
     /// 减少无用查询、统一查询方法、创建默认菜单、统一触发事件
     /// </summary>
     [ContentProperty(Name = nameof(Lv))]
-    public abstract partial class List : Tab
+    public partial class List : Tab
     {
         #region 静态成员
         public readonly static DependencyProperty LvProperty = DependencyProperty.Register(
@@ -61,6 +61,11 @@ namespace Dt.Base
         long? _selectID;
         #endregion
 
+        #region 构造方法
+        public List()
+        { }
+        #endregion
+        
         #region 事件
         /// <summary>
         /// 点击增加、编辑菜单项、双击行、切换选择行等触发的事件，参数包含源事件类型及操作
@@ -206,7 +211,7 @@ namespace Dt.Base
         /// <summary>
         /// 查询
         /// </summary>
-        protected abstract Task OnQuery();
+        protected virtual Task OnQuery() => Task.CompletedTask;
 
         /// <summary>
         /// 增加

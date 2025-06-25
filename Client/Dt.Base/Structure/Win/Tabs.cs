@@ -22,7 +22,7 @@ namespace Dt.Base
     /// 包含标题栏的TabControl：
     /// 有标题栏，标签在下方，一个子项时不显示标签
     /// </summary>
-    public sealed partial class Tabs : TabControl
+    public partial class Tabs : TabControl
     {
         #region 静态内容
         /// <summary>
