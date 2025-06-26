@@ -65,7 +65,6 @@ namespace Dt.Core
             // WinUI中Window.Current为null
             MainWin = new Window { Title = Kit.Title };
             CustomWin();
-            MainWin.Activate();
 #else
             // uno中若新创建，Window.Bounds始终为(0, 0)！
             MainWin = Window.Current;
