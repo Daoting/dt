@@ -1,5 +1,6 @@
 ﻿<Project>
     <PropertyGroup>
+        <IsDtClient>true</IsDtClient>
         <UnoVersion>6.0.704</UnoVersion>
     </PropertyGroup>
     

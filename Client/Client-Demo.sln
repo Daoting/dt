@@ -9,15 +9,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dt.Base", "Dt.Base\Dt.Base.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dt.Mgr", "Dt.Mgr\Dt.Mgr.csproj", "{F2A01B6C-76EB-0161-F04D-42FB10FA8F6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Base", "..\Demo\Demo.Base\Demo.Base.csproj", "{5597B912-1923-B395-D6DA-8D28D979F645}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{9A81E5CD-770E-4DF9-A33B-5219434ABE21}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
-		Dt.Client.props = Dt.Client.props
 		Dt.Client.targets = Dt.Client.targets
 		References.props = References.props
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Base", "..\Demo\Demo.Base\Demo.Base.csproj", "{5597B912-1923-B395-D6DA-8D28D979F645}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.UI", "..\Demo\Demo.UI\Demo.UI.csproj", "{E4308096-CA90-B2D6-4836-D7EAA2D1B844}"
 EndProject
