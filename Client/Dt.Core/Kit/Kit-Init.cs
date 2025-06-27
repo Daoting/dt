@@ -49,23 +49,16 @@ namespace Dt.Core
 
             /* 异常处理，参见 https://github.com/Daoting/dt/issues/1
             
-            主线程同步、异步方法中抛异常，或Task内部同步、异步方法中抛出异常，都不触发未处理异常事件，被.net内部拦截处理
+            未处理异常发生的位置有4种：
+            主线程同步方法、主线程异步方法、Task内部同步方法、Task内部异步方法
             
-            平台/异常位置    主线程同步方法    主线程异步方法    Task内同步方法    Task内异步方法
-            WinAppSdk            V               V                V                V
-            Android             V               V                V                V
-            Desktop 
+            对于以上4种未处理异常：
+            1. WinAppSdk V1.2 都能触发未处理异常事件，已完美解决崩溃问题，v1.7主线程异步异常会崩溃
+            2. Skia渲染时都不触发未处理异常事件，被uno 或 .net内部拦截处理，但都不会崩溃！
             
-            
-            1. UI主线程同步方法中抛异常被.net内部拦截处理，不触发未处理异常事件
-            2. UI主线程异步方法中抛异常，触发未处理异常事件
-            3. Task内部异常，不管同步或异步都不触发未处理异常事件
-            4. 因为触发未处理异常事件的不确定性，要想统一提供警告提示信息，只能在抛出KnownException异常前显示
-            
-            WinAppSdk V1.2 都能触发未处理异常事件，已完美解决崩溃问题
+            KnownException是业务异常，阻止业务继续时通过Throw类抛出，为了能统一显示警告信息，只能在抛出KnownException异常前显示！
 
-            总结：所有平台都不会因为异常而崩溃，对于maui上的非KnownException类型异常，在UI同步方法或后台抛出时无法给出警告提示！
-            
+            总结：所有平台都不会因为异常而崩溃，对于不是通过Throw类抛出的异常，非WinAppSdk无法给出警告提示！
             */
             AttachUnhandledException();
 
@@ -173,15 +166,7 @@ namespace Dt.Core
 
         static void AttachUnhandledException()
         {
-            // For Android:
-            // All exceptions will flow through Android.Runtime.AndroidEnvironment.UnhandledExceptionRaiser,
-            // and NOT through AppDomain.CurrentDomain.UnhandledException
-
-            Android.Runtime.AndroidEnvironment.UnhandledExceptionRaiser += (s, e) =>
-            {
-                e.Handled = true;
-                OnUnhandledException(e.Exception);
-            };
+            
         }
 
 #elif IOS
@@ -241,8 +226,7 @@ namespace Dt.Core
 #elif DESKTOP
         static void AttachUnhandledException()
         {
-            // 主线程同步、异步方法中抛异常，或Task内部同步、异步方法中抛出异常，都不触发未处理异常事件
-            // 被.net内部拦截处理，不触发未处理异常事件
+            
         }
 #endif
 
