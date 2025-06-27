@@ -1,9 +1,7 @@
 ﻿<Project Sdk="Dt.Sdk">
     <PropertyGroup>
         <IsExe>true</IsExe>
-        <!-- 不输出Dt.BuildTools中的本地网站 -->
-        <NotIncludeWebPages>true</NotIncludeWebPages>
-
+        
         <!-- Display name -->
         <ApplicationTitle>Excel样例</ApplicationTitle>
         <!-- App Identifier -->
