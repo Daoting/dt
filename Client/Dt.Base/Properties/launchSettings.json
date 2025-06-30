@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Dt.Base": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:64101;http://localhost:64102"
+    }
+  }
+}
