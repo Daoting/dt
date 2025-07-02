@@ -18,22 +18,23 @@ namespace Dt.Base.TreeViews
     /// </summary>
     class TvCleaner
     {
-        readonly BlockingCollection<TvRootItems> _queue;
-
-        public TvCleaner()
+#if WIN
+        static readonly BlockingCollection<TvRootItems> _queue;
+        
+        static TvCleaner()
         {
             _queue = new BlockingCollection<TvRootItems>();
             Task.Run(Clean);
         }
 
-        public bool Add(TvRootItems p_target)
+        public static bool Add(TvRootItems p_target)
         {
             if (p_target != null)
                 return _queue.TryAdd(p_target);
             return false;
         }
 
-        void Clean()
+        static void Clean()
         {
             while (true)
             {
@@ -49,5 +50,8 @@ namespace Dt.Base.TreeViews
                 catch { }
             }
         }
+#else
+        public static bool Add(TvRootItems p_target) => false;
+#endif
     }
 }

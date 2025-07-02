@@ -1675,72 +1675,17 @@ namespace Dt.Base
 #endif
         #endregion
 
-        #region 释放资源
-        /// <summary>
-        /// 实现 IDestroy 接口
-        /// </summary>
+        #region IDestroy
         public void Destroy()
         {
-            _cleaner.Add(this);
+            DlgCleaner.Add(this);
         }
 
         void OnOwnWinDestroyed(Win e)
         {
             e.Destroyed -= OnOwnWinDestroyed;
             Close();
-            _cleaner.Add(this);
-        }
-
-        static readonly DlgCleaner _cleaner = new DlgCleaner();
-        class DlgCleaner
-        {
-            readonly BlockingCollection<Dlg> _queue;
-
-            public DlgCleaner()
-            {
-                _queue = new BlockingCollection<Dlg>();
-                Task.Run(Clean);
-            }
-
-            public bool Add(Dlg p_dlg)
-            {
-                if (p_dlg == null || p_dlg.Content == null)
-                    return false;
-                return _queue.TryAdd(p_dlg);
-            }
-
-            void Clean()
-            {
-                while (true)
-                {
-                    try
-                    {
-                        var dlg = _queue.Take();
-                        Kit.RunSync(() =>
-                        {
-                            try
-                            {
-                                if (dlg.Content is IDestroy tc)
-                                {
-                                    tc.Destroy();
-                                }
-                                else if (dlg.Content is UIElement elem)
-                                {
-                                    foreach (var cl in elem.FindChildrenByType<IDestroy>())
-                                    {
-                                        cl.Destroy();
-                                    }
-                                }
-                            }
-                            catch { }
-
-                            dlg.Content = null;
-                            dlg = null;
-                        });
-                    }
-                    catch { }
-                }
-            }
+            DlgCleaner.Add(this);
         }
         #endregion
     }

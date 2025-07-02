@@ -18,15 +18,16 @@ namespace Dt.Base.ListView
     /// </summary>
     class LvCleaner
     {
-        readonly BlockingCollection<IList> _queue;
-
-        public LvCleaner()
+#if WIN
+        static readonly BlockingCollection<IList> _queue;
+        
+        static LvCleaner()
         {
             _queue = new BlockingCollection<IList>();
             Task.Run(Clean);
         }
-
-        public bool Add(IList p_target)
+        
+        public static bool Add(IList p_target)
         {
             if (p_target == null || p_target.Count == 0)
                 return false;
@@ -34,7 +35,7 @@ namespace Dt.Base.ListView
             return _queue.TryAdd(p_target);
         }
 
-        void Clean()
+        static void Clean()
         {
             while (true)
             {
@@ -55,6 +56,9 @@ namespace Dt.Base.ListView
                 catch { }
             }
         }
+#else
+        public static bool Add(IList p_target) => false;
+#endif
     }
 
     /// <summary>

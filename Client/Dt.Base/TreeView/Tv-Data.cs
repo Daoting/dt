@@ -146,7 +146,7 @@ namespace Dt.Base
             if (RootItems.Count > 0)
             {
                 // 统一清除
-                Cleaner.Add(RootItems);
+                TvCleaner.Add(RootItems);
                 RootItems = new TvRootItems(this);
             }
         }

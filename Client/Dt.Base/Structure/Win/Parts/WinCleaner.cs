@@ -9,6 +9,7 @@
 #region 引用命名
 using Microsoft.UI.Xaml;
 using System.Collections.Concurrent;
+using System.Text;
 #endregion
 
 namespace Dt.Base.Docking
@@ -18,22 +19,23 @@ namespace Dt.Base.Docking
     /// </summary>
     class WinCleaner
     {
-        readonly BlockingCollection<Win> _queue;
-
-        public WinCleaner()
+#if WIN
+        static readonly BlockingCollection<Win> _queue;
+        
+        static WinCleaner()
         {
             _queue = new BlockingCollection<Win>();
             Task.Run(Clean);
         }
-
-        public bool Add(Win p_win)
+        
+        public static bool Add(Win p_win)
         {
             if (p_win == null)
                 return false;
             return _queue.TryAdd(p_win);
         }
 
-        void Clean()
+        static void Clean()
         {
             while (true)
             {
@@ -42,6 +44,9 @@ namespace Dt.Base.Docking
                     var win = _queue.Take();
                     Kit.RunSync(() =>
                     {
+#if DEBUG
+                        StringBuilder sb = new StringBuilder($"释放[{win.Title ?? "无标题"}]窗口");
+#endif
                         try
                         {
                             win.DetachEvent();
@@ -52,16 +57,25 @@ namespace Dt.Base.Docking
                                     // NavList
                                     if (tab is IDestroy tc)
                                     {
+#if DEBUG
+                                        sb.Append($"、[{tab.Title ?? "无标题"}]Tab");
+#endif
                                         tc.Destroy();
                                     }
                                     else if (tab.Content is IDestroy wc)
                                     {
+#if DEBUG
+                                        sb.Append($"、{tab.Content.GetType().Name}");
+#endif
                                         wc.Destroy();
                                     }
                                     else if (tab.Content is UIElement elem)
                                     {
                                         foreach (var cl in elem.FindChildrenByType<IDestroy>())
                                         {
+#if DEBUG
+                                            sb.Append($"、{cl.GetType().Name}");
+#endif
                                             cl.Destroy();
                                         }
                                     }
@@ -70,6 +84,11 @@ namespace Dt.Base.Docking
                             win.OnDestroyed();
                         }
                         catch { }
+                        
+#if DEBUG
+                        System.Diagnostics.Debug.WriteLine(sb.ToString());
+#endif
+                        
                         win = null;
                     });
 
@@ -79,5 +98,8 @@ namespace Dt.Base.Docking
                 catch { }
             }
         }
+#else
+        public static bool Add(Win p_win) => false;
+#endif
     }
 }

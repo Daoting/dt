@@ -1311,7 +1311,7 @@ namespace Dt.Base
 
             // PhoneUI内嵌窗口从首页Tab返回时需要排除
             if (!Kit.IsPhoneUI || !(bool)GetValue(IsInnerWinInPhoneUIProperty))
-                _cleaner.Add(this);
+                WinCleaner.Add(this);
         }
 
         /// <summary>
@@ -1342,16 +1342,11 @@ namespace Dt.Base
 
         #region IDestroy
         /// <summary>
-        /// 负责所有Win内部资源的释放
-        /// </summary>
-        static readonly WinCleaner _cleaner = new WinCleaner();
-
-        /// <summary>
         /// 嵌套在主区的窗口释放
         /// </summary>
         public void Destroy()
         {
-            _cleaner.Add(this);
+            WinCleaner.Add(this);
         }
 
         internal void OnDestroyed()

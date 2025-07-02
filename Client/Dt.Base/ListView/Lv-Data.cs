@@ -220,7 +220,7 @@ namespace Dt.Base
             if (GroupRows != null)
             {
                 // 统一清除
-                Cleaner.Add(GroupRows);
+                LvCleaner.Add(GroupRows);
                 GroupRows = null;
                 existGroup = true;
             }
@@ -257,7 +257,7 @@ namespace Dt.Base
             }
             
             MapRows = new List<bool>();
-            Cleaner.Add(GroupRows);
+            LvCleaner.Add(GroupRows);
             GroupRows = new List<GroupRow>();
             foreach (var group in p_groups.OfType<IList>())
             {
@@ -351,7 +351,7 @@ namespace Dt.Base
             if (GroupRows != null)
             {
                 // 统一清除
-                Cleaner.Add(GroupRows);
+                LvCleaner.Add(GroupRows);
                 GroupRows = null;
                 existGroup = true;
             }
@@ -380,7 +380,7 @@ namespace Dt.Base
             if (_rows.Count > 0)
             {
                 // 统一清除
-                Cleaner.Add(_rows);
+                LvCleaner.Add(_rows);
                 _rows = new List<LvItem>();
             }
         }

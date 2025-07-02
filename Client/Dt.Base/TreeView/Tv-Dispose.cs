@@ -18,11 +18,6 @@ namespace Dt.Base
     /// </summary>
     public partial class Tv : IDestroy
     {
-        /// <summary>
-        /// 负责切换数据源时的释放
-        /// </summary>
-        internal static readonly TvCleaner Cleaner = new TvCleaner();
-
         public void Destroy()
         {
             KeyDown -= OnKeyDown;

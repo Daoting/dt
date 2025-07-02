@@ -124,7 +124,7 @@ namespace Dt.Base.TreeViews
                 
                 // 释放上次搜索结果
                 if (_rootItems != _owner.RootItems && _owner.RootItems.Count > 0)
-                    Tv.Cleaner.Add(_owner.RootItems);
+                    TvCleaner.Add(_owner.RootItems);
                 
                 _owner.RootItems = root;
                 root.Invalidate();

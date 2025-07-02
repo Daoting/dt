@@ -507,11 +507,6 @@ namespace Dt.Base
         /// 是否需要对数据源进行过滤
         /// </summary>
         internal bool NeedFiltering => (FilterCfg != null && FilterCfg.NeedFiltering) || (Filter != null);
-
-        /// <summary>
-        /// 释放资源
-        /// </summary>
-        internal static readonly LvCleaner Cleaner = new LvCleaner();
         #endregion
 
         #region 外部方法

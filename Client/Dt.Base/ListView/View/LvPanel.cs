@@ -648,7 +648,7 @@ namespace Dt.Base.ListView
                 _groupHeader = null;
             }
 
-            Lv.Cleaner.Add(_dataRows);
+            LvCleaner.Add(_dataRows);
             _dataRows = new List<LvRow>();
         }
 
