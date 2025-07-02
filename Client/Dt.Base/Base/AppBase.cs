@@ -33,6 +33,20 @@ namespace Dt.Base
 
         protected override void OnLaunched(LaunchActivatedEventArgs p_args)
         {
+#if !WIN
+            // 非WinAppSdk平台统一Skia渲染：
+
+            // Skia渲染时默认true，和WinUI一致Frame不保存旧页面。为提高返回时的性能，设置为false
+            // https://platform.uno/docs/articles/controls/Frame.html
+            Uno.UI.FeatureConfiguration.Frame.UseWinUIBehavior = false;
+
+            // Skia渲染时HarmonyOS Sans字体作为默认字体，开源字体无版权问题，在构造方法设置对wasm无效
+            Uno.UI.FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/HarmonySans.ttf";
+#endif
+
+            // 设置支持中文的默认字体，ScottPlot中默认字体乱码
+            ScottPlot.Fonts.Default = ScottPlot.Fonts.Detect("字");
+            
             _stub.OnLaunched(p_args);
         }
 

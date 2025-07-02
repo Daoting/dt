@@ -18,11 +18,6 @@ namespace Dt.Base
     /// </summary>
     public partial class DefaultStub : Stub
     {
-        public DefaultStub()
-        {
-            UnoKit.Init();
-        }
-
         public override void OnLaunched(LaunchActivatedEventArgs p_args)
         {
             _ = Launch();

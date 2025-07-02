@@ -20,11 +20,6 @@ namespace Dt.Base
     {
         string _params;
 
-        public DefaultStub()
-        {
-            UnoKit.Init();
-        }
-
         public override async void OnLaunched(LaunchActivatedEventArgs p_args)
         {
             if (string.IsNullOrEmpty(_params))

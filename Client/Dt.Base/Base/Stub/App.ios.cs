@@ -26,7 +26,6 @@ namespace Dt.Base
         public DefaultStub()
         {
             BgJob.RegisterEarliest();
-            UnoKit.Init();
         }
 
         public override void OnLaunched(LaunchActivatedEventArgs p_args)

@@ -62,8 +62,6 @@ namespace Dt.Core
             */
             AttachUnhandledException();
 
-            // 设置支持中文的默认字体，ScottPlot中默认字体乱码
-            ScottPlot.Fonts.Default = ScottPlot.Fonts.Detect("字");
             Debug("Kit.Init");
         }
 
