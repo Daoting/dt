@@ -42,7 +42,8 @@ namespace Dt.Base
             // https://platform.uno/docs/articles/controls/Frame.html
             Uno.UI.FeatureConfiguration.Frame.UseWinUIBehavior = false;
 
-            // Skia渲染时HarmonyOS Sans字体作为默认字体，开源字体无版权问题，在构造方法设置对wasm无效
+            // Skia渲染时HarmonyOS Sans字体作为默认字体，开源字体无版权问题，在构造方法设置对wasm无效！
+            // uno通过 HarmonySans.ttf.manifest 获取粗体、斜体等样式，wasm无需在css中设置字体
             Uno.UI.FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/HarmonySans.ttf";
 #endif
             
