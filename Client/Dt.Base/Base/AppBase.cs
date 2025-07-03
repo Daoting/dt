@@ -9,6 +9,8 @@
 #region 引用命名
 using Dt.Core;
 using Microsoft.UI.Xaml;
+using SkiaSharp;
+using Windows.Storage;
 #if IOS
 using UIKit;
 using Foundation;
@@ -43,9 +45,6 @@ namespace Dt.Base
             // Skia渲染时HarmonyOS Sans字体作为默认字体，开源字体无版权问题，在构造方法设置对wasm无效
             Uno.UI.FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/HarmonySans.ttf";
 #endif
-
-            // 设置支持中文的默认字体，ScottPlot中默认字体乱码
-            ScottPlot.Fonts.Default = ScottPlot.Fonts.Detect("字");
             
             _stub.OnLaunched(p_args);
         }
@@ -58,23 +57,23 @@ namespace Dt.Base
         {
             Kit.OnUnhandledException(ex);
         }
-        
-//#if IOS
-//        public override bool OpenUrl(UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options)
-//        {
-//            _stub.OpenUrl(p_app, p_url, p_options);
-//            return true;
-//        }
 
-//        public override void DidEnterBackground(UIApplication application)
-//        {
-//            BgJob.OnEnterBackground();
-//        }
+        //#if IOS
+        //        public override bool OpenUrl(UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options)
+        //        {
+        //            _stub.OpenUrl(p_app, p_url, p_options);
+        //            return true;
+        //        }
 
-//        public override void ReceivedLocalNotification(UIApplication p_app, UILocalNotification p_notification)
-//        {
-//            _stub.ReceivedLocalNotification(p_app, p_notification);
-//        }
-//#endif
+        //        public override void DidEnterBackground(UIApplication application)
+        //        {
+        //            BgJob.OnEnterBackground();
+        //        }
+
+        //        public override void ReceivedLocalNotification(UIApplication p_app, UILocalNotification p_notification)
+        //        {
+        //            _stub.ReceivedLocalNotification(p_app, p_notification);
+        //        }
+        //#endif
     }
 }
