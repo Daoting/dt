@@ -67,7 +67,15 @@ namespace Dt.Base
 
                 // 附加全局按键事件
                 InitInput();
-
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex.Message);
+                return;
+            }
+            
+            try
+            {
                 await InitConfig();
                 _isInited = true;
             }
@@ -79,6 +87,9 @@ namespace Dt.Base
             
             try
             {
+#if DEBUG
+                Kit.Debug("调用Stub.OnStartup");
+#endif
                 // 由外部控制启动过程
                 await OnStartup();
 

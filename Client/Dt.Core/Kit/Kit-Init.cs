@@ -31,7 +31,6 @@ namespace Dt.Core
             _typeAlias = _svcProvider.GetRequiredService<ITypeAlias>();
             _ui = _svcProvider.GetRequiredService<IUICallback>();
             _user = _svcProvider.GetService<IUserCallback>();
-            At.InitConfig();
 
             // 从后台任务启动
             if (Application.Current == null)
@@ -62,15 +61,17 @@ namespace Dt.Core
             */
             AttachUnhandledException();
 
-            Debug("Kit.Init");
+            Debug("构造Stub、注入服务、初始化日志、全局未处理异常");
         }
 
         /// <summary>
-        /// 启动前的准备
+        /// 启动前的准备，Application.OnLaunched中调用
         /// </summary>
         /// <returns></returns>
         internal static async Task OnLaunch()
         {
+            await At.InitConfig();
+            
             // 创建本地文件存放目录
             // 使用 StorageFolder 替换 Directory 是因为 wasm 中可以等待 IDBFS 初始化完毕！！！
             // 否则用 Directory 每次都创建新目录！

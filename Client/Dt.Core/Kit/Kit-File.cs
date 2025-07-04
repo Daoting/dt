@@ -124,16 +124,16 @@ namespace Dt.Core
         /// <returns></returns>
         public static async Task<Stream> GetContentFileStream(string p_fileUri)
         {
-            StorageFile file = null;
             try
             {
-                file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(p_fileUri));
+                var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(p_fileUri));
+                if (file != null)
+                    return await file.OpenStreamForReadAsync();
             }
-            catch { }
-            
-            if (file != null)
-                return await file.OpenStreamForReadAsync();
-
+            catch (Exception ex)
+            {
+                Throw.Msg($"读取 {p_fileUri} 文件时出错！{ex.Message}");
+            }
             Throw.Msg("未找到文件：" + p_fileUri);
             return null;
         }

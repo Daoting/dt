@@ -10,6 +10,7 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Windows.Storage;
 #endregion
 
 namespace Dt.Core
@@ -137,48 +138,12 @@ namespace Dt.Core
             return sai;
         }
 
-#if WASM
-        internal static void InitConfig()
+        internal static async Task InitConfig()
         {
-            // wasm不支持直连数据库，因启动时读取配置，不使用Config.json，使用Config.js
-            // UnoAppManifest.displayName 在AppManifest.js中设置
-            // DtConfig.server 在Config.js配置，AppManifest.js每次会动态生成，无法在其设置
-            Kit.Title = Kit.InvokeJS("UnoAppManifest.displayName");
-            var server = Kit.InvokeJS("DtConfig.server");
-            if (!string.IsNullOrEmpty(server))
-            {
-                _svcUrlInfo = new SvcUrlInfo(server);
-                _originAI = _currentAI = GetAccessInfo(AccessType.Service, "cm");
-            }
-            Console.WriteLine($"标题：{(Kit.Title == null ? "" : Kit.Title)}\r\n服务：{(server == null ? "" : server)}");
-        }
-#else
-        internal static void InitConfig()
-        {
-            string config;
-#if ANDROID
-            try
-            {
-                using (var sr = new StreamReader(Android.App.Application.Context.Assets.Open("Assets/Config.json")))
-                {
-                    config = sr.ReadToEnd();
-                }
-            }
-            catch
-            {
-                Kit.Debug("缺少Config.json文件！");
+            // 采用统一方式读取Config.json文件内容，wasm不支持Task.Wait()
+            string config = await Kit.GetContentFileText("ms-appx:///Assets/Config.json");
+            if (string.IsNullOrEmpty(config))
                 return;
-            }
-#else
-            var path = Path.Combine(AppContext.BaseDirectory, "Assets", "Config.json");
-            if (!File.Exists(path))
-            {
-                // throw时无提示信息
-                Kit.Debug("缺少Config.json文件！");
-                return;
-            }
-            config = File.ReadAllText(path);
-#endif
 
             string dbKey = null;
             string sqliteKey = null;
@@ -263,8 +228,7 @@ namespace Dt.Core
             catch (Exception ex)
             {
                 // throw时无提示信息
-                Kit.Debug("读取 Config.json 时出错！" + ex.Message);
-                return;
+                throw new Exception("读取 Config.json 时出错！" + ex.Message);
             }
 
             if (dbKey != null)
@@ -275,7 +239,7 @@ namespace Dt.Core
                 }
                 else
                 {
-                    Kit.Debug($"Config.json 中未设置键名为 {dbKey} 的数据库连接串！");
+                    throw new Exception($"Config.json 中未设置键名为 {dbKey} 的数据库连接串！");
                 }
             }
             else if (sqliteKey != null)
@@ -289,6 +253,12 @@ namespace Dt.Core
                 _originAI = _currentAI = info;
             }
 
+            if (Kit.AppType == AppType.Wasm
+                && (dbKey != null || sqliteKey != null))
+            {
+                throw new Exception("Config.json 设置错误，wasm不支持直连数据库！");
+            }
+            
 #if DEBUG
             string fw = "单机架构";
             if (_originAI != null)
@@ -306,10 +276,9 @@ namespace Dt.Core
                     fw = $"单机架构({sqliteKey})";
                 }
             }
-            Kit.Debug(fw);
+            Kit.Debug("读取Config.json：" + fw);
 #endif
         }
-#endif
 
         static SvcUrlInfo _svcUrlInfo;
         static IAccessInfo _originAI;
