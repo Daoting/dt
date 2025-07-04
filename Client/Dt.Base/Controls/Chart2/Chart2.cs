@@ -45,9 +45,9 @@ namespace Dt.Base
             var file = Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Fonts/HarmonySans.ttf")).GetResults();
             var basePath = file.Path.Substring(0, file.Path.Length - 4);
             ScottPlot.Fonts.AddFontFile(fontName, file.Path);
-            ScottPlot.Fonts.AddFontFile(fontName, basePath + "-BoldItalic.ttf", true, true);
-            ScottPlot.Fonts.AddFontFile(fontName, basePath + "-Bold.ttf", true, false);
-            ScottPlot.Fonts.AddFontFile(fontName, basePath + "-Italic.ttf", false, true);
+            ScottPlot.Fonts.AddFontFile(fontName, basePath + "_Bold.ttf", true, true);
+            ScottPlot.Fonts.AddFontFile(fontName, basePath + "_Bold.ttf", true, false);
+            ScottPlot.Fonts.AddFontFile(fontName, file.Path, false, true);
             ScottPlot.Fonts.Default = fontName;
 #endif
         }

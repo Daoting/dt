@@ -70,6 +70,11 @@
                 <TextBlock Text="加粗Bold" FontWeight="Bold" />
                 <TextBlock Text="黑粗Black" FontWeight="Black" />
             </StackPanel>
+
+            <StackPanel Background="{StaticResource 浅灰1}" Padding="10" Spacing="10">
+                <TextBlock Text="Harmony字体合并seguiemj.ttf，所有平台都支持表情符号" />
+                <TextBlock Text="🔶❤👌😂😍😜🌹" />
+            </StackPanel>
         </StackPanel>
     </ScrollViewer>
 </a:Win>
