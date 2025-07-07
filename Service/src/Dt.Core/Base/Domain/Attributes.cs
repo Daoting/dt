@@ -16,10 +16,16 @@ namespace Dt.Core
     /// 实体类映射表标签
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+#if SERVER
+    public class TblAttribute : Attribute
+    {
+        public TblAttribute(string p_tblName)
+#else
     public class TblAttribute : TypeAliasAttribute
     {
         public TblAttribute(string p_tblName)
             : base(p_tblName)
+#endif
         {
             Name = p_tblName;
         }
