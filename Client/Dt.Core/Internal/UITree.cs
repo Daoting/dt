@@ -61,7 +61,7 @@ namespace Dt.Core
         #region 静态构造
         static UITree()
         {
-            MainWin = new Window { Title = Kit.Title };
+            MainWin = new Window();
 #if WIN
             CustomWin();
 #endif

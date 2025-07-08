@@ -167,7 +167,18 @@ namespace Dt.Core
         /// <summary>
         /// 系统标题
         /// </summary>
-        public static string Title { get; set; }
+        public static string Title
+        {
+            get { return _title; }
+            set
+            {
+                if (_title != value)
+                {
+                    _title = value;
+                    UITree.MainWin.Title = value;
+                }
+            }
+        }
 
         /// <summary>
         /// 加载根内容，支持任意类型的UIElement，特殊类型有：
@@ -214,6 +225,8 @@ namespace Dt.Core
         /// UI模式切换的回调方法，Phone UI 与 PC UI 切换
         /// </summary>
         internal static Action OnUIModeChanged => _ui.OnUIModeChanged;
+
+        static string _title;
         #endregion
 
         #region 选择文件
