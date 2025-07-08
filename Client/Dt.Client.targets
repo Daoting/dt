@@ -45,8 +45,6 @@
         <PackageReference Include="Uno.WinUI.Runtime.WebAssembly" Version="$(UnoVersion)" PrivateAssets="all" IncludeAssets="none" ExcludeAssets="all" />
         <!-- 不引用link出错 -->
         <PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.15" />
-        <!-- 不引用启动出错 -->
-        <PackageReference Include="Uno.UI.HotDesign" Version="1.11.182"  />
     </ItemGroup>
 
     <!-- Desktop -->
