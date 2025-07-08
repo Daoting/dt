@@ -61,27 +61,10 @@ namespace Dt.Core
         #region 静态构造
         static UITree()
         {
-#if WIN
-            // WinUI中Window.Current为null
             MainWin = new Window { Title = Kit.Title };
+#if WIN
             CustomWin();
-#else
-            // uno中若新创建，Window.Bounds始终为(0, 0)！
-            MainWin = Window.Current;
-            MainWin.Title = Kit.Title;
 #endif
-
-            // iOS android 启动就崩溃的现象已提uno讨论：https://github.com/unoplatform/uno/discussions/8933
-            // 浪费十多天生命，怎能以一个操字了得！根本原因是项目类型过多引起uno异常，uno认为是.net6.0的原因
-            // 解决方法：uno增加常量 UNO_DISABLE_KNOWN_MISSING_TYPES , 控制调试状态不检查未绑定类型
-            // iOS 在 debug release 状态都不再崩溃
-            // android 在 uno4.5 后只联调状态正常，单独运行仍然启动就崩溃
-            // 仍然采用老的解决方法：必须最早创建Frame，不能注掉！！！
-            // 升级.net8.0后android已不再崩溃，不再崩溃，UNO_DISABLE_KNOWN_MISSING_TYPES会造成编译错误，已无用！
-            //#if ANDROID
-            //          new Frame().Navigate(typeof(Page));
-            //#endif
-
             // 背景画刷，默认主蓝
             var theme = Kit.GetService<ITheme>();
             Brush bgBrush = (theme == null) ?

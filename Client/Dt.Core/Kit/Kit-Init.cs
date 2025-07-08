@@ -61,7 +61,7 @@ namespace Dt.Core
             */
             AttachUnhandledException();
 
-            Debug("构造Stub、注入服务、初始化日志、全局未处理异常");
+            Debug("构造Stub，注入服务");
         }
 
         /// <summary>
