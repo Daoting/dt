@@ -1,10 +1,10 @@
 {
-  "background_color": "#ffffff",
-  "description": "TestSdk",
-  "display": "standalone",
-  "name": "TestSdk",
-  "short_name": "TestSdk",
+  "name": "搬运工",
+  "short_name": "搬运工",
+  "description": "搬运工样例",
   "start_url": "/index.html",
+  "background_color": "#1BA1E2",
+  "display": "standalone",
   "theme_color": "#ffffff",
   "scope": "/"
 }

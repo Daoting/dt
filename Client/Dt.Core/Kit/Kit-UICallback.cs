@@ -175,7 +175,9 @@ namespace Dt.Core
                 if (_title != value)
                 {
                     _title = value;
-                    UITree.MainWin.Title = value;
+                    // 确保已初始化
+                    if (_svcProvider != null)
+                        UITree.MainWin.Title = value;
                 }
             }
         }
