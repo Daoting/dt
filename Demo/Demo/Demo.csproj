@@ -2,16 +2,12 @@
 	<PropertyGroup>
 		<IsExe>true</IsExe>
 
-		<!-- Display name -->
+		<!-- WinAppSdk时和Package.appxmanifest模板生成AppxManifest.xml -->
 		<ApplicationTitle>搬运工</ApplicationTitle>
-		<!-- App Identifier -->
 		<ApplicationId>dt.Demo</ApplicationId>
-		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
-		<!-- Package Publisher -->
 		<ApplicationPublisher>Daoting</ApplicationPublisher>
-		<!-- Package Description -->
 		<Description>搬运工样例.</Description>
 	</PropertyGroup>
 
