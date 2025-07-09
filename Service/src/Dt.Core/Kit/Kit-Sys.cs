@@ -53,23 +53,6 @@ namespace Dt.Core
         public static bool IsSingletonSvc => Stubs.Length > 1;
 
         /// <summary>
-        /// 获取系统配置
-        /// </summary>
-        public static IConfiguration Config
-        {
-            get { return _config; }
-            internal set
-            {
-                if (value != null)
-                {
-                    _config = value;
-                    ApplyConfig();
-                    _cfgCallback = _config.GetReloadToken().RegisterChangeCallback(OnConfigChanged, null);
-                }
-            }
-        }
-
-        /// <summary>
         /// 获取当前请求的HttpContext
         /// </summary>
         public static HttpContext HttpContext => _accessor.HttpContext;
@@ -94,7 +77,7 @@ namespace Dt.Core
         /// <summary>
         /// 是否启用RabbitMQ
         /// </summary>
-        public static bool EnableRabbitMQ { get; internal set; }
+        public static bool EnableRabbitMQ { get; set; }
 
         /// <summary>
         /// 服务是否运行在Docker容器
@@ -115,6 +98,11 @@ namespace Dt.Core
         /// 系统配置变化事件
         /// </summary>
         public static event Action ConfigChanged;
+
+        /// <summary>
+        /// 获取系统配置
+        /// </summary>
+        public static IConfiguration Config => _config;
 
         /// <summary>
         /// 获取系统配置中指定键的值
@@ -140,6 +128,21 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 初始化系统配置
+        /// </summary>
+        /// <param name="p_config"></param>
+        /// <param name="p_attachChanged">是否监听系统配置(json文件)修改事件</param>
+        public static void InitConfig(IConfiguration p_config, bool p_attachChanged)
+        {
+            _config = p_config;
+            if (p_attachChanged)
+            {
+                ApplyConfig();
+                _cfgCallback = _config.GetReloadToken().RegisterChangeCallback(OnConfigChanged, null);
+            }
+        }
+        
+        /// <summary>
         /// 系统配置(json文件)修改事件
         /// </summary>
         /// <param name="p_state"></param>
@@ -158,15 +161,6 @@ namespace Dt.Core
             InitDbInfo();
             TraceSql = _config.GetValue("TraceSql", false);
             RpcHandler.TraceRpc = _config.GetValue("TraceRpc", false);
-        }
-
-        /// <summary>
-        /// 设置Boot服务的配置
-        /// </summary>
-        /// <param name="p_config"></param>
-        internal static void SetBootConfig(IConfigurationRoot p_config)
-        {
-            _config = p_config;
         }
         #endregion
 
@@ -215,7 +209,7 @@ namespace Dt.Core
         #endregion
 
         #region Startup
-        internal static void ConfigureServices(IServiceCollection p_services)
+        public static void ConfigureServices(IServiceCollection p_services)
         {
             // 外部
             if (Stubs != null)
@@ -230,7 +224,7 @@ namespace Dt.Core
             p_services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
-        internal static void Configure(IApplicationBuilder p_app)
+        public static void Configure(IApplicationBuilder p_app)
         {
             // 全局服务容器
             _svcProvider = p_app.ApplicationServices;

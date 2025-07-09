@@ -32,18 +32,16 @@ namespace Dt.Boot
 
             // 浏览器支持Brotli压缩、请求文件的br文件存在
             if ((HttpMethods.IsGet(req.Method) || HttpMethods.IsHead(req.Method))
-                && IsFile(req.Path.Value)
-                && req.Headers.TryGetValue("Accept-Encoding", out var accept)
-                && accept.Any(str => str.Contains("br")))
+                && IsFile(req.Path.Value))
             {
-                var fi = _fileProvider.GetFileInfo(req.Path.Value);
-                if (File.Exists(fi.PhysicalPath + ".br"))
-                {
-                    // br文件存在
-                    req.Path += ".br";
-                    // 响应头标志br压缩
-                    p_context.Response.Headers.Add("Content-Encoding", "br");
-                }
+                //var fi = _fileProvider.GetFileInfo(req.Path.Value);
+                //if (File.Exists(fi.PhysicalPath + ".gz"))
+                //{
+                //    // gz文件存在
+                //    req.Path += ".gz";
+                //    // 响应头标志br压缩
+                //    p_context.Response.Headers["Content-Encoding"] = "gzip";
+                //}
             }
 
             await _next(p_context);

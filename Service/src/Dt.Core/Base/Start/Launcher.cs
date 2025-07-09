@@ -52,7 +52,7 @@ namespace Dt.Core
         /// <summary>
         /// 创建日志对象
         /// </summary>
-        static void CreateLogger()
+        public static void CreateLogger()
         {
             try
             {
@@ -91,11 +91,12 @@ namespace Dt.Core
         {
             try
             {
-                Kit.Config = new ConfigurationBuilder()
+                var cfg = new ConfigurationBuilder()
                     .SetBasePath(Path.Combine(AppContext.BaseDirectory, "etc/config"))
                     .AddJsonFile("service.json", false, true)
                     .AddJsonFile("global.json", false, true)
                     .Build();
+                Kit.InitConfig(cfg, true);
                 Log.Information("读取配置成功");
             }
             catch (Exception e)

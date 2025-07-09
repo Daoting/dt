@@ -27,17 +27,16 @@ namespace Dt.Boot
         {
             _mimeTypeProvider = new FileExtensionContentTypeProvider();
             var mp = _mimeTypeProvider.Mappings;
+            mp.TryAdd(".wasm", MediaTypeNames.Application.Wasm);
             mp.TryAdd(".clr", MediaTypeNames.Application.Octet);
-            mp.TryAdd(".dat", MediaTypeNames.Application.Octet);
-            mp.TryAdd(".blat", MediaTypeNames.Application.Octet);
             mp.TryAdd(".pdb", MediaTypeNames.Application.Octet);
-            mp.TryAdd(".rsp", MediaTypeNames.Text.Plain);
+            mp.TryAdd(".dat", MediaTypeNames.Application.Octet);
 
             // mime类型在 OnPrepareResponse 时重置到非压缩文件的类型
             mp.TryAdd(".br", MediaTypeNames.Application.Octet);
 
-            // .config文件默认被iis拒绝，无法获取
-            //mp.TryAdd(".config", MediaTypeNames.Text.Xml);
+            // PWA需要
+            mp.TryAdd(".json", MediaTypeNames.Application.Json);
         }
 
         /// <summary>
@@ -109,7 +108,7 @@ namespace Dt.Boot
                 headers.CacheControl = new CacheControlHeaderValue { NoCache = true };
             }
 
-            if (!ctx.File.Name.EndsWith(".br"))
+            if (!ctx.File.Name.EndsWith(".gz"))
                 return;
 
             // 重置到非压缩文件的mime类型

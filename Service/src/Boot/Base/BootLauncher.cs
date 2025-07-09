@@ -15,9 +15,9 @@ using Microsoft.Extensions.Hosting;
 using Serilog.Formatting.Compact;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Boot
 {
-    public static partial class Launcher
+    public static class BootLauncher
     {
         /// <summary>
         /// 启动boot服务
@@ -32,7 +32,7 @@ namespace Dt.Core
 
             Kit.Stubs = new Stub[] { p_stub };
             Kit.EnableRabbitMQ = false;
-            CreateLogger();
+            Launcher.CreateLogger();
 
             try
             {
@@ -40,7 +40,7 @@ namespace Dt.Core
                     .SetBasePath(Path.Combine(AppContext.BaseDirectory, "etc/config"))
                     .AddJsonFile("service.json", false, true)
                     .Build();
-                Kit.SetBootConfig(cfg);
+                Kit.InitConfig(cfg, false);
                 Log.Information("读取配置成功");
             }
             catch (Exception e)

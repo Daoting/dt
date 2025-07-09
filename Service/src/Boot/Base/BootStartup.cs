@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Boot
 {
     public class BootStartup
     {

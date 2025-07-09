@@ -8,9 +8,10 @@
 
 #region 引用命名
 using Microsoft.AspNetCore.Http;
+using System.Diagnostics;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Boot
 {
     /// <summary>
     /// 系统内置中间件，wasm客户端访问中间件
