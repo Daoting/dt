@@ -68,11 +68,11 @@ namespace Dt.Core
 
                         // 状态码204，无内容响应
                         p_context.Response.StatusCode = StatusCodes.Status204NoContent;
-                        Log.Information("已允许wasm客户端预检请求");
+                        Log.Information("预检已允许");
                     }
                     else
                     {
-                        Log.Information("未知的预检请求，已拒绝");
+                        Log.Warning("未知的预检请求，已拒绝");
                     }
                     return Task.CompletedTask;
                 }
