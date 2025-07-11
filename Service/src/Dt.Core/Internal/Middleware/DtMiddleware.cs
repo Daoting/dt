@@ -55,6 +55,9 @@ namespace Dt.Core
                     headers.AccessControlAllowMethods = "*";
                     // 允许跨域请求时自定义 header 字段
                     headers.AccessControlAllowHeaders = "*";
+                    // 预检请求缓存时间，单位秒，Chromium上限2小时
+                    headers.AccessControlMaxAge = "7200";
+
                     // 若要支持iframe内的跨域请求，需要以下两个header
                     //headers.Append("Cross-Origin-Embedder-Policy", "require-corp");
                     //headers.Append("Cross-Origin-Opener-Policy", "same-origin");
