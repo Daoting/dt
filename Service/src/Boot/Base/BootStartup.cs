@@ -48,8 +48,6 @@ namespace Dt.Boot
         /// <param name="p_app"></param>
         public void Configure(IApplicationBuilder p_app)
         {
-            // 中间件
-            p_app.UseMiddleware<BootMiddleware>();
             Kit.Configure(p_app);
 
             // 末尾中间件，显示自定义404页面

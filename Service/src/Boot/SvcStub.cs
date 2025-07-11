@@ -27,16 +27,8 @@ namespace Dt.Boot
         {
             _mimeTypeProvider = new FileExtensionContentTypeProvider();
             var mp = _mimeTypeProvider.Mappings;
-            mp.TryAdd(".wasm", MediaTypeNames.Application.Wasm);
-            mp.TryAdd(".clr", MediaTypeNames.Application.Octet);
             mp.TryAdd(".pdb", MediaTypeNames.Application.Octet);
             mp.TryAdd(".dat", MediaTypeNames.Application.Octet);
-
-            // mime类型在 OnPrepareResponse 时重置到非压缩文件的类型
-            mp.TryAdd(".br", MediaTypeNames.Application.Octet);
-
-            // PWA需要
-            mp.TryAdd(".json", MediaTypeNames.Application.Json);
         }
 
         /// <summary>
@@ -50,7 +42,6 @@ namespace Dt.Boot
         /// <param name="p_services"></param>
         public override void ConfigureServices(IServiceCollection p_services)
         {
-
         }
 
         /// <summary>
@@ -89,34 +80,7 @@ namespace Dt.Boot
             {
                 FileProvider = fileProvider,
                 ContentTypeProvider = _mimeTypeProvider,
-                OnPrepareResponse = SetCacheHeaders
             });
-        }
-
-        void SetCacheHeaders(StaticFileResponseContext ctx)
-        {
-            // 参见uno: https://github.com/unoplatform/Uno.Wasm.Bootstrap/blob/main/src/Uno.Wasm.Bootstrap.Cli/Server/Startup.cs
-            // By setting "Cache-Control: no-cache", we're allowing the browser to store
-            // a cached copy of the response, but telling it that it must check with the
-            // server for modifications (based on Etag) before using that cached copy.
-            // Longer term, we should generate URLs based on content hashes (at least
-            // for published apps) so that the browser doesn't need to make any requests
-            // for unchanged files.
-            var headers = ctx.Context.Response.GetTypedHeaders();
-            if (headers.CacheControl == null)
-            {
-                headers.CacheControl = new CacheControlHeaderValue { NoCache = true };
-            }
-
-            if (!ctx.File.Name.EndsWith(".gz"))
-                return;
-
-            // 重置到非压缩文件的mime类型
-            var fileName = ctx.File.Name.Substring(0, ctx.File.Name.Length - 3);
-            if (_mimeTypeProvider.TryGetContentType(fileName, out var mimeType))
-            {
-                headers.ContentType = new MediaTypeHeaderValue(new StringSegment(mimeType));
-            }
         }
     }
 }

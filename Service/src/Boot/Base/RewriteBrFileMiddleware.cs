@@ -13,7 +13,7 @@ using Microsoft.Extensions.FileProviders;
 namespace Dt.Boot
 {
     /// <summary>
-    /// 重写请求文件路径，指向Brotli压缩文件 *.br
+    /// 重写请求文件路径，指向压缩文件 *.gz
     /// </summary>
     public class RewriteBrFileMiddleware
     {
@@ -30,18 +30,18 @@ namespace Dt.Boot
         {
             var req = p_context.Request;
 
-            // 浏览器支持Brotli压缩、请求文件的br文件存在
+            // 若请求文件的gz文件存在，指向压缩文件
             if ((HttpMethods.IsGet(req.Method) || HttpMethods.IsHead(req.Method))
                 && IsFile(req.Path.Value))
             {
-                //var fi = _fileProvider.GetFileInfo(req.Path.Value);
-                //if (File.Exists(fi.PhysicalPath + ".gz"))
-                //{
-                //    // gz文件存在
-                //    req.Path += ".gz";
-                //    // 响应头标志br压缩
-                //    p_context.Response.Headers["Content-Encoding"] = "gzip";
-                //}
+                var fi = _fileProvider.GetFileInfo(req.Path.Value);
+                if (File.Exists(fi.PhysicalPath + ".gz"))
+                {
+                    // gz文件存在
+                    req.Path += ".gz";
+                    // 响应头标志br压缩
+                    p_context.Response.Headers["Content-Encoding"] = "gzip";
+                }
             }
 
             await _next(p_context);
