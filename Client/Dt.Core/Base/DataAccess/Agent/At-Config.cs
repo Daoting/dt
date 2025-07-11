@@ -162,6 +162,18 @@ namespace Dt.Core
                     {
                         Kit.Title = r.ReadAsString();
                     }
+#if WASM
+                    else if (key == "wasmserver")
+                    {
+                        var str = r.ReadAsString();
+                        if (Regex.IsMatch(str, @"^http[s]?://[^\s/]+"))
+                        {
+                            _svcUrlInfo = new SvcUrlInfo(str);
+                            _originAI = _currentAI = GetAccessInfo(AccessType.Service, "cm");
+                        }
+                        
+                    }
+#else
                     else if (key == "server")
                     {
                         var str = r.ReadAsString();
@@ -218,6 +230,7 @@ namespace Dt.Core
                             }
                         }
                     }
+#endif
                     else
                     {
                         r.Read();
@@ -231,6 +244,12 @@ namespace Dt.Core
                 throw new Exception("读取 Config.json 时出错！" + ex.Message);
             }
 
+#if WASM
+            if (_originAI == null)
+            {
+                throw new Exception("Config.json 缺少键名为 WasmServer 的服务地址！");
+            }
+#else
             if (dbKey != null)
             {
                 if (_dbs.TryGetValue(dbKey, out var info))
@@ -252,13 +271,8 @@ namespace Dt.Core
                 }
                 _originAI = _currentAI = info;
             }
+#endif
 
-            if (Kit.AppType == AppType.Wasm
-                && (dbKey != null || sqliteKey != null))
-            {
-                throw new Exception("Config.json 设置错误，wasm不支持直连数据库！");
-            }
-            
 #if DEBUG
             string fw = "单机架构";
             if (_originAI != null)
@@ -267,7 +281,7 @@ namespace Dt.Core
                 {
                     fw = "多层服务架构";
                 }
-                else if (_originAI.Type == AccessType.Database)
+                else if (_originAI.Type == AccessType.Database && dbKey != null)
                 {
                     fw = $"两层架构({((DbAccessInfo)_originAI).DbType})";
                 }
