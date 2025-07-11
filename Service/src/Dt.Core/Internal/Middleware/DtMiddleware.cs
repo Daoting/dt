@@ -41,6 +41,35 @@ namespace Dt.Core
 
         public Task Invoke(HttpContext p_context)
         {
+            // 外站跨域预检，通常wasm客户端会发送预检请求
+            if (p_context.Request.Headers.ContainsKey("Origin")
+                && p_context.Request.Method == "OPTIONS")
+            {
+                // 跨域请求特殊标志头
+                if (p_context.Request.Headers.AccessControlRequestHeaders.Contains("dt-wasm"))
+                {
+                    var headers = p_context.Response.Headers;
+                    // 允许跨域请求的域
+                    headers.AccessControlAllowOrigin = "*";
+                    // 允许跨域请求时的HTTP方法，如 GET PUT POST OPTIONS
+                    headers.AccessControlAllowMethods = "*";
+                    // 允许跨域请求时自定义 header 字段
+                    headers.AccessControlAllowHeaders = "*";
+                    // 若要支持iframe内的跨域请求，需要以下两个header
+                    //headers.Append("Cross-Origin-Embedder-Policy", "require-corp");
+                    //headers.Append("Cross-Origin-Opener-Policy", "same-origin");
+
+                    // 状态码204，无内容响应
+                    p_context.Response.StatusCode = StatusCodes.Status204NoContent;
+                    Log.Information("已允许wasm客户端预检请求");
+                }
+                else
+                {
+                    Log.Information("未知的预检请求，已拒绝");
+                }
+                return Task.CompletedTask;
+            }
+
             // 内部特殊路径格式：/.xxx
             string path = p_context.Request.Path.Value.ToLower();
             if (path == "/.c")
