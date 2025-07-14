@@ -49,16 +49,7 @@ namespace Dt.Base
             
             _stub.OnLaunched(p_args);
         }
-
-        /// <summary>
-        /// 处理wpf的DispatcherUnhandledException事件
-        /// </summary>
-        /// <param name="ex"></param>
-        public void OnUnhandledException(Exception ex)
-        {
-            Kit.OnUnhandledException(ex);
-        }
-
+        
         //#if IOS
         //        public override bool OpenUrl(UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options)
         //        {

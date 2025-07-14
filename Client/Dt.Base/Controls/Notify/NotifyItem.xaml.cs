@@ -15,6 +15,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using System.ComponentModel;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.System.Threading;
 #endregion
@@ -44,6 +45,7 @@ namespace Dt.Base
             _grid.PointerPressed += OnPointerPressed;
             _grid.PointerReleased += OnPointerReleased;
             _grid.PointerExited += OnPointerExited;
+            _grid.RightTapped += OnRightTapped;
 
             _grid.Background = _info.NotifyType == NotifyType.Information ? Res.BlackBrush : Res.RedBrush;
             _tb.Text = _info.Message;
@@ -209,6 +211,9 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
+            if (e.IsRightButton())
+                return;
+
             if (_grid.CapturePointer(e.Pointer))
             {
                 // 因phone不触发PointerEntered，再次关闭定时器
@@ -221,6 +226,9 @@ namespace Dt.Base
 
         void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
+            if (_ptStart == null)
+                return;
+
             _grid.ReleasePointerCapture(e.Pointer);
             e.Handled = true;
             var pt = e.GetCurrentPoint(null).Position;
@@ -234,6 +242,7 @@ namespace Dt.Base
             {
                 _rc.Fill = null;
             }
+            _ptStart = null;
         }
 
         /// <summary>
@@ -246,6 +255,33 @@ namespace Dt.Base
             if (_info.Delay > 0)
                 StartAutoClose();
             _rc.Fill = null;
+        }
+
+        async void OnRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            DataPackage data = new DataPackage();
+            data.SetText(_info.Message);
+            Clipboard.SetContent(data);
+
+            Border bd = new Border
+            {
+                Background = Res.亮蓝,
+                Padding = new Thickness(10),
+                CornerRadius = new CornerRadius(5),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            TextBlock tb = new TextBlock
+            {
+                Text = "已复制到剪贴板",
+                FontSize = 16,
+                Foreground = Res.WhiteBrush,
+            };
+            bd.Child = tb;
+
+            _grid.Children.Add(bd);
+            await Task.Delay(1000);
+            _grid.Children.Remove(bd);
         }
     }
 }
