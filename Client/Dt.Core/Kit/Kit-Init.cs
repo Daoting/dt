@@ -39,15 +39,7 @@ namespace Dt.Core
             // 初始化日志
             Serilogger.Init();
 
-#if !WIN
-            // WinUI已移除事件，其他平台咋？
-            //var app = Application.Current;
-            //app.Suspending += OnSuspending;
-            //app.Resuming += OnResuming;
-#endif
-
             /* 异常处理，参见 https://github.com/Daoting/dt/issues/1
-            
             未处理异常发生的位置有4种：
             主线程同步方法、主线程异步方法、Task内部同步方法、Task内部异步方法
             
@@ -59,7 +51,13 @@ namespace Dt.Core
 
             总结：所有平台都不会因为异常而崩溃，对于不是通过Throw类抛出的异常，非WinAppSdk无法给出警告提示！
             */
-            AttachUnhandledException();
+#if WIN
+            Application.Current.UnhandledException += (s, e) =>
+            {
+                e.Handled = true;
+                OnUnhandledException(e.Exception);
+            };
+#endif
 
             Debug("构造Stub，注入服务");
         }
@@ -88,13 +86,47 @@ namespace Dt.Core
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
-        /// <summary>
-        /// 依赖注入的全局服务对象提供者
-        /// </summary>
-        static IServiceProvider _svcProvider;
-        static ITypeAlias _typeAlias;
-        static IUICallback _ui;
-        static IUserCallback _user;
+        #region 异常处理
+        static void OnUnhandledException(Exception p_ex)
+        {
+            try
+            {
+                // 不处理已知异常，已在抛出异常前警告(Throw类)，不输出日志
+                if (!(p_ex is KnownException) && !(p_ex.InnerException is KnownException))
+                {
+                    string title;
+                    if (p_ex is ServerException se)
+                    {
+                        title = se.Title;
+                    }
+                    else
+                    {
+                        title = $"未处理异常：{p_ex.GetType().FullName}";
+                    }
+
+                    // 警告、保存日志
+                    var notify = new NotifyInfo
+                    {
+                        NotifyType = NotifyType.Warning,
+                        Message = title,
+                        Delay = 5,
+                        Link = "查看详细",
+                    };
+                    notify.LinkCallback = (e) =>
+                    {
+                        ShowLogBox();
+                        CloseNotify(notify);
+                    };
+                    Notify(notify);
+
+                    // ServerException日志已输出
+                    if (p_ex is not ServerException)
+                        Log.Error(p_ex, title);
+                }
+            }
+            catch { }
+        }
+        #endregion
 
         #region App事件方法
         /// <summary>
@@ -136,138 +168,12 @@ namespace Dt.Core
         }
         #endregion
 
-        #region 异常处理
-#if WIN
-
-        static void AttachUnhandledException()
-        {
-            // For WinUI 3:
-            //
-            // * Exceptions on background threads are caught by AppDomain.CurrentDomain.UnhandledException,
-            //   not by Microsoft.UI.Xaml.Application.Current.UnhandledException
-            //   See: https://github.com/microsoft/microsoft-ui-xaml/issues/5221
-            //
-            // * Exceptions caught by Microsoft.UI.Xaml.Application.Current.UnhandledException have details removed,
-            //   but that can be worked around by saved by trapping first chance exceptions
-            //   See: https://github.com/microsoft/microsoft-ui-xaml/issues/7160
-            //
-            //  目前问题：UI主线程异步异常造成崩溃、后台未处理异常不能提醒，V1.2 preview2解决
-
-            // V1.2 已完美解决
-            Application.Current.UnhandledException += (s, e) =>
-            {
-                e.Handled = true;
-                OnUnhandledException(e.Exception);
-            };
-        }
-
-#elif ANDROID
-
-        static void AttachUnhandledException()
-        {
-            
-        }
-
-#elif IOS
-
-        static void AttachUnhandledException()
-        {
-            // .net7.0 崩溃已治愈
-            // 1. 在Main函数中try catch，延用xamarin中 RunLoop 的方法
-            // 2. 处理以下两事件，否则 "调试时不崩溃，正式运行时崩溃"
-            // UI主线程异步方法中抛异常，不再崩溃
-
-            ObjCRuntime.Runtime.MarshalManagedException += (s, e) => e.ExceptionMode = ObjCRuntime.MarshalManagedExceptionMode.UnwindNativeCode;
-            AppDomain.CurrentDomain.UnhandledException += (s, e) => OnUnhandledException(e.ExceptionObject as Exception);
-        }
-
-        public static void OnIOSUnhandledException(Exception ex)
-        {
-            OnUnhandledException(ex);
-            RunLoop();
-        }
-
         /// <summary>
-        /// 原创方法，防止异常时闪退，碰巧好使
-        /// 网上未找到处理方法，已测试的方法有：
-        /// ObjCRuntime.Runtime.MarshalManagedException += OnIOSUnhandledException;
-        /// AppDomain.CurrentDomain.UnhandledException
-        /// NSSetUncaughtExceptionHandler signal
-        /// Mono.Runtime.RemoveSignalHandlers
+        /// 依赖注入的全局服务对象提供者
         /// </summary>
-        static void RunLoop()
-        {
-            var loop = CoreFoundation.CFRunLoop.Current;
-            bool hasException;
-            while (true)
-            {
-                try
-                {
-                    loop.RunInMode(CoreFoundation.CFRunLoop.ModeDefault, 0.001, false);
-                }
-                catch (Exception ex)
-                {
-                    hasException = true;
-                    OnUnhandledException(ex);
-                    break;
-                }
-            }
-
-            if (hasException)
-                RunLoop();
-        }
-
-#elif WASM
-        static void AttachUnhandledException()
-        {
-            AppDomain.CurrentDomain.UnhandledException += (s, e) => OnUnhandledException(e.ExceptionObject as Exception);
-        }
-#elif DESKTOP
-        static void AttachUnhandledException()
-        {
-            
-        }
-#endif
-
-        internal static void OnUnhandledException(Exception p_ex)
-        {
-            try
-            {
-                // 不处理已知异常，已在抛出异常前警告(Throw类)，不输出日志
-                if (!(p_ex is KnownException) && !(p_ex.InnerException is KnownException))
-                {
-                    string title;
-                    if (p_ex is ServerException se)
-                    {
-                        title = se.Title;
-                    }
-                    else
-                    {
-                        title = $"未处理异常：{p_ex.GetType().FullName}";
-                    }
-
-                    // 警告、保存日志
-                    var notify = new NotifyInfo
-                    {
-                        NotifyType = NotifyType.Warning,
-                        Message = title,
-                        Delay = 5,
-                        Link = "查看详细",
-                    };
-                    notify.LinkCallback = (e) =>
-                    {
-                        ShowLogBox();
-                        CloseNotify(notify);
-                    };
-                    Notify(notify);
-
-                    // ServerException日志已输出
-                    if (p_ex is not ServerException)
-                        Log.Error(p_ex, title);
-                }
-            }
-            catch { }
-        }
-        #endregion
+        static IServiceProvider _svcProvider;
+        static ITypeAlias _typeAlias;
+        static IUICallback _ui;
+        static IUserCallback _user;
     }
 }
