@@ -7,7 +7,7 @@
     <ItemGroup>
         <PackageReference Include="Dt.Infras" Version="5.0.0" />
         <PackageReference Include="ScottPlot" Version="5.0.40" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.7" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.0.2" />
         
         <!-- 日志，两端版本相同 -->
@@ -49,6 +49,9 @@
         <!-- ScottPlot Lottie都引用，注意版本匹配 -->
         <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="3.119.0" />
         <PackageReference Include="SkiaSharp.Skottie" Version="3.119.0" />
+        <!-- 异常日志 -->
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.7" />
+        <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="$(UnoVersion)" />
     </ItemGroup>
     
     <!-- Android -->
@@ -62,11 +65,13 @@
     <!-- IOS -->
     <ItemGroup Condition="$(IsIOS)">
         <PackageReference Include="Uno.WinUI.Runtime.Skia.AppleUIKit" Version="$(UnoVersion)" PrivateAssets="all" IncludeAssets="build" />
+        <PackageReference Include="Uno.Extensions.Logging.OSLog" Version="1.7.0" />
     </ItemGroup>
 
     <!-- Wasm -->
     <ItemGroup Condition="$(IsBrowserWasm)">
         <PackageReference Include="Uno.WinUI.Runtime.Skia.WebAssembly.Browser" Version="$(UnoVersion)" PrivateAssets="all" IncludeAssets="build" />
+        <PackageReference Include="Uno.Extensions.Logging.WebAssembly.Console" Version="1.7.0" />
     </ItemGroup>
 
     <!-- Desktop -->

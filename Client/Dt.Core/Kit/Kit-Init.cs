@@ -22,7 +22,7 @@ namespace Dt.Core
     public partial class Kit
     {
         /// <summary>
-        /// Kit初始化：提取注入的服务、日志、全局事件
+        /// Kit初始化：提取注入的服务、日志
         /// </summary>
         /// <param name="p_svcProvider">注入服务</param>
         internal static void Init(IServiceProvider p_svcProvider)
@@ -38,27 +38,6 @@ namespace Dt.Core
 
             // 初始化日志
             Serilogger.Init();
-
-            /* 异常处理，参见 https://github.com/Daoting/dt/issues/1
-            未处理异常发生的位置有4种：
-            主线程同步方法、主线程异步方法、Task内部同步方法、Task内部异步方法
-            
-            对于以上4种未处理异常：
-            1. WinAppSdk V1.2 都能触发未处理异常事件，已完美解决崩溃问题，v1.7主线程异步异常会崩溃
-            2. Skia渲染时都不触发未处理异常事件，被uno 或 .net内部拦截处理，但都不会崩溃！
-            
-            KnownException是业务异常，阻止业务继续时通过Throw类抛出，为了能统一显示警告信息，只能在抛出KnownException异常前显示！
-
-            总结：所有平台都不会因为异常而崩溃，对于不是通过Throw类抛出的异常，非WinAppSdk无法给出警告提示！
-            */
-#if WIN
-            Application.Current.UnhandledException += (s, e) =>
-            {
-                e.Handled = true;
-                OnUnhandledException(e.Exception);
-            };
-#endif
-
             Debug("构造Stub，注入服务");
         }
 
@@ -69,7 +48,7 @@ namespace Dt.Core
         internal static async Task OnLaunch()
         {
             await At.InitConfig();
-            
+
             // 创建本地文件存放目录
             // 使用 StorageFolder 替换 Directory 是因为 wasm 中可以等待 IDBFS 初始化完毕！！！
             // 否则用 Directory 每次都创建新目录！
@@ -85,49 +64,7 @@ namespace Dt.Core
             // GBK编码
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
-
-        #region 异常处理
-        static void OnUnhandledException(Exception p_ex)
-        {
-            try
-            {
-                // 不处理已知异常，已在抛出异常前警告(Throw类)，不输出日志
-                if (!(p_ex is KnownException) && !(p_ex.InnerException is KnownException))
-                {
-                    string title;
-                    if (p_ex is ServerException se)
-                    {
-                        title = se.Title;
-                    }
-                    else
-                    {
-                        title = $"未处理异常：{p_ex.GetType().FullName}";
-                    }
-
-                    // 警告、保存日志
-                    var notify = new NotifyInfo
-                    {
-                        NotifyType = NotifyType.Warning,
-                        Message = title,
-                        Delay = 5,
-                        Link = "查看详细",
-                    };
-                    notify.LinkCallback = (e) =>
-                    {
-                        ShowLogBox();
-                        CloseNotify(notify);
-                    };
-                    Notify(notify);
-
-                    // ServerException日志已输出
-                    if (p_ex is not ServerException)
-                        Log.Error(p_ex, title);
-                }
-            }
-            catch { }
-        }
-        #endregion
-
+        
         #region App事件方法
         /// <summary>
         /// 三平台都能正常触发！必须耗时小！
