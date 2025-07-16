@@ -1311,7 +1311,7 @@ namespace Dt.Base
 
             // PhoneUI内嵌窗口从首页Tab返回时需要排除
             if (!Kit.IsPhoneUI || !(bool)GetValue(IsInnerWinInPhoneUIProperty))
-                WinCleaner.Add(this);
+                Destroy();
         }
 
         /// <summary>
@@ -1342,11 +1342,15 @@ namespace Dt.Base
 
         #region IDestroy
         /// <summary>
-        /// 嵌套在主区的窗口释放
+        /// 窗口关闭或嵌套在主区的窗口释放
         /// </summary>
         public void Destroy()
         {
+#if WIN
             WinCleaner.Add(this);
+#else
+            OnDestroyed();
+#endif
         }
 
         internal void OnDestroyed()
@@ -1359,6 +1363,6 @@ namespace Dt.Base
             Items.ItemsChanged -= OnItemsChanged;
             SizeChanged -= OnSizeChanged;
         }
-        #endregion
+#endregion
     }
 }
