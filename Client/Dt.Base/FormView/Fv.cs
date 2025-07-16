@@ -419,28 +419,29 @@ namespace Dt.Base
         protected override Size MeasureOverride(Size availableSize)
         {
             // 准确获取高度
-            if (!double.IsInfinity(availableSize.Width) && !double.IsInfinity(availableSize.Height))
-            {
-                // 外部无ScrollViewer StackPanel的情况
-                _panel.SetMaxSize(availableSize);
-            }
-            else
+            double width = availableSize.Width;
+            double height = availableSize.Height;
+
+            // 外部有ScrollViewer StackPanel的情况
+            if (double.IsInfinity(width) || double.IsInfinity(height))
             {
                 // 和Lv相似，参见win.xaml：win模式在Tabs定义，phone模式在Tab定义
                 var pre = _scroll.FindParentInWin<SizedPresenter>();
                 if (pre != null)
                 {
-                    _panel.SetMaxSize(pre.AvailableSize);
+                    width = double.IsInfinity(pre.AvailableSize.Width) ? Kit.ViewWidth : pre.AvailableSize.Width;
+                    height = double.IsInfinity(pre.AvailableSize.Height) ? Kit.ViewHeight : pre.AvailableSize.Height;
                 }
                 else
                 {
                     // 无有效大小时以窗口大小为准
-                    double width = double.IsInfinity(availableSize.Width) ? Kit.ViewWidth : availableSize.Width;
-                    double height = double.IsInfinity(availableSize.Height) ? Kit.ViewHeight : availableSize.Height;
-                    _panel.SetMaxSize(new Size(width, height));
+                    width = double.IsInfinity(availableSize.Width) ? Kit.ViewWidth : availableSize.Width;
+                    height = double.IsInfinity(availableSize.Height) ? Kit.ViewHeight : availableSize.Height;
                 }
             }
-            return base.MeasureOverride(availableSize);
+            Size size = new Size(width, height);
+            _panel.SetMaxSize(size);
+            return base.MeasureOverride(size);
         }
 
         protected override void OnKeyUp(KeyRoutedEventArgs e)
