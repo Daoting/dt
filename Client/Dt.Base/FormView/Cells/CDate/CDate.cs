@@ -175,7 +175,7 @@ namespace Dt.Base
         protected override bool SetFocus()
         {
             if (_grid != null && _grid.Background == null)
-                return ((MaskBox)_grid.Children[0]).Focus(FocusState.Programmatic);
+                return ((MaskBox)_grid.Children[0]).Box.Focus(FocusState.Programmatic);
             return true;
         }
 

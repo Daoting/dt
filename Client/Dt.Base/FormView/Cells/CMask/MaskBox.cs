@@ -175,19 +175,19 @@ namespace Dt.Base
             DefaultStyleKey = typeof(MaskBox);
 
             _tb = new TextBox { Style = Res.FvTextBox };
-            _tb.TextChanged += OnTextChanged;
-            _tb.AddHandler(KeyDownEvent, (KeyEventHandler)OnKeyDown, true);
-            _tb.PointerWheelChanged += OnPointerWheelChanged;
-            _tb.GotFocus += OnGotFocus;
-            _tb.LostFocus += OnLostFocus;
-            _tb.AddHandler(PointerPressedEvent, (PointerEventHandler)OnPointerPressed, true);
-            _tb.AddHandler(PointerReleasedEvent, (PointerEventHandler)OnPointerReleased, true);
             // 默认输入范围为英文模式
             _tb.InputScope = CreateAlphaScope();
 
             _maskManager = new MaskMediator(this);
             _inputManager = new MaskBoxInput(this);
             Content = _tb;
+
+            Loaded += (s, e) =>
+            {
+                DetachEvent();
+                AttachEvent();
+            };
+            Unloaded += (s, e) => DetachEvent();
         }
         #endregion
 
@@ -381,12 +381,6 @@ namespace Dt.Base
             _isLoaded = true;
             _maskManager.Initialize();
         }
-
-        protected override void OnGotFocus(RoutedEventArgs e)
-        {
-            base.OnGotFocus(e);
-            _tb.Focus(FocusState.Programmatic);
-        }
         #endregion
 
         #region TextBox事件
@@ -512,6 +506,30 @@ namespace Dt.Base
         {
             _maskManager.FlushPendingEditActions();
             _maskManager.UpdateTextAndValue(true);
+        }
+
+        void AttachEvent()
+        {
+            _tb.TextChanged += OnTextChanged;
+            _tb.GotFocus += OnGotFocus;
+            _tb.LostFocus += OnLostFocus;
+            _tb.PointerWheelChanged += OnPointerWheelChanged;
+
+            _tb.AddHandler(KeyDownEvent, (KeyEventHandler)OnKeyDown, true);
+            _tb.AddHandler(PointerPressedEvent, (PointerEventHandler)OnPointerPressed, true);
+            _tb.AddHandler(PointerReleasedEvent, (PointerEventHandler)OnPointerReleased, true);
+        }
+
+        void DetachEvent()
+        {
+            _tb.TextChanged -= OnTextChanged;
+            _tb.GotFocus -= OnGotFocus;
+            _tb.LostFocus -= OnLostFocus;
+            _tb.PointerWheelChanged -= OnPointerWheelChanged;
+
+            _tb.RemoveHandler(KeyDownEvent, (KeyEventHandler)OnKeyDown);
+            _tb.RemoveHandler(PointerPressedEvent, (PointerEventHandler)OnPointerPressed);
+            _tb.RemoveHandler(PointerReleasedEvent, (PointerEventHandler)OnPointerReleased);
         }
         #endregion
 
