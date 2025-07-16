@@ -125,12 +125,11 @@ namespace Dt.Base
                 builder.AddConsole();
 #endif
 
-                builder.SetMinimumLevel(LogLevel.Error);
+                builder.SetMinimumLevel(LogLevel.Warning);
 
-                builder.AddFilter("Dt", LogLevel.Error);
-                builder.AddFilter("Uno", LogLevel.Error);
-                builder.AddFilter("Windows", LogLevel.Error);
-                builder.AddFilter("Microsoft", LogLevel.Error);
+                builder.AddFilter("Uno", LogLevel.Warning);
+                builder.AddFilter("Windows", LogLevel.Warning);
+                builder.AddFilter("Microsoft", LogLevel.Warning);
             });
 
             global::Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory = factory;
