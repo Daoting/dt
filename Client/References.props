@@ -11,9 +11,9 @@
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.0.2" />
         
         <!-- 日志，两端版本相同 -->
-        <PackageReference Include="Serilog" Version="3.1.1" />
-        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-        <PackageReference Include="Serilog.Formatting.Compact" Version="2.0.0" />
+        <PackageReference Include="Serilog" Version="4.3.0" />
+        <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+        <PackageReference Include="Serilog.Formatting.Compact" Version="3.0.0" />
         
         <!-- Db相关，两端版本相同 -->
         <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.6" />
