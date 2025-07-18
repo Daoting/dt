@@ -50,7 +50,17 @@ namespace Dt.Core
                 if (isPreflight)
                 {
                     // 跨域请求特殊标志头
-                    if (p_context.Request.Headers.AccessControlRequestHeaders.Contains("dt-wasm"))
+                    bool isValid = false;
+                    foreach(var h in p_context.Request.Headers.AccessControlRequestHeaders)
+                    {
+                        if (!string.IsNullOrEmpty(h) && h.Contains("dt-wasm"))
+                        {
+                            isValid = true;
+                            break;
+                        }
+                    }
+                    
+                    if (isValid)
                     {
                         var headers = p_context.Response.Headers;
                         // 允许跨域请求的域
