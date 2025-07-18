@@ -629,7 +629,7 @@ namespace Dt.Base
                 Kit.Warn("删除文件失败！");
             return suc;
         }
-#endregion
+        #endregion
 
         #region IUploadUI 上传过程
         /// <summary>
@@ -653,6 +653,14 @@ namespace Dt.Base
             _itemInfo.Uploader = Kit.UserName;
             _itemInfo.Date = Kit.Now.ToString("yyyy-MM-dd HH:mm");
 
+#if WASM || DESKTOP
+            // 无缩略图
+            UpdateIcon(p_file.Ext);
+            Title = _itemInfo.FileName;
+            ExtInfo = $"{_itemInfo.FileDesc}\r\n{Kit.GetFileSizeDesc(_itemInfo.Length)}  {_itemInfo.Uploader}\r\n{_itemInfo.Date}";
+            await Task.CompletedTask;
+            return;
+#else
             // 更新控件模板及扩展信息
             UpdateTemplate(p_file.Ext);
 
@@ -660,7 +668,7 @@ namespace Dt.Base
             if (FileType == FileItemType.Image || FileType == FileItemType.Video)
             {
                 BitmapImage bmp = new BitmapImage();
-#if WIN || DESKTOP || WASM
+#if WIN
                 StorageFile sf = null;
                 if (!string.IsNullOrEmpty(p_file.ThumbPath))
                 {
@@ -717,6 +725,7 @@ namespace Dt.Base
 #endif
                 Bitmap = bmp;
             }
+#endif
         }
 
         /// <summary>
@@ -803,13 +812,13 @@ namespace Dt.Base
         {
             Kit.RunAsync(() =>
             {
-                // 开始发送
-                if (p_bytesStep == p_bytesSent)
-                    State = FileItemState.Uploading;
-
                 double percent = p_bytesSent * 100 / p_totalBytesToSend;
                 Percent = string.Format("{0}%", percent);
                 ProgressWidth = Math.Ceiling(percent / 100 * ActualWidth);
+
+                // 开始发送
+                if (p_bytesStep == p_bytesSent)
+                    State = FileItemState.Uploading;
 
                 // 完成
                 if (p_bytesSent == p_totalBytesToSend)
@@ -1018,7 +1027,7 @@ namespace Dt.Base
             if (!string.IsNullOrEmpty(path))
                 Bitmap = new BitmapImage(new Uri(path));
         }
-#endregion
+        #endregion
 
         #region 更新UI
         /// <summary>

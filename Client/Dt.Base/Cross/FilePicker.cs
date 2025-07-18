@@ -301,9 +301,14 @@ namespace Dt.Base
         }
 
 #elif WASM
-
-#elif IOS
-
+        static async Task<FileData> GetFileData(StorageFile p_file)
+        {
+            FileData fd = new FileData(p_file.Name, p_file.Name, (await p_file.GetBasicPropertiesAsync()).Size);
+            fd.FileStream = await p_file.OpenStreamForReadAsync();
+            // 无描述Desc，无缩略图
+            fd.Desc = "wasm";
+            return fd;
+        }
 #endif
         #endregion
     }
