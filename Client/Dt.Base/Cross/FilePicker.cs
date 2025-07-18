@@ -178,7 +178,7 @@ namespace Dt.Base
             return picker;
         }
 
-#if WIN    
+#if WIN
         static async Task<FileData> GetFileData(StorageFile p_file)
         {
             string id = StorageApplicationPermissions.FutureAccessList.Add(p_file);
@@ -307,6 +307,14 @@ namespace Dt.Base
             fd.FileStream = await p_file.OpenStreamForReadAsync();
             // 无描述Desc，无缩略图
             fd.Desc = "wasm";
+            return fd;
+        }
+#elif DESKTOP
+        static async Task<FileData> GetFileData(StorageFile p_file)
+        {
+            FileData fd = new FileData(p_file.Path, p_file.Name, (await p_file.GetBasicPropertiesAsync()).Size);
+            // 无描述Desc，无缩略图
+            fd.Desc = "desktop";
             return fd;
         }
 #endif
