@@ -8,7 +8,7 @@
         <PackageReference Include="Dt.Infras" Version="5.0.0" />
         <PackageReference Include="ScottPlot" Version="5.0.40" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.7" />
-        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.0.2" />
+        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.6" />
         
         <!-- 日志，两端版本相同 -->
         <PackageReference Include="Serilog" Version="4.3.0" />
