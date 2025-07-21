@@ -20,7 +20,7 @@ namespace Dt.Base
     {
         string _params;
 
-        public override async void OnLaunched(LaunchActivatedEventArgs p_args)
+        public override async Task OnLaunched(LaunchActivatedEventArgs p_args)
         {
             if (string.IsNullOrEmpty(_params))
                 _params = p_args.Arguments;

@@ -18,9 +18,9 @@ namespace Dt.Base
     /// </summary>
     public partial class DefaultStub : Stub
     {
-        public override void OnLaunched(LaunchActivatedEventArgs p_args)
+        public override Task OnLaunched(LaunchActivatedEventArgs p_args)
         {
-            _ = Launch();
+            return Launch();
         }
     }
 }

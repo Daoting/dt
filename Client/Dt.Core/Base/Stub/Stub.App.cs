@@ -25,7 +25,7 @@ namespace Dt.Core
         /// Application.OnLaunched
         /// </summary>
         /// <param name="p_args"></param>
-        public abstract void OnLaunched(LaunchActivatedEventArgs p_args);
+        public abstract Task OnLaunched(LaunchActivatedEventArgs p_args);
 
         /// <summary>
         /// 切换Stub新实例重启

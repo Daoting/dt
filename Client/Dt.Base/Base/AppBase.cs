@@ -27,7 +27,7 @@ namespace Dt.Base
     /// </summary>
     public abstract class AppBase : Application
     {
-        readonly Stub _stub;
+        Stub _stub;
 
         public AppBase()
         {
@@ -49,12 +49,13 @@ namespace Dt.Base
             // 影响性能，正式版不启用
             InitExceptionLog();
 #endif
-            _stub = NewStub();
         }
 
         protected abstract Stub NewStub();
 
-        protected override void OnLaunched(LaunchActivatedEventArgs p_args)
+        protected abstract void InitDtDictionary();
+
+        protected override async void OnLaunched(LaunchActivatedEventArgs p_args)
         {
 #if !WIN
             // 非WinAppSdk平台统一Skia渲染：
@@ -67,7 +68,14 @@ namespace Dt.Base
             // uno通过 HarmonySans.ttf.manifest 获取粗体、斜体等样式，wasm无需在css中设置字体
             Uno.UI.FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/HarmonySans.ttf";
 #endif
-            _stub.OnLaunched(p_args);
+
+            if (_stub == null)
+            {
+                InitDtDictionary();
+                
+                _stub = NewStub();
+            }
+            await _stub.OnLaunched(p_args);
         }
 
         #region 异常处理

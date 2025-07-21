@@ -26,7 +26,7 @@ namespace Dt.Base
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
         }
         
-        public override async void OnLaunched(LaunchActivatedEventArgs p_args)
+        public override async Task OnLaunched(LaunchActivatedEventArgs p_args)
         {
             try
             {

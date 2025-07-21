@@ -28,9 +28,9 @@ namespace Dt.Base
             BgJob.RegisterEarliest();
         }
 
-        public override void OnLaunched(LaunchActivatedEventArgs p_args)
+        public override Task OnLaunched(LaunchActivatedEventArgs p_args)
         {
-            _ = Launch(p_args.Arguments);
+            return Launch(p_args.Arguments);
         }
 
         public override void OpenUrl(UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options)
