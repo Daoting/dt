@@ -114,9 +114,4 @@
         <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj" PrivateAssets="all" />
         <ProjectReference Include="..\Dt.Toolkit\Dt.Toolkit.csproj" PrivateAssets="all" />
     </ItemGroup>
-
-    <ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
-        <!-- GMImagePicker.Xamarin不再升级，升.net6.0不兼容，合并 -->
-        <ProjectReference Include="..\GMImagePicker\GMImagePicker.csproj" PrivateAssets="all" />
-    </ItemGroup>
 </Project>
