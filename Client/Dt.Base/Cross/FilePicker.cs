@@ -1,5 +1,4 @@
-﻿#if WIN || WASM || DESKTOP || ANDROID
-#region 文件描述
+﻿#region 文件描述
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
@@ -218,7 +217,7 @@ namespace Dt.Base
             }
             return fd;
         }
-        
+
 #elif ANDROID
         static async Task<FileData> GetFileData(StorageFile p_file)
         {
@@ -317,8 +316,14 @@ namespace Dt.Base
             fd.Desc = "desktop";
             return fd;
         }
+#elif IOS
+        static async Task<FileData> GetFileData(StorageFile p_file)
+        {
+            FileData fd = new FileData(p_file.Path, p_file.Name, (await p_file.GetBasicPropertiesAsync()).Size);
+            fd.Desc = "ios";
+            return fd;
+        }
 #endif
         #endregion
     }
 }
-#endif
