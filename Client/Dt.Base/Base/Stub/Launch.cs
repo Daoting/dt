@@ -56,17 +56,6 @@ namespace Dt.Base
                 RecvShare(p_shareInfo);
                 return;
             }
-
-            try
-            {
-                // 附加全局按键事件
-                InitInput();
-            }
-            catch (Exception ex)
-            {
-                ShowError(ex.Message);
-                return;
-            }
             
             try
             {
@@ -93,6 +82,9 @@ namespace Dt.Base
                 // 注册后台任务
                 BgJob.Register();
 
+                // 附加全局按键事件
+                InitInput();
+                
 #if WIN && !DEBUG
                 if (At.Framework == AccessType.Service)
                 {
@@ -113,7 +105,7 @@ namespace Dt.Base
         /// <param name="p_error"></param>
         internal static void ShowError(string p_error)
         {
-            var dlg = new Dlg { IsPinned = true, Resizeable = false, HideTitleBar = true, ShowVeil = false, Background = Res.主蓝 };
+            var dlg = new Dlg { IsPinned = true, Resizeable = false, HideTitleBar = true, ShowVeil = false, Background = Kit.ThemeBrush };
             if (!Kit.IsPhoneUI)
             {
                 dlg.WinPlacement = DlgPlacement.CenterScreen;
