@@ -138,111 +138,32 @@ namespace Dt.Core
             return sai;
         }
 
-        internal static async Task InitConfig()
+        internal static void InitConfig()
         {
-            // 采用统一方式读取Config.json文件内容，wasm不支持Task.Wait()
-            string config = await Kit.GetContentFileText("ms-appx:///Assets/Config.json");
-            if (string.IsNullOrEmpty(config))
-                return;
-
             string dbKey = null;
             string sqliteKey = null;
-            try
-            {
-                var r = new Utf8JsonReader(Encoding.UTF8.GetBytes(config), new JsonReaderOptions { CommentHandling = JsonCommentHandling.Skip, AllowTrailingCommas = true, });
-                // {
-                r.Read();
-                while (r.Read())
-                {
-                    if (r.TokenType != JsonTokenType.PropertyName)
-                        break;
 
-                    string key = r.GetString().ToLower();
-                    if (key == "title")
-                    {
-                        //Kit.Title = r.ReadAsString();
-                    }
 #if WASM
-                    else if (key == "wasmserver")
-                    {
-                        var str = r.ReadAsString();
-                        if (Regex.IsMatch(str, @"^http[s]?://[^\s/]+"))
-                        {
-                            _svcUrlInfo = new SvcUrlInfo(str);
-                            _originAI = _currentAI = GetAccessInfo(AccessType.Service, "cm");
-                        }
-                        
-                    }
-#else
-                    else if (key == "server")
-                    {
-                        var str = r.ReadAsString();
-                        if (Regex.IsMatch(str, @"^http[s]?://[^\s/]+"))
-                        {
-                            _svcUrlInfo = new SvcUrlInfo(str);
-                            _originAI = _currentAI = GetAccessInfo(AccessType.Service, "cm");
-                        }
-                        else if (str.StartsWith("sqlite/", StringComparison.OrdinalIgnoreCase))
-                        {
-                            sqliteKey = str.Substring(7);
-                        }
-                        else
-                        {
-                            dbKey = str;
-                        }
-                    }
-                    else if (key == "database")
-                    {
-                        // {
-                        r.Read();
-
-                        while (r.Read() && r.TokenType != JsonTokenType.EndObject)
-                        {
-                            string dbName = r.GetString();
-                            // {
-                            r.Read();
-
-                            string connStr = null;
-                            DatabaseType? tp = null;
-                            while (r.Read() && r.TokenType != JsonTokenType.EndObject)
-                            {
-                                var name = r.GetString().ToLower();
-                                if (name == "connstr")
-                                {
-                                    connStr = r.ReadAsString();
-                                }
-                                else if (name == "dbtype")
-                                {
-                                    var dbType = r.ReadAsString().ToLower();
-                                    if (dbType == "mysql")
-                                        tp = DatabaseType.MySql;
-                                    else if (dbType == "oracle")
-                                        tp = DatabaseType.Oracle;
-                                    else if (dbType == "sqlserver")
-                                        tp = DatabaseType.SqlServer;
-                                    else if (dbType == "postgresql")
-                                        tp = DatabaseType.PostgreSql;
-                                }
-                            }
-                            if (!string.IsNullOrEmpty(connStr) && tp != null)
-                            {
-                                _dbs[dbName] = new DbAccessInfo(dbName, connStr, tp.Value);
-                            }
-                        }
-                    }
-#endif
-                    else
-                    {
-                        r.Read();
-                        r.TrySkip();
-                    }
-                }
-            }
-            catch (Exception ex)
+            if (Regex.IsMatch(GlobalConfig.WasmServer, @"^http[s]?://[^\s/]+"))
             {
-                // throw时无提示信息
-                throw new Exception("读取 Config.json 时出错！" + ex.Message);
+                _svcUrlInfo = new SvcUrlInfo(GlobalConfig.WasmServer);
+                _originAI = _currentAI = GetAccessInfo(AccessType.Service, "cm");
             }
+#else
+            if (Regex.IsMatch(GlobalConfig.Server, @"^http[s]?://[^\s/]+"))
+            {
+                _svcUrlInfo = new SvcUrlInfo(GlobalConfig.Server);
+                _originAI = _currentAI = GetAccessInfo(AccessType.Service, "cm");
+            }
+            else if (GlobalConfig.Server.StartsWith("sqlite/", StringComparison.OrdinalIgnoreCase))
+            {
+                sqliteKey = GlobalConfig.Server.Substring(7);
+            }
+            else
+            {
+                dbKey = GlobalConfig.Server;
+            }
+#endif
 
 #if WASM
             if (_originAI == null)
@@ -290,7 +211,7 @@ namespace Dt.Core
                     fw = $"单机架构({sqliteKey})";
                 }
             }
-            Kit.Debug("读取Config.json：" + fw);
+            Kit.Debug(fw);
 #endif
         }
 
@@ -299,7 +220,7 @@ namespace Dt.Core
         static IAccessInfo _currentAI;
 
         static readonly Dictionary<string, SvcAccessInfo> _svcs = new Dictionary<string, SvcAccessInfo>(StringComparer.OrdinalIgnoreCase);
-        static readonly Dictionary<string, DbAccessInfo> _dbs = new Dictionary<string, DbAccessInfo>(StringComparer.OrdinalIgnoreCase);
+        static Dictionary<string, DbAccessInfo> _dbs => GlobalConfig._dbs;
         static readonly Dictionary<string, SqliteAccessInfo> _sqlites = new Dictionary<string, SqliteAccessInfo>(StringComparer.OrdinalIgnoreCase);
     }
 }

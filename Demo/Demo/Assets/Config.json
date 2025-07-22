@@ -6,6 +6,9 @@
   //"Server": "pgdt",
   //"Server": "sqlite/库名",
 
+  // Wasm服务地址，因浏览器内访问https时证书无效不访问，证书已安装可以和Server相同
+  "WasmServer": "http://10.10.1.16:9999",
+
   // 可直连数据库列表
   "Database": {
     "mydt": {
@@ -24,10 +27,7 @@
       "ConnStr": "Host=10.10.1.2;Port=5432;Database=dt;Username=dt;Password=dt;",
       "DbType": "postgresql"
     }
-  },
-
-  // Wasm服务地址，因浏览器内访问https时证书无效不访问，证书已安装可以和Server相同
-  "WasmServer": "http://10.10.1.16:9999",
+  }
 
   // 日志设置
   //"LogSetting": {

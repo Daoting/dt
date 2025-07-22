@@ -20,7 +20,7 @@ namespace Dt.Core
     /// </summary>
     internal class GlobalConfig
     {
-        static readonly Dictionary<string, DbAccessInfo> _dbs = new Dictionary<string, DbAccessInfo>(StringComparer.OrdinalIgnoreCase);
+        public static readonly Dictionary<string, DbAccessInfo> _dbs = new Dictionary<string, DbAccessInfo>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// 系统标题
@@ -30,8 +30,6 @@ namespace Dt.Core
         public static string Server { get; set; }
 
         public static string WasmServer { get; set; }
-
-        public static Dictionary<string, DbAccessInfo> DbInfos => _dbs;
 
         public static LogSetting LogSetting { get; } = CreateLogSetting();
 
@@ -60,6 +58,7 @@ namespace Dt.Core
                     if (key == "title")
                     {
                         Title = r.ReadAsString();
+                        UITree.MainWin.Title = Title;
                     }
                     else if (key == "wasmserver")
                     {

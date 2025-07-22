@@ -32,7 +32,7 @@ namespace Dt.Core
             _ui = _svcProvider.GetRequiredService<IUICallback>();
             _user = _svcProvider.GetService<IUserCallback>();
             
-            await At.InitConfig();
+            At.InitConfig();
 
             // 创建本地文件存放目录
             // 使用 StorageFolder 替换 Directory 是因为 wasm 中可以等待 IDBFS 初始化完毕！！！
@@ -49,7 +49,7 @@ namespace Dt.Core
             // GBK编码
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            Debug("Kit.Init");
+            Debug("存根注入服务");
         }
         
         #region App事件方法
