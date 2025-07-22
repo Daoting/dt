@@ -15,41 +15,41 @@ namespace Dt.Core
     /// <summary>
     /// 日志设置
     /// </summary>
-    public interface ILogSetting
+    public class LogSetting
     {
         /// <summary>
         /// 处理日志的最小级别，低于最小级别的不处理
         /// </summary>
-        LogEventLevel MinimumLevel { get; }
-        
+        public LogEventLevel MinimumLevel { get; set; }
+
         /// <summary>
         /// 是否将日志输出到Console
         /// </summary>
-        bool ConsoleEnabled { get; }
+        public bool ConsoleEnabled { get; set; }
 
         /// <summary>
         /// 输出到Console的级别
         /// </summary>
-        LogEventLevel ConsoleLogLevel { get; }
+        public LogEventLevel ConsoleLogLevel { get; set; }
 
         /// <summary>
         /// 是否将日志保存到文件
         /// </summary>
-        bool FileEnabled { get; }
+        public bool FileEnabled { get; set; }
 
         /// <summary>
         /// 日志输出到文件的级别
         /// </summary>
-        LogEventLevel FileLogLevel { get; }
+        public LogEventLevel FileLogLevel { get; set; }
 
         /// <summary>
         /// 是否将日志输出到Trace
         /// </summary>
-        bool TraceEnabled { get; }
+        public bool TraceEnabled { get; set; }
 
         /// <summary>
         /// 日志到Trace的级别
         /// </summary>
-        LogEventLevel TraceLogLevel { get; }
+        public LogEventLevel TraceLogLevel { get; set; }
     }
 }

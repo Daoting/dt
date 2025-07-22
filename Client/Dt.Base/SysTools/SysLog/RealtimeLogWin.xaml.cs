@@ -32,7 +32,16 @@ namespace Dt.Base.Tools
 
             if (!Log.IsEnabled(LogEventLevel.Debug))
             {
-                Serilogger.ApplySetting(new LogSetting());
+                Serilogger.ApplySetting(new LogSetting
+                {
+                    MinimumLevel = LogEventLevel.Debug,
+                    ConsoleEnabled = true,
+                    FileEnabled = true,
+                    TraceEnabled = true,
+                    FileLogLevel = LogEventLevel.Information,
+                    ConsoleLogLevel = LogEventLevel.Debug,
+                    TraceLogLevel = LogEventLevel.Debug,
+                });
                 Log.Debug("已将最小日志级别自动调整为Debug");
             }
             _menu["Sqlite"].IsChecked = SqliteAccess.TraceLog;
@@ -65,17 +74,6 @@ namespace Dt.Base.Tools
         public void ClearData()
         {
             _lv.Data = null;
-        }
-
-        class LogSetting : ILogSetting
-        {
-            public LogEventLevel MinimumLevel => LogEventLevel.Debug;
-            public bool TraceEnabled => true;
-            public LogEventLevel TraceLogLevel => LogEventLevel.Debug;
-            public bool FileEnabled => true;
-            public LogEventLevel FileLogLevel => LogEventLevel.Information;
-            public bool ConsoleEnabled => false;
-            public LogEventLevel ConsoleLogLevel => LogEventLevel.Debug;
         }
     }
 

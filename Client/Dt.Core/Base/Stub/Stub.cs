@@ -24,7 +24,6 @@ namespace Dt.Core
             Inst = this;
             
             var svcs = new ServiceCollection();
-            svcs.AddSingleton<ILogSetting, DefLogSetting>();
             svcs.AddSingleton<ITypeAlias, DefTypeAlias>();
             ConfigureServices(svcs);
             ServiceProvider = svcs.BuildServiceProvider();

@@ -64,9 +64,7 @@ namespace Dt.Base
 #endif
             
             // 创建可视树
-            UITree.Init();
-            // 背景为主题画刷
-            UITree.RootGrid.Background = (ThemeBrush != null) ? ThemeBrush : new SolidColorBrush(Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2));
+            UITree.Init(ThemeBrush);
             
             // 初始化全局配置、类型字典、日志、存根、Kit
             try
@@ -79,20 +77,7 @@ namespace Dt.Base
             }
             catch (Exception ex)
             {
-                var win = new Window { Title = "启动出错" };
-                var bd = new Border { Background = new SolidColorBrush(Colors.Red) };
-                bd.Child = new TextBlock
-                {
-                    Text = ex.Message,
-                    Foreground = new SolidColorBrush(Colors.White),
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    TextWrapping = TextWrapping.Wrap,
-                    FontSize = 20,
-                    Margin = new Thickness(20)
-                };
-                win.Content = bd;
-                win.Activate();
+                DefaultStub.ShowError(ex.Message);
                 return;
             }
 

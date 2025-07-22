@@ -29,7 +29,6 @@ namespace Demo
             p_svcs.AddTransient<IReceiveShare, ReceiveShare>();
             p_svcs.AddTransient<ITaskbar, Taskbar>();
             //p_svcs.AddTransient<ITaskbar, MyTaskbar>();
-            //p_svcs.AddSingleton<ILogSetting, LogSetting>();
         }
 
         /// <summary>

@@ -47,26 +47,33 @@ namespace Dt.Core
         /// <summary>
         /// 对话框面板
         /// </summary>
-        static readonly Canvas _dlgCanvas;
+        static Canvas _dlgCanvas;
 
         static PointerEventHandler _pressedHandler = new PointerEventHandler(OnPanelPointerPressed);
 
         /// <summary>
         /// 内容元素的容器
         /// </summary>
-        static readonly Border _contentBorder;
-
+        static Border _contentBorder;
         #endregion
 
-        #region 静态构造
-        static UITree()
+        #region 初始化
+        /// <summary>
+        /// 创建窗口及整个系统可视树
+        /// </summary>
+        /// <param name="p_themeBrush"></param>
+        internal static void Init(Brush p_themeBrush)
         {
+            // 避免重复创建
+            if (MainWin != null)
+                return;
+            
             MainWin = new Window();
 #if WIN
             CustomWin();
 #endif
-            // 根Grid，背景为主题画刷，在外部设置
-            RootGrid = new Grid();
+            // 根Grid，背景为主题画刷
+            RootGrid = new Grid { Background = (p_themeBrush != null) ? p_themeBrush : new SolidColorBrush(Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2)) };
 
             // 最低层，不可见，截图用
             SnapBorder = new Border();
@@ -130,29 +137,23 @@ namespace Dt.Core
             MainWin.Activate();
             Kit.Debug("创建可视树");
         }
-
-        /// <summary>
-        /// 创建窗口及整个系统可视树，在静态构造方法中完成，避免重复创建
-        /// </summary>
-        internal static void Init()
-        { }
         #endregion
 
         #region 基础
         /// <summary>
         /// 主窗口
         /// </summary>
-        public static readonly Window MainWin;
+        public static Window MainWin;
 
         /// <summary>
         /// Window.Content内容，根Grid
         /// </summary>
-        public static readonly Grid RootGrid;
+        public static Grid RootGrid;
 
         /// <summary>
         /// 在最低层，不可见，截图用的Border容器
         /// </summary>
-        public static readonly Border SnapBorder;
+        public static Border SnapBorder;
 
         /// <summary>
         /// 获取设置桌面层/页面层的内容元素，桌面、Frame、登录页面，在最底层
@@ -346,7 +347,7 @@ namespace Dt.Core
         /// <summary>
         /// 提示信息面板
         /// </summary>
-        public static readonly StackPanel NotifyPanel;
+        public static StackPanel NotifyPanel;
 
         /// <summary>
         /// 调整提示信息层样式

@@ -33,7 +33,7 @@ namespace Dt.Core
 
         public static Dictionary<string, DbAccessInfo> DbInfos => _dbs;
 
-        public static ILogSetting LogSetting { get; } = CreateLogSetting();
+        public static LogSetting LogSetting { get; } = CreateLogSetting();
 
         public static async Task Load()
         {
@@ -108,6 +108,43 @@ namespace Dt.Core
                             }
                         }
                     }
+                    else if (key == "logsetting")
+                    {
+                        // {
+                        r.Read();
+
+                        while (r.Read() && r.TokenType != JsonTokenType.EndObject)
+                        {
+                            switch (r.GetString().ToLower())
+                            {
+                                case "minimumlevel":
+                                    LogSetting.MinimumLevel = Enum.Parse<LogEventLevel>(r.ReadAsString());
+                                    break;
+                                case "consoleenabled":
+                                    LogSetting.ConsoleEnabled = r.ReadAsBool();
+                                    break;
+                                case "consoleloglevel":
+                                    LogSetting.ConsoleLogLevel = Enum.Parse<LogEventLevel>(r.ReadAsString());
+                                    break;
+                                case "fileenabled":
+                                    LogSetting.FileEnabled = r.ReadAsBool();
+                                    break;
+                                case "fileloglevel":
+                                    LogSetting.FileLogLevel = Enum.Parse<LogEventLevel>(r.ReadAsString());
+                                    break;
+                                case "traceenabled":
+                                    LogSetting.TraceEnabled = r.ReadAsBool();
+                                    break;
+                                case "traceloglevel":
+                                    LogSetting.TraceLogLevel = Enum.Parse<LogEventLevel>(r.ReadAsString());
+                                    break;
+                                default:
+                                    r.Read();
+                                    r.TrySkip();
+                                    break;
+                            }
+                        }
+                    }
                     else
                     {
                         r.Read();
@@ -120,45 +157,35 @@ namespace Dt.Core
                 // throw时无提示信息
                 throw new Exception("读取 Config.json 时出错！" + ex.Message);
             }
+            Kit.Debug("加载全局配置");
         }
 
-        static ILogSetting CreateLogSetting()
+        static LogSetting CreateLogSetting()
         {
+            // 默认日志设置
 #if DEBUG
-            return new CfgLogSetting
+            return new LogSetting
             {
                 MinimumLevel = LogEventLevel.Debug,
                 ConsoleEnabled = true,
-                FileEnabled = true,
-                TraceEnabled = true,
-                FileLogLevel = LogEventLevel.Information,
                 ConsoleLogLevel = LogEventLevel.Debug,
+                FileEnabled = true,
+                FileLogLevel = LogEventLevel.Information,
+                TraceEnabled = true,
                 TraceLogLevel = LogEventLevel.Debug,
             };
 #else
-            return new CfgLogSetting
+            return new LogSetting
             {
-                MinimumLevel = LogEventLevel.Debug,
-                ConsoleEnabled = true,
-                FileEnabled = true,
-                TraceEnabled = true,
-                FileLogLevel = LogEventLevel.Information,
+                MinimumLevel = LogEventLevel.Warning,
+                ConsoleEnabled = false,
                 ConsoleLogLevel = LogEventLevel.Debug,
+                FileEnabled = true,
+                FileLogLevel = LogEventLevel.Warning,
+                TraceEnabled = false,
                 TraceLogLevel = LogEventLevel.Debug,
             };
 #endif
-        }
-        
-        class CfgLogSetting : ILogSetting
-        {
-            public LogEventLevel MinimumLevel { get; set; }
-            public bool ConsoleEnabled { get; set; }
-            public bool FileEnabled { get; set; }
-            public bool TraceEnabled { get; set; }
-            public LogEventLevel FileLogLevel { get; set; }
-
-            public LogEventLevel ConsoleLogLevel { get; set; }
-            public LogEventLevel TraceLogLevel { get; set; }
         }
     }
 }

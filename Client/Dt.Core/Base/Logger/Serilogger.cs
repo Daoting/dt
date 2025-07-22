@@ -18,11 +18,11 @@ namespace Dt.Core
     {
         public static void Init()
         {
-            var setting = Kit.GetRequiredService<ILogSetting>();
-            ApplySetting(setting);
+            ApplySetting(GlobalConfig.LogSetting);
+            Kit.Debug("启动日志");
         }
 
-        public static void ApplySetting(ILogSetting setting)
+        public static void ApplySetting(LogSetting setting)
         {
             try
             {

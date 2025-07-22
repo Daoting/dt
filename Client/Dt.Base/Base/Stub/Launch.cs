@@ -111,7 +111,7 @@ namespace Dt.Base
         /// 启动过程中显示错误信息，此时未加载任何UI
         /// </summary>
         /// <param name="p_error"></param>
-        static void ShowError(string p_error)
+        internal static void ShowError(string p_error)
         {
             var dlg = new Dlg { IsPinned = true, Resizeable = false, HideTitleBar = true, ShowVeil = false, Background = Res.主蓝 };
             if (!Kit.IsPhoneUI)
