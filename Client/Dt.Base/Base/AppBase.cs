@@ -8,9 +8,14 @@
 
 #region 引用命名
 using Dt.Core;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using SkiaSharp;
+using System.Text.Json;
 using Windows.Storage;
+using Windows.UI;
 #if !WIN
 using Microsoft.Extensions.Logging;
 #endif
@@ -29,8 +34,68 @@ namespace Dt.Base
     {
         Stub _stub;
 
-        public AppBase()
+        protected abstract Stub NewStub();
+
+        protected abstract void InitDtDictionary();
+
+        /// <summary>
+        /// 主题颜色，logo图标、启动页背景色，在app项目.csprj中设置
+        /// </summary>
+        protected abstract Brush ThemeBrush { get; }
+        
+        protected override async void OnLaunched(LaunchActivatedEventArgs p_args)
         {
+            if (_stub != null)
+            {
+                await _stub.OnLaunched(p_args);
+                return;
+            }
+
+#if !WIN
+            // 非WinAppSdk平台统一Skia渲染：
+
+            // Skia渲染时默认true，和WinUI一致Frame不保存旧页面。为提高返回时的性能，设置为false
+            // https://platform.uno/docs/articles/controls/Frame.html
+            Uno.UI.FeatureConfiguration.Frame.UseWinUIBehavior = false;
+
+            // Skia渲染时HarmonyOS Sans字体作为默认字体，开源字体无版权问题，在构造方法设置对wasm无效！
+            // uno通过 HarmonySans.ttf.manifest 获取粗体、斜体等样式，wasm无需在css中设置字体
+            Uno.UI.FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/HarmonySans.ttf";
+#endif
+            
+            // 创建可视树
+            UITree.Init();
+            // 背景为主题画刷
+            UITree.RootGrid.Background = (ThemeBrush != null) ? ThemeBrush : new SolidColorBrush(Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2));
+            
+            // 初始化全局配置、类型字典、日志、存根、Kit
+            try
+            {
+                await GlobalConfig.Load();
+                InitDtDictionary();
+                Serilogger.Init();
+                _stub = NewStub();
+                await Kit.Init(_stub.ServiceProvider);
+            }
+            catch (Exception ex)
+            {
+                var win = new Window { Title = "启动出错" };
+                var bd = new Border { Background = new SolidColorBrush(Colors.Red) };
+                bd.Child = new TextBlock
+                {
+                    Text = ex.Message,
+                    Foreground = new SolidColorBrush(Colors.White),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    TextWrapping = TextWrapping.Wrap,
+                    FontSize = 20,
+                    Margin = new Thickness(20)
+                };
+                win.Content = bd;
+                win.Activate();
+                return;
+            }
+
             /* 异常处理，参见 https://github.com/Daoting/dt/issues/1
             未处理异常发生的位置有4种：
             主线程同步方法、主线程异步方法、Task内部同步方法、Task内部异步方法
@@ -49,32 +114,6 @@ namespace Dt.Base
             // 影响性能，正式版不启用
             InitExceptionLog();
 #endif
-        }
-
-        protected abstract Stub NewStub();
-
-        protected abstract void InitDtDictionary();
-
-        protected override async void OnLaunched(LaunchActivatedEventArgs p_args)
-        {
-#if !WIN
-            // 非WinAppSdk平台统一Skia渲染：
-
-            // Skia渲染时默认true，和WinUI一致Frame不保存旧页面。为提高返回时的性能，设置为false
-            // https://platform.uno/docs/articles/controls/Frame.html
-            Uno.UI.FeatureConfiguration.Frame.UseWinUIBehavior = false;
-
-            // Skia渲染时HarmonyOS Sans字体作为默认字体，开源字体无版权问题，在构造方法设置对wasm无效！
-            // uno通过 HarmonySans.ttf.manifest 获取粗体、斜体等样式，wasm无需在css中设置字体
-            Uno.UI.FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/HarmonySans.ttf";
-#endif
-
-            if (_stub == null)
-            {
-                InitDtDictionary();
-                
-                _stub = NewStub();
-            }
             await _stub.OnLaunched(p_args);
         }
 
@@ -149,6 +188,7 @@ namespace Dt.Base
 #endif
         #endregion
 
+        #region IOS
         //#if IOS
         //        public override bool OpenUrl(UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options)
         //        {
@@ -166,5 +206,6 @@ namespace Dt.Base
         //            _stub.ReceivedLocalNotification(p_app, p_notification);
         //        }
         //#endif
+        #endregion
     }
 }

@@ -320,8 +320,7 @@ namespace Dt.Base
             var grid = GetTemplateChild("HeaderGrid") as Grid;
             if (grid != null)
             {
-                var theme = Kit.GetService<ITheme>();
-                grid.Background = (theme == null) ? Res.主蓝 : theme.ThemeBrush;
+                grid.Background = Kit.ThemeBrush;
             }
 
             if (OwnWin != null)

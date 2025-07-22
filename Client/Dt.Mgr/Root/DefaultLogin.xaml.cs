@@ -32,8 +32,7 @@ namespace Dt.Mgr
             InitializeComponent();
 
             // 背景
-            var theme = Kit.GetService<ITheme>();
-            Background = (theme == null) ? Res.主蓝 : theme.ThemeBrush;
+            Background = Kit.ThemeBrush;
 
             _tbTitle.Text = string.IsNullOrEmpty(Kit.Title) ? "无标题" : Kit.Title;
 

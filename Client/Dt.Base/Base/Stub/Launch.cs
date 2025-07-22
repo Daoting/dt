@@ -35,9 +35,6 @@ namespace Dt.Base
         /// <returns></returns>
         async Task Launch(string p_launchArgs = null, ShareInfo p_shareInfo = null)
         {
-            // 创建可视树
-            UITree.Init();
-
             if (!string.IsNullOrEmpty(p_launchArgs))
             {
                 try
@@ -62,9 +59,6 @@ namespace Dt.Base
 
             try
             {
-                // 启动前的准备
-                await Kit.OnLaunch();
-
                 // 附加全局按键事件
                 InitInput();
             }

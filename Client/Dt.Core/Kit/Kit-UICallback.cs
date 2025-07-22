@@ -10,6 +10,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 #endregion
 
 namespace Dt.Core
@@ -167,21 +168,13 @@ namespace Dt.Core
         /// <summary>
         /// 系统标题
         /// </summary>
-        public static string Title
-        {
-            get { return _title; }
-            set
-            {
-                if (_title != value)
-                {
-                    _title = value;
-                    // 确保已初始化
-                    if (_svcProvider != null)
-                        UITree.MainWin.Title = value;
-                }
-            }
-        }
+        public static string Title => GlobalConfig.Title;
 
+        /// <summary>
+        /// 主题画刷
+        /// </summary>
+        public static Brush ThemeBrush => UITree.RootGrid.Background;
+        
         /// <summary>
         /// 加载根内容，支持任意类型的UIElement，特殊类型有：
         /// <para>Win：PhoneUI模式加载Frame、导航到窗口主页、再导航到自启动窗口主页；Win模式加载桌面、打开窗口、再打开自启动窗口</para>
@@ -227,8 +220,6 @@ namespace Dt.Core
         /// UI模式切换的回调方法，Phone UI 与 PC UI 切换
         /// </summary>
         internal static Action OnUIModeChanged => _ui.OnUIModeChanged;
-
-        static string _title;
         #endregion
 
         #region 选择文件

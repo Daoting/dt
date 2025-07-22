@@ -65,14 +65,8 @@ namespace Dt.Core
 #if WIN
             CustomWin();
 #endif
-            // 背景画刷，默认主蓝
-            var theme = Kit.GetService<ITheme>();
-            Brush bgBrush = (theme == null) ?
-                new SolidColorBrush(Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2))
-                : theme.ThemeBrush;
-
-            // 根Grid，背景为主题画刷
-            RootGrid = new Grid { Background = bgBrush };
+            // 根Grid，背景为主题画刷，在外部设置
+            RootGrid = new Grid();
 
             // 最低层，不可见，截图用
             SnapBorder = new Border();
@@ -85,7 +79,7 @@ namespace Dt.Core
                 Height = 80,
                 Width = 80,
                 IsActive = true,
-                Background = bgBrush,
+                Background = new SolidColorBrush(Colors.Transparent),
                 Foreground = new SolidColorBrush(Colors.White),
             };
             RootGrid.Children.Add(_contentBorder);
@@ -178,7 +172,7 @@ namespace Dt.Core
                     // 顶部空出标题栏
                     _contentBorder.Padding = new Thickness(0, MainWin.AppWindow.TitleBar.Height, 0, 0);
                     // 清除标题栏可Passthrough区域
-                    var nonClient = Microsoft.UI.Input.InputNonClientPointerSource.GetForWindowId(Kit.MainWin.AppWindow.Id);
+                    var nonClient = Microsoft.UI.Input.InputNonClientPointerSource.GetForWindowId(MainWin.AppWindow.Id);
                     nonClient.ClearRegionRects(Microsoft.UI.Input.NonClientRegionKind.Passthrough);
                 }
                 else

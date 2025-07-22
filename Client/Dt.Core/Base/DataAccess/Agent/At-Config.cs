@@ -160,7 +160,7 @@ namespace Dt.Core
                     string key = r.GetString().ToLower();
                     if (key == "title")
                     {
-                        Kit.Title = r.ReadAsString();
+                        //Kit.Title = r.ReadAsString();
                     }
 #if WASM
                     else if (key == "wasmserver")

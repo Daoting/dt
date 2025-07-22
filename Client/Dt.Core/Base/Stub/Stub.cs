@@ -27,7 +27,7 @@ namespace Dt.Core
             svcs.AddSingleton<ILogSetting, DefLogSetting>();
             svcs.AddSingleton<ITypeAlias, DefTypeAlias>();
             ConfigureServices(svcs);
-            Kit.Init(svcs.BuildServiceProvider());
+            ServiceProvider = svcs.BuildServiceProvider();
         }
         
         /// <summary>
@@ -41,6 +41,11 @@ namespace Dt.Core
         /// </summary>
         protected virtual Task OnStartup() { return Task.CompletedTask; }
 
+        /// <summary>
+        /// 注入服务的提供者
+        /// </summary>
+        internal readonly ServiceProvider ServiceProvider;
+        
         /// <summary>
         /// 内部访问存根实例
         /// </summary>

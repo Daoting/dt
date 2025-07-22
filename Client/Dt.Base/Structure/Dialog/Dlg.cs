@@ -706,8 +706,7 @@ namespace Dt.Base
             {
                 if (Kit.IsPhoneUI)
                 {
-                    var theme = Kit.GetService<ITheme>();
-                    _headerGrid.Background = (theme == null) ? Res.主蓝 : theme.ThemeBrush;
+                    _headerGrid.Background = Kit.ThemeBrush;
                 }
                 _headerGrid.PointerPressed += OnHeaderPointerPressed;
                 _headerGrid.PointerMoved += OnHeaderPointerMoved;

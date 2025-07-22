@@ -22,31 +22,16 @@ namespace Dt.Core
     public partial class Kit
     {
         /// <summary>
-        /// Kit初始化：提取注入的服务、日志
+        /// Kit初始化：提取注入的服务、启动前的准备，Application.OnLaunched中调用
         /// </summary>
         /// <param name="p_svcProvider">注入服务</param>
-        internal static void Init(IServiceProvider p_svcProvider)
+        internal static async Task Init(IServiceProvider p_svcProvider)
         {
             _svcProvider = p_svcProvider;
             _typeAlias = _svcProvider.GetRequiredService<ITypeAlias>();
             _ui = _svcProvider.GetRequiredService<IUICallback>();
             _user = _svcProvider.GetService<IUserCallback>();
-
-            // 从后台任务启动
-            if (Application.Current == null)
-                return;
-
-            // 初始化日志
-            Serilogger.Init();
-            Debug("构造Stub，注入服务");
-        }
-
-        /// <summary>
-        /// 启动前的准备，Application.OnLaunched中调用
-        /// </summary>
-        /// <returns></returns>
-        internal static async Task OnLaunch()
-        {
+            
             await At.InitConfig();
 
             // 创建本地文件存放目录
@@ -63,6 +48,8 @@ namespace Dt.Core
 
             // GBK编码
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+            Debug("Kit.Init");
         }
         
         #region App事件方法

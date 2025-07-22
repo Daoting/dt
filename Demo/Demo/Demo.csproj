@@ -1,7 +1,10 @@
 <Project Sdk="Dt.Sdk">
 	<PropertyGroup>
 		<IsExe>true</IsExe>
-
+		
+		<!-- 主题颜色，无#前缀，logo图标、启动页背景色 -->
+		<ThemeColor>1BA1E2</ThemeColor>
+		
 		<!-- WinAppSdk时和Package.appxmanifest模板生成AppxManifest.xml -->
 		<ApplicationTitle>搬运工</ApplicationTitle>
 		<ApplicationId>dt.Demo</ApplicationId>

@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Dt.Core
 {
-    static class Serilogger
+    internal static class Serilogger
     {
         public static void Init()
         {
