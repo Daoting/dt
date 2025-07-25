@@ -7,16 +7,13 @@
 #endregion
 
 #region 引用命名
-using Dt.Core.Rpc;
+using Dt.Base.Tools;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System.IO.Compression;
-using System.Text.Json;
-using Microsoft.Extensions.DependencyInjection;
-using Windows.UI.Core;
 using Microsoft.UI.Xaml.Input;
+using Serilog.Extensions.ElapsedTime;
+using System.Text.Json;
 using Windows.System;
-using Dt.Base.Tools;
 #endregion
 
 namespace Dt.Base
@@ -67,12 +64,11 @@ namespace Dt.Base
                 OnInitFailed(ex);
                 return;
             }
-            
+
+            LogElapsed.Log("启动耗时");
+
             try
             {
-#if DEBUG
-                Kit.Debug("调用Stub.OnStartup");
-#endif
                 // 由外部控制启动过程
                 await OnStartup();
 

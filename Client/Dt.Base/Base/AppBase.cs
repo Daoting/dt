@@ -30,7 +30,7 @@ namespace Dt.Base
     /// <summary>
     /// Application基类
     /// </summary>
-    public abstract class AppBase : Application
+    public abstract partial class AppBase : Application
     {
         Stub _stub;
 
@@ -51,6 +51,7 @@ namespace Dt.Base
                 return;
             }
 
+            var logInfo = new LogElapsedInfo();
 #if !WIN
             // 非WinAppSdk平台统一Skia渲染：
 
@@ -71,7 +72,7 @@ namespace Dt.Base
             {
                 await GlobalConfig.Load();
                 InitDtDictionary();
-                Serilogger.Init();
+                Serilogger.Init(logInfo);
                 _stub = NewStub();
                 await Kit.Init(_stub.ServiceProvider);
             }
@@ -171,6 +172,29 @@ namespace Dt.Base
 #endif
         }
 #endif
+        #endregion
+
+        #region 静态方法
+        public static void Once()
+        {
+            DefUICallback._notifyList.ItemsChanged += DefUICallback.OnNotifyItemsChanged;
+
+            // 设置支持中文的默认字体，ScottPlot中默认字体乱码
+#if WIN
+            // 采用windows默认中文字体：微软雅黑
+            ScottPlot.Fonts.Default = "Microsoft YaHei UI";
+#else
+            // 默认字体和uno中相同，手动指定粗体、斜体等样式的ttf文件
+            string fontName = "HarmonySans";
+            var file = Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Fonts/HarmonySans.ttf")).GetResults();
+            var basePath = file.Path.Substring(0, file.Path.Length - 4);
+            ScottPlot.Fonts.AddFontFile(fontName, file.Path);
+            ScottPlot.Fonts.AddFontFile(fontName, basePath + "_Bold.ttf", true, true);
+            ScottPlot.Fonts.AddFontFile(fontName, basePath + "_Bold.ttf", true, false);
+            ScottPlot.Fonts.AddFontFile(fontName, file.Path, false, true);
+            ScottPlot.Fonts.Default = fontName;
+#endif
+        }
         #endregion
 
         #region IOS

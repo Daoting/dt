@@ -32,27 +32,6 @@ namespace Dt.Base
         IPlotInteraction _interaction;
         #endregion
 
-        #region 静态构造
-        static Chart2()
-        {
-            // 设置支持中文的默认字体，ScottPlot中默认字体乱码
-#if WIN
-            // 采用windows默认中文字体：微软雅黑
-            ScottPlot.Fonts.Default = "Microsoft YaHei UI";
-#else
-            // 默认字体和uno中相同，手动指定粗体、斜体等样式的ttf文件
-            string fontName = "HarmonySans";
-            var file = Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Fonts/HarmonySans.ttf")).GetResults();
-            var basePath = file.Path.Substring(0, file.Path.Length - 4);
-            ScottPlot.Fonts.AddFontFile(fontName, file.Path);
-            ScottPlot.Fonts.AddFontFile(fontName, basePath + "_Bold.ttf", true, true);
-            ScottPlot.Fonts.AddFontFile(fontName, basePath + "_Bold.ttf", true, false);
-            ScottPlot.Fonts.AddFontFile(fontName, file.Path, false, true);
-            ScottPlot.Fonts.Default = fontName;
-#endif
-        }
-        #endregion
-
         #region 构造方法
         public Chart2()
         {

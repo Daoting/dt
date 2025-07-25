@@ -7,22 +7,22 @@
 #endregion
 
 #region 引用命名
+using Serilog.Extensions.ElapsedTime;
 using Serilog.Formatting.Compact;
 using Windows.Storage;
-using Microsoft.Extensions.DependencyInjection;
 #endregion
 
 namespace Dt.Core
 {
     internal static class Serilogger
     {
-        public static void Init()
+        public static void Init(ILogElapsedInfo p_logElapsedInfo)
         {
-            ApplySetting(GlobalConfig.LogSetting);
+            ApplySetting(GlobalConfig.LogSetting, p_logElapsedInfo);
             Kit.Debug("启动日志");
         }
 
-        public static void ApplySetting(LogSetting setting)
+        public static void ApplySetting(LogSetting setting, ILogElapsedInfo p_logElapsedInfo = null)
         {
             try
             {
@@ -30,6 +30,8 @@ namespace Dt.Core
 
                 // 设置最小输出级别，默认Information
                 cfg.MinimumLevel.Is(setting.MinimumLevel);
+
+                cfg.WithElapsed(p_logElapsedInfo, setting.MinimumLevel);
 
                 if (setting.TraceEnabled)
                     cfg.WriteTo.Sink(new TraceSink(), restrictedToMinimumLevel: setting.TraceLogLevel);

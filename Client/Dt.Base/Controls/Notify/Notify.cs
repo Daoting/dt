@@ -90,15 +90,9 @@ namespace Dt.Base
         }
 
         #region 静态内容
-        static readonly ItemList<NotifyInfo> _notifyList;
+        internal static readonly ItemList<NotifyInfo> _notifyList = new ItemList<NotifyInfo>();
         
-        static DefUICallback()
-        {
-            _notifyList = new ItemList<NotifyInfo>();
-            _notifyList.ItemsChanged += OnNotifyItemsChanged;
-        }
-
-        static void OnNotifyItemsChanged(object sender, ItemListChangedArgs e)
+        internal static void OnNotifyItemsChanged(object sender, ItemListChangedArgs e)
         {
             if (e.CollectionChange == CollectionChange.ItemInserted || e.CollectionChange == CollectionChange.ItemChanged)
             {
