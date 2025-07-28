@@ -46,6 +46,7 @@ namespace Dt.Core
                 }
                 return _info;
             }
+            set { _info = value; }
         }
 
         /// <summary>
@@ -65,6 +66,7 @@ namespace Dt.Core
                 }
                 return _msg;
             }
+            set { _msg = value; }
         }
     }
 }

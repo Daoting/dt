@@ -49,7 +49,7 @@ namespace Dt.Core
             // GBK编码
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            Debug("存根注入服务");
+            Trace("存根注入服务");
         }
         
         #region App事件方法

@@ -135,7 +135,7 @@ namespace Dt.Core
             ApplyNotifyStyle();
             MainWin.Content = RootGrid;
             MainWin.Activate();
-            Kit.Debug("创建可视树");
+            Kit.Trace("创建可视树");
         }
         #endregion
 

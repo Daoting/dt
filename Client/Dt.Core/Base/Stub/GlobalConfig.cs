@@ -156,7 +156,7 @@ namespace Dt.Core
                 // throw时无提示信息
                 throw new Exception("读取 Config.json 时出错！" + ex.Message);
             }
-            Kit.Debug("加载全局配置");
+            Kit.Trace("加载全局配置");
         }
 
         static LogSetting CreateLogSetting()

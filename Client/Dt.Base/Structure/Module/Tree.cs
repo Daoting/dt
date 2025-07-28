@@ -108,7 +108,7 @@ namespace Dt.Base
             // 加载数据，屏蔽切换太快上次未更新的情况
             if (_toggling)
             {
-                Kit.Debug("Tree跳过加载");
+                Kit.Trace("Tree跳过加载");
                 return;
             }
 

@@ -28,14 +28,22 @@ namespace Dt.Core
         /// 向Trace窗口输出信息
         /// </summary>
         /// <param name="p_logEvent"></param>
-        public static void AddItem(LogEvent p_logEvent)
+        public static void AddLogEvent(LogEvent p_logEvent)
         {
-            var item = new TraceLogItem { Log = p_logEvent };
+            AddItem(new TraceLogItem { Log = p_logEvent });
+        }
+
+        /// <summary>
+        /// 向Trace窗口输出信息
+        /// </summary>
+        /// <param name="p_logItem"></param>
+        public static void AddItem(TraceLogItem p_logItem)
+        {
             Kit.RunAsync(() =>
             {
                 using (Data.Defer())
                 {
-                    Data.Add(item);
+                    Data.Add(p_logItem);
                     if (Data.Count > _maxTrace)
                     {
                         // 确保输出行数不超过给定的最大行数
@@ -44,7 +52,7 @@ namespace Dt.Core
                 }
             });
         }
-
+        
         /// <summary>
         /// 清空输出
         /// </summary>

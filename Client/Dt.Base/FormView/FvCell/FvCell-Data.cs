@@ -151,7 +151,7 @@ namespace Dt.Base
                 {
                     // ID既不是列，也不是属性，不绑定
                     ClearValue(ValBindingProperty);
-                    Kit.Debug($"【{ID}】在数据源中既不是列，也不是属性，无法绑定！");
+                    Kit.Trace($"【{ID}】在数据源中既不是列，也不是属性，无法绑定！");
                 }
                 return;
             }

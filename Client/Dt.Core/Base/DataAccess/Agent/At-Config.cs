@@ -211,7 +211,7 @@ namespace Dt.Core
                     fw = $"单机架构({sqliteKey})";
                 }
             }
-            Kit.Debug(fw);
+            Kit.Trace(fw);
 #endif
         }
 

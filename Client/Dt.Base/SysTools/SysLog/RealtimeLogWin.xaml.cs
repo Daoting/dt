@@ -65,7 +65,7 @@ namespace Dt.Base.Tools
             SqliteAccess.TraceLog = !SqliteAccess.TraceLog;
             e.IsChecked = SqliteAccess.TraceLog;
         }
-        
+
         void OnClear(Mi e)
         {
             TraceLogs.Clear();
@@ -103,29 +103,36 @@ namespace Dt.Base.Tools
             {
                 if (c.Data is not TraceLogItem r)
                     return;
-                
+
                 tbInfo.Text = r.Info;
-                switch (r.Log.Level)
+                if (r.Log != null)
                 {
-                    case LogEventLevel.Debug:
-                        tbInfo.Foreground = Res.深灰1;
-                        break;
+                    switch (r.Log.Level)
+                    {
+                        case LogEventLevel.Debug:
+                            tbInfo.Foreground = Res.深灰1;
+                            break;
 
-                    case LogEventLevel.Warning:
-                        tbInfo.Foreground = Res.深黄;
-                        break;
+                        case LogEventLevel.Warning:
+                            tbInfo.Foreground = Res.深黄;
+                            break;
 
-                    case LogEventLevel.Error:
-                        tbInfo.Foreground = Res.RedBrush;
-                        break;
+                        case LogEventLevel.Error:
+                            tbInfo.Foreground = Res.RedBrush;
+                            break;
 
-                    case LogEventLevel.Fatal:
-                        tbInfo.Foreground = Res.亮红;
-                        break;
+                        case LogEventLevel.Fatal:
+                            tbInfo.Foreground = Res.亮红;
+                            break;
 
-                    default:
-                        tbInfo.Foreground = Res.BlackBrush;
-                        break;
+                        default:
+                            tbInfo.Foreground = Res.BlackBrush;
+                            break;
+                    }
+                }
+                else
+                {
+                    tbInfo.Foreground = Res.BlackBrush;
                 }
                 tbMsg.Text = r.Msg;
             };

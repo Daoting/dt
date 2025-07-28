@@ -19,7 +19,7 @@ namespace Dt.Core
         public static void Init(ILogElapsedInfo p_logElapsedInfo)
         {
             ApplySetting(GlobalConfig.LogSetting, p_logElapsedInfo);
-            Kit.Debug("启动日志");
+            Kit.Trace("启动日志");
         }
 
         public static void ApplySetting(LogSetting setting, ILogElapsedInfo p_logElapsedInfo = null)
