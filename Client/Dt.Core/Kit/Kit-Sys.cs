@@ -9,6 +9,9 @@
 #region 引用命名
 using Windows.Storage;
 using Windows.UI.ViewManagement;
+#if WIN || ANDROID || IOS
+using Microsoft.Maui.Devices;
+#endif
 #endregion
 
 namespace Dt.Core
@@ -61,6 +64,21 @@ namespace Dt.Core
                 return UIViewSettings.GetForCurrentView().UserInteractionMode == UserInteractionMode.Touch;
 #else
                 return true;
+#endif
+            }
+        }
+
+        /// <summary>
+        /// 获取本地设备信息
+        /// </summary>
+        public static string LocalInfo
+        {
+            get
+            {
+#if WIN || ANDROID || IOS
+                return $"DevName: {DeviceInfo.Name}\nPlatform: {DeviceInfo.Platform}\nOsVer: {DeviceInfo.VersionString}\nAppType: {AppType}\nDtVer: {typeof(Kit).Assembly.GetName().Version}\n";
+#else
+                return $"AppType: {Kit.AppType}\nDtVer: {typeof(Kit).Assembly.GetName().Version}\n";
 #endif
             }
         }

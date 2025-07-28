@@ -9,6 +9,7 @@
 #region 引用命名
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
+using Serilog.Extensions.ElapsedTime;
 using System.Text;
 using Windows.ApplicationModel;
 using Windows.Storage;
@@ -51,7 +52,17 @@ namespace Dt.Core
 
             Trace("存根注入服务");
         }
-        
+
+        /// <summary>
+        /// 正常启动结束
+        /// </summary>
+        /// <returns></returns>
+        internal static void OnLaunched()
+        {
+            TraceTick("启动耗时");
+            Log.Logger.WithElapsed<Kit>();
+        }
+
         #region App事件方法
         /// <summary>
         /// 三平台都能正常触发！必须耗时小！

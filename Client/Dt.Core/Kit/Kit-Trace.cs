@@ -7,23 +7,12 @@
 #endregion
 
 #region 引用命名
-using Microsoft.UI.Dispatching;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Markup;
-using Serilog.Events;
-using Serilog.Parsing;
-using System.Text;
-using System.Text.RegularExpressions;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
-using Windows.UI.Core;
 #endregion
 
 namespace Dt.Core
 {
     /// <summary>
-    /// 输出信息
+    /// 输出耗时信息、普通信息
     /// </summary>
     public partial class Kit
     {
@@ -46,6 +35,26 @@ namespace Dt.Core
             };
             TraceLogs.AddItem(item);
         }
+
+        /// <summary>
+        /// 重置耗时计时器，从当前时间开始计时
+        /// </summary>
+        public static void ResetTick()
+        {
+            _lastTick = Environment.TickCount;
+        }
+
+        /// <summary>
+        /// 输出耗时信息，计算从上次调用 ResetTick 或 TraceTick 的时间差
+        /// </summary>
+        /// <param name="prefixText">信息前缀</param>
+        public static void TraceTick(string prefixText = null)
+        {
+            int now = Environment.TickCount;
+            Trace($"{(string.IsNullOrEmpty(prefixText) ? "耗时" : prefixText)} {now - _lastTick}ms");
+            _lastTick = now;
+        }
         
+        static int _lastTick;
     }
 }

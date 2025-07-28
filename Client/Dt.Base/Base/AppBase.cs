@@ -42,7 +42,7 @@ namespace Dt.Base
         /// 主题颜色，logo图标、启动页背景色，在app项目.csprj中设置
         /// </summary>
         protected abstract Brush ThemeBrush { get; }
-        
+
         protected override async void OnLaunched(LaunchActivatedEventArgs p_args)
         {
             if (_stub != null)
@@ -51,7 +51,7 @@ namespace Dt.Base
                 return;
             }
 
-            var logInfo = new LogElapsedInfo();
+            Kit.ResetTick();
 #if !WIN
             // 非WinAppSdk平台统一Skia渲染：
 
@@ -63,16 +63,16 @@ namespace Dt.Base
             // uno通过 HarmonySans.ttf.manifest 获取粗体、斜体等样式，wasm无需在css中设置字体
             Uno.UI.FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/HarmonySans.ttf";
 #endif
-            
+
             // 创建可视树
             UITree.Init(ThemeBrush);
-            
+
             // 初始化全局配置、类型字典、日志、存根、Kit
             try
             {
                 await GlobalConfig.Load();
                 InitDtDictionary();
-                Serilogger.Init(logInfo);
+                Serilogger.Init();
                 _stub = NewStub();
                 await Kit.Init(_stub.ServiceProvider);
             }
@@ -172,29 +172,6 @@ namespace Dt.Base
 #endif
         }
 #endif
-        #endregion
-
-        #region 静态方法
-        public static void Once()
-        {
-            DefUICallback._notifyList.ItemsChanged += DefUICallback.OnNotifyItemsChanged;
-
-            // 设置支持中文的默认字体，ScottPlot中默认字体乱码
-#if WIN
-            // 采用windows默认中文字体：微软雅黑
-            ScottPlot.Fonts.Default = "Microsoft YaHei UI";
-#else
-            // 默认字体和uno中相同，手动指定粗体、斜体等样式的ttf文件
-            string fontName = "HarmonySans";
-            var file = Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Fonts/HarmonySans.ttf")).GetResults();
-            var basePath = file.Path.Substring(0, file.Path.Length - 4);
-            ScottPlot.Fonts.AddFontFile(fontName, file.Path);
-            ScottPlot.Fonts.AddFontFile(fontName, basePath + "_Bold.ttf", true, true);
-            ScottPlot.Fonts.AddFontFile(fontName, basePath + "_Bold.ttf", true, false);
-            ScottPlot.Fonts.AddFontFile(fontName, file.Path, false, true);
-            ScottPlot.Fonts.Default = fontName;
-#endif
-        }
         #endregion
 
         #region IOS

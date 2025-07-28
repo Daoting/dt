@@ -65,7 +65,7 @@ namespace Dt.Base
                 return;
             }
 
-            LogElapsed.Log("启动耗时");
+            Kit.OnLaunched();
 
             try
             {
@@ -93,27 +93,6 @@ namespace Dt.Base
             {
                 ShowError(ex.Message);
             }
-        }
-
-        /// <summary>
-        /// 启动过程中显示错误信息，此时未加载任何UI
-        /// </summary>
-        /// <param name="p_error"></param>
-        internal static void ShowError(string p_error)
-        {
-            var dlg = new Dlg { IsPinned = true, Resizeable = false, HideTitleBar = true, ShowVeil = false, Background = Kit.ThemeBrush };
-            if (!Kit.IsPhoneUI)
-            {
-                dlg.WinPlacement = DlgPlacement.CenterScreen;
-                dlg.MinWidth = 300;
-                dlg.MaxWidth = Kit.ViewWidth / 4;
-                dlg.BorderThickness = new Thickness(0);
-            }
-            var pnl = new StackPanel { Margin = new Thickness(40), VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
-            pnl.Children.Add(new TextBlock { Text = "\uE037", FontFamily = Res.IconFont, Foreground = Res.WhiteBrush, FontSize = 40, Margin = new Thickness(0, 0, 0, 10), HorizontalAlignment = HorizontalAlignment.Center });
-            pnl.Children.Add(new TextBlock { Text = p_error, Foreground = Res.WhiteBrush, FontSize = 20, TextWrapping = TextWrapping.Wrap, HorizontalAlignment = HorizontalAlignment.Center });
-            dlg.Content = pnl;
-            dlg.Show();
         }
 
         /// <summary>
@@ -259,6 +238,53 @@ namespace Dt.Base
             await InitConfig();
             await OnStartup();
         }
+
+        #region 静态方法
+        /// <summary>
+        /// 启动过程中显示错误信息，此时未加载任何UI
+        /// </summary>
+        /// <param name="p_error"></param>
+        public static void ShowError(string p_error)
+        {
+            var dlg = new Dlg { IsPinned = true, Resizeable = false, HideTitleBar = true, ShowVeil = false, Background = Kit.ThemeBrush };
+            if (!Kit.IsPhoneUI)
+            {
+                dlg.WinPlacement = DlgPlacement.CenterScreen;
+                dlg.MinWidth = 300;
+                dlg.MaxWidth = Kit.ViewWidth / 4;
+                dlg.BorderThickness = new Thickness(0);
+            }
+            var pnl = new StackPanel { Margin = new Thickness(40), VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
+            pnl.Children.Add(new TextBlock { Text = "\uE037", FontFamily = Res.IconFont, Foreground = Res.WhiteBrush, FontSize = 40, Margin = new Thickness(0, 0, 0, 10), HorizontalAlignment = HorizontalAlignment.Center });
+            pnl.Children.Add(new TextBlock { Text = p_error, Foreground = Res.WhiteBrush, FontSize = 20, TextWrapping = TextWrapping.Wrap, HorizontalAlignment = HorizontalAlignment.Center });
+            dlg.Content = pnl;
+            dlg.Show();
+        }
+
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        public static void Once()
+        {
+            DefUICallback._notifyList.ItemsChanged += DefUICallback.OnNotifyItemsChanged;
+
+            // 设置支持中文的默认字体，ScottPlot中默认字体乱码
+#if WIN
+            // 采用windows默认中文字体：微软雅黑
+            ScottPlot.Fonts.Default = "Microsoft YaHei UI";
+#else
+            // 默认字体和uno中相同，手动指定粗体、斜体等样式的ttf文件
+            string fontName = "HarmonySans";
+            var file = Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Fonts/HarmonySans.ttf")).GetResults();
+            var basePath = file.Path.Substring(0, file.Path.Length - 4);
+            ScottPlot.Fonts.AddFontFile(fontName, file.Path);
+            ScottPlot.Fonts.AddFontFile(fontName, basePath + "_Bold.ttf", true, true);
+            ScottPlot.Fonts.AddFontFile(fontName, basePath + "_Bold.ttf", true, false);
+            ScottPlot.Fonts.AddFontFile(fontName, file.Path, false, true);
+            ScottPlot.Fonts.Default = fontName;
+#endif
+        }
+        #endregion
 
         bool _isInited;
     }
