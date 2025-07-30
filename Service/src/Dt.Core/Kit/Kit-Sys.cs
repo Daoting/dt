@@ -91,6 +91,11 @@ namespace Dt.Core
         /// 是否输出所有运行中的Sql语句
         /// </summary>
         public static bool TraceSql { get; set; }
+        
+        /// <summary>
+        /// 获取所有服务名称的连接字符串，多个服务名称用'+'连接
+        /// </summary>
+        public static string AllSvcName => string.Join('+', SvcNames);
         #endregion
 
         #region 系统配置
@@ -141,7 +146,7 @@ namespace Dt.Core
                 _cfgCallback = _config.GetReloadToken().RegisterChangeCallback(OnConfigChanged, null);
             }
         }
-        
+
         /// <summary>
         /// 系统配置(json文件)修改事件
         /// </summary>

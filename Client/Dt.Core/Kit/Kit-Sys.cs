@@ -69,16 +69,16 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 获取本地设备信息
+        /// 获取系统描述信息
         /// </summary>
         public static string LocalInfo
         {
             get
             {
 #if WIN || ANDROID || IOS
-                return $"DevName: {DeviceInfo.Name}\nPlatform: {DeviceInfo.Platform}\nOsVer: {DeviceInfo.VersionString}\nAppType: {AppType}\nDtVer: {typeof(Kit).Assembly.GetName().Version}\n";
+                return $"DevName: {DeviceInfo.Name}\nPlatform: {DeviceInfo.Platform}\nOsVer: {DeviceInfo.VersionString}\nAppType: {AppType}\nDtVer: {typeof(Kit).Assembly.GetName().Version.ToString(3)}\n";
 #else
-                return $"AppType: {Kit.AppType}\nDtVer: {typeof(Kit).Assembly.GetName().Version}\n";
+                return $"AppType: {AppType}\nDtVer: {typeof(Kit).Assembly.GetName().Version.ToString(3)}\n";
 #endif
             }
         }

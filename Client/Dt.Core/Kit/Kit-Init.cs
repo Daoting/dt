@@ -60,7 +60,7 @@ namespace Dt.Core
         internal static void OnLaunched()
         {
             TraceTick("启动耗时");
-            Log.Logger.WithElapsed<Kit>();
+            Log.Logger.WithElapsed<Kit>(GlobalConfig.Path);
         }
 
         #region App事件方法

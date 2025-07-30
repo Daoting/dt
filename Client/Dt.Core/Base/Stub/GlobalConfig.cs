@@ -33,6 +33,8 @@ namespace Dt.Core
 
         public static LogSetting LogSetting { get; } = CreateLogSetting();
 
+        public static string Path { get; set; }
+        
         public static async Task Load()
         {
             try
@@ -40,6 +42,7 @@ namespace Dt.Core
                 // 采用统一方式读取Config.json文件内容，wasm不支持Task.Wait()
                 string config;
                 var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Config.json"));
+                Path = file.Path;
                 using (var stream = await file.OpenStreamForReadAsync())
                 using (var reader = new StreamReader(stream))
                 {

@@ -8,7 +8,11 @@
 		<EmbeddedResource Include="Res\*.*" />
 		<EmbeddedResource Include="Internal\InitMode\InitSql\*.*" />
 	</ItemGroup>
-
+	
+	<ItemGroup Condition="exists('..\..\..\..\Tools\File\TestProgressStream.cs')">
+		<Compile Include="..\..\..\..\Tools\File\TestProgressStream.cs" Link="Rpc\Server\Handler\TestProgressStream.cs" />
+	</ItemGroup>
+	
 	<Import Project="..\References.props" />
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />

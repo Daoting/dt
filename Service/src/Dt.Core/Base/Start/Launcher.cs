@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Serilog.Extensions.ElapsedTime;
 using Serilog.Formatting.Compact;
 #endregion
 
@@ -75,6 +76,7 @@ namespace Dt.Core
                         rollingInterval: RollingInterval.Day, // 文件名末尾加日期
                         rollOnFileSizeLimit: true) // 超过1G时新文件名末尾加序号
                     .WriteTo.Console()
+                    .WithElapsed<Kit>()
                     .CreateLogger();
             }
             catch (Exception e)
@@ -203,7 +205,7 @@ namespace Dt.Core
 
             // 单体不启用 RabbitMQ
             Kit.EnableRabbitMQ = Kit.Stubs.Length == 1;
-            Log.Information($"启动 {string.Join('+', Kit.SvcNames)}，版本：{typeof(Launcher).Assembly.GetName().Version.ToString(3)}");
+            Log.Information($"启动 {Kit.AllSvcName}，版本：{typeof(Launcher).Assembly.GetName().Version.ToString(3)}");
         }
 
         /// <summary>
