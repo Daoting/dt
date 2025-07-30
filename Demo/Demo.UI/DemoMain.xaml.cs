@@ -119,10 +119,5 @@ namespace Demo.UI
 #endif
             };
         }
-
-        void OpenHomeWin(object p_owner, Nav p_nav)
-        {
-            Stub.Reboot(Type.GetType("Dt.MgrDemo.AppStub,Dt.MgrDemo"));
-        }
     }
 }
