@@ -58,14 +58,13 @@ namespace Dt.Base
             {
                 await InitConfig();
                 _isInited = true;
+                Kit.OnLaunched();
             }
             catch (Exception ex)
             {
                 OnInitFailed(ex);
                 return;
             }
-
-            Kit.OnLaunched();
 
             try
             {
@@ -129,7 +128,7 @@ namespace Dt.Base
         {
 #if ANDROID || IOS
             // WinUI中已移除 SystemNavigationManager，删除PhoneUI模式下窗口左上角的后退按钮
-            SystemNavigationManager.GetForCurrentView().BackRequested += InputKit.OnBackRequested;
+            Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += InputKit.OnBackRequested;
 #elif WIN
             // 1. 除win外，其他平台暂不支持 UIElement.KeyboardAccelerators：https://github.com/unoplatform/uno/issues/13341
             // 2. WinUI的 Window.CoreWindow 始终为null
@@ -228,17 +227,7 @@ namespace Dt.Base
         {
             ShowError(p_ex.Message);
         }
-
-        /// <summary>
-        /// Stub新实例启动
-        /// </summary>
-        /// <returns></returns>
-        protected sealed override async Task OnReboot()
-        {
-            await InitConfig();
-            await OnStartup();
-        }
-
+        
         #region 静态方法
         /// <summary>
         /// 启动过程中显示错误信息，此时未加载任何UI
@@ -261,28 +250,9 @@ namespace Dt.Base
             dlg.Show();
         }
 
-        /// <summary>
-        /// 初始化
-        /// </summary>
         public static void Once()
         {
             DefUICallback._notifyList.ItemsChanged += DefUICallback.OnNotifyItemsChanged;
-
-            // 设置支持中文的默认字体，ScottPlot中默认字体乱码
-#if WIN
-            // 采用windows默认中文字体：微软雅黑
-            ScottPlot.Fonts.Default = "Microsoft YaHei UI";
-#else
-            // 默认字体和uno中相同，手动指定粗体、斜体等样式的ttf文件
-            string fontName = "HarmonySans";
-            var file = Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Fonts/HarmonySans.ttf")).GetResults();
-            var basePath = file.Path.Substring(0, file.Path.Length - 4);
-            ScottPlot.Fonts.AddFontFile(fontName, file.Path);
-            ScottPlot.Fonts.AddFontFile(fontName, basePath + "_Bold.ttf", true, true);
-            ScottPlot.Fonts.AddFontFile(fontName, basePath + "_Bold.ttf", true, false);
-            ScottPlot.Fonts.AddFontFile(fontName, file.Path, false, true);
-            ScottPlot.Fonts.Default = fontName;
-#endif
         }
         #endregion
 

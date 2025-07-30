@@ -15,6 +15,7 @@ using ScottPlot;
 using ScottPlot.Control;
 using ScottPlot.Interactivity;
 using SkiaSharp.Views.Windows;
+using Windows.Storage;
 #endregion
 
 namespace Dt.Base
@@ -30,6 +31,39 @@ namespace Dt.Base
         PlotX _plot;
         UserInputProcessor _inputProcessor;
         IPlotInteraction _interaction;
+        #endregion
+
+        #region 静态构造
+        static Chart2()
+        {
+            // 设置支持中文的默认字体，ScottPlot中默认字体乱码
+#if WIN
+            // 采用windows默认中文字体：微软雅黑
+            ScottPlot.Fonts.Default = "Microsoft YaHei UI";
+#else
+            _ = AddFontFile();
+#endif
+        }
+        
+        static async Task AddFontFile()
+        {
+            // 默认字体和uno中相同，手动指定粗体、斜体等样式的ttf文件
+            string fontName = "HarmonySans";
+            try
+            {
+                // 静态构造方法中若使用GetResults()同步方法获取文件时，android初次会异常！
+                var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Fonts/HarmonySans.ttf"));
+                ScottPlot.Fonts.AddFontFile(fontName, file.Path, false, false);
+                ScottPlot.Fonts.AddFontFile(fontName, file.Path, false, true);
+
+                // 仍需要获取文件路径，通过上述路径计算的路径在android中报文件不存在，可能android中StorageFile内部有获取访问权限的异步操作
+                file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Fonts/HarmonySans_Bold.ttf"));
+                ScottPlot.Fonts.AddFontFile(fontName, file.Path, true, true);
+                ScottPlot.Fonts.AddFontFile(fontName, file.Path, true, false);
+            }
+            catch { }
+            ScottPlot.Fonts.Default = fontName;
+        }
         #endregion
 
         #region 构造方法
