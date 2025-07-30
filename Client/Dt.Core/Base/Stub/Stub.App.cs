@@ -26,29 +26,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_args"></param>
         public abstract Task OnLaunched(LaunchActivatedEventArgs p_args);
-
-        /// <summary>
-        /// 切换Stub新实例重启
-        /// </summary>
-        /// <param name="p_stubType"></param>
-        /// <returns></returns>
-        public static Task Reboot(Type p_stubType)
-        {
-            if (p_stubType != null && p_stubType.IsSubclassOf(typeof(Stub)))
-            {
-                Inst = null;
-                var stub = (Stub)Activator.CreateInstance(p_stubType);
-                return stub.OnReboot();
-            }
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Stub新实例启动
-        /// </summary>
-        /// <returns></returns>
-        protected abstract Task OnReboot();
-
+        
 #if IOS
         public virtual void OpenUrl(UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options) { }
 

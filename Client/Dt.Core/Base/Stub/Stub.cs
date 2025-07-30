@@ -19,10 +19,7 @@ namespace Dt.Core
     {
         public Stub()
         {
-            if (Inst != null)
-                throw new Exception("Stub 为单例对象！若重启请使用 Reboot 方法");
             Inst = this;
-            
             var svcs = new ServiceCollection();
             svcs.AddSingleton<ITypeAlias, DefTypeAlias>();
             ConfigureServices(svcs);
