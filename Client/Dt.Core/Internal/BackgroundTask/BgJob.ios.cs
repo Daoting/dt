@@ -60,13 +60,14 @@ namespace Dt.Core
             Task.Run(async () =>
             {
                 // 无后台 或 未启用
-                if (Kit.GetService<IBackgroundJob>() == null || !await CookieX.IsEnableBgJob())
+                var job = Kit.GetService<IBackgroundJob>();
+                if (job == null || !await CookieX.IsEnableBgJob())
                     return;
 
-                // 因后台任务独立运行，记录当前的存根类型以备后台使用，秒！
-                string name = Stub.Inst.GetType().AssemblyQualifiedName;
-                if (name != await CookieX.Get(_stubType))
-                    await CookieX.Save(_stubType, name);
+                // 因后台任务独立运行，记录当前的后台任务类型以备后台使用，秒！
+                string name = job.GetType().AssemblyQualifiedName;
+                if (name != await CookieX.Get(_bgJobType))
+                    await CookieX.Save(_bgJobType, name);
 
                 // 有后台需要注册通知，因后台任务无法注册
                 RegisterNotification();

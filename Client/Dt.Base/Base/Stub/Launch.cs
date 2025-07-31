@@ -56,9 +56,9 @@ namespace Dt.Base
             
             try
             {
+                await Kit.OnLaunched();
                 await InitConfig();
                 _isInited = true;
-                Kit.OnLaunched();
             }
             catch (Exception ex)
             {

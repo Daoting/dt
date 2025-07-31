@@ -8,6 +8,11 @@
 
 #region 引用命名
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
+#if IOS
+using UIKit;
+using Foundation;
+#endif
 #endregion
 
 namespace Dt.Core
@@ -19,11 +24,10 @@ namespace Dt.Core
     {
         public Stub()
         {
-            Inst = this;
             var svcs = new ServiceCollection();
             svcs.AddSingleton<ITypeAlias, DefTypeAlias>();
             ConfigureServices(svcs);
-            ServiceProvider = svcs.BuildServiceProvider();
+            Kit.Inject(svcs.BuildServiceProvider());
         }
         
         /// <summary>
@@ -38,13 +42,15 @@ namespace Dt.Core
         protected virtual Task OnStartup() { return Task.CompletedTask; }
 
         /// <summary>
-        /// 注入服务的提供者
+        /// Application.OnLaunched
         /// </summary>
-        internal readonly ServiceProvider ServiceProvider;
-        
-        /// <summary>
-        /// 内部访问存根实例
-        /// </summary>
-        internal static Stub Inst { get; private set; }
+        /// <param name="p_args"></param>
+        public abstract Task OnLaunched(LaunchActivatedEventArgs p_args);
+
+#if IOS
+        public virtual void OpenUrl(UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options) { }
+
+        public virtual void ReceivedLocalNotification(UIApplication p_app, UILocalNotification p_notification) { }
+#endif
     }
 }

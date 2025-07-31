@@ -23,18 +23,25 @@ namespace Dt.Core
     public partial class Kit
     {
         /// <summary>
-        /// Kit初始化：提取注入的服务、启动前的准备，Application.OnLaunched中调用
+        /// 提取注入的服务，Stub构造方法中调用
         /// </summary>
         /// <param name="p_svcProvider">注入服务</param>
-        internal static async Task Init(IServiceProvider p_svcProvider)
+        internal static void Inject(IServiceProvider p_svcProvider)
         {
             _svcProvider = p_svcProvider;
             _typeAlias = _svcProvider.GetRequiredService<ITypeAlias>();
             _ui = _svcProvider.GetRequiredService<IUICallback>();
             _user = _svcProvider.GetService<IUserCallback>();
-            
             At.InitConfig();
+            Trace("注入服务");
+        }
 
+        /// <summary>
+        /// 正常启动结束，最后的准备，Application.OnLaunched中调用
+        /// </summary>
+        /// <returns></returns>
+        internal static async Task OnLaunched()
+        {
             // 创建本地文件存放目录
             // 使用 StorageFolder 替换 Directory 是因为 wasm 中可以等待 IDBFS 初始化完毕！！！
             // 否则用 Directory 每次都创建新目录！
@@ -49,18 +56,8 @@ namespace Dt.Core
 
             // GBK编码
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
-            Trace("存根注入服务");
-        }
-
-        /// <summary>
-        /// 正常启动结束
-        /// </summary>
-        /// <returns></returns>
-        internal static void OnLaunched()
-        {
-            TraceTick("启动耗时");
             Log.Logger.WithElapsed<Kit>(GlobalConfig.Path);
+            TraceTick("启动耗时");
         }
 
         #region App事件方法

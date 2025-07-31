@@ -22,7 +22,7 @@ namespace Dt.Core
     /// </summary>
     public static partial class BgJob
     {
-        const string _stubType = "StubType";
+        const string _bgJobType = "BackgroundJobType";
         static StreamWriter _logWriter;
 
         /// <summary>
@@ -34,27 +34,16 @@ namespace Dt.Core
         {
             WriteLog("后台任务...");
 
-            // 前端在运行或后台资源未释放，Stub实例存在
-            Stub stub = Stub.Inst;
-            if (stub == null)
+            // 因后台任务独立运行，类型需要从State库获取！
+            IBackgroundJob bgJob = null;
+            string tpName = await CookieX.Get(_bgJobType);
+            if (!string.IsNullOrEmpty(tpName))
             {
-                // 因后台任务独立运行，存根类型需要从State库获取！
-                string tpName = await CookieX.Get(_stubType);
-                if (!string.IsNullOrEmpty(tpName))
-                {
-                    Type tp = Type.GetType(tpName);
-                    if (tp != null)
-                        stub = Activator.CreateInstance(tp) as Stub;
-                }
+                Type tp = Type.GetType(tpName);
+                if (tp != null)
+                    bgJob = Activator.CreateInstance(tp) as IBackgroundJob;
             }
 
-            if (stub == null)
-            {
-                Unregister();
-                return;
-            }
-
-            var bgJob = Kit.GetService<IBackgroundJob>();
             if (bgJob != null)
             {
                 string msg = "启动";

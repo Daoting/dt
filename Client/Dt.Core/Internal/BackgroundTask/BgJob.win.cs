@@ -13,8 +13,8 @@ using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.AppNotifications.Builder;
 using System.Diagnostics;
 using System.Text.Json;
-using Windows.ApplicationModel.Background;
 using Windows.UI.Notifications;
+using Windows.ApplicationModel.Background;
 #endregion
 
 namespace Dt.Core
@@ -39,13 +39,14 @@ namespace Dt.Core
             Task.Run(async () =>
             {
                 // 无后台 或 未启用
-                if (Kit.GetService<IBackgroundJob>() == null || !await CookieX.IsEnableBgJob())
+                var job = Kit.GetService<IBackgroundJob>();
+                if (job == null || !await CookieX.IsEnableBgJob())
                     return;
 
-                // 因后台任务独立运行，记录当前的存根类型以备后台使用，秒！
-                string name = Stub.Inst.GetType().AssemblyQualifiedName;
-                if (name != await CookieX.Get(_stubType))
-                    await CookieX.Save(_stubType, name);
+                // 因后台任务独立运行，记录当前的后台任务类型以备后台使用，秒！
+                string name = job.GetType().AssemblyQualifiedName;
+                if (name != await CookieX.Get(_bgJobType))
+                    await CookieX.Save(_bgJobType, name);
 
                 var res = await BackgroundExecutionManager.RequestAccessAsync();
                 if (res == BackgroundAccessStatus.Unspecified
@@ -62,11 +63,11 @@ namespace Dt.Core
                         return;
 
                     // 注册后台任务
-                    BackgroundTaskBuilder bd = new BackgroundTaskBuilder();
+                    var bd = new Microsoft.Windows.ApplicationModel.Background.BackgroundTaskBuilder();
                     // 任务名称
                     bd.Name = _bgTaskName;
                     // 入口点
-                    bd.TaskEntryPoint = "Dt.Tasks.TimeTriggeredTask";
+                    bd.SetTaskEntryPointClsid(Dt.Tasks.BackgroundTaskServer.GetGuid());
                     // 设置触发器，周期运行
                     bd.SetTrigger(new TimeTrigger(_interval, false));
                     bd.Register();

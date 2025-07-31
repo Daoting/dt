@@ -25,11 +25,12 @@
 		  EntryPoint="$targetentrypoint$">
 			<uap:VisualElements />
 			<Extensions>
-				<!--<Extension Category="windows.backgroundTasks" EntryPoint="Dt.Tasks.TimeTriggeredTask">
+				<!-- Below Entry Point is to be mentioned in case of C# application for usage of WinAppSDK Background Task API -->
+				<Extension Category="windows.backgroundTasks" EntryPoint="Microsoft.Windows.ApplicationModel.Background.UniversalBGTask.Task">
                     <BackgroundTasks>
-                        <Task Type="timer"/>
+                        <Task Type="general"/>
                     </BackgroundTasks>
-                </Extension>-->
+                </Extension>
 
 				<!--单击Toast通知激活的 CLSID-->
 				<desktop:Extension Category="windows.toastNotificationActivation">
@@ -42,6 +43,10 @@
 						<!-- Executable切记不加路径，exe名大小写敏感，Arguments固定，否则AppNotificationManager.Register注册失败 -->
 						<com:ExeServer Executable="Demo.exe" Arguments="----AppNotificationActivated:" DisplayName="Toast activator">
 							<com:Class Id="10ab3dd3-6a3c-41b1-93a2-5fde2f2c7111" />
+						</com:ExeServer>
+						<com:ExeServer Executable="Demo.exe" Arguments="-RegisterForBGTaskServer" DisplayName="TimeTriggeredTask"
+										 LaunchAndActivationPermission="O:PSG:BUD:(A;;11;;;IU)(A;;11;;;S-1-15-2-1)S:(ML;;NX;;;LW)">
+							<com:Class Id="87651234-4444-4444-4444-1234567890AA" DisplayName="TimeTriggeredTask" />
 						</com:ExeServer>
 					</com:ComServer>
 				</com:Extension>
@@ -56,12 +61,12 @@
 	</Capabilities>
 
 	<!-- VS调试时总提示不能中断，暂注释 -->
-	<!--<Extensions>
+	<Extensions>
         <Extension Category="windows.activatableClass.inProcessServer">
-            <InProcessServer>
-                <Path>WinRT.Host.dll</Path>
-                <ActivatableClass ActivatableClassId="Dt.Tasks.TimeTriggeredTask" ThreadingModel="both" />
-            </InProcessServer>
-        </Extension>
-    </Extensions>-->
+			<InProcessServer>
+				<Path>Microsoft.Windows.ApplicationModel.Background.UniversalBGTask.dll</Path>
+				<ActivatableClass ActivatableClassId="Microsoft.Windows.ApplicationModel.Background.UniversalBGTask.Task" ThreadingModel="both"/>
+			</InProcessServer>
+		</Extension>
+    </Extensions>
 </Package>

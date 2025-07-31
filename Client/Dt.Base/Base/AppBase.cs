@@ -34,6 +34,19 @@ namespace Dt.Base
     {
         Stub _stub;
 
+#if WIN
+        public AppBase()
+        {
+            // 注册WinAppSdk后台任务，WinAppSdk1.7后新方式
+            Dt.Tasks.BackgroundTaskServer.Register();
+        }
+
+        ~AppBase()
+        {
+            Dt.Tasks.BackgroundTaskServer.Revoke();
+        }
+#endif
+
         protected abstract Stub NewStub();
 
         protected abstract void InitDtDictionary();
@@ -67,14 +80,13 @@ namespace Dt.Base
             // 创建可视树
             UITree.Init(ThemeBrush);
 
-            // 初始化全局配置、类型字典、日志、存根、Kit
+            // 初始化全局配置、类型字典、日志、存根
             try
             {
                 await GlobalConfig.Load();
                 InitDtDictionary();
                 Serilogger.Init();
                 _stub = NewStub();
-                await Kit.Init(_stub.ServiceProvider);
             }
             catch (Exception ex)
             {

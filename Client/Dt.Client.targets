@@ -10,10 +10,6 @@
         <PackageReference Include="Uno.Resizetizer" Version="1.8.1" />
     </ItemGroup>
 
-    <ItemGroup Condition="$(IsWinAppSdk) AND $(IsExe) == 'true'">
-        <PackageReference Include="Dt.Tasks" Version="4.0.0" />
-    </ItemGroup>
-
     <!-- Android -->
     <ItemGroup Condition="$(IsAndroid) AND $(IsExe) != 'true'">
         <PackageReference Include="Uno.WinUI.Runtime.Skia.Android" Version="$(UnoVersion)" PrivateAssets="all" IncludeAssets="build" />
