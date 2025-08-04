@@ -1,6 +1,4 @@
 ﻿{
-  "Title": "搬运工",
-
   // cm服务地址 或 直连数据库的键名 或 sqlite库名
   "Server": "https://10.10.1.16:1234",
   //"Server": "pgdt",

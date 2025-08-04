@@ -61,14 +61,15 @@ namespace Dt.Core
         /// <summary>
         /// 创建窗口及整个系统可视树
         /// </summary>
-        /// <param name="p_themeBrush"></param>
-        internal static void Init(Brush p_themeBrush)
+        /// <param name="p_title">标题</param>
+        /// <param name="p_themeBrush">主题画刷</param>
+        internal static void Init(string p_title, Brush p_themeBrush)
         {
             // 避免重复创建
             if (MainWin != null)
                 return;
             
-            MainWin = new Window();
+            MainWin = new Window { Title = p_title };
 #if WIN
             CustomWin();
 #endif

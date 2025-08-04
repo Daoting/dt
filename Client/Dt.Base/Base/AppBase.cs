@@ -33,15 +33,27 @@ namespace Dt.Base
     public abstract partial class AppBase : Application
     {
         Stub _stub;
-        
+
+        /// <summary>
+        /// 创建存根对象
+        /// </summary>
+        /// <returns></returns>
         protected abstract Stub NewStub();
 
+        /// <summary>
+        /// 初始化带标签的类型字典
+        /// </summary>
         protected abstract void InitDtDictionary();
 
         /// <summary>
         /// 主题颜色，logo图标、启动页背景色，在app项目.csprj中设置
         /// </summary>
         protected abstract Brush ThemeBrush { get; }
+
+        /// <summary>
+        /// 标题，在app项目.csprj中设置 ApplicationTitle
+        /// </summary>
+        protected abstract string Title { get; }
 
         protected override async void OnLaunched(LaunchActivatedEventArgs p_args)
         {
@@ -63,9 +75,9 @@ namespace Dt.Base
             // uno通过 HarmonySans.ttf.manifest 获取粗体、斜体等样式，wasm无需在css中设置字体
             Uno.UI.FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/HarmonySans.ttf";
 #endif
-
+            
             // 创建可视树
-            UITree.Init(ThemeBrush);
+            UITree.Init(Title, ThemeBrush);
 
             // 初始化全局配置、类型字典、日志、存根
             try

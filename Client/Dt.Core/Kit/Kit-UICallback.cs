@@ -168,7 +168,7 @@ namespace Dt.Core
         /// <summary>
         /// 系统标题
         /// </summary>
-        public static string Title => GlobalConfig.Title;
+        public static string Title => UITree.MainWin.Title;
 
         /// <summary>
         /// 主题画刷

@@ -21,12 +21,7 @@ namespace Dt.Core
     internal class GlobalConfig
     {
         public static readonly Dictionary<string, DbAccessInfo> _dbs = new Dictionary<string, DbAccessInfo>(StringComparer.OrdinalIgnoreCase);
-
-        /// <summary>
-        /// 系统标题
-        /// </summary>
-        public static string Title { get; set; }
-
+        
         public static string Server { get; set; }
 
         public static string WasmServer { get; set; }
@@ -58,18 +53,13 @@ namespace Dt.Core
                         break;
 
                     string key = r.GetString().ToLower();
-                    if (key == "title")
-                    {
-                        Title = r.ReadAsString();
-                        UITree.MainWin.Title = Title;
-                    }
-                    else if (key == "wasmserver")
-                    {
-                        WasmServer = r.ReadAsString();
-                    }
-                    else if (key == "server")
+                    if (key == "server")
                     {
                         Server = r.ReadAsString();
+                    }
+                    else if(key == "wasmserver")
+                    {
+                        WasmServer = r.ReadAsString();
                     }
                     else if (key == "database")
                     {
