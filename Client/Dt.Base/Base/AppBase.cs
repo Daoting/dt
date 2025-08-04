@@ -33,20 +33,7 @@ namespace Dt.Base
     public abstract partial class AppBase : Application
     {
         Stub _stub;
-
-#if WIN
-        public AppBase()
-        {
-            // 注册WinAppSdk后台任务，WinAppSdk1.7后新方式
-            Dt.Tasks.BackgroundTaskServer.Register();
-        }
-
-        ~AppBase()
-        {
-            Dt.Tasks.BackgroundTaskServer.Revoke();
-        }
-#endif
-
+        
         protected abstract Stub NewStub();
 
         protected abstract void InitDtDictionary();

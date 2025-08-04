@@ -14,18 +14,16 @@ namespace Demo
     class BackgroundJob : IBackgroundJob
     {
         /// <summary>
-        /// 后台任务处理，除 AtState、Stub、Kit.Rpc、Kit.Toast 外，不可使用任何UI和外部变量，保证可独立运行！！！
-        /// 记录日志使用 BgJob.WriteLog
+        /// 后台任务处理，除 BgJobKit类、本地库(如AtState CookieX) 外，不可使用任何UI和外部变量，保证可独立运行！！！
         /// </summary>
         public async Task Run()
         {
-            //string tpName = AtState.GetCookie("LoginPhone");
-            //Kit.Toast(
-            //    "样例",
-            //    DateTime.Now.ToString(),
-            //    new AutoStartInfo { WinType = typeof(LvHome).AssemblyQualifiedName, Title = "列表" });
-
-            await Task.CompletedTask;
+            string phone = await CookieX.Get("LoginID");
+            BgJobKit.Toast(
+                "后台任务样例",
+                $"用户标识：{phone}",
+                new AutoStartInfo { WinType = typeof(UI.LvHome).AssemblyQualifiedName, Title = "列表" });
+            BgJobKit.Log("后台运行中");
         }
     }
 }

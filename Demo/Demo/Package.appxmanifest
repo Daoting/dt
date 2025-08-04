@@ -28,7 +28,7 @@
 				<!-- Below Entry Point is to be mentioned in case of C# application for usage of WinAppSDK Background Task API -->
 				<Extension Category="windows.backgroundTasks" EntryPoint="Microsoft.Windows.ApplicationModel.Background.UniversalBGTask.Task">
                     <BackgroundTasks>
-                        <Task Type="general"/>
+                        <Task Type="timer"/>
                     </BackgroundTasks>
                 </Extension>
 
