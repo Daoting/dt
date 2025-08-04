@@ -12,9 +12,6 @@
 		<ApplicationVersion>1</ApplicationVersion>
 		<ApplicationPublisher>Daoting</ApplicationPublisher>
 		<Description>搬运工样例.</Description>
-
-		<DefineConstants>DISABLE_XAML_GENERATED_MAIN</DefineConstants>
-		<StartupObject>Program</StartupObject>
 	</PropertyGroup>
 
 	<ItemGroup>
