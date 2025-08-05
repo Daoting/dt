@@ -33,9 +33,8 @@ namespace Demo
     {
         protected override void OnCreate(Bundle bundle)
         {
-            AndroidActivity.OnCreate(this, bundle);
-            global::AndroidX.Core.SplashScreen.SplashScreen.InstallSplashScreen(this);
             base.OnCreate(bundle);
+            AndroidActivity.OnCreate(this, bundle);
         }
     }
 
@@ -44,7 +43,7 @@ namespace Demo
         Icon = "@mipmap/icon",
         LargeHeap = true,
         HardwareAccelerated = true,
-        Theme = "@style/Theme.App.Starting"
+        Theme = "@style/AppTheme"
     )]
     public class MainApplication : NativeApplication
     {
