@@ -89,7 +89,7 @@ namespace Dt.Core
                     break;
                 }
             }
-            Debug.WriteLine("注销后台任务");
+            BgJobKit.Log("注销后台任务");
         }
 
         public static void Toast(string p_title, string p_content, AutoStartInfo p_startInfo)
@@ -103,7 +103,7 @@ namespace Dt.Core
                 string json = JsonSerializer.Serialize(p_startInfo, JsonOptions.UnsafeSerializer);
                 ((Windows.Data.Xml.Dom.XmlElement)xml.FirstChild).SetAttribute("launch", json);
             }
-            
+
             xml.GetElementsByTagName("text").Item(0).InnerText = !string.IsNullOrEmpty(p_title) ? p_title : p_content;
             if (!string.IsNullOrEmpty(p_title) && !string.IsNullOrEmpty(p_content))
                 xml.GetElementsByTagName("text").Item(1).InnerText = p_content;

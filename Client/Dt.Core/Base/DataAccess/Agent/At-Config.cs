@@ -138,7 +138,7 @@ namespace Dt.Core
             return sai;
         }
 
-        internal static void InitConfig()
+        internal static void InitConfig(bool p_trace = true)
         {
             string dbKey = null;
             string sqliteKey = null;
@@ -194,25 +194,26 @@ namespace Dt.Core
             }
 #endif
 
-#if DEBUG
-            string fw = "单机架构";
-            if (_originAI != null)
+            if (p_trace)
             {
-                if (_originAI.Type == AccessType.Service)
+                string fw = "单机架构";
+                if (_originAI != null)
                 {
-                    fw = "多层服务架构";
+                    if (_originAI.Type == AccessType.Service)
+                    {
+                        fw = "多层服务架构";
+                    }
+                    else if (_originAI.Type == AccessType.Database && dbKey != null)
+                    {
+                        fw = $"两层架构({((DbAccessInfo)_originAI).DbType})";
+                    }
+                    else if (sqliteKey != null)
+                    {
+                        fw = $"单机架构({sqliteKey})";
+                    }
                 }
-                else if (_originAI.Type == AccessType.Database && dbKey != null)
-                {
-                    fw = $"两层架构({((DbAccessInfo)_originAI).DbType})";
-                }
-                else if (sqliteKey != null)
-                {
-                    fw = $"单机架构({sqliteKey})";
-                }
+                Kit.Trace(fw);
             }
-            Kit.Trace(fw);
-#endif
         }
 
         static SvcUrlInfo _svcUrlInfo;

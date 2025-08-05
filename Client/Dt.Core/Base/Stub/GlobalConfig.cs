@@ -21,7 +21,7 @@ namespace Dt.Core
     internal class GlobalConfig
     {
         public static readonly Dictionary<string, DbAccessInfo> _dbs = new Dictionary<string, DbAccessInfo>(StringComparer.OrdinalIgnoreCase);
-        
+
         public static string Server { get; set; }
 
         public static string WasmServer { get; set; }
@@ -29,8 +29,8 @@ namespace Dt.Core
         public static LogSetting LogSetting { get; } = CreateLogSetting();
 
         public static string Path { get; set; }
-        
-        public static async Task Load()
+
+        public static async Task Load(bool p_trace = true)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace Dt.Core
                     {
                         Server = r.ReadAsString();
                     }
-                    else if(key == "wasmserver")
+                    else if (key == "wasmserver")
                     {
                         WasmServer = r.ReadAsString();
                     }
@@ -149,7 +149,9 @@ namespace Dt.Core
                 // throw时无提示信息
                 throw new Exception("读取 Config.json 时出错！" + ex.Message);
             }
-            Kit.Trace("加载全局配置");
+
+            if (p_trace)
+                Kit.Trace("加载全局配置");
         }
 
         static LogSetting CreateLogSetting()

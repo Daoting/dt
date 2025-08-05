@@ -54,6 +54,21 @@ namespace Dt.Core
             Trace($"{(string.IsNullOrEmpty(prefixText) ? "耗时" : prefixText)} {now - _lastTick}ms");
             _lastTick = now;
         }
+
+        /// <summary>
+        ///Debug模式下输出信息
+        /// </summary>
+        /// <param name="p_msg"></param>
+        public static void Debug(string p_msg)
+        {
+#if DEBUG
+#if WASM || DESKTOP
+            Console.WriteLine(p_msg);
+#else
+            System.Diagnostics.Debug.WriteLine(p_msg);
+#endif
+#endif
+        }
         
         static int _lastTick;
     }

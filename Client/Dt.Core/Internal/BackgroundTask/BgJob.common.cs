@@ -25,8 +25,6 @@ namespace Dt.Core
         /// <returns></returns>
         public static async Task Run()
         {
-            BgJobKit.Log("启动后台");
-
             // 因后台任务独立运行，类型需要从State库获取！
             IBackgroundJob bgJob = null;
             string tpName = await CookieX.Get(_bgJobType);
@@ -41,7 +39,10 @@ namespace Dt.Core
             {
                 try
                 {
-                    BgJobKit.Log("后台运行");
+                    await GlobalConfig.Load(false);
+                    At.InitConfig(false);
+                    BgJobKit.Log("后台加载配置");
+                    
                     await bgJob.Run();
                     BgJobKit.Log("后台结束");
                 }
