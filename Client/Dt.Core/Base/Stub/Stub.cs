@@ -24,6 +24,7 @@ namespace Dt.Core
     {
         public Stub()
         {
+            Inst = this;
             var svcs = new ServiceCollection();
             svcs.AddSingleton<ITypeAlias, DefTypeAlias>();
             ConfigureServices(svcs);
@@ -47,6 +48,11 @@ namespace Dt.Core
         /// <param name="p_args"></param>
         public abstract Task OnLaunched(LaunchActivatedEventArgs p_args);
 
+        /// <summary>
+        /// 内部访问存根实例
+        /// </summary>
+        internal static Stub Inst { get; private set; }
+        
 #if IOS
         public virtual void OpenUrl(UIApplication p_app, Foundation.NSUrl p_url, Foundation.NSDictionary p_options) { }
 
