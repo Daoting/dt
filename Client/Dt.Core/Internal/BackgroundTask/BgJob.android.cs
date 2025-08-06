@@ -11,10 +11,10 @@
 using Android.App;
 using Android.Content;
 using AndroidX.Work;
-using System;
+using Microsoft.Maui.ApplicationModel;
 using System.Diagnostics;
 using System.Text.Json;
-using System.Threading.Tasks;
+using static Microsoft.Maui.ApplicationModel.Permissions;
 #endregion
 
 namespace Dt.Core
@@ -87,11 +87,26 @@ namespace Dt.Core
             Debug.WriteLine("注销后台任务");
         }
 
-        public static void Toast(string p_title, string p_content, AutoStartInfo p_startInfo)
+        public static async void Toast(string p_title, string p_content, AutoStartInfo p_startInfo)
         {
             if (string.IsNullOrEmpty(p_title) || string.IsNullOrEmpty(p_content))
                 return;
 
+            try
+            {
+                // 请求通知权限，三种情况：
+                // 1 已授权则继续
+                // 2 未授权则弹出请求对话框，用户选择允许或拒绝，但无任何返回，本次通知丢失
+                // 3 后台任务调用时若未授权则直接异常
+                var status = await Permissions.RequestAsync<PostNotifications>();
+                if (status != PermissionStatus.Granted)
+                    return;
+            }
+            catch
+            {
+                return;
+            }
+            
             var context = Application.Context;
             if (_manager == null)
             {
@@ -118,16 +133,16 @@ namespace Dt.Core
 
             // 一定要设置 channel 和 icon，否则不通知！！！
             Notification notify = new Notification.Builder(context, _channelID)
-                .SetSmallIcon(Resource.Drawable.abc_star_black_48dp)
+                .SetSmallIcon(Resource.Drawable.abc_star_black_48dp) // 小图标
                 .SetContentTitle(p_title)
                 .SetContentText(p_content)
-                .SetContentIntent(pending)
-                .SetAutoCancel(true)
+                .SetContentIntent(pending) // 跳转配置
+                .SetAutoCancel(true) // 是否自动消失
                 .Build();
             _manager.Notify(_id++, notify);
         }
     }
-
+    
     public class PluginWorker : Worker
     {
         public PluginWorker(Context context, WorkerParameters workerParameters)
