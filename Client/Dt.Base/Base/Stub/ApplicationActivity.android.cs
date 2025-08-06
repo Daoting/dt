@@ -28,11 +28,14 @@ namespace Dt.Base
         /// <param name="bundle"></param>
         public static void OnCreate(Activity activity, Bundle bundle)
         {
-            BgJob.MainActivity = activity.GetType();
+            if (Stub.Inst == null)
+            {
+                BgJob.MainActivity = activity.GetType();
 
-            // 确保 Permissions.RequestAsync 调用时正常
-            Microsoft.Maui.ApplicationModel.Platform.Init(activity, bundle);
-            
+                // 确保 Permissions.RequestAsync 调用时正常
+                Microsoft.Maui.ApplicationModel.Platform.Init(activity, bundle);
+            }
+
             var it = activity.Intent;
             switch (it.Action)
             {
@@ -51,7 +54,7 @@ namespace Dt.Base
                     // 点击通知栏后，接收传递参数
                     var startInfo = it.GetStringExtra(BgJob.ActionToast);
                     if (!string.IsNullOrEmpty(startInfo))
-                        ((DefaultStub)Stub.Inst).ToastStart(startInfo);
+                        DefaultStub.ToastStart(startInfo);
                     break;
             }
         }
@@ -94,7 +97,7 @@ namespace Dt.Base
                     path = uri.ToString();
                 info.FilePath = path;
             }
-            ((DefaultStub)Stub.Inst).ReceiveShare(info);
+            DefaultStub.ReceiveShare(info);
         }
     }
 }

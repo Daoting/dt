@@ -18,29 +18,41 @@ namespace Dt.Base
     /// </summary>
     public partial class DefaultStub : Stub
     {
-        string _params;
+        static string _params;
+        static ShareInfo _shareInfo;
 
         public override async Task OnLaunched(LaunchActivatedEventArgs p_args)
         {
             if (string.IsNullOrEmpty(_params))
                 _params = p_args.Arguments;
 
-            await Launch(_params);
+            await Launch(_params, _shareInfo);
             _params = null;
+            _shareInfo = null;
         }
 
-        public void ReceiveShare(ShareInfo p_shareInfo)
+        public static void ReceiveShare(ShareInfo p_shareInfo)
         {
-            _ = Launch(null, p_shareInfo);
+            // 接收分享内容
+            if (Inst is DefaultStub stub)
+            {
+                // 已启动
+                _ = stub.Launch(null, p_shareInfo);
+            }
+            else
+            {
+                // 未启动，记录分享内容提供给 OnLaunched
+                _shareInfo = p_shareInfo;
+            }
         }
 
-        public void ToastStart(string p_params)
+        public static void ToastStart(string p_params)
         {
             // 点击通知栏启动
-            if (_isInited)
+            if (Inst is DefaultStub stub)
             {
-                // 状态库打开表示app已启动过，不会再调用 OnLaunched
-                _ = Launch(p_params);
+                // app已启动过，不会再调用 OnLaunched
+                _ = stub.Launch(p_params);
             }
             else
             {
