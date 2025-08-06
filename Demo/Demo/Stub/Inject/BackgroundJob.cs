@@ -7,9 +7,8 @@
 #endregion
 
 #region 引用命名
-#endregion
-
 using Dt.Mgr.Rbac;
+#endregion
 
 namespace Demo
 {
@@ -21,6 +20,17 @@ namespace Demo
         public async Task Run()
         {
             BgJobKit.Log("后台运行中");
+
+            string last = await CookieX.Get("LastNotify");
+            int now = Environment.TickCount;
+            if (last != null
+                && int.TryParse(last, out int lastTime)
+                && now - lastTime < 1440000)
+            {
+                // 24小时通知一次
+                return;
+            }
+            await CookieX.Save("LastNotify", now.ToString());
 
             string msg = null;
             string id = await CookieX.Get("LoginID");
@@ -39,7 +49,7 @@ namespace Demo
             {
                 msg += "用户未登录\n";
             }
-            
+
             BgJobKit.Toast(
                 "后台样例 > 带启动参数",
                 msg,
