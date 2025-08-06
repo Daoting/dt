@@ -148,7 +148,7 @@ namespace Dt.Core
             }
             finally
             {
-                WriteLog(msg);
+                BgJobKit.Log(msg);
             }
         }
 
@@ -178,11 +178,11 @@ namespace Dt.Core
             {
                 if (error != null)
                 {
-                    WriteLog($"推送通知Error: {error.LocalizedDescription ?? ""}");
+                    BgJobKit.Log($"推送通知Error: {error.LocalizedDescription ?? ""}");
                 }
                 else
                 {
-                    WriteLog("已推送本地通知");
+                    BgJobKit.Log("已推送本地通知");
                 }
             });
         }
