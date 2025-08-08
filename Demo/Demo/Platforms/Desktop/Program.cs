@@ -1,13 +1,12 @@
 using Uno.UI.Hosting;
-using Demo;
 
-internal class Program
+public class Program
 {
     [STAThread]
     public static void Main(string[] args)
     {
         var host = UnoPlatformHostBuilder.Create()
-            .App(() => new App())
+            .App(() => new Demo.App())
             .UseX11()
             .UseLinuxFrameBuffer()
             .UseMacOS()
