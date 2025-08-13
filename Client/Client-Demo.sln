@@ -26,6 +26,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Lob", "..\Demo\Demo.Lo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{805794EE-FBDE-4615-8F52-5FBD9604C00A}"
 EndProject
+
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InitSql", "InitSql", "{98FDE656-7DF2-4A33-96A5-9F733E9F7FEE}"
 	ProjectSection(SolutionItems) = preProject
 		..\Demo\InitSql\mysql-demo.sql = ..\Demo\InitSql\mysql-demo.sql
@@ -41,6 +42,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{02EA681E-C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "..\Demo\Demo\Demo.csproj", "{092D94A1-3EF3-162B-E54A-564595FD45C8}"
 EndProject
+
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,9 +50,11 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{54B4F303-8C34-225F-52A2-CA498A570B2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54B4F303-8C34-225F-52A2-CA498A570B2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54B4F303-8C34-225F-52A2-CA498A570B2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54B4F303-8C34-225F-52A2-CA498A570B2F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{05EBA981-BDF3-19D4-27E3-533715D52BA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05EBA981-BDF3-19D4-27E3-533715D52BA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05EBA981-BDF3-19D4-27E3-533715D52BA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05EBA981-BDF3-19D4-27E3-533715D52BA6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F2A01B6C-76EB-0161-F04D-42FB10FA8F6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -60,7 +64,6 @@ Global
 		{5597B912-1923-B395-D6DA-8D28D979F645}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5597B912-1923-B395-D6DA-8D28D979F645}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E4308096-CA90-B2D6-4836-D7EAA2D1B844}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E4308096-CA90-B2D6-4836-D7EAA2D1B844}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4308096-CA90-B2D6-4836-D7EAA2D1B844}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4308096-CA90-B2D6-4836-D7EAA2D1B844}.Release|Any CPU.Build.0 = Release|Any CPU
 		{924AC3A6-0A46-9C53-3EC7-6C42F4FDB5B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
