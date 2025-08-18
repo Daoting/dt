@@ -56,6 +56,8 @@ namespace Dt.Base
             
             try
             {
+                // 附加全局按键事件
+                InitInput();
                 await Kit.OnLaunched();
                 await InitConfig();
                 _isInited = true;
@@ -77,9 +79,6 @@ namespace Dt.Base
                 // 注册后台任务
                 BgJob.Register();
 
-                // 附加全局按键事件
-                InitInput();
-                
 #if WIN && !DEBUG
                 if (At.Framework == AccessType.Service)
                 {
