@@ -33,7 +33,7 @@ namespace Dt.Base
     /// 对话框容器
     /// </summary>
     [ContentProperty(Name = "Content")]
-    public partial class Dlg : Control, IDlgPressed, IDestroy
+    public partial class Dlg : Control, IDlgPressed, IDestroy, IDisposable
     {
         #region 静态成员
         public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
@@ -1683,6 +1683,14 @@ namespace Dt.Base
         void OnOwnWinDestroyed(Win e)
         {
             e.Destroyed -= OnOwnWinDestroyed;
+            Close();
+            DlgCleaner.Add(this);
+        }
+        #endregion
+
+        #region IDisposable
+        public void Dispose()
+        {
             Close();
             DlgCleaner.Add(this);
         }

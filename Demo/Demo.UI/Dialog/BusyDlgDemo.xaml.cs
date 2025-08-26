@@ -32,37 +32,42 @@ namespace Demo.UI
 
         async void OnBusyWin(object sender, RoutedEventArgs e)
         {
-            var dlg = this.Busy(_tbMsg.Text, _cbVeil.IsChecked.Value);
-            await Task.Delay(3000);
-            dlg.Close();
+            using (this.Busy(_tbMsg.Text, _cbVeil.IsChecked.Value))
+            {
+                await Task.Delay(3000);
+            }
         }
 
         async void OnBusyFv(object sender, RoutedEventArgs e)
         {
-            var dlg = _fv.Busy(_tbMsg.Text, _cbVeil.IsChecked.Value);
-            await Task.Delay(3000);
-            dlg.Close();
+            using (_fv.Busy(_tbMsg.Text, _cbVeil.IsChecked.Value))
+            {
+                await Task.Delay(3000);
+            }
         }
 
         async void OnBusyTbl(object sender, RoutedEventArgs e)
         {
-            var dlg = _lvTbl.Busy(_tbMsg.Text, _cbVeil.IsChecked.Value);
-            await Task.Delay(3000);
-            dlg.Close();
+            using (_lvTbl.Busy(_tbMsg.Text, _cbVeil.IsChecked.Value))
+            {
+                await Task.Delay(3000);
+            }
         }
 
         async void OnBusyList(object sender, RoutedEventArgs e)
         {
-            var dlg = _lvList.Busy(_tbMsg.Text, _cbVeil.IsChecked.Value);
-            await Task.Delay(3000);
-            dlg.Close();
+            using (_lvList.Busy(_tbMsg.Text, _cbVeil.IsChecked.Value))
+            {
+                await Task.Delay(3000);
+            }
         }
 
         async void OnBusyTile(object sender, RoutedEventArgs e)
         {
-            var dlg = _lvTile.Busy(_tbMsg.Text, _cbVeil.IsChecked.Value);
-            await Task.Delay(3000);
-            dlg.Close();
+            using (_lvTile.Busy(_tbMsg.Text, _cbVeil.IsChecked.Value))
+            {
+                await Task.Delay(3000);
+            }
         }
 
         void LoadData()
