@@ -26,20 +26,15 @@ namespace Infras.Demo
     )]
     public class MainActivity : Microsoft.UI.Xaml.ApplicationActivity
     {
-        protected override void OnCreate(Bundle savedInstanceState)
-        {
-            global::AndroidX.Core.SplashScreen.SplashScreen.InstallSplashScreen(this);
-            base.OnCreate(savedInstanceState);
-        }
     }
 
     [Application(
-        Label = "@string/ApplicationName",
-        Icon = "@mipmap/icon",
-        LargeHeap = true,
-        HardwareAccelerated = true,
-        Theme = "@style/Theme.App.Starting"
-    )]
+       Label = "@string/ApplicationName",
+       Icon = "@mipmap/icon",
+       LargeHeap = true,
+       HardwareAccelerated = true,
+       Theme = "@style/AppTheme"
+   )]
     public class Application : Microsoft.UI.Xaml.NativeApplication
     {
         public Application(IntPtr javaReference, JniHandleOwnership transfer)
