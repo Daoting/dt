@@ -742,7 +742,7 @@ namespace Dt.Base
                 Canvas.SetZIndex(_canvas, ++_topmostZIndex);
             else
                 Canvas.SetZIndex(_canvas, ++_normalZIndex);
-            
+
             double maxWidth = Kit.ViewWidth;
             double maxHeight = Kit.ViewHeight;
 
@@ -1689,7 +1689,7 @@ namespace Dt.Base
         #endregion
 
         #region IDisposable
-        public void Dispose()
+        void IDisposable.Dispose()
         {
             Close();
             DlgCleaner.Add(this);

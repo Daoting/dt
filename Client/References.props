@@ -1,6 +1,6 @@
 ﻿<Project>
     <PropertyGroup>
-        <UnoVersion>6.0.704</UnoVersion>
+        <UnoVersion>6.2.58</UnoVersion>
     </PropertyGroup>
     
     <!-- 公共引用包 -->
@@ -34,7 +34,7 @@
     <!-- WinAppSdk -->
     <ItemGroup Condition="$(IsWinAppSdk)">
         <PackageReference Include="Dt.Tasks" Version="5.0.0" />
-        <!-- 1.7版本主线程异步异常会崩溃 -->
+        <!-- 1.7版本主线程异步异常会崩溃、后台任务全新方式；1.6不崩溃但原Dt.Tasks无法运行 -->
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250606001" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4188" />
         <!-- Lottie动画已正常，Microsoft.Graphics.Win2D需1.2.0以上版本，Microsoft.Maui.Essentials已间接引用 -->

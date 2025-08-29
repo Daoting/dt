@@ -12,7 +12,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{ADA70A06-F739-49AF-AB28-3ABF482EE480}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
-		Dt.Client.props = Dt.Client.props
 		Dt.Client.targets = Dt.Client.targets
 		References.props = References.props
 	EndProjectSection
