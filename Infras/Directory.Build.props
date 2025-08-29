@@ -32,7 +32,7 @@
     
     <!-- 所有App引用 -->
     <ItemGroup Condition="$(IsExe) == 'true'">
-        <PackageReference Include="Dt.BuildTools" Version="1.5.0" />
+        <PackageReference Include="Dt.BuildTools" Version="1.5.1" />
         <PackageReference Include="Uno.Resizetizer" Version="1.8.1" />
     </ItemGroup>
 
