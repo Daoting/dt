@@ -16,7 +16,7 @@ namespace Demo
     /// <summary>
     /// 使用搬运工标准服务的存根
     /// </summary>
-    public class AppStub : LobStub
+    public class AppStub : DefaultStub
     {
         /// <summary>
         /// 注入全局服务
@@ -43,11 +43,11 @@ namespace Demo
                 await new PolicyDlg().ShowAsync();
                 await CookieX.Save("FirstRun", "0");
             }
-
-            LoginDs.Login += Gs.OnLogin;
-            // 已登录过先自动登录，未登录或登录失败时显示登录页
-            var suc = await Kit.LoginByCookie();
-            Kit.ShowRoot(suc ? LobViews.主页 : LobViews.登录页);
+            Kit.ShowRoot("控件样例");
+            //LoginDs.Login += Gs.OnLogin;
+            //// 已登录过先自动登录，未登录或登录失败时显示登录页
+            //var suc = await Kit.LoginByCookie();
+            //Kit.ShowRoot(suc ? LobViews.主页 : LobViews.登录页);
         }
 
         protected override async void OnInitFailed(Exception p_ex)

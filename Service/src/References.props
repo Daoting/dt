@@ -1,7 +1,9 @@
 ﻿<Project>
 	<ItemGroup>
-		<PackageReference Include="Autofac" Version="6.5.0" />
-		<PackageReference Include="Castle.Core" Version="5.1.1" />
+		<PackageReference Include="Autofac" Version="8.4.0" />
+		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
+		<PackageReference Include="Autofac.Extras.DynamicProxy" Version="7.1.0" />
+		<PackageReference Include="Castle.Core" Version="5.2.1" />
 		<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
 		<PackageReference Include="Polly" Version="8.2.0" />
 		<PackageReference Include="RabbitMQ.Client" Version="6.7.0" />

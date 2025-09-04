@@ -22,11 +22,6 @@ namespace Dt.Cm
     [Api(Interceptors = new Type[] { typeof(Interceptor1), typeof(Interceptor2) }, IsTest = true)]
     public class TestIntercept : DomainSvc
     {
-        public virtual Task<string> NoTrans()
-        {
-            return GetSql();
-        }
-
         /// <summary>
         /// 不拦截内嵌方法
         /// </summary>
@@ -55,9 +50,13 @@ namespace Dt.Cm
             throw new Exception("普通异常");
         }
 
+        /// <summary>
+        /// 普通拦截
+        /// </summary>
+        /// <returns></returns>
         public virtual Task<string> GetSql()
         {
-            return _da.GetScalar<string>("select `sql` from cm_sql");
+            return Task.FromResult("select * from cm_user");
         }
     }
 
