@@ -1,6 +1,4 @@
 ﻿{
-  //"Mode": "InitDb",
-
   "DbKey": "pgdt",
   "TraceSql": true,
   "TraceRpc": true,

@@ -131,7 +131,7 @@ namespace Dt.Core
                 p_stub.SvcName = name.ToLower();
             }
 
-            // 配置中允许单体服务 且 服务Stub中也允许单体服务时，才单体服务
+            // 配置中允许单体服务 且 不是内置微服务时，才单体服务
             bool isSingletonSvc = "SingletonSvc".Equals(Kit.GetCfg<string>("Mode"), StringComparison.OrdinalIgnoreCase);
             if (isSingletonSvc)
             {
@@ -140,17 +140,17 @@ namespace Dt.Core
                 // 公共服务
                 Type tp = Type.GetType("Dt.Cm.SvcStub,Dt.Cm");
                 if (tp == null)
-                    LogException("缺少Dt.Cm.dll文件");
+                    NoDllException("Dt.Cm.dll");
                 stubs.Add((Stub)Activator.CreateInstance(tp));
 
                 tp = Type.GetType("Dt.Msg.SvcStub,Dt.Msg");
                 if (tp == null)
-                    LogException("缺少Dt.Msg.dll文件");
+                    NoDllException("Dt.Msg.dll");
                 stubs.Add((Stub)Activator.CreateInstance(tp));
 
                 tp = Type.GetType("Dt.Fsm.SvcStub,Dt.Fsm");
                 if (tp == null)
-                    LogException("缺少Dt.Fsm.dll文件");
+                    NoDllException("Dt.Fsm.dll");
                 stubs.Add((Stub)Activator.CreateInstance(tp));
 
                 // 自定义服务的数据源键名
@@ -268,6 +268,11 @@ namespace Dt.Core
         {
             Log.Fatal(p_msg);
             throw new Exception(p_msg);
+        }
+
+        static void NoDllException(string p_dll)
+        {
+            LogException($"缺少[{p_dll}]文件，cm msg fsm内置微服务不支持单体模式！");
         }
     }
 }
