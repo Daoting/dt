@@ -23,12 +23,7 @@ namespace Dt.Core
         /// 服务名称，小写
         /// </summary>
         public virtual string SvcName { get; set; }
-
-        /// <summary>
-        /// 是否允许单体服务模式
-        /// </summary>
-        public virtual bool AllowSingleton => true;
-
+        
         /// <summary>
         /// 注入全局服务
         /// </summary>

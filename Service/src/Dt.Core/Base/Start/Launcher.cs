@@ -133,7 +133,7 @@ namespace Dt.Core
 
             // 配置中允许单体服务 且 服务Stub中也允许单体服务时，才单体服务
             bool isSingletonSvc = "SingletonSvc".Equals(Kit.GetCfg<string>("Mode"), StringComparison.OrdinalIgnoreCase);
-            if (isSingletonSvc && p_stub.AllowSingleton)
+            if (isSingletonSvc)
             {
                 List<Stub> stubs = new List<Stub> { p_stub };
 

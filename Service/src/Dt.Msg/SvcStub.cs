@@ -31,10 +31,5 @@ namespace Dt.Msg
             get => "msg";
             set => throw new Exception("msg服务名称不可修改");
         }
-
-        /// <summary>
-        /// 是否允许单体服务模式
-        /// </summary>
-        public override bool AllowSingleton => false;
     }
 }

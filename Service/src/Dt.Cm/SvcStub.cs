@@ -28,12 +28,7 @@ namespace Dt.Cm
             get => "cm";
             set => throw new Exception("cm服务名称不可修改");
         }
-
-        /// <summary>
-        /// 是否允许单体服务模式
-        /// </summary>
-        public override bool AllowSingleton => false;
-
+        
         /// <summary>
         /// 定义全局服务
         /// </summary>

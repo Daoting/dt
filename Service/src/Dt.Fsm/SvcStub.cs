@@ -33,12 +33,7 @@ namespace Dt.Fsm
             get => "fsm";
             set => throw new Exception("fsm服务名称不可修改");
         }
-
-        /// <summary>
-        /// 是否允许单体服务模式
-        /// </summary>
-        public override bool AllowSingleton => false;
-
+        
         /// <summary>
         /// 定义全局服务
         /// </summary>
