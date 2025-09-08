@@ -48,12 +48,12 @@ namespace Dt.Base
         /// <summary>
         /// 主题颜色，logo图标、启动页背景色，在app项目.csprj中设置
         /// </summary>
-        protected abstract Brush ThemeBrush { get; }
+        public abstract Brush ThemeBrush { get; }
 
         /// <summary>
         /// 标题，在app项目.csprj中设置 ApplicationTitle
         /// </summary>
-        protected abstract string Title { get; }
+        public abstract string Title { get; }
 
         protected override async void OnLaunched(LaunchActivatedEventArgs p_args)
         {

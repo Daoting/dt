@@ -10,6 +10,7 @@
 using Dt.Base.Tools;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Windows.Foundation.Collections;
 #endregion
 
@@ -237,5 +238,15 @@ namespace Dt.Base
                 LoadRootFrame(CreateRootWin());
             }
         }
+
+        /// <summary>
+        /// 主题颜色，logo图标、启动页背景色，在app项目.csprj中设置
+        /// </summary>
+        public Brush ThemeBrush => ((AppBase)Application.Current).ThemeBrush;
+
+        /// <summary>
+        /// 标题，在app项目.csprj中设置 ApplicationTitle
+        /// </summary>
+        public string Title => ((AppBase)Application.Current).Title;
     }
 }

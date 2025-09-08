@@ -168,12 +168,12 @@ namespace Dt.Core
         /// <summary>
         /// 系统标题
         /// </summary>
-        public static string Title => UITree.MainWin.Title;
+        public static string Title => _ui.Title;
 
         /// <summary>
         /// 主题画刷
         /// </summary>
-        public static Brush ThemeBrush => UITree.RootGrid.Background;
+        public static Brush ThemeBrush => _ui.ThemeBrush;
         
         /// <summary>
         /// 加载根内容，支持任意类型的UIElement，特殊类型有：

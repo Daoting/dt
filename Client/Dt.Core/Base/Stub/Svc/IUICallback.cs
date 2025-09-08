@@ -9,6 +9,7 @@
 #region 引用命名
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 #endregion
 
 namespace Dt.Core
@@ -125,6 +126,16 @@ namespace Dt.Core
         /// UI模式切换的回调方法，Phone UI 与 PC UI 切换
         /// </summary>
         void OnUIModeChanged();
+
+        /// <summary>
+        /// 主题颜色，logo图标、启动页背景色，在app项目.csprj中设置
+        /// </summary>
+        Brush ThemeBrush { get; }
+        
+        /// <summary>
+        /// 标题，在app项目.csprj中设置 ApplicationTitle
+        /// </summary>
+        string Title { get; }
         #endregion
 
         #region 选择文件
