@@ -64,10 +64,23 @@ namespace Dt.Fsm
             p_handlers["/.u"] = (p_context) => new Uploader(p_context).Handle();
             p_handlers["/.d"] = (p_context) => new Downloader(p_context).Handle();
 
-            // 设置可浏览目录的根目录，映射到虚拟目录drv，和wwwroot区分
+            // 设置可浏览目录的根目录
+            var fileProvider = new PhysicalFileProvider(Cfg.Root);
             p_app.UseDirectoryBrowser(new DirectoryBrowserOptions
             {
-                FileProvider = new PhysicalFileProvider(Cfg.Root),
+                FileProvider = fileProvider,
+                RequestPath = "/drv"
+            });
+
+            // drive下的所有文件作为网站静态文件，映射到虚拟目录drv，和wwwroot区分
+            // 支持下载msix类型文件
+            var mimeTypeProvider = new FileExtensionContentTypeProvider();
+            mimeTypeProvider.Mappings.TryAdd(".msix", MediaTypeNames.Application.Octet);
+            mimeTypeProvider.Mappings.TryAdd(".cer", MediaTypeNames.Application.Octet);
+            p_app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = fileProvider,
+                ContentTypeProvider = mimeTypeProvider,
                 RequestPath = "/drv"
             });
         }
