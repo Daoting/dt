@@ -103,14 +103,5 @@ namespace Dt.Fsm
             }
             return null;
         }
-
-        /// <summary>
-        /// 获取windows应用的版本信息
-        /// </summary>
-        /// <returns></returns>
-        public Dict GetWinAppVer()
-        {
-            return MsixCfg.WinAppVer;
-        }
     }
 }

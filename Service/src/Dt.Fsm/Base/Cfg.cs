@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Caches;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -23,8 +24,8 @@ namespace Dt.Fsm
     /// </summary>
     public static class Cfg
     {
-        const string _defaultVol = "v0";
-
+        static IConfiguration _config;
+        
         /// <summary>
         /// 卷状态缓存键
         /// </summary>
@@ -58,6 +59,26 @@ namespace Dt.Fsm
         /// </summary>
         public static void Init()
         {
+            if (!File.Exists(Path.Combine(AppContext.BaseDirectory, "etc/config/fsm.json")))
+            {
+                Log.Warning("缺少fsm.json文件！");
+                return;
+            }
+
+            try
+            {
+                _config = new ConfigurationBuilder()
+                    .SetBasePath(Path.Combine(AppContext.BaseDirectory, "etc/config"))
+                    .AddJsonFile("fsm.json", false, false)
+                    .Build();
+                Log.Information("读取 fsm.json 成功");
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e, "读取 fsm.json 失败！");
+                throw;
+            }
+            
             // BaseDirectory程序集所在的目录，不可用Directory.GetCurrentDirectory()！
             Root = Path.Combine(AppContext.BaseDirectory, "drive");
             var dir = new DirectoryInfo(Root);
@@ -65,7 +86,7 @@ namespace Dt.Fsm
                 dir.Create();
 
             // 固定卷
-            var fv = Kit.GetCfg<string>("FixedVolume");
+            var fv = _config.GetValue<string>("FixedVolume");
             StringBuilder sb;
             if (!string.IsNullOrEmpty(fv))
             {
@@ -107,14 +128,23 @@ namespace Dt.Fsm
                     }
                 }
             }
-            // 无普通卷时创建默认卷v0
+            
+            // 无普通卷时创建默认卷v0 v1 v2
             if (Volumes.Count == 0)
             {
-                Volumes.Add(_defaultVol);
-                Directory.CreateDirectory(Path.Combine(Root, _defaultVol));
-                cache.Increment(_defaultVol, 0).Wait();
-                sb.Append(" ");
-                sb.Append(_defaultVol);
+                for (int i = 0; i < 3; i++)
+                {
+                    var vol = "v" + i;
+                    string path = Path.Combine(Root, vol);
+                    if (!Directory.Exists(path))
+                    {
+                        Volumes.Add(vol);
+                        Directory.CreateDirectory(path);
+                        cache.Increment(vol, 0).Wait();
+                        sb.Append(" ");
+                        sb.Append(vol);
+                    }
+                }
             }
 
             Log.Information(sb.ToString());

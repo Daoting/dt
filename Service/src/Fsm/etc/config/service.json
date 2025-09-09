@@ -11,6 +11,5 @@
     }
   ],
 
-  "FixedVolume": "photo;editor;g;chat",
   "MaxRequestBodySize": 1073741824
 }
