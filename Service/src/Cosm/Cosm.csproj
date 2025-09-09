@@ -3,7 +3,16 @@
 		<Content Include="..\..\k8s\global.json" Link="etc\config\global.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<Content Include="..\Cm\etc\config\sqlite.json" Link="etc\config\sqlite.json">
+		<Content Include="..\Cm\etc\config\cm.json" Link="etc\config\cm.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="..\Fsm\etc\config\fsm.json" Link="etc\config\fsm.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="..\Msg\etc\config\msg.json" Link="etc\config\msg.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="..\Cm\etc\config\logger.json" Link="etc\config\logger.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
