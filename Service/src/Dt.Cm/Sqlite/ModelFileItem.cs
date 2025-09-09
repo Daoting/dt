@@ -61,7 +61,7 @@ namespace Dt.Cm
         /// </summary>
         public string Version { get; private set; }
 
-        public void Init(IConfigurationRoot p_cfg)
+        public void Init(IConfigurationSection p_cfg)
         {
             _exportDbs = (from item in p_cfg.GetSection("ExportToModel").GetChildren()
                           select item.Value).ToList();

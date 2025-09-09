@@ -27,13 +27,11 @@ namespace Dt.Cm
     /// </summary>
     class SqliteFileItem
     {
-        IConfigurationRoot _root;
         IConfigurationSection _sect;
         byte[] _data;
 
-        public SqliteFileItem(IConfigurationRoot p_cfg, IConfigurationSection p_item)
+        public SqliteFileItem(IConfigurationSection p_item)
         {
-            _root = p_cfg;
             _sect = p_item;
 
             var name = p_item.Key;
@@ -99,7 +97,7 @@ namespace Dt.Cm
 
                     foreach (var item in _sect.GetChildren())
                     {
-                        var arr = _root.GetSection($"{item.Path}:Create").Get<string[]>();
+                        var arr = Cfg.Config.GetSection($"{item.Path}:Create").Get<string[]>();
                         if (arr == null || arr.Length == 0)
                             continue;
 
@@ -185,8 +183,8 @@ namespace Dt.Cm
 
         async Task<int> ImportData(IConfigurationSection p_item, SqliteConnection p_conn)
         {
-            var dbConn = _root.GetValue<string>($"{p_item.Path}:DbKey");
-            var select = _root.GetValue<string>($"{p_item.Path}:Data");
+            var dbConn = Cfg.Config.GetValue<string>($"{p_item.Path}:DbKey");
+            var select = Cfg.Config.GetValue<string>($"{p_item.Path}:Data");
             if (string.IsNullOrEmpty(select))
                 return 0;
 

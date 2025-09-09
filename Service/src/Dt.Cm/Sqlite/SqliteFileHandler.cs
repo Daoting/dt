@@ -36,29 +36,18 @@ namespace Dt.Cm
         /// </summary>
         public void Init(IDictionary<string, RequestDelegate> p_handlers)
         {
-            if (!File.Exists(System.IO.Path.Combine(AppContext.BaseDirectory, "etc/config/sqlite.json")))
-            {
-                string err = "缺少sqlite.json文件，无法正常启动";
-                Log.Fatal(err);
-                throw new Exception(err);
-            }
-
             if (!_path.Exists)
                 _path.Create();
 
-            // 加载 sqlite.json 配置，需要将数据导出到sqlite文件的列表
-            var cfg = new ConfigurationBuilder()
-                .SetBasePath(System.IO.Path.Combine(AppContext.BaseDirectory, "etc/config"))
-                .AddJsonFile("sqlite.json", false, false)
-                .Build();
-
+            var root = Cfg.Config.GetSection("SqliteModel");
+            
             // db模型的sqlite文件
-            _model.Init(cfg);
+            _model.Init(root);
 
             // 普通sqlite文件
-            foreach (var item in cfg.GetSection("Files").GetChildren())
+            foreach (var item in root.GetSection("Files").GetChildren())
             {
-                _fileItem[item.Key] = new SqliteFileItem(cfg, item);
+                _fileItem[item.Key] = new SqliteFileItem(item);
             }
 
             // 注册请求路径处理
