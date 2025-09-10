@@ -3,6 +3,9 @@
 		<Content Include="..\..\k8s\global.json" Link="etc\config\global.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
+		<Content Include="..\App\etc\config\app.json" Link="etc\config\app.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 		<Content Include="..\Cm\etc\config\cm.json" Link="etc\config\cm.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
@@ -23,6 +26,7 @@
 
 	<ItemGroup>
 		<!--PrivateAssets避免引用项目的 nuget 包-->
+		<ProjectReference Include="..\Dt.App\Dt.App.csproj" />
 		<ProjectReference Include="..\Dt.Cm\Dt.Cm.csproj" PrivateAssets="all" />
 		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" PrivateAssets="all" />
 		<ProjectReference Include="..\Dt.Fsm\Dt.Fsm.csproj" PrivateAssets="all" />

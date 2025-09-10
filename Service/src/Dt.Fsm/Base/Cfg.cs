@@ -55,14 +55,15 @@ namespace Dt.Fsm
         public static List<string> FixedVolumes { get; } = new List<string>();
 
         /// <summary>
-        /// 初始化文件服务
+        /// 初始化服务配置
         /// </summary>
         public static void Init()
         {
             if (!File.Exists(Path.Combine(AppContext.BaseDirectory, "etc/config/fsm.json")))
             {
-                Log.Warning("缺少fsm.json文件！");
-                return;
+                var ex = new Exception("缺少 fsm.json 文件！");
+                Log.Fatal(ex, "fsm服务启动出错");
+                throw ex;
             }
 
             try

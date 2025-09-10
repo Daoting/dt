@@ -1,4 +1,4 @@
-﻿{
+{
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
@@ -8,11 +8,11 @@
     }
   },
   "profiles": {
-    "Boot": {
+    "App": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:1004"
+      "applicationUrl": "https://localhost:1004/app"
     },
     "IIS": {
       "commandName": "IIS",

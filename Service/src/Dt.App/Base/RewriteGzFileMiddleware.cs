@@ -7,20 +7,21 @@
 #endregion
 
 #region 引用命名
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 #endregion
 
-namespace Dt.Boot
+namespace Dt.App
 {
     /// <summary>
     /// 重写请求文件路径，指向压缩文件 *.gz
     /// </summary>
-    public class RewriteBrFileMiddleware
+    public class RewriteGzFileMiddleware
     {
         readonly RequestDelegate _next;
         readonly PhysicalFileProvider _fileProvider;
-
-        public RewriteBrFileMiddleware(RequestDelegate p_next, PhysicalFileProvider p_fileProvider)
+        
+        public RewriteGzFileMiddleware(RequestDelegate p_next, PhysicalFileProvider p_fileProvider)
         {
             _next = p_next;
             _fileProvider = p_fileProvider;
@@ -32,31 +33,19 @@ namespace Dt.Boot
 
             // 若请求文件的gz文件存在，指向压缩文件
             if ((HttpMethods.IsGet(req.Method) || HttpMethods.IsHead(req.Method))
-                && IsFile(req.Path.Value))
+                && req.Path.Value is string path
+                && path.LastIndexOf('.') > 0  // 有扩展名
+                && path.StartsWith(Cfg.WasmVirPath, StringComparison.OrdinalIgnoreCase))
             {
-                var fi = _fileProvider.GetFileInfo(req.Path.Value);
+                var fi = _fileProvider.GetFileInfo(path.Substring(Cfg.WasmVirPath.Length));
                 if (File.Exists(fi.PhysicalPath + ".gz"))
                 {
                     // gz文件存在
-                    req.Path += ".gz";
-                    // 响应头标志br压缩
-                    p_context.Response.Headers["Content-Encoding"] = "gzip";
+                    req.Path = path + ".gz";
                 }
             }
 
             await _next(p_context);
-        }
-
-        /// <summary>
-        /// 是否有扩展名
-        /// </summary>
-        /// <param name="p_path"></param>
-        /// <returns></returns>
-        static bool IsFile(string p_path)
-        {
-            if (string.IsNullOrWhiteSpace(p_path))
-                return false;
-            return p_path.LastIndexOf('.') > 0;
         }
     }
 }

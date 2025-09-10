@@ -27,14 +27,15 @@ namespace Dt.Cm
         public static IConfiguration Config { get; private set; }
 
         /// <summary>
-        /// 初始化文件服务
+        /// 初始化服务配置
         /// </summary>
         public static void Init()
         {
             if (!File.Exists(Path.Combine(AppContext.BaseDirectory, "etc/config/cm.json")))
             {
-                Log.Warning("缺少cm.json文件！");
-                return;
+                var ex = new Exception("缺少 cm.json 文件！");
+                Log.Fatal(ex, "cm服务启动出错");
+                throw ex;
             }
 
             try

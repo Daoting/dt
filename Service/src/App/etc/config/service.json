@@ -1,0 +1,14 @@
+﻿{
+  "DbKey": "pgdt",
+  "TraceSql": false,
+  "TraceRpc": false,
+
+  // 启动KestrelServer时的监听设置
+  "KestrelListen": [
+    {
+      "Scheme": "https",
+      "Address": "0.0.0.0",
+      "Port": "1004"
+    }
+  ]
+}

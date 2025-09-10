@@ -1,1 +1,0 @@
-Dt.Boot.BootLauncher.StartBoot(args, new Dt.Boot.SvcStub());

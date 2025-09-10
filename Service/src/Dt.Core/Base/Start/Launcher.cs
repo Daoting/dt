@@ -153,6 +153,11 @@ namespace Dt.Core
                     NoDllException("Dt.Fsm.dll");
                 stubs.Add((Stub)Activator.CreateInstance(tp));
 
+                tp = Type.GetType("Dt.App.SvcStub,Dt.App");
+                if (tp == null)
+                    NoDllException("Dt.App.dll");
+                stubs.Add((Stub)Activator.CreateInstance(tp));
+                
                 // 自定义服务的数据源键名
                 var sect = Kit.Config.GetSection("CustomSvcDbKey");
                 Dictionary<string, DbAccessInfo> svcDbs = null;
