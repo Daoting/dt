@@ -63,7 +63,7 @@ namespace Dt.App
             Cfg.Init();
 
             // 注册请求路径处理
-            p_handlers["/.app"] = (p_context) => new AppMiddleware().Handle(p_context);
+            p_handlers["/"] = (p_context) => new AppMiddleware().Handle(p_context);
 
             // app安装包可手动下载
             p_app.UseStaticFiles(new StaticFileOptions

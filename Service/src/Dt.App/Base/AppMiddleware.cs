@@ -28,7 +28,7 @@ namespace Dt.App
         {
             try
             {
-                using (var sr = new StreamReader(typeof(AppMiddleware).Assembly.GetManifestResourceStream("Dt.App.Res.Package.html")))
+                using (var sr = new StreamReader(typeof(AppMiddleware).Assembly.GetManifestResourceStream("Dt.App.Res.Home.html")))
                 {
                     _page = sr.ReadToEnd();
                 }
