@@ -8,6 +8,7 @@
 		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" PrivateAssets="all" />
 		<ProjectReference Include="..\Dt.Fsm\Dt.Fsm.csproj" PrivateAssets="all" />
 		<ProjectReference Include="..\Dt.Msg\Dt.Msg.csproj" PrivateAssets="all" />
+		<ProjectReference Include="..\Dt.App\Dt.App.csproj" PrivateAssets="all" />
 	</ItemGroup>
 
 	<Import Project="..\References.props" />
