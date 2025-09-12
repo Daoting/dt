@@ -1,1 +1,1 @@
-﻿Launcher.Run(args, null);
+﻿Launcher.Run(args);

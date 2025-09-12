@@ -32,9 +32,14 @@ namespace Dt.Core
 
         #region 属性
         /// <summary>
+        /// 基础路径
+        /// </summary>
+        public static string PathBase { get; internal set; }
+        
+        /// <summary>
         /// 获取所有服务存根
         /// </summary>
-        public static Stub[] Stubs { get; set; }
+        public static Stub[] Stubs { get; internal set; }
 
         /// <summary>
         /// 获取服务实例ID，k8s部署在同一Node上多个Pod副本时区分用，每次启动生成新ID，终生不变

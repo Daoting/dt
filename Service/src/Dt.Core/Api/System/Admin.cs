@@ -738,7 +738,7 @@ namespace Dt.Core
         {
             return Task.Run(() =>
             {
-                var dir = new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "etc", "log"));
+                var dir = new DirectoryInfo(Path.Combine(Kit.PathBase, "etc", "log"));
                 if (dir.Exists)
                 {
                     StringBuilder sb = new StringBuilder();

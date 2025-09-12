@@ -14,6 +14,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog.Extensions.ElapsedTime;
 using Serilog.Formatting.Compact;
+using System.Reflection;
+using System.Reflection.Metadata;
+using System.Reflection.PortableExecutable;
 #endregion
 
 namespace Dt.Core
@@ -25,47 +28,70 @@ namespace Dt.Core
     {
         /// <summary>
         /// 初始化服务，任一环节失败即启动失败
+        /// + 确定基础路径
         /// + 创建日志对象
         /// + 读取配置
-        /// + 缓存默认库表结构、同步时间
+        /// + 整理服务存根
         /// + 启动http服务器
         /// 此方法不可异步，否则启动有问题！！！
         /// </summary>
-        /// <param name="p_args">启动参数</param>
-        /// <param name="p_stub">服务存根</param>
-        public static void Run(string[] p_args, Stub p_stub)
+        /// <param name="p_args">命令行参数，基础路径，空时dll所在路径为基础路径</param>
+        public static void Run(string[] p_args)
         {
+            SetPathBase(p_args);
             CreateLogger();
             LoadConfig();
-            if ("InitDb".Equals(Kit.GetCfg<string>("Mode"), StringComparison.OrdinalIgnoreCase))
+            BuildStubs();
+            RunWebHost();
+            Log.CloseAndFlush();
+        }
+
+        /// <summary>
+        /// 确定基础路径
+        /// </summary>
+        /// <param name="p_args"></param>
+        /// <exception cref="Exception"></exception>
+        static void SetPathBase(string[] p_args)
+        {
+            if (p_args != null && p_args.Length > 0)
             {
-                // 进入初始化数据库模式
-                RunInitModeWebHost();
+                var path = p_args[0];
+                if (!Path.IsPathRooted(path))
+                {
+                    // 相对路径
+                    path = Path.Combine(AppContext.BaseDirectory, path);
+                }
+                if (!Directory.Exists(path))
+                {
+                    string msg = $"基础路径 {path} 不存在";
+                    Console.WriteLine(msg);
+                    throw new Exception(msg);
+                }
+                Kit.PathBase = path;
             }
             else
             {
-                BuildStubs(p_stub);
-                RunWebHost(p_args);
+                // dll所在路径为基础路径
+                Kit.PathBase = AppContext.BaseDirectory;
             }
-            Log.CloseAndFlush();
         }
 
         /// <summary>
         /// 创建日志对象
         /// </summary>
-        public static void CreateLogger()
+        static void CreateLogger()
         {
             try
             {
                 // 支持动态调整
                 var cfg = new ConfigurationBuilder()
-                    .SetBasePath(Path.Combine(AppContext.BaseDirectory, "etc/config"))
+                    .SetBasePath(Path.Combine(Kit.PathBase, "etc/config"))
                     .AddJsonFile("logger.json", false, true)
                     .Build();
 
                 // 日志文件命名：
                 // log-服务实例ID-日期.txt，避免部署在k8s挂载宿主目录时文件名重复
-                string path = Path.Combine(AppContext.BaseDirectory, "etc/log", $"log-{Kit.SvcID}-.txt");
+                string path = Path.Combine(Kit.PathBase, "etc/log", $"log-{Kit.SvcID}-.txt");
                 Log.Logger = new LoggerConfiguration()
                     .ReadFrom.Configuration(cfg)
                     .WriteTo.Html()
@@ -94,7 +120,7 @@ namespace Dt.Core
             try
             {
                 var cfg = new ConfigurationBuilder()
-                    .SetBasePath(Path.Combine(AppContext.BaseDirectory, "etc/config"))
+                    .SetBasePath(Path.Combine(Kit.PathBase, "etc/config"))
                     .AddJsonFile("service.json", false, true)
                     .AddJsonFile("global.json", false, true)
                     .Build();
@@ -111,53 +137,57 @@ namespace Dt.Core
         /// <summary>
         /// 整理服务存根
         /// </summary>
-        /// <param name="p_stub">服务存根</param>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="Exception"></exception>
-        static void BuildStubs(Stub p_stub)
+        static void BuildStubs()
         {
-            if (p_stub == null)
-                p_stub = new DefaultStub();
-
             // 服务名
-            if (string.IsNullOrEmpty(p_stub.SvcName))
-            {
-                var name = Kit.GetCfg<string>("SvcName");
-                if (string.IsNullOrEmpty(name))
-                {
-                    LogException("未设置服务名称，启动失败！");
-                }
+            var svcName = Kit.GetCfg<string>("SvcName", "").ToLower();
 
-                p_stub.SvcName = name.ToLower();
+            List<Stub> stubs = new List<Stub>();
+            if (svcName == "cm")
+            {
+                stubs.Add(CreateSysStub("Dt.Cm"));
             }
-
-            // 配置中允许单体服务 且 不是内置微服务时，才单体服务
-            bool isSingletonSvc = "SingletonSvc".Equals(Kit.GetCfg<string>("Mode"), StringComparison.OrdinalIgnoreCase);
-            if (isSingletonSvc)
+            else if (svcName == "msg")
             {
-                List<Stub> stubs = new List<Stub> { p_stub };
+                stubs.Add(CreateSysStub("Dt.Msg"));
+            }
+            else if (svcName == "fsm")
+            {
+                stubs.Add(CreateSysStub("Dt.Fsm"));
+            }
+            else if (svcName == "app")
+            {
+                stubs.Add(CreateSysStub("Dt.App"));
+            }
+            else
+            {
+                var ls = GetAllStubs();
+                if (svcName != "")
+                {
+                    // 自定义微服务
+                    var stub = ls.FirstOrDefault(s => svcName.Equals(s.SvcName, StringComparison.OrdinalIgnoreCase));
+                    if (stub == null)
+                    {
+                        var ex = new Exception($"服务 [{svcName}] 的 Stub 不存在！");
+                        Log.Fatal(ex, "加载服务存根出错");
+                        throw ex;
+                    }
+                    stubs.Add(stub);
+                }
+                else
+                {
+                    // 单体服务模式，所有微服务聚集成一个服务
+                    stubs.AddRange(ls);
+                    stubs.Add(CreateSysStub("Dt.Cm"));
+                    stubs.Add(CreateSysStub("Dt.Msg"));
+                    stubs.Add(CreateSysStub("Dt.Fsm"));
+                    stubs.Add(CreateSysStub("Dt.App"));
+                }
+            }
+            Kit.Stubs = stubs.ToArray();
 
-                // 公共服务
-                Type tp = Type.GetType("Dt.Cm.SvcStub,Dt.Cm");
-                if (tp == null)
-                    NoDllException("Dt.Cm.dll");
-                stubs.Add((Stub)Activator.CreateInstance(tp));
-
-                tp = Type.GetType("Dt.Msg.SvcStub,Dt.Msg");
-                if (tp == null)
-                    NoDllException("Dt.Msg.dll");
-                stubs.Add((Stub)Activator.CreateInstance(tp));
-
-                tp = Type.GetType("Dt.Fsm.SvcStub,Dt.Fsm");
-                if (tp == null)
-                    NoDllException("Dt.Fsm.dll");
-                stubs.Add((Stub)Activator.CreateInstance(tp));
-
-                tp = Type.GetType("Dt.App.SvcStub,Dt.App");
-                if (tp == null)
-                    NoDllException("Dt.App.dll");
-                stubs.Add((Stub)Activator.CreateInstance(tp));
-                
+            if (Kit.Stubs.Length > 1)
+            {
                 // 自定义服务的数据源键名
                 var sect = Kit.Config.GetSection("CustomSvcDbKey");
                 Dictionary<string, DbAccessInfo> svcDbs = null;
@@ -189,23 +219,13 @@ namespace Dt.Core
                 // 多数据库
                 if (svcDbs != null)
                 {
-                    if (!svcDbs.ContainsKey(p_stub.SvcName))
-                        svcDbs[p_stub.SvcName] = Kit.DefaultDbInfo;
-                    if (!svcDbs.ContainsKey("cm"))
-                        svcDbs["cm"] = Kit.DefaultDbInfo;
-                    if (!svcDbs.ContainsKey("msg"))
-                        svcDbs["msg"] = Kit.DefaultDbInfo;
-                    if (!svcDbs.ContainsKey("fsm"))
-                        svcDbs["fsm"] = Kit.DefaultDbInfo;
-
+                    foreach (var stub in Kit.Stubs)
+                    {
+                        if (!svcDbs.ContainsKey(stub.SvcName))
+                            svcDbs[stub.SvcName] = Kit.DefaultDbInfo;
+                    }
                     Kit.SingletonSvcDbs = svcDbs;
                 }
-
-                Kit.Stubs = stubs.ToArray();
-            }
-            else
-            {
-                Kit.Stubs = new Stub[] { p_stub };
             }
 
             // 单体不启用 RabbitMQ
@@ -216,15 +236,14 @@ namespace Dt.Core
         /// <summary>
         /// 启动Web服务器
         /// </summary>
-        /// <param name="p_args">启动参数</param>
-        static void RunWebHost(string[] p_args)
+        static void RunWebHost()
         {
             try
             {
                 // 部署在IIS进程内模式时创建 IISHttpServer
                 // 其他情况创建 KestrelServer
                 // 两种 Web服务器的配置在Startup.ConfigureServices
-                Host.CreateDefaultBuilder(p_args)
+                Host.CreateDefaultBuilder()
                     // 为WebHost配置默认设置
                     .ConfigureWebHostDefaults(web => web.UseStartup<Startup>())
                     // 改用Autofac来实现依赖注入
@@ -278,6 +297,68 @@ namespace Dt.Core
         static void NoDllException(string p_dll)
         {
             LogException($"缺少[{p_dll}]文件，cm msg fsm内置微服务不支持单体模式！");
+        }
+
+        static Stub CreateSysStub(string p_name)
+        {
+            Type tp = Type.GetType($"{p_name}.SvcStub,{p_name}");
+            if (tp == null)
+                NoDllException($"{p_name}.dll");
+            return (Stub)Activator.CreateInstance(tp);
+        }
+
+        /// <summary>
+        /// 从所有dll中找出自定义微服务的Stub列表
+        /// </summary>
+        /// <returns></returns>
+        static List<Stub> GetAllStubs()
+        {
+            List<Stub> ls = new List<Stub>();
+            DirectoryInfo di = new DirectoryInfo(AppContext.BaseDirectory);
+            foreach (FileInfo fi in di.GetFiles("*.dll"))
+            {
+                if (fi.Name.Equals("Dt.Core.dll")
+                    || fi.Name.Equals("Dt.Cm.dll")
+                    || fi.Name.Equals("Dt.Fsm.dll")
+                    || fi.Name.Equals("Dt.Msg.dll")
+                    || fi.Name.Equals("Dt.App.dll"))
+                    continue;
+
+                using var stream = fi.OpenRead();
+                using var peReader = new PEReader(stream);
+                {
+                    var meta = peReader.GetMetadataReader();
+                    foreach (var ar in meta.AssemblyReferences)
+                    {
+                        var arf = meta.GetAssemblyReference(ar);
+                        var rn = meta.GetString(arf.Name);
+                        if (rn == "Dt.Core")
+                        {
+                            // 遍历所有公共类型
+                            foreach (var typeHandle in meta.TypeDefinitions)
+                            {
+                                var type = meta.GetTypeDefinition(typeHandle);
+                                if (type.BaseType.Kind == HandleKind.TypeReference)
+                                {
+                                    var bt = meta.GetTypeReference((TypeReferenceHandle)type.BaseType);
+                                    if (meta.GetString(bt.Name) == "Stub" && meta.GetString(bt.Namespace) == "Dt.Core")
+                                    {
+                                        var asm = Assembly.LoadFrom(fi.FullName);
+                                        var ns = meta.GetString(type.Namespace);
+                                        var nn = meta.GetString(type.Name);
+                                        var st = asm.GetType(ns + "." + nn);
+                                        if (st != null)
+                                            ls.Add((Stub)Activator.CreateInstance(st));
+                                        break;
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            return ls;
         }
     }
 }

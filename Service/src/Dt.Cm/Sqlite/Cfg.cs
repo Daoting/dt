@@ -31,7 +31,7 @@ namespace Dt.Cm
         /// </summary>
         public static void Init()
         {
-            if (!File.Exists(Path.Combine(AppContext.BaseDirectory, "etc/config/cm.json")))
+            if (!File.Exists(Path.Combine(Kit.PathBase, "etc/config/cm.json")))
             {
                 var ex = new Exception("缺少 cm.json 文件！");
                 Log.Fatal(ex, "cm服务启动出错");
@@ -41,7 +41,7 @@ namespace Dt.Cm
             try
             {
                 Config = new ConfigurationBuilder()
-                    .SetBasePath(Path.Combine(AppContext.BaseDirectory, "etc/config"))
+                    .SetBasePath(Path.Combine(Kit.PathBase, "etc/config"))
                     .AddJsonFile("cm.json", false, false)
                     .Build();
                 Log.Information("读取 cm.json 成功");

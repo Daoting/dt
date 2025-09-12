@@ -218,7 +218,7 @@ namespace Dt.Core
             using (StreamReader sr = new StreamReader(p_context.Request.Body))
             {
                 // 客户端提供完整路径
-                filePath = Path.Combine(AppContext.BaseDirectory, await sr.ReadToEndAsync());
+                filePath = Path.Combine(Kit.PathBase, await sr.ReadToEndAsync());
             }
 
             FileInfo fileInfo = new FileInfo(filePath);

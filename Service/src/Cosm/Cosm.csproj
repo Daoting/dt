@@ -1,35 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	
 	<ItemGroup>
-		<Content Include="..\..\k8s\global.json" Link="etc\config\global.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="..\App\etc\config\app.json" Link="etc\config\app.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="..\Cm\etc\config\cm.json" Link="etc\config\cm.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="..\Fsm\etc\config\fsm.json" Link="etc\config\fsm.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="..\Msg\etc\config\msg.json" Link="etc\config\msg.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="..\Cm\etc\config\logger.json" Link="etc\config\logger.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
+		<ProjectReference Include="..\Dt.Cm\Dt.Cm.csproj" />
+		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+		<ProjectReference Include="..\Dt.Fsm\Dt.Fsm.csproj" />
+		<ProjectReference Include="..\Dt.Msg\Dt.Msg.csproj" />
+		<ProjectReference Include="..\Dt.App\Dt.App.csproj" />
 	</ItemGroup>
 
 	<!--<ItemGroup>
-	  <PackageReference Include="Dt.Service" Version="4.1.0" />
+	  <PackageReference Include="Dt.Service" Version="5.0.0" />
 	</ItemGroup>-->
 
-	<ItemGroup>
-		<!--PrivateAssets避免引用项目的 nuget 包-->
-		<ProjectReference Include="..\Dt.App\Dt.App.csproj" />
-		<ProjectReference Include="..\Dt.Cm\Dt.Cm.csproj" PrivateAssets="all" />
-		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" PrivateAssets="all" />
-		<ProjectReference Include="..\Dt.Fsm\Dt.Fsm.csproj" PrivateAssets="all" />
-		<ProjectReference Include="..\Dt.Msg\Dt.Msg.csproj" PrivateAssets="all" />
-	</ItemGroup>
 </Project>

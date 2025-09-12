@@ -20,7 +20,7 @@ namespace Dt.Cm
     public class SqliteFileHandler
     {
         #region 成员变量
-        static DirectoryInfo _path = new DirectoryInfo(System.IO.Path.Combine(AppContext.BaseDirectory, "etc/sqlite"));
+        static DirectoryInfo _path = new DirectoryInfo(System.IO.Path.Combine(Kit.PathBase, "etc/sqlite"));
 
         readonly ModelFileItem _model = new ModelFileItem();
         readonly Dictionary<string, SqliteFileItem> _fileItem = new Dictionary<string, SqliteFileItem>(StringComparer.OrdinalIgnoreCase);

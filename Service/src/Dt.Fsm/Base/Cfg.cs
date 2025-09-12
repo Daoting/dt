@@ -59,7 +59,7 @@ namespace Dt.Fsm
         /// </summary>
         public static void Init()
         {
-            if (!File.Exists(Path.Combine(AppContext.BaseDirectory, "etc/config/fsm.json")))
+            if (!File.Exists(Path.Combine(Kit.PathBase, "etc/config/fsm.json")))
             {
                 var ex = new Exception("缺少 fsm.json 文件！");
                 Log.Fatal(ex, "fsm服务启动出错");
@@ -69,7 +69,7 @@ namespace Dt.Fsm
             try
             {
                 _config = new ConfigurationBuilder()
-                    .SetBasePath(Path.Combine(AppContext.BaseDirectory, "etc/config"))
+                    .SetBasePath(Path.Combine(Kit.PathBase, "etc/config"))
                     .AddJsonFile("fsm.json", false, false)
                     .Build();
                 Log.Information("读取 fsm.json 成功");
@@ -81,7 +81,7 @@ namespace Dt.Fsm
             }
             
             // BaseDirectory程序集所在的目录，不可用Directory.GetCurrentDirectory()！
-            Root = Path.Combine(AppContext.BaseDirectory, "drive");
+            Root = Path.Combine(Kit.PathBase, "drive");
             var dir = new DirectoryInfo(Root);
             if (!dir.Exists)
                 dir.Create();

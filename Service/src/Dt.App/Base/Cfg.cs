@@ -47,7 +47,7 @@ namespace Dt.App
         /// </summary>
         public static void Init()
         {
-            if (!File.Exists(Path.Combine(AppContext.BaseDirectory, "etc/config/app.json")))
+            if (!File.Exists(Path.Combine(Kit.PathBase, "etc/config/app.json")))
             {
                 var ex = new Exception("缺少 app.json 文件！");
                 Log.Fatal(ex, "app服务启动出错");
@@ -57,7 +57,7 @@ namespace Dt.App
             try
             {
                 _config = new ConfigurationBuilder()
-                    .SetBasePath(Path.Combine(AppContext.BaseDirectory, "etc/config"))
+                    .SetBasePath(Path.Combine(Kit.PathBase, "etc/config"))
                     .AddJsonFile("app.json", false, true)
                     .Build();
 
@@ -72,7 +72,7 @@ namespace Dt.App
                 throw;
             }
 
-            PackageDir = Path.Combine(AppContext.BaseDirectory, "package");
+            PackageDir = Path.Combine(Kit.PathBase, "package");
             if (!Directory.Exists(PackageDir))
                 Directory.CreateDirectory(PackageDir);
 
@@ -80,7 +80,7 @@ namespace Dt.App
             if (!Path.IsPathRooted(WasmDir))
             {
                 // 相对路径
-                WasmDir = Path.Combine(AppContext.BaseDirectory, WasmDir);
+                WasmDir = Path.Combine(Kit.PathBase, WasmDir);
             }
             if (!Directory.Exists(WasmDir))
                 Directory.CreateDirectory(WasmDir);
