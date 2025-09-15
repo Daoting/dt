@@ -33,7 +33,7 @@ namespace Dt.Core
             // 配置 KestrelServer
             p_services.Configure<KestrelServerOptions>(options =>
             {
-                // KestrelServer 监听设置，配置在 service.json 的 KestrelListen 节
+                // KestrelServer 监听设置，配置在 kestrel.json
                 ConfigureKestrelListen(options);
 
                 // 不限制请求/响应的速率，不适合流模式长时间等待的情况！
@@ -84,14 +84,24 @@ namespace Dt.Core
         /// <param name="p_options"></param>
         public static void ConfigureKestrelListen(KestrelServerOptions p_options)
         {
-            var sect = Kit.Config.GetSection("KestrelListen").GetChildren();
+            if (!File.Exists(Path.Combine(Kit.PathBase, "etc/config", "kestrel.json")))
+            {
+                Log.Warning("缺少 kestrel.json 配置，使用默认监听端口");
+                return;
+            }
+            
+            var cfg = new ConfigurationBuilder()
+                    .SetBasePath(Path.Combine(Kit.PathBase, "etc/config"))
+                    .AddJsonFile("kestrel.json", false, false)
+                    .Build();
+            var sect = cfg.GetSection("KestrelListen").GetChildren();
 
-            // service.json 中无配置
+            // 无配置
             if (!sect.Any())
             {
                 // 使用 launchSettings.json 中配置，
                 // 都无配置使用缺省：http://localhost:5000; https://localhost:5001
-                Log.Information("service.json无监听配置，使用默认");
+                Log.Warning("kestrel.json 无监听配置，使用默认");
                 return;
             }
 

@@ -230,7 +230,7 @@ namespace Dt.Core
 
             // 单体不启用 RabbitMQ
             Kit.EnableRabbitMQ = Kit.Stubs.Length == 1;
-            Log.Information($"启动 {Kit.AllSvcName}，版本：{typeof(Launcher).Assembly.GetName().Version.ToString(3)}");
+            Log.Information($"启动 {string.Join('+', Kit.SvcNames)}，版本：{typeof(Launcher).Assembly.GetName().Version.ToString(3)}");
         }
 
         /// <summary>
@@ -317,48 +317,64 @@ namespace Dt.Core
             DirectoryInfo di = new DirectoryInfo(AppContext.BaseDirectory);
             foreach (FileInfo fi in di.GetFiles("*.dll"))
             {
-                if (fi.Name.Equals("Dt.Core.dll")
-                    || fi.Name.Equals("Dt.Cm.dll")
-                    || fi.Name.Equals("Dt.Fsm.dll")
-                    || fi.Name.Equals("Dt.Msg.dll")
-                    || fi.Name.Equals("Dt.App.dll"))
-                    continue;
-
-                using var stream = fi.OpenRead();
-                using var peReader = new PEReader(stream);
+                bool skip = false;
+                foreach (var filter in _dllFilter)
                 {
-                    var meta = peReader.GetMetadataReader();
-                    foreach (var ar in meta.AssemblyReferences)
+                    if (fi.Name.StartsWith(filter))
                     {
-                        var arf = meta.GetAssemblyReference(ar);
-                        var rn = meta.GetString(arf.Name);
-                        if (rn == "Dt.Core")
+                        skip = true;
+                        break;
+                    }
+                }
+                if (skip)
+                    continue;
+                
+                try
+                {
+                    using var stream = fi.OpenRead();
+                    using var peReader = new PEReader(stream);
+                    {
+                        var meta = peReader.GetMetadataReader();
+                        var refs = meta.AssemblyReferences;
+                        foreach (var ar in refs)
                         {
-                            // 遍历所有公共类型
-                            foreach (var typeHandle in meta.TypeDefinitions)
+                            var arf = meta.GetAssemblyReference(ar);
+                            var rn = meta.GetString(arf.Name);
+                            if (rn == "Dt.Core")
                             {
-                                var type = meta.GetTypeDefinition(typeHandle);
-                                if (type.BaseType.Kind == HandleKind.TypeReference)
+                                // 遍历所有公共类型
+                                foreach (var typeHandle in meta.TypeDefinitions)
                                 {
-                                    var bt = meta.GetTypeReference((TypeReferenceHandle)type.BaseType);
-                                    if (meta.GetString(bt.Name) == "Stub" && meta.GetString(bt.Namespace) == "Dt.Core")
+                                    var type = meta.GetTypeDefinition(typeHandle);
+                                    if (type.BaseType.Kind == HandleKind.TypeReference)
                                     {
-                                        var asm = Assembly.LoadFrom(fi.FullName);
-                                        var ns = meta.GetString(type.Namespace);
-                                        var nn = meta.GetString(type.Name);
-                                        var st = asm.GetType(ns + "." + nn);
-                                        if (st != null)
-                                            ls.Add((Stub)Activator.CreateInstance(st));
-                                        break;
+                                        var bt = meta.GetTypeReference((TypeReferenceHandle)type.BaseType);
+                                        if (meta.GetString(bt.Name) == "Stub" && meta.GetString(bt.Namespace) == "Dt.Core")
+                                        {
+                                            var asm = Assembly.LoadFrom(fi.FullName);
+                                            var ns = meta.GetString(type.Namespace);
+                                            var nn = meta.GetString(type.Name);
+                                            var st = asm.GetType(ns + "." + nn);
+                                            if (st != null)
+                                                ls.Add((Stub)Activator.CreateInstance(st));
+                                            break;
+                                        }
                                     }
                                 }
+                                break;
                             }
-                            break;
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Log.Fatal(ex, $"{fi.Name} 提取Stub时出错！");
+                    throw;
                 }
             }
             return ls;
         }
+        
+        static List<string> _dllFilter = new List<string> { "Microsoft.", "System.", "Autofac.", "Castle.", "Dapper.", "Dt.Core.", "Dt.Cm.", "Dt.Fsm.", "Dt.Msg.", "Dt.App.", "MailKit.", "MimeKit.", "MySqlConnector.", "Nito.", "Npgsql.", "Oracle.", "Polly.", "RabbitMQ.", "Serilog.", "SQLitePCLRaw.", "StackExchange.", "BouncyCastle.", "Pipelines." };
     }
 }

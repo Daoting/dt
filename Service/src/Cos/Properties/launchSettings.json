@@ -7,7 +7,7 @@
     }
   },
   "profiles": {
-    "Cosm": {
+    "Cos": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": ".admin",
