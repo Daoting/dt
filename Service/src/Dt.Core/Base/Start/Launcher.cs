@@ -176,24 +176,33 @@ namespace Dt.Core
             }
             Kit.Svcs = svcs;
 
-            // 完善每个微服务的配置及数据源
+            // 完善每个微服务的数据源jian
             foreach (var svc in Kit.Svcs)
             {
                 string file = svc.SvcName + ".json";
                 string path = Path.Combine(Kit.PathBase, "etc/config", file);
-                try
+                
+                if (!File.Exists(path))
                 {
-                    svc.Config = new ConfigurationBuilder()
-                        .AddJsonFile(path, false, false)
-                        .Build();
-                }
-                catch (Exception e)
-                {
-                    Log.Fatal(e, $"读取 {file} 失败！");
-                    throw;
+                    // 无配置文件，使用默认数据源
+                    svc.DbInfo = Kit.DefaultDbInfo;
+                    continue;
                 }
 
-                string dbKey = svc.Config["DbKey"];
+                string dbKey = null;
+                try
+                {
+                    var cfg = new ConfigurationBuilder()
+                        .AddJsonFile(path, false, false)
+                        .Build();
+                    dbKey = cfg["DbKey"];
+                }
+                catch
+                {
+                    svc.DbInfo = Kit.DefaultDbInfo;
+                    continue;
+                }
+
                 if (string.IsNullOrEmpty(dbKey))
                 {
                     // 无 DbKey 配置，使用默认数据源

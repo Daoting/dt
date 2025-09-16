@@ -38,11 +38,6 @@ namespace Dt.Core
         /// 当前服务的默认数据库描述信息
         /// </summary>
         public DbAccessInfo DbInfo { get; set; }
-
-        /// <summary>
-        /// 当前服务的配置
-        /// </summary>
-        public IConfiguration Config { get; set; }
     }
     
     /// <summary>
