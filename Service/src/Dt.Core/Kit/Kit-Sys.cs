@@ -35,11 +35,11 @@ namespace Dt.Core
         /// 基础路径
         /// </summary>
         public static string PathBase { get; internal set; }
-        
+
         /// <summary>
-        /// 获取所有服务存根
+        /// 获取当前运行的所有微服务列表
         /// </summary>
-        public static Stub[] Stubs { get; internal set; }
+        public static SvcList Svcs { get; internal set; }
 
         /// <summary>
         /// 获取服务实例ID，k8s部署在同一Node上多个Pod副本时区分用，每次启动生成新ID，终生不变
@@ -49,13 +49,13 @@ namespace Dt.Core
         /// <summary>
         /// 获取所有服务名称，小写
         /// </summary>
-        public static IEnumerable<string> SvcNames => from stub in Stubs
+        public static IEnumerable<string> SvcNames => from stub in Svcs
                                                       select stub.SvcName;
 
         /// <summary>
         /// 是否为单体服务(所有微服务合并成一个服务)
         /// </summary>
-        public static bool IsSingletonSvc => Stubs.Length > 1;
+        public static bool IsSingletonSvc => Svcs.Count > 1;
 
         /// <summary>
         /// 获取当前请求的HttpContext
@@ -136,15 +136,11 @@ namespace Dt.Core
         /// 初始化系统配置
         /// </summary>
         /// <param name="p_config"></param>
-        /// <param name="p_attachChanged">是否监听系统配置(json文件)修改事件</param>
-        public static void InitConfig(IConfiguration p_config, bool p_attachChanged)
+        internal static void InitConfig(IConfiguration p_config)
         {
             _config = p_config;
-            if (p_attachChanged)
-            {
-                ApplyConfig();
-                _cfgCallback = _config.GetReloadToken().RegisterChangeCallback(OnConfigChanged, null);
-            }
+            ApplyConfig();
+            _cfgCallback = _config.GetReloadToken().RegisterChangeCallback(OnConfigChanged, null);
         }
 
         /// <summary>
@@ -217,11 +213,11 @@ namespace Dt.Core
         public static void ConfigureServices(IServiceCollection p_services)
         {
             // 外部
-            if (Stubs != null)
+            if (Svcs != null)
             {
-                foreach (var stub in Stubs)
+                foreach (var svc in Svcs)
                 {
-                    stub.ConfigureServices(p_services);
+                    svc.Stub.ConfigureServices(p_services);
                 }
             }
 
@@ -235,11 +231,11 @@ namespace Dt.Core
             _svcProvider = p_app.ApplicationServices;
             _accessor = _svcProvider.GetRequiredService<IHttpContextAccessor>();
 
-            if (Stubs != null)
+            if (Svcs != null)
             {
-                foreach (var stub in Stubs)
+                foreach (var svc in Svcs)
                 {
-                    stub.Configure(p_app, DtMiddleware.RequestHandlers);
+                    svc.Stub.Configure(p_app, DtMiddleware.RequestHandlers);
                 }
             }
         }

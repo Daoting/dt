@@ -28,8 +28,8 @@ namespace Dt.Core
         public List<string> GetInitInfo()
         {
             var ls = new List<string>();
-            if (Kit.Stubs.Length == 1)
-                ls.Add($"{Kit.Stubs[0].SvcName} API目录");
+            if (Kit.Svcs.Count == 1)
+                ls.Add($"{Kit.Svcs[0].SvcName} API目录");
             else
                 ls.Add("API目录");
             ls.Add(GetTopbarHtml());
@@ -37,13 +37,8 @@ namespace Dt.Core
             // 版本号
             var ver = typeof(Admin).Assembly.GetName().Version.ToString(3);
             ls.Add(ver);
-            
-            // 不显示无Api的服务
-            var stub = (from s in Kit.Stubs
-                        where s is not DefaultStub
-                        select s).FirstOrDefault();
-            if (stub != null)
-                ls.Add(GetGroupApi(stub.SvcName));
+
+            ls.Add(GetGroupApi(Kit.Svcs[0].SvcName));
             return ls;
         }
 
@@ -214,10 +209,9 @@ namespace Dt.Core
         {
             StringBuilder sb = new StringBuilder();
             sb.Append($"<span style=\"font-size:20px;\">API({Silo.Methods.Count})</span>");
-            foreach (var stub in Kit.Stubs)
+            foreach (var svc in Kit.Svcs)
             {
-                if (stub is not DefaultStub)
-                    sb.AppendFormat("<a onclick=\"load('[&quot;&quot;,&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", stub.SvcName);
+                sb.AppendFormat("<a onclick=\"load('[&quot;&quot;,&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", svc.SvcName);
             }
             sb.AppendFormat("<a onclick=\"load('[&quot;&quot;,&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", "公共");
             sb.AppendFormat("<a onclick=\"load('[&quot;&quot;,&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", "测试");
@@ -258,18 +252,18 @@ namespace Dt.Core
             string serviceName = "";
             if (attr.AgentMode == AgentMode.Default)
             {
-                if (Kit.Stubs.Length == 1)
+                if (Kit.Svcs.Count == 1)
                 {
-                    serviceName = $"\"{Kit.Stubs[0].SvcName}\"";
+                    serviceName = $"\"{Kit.Svcs[0].SvcName}\"";
                 }
                 else
                 {
                     // 多服务
-                    foreach (var stub in Kit.Stubs)
+                    foreach (var svc in Kit.Svcs)
                     {
-                        if (stub.GetType().Assembly == type.Assembly)
+                        if (svc.Stub.GetType().Assembly == type.Assembly)
                         {
-                            serviceName = $"\"{stub.SvcName}\"";
+                            serviceName = $"\"{svc.SvcName}\"";
                             break;
                         }
                     }

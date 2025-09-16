@@ -129,7 +129,7 @@ namespace Dt.Core.RabbitMQ
                 durable: true,      // 持久化
                 autoDelete: false); // 是否自动删除
 
-            var name = Kit.Stubs[0].SvcName;
+            var name = Kit.Svcs[0].SvcName;
             // 每个微服务声明三个消费者队列
             // 1. 如dt.cm，接收单副本时的直接投递 或 多个服务副本时采用均衡算法投递给其中一个的情况
             await CreateWorkConsumer(name);

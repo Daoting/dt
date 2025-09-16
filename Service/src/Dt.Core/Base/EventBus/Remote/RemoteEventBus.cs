@@ -105,7 +105,7 @@ namespace Dt.Core.EventBus
             if (p_event != null)
             {
                 if (string.IsNullOrEmpty(p_svcName))
-                    p_svcName = Kit.Stubs[0].SvcName;
+                    p_svcName = Kit.Svcs[0].SvcName;
                 Publish(p_event, $"{Kit.AppName}.{p_svcName.ToLower()}.All", true);
             }
         }

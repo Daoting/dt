@@ -28,7 +28,7 @@ namespace Dt.Core
         /// <exception cref="Exception"></exception>
         public static Task<T> Rpc<T>(string p_serviceName, string p_methodName, params object[] p_params)
         {
-            if (EnableRabbitMQ && !Stubs[0].SvcName.Equals(p_serviceName, StringComparison.OrdinalIgnoreCase))
+            if (EnableRabbitMQ && !Svcs[0].SvcName.Equals(p_serviceName, StringComparison.OrdinalIgnoreCase))
             {
                 // 非单体且非本服务时，远程调用
                 return new RabbitMQRpc().Call<T>(

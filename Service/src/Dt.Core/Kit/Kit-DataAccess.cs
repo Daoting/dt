@@ -63,7 +63,7 @@ namespace Dt.Core
         {
             var defDbKey = _config["DbKey"];
             if (string.IsNullOrEmpty(defDbKey))
-                throw new Exception("service.json中缺少默认数据源键名的配置！");
+                throw new Exception("service.json 中缺少默认数据源键名的配置！");
 
             _dbAll = new Dictionary<string, DbAccessInfo>(StringComparer.OrdinalIgnoreCase);
             var sect = _config.GetSection("Database");
@@ -94,14 +94,9 @@ namespace Dt.Core
             }
 
             if (_defaultDbInfo == null)
-                throw new Exception($"默认数据源键名[{defDbKey}]在global.json无配置！");
+                throw new Exception($"默认数据源键名 {defDbKey} 在 service.json 无配置！");
         }
-
-        /// <summary>
-        /// 单体服务时所有服务的数据库描述信息，所有服务使用同一库时为null
-        /// </summary>
-        internal static Dictionary<string, DbAccessInfo> SingletonSvcDbs { get; set; }
-
+        
         static Dictionary<string, DbAccessInfo> _dbAll;
         static DbAccessInfo _defaultDbInfo;
     }

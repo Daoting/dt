@@ -53,7 +53,7 @@ namespace Dt.Core.RabbitMQ
         /// <returns></returns>
         public IEnumerable<string> GetOtherReplicaIDs()
         {
-            string queueName = $"{Kit.AppName}.{Kit.Stubs[0].SvcName}";
+            string queueName = $"{Kit.AppName}.{Kit.Svcs[0].SvcName}";
             return from name in _allSvcInsts
                    where name.StartsWith(queueName) && !name.EndsWith(Kit.SvcID)
                    select name.Substring(queueName.Length + 1);
@@ -67,7 +67,7 @@ namespace Dt.Core.RabbitMQ
         public IEnumerable<string> GetReplicaIDs(string p_svcName)
         {
             if (string.IsNullOrEmpty(p_svcName))
-                p_svcName = Kit.Stubs[0].SvcName;
+                p_svcName = Kit.Svcs[0].SvcName;
 
             string queueName = $"{Kit.AppName}.{p_svcName}";
             return from name in _allSvcInsts
@@ -82,12 +82,12 @@ namespace Dt.Core.RabbitMQ
         /// <returns>副本个数</returns>
         public int GetReplicaCount(string p_svcName)
         {
-            // 未启用RabbitMQ，如：单体服务、Boot服务
+            // 未启用RabbitMQ，如：单体服务
             if (!Kit.EnableRabbitMQ)
                 return 1;
 
             if (string.IsNullOrEmpty(p_svcName))
-                p_svcName = Kit.Stubs[0].SvcName;
+                p_svcName = Kit.Svcs[0].SvcName;
 
             string queueName = $"{Kit.AppName}.{p_svcName}";
             return (from name in _allSvcInsts

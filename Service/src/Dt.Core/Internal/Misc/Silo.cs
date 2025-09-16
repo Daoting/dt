@@ -156,11 +156,9 @@ namespace Dt.Core
         {
             // 提取微服务和Dt.Core程序集
             LoadAssembly(typeof(Silo).Assembly, p_builder, "公共");
-            foreach (var stub in Kit.Stubs)
+            foreach (var svc in Kit.Svcs)
             {
-                // 过滤默认存根，无Api
-                if (stub is not DefaultStub)
-                    LoadAssembly(stub.GetType().Assembly, p_builder, stub.SvcName);
+                LoadAssembly(svc.Stub.GetType().Assembly, p_builder, svc.SvcName);
             }
 
             // 内部服务管理Api
@@ -249,7 +247,7 @@ namespace Dt.Core
                 || string.IsNullOrEmpty(p_groupName)
                 || p_groupName == "公共")
             {
-                svcName = Kit.Stubs[0].SvcName;
+                svcName = Kit.Svcs[0].SvcName;
             }
             else
             {

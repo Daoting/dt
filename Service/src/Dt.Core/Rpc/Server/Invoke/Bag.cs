@@ -56,17 +56,17 @@ namespace Dt.Core
 
         void CreateDataAccess(string p_svcName)
         {
-            if (string.IsNullOrEmpty(p_svcName) || Kit.SingletonSvcDbs == null)
+            if (string.IsNullOrEmpty(p_svcName))
             {
                 DataAccess = Kit.DefaultDbInfo.GetDa();
             }
-            else if (Kit.SingletonSvcDbs.TryGetValue(p_svcName, out var di))
+            else if (Kit.Svcs.TryGetValue(p_svcName, out var svc))
             {
-                DataAccess = di.GetDa();
+                DataAccess = svc.DbInfo.GetDa();
             }
             else
             {
-                throw new Exception($"服务[{p_svcName}]未设置默认数据源键名！");
+                throw new Exception($"服务 {p_svcName} 不存在！");
             }
             DataAccess.AutoClose = false;
         }
