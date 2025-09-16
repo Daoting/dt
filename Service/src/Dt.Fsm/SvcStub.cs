@@ -26,15 +26,6 @@ namespace Dt.Fsm
     public class SvcStub : Stub
     {
         /// <summary>
-        /// 获取服务名称，小写
-        /// </summary>
-        public override string SvcName
-        {
-            get => "fsm";
-            set => throw new Exception("fsm服务名称不可修改");
-        }
-        
-        /// <summary>
         /// 定义全局服务
         /// </summary>
         /// <param name="p_services"></param>

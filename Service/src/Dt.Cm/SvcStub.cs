@@ -21,15 +21,6 @@ namespace Dt.Cm
     public class SvcStub : Stub
     {
         /// <summary>
-        /// 服务名称，小写
-        /// </summary>
-        public override string SvcName
-        {
-            get => "cm";
-            set => throw new Exception("cm服务名称不可修改");
-        }
-        
-        /// <summary>
         /// 定义全局服务
         /// </summary>
         /// <param name="p_services"></param>

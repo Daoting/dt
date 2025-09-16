@@ -23,13 +23,6 @@ namespace Dt.Msg
     /// </summary>
     public class SvcStub : Stub
     {
-        /// <summary>
-        /// 获取服务名称，小写
-        /// </summary>
-        public override string SvcName
-        {
-            get => "msg";
-            set => throw new Exception("msg服务名称不可修改");
-        }
+        
     }
 }

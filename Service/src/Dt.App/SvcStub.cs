@@ -33,16 +33,7 @@ namespace Dt.App
             mp.TryAdd(".msix", MediaTypeNames.Application.Octet);
             mp.TryAdd(".cer", MediaTypeNames.Application.Octet);
         }
-
-        /// <summary>
-        /// 获取服务名称，小写
-        /// </summary>
-        public override string SvcName
-        {
-            get => "app";
-            set => throw new Exception("app服务名称不可修改");
-        }
-
+        
         /// <summary>
         /// 定义全局服务
         /// </summary>
