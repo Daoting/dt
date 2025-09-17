@@ -1,4 +1,0 @@
-﻿{
-  // 固定卷，方便客户端指定上传位置，如FileList.FixedVolume
-  "FixedVolume": "photo;chat"
-}
