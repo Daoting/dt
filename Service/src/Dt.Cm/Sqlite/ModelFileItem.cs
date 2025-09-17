@@ -70,7 +70,7 @@ namespace Dt.Cm
             if (fi != null)
             {
                 Version = fi.Name.Substring(0, fi.Name.Length - 3);
-                Log.Information("sqlite文件 {0} ", Version);
+                //Log.Information("sqlite文件 {0} ", Version);
             }
             else
             {

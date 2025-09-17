@@ -61,7 +61,7 @@ namespace Dt.App
             {
                 FileProvider = new PhysicalFileProvider(Cfg.PackageDir),
                 ContentTypeProvider = _mimeTypeProvider,
-                RequestPath = "/pkg"
+                RequestPath = Cfg.PackageVirPath
             });
 
             // wasm目录，wasm app网站静态文件
@@ -102,6 +102,7 @@ namespace Dt.App
                     }
                 }
             });
+            Log.Information($"app：虚拟目录 /  {Cfg.WasmVirPath}  {Cfg.PackageVirPath}");
         }
     }
 }

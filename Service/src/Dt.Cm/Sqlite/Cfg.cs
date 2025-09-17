@@ -33,9 +33,9 @@ namespace Dt.Cm
         {
             if (!File.Exists(Path.Combine(Kit.PathBase, "etc/config/cm.json")))
             {
-                var ex = new Exception("缺少 cm.json 文件！");
-                Log.Fatal(ex, "cm服务启动出错");
-                throw ex;
+                var ex = "缺少 cm.json 文件！";
+                Log.Fatal(ex);
+                throw new Exception(ex);
             }
 
             try
@@ -44,7 +44,6 @@ namespace Dt.Cm
                     .SetBasePath(Path.Combine(Kit.PathBase, "etc/config"))
                     .AddJsonFile("cm.json", false, false)
                     .Build();
-                Log.Information("读取 cm.json 成功");
             }
             catch (Exception e)
             {
@@ -58,18 +57,19 @@ namespace Dt.Cm
             {
                 // 单体服务时，只需一个地址
                 SysKernel.Config["IsSingletonSvc"] = true;
+                Log.Information("cm：单体服务模式");
                 return;
             }
 
             SysKernel.Config["IsSingletonSvc"] = false;
-            
+
             Dict dt = new Dict();
             foreach (var item in Config.GetSection("Urls").GetChildren())
             {
                 dt[item.Key] = item.Value;
             }
             SysKernel.Config["SvcUrls"] = dt;
-            Log.Information("加载所有服务的地址信息");
+            Log.Information("cm：微服务模式");
         }
     }
 }

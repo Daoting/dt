@@ -38,6 +38,11 @@ namespace Dt.App
         public const string WasmVirPath = "/app";
 
         /// <summary>
+        /// 安装包的虚拟目录
+        /// </summary>
+        public const string PackageVirPath = "/pkg";
+        
+        /// <summary>
         /// wasm app网站静态文件存放目录
         /// </summary>
         public static string WasmDir { get; private set; }
@@ -64,7 +69,6 @@ namespace Dt.App
                 // json文件修改后重新加载
                 _cfgCallback = _config.GetReloadToken().RegisterChangeCallback(OnConfigChanged, null);
                 ApplyConfig();
-                Log.Information("读取 app.json 成功");
             }
             catch (Exception e)
             {

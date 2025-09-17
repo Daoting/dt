@@ -139,7 +139,7 @@ namespace Dt.Core
         static void LoadSvcs()
         {
             // 服务名
-            var svcName = Kit.GetCfg<string>("SvcName", "").ToLower();
+            var svcName = Kit.GetCfg<string>("SvcName", "").Trim().ToLower();
 
             var svcs = new SvcList();
             if (_sysSvcs.Contains(svcName))
@@ -221,7 +221,7 @@ namespace Dt.Core
 
             // 单体不启用 RabbitMQ
             Kit.EnableRabbitMQ = Kit.Svcs.Count == 1;
-            Log.Information($"启动 {string.Join('+', Kit.SvcNames)}，版本：{typeof(Launcher).Assembly.GetName().Version.ToString(3)}");
+            Log.Information($"启动 {string.Join(" + ", Kit.SvcNames)}，版本：{typeof(Launcher).Assembly.GetName().Version.ToString(3)}");
         }
 
         /// <summary>

@@ -33,6 +33,7 @@ namespace Dt.Core
             // 配置 KestrelServer
             p_services.Configure<KestrelServerOptions>(options =>
             {
+                Log.Information("配置 KestrelServer");
                 // KestrelServer 监听设置，配置在 kestrel.json
                 ConfigureKestrelListen(options);
 
@@ -47,23 +48,20 @@ namespace Dt.Core
                     options.Limits.MaxRequestBodySize = maxSize;
                     Log.Information("请求内容的最大长度 " + Kit.GetFileSizeDesc((ulong)maxSize));
                 }
-
-                Log.Information("启动 KestrelServer 成功");
             });
 
             // 配置 IISHttpServer
             p_services.Configure<IISServerOptions>(options =>
             {
+                Log.Information("配置 IISServer");
                 long maxSize = Kit.GetCfg<long>("MaxRequestBodySize", 0);
                 if (maxSize > 0)
                 {
                     // 设置post的body的最大长度，默认28.6M
                     // web.config 和 service.json都需设置
                     options.MaxRequestBodySize = maxSize;
+                    Log.Information("请求内容的最大长度 " + Kit.GetFileSizeDesc((ulong)maxSize));
                 }
-
-                Log.Information("启动 IISHttpServer 成功");
-                Log.Information("请求内容的最大长度 " + Kit.GetFileSizeDesc((ulong)maxSize));
             });
 
             Kit.ConfigureServices(p_services);
@@ -89,7 +87,7 @@ namespace Dt.Core
                 Log.Warning("缺少 kestrel.json 配置，使用默认监听端口");
                 return;
             }
-            
+
             var cfg = new ConfigurationBuilder()
                     .SetBasePath(Path.Combine(Kit.PathBase, "etc/config"))
                     .AddJsonFile("kestrel.json", false, false)
@@ -107,6 +105,7 @@ namespace Dt.Core
 
             // 根据 service.json 的 KestrelListen 节配置设置监听
             // 可以监听多个Url，每个监听的Url配置一次
+            string msg = "";
             foreach (var item in sect)
             {
                 // 使用协议：http https
@@ -137,7 +136,7 @@ namespace Dt.Core
                                 // 无证书使用默认localhost证书
                                 listenOptions.UseHttps();
                             }
-                            Log.Information($"监听：{listenOptions}");
+                            msg += $" {listenOptions}";
                         }
                         catch (Exception ex)
                         {
@@ -150,10 +149,12 @@ namespace Dt.Core
                     // http协议，无X509证书
                     p_options.Listen(IPAddress.Parse(address), port, listenOptions =>
                     {
-                        Log.Information($"监听：{listenOptions}");
+                        msg += $" {listenOptions}";
                     });
                 }
             }
+            if (msg != "")
+                Log.Information("监听：" + msg);
         }
 
         /// <summary>
@@ -186,7 +187,7 @@ namespace Dt.Core
             // GBK编码
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            Log.Information($"连接{Kit.DefaultDbInfo.DbType}库【{Kit.DefaultDbInfo.Name}】");
+            Log.Information($"连接 {Kit.DefaultDbInfo.DbType} 库 {Kit.DefaultDbInfo.Name}");
             DbSchema.SyncDbTime();
             Log.Information("---启动完毕---");
         }

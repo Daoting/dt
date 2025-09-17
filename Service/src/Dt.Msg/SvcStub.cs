@@ -23,6 +23,9 @@ namespace Dt.Msg
     /// </summary>
     public class SvcStub : Stub
     {
-        
+        public override void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_handlers)
+        {
+            Log.Information("msg：配置完毕");
+        }
     }
 }
