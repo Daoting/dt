@@ -96,6 +96,11 @@ namespace Dt.Core
         /// 是否输出所有运行中的Sql语句
         /// </summary>
         public static bool TraceSql { get; set; }
+
+        /// <summary>
+        /// 获取所有服务名称的连接字符串，多个服务名称用'+'连接
+        /// </summary>
+        public static string AllSvcName => Svcs != null ? string.Join(" + ", SvcNames) : "";
         #endregion
 
         #region 系统配置
@@ -235,7 +240,10 @@ namespace Dt.Core
             {
                 foreach (var svc in Svcs)
                 {
-                    svc.Stub.Configure(p_app, DtMiddleware.RequestHandlers);
+                    if (svc.IsEmptySvc)
+                        Log.Information(svc.SvcName + "：空服务");
+                    else
+                        svc.Stub.Configure(p_app, DtMiddleware.RequestHandlers);
                 }
             }
         }

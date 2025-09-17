@@ -14,7 +14,8 @@
 
   // 空服务
   "EmptySvcs": {
-    //"svcname": "dbkey",
+    "orcl": "orcldt",
+    "mysql": "mydt"
   },
 
   "AppName": "搬运工",

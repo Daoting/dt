@@ -158,7 +158,8 @@ namespace Dt.Core
             LoadAssembly(typeof(Silo).Assembly, p_builder, "公共");
             foreach (var svc in Kit.Svcs)
             {
-                LoadAssembly(svc.Stub.GetType().Assembly, p_builder, svc.SvcName);
+                if (!svc.IsEmptySvc)
+                    LoadAssembly(svc.Stub.GetType().Assembly, p_builder, svc.SvcName);
             }
 
             // 内部服务管理Api

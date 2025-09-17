@@ -102,7 +102,7 @@ namespace Dt.App
                     }
                 }
             });
-            Log.Information($"app：虚拟目录 /  {Cfg.WasmVirPath}  {Cfg.PackageVirPath}");
+            Log.Information($"app：/  {Cfg.WasmVirPath}  {Cfg.PackageVirPath}，3个虚拟目录");
         }
     }
 }

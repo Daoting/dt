@@ -28,10 +28,7 @@ namespace Dt.Core
         public List<string> GetInitInfo()
         {
             var ls = new List<string>();
-            if (Kit.Svcs.Count == 1)
-                ls.Add($"{Kit.Svcs[0].SvcName} API目录");
-            else
-                ls.Add("API目录");
+            ls.Add($"{Kit.AppName} API");
             ls.Add(GetTopbarHtml());
 
             // 版本号
@@ -51,6 +48,9 @@ namespace Dt.Core
         {
             if (Silo.GroupMethods.TryGetValue(p_group, out List<string> ls))
                 return GetApiHtml(ls);
+
+            if (Kit.Svcs.TryGetValue(p_group, out var svc))
+                return $"<p><b>{p_group}</b>为空服务，无API，数据源：<b>{svc.DbInfo.Name}</b></p>";
             return "";
         }
 
@@ -208,7 +208,7 @@ namespace Dt.Core
         string GetTopbarHtml()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append($"<span style=\"font-size:20px;\">API({Silo.Methods.Count})</span>");
+            sb.Append($"<span style=\"font-size:20px;font-family:宋体\">{Kit.AppName} API({Silo.Methods.Count})</span>");
             foreach (var svc in Kit.Svcs)
             {
                 sb.AppendFormat("<a onclick=\"load('[&quot;&quot;,&quot;Admin.GetGroupApi&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\" class=\"aTitle\">{0}</a>", svc.SvcName);
