@@ -76,7 +76,7 @@ namespace Dt.Core
         /// </summary>
         public static string AppName
         {
-            get { return _config.GetValue("App", "dt"); }
+            get { return _config.GetValue("AppName", "dt"); }
         }
 
         /// <summary>
