@@ -242,7 +242,7 @@ namespace Dt.Base
             }
 
             return Kit.Rpc<Table>(
-                string.IsNullOrEmpty(p_svc) ? At.Svc : p_svc,
+                string.IsNullOrEmpty(p_svc) ? At.CurrentSvc : p_svc,
                 "Da.Query",
                 sql,
                 sqlDt

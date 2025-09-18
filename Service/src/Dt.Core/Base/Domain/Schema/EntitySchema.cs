@@ -54,21 +54,10 @@ namespace Dt.Core
         }
 
 #else
-        // 只sqlite需要存储，其它必须实时获取
-        IAccessInfo _accessInfo = null;
-        
         /// <summary>
         /// Entity用到的数据访问信息
         /// </summary>
-        public IAccessInfo AccessInfo
-        {
-            get
-            {
-                if (_accessInfo == null)
-                    return At.AccessInfo;
-                return _accessInfo;
-            }
-        }
+        public IAccessInfo AccessInfo { get; private set; }
 
         async Task<bool> Init()
         {
@@ -76,6 +65,16 @@ namespace Dt.Core
             if (tbl != null && !string.IsNullOrEmpty(tbl.Name))
             {
                 Schema = await GetTableSchema(tbl);
+                if (At.AccessInfo.Type == AccessType.Service)
+                {
+                    // '服务名+数据源键名' 作为 IAccessInfo.Name，服务端以数据源键名键名为准构造DataAccess
+                    AccessInfo = At.GetAccessInfo(AccessType.Service, $"{At.OriginSvc}+{Schema.DbKey}");
+                }
+                else
+                {
+                    // 直连库时
+                    AccessInfo = At.AccessInfo;
+                }
             }
             else
             {
@@ -83,7 +82,7 @@ namespace Dt.Core
                 if (sqlite != null && !string.IsNullOrEmpty(sqlite.DbName))
                 {
                     Schema = GetSqliteSchema(EntityType, sqlite.DbName);
-                    _accessInfo = At.GetAccessInfo(AccessType.Local, sqlite.DbName);
+                    AccessInfo = At.GetAccessInfo(AccessType.Local, sqlite.DbName);
                 }
             }
 

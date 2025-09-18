@@ -4,7 +4,7 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": ".admin",
-      "applicationUrl": "https://localhost:1000/"
+      "applicationUrl": "https://localhost:1234/"
     }
   }
 }

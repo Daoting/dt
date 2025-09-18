@@ -43,7 +43,7 @@ namespace Demo.Crud
 
         async void OnChangeSvc(object sender, RoutedEventArgs e)
         {
-            At.Svc = "lob";
+            At.CurrentSvc = "lob";
             
             var x = await UserX.First(null);
             x = await At.First<UserX>("select * from cm_user");

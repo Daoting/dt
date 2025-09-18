@@ -33,7 +33,7 @@ namespace Dt.Mgr
             if (data.Count > 1)
             {
                 // 不同库的表重名，先取该服务的默认数据源键名
-                var dbKey = await Kit.Rpc<string>(At.Svc, "Da.GetDbKey");
+                var dbKey = await Kit.Rpc<string>(At.CurrentSvc, "Da.GetDbKey");
                 foreach (var r in data)
                 {
                     if (dbKey.Equals(r.DbKey, StringComparison.OrdinalIgnoreCase))

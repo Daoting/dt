@@ -56,9 +56,16 @@ namespace Dt.Core
 
         void CreateDataAccess(string p_svcName)
         {
+            int index;
             if (string.IsNullOrEmpty(p_svcName))
             {
                 DataAccess = Kit.DefaultDbInfo.GetDa();
+            }
+            else if ((index = p_svcName.IndexOf('+')) > 0
+                && index < p_svcName.Length - 1)
+            {
+                // 服务名+数据源键名，如：do+pgdt ，以键名为准，实体系统用到
+                DataAccess = Kit.AllDbInfo[p_svcName.Substring(index + 1)].GetDa();
             }
             else if (Kit.Svcs.TryGetValue(p_svcName, out var svc))
             {

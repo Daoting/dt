@@ -15,6 +15,7 @@
   // 空服务
   "EmptySvcs": {
     //"svcname": "dbkey",
+    "do": "pgdt"
   },
 
   "AppName": "搬运工",

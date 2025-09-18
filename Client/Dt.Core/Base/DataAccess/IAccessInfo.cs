@@ -23,7 +23,7 @@ namespace Dt.Core
         AccessType Type { get; }
 
         /// <summary>
-        /// <para>1. 通过服务访问时为服务名</para>
+        /// <para>1. 通过服务访问时为'服务名' 或 '服务名+数据源键名'(实体)</para>
         /// <para>2. 直连数据库时为库的键名</para>
         /// <para>3. 本地sqlite库访问时为库名</para>
         /// </summary>

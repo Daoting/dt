@@ -15,14 +15,22 @@ namespace Dt.Core
     class SvcUrlInfo
     {
         #region 成员变量
-        string _url;
+        // cm服务地址
+        string _urlCm;
+        // do服务地址
+        string _urlDefSvc;
+        
         bool _isSingletonSvc = false;
         Dictionary<string, string> _urlDict;
         #endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p_url">cm服务地址</param>
         public SvcUrlInfo(string p_url)
         {
-            _url = p_url;
+            _urlCm = p_url;
         }
 
         /// <summary>
@@ -34,8 +42,12 @@ namespace Dt.Core
         {
             // 单体服务(所有微服务合并成一个服务)
             if (_isSingletonSvc || "cm".Equals(p_svcName, StringComparison.OrdinalIgnoreCase))
-                return _url;
+                return _urlCm;
 
+            // do do+dbkey
+            if (p_svcName.StartsWith(At.OriginSvc, StringComparison.OrdinalIgnoreCase))
+                return _urlDefSvc;
+            
             if (_urlDict.TryGetValue(p_svcName, out var url))
                 return url;
 
@@ -53,9 +65,9 @@ namespace Dt.Core
                 // 单体服务
                 _isSingletonSvc = true;
             }
-            else if (!string.IsNullOrWhiteSpace(_url))
+            else if (!string.IsNullOrWhiteSpace(_urlCm))
             {
-                var match = Regex.Match(_url, @"^http[s]?://[^\s:/]+");
+                var match = Regex.Match(_urlCm, @"^http[s]?://[^\s:/]+");
                 string prefix = "";
                 if (match.Success)
                     prefix = match.Value;
@@ -68,6 +80,9 @@ namespace Dt.Core
                         url = prefix + url.Substring(1).TrimEnd('\\');
                     _urlDict[item.Key] = url;
                 }
+                
+                if (!_urlDict.TryGetValue(At.OriginSvc, out _urlDefSvc))
+                    throw new Exception($"[{At.OriginSvc}] 服务地址不存在！");
             }
         }
     }

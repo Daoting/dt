@@ -41,7 +41,7 @@ namespace Dt.Core
         /// <summary>
         /// 获取实体系统当前使用的服务名
         /// </summary>
-        public static string Svc
+        public static string CurrentSvc
         {
             get
             {
@@ -56,6 +56,11 @@ namespace Dt.Core
                 _currentAI = GetAccessInfo(AccessType.Service, value);
             }
         }
+
+        /// <summary>
+        /// 多层架构的默认服务名
+        /// </summary>
+        public const string OriginSvc = "do";
 
         /// <summary>
         /// 设置实体系统当前直连的数据库
@@ -145,13 +150,13 @@ namespace Dt.Core
             if (Regex.IsMatch(GlobalConfig.WasmServer, @"^http[s]?://[^\s/]+"))
             {
                 _svcUrlInfo = new SvcUrlInfo(GlobalConfig.WasmServer);
-                _originAI = _currentAI = GetAccessInfo(AccessType.Service, "do");
+                _originAI = _currentAI = GetAccessInfo(AccessType.Service, OriginSvc);
             }
 #else
             if (Regex.IsMatch(GlobalConfig.Server, @"^http[s]?://[^\s/]+"))
             {
                 _svcUrlInfo = new SvcUrlInfo(GlobalConfig.Server);
-                _originAI = _currentAI = GetAccessInfo(AccessType.Service, "do");
+                _originAI = _currentAI = GetAccessInfo(AccessType.Service, OriginSvc);
             }
             else if (GlobalConfig.Server.StartsWith("sqlite/", StringComparison.OrdinalIgnoreCase))
             {
@@ -221,5 +226,6 @@ namespace Dt.Core
         static readonly Dictionary<string, SvcAccessInfo> _svcs = new Dictionary<string, SvcAccessInfo>(StringComparer.OrdinalIgnoreCase);
         static Dictionary<string, DbAccessInfo> _dbs => GlobalConfig._dbs;
         static readonly Dictionary<string, SqliteAccessInfo> _sqlites = new Dictionary<string, SqliteAccessInfo>(StringComparer.OrdinalIgnoreCase);
+
     }
 }
