@@ -9,8 +9,6 @@
   "TraceSql": true,
   // 是否输出所有调用的Api名称
   "TraceRpc": true,
-  // 请求内容的最大长度
-  "MaxRequestBodySize": 1073741824,
 
   // 空服务
   "EmptySvcs": {

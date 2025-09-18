@@ -41,7 +41,7 @@ namespace Dt.Core
                 options.Limits.MinRequestBodyDataRate = null;
                 options.Limits.MinResponseDataRate = null;
 
-                long maxSize = Kit.GetCfg<long>("MaxRequestBodySize", 0);
+                long maxSize = GetMaxRequestBodySize();
                 if (maxSize > 0)
                 {
                     // 设置post的body的最大长度，默认28.6M
@@ -54,7 +54,7 @@ namespace Dt.Core
             p_services.Configure<IISServerOptions>(options =>
             {
                 Log.Information("配置 IISServer");
-                long maxSize = Kit.GetCfg<long>("MaxRequestBodySize", 0);
+                long maxSize = GetMaxRequestBodySize();
                 if (maxSize > 0)
                 {
                     // 设置post的body的最大长度，默认28.6M
@@ -190,6 +190,24 @@ namespace Dt.Core
             Log.Information($"连接 {Kit.DefaultDbInfo.DbType} 库 {Kit.DefaultDbInfo.Name}");
             DbSchema.SyncDbTime();
             Log.Information("---启动完毕---");
+        }
+
+        /// <summary>
+        /// 找出所有微服务中最大请求长度
+        /// </summary>
+        /// <returns></returns>
+        static long GetMaxRequestBodySize()
+        {
+            long maxSize = 0;
+            if (Kit.Svcs != null)
+            {
+                foreach (var svc in Kit.Svcs)
+                {
+                    if (svc.Stub.MaxRequestBodySize > maxSize)
+                        maxSize = svc.Stub.MaxRequestBodySize;
+                }
+            }
+            return maxSize;
         }
     }
 }

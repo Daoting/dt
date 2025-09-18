@@ -20,6 +20,11 @@ namespace Dt.Core
     public abstract class Stub
     {
         /// <summary>
+        /// 当前微服务http post请求的最大长度，0时采用默认28.6M
+        /// </summary>
+        public virtual long MaxRequestBodySize { get; }
+
+        /// <summary>
         /// 注入全局服务
         /// </summary>
         /// <param name="p_services"></param>

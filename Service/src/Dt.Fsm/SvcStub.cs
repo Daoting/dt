@@ -26,6 +26,11 @@ namespace Dt.Fsm
     public class SvcStub : Stub
     {
         /// <summary>
+        /// 当前微服务http post请求的最大长度，0时采用默认28.6M
+        /// </summary>
+        public override long MaxRequestBodySize => 1073741824;
+        
+        /// <summary>
         /// 定义全局服务
         /// </summary>
         /// <param name="p_services"></param>

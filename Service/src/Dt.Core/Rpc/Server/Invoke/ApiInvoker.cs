@@ -70,7 +70,7 @@ namespace Dt.Core.Rpc
         public virtual CancellationToken RequestAborted { get; }
 
         /// <summary>
-        /// 服务名称
+        /// 服务名称 或 '服务名+数据源键名'(实体)
         /// </summary>
         public string SvcName { get; private set; }
 
