@@ -98,11 +98,9 @@ namespace Dt.Core
         /// 初始化所有微服务地址
         /// </summary>
         /// <param name="p_svcUrls"></param>
-        /// <param name="p_entitySvcName">实体系统使用的默认服务名</param>
-        public static void InitSvcUrls(Dict p_svcUrls, string p_entitySvcName)
+        public static void InitSvcUrls(Dict p_svcUrls)
         {
             _svcUrlInfo.InitSvcUrls(p_svcUrls);
-            _originAI = _currentAI = GetAccessInfo(AccessType.Service, p_entitySvcName);
         }
 
         /// <summary>
@@ -147,13 +145,13 @@ namespace Dt.Core
             if (Regex.IsMatch(GlobalConfig.WasmServer, @"^http[s]?://[^\s/]+"))
             {
                 _svcUrlInfo = new SvcUrlInfo(GlobalConfig.WasmServer);
-                _originAI = _currentAI = GetAccessInfo(AccessType.Service, "cm");
+                _originAI = _currentAI = GetAccessInfo(AccessType.Service, "do");
             }
 #else
             if (Regex.IsMatch(GlobalConfig.Server, @"^http[s]?://[^\s/]+"))
             {
                 _svcUrlInfo = new SvcUrlInfo(GlobalConfig.Server);
-                _originAI = _currentAI = GetAccessInfo(AccessType.Service, "cm");
+                _originAI = _currentAI = GetAccessInfo(AccessType.Service, "do");
             }
             else if (GlobalConfig.Server.StartsWith("sqlite/", StringComparison.OrdinalIgnoreCase))
             {

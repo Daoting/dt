@@ -51,8 +51,6 @@ namespace Dt.Cm
                 throw;
             }
 
-            // 客户端实体存储使用的默认服务名
-            SysKernel.Config["EntitySvcName"] = Config.GetValue("EntitySvcName", "cm");
             if (Kit.IsSingletonSvc)
             {
                 // 单体服务时，只需一个地址
