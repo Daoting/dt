@@ -31,6 +31,9 @@ namespace Dt.Core.RabbitMQ
 
         public AppSvcList()
         {
+            if (!Kit.EnableRabbitMQ)
+                throw new Exception("未启用 RabbitMQ，无法创建 AppSvcList");
+            
             _allSvcs = new List<string>();
             _allSvcInsts = new List<string>();
             _timer = new Timer(5000);
@@ -82,10 +85,6 @@ namespace Dt.Core.RabbitMQ
         /// <returns>副本个数</returns>
         public int GetReplicaCount(string p_svcName)
         {
-            // 未启用RabbitMQ，如：单体服务
-            if (!Kit.EnableRabbitMQ)
-                return 1;
-
             if (string.IsNullOrEmpty(p_svcName))
                 p_svcName = Kit.Svcs[0].SvcName;
 

@@ -19,16 +19,30 @@ namespace Dt.Core
     /// </summary>
     public partial class Kit
     {
-        static readonly AppSvcList _svcList = new AppSvcList();
+        static AppSvcList _svcList;
+
+        static AppSvcList AppSvcList
+        {
+            get
+            {
+                if (EnableRabbitMQ && _svcList == null)
+                    _svcList = new AppSvcList();
+                return _svcList;
+            }
+        }
 
         /// <summary>
-        /// 通过RabbitMQ队列，获取应用内正在运行的所有微服务列表
+        /// 通过RabbitMQ队列，获取应用内正在运行的所有微服务列表，单体服务特殊，未启用RabbitMQ
         /// </summary>
         /// <param name="p_isSvcInst">true表示所有微服务副本实例，false表示所有微服务</param>
         /// <returns>微服务列表</returns>
         public static List<string> GetAllSvcs(bool p_isSvcInst)
         {
-            return _svcList.GetAllSvcs(p_isSvcInst);
+            if (EnableRabbitMQ)
+                return AppSvcList.GetAllSvcs(p_isSvcInst);
+
+            // 未启用RabbitMQ
+            return SvcNames.ToList();
         }
 
         /// <summary>
@@ -37,7 +51,9 @@ namespace Dt.Core
         /// <returns></returns>
         public static IEnumerable<string> GetOtherReplicaIDs()
         {
-            return _svcList.GetOtherReplicaIDs();
+            if (EnableRabbitMQ)
+                return AppSvcList.GetOtherReplicaIDs();
+            return new List<string>();
         }
 
         /// <summary>
@@ -47,7 +63,9 @@ namespace Dt.Core
         /// <returns></returns>
         public static IEnumerable<string> GetSvcReplicaIDs(string p_svcName = null)
         {
-            return _svcList.GetReplicaIDs(p_svcName);
+            if (EnableRabbitMQ)
+                return AppSvcList.GetReplicaIDs(p_svcName);
+            return new List<string>();
         }
 
         /// <summary>
@@ -57,12 +75,15 @@ namespace Dt.Core
         /// <returns>副本个数</returns>
         public static int GetSvcReplicaCount(string p_svcName = null)
         {
-            return _svcList.GetReplicaCount(p_svcName);
+            if (EnableRabbitMQ)
+                return AppSvcList.GetReplicaCount(p_svcName);
+            return 1;
         }
 
         internal static void UpdateSvcList()
         {
-            _svcList.Update();
+            if (EnableRabbitMQ)
+                AppSvcList.Update();
         }
     }
 }
