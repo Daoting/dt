@@ -50,7 +50,7 @@ namespace Dt.Mgr
                 tbl = data[0];
             }
 
-            TableSchema schema = new TableSchema(tblName, tbl.Type);
+            TableSchema schema = new TableSchema(tblName, tbl.Type, tbl.DbKey);
             var cols = await AtModel.Each<OmColumn>($"select * from OmColumn where TableID={tbl.ID}");
             foreach (var oc in cols)
             {

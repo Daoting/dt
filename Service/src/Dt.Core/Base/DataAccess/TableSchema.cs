@@ -28,11 +28,12 @@ namespace Dt.Core
         string _sqlDelete;
         #endregion
 
-        public TableSchema(string p_name, DatabaseType p_dbType)
+        public TableSchema(string p_name, DatabaseType p_dbType, string p_dbKey = null)
         {
             Name = p_name;
             DbType = p_dbType;
-
+            DbKey = p_dbKey;
+            
             switch (p_dbType)
             {
                 case DatabaseType.MySql:
@@ -72,6 +73,11 @@ namespace Dt.Core
         /// </summary>
         public DatabaseType DbType { get; }
 
+        /// <summary>
+        /// 表所在的数据源键名 或 库文件名(sqlite)
+        /// </summary>
+        public string DbKey { get; }
+        
         /// <summary>
         /// 主键列列表
         /// </summary>

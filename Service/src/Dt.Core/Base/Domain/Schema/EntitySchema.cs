@@ -82,7 +82,7 @@ namespace Dt.Core
                 var sqlite = EntityType.GetCustomAttribute<SqliteAttribute>(false);
                 if (sqlite != null && !string.IsNullOrEmpty(sqlite.DbName))
                 {
-                    Schema = GetSqliteSchema(EntityType);
+                    Schema = GetSqliteSchema(EntityType, sqlite.DbName);
                     _accessInfo = At.GetAccessInfo(AccessType.Local, sqlite.DbName);
                 }
             }
@@ -110,14 +110,14 @@ namespace Dt.Core
             return At.GetTableSchema(p_tblAttr.Name);
         }
 
-        internal static TableSchema GetSqliteSchema(Type p_type)
+        internal static TableSchema GetSqliteSchema(Type p_type, string p_dbName)
         {
             // 不包括继承的属性
             var props = p_type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty | BindingFlags.DeclaredOnly);
 
             // 删除后缀 X
             var name = p_type.Name.TrimEnd('X');
-            TableSchema schema = new TableSchema(name, DatabaseType.Sqlite);
+            TableSchema schema = new TableSchema(name, DatabaseType.Sqlite, p_dbName);
             foreach (var p in props)
             {
                 if (!p.CanWrite || p.GetCustomAttribute<IgnoreAttribute>(false) != null)

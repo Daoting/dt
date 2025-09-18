@@ -63,7 +63,7 @@ namespace Dt.Core
                 var sqlite = Type.GetCustomAttribute<SqliteAttribute>(false);
                 if (sqlite != null && !string.IsNullOrEmpty(sqlite.DbName))
                 {
-                    Schema = EntitySchema.GetSqliteSchema(Type);
+                    Schema = EntitySchema.GetSqliteSchema(Type, sqlite.DbName);
                 }
             }
 #endif
