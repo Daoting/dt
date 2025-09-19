@@ -37,10 +37,4 @@ namespace Dt.Core
         /// <param name="p_handlers">注册自定义请求处理</param>
         public virtual void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_handlers) { }
     }
-
-    /// <summary>
-    /// 默认服务存根，无Api的空服务使用
-    /// </summary>
-    public class DefaultStub : Stub
-    { }
 }

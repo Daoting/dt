@@ -50,7 +50,7 @@ namespace Dt.Core
                 return GetApiHtml(ls);
 
             if (Kit.Svcs.TryGetValue(p_group, out var svc))
-                return $"<p><b>{p_group}</b>为空服务，无API，数据源：<b>{svc.DbInfo.Name}</b></p>";
+                return $"<p><b>{p_group}</b>为空服务，数据源：<b>{svc.DbInfo.Name}</b></p>";
             return "";
         }
 

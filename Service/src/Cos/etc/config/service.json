@@ -10,12 +10,6 @@
   // 是否输出所有调用的Api名称
   "TraceRpc": true,
 
-  // 空服务
-  "EmptySvcs": {
-    //"svcname": "dbkey",
-    "do": "pgdt"
-  },
-
   "AppName": "搬运工",
 
   "Database": {

@@ -304,30 +304,6 @@ namespace Dt.Core
         static SvcList GetAllSvcs()
         {
             var ls = new SvcList();
-
-            // 空服务
-            var sect = Kit.Config.GetSection("EmptySvcs");
-            foreach (var svc in sect.GetChildren())
-            {
-                var svcName = svc.Key.Trim().ToLower();
-                var dbKey = svc.Value.Trim();
-                
-                if (svcName == "" || dbKey == "")
-                    LogException("service.json 的空服务配置键值都不可为空！");
-                
-                var si = new SvcInfo(svcName, new DefaultStub());
-                if (Kit.AllDbInfo.TryGetValue(dbKey, out var dbInfo))
-                {
-                    si.DbInfo = dbInfo;
-                }
-                else
-                {
-                    LogException($"service.json 中空服务的数据源键名 {dbKey} 无连接串配置！");
-                }
-                ls.Add(si);
-            }
-
-            // 提取dll中的微服务
             DirectoryInfo di = new DirectoryInfo(AppContext.BaseDirectory);
             foreach (FileInfo fi in di.GetFiles("*.dll"))
             {

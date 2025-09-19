@@ -240,10 +240,7 @@ namespace Dt.Core
             {
                 foreach (var svc in Svcs)
                 {
-                    if (svc.IsEmptySvc)
-                        Log.Information(svc.SvcName + "：空服务");
-                    else
-                        svc.Stub.Configure(p_app, DtMiddleware.RequestHandlers);
+                    svc.Stub.Configure(p_app, DtMiddleware.RequestHandlers);
                 }
             }
         }
