@@ -41,8 +41,16 @@ namespace Dt.Core
             SetPathBase(p_args);
             CreateLogger();
             LoadConfig();
-            LoadSvcs();
-            RunWebHost();
+            if ("InitDb".Equals(Kit.GetCfg<string>("SvcName"), StringComparison.OrdinalIgnoreCase))
+            {
+                // 进入初始化数据库模式
+                RunInitModeWebHost();
+            }
+            else
+            {
+                LoadSvcs();
+                RunWebHost();
+            }
             Log.CloseAndFlush();
         }
 
