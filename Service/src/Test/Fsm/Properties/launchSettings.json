@@ -1,0 +1,20 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/dt-fsm"
+    }
+  },
+  "profiles": {
+    "fsm": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": ".admin",
+      "applicationUrl": "https://localhost:1003/"
+    },
+    "IIS": {
+      "commandName": "IIS"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:30001"
+    },
+    "iis": {
+      "applicationUrl": "http://localhost/dt-cm"
+    }
+  },
+  "profiles": {
+    "TestPathBase": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": ".admin",
+      "applicationUrl": "https://localhost:1234/"
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": ".admin"
+    },
+    "IIS": {
+      "commandName": "IIS"
+    }
+  }
+}

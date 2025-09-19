@@ -1,0 +1,20 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/dt-cm"
+    }
+  },
+  "profiles": {
+    "cm": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": ".admin",
+      "applicationUrl": "https://localhost:1001/"
+    },
+    "IIS": {
+      "commandName": "IIS"
+    }
+  }
+}

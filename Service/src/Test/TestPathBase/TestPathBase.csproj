@@ -1,0 +1,5 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	<ItemGroup>
+		<ProjectReference Include="..\..\Dt.Service\Dt.Service.csproj" />
+	</ItemGroup>
+</Project>

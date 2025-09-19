@@ -17,7 +17,7 @@ namespace Dt.Core
         #region 成员变量
         // cm服务地址
         string _urlCm;
-        // do服务地址
+        // da服务地址
         string _urlDefSvc;
         
         bool _isSingletonSvc = false;
@@ -36,7 +36,7 @@ namespace Dt.Core
         /// <summary>
         /// 获取服务地址，末尾无/，如：https://10.10.1.16/dt-cm
         /// </summary>
-        /// <param name="p_svcName">服务名称，如cm</param>
+        /// <param name="p_svcName">服务名称，如da da+dbkey </param>
         /// <returns></returns>
         public string GetSvcUrl(string p_svcName)
         {
