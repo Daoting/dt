@@ -122,6 +122,7 @@ namespace Dt.Core
                 var cfg = new ConfigurationBuilder()
                     .SetBasePath(Path.Combine(Kit.PathBase, "etc/config"))
                     .AddJsonFile("service.json", false, true)
+                    .AddJsonFile("global.json", false, true)
                     .Build();
                 Kit.InitConfig(cfg);
                 Log.Information("读取配置成功");
