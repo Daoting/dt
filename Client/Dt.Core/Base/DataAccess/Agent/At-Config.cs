@@ -60,7 +60,7 @@ namespace Dt.Core
         /// <summary>
         /// 多层架构的默认服务名
         /// </summary>
-        public const string OriginSvc = "do";
+        public const string OriginSvc = "da";
 
         /// <summary>
         /// 设置实体系统当前直连的数据库

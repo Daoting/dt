@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Msg
+namespace Dt.Da
 {
     /// <summary>
     /// 服务存根

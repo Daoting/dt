@@ -369,7 +369,7 @@ namespace Dt.Core
             return ls;
         }
 
-        static List<string> _dllFilter = new List<string> { "Microsoft.", "System.", "Autofac.", "Castle.", "Dapper.", "Dt.Core.", "Dt.Cm.", "Dt.Fsm.", "Dt.Msg.", "Dt.App.", "MailKit.", "MimeKit.", "MySqlConnector.", "Nito.", "Npgsql.", "Oracle.", "Polly.", "RabbitMQ.", "Serilog.", "SQLitePCLRaw.", "StackExchange.", "BouncyCastle.", "Pipelines." };
-        static List<string> _sysSvcs = new List<string> { "cm", "fsm", "msg", "app" };
+        static List<string> _dllFilter = new List<string> { "Microsoft.", "System.", "Autofac.", "Castle.", "Dapper.", "Dt.Core.", "Dt.Da.", "Dt.Cm.", "Dt.Fsm.", "Dt.Msg.", "Dt.App.", "MailKit.", "MimeKit.", "MySqlConnector.", "Nito.", "Npgsql.", "Oracle.", "Polly.", "RabbitMQ.", "Serilog.", "SQLitePCLRaw.", "StackExchange.", "BouncyCastle.", "Pipelines." };
+        static List<string> _sysSvcs = new List<string> { "cm", "fsm", "msg", "app", "da" };
     }
 }

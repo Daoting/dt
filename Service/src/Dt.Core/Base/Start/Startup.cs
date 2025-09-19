@@ -187,7 +187,6 @@ namespace Dt.Core
             // GBK编码
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            Log.Information($"连接 {Kit.DefaultDbInfo.DbType} 库 {Kit.DefaultDbInfo.Name}");
             DbSchema.SyncDbTime();
             Log.Information("---启动完毕---");
         }

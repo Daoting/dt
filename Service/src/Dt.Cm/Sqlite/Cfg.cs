@@ -55,7 +55,6 @@ namespace Dt.Cm
             {
                 // 单体服务时，只需一个地址
                 SysKernel.Config["IsSingletonSvc"] = true;
-                Log.Information("cm：单体服务模式");
                 return;
             }
 
@@ -67,7 +66,6 @@ namespace Dt.Cm
                 dt[item.Key] = item.Value;
             }
             SysKernel.Config["SvcUrls"] = dt;
-            Log.Information("cm：微服务模式");
         }
     }
 }

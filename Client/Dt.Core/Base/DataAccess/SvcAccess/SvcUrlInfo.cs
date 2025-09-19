@@ -44,7 +44,7 @@ namespace Dt.Core
             if (_isSingletonSvc || "cm".Equals(p_svcName, StringComparison.OrdinalIgnoreCase))
                 return _urlCm;
 
-            // do do+dbkey
+            // da da+dbkey
             if (p_svcName.StartsWith(At.OriginSvc, StringComparison.OrdinalIgnoreCase))
                 return _urlDefSvc;
             
