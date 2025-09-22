@@ -29,7 +29,7 @@ namespace Dt.Mgr.Workflow
 
         static async Task<bool> SaveFormInternal(WfFormInfo p_info, bool p_isNotify)
         {
-            var w = At.NewWriter();
+            var w = await WfiPrcX.NewWriter();
 
             // 先添加待保存的表单数据
             if (!await p_info.Form.DoSave(w, false, false))
@@ -84,7 +84,7 @@ namespace Dt.Mgr.Workflow
                 return;
             }
 
-            var w = At.NewWriter();
+            var w = await WfiPrcX.NewWriter();
             // 判断当前活动是否结束（需要多人同时完成该活动的情况）
             if (!await p_info.AtvInst.IsFinished())
             {
@@ -756,7 +756,7 @@ namespace Dt.Mgr.Workflow
                 UserID: userId,
                 Note: res.Item2);
 
-            var w = At.NewWriter();
+            var w = await WfiItemX.NewWriter();
             if (p_info.AtvInst.IsChanged)
                 await w.Save(p_info.AtvInst);
             await w.Save(p_info.WorkItem);
@@ -902,7 +902,7 @@ namespace Dt.Mgr.Workflow
             nextAtvs.Clear();
 
             // 一个事务批量保存
-            var w = At.NewWriter();
+            var w = await WfiAtvX.NewWriter();
             await w.Save(nextAtvs);
             await w.Save(curAtvi);
             await w.Save(newItem);
@@ -950,7 +950,7 @@ namespace Dt.Mgr.Workflow
             if (!await Kit.Confirm("确认要删除当前表单吗？删除后表单将不可恢复！"))
                 return;
 
-            var w = At.NewWriter();
+            var w = await WfdPrcX.NewWriter();
             if (await p_info.Form.DeleteInternal(w))
             {
                 if (!p_info.PrcInst.IsAdded)

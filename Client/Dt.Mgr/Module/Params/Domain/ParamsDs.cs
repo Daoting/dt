@@ -18,7 +18,7 @@ namespace Dt.Mgr.Module
             if (!long.TryParse(p_paramID, out var paramID))
                 Throw.Msg("参数标识错误！");
 
-            var w = At.NewWriter();
+            var w = await UserParamsX.NewWriter();
             var old = new UserParamsX(
                 UserID: Kit.UserID,
                 ParamID: paramID);

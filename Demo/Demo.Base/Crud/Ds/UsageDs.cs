@@ -17,7 +17,7 @@ namespace Demo.Base
         {
             var x = await 基础X.New("领域服务" + Kit.NewGuid.Substring(0, 6));
 
-            var w = At.NewWriter();
+            var w = await 基础X.NewWriter();
             await w.Save(x);
 
             var tbl = await 基础X.Page(0, 4, null);

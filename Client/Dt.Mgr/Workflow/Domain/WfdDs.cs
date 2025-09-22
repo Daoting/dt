@@ -17,7 +17,7 @@ namespace Dt.Mgr.Workflow
     {
         public static async Task<bool> SavePrc(WfdPrcX p_prc)
         {
-            var w = At.NewWriter();
+            var w = await WfdPrcX.NewWriter();
             await w.Save(p_prc);
             await w.Save(p_prc.Atvs);
             await w.Save(p_prc.Trss);

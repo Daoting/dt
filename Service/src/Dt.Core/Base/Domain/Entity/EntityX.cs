@@ -732,6 +732,23 @@ namespace Dt.Core
         }
         #endregion
 
+        #region 实体写入器
+        /// <summary>
+        /// 创建实体写入器
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<IEntityWriter> NewWriter()
+        {
+#if SERVER
+            await Task.CompletedTask;
+            return  new EntityWriter(Kit.DataAccess);
+#else
+            var model = await EntitySchema.Get(typeof(TEntity));
+            return new EntityWriter(model.AccessInfo.GetDa());
+#endif
+        }
+        #endregion
+
         #region 工具方法
         protected static async Task AddEntityCells(Entity p_entity, Type p_type)
         {

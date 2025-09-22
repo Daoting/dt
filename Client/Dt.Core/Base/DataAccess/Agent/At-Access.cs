@@ -271,14 +271,6 @@ namespace Dt.Core
         }
         #endregion
 
-        #region 实体写入器
-        /// <summary>
-        /// 创建实体写入器
-        /// </summary>
-        /// <returns></returns>
-        public static IEntityWriter NewWriter() => new EntityWriter(_currentAI.GetDa());
-        #endregion
-
         #region 表结构
         /// <summary>
         /// 获取数据库所有表结构信息
