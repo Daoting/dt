@@ -15,12 +15,13 @@ namespace Demo.Crud
     public partial class 基础X : EntityX<基础X>
     {
         #region 构造方法
-        protected 基础X() { }
+        基础X() { }
 
         public 基础X(CellList p_cells) : base(p_cells) { }
 
         public 基础X(
             long ID,
+            long? ParentID = default,
             int 序列 = default,
             string 名称 = default,
             string 限长4 = default,
@@ -35,6 +36,7 @@ namespace Demo.Crud
             DateTime 修改时间 = default)
         {
             Add("id", ID);
+            Add("parent_id", ParentID);
             Add("序列", 序列);
             Add("名称", 名称);
             Add("限长4", 限长4);
@@ -50,6 +52,17 @@ namespace Demo.Crud
             IsAdded = true;
         }
         #endregion
+
+        /// <summary>
+        /// 上级id，演示树状结构
+        /// </summary>
+        public long? ParentID
+        {
+            get { return (long?)this["parent_id"]; }
+            set { this["parent_id"] = value; }
+        }
+
+        public Cell cParentID => _cells["parent_id"];
 
         /// <summary>
         /// 序列自动赋值

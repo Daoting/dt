@@ -1,1 +1,1 @@
-﻿Launcher.Run(args, new Dt.MgrDemo.SvcStub());
+﻿Launcher.Run(args);
