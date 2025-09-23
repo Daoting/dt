@@ -187,6 +187,18 @@ namespace Dt.Core
             // GBK编码
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
+            // 数据库(服务)
+            string msg = "";
+            string custom = "";
+            foreach (var svc in Kit.Svcs)
+            {
+                if (svc.DbInfo == Kit.DefaultDbInfo)
+                    msg += " " + svc.SvcName;
+                else
+                    custom += $", {svc.DbInfo.Name}({svc.SvcName})";
+            }
+            Log.Information($"数据库(服务)：{Kit.DefaultDbInfo.Name}({msg.TrimStart()}){custom}");
+
             DbSchema.SyncDbTime();
             Log.Information("---启动完毕---");
         }

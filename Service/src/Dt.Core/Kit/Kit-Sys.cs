@@ -241,7 +241,6 @@ namespace Dt.Core
                 foreach (var svc in Svcs)
                 {
                     svc.Stub.Configure(p_app, DtMiddleware.RequestHandlers);
-                    Log.Information($"{svc.SvcName}：{svc.DbInfo.Name}({svc.DbInfo.DbType})");
                 }
             }
         }
