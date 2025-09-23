@@ -3,6 +3,9 @@
 		<DebugType>portable</DebugType>
 		<DebugSymbols>True</DebugSymbols>
 	</PropertyGroup>
+	<ItemGroup>
+	  <EmbeddedResource Include="Res\Home.html" />
+	</ItemGroup>
 	
 	<ItemGroup>
 		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />

@@ -3,7 +3,7 @@
     "Cos": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": ".admin",
+      "launchUrl": "",
       "applicationUrl": "https://localhost:1234/"
     }
   }

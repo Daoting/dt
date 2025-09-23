@@ -1,9 +1,0 @@
-﻿{
-  "KestrelListen": [
-    {
-      "Scheme": "https",
-      "Address": "0.0.0.0",
-      "Port": "1000"
-    }
-  ]
-}

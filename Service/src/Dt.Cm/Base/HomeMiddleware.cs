@@ -11,12 +11,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 #endregion
 
-namespace Dt.App
+namespace Dt.Cm
 {
     /// <summary>
     /// 重写请求文件路径，指向压缩文件 *.gz
     /// </summary>
-    public class AppMiddleware
+    public class HomeMiddleware
     {
         public Task Handle(HttpContext p_context)
         {
@@ -24,11 +24,11 @@ namespace Dt.App
             return p_context.Response.WriteAsync(_page);
         }
 
-        static AppMiddleware()
+        static HomeMiddleware()
         {
             try
             {
-                using (var sr = new StreamReader(typeof(AppMiddleware).Assembly.GetManifestResourceStream("Dt.App.Res.Home.html")))
+                using (var sr = new StreamReader(typeof(HomeMiddleware).Assembly.GetManifestResourceStream("Dt.Cm.Res.Home.html")))
                 {
                     _page = sr.ReadToEnd();
                 }

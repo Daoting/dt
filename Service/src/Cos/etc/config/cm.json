@@ -1,4 +1,31 @@
 ﻿{
+  // 安装包和wasm静态网站的相对路径或绝对路径
+  "PackagePath": "package",
+  "WasmPath": "wasm",
+
+  // win安装包版本信息
+  "WinApp": {
+    "Version": "4.2.1.0",
+    // 是否强制更新
+    "ForceUpdate": false,
+    // 文件名前缀
+    "File": "Dt.Shell.Win"
+  },
+
+  // 每个服务的url，两种写法：
+  // 1. 完整http(s)地址
+  // 2. *代表和cm服务域名相同
+  "Urls": {
+    "da": "*:1002",
+    "msg": "*:1004",
+    "fsm": "*:1003"
+  },
+  //"Urls": {
+  //  "da": "*/dt-da",
+  //  "msg": "*/dt-msg",
+  //  "fsm": "*/dt-fsm"
+  //},
+
   "SqliteModel": {
     // 除默认数据源外，其余需要导出到模型库的数据源键名
     "ExportToModel": [],
@@ -40,22 +67,5 @@
         }
       }
     }
-  },
-
-  // 每个服务的url，两种写法：
-  // 1. 完整http(s)地址
-  // 2. *代表和cm服务域名相同
-  "Urls": {
-    "app": "*:1000",
-    "da": "*:1002",
-    "msg": "*:1004",
-    "fsm": "*:1003"
   }
-
-  //"Urls": {
-  //  "app": "*/dt-app",
-  //  "da": "*/dt-da",
-  //  "msg": "*/dt-msg",
-  //  "fsm": "*/dt-fsm"
-  //}
 }

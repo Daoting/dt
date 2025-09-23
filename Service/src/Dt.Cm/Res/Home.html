@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <style>
+        a, b, body, div, font, h1, h2, h3, h4, i, input, lp, select, td, u {
+            font-family: Arial,宋体;
+            font-size: 16px;
+        }
+
+            a:link {
+                text-decoration: none;
+            }
+
+        table {
+            border: 0;
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        label {
+            display: inline-block;
+            width: 150px;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .trClass {
+            height: 40px;
+            vertical-align: bottom;
+        }
+
+        .trMethod {
+            height: 30px;
+        }
+
+        .tdMethod {
+            width: 20%;
+        }
+
+        .trLeft {
+            height: 20px;
+        }
+
+        .tdParam {
+            border-right: 1px solid #C3C3C3;
+            border-bottom: 1px solid #C3C3C3;
+            padding-left: 5px;
+        }
+
+        .aTitle {
+            font-size: 20px;
+            margin-left: 20px;
+        }
+
+        .logTitle {
+            background: green;
+            padding: 4px 4px 4px 4px;
+        }
+
+        .divCaption {
+            background: #F1F1F1;
+            border: 1px solid #E0E0E0;
+            padding: 10px 0px 10px 0px;
+        }
+
+        .divItem {
+            display: flex;
+            flex-direction: column;
+            width: 800px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .divRoot {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0; height: 100%;">
+    <div class="divRoot">
+        <div class="divItem">
+            <div>
+                <label>数据库类型</label>
+                <select id="dbtype" onchange="onDbChanged(this.value)" style="width:203px;padding:1px 2px">
+                    <option value="0">PostgreSql</option>
+                    <option value="1">MySql</option>
+                    <option value="2">Oracle</option>
+                    <option value="3">Sql Server</option>
+                </select><br /><br />
+                <label>主机</label>
+                <input type="text" id="host" value="10.10.1.2"><br /><br />
+                <label>端口</label>
+                <input type="text" id="port" value="5432"><br /><br />
+                <label id="lbldefdb">默认库名</label>
+                <input id="defdb" type="text" value="postgres"><br /><br />
+                <label>用户名 </label>
+                <input type="text" id="defuser" value="postgres"><br /><br />
+                <label>密码</label>
+                <input id="pwd" type="password"><br /><br />
+                <input id="btnConnec" type="button" value="连　　接" style="width:100%;" onclick="onConnect()">
+                <label style="color: red; width: auto; margin-top: 10px;">* 确保该用户具有增删库权限</label>
+            </div>
+        </div>
+        <div class="divItem" style="background:red;">
+            <button data-v-7499b2f6="" class="buttom"><div data-v-7499b2f6="" class="buttom_text hwtext_65st">安装</div></button>
+        </div>
+    </div>
+</body>
+</html>

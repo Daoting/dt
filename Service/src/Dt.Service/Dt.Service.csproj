@@ -9,7 +9,6 @@
 		<ProjectReference Include="..\Dt.Cm\Dt.Cm.csproj" PrivateAssets="all" />
 		<ProjectReference Include="..\Dt.Fsm\Dt.Fsm.csproj" PrivateAssets="all" />
 		<ProjectReference Include="..\Dt.Msg\Dt.Msg.csproj" PrivateAssets="all" />
-		<ProjectReference Include="..\Dt.App\Dt.App.csproj" PrivateAssets="all" />
 	</ItemGroup>
 
 	<!-- 开发时项目引用不屏蔽 -->
@@ -19,7 +18,6 @@
 		<ProjectReference Include="..\Dt.Cm\Dt.Cm.csproj" />
 		<ProjectReference Include="..\Dt.Fsm\Dt.Fsm.csproj" />
 		<ProjectReference Include="..\Dt.Msg\Dt.Msg.csproj" />
-		<ProjectReference Include="..\Dt.App\Dt.App.csproj" />
 	</ItemGroup>
 	
 	<Import Project="..\References.props" />

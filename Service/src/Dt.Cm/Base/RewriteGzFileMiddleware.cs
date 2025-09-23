@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 #endregion
 
-namespace Dt.App
+namespace Dt.Cm
 {
     /// <summary>
     /// 重写请求文件路径，指向压缩文件 *.gz
