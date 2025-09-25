@@ -36,7 +36,7 @@ namespace Dt.Cm
         /// <returns></returns>
         public Dict GetWinAppVer()
         {
-            return null; // MsixCfg.WinAppVer;
+            return Cfg.WinAppVer;
         }
         
         /// <summary>

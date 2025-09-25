@@ -33,7 +33,7 @@ namespace Dt.Cm
             mp.TryAdd(".msix", MediaTypeNames.Application.Octet);
             mp.TryAdd(".cer", MediaTypeNames.Application.Octet);
         }
-        
+
         /// <summary>
         /// 定义全局服务
         /// </summary>
@@ -53,19 +53,24 @@ namespace Dt.Cm
         public override void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_handlers)
         {
             Cfg.Init();
-            
+
             // 注册请求路径处理
             Kit.GetService<SqliteFileHandler>().Init(p_handlers);
             p_handlers["/"] = (p_context) => new HomeMiddleware().Handle(p_context);
 
-            // 安装包可手动下载
+            // 安装包目录可浏览可手动下载
+            p_app.UseDirectoryBrowser(new DirectoryBrowserOptions
+            {
+                FileProvider = new PhysicalFileProvider(Cfg.PackageDir),
+                RequestPath = Cfg.PackageVirPath
+            });
             p_app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Cfg.PackageDir),
                 ContentTypeProvider = _mimeTypeProvider,
                 RequestPath = Cfg.PackageVirPath
             });
-
+            
             // wasm目录，wasm网站静态文件
             var fileProvider = new PhysicalFileProvider(Cfg.WasmDir);
 
