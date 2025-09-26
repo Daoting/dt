@@ -79,8 +79,7 @@ namespace Dt.Cm
 
             if (start != "")
             {
-                start = $"开始更新{start}文件";
-
+                start = $"开始更新 {start} 模型文件";
                 Task.Run(async () =>
                 {
                     if (!_model.IsRefreshing)
@@ -94,13 +93,15 @@ namespace Dt.Cm
                         }
                     }
                     UpdateVersion();
+                    Log.Information("所有模型文件更新完毕！");
                 });
             }
             else
             {
-                start = "所有sqlite文件更新中，无需重复提交更新请求！";
+                start = "所有模型文件更新中，无需重复提交更新请求！";
             }
-
+            
+            Log.Information(start);
             return start;
         }
 
@@ -119,15 +120,16 @@ namespace Dt.Cm
             {
                 if (_model.IsRefreshing)
                 {
-                    msg = "model文件更新中，无需重复提交更新请求！";
+                    msg = "model 文件更新中，无需重复提交更新请求！";
                 }
                 else
                 {
-                    msg = "开始更新model文件...";
+                    msg = "开始更新 model 模型文件...";
                     Task.Run(async () =>
                     {
                         await _model.Refresh();
                         UpdateVersion();
+                        Log.Information("更新完毕！");
                     });
                 }
             }
@@ -139,18 +141,20 @@ namespace Dt.Cm
                 }
                 else
                 {
-                    msg = $"开始更新{p_fileName}文件...";
+                    msg = $"开始更新 {p_fileName} 模型文件...";
                     Task.Run(async () =>
                     {
                         await item.Refresh();
                         UpdateVersion();
+                        Log.Information("更新完毕！");
                     });
                 }
             }
             else
             {
-                msg = "开始更新model文件...";
+                msg = $"无 {p_fileName} 模型配置，无法更新它的模型文件！";
             }
+            Log.Information(msg);
             return msg;
         }
 
