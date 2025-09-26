@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 namespace Dt.Cm
 {
     /// <summary>
-    /// 系统内核Api
+    /// 默认首页Api
     /// </summary>
     [Api]
     public class HomeApi : DomainSvc
@@ -28,7 +28,7 @@ namespace Dt.Cm
             var ver = typeof(HomeApi).Assembly.GetName().Version.ToString(3);
             ls.Add(ver);
             ls.Add(GetSvcs());
-            
+            ls.Add(GetModelInfo());
             return ls;
         }
 
@@ -84,7 +84,6 @@ namespace Dt.Cm
             return sb.ToString();
         }
 
-
         string GetSvcs()
         {
             if (Kit.IsSingletonSvc)
@@ -112,5 +111,22 @@ namespace Dt.Cm
             return sb.ToString();
         }
 
+        string GetModelInfo()
+        {
+            if (!SysKernel.Config.ContainsKey("SqliteVer"))
+            {
+                return "<div class=\"row\"><div class=\"cell\" style=\"color: red;\">当前无模型文件，请点击右上角的【更新所有】生成模型文件！</div></div>";
+            }
+
+            var sb = new StringBuilder("<div class=\"row\">");
+            var model = Kit.GetService<SqliteFileHandler>();
+            foreach (var file in model.GetAllFile())
+            {
+                sb.Append($"<div class=\"cell\"><a onclick=\"updateModel('{file}')\" href=\"javascript:void(0);\">更新{file}</a></div>");
+            }
+
+            sb.Append("</div>");
+            return sb.ToString();
+        }
     }
 }

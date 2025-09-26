@@ -5,11 +5,10 @@
 
   // win安装包版本信息
   "WinApp": {
-    "Version": "4.2.1.0",
     // 是否强制更新
     "ForceUpdate": false,
     // 文件名前缀
-    "File": "Dt.Shell.Win"
+    "File": "Demo"
   },
 
   // 每个服务的url，两种写法：
