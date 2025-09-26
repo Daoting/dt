@@ -1,5 +1,5 @@
 ﻿{
-  // 安装包和wasm静态网站的相对路径或绝对路径
+  // 安装包和wasm静态网站的路径，相对或绝对路径
   "PackagePath": "package",
   "WasmPath": "wasm",
 

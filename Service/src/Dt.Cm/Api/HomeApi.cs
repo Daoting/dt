@@ -16,7 +16,7 @@ namespace Dt.Cm
     /// <summary>
     /// 默认首页Api
     /// </summary>
-    [Api]
+    [Api(IsTest = true)]
     public class HomeApi : DomainSvc
     {
         public List<string> GetInitInfo()
@@ -37,8 +37,8 @@ namespace Dt.Cm
             var sb = new StringBuilder("<div class=\"row\">");
             
             sb.Append("<div class=\"cell\">Win10+</div>");
-            var x64 = Cfg.WinAppVer.Str("x64");
-            var arm64 = Cfg.WinAppVer.Str("arm64");
+            var x64 = Pkg.WinAppVer.Str("x64");
+            var arm64 = Pkg.WinAppVer.Str("arm64");
             if (x64 == "" && arm64 == "")
             {
                 sb.Append("<div class=\"cell\">无安装包</div>");
@@ -47,30 +47,28 @@ namespace Dt.Cm
             {
                 if (x64 == "")
                 {
-                    sb.Append("<div class=\"cell\">无 x64 版本的安装包</div>");
+                    sb.Append("<div class=\"cell\">无x64安装包</div>");
                 }
                 else
                 {
-                    sb.Append($"<div class=\"cell\"><a href=\"/pkg/win/{Cfg.WinX64File}\">x64 (V{x64.Substring(0, x64.Length - 2)})</a></div>");
+                    sb.Append($"<div class=\"cell\"><a href=\"/pkg/win/{Pkg.WinX64File}\">v{x64.Substring(0, x64.Length - 2)}__x64</a></div>");
                 }
 
                 if (arm64 == "")
                 {
-                    sb.Append("<div class=\"cell\">无 arm64 版本的安装包</div>");
+                    sb.Append("<div class=\"cell\">无arm64安装包</div>");
                 }
                 else
                 {
-                    sb.Append($"<div class=\"cell\"><a href=\"/pkg/win/{Cfg.WinArm64File}\">arm64 (V{arm64.Substring(0, arm64.Length - 2)})</a></div>");
+                    sb.Append($"<div class=\"cell\"><a href=\"/pkg/win/{Pkg.WinArm64File}\">v{arm64.Substring(0, arm64.Length - 2)}__arm64</a></div>");
                 }
             }
             sb.Append("<div class=\"cell\"><a href=\"/pkg/win/install.cer\">下载证书</a></div>");
-            sb.Append("<div class=\"cell\"><a href=\"https://daoting.github.io/dt-docs/99%E5%8F%91%E5%B8%83%E9%83%A8%E7%BD%B2/2win%E5%BA%94%E7%94%A8/#%E5%AE%89%E8%A3%85\" target=\"blank\">安装教程</a></div>");
             sb.Append("</div>");
 
             sb.Append("<div class=\"row\"><div class=\"cell\" style=\"margin: 0 1.5rem 0 0;\">手机</div>");
-            sb.Append("<div class=\"cell\"><a href=\"/pkg/win/install.cer\">安卓arm64</a></div>");
-            sb.Append("<div class=\"cell\"><a href=\"/pkg/win/install.cer\">安卓x64</a></div>");
-            sb.Append("<div class=\"cell\"><a href=\"/pkg/win/install.cer\">苹果10+</a></div>");
+            sb.Append("<div class=\"cell\"><a href=\"/pkg/win/install.cer\">v1.1.0__安卓5.0+</a></div>");
+            sb.Append("<div class=\"cell\"><a href=\"/pkg/win/install.cer\">v1.1.0__苹果10+</a></div>");
             sb.Append("</div>");
 
             sb.Append("<div class=\"row\"><div class=\"cell\" style=\"margin: 0 1.5rem 0 0;\">桌面</div>");

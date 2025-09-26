@@ -38,36 +38,6 @@ namespace Dt.Cm
         /// 安装包的虚拟目录
         /// </summary>
         public const string PackageVirPath = "/pkg";
-
-        /// <summary>
-        /// windows应用msix安装包的版本信息
-        /// </summary>
-        public static Dict WinAppVer { get; private set; }
-
-
-        public static string WinX64File
-        {
-            get
-            {
-                if (WinAppVer != null && WinAppVer.Str("x64") != "")
-                {
-                    return WinAppVer.Str("file") + "_" + WinAppVer.Str("x64") + "_x64.msix";
-                }
-                return null;
-            }
-        }
-
-        public static string WinArm64File
-        {
-            get
-            {
-                if (WinAppVer != null && WinAppVer.Str("arm64") != "")
-                {
-                    return WinAppVer.Str("file") + "_" + WinAppVer.Str("arm64") + "_arm64.msix";
-                }
-                return null;
-            }
-        }
         
         /// <summary>
         /// 初始化服务配置
@@ -128,47 +98,7 @@ namespace Dt.Cm
             if (!Directory.Exists(WasmDir))
                 Directory.CreateDirectory(WasmDir);
 
-            UpdatePkgVer();
-        }
-
-        static void UpdatePkgVer()
-        {
-            var prefix = Config.GetValue("WinApp:File", "Dt");
-            WinAppVer = new Dict
-            {
-                { "file", prefix },
-                { "force", Config.GetValue("WinApp:ForceUpdate", false) },
-            };
-
-            var ver = GetAppLastVer(prefix, "x64");
-            WinAppVer["x64"] = ver != null ? ver.ToString(4) : "";
-
-            ver = GetAppLastVer(prefix, "arm64");
-            WinAppVer["arm64"] = ver != null ? ver.ToString(4) : "";
-        }
-        
-        static Version GetAppLastVer(string p_prefix, string p_arch)
-        {
-            DirectoryInfo di = new DirectoryInfo(Path.Combine(PackageDir, "Win"));
-            if (!di.Exists)
-                return null;
-                
-            bool exist = false;
-            var ver = new Version("0.0.0.0");
-            foreach (var fi in di.EnumerateFiles($"{p_prefix}_*_{p_arch}.msix"))
-            {
-                var ar = fi.Name.Split('_');
-                if (ar.Length != 3)
-                    continue;
-
-                var curVer = new Version(ar[1]);
-                if (curVer > ver)
-                {
-                    ver = curVer;
-                    exist = true;
-                }
-            }
-            return exist? ver : null;
+            Pkg.UpdatePkgVer();
         }
     }
 }
