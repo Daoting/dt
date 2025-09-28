@@ -355,3 +355,4 @@ Doc/
 Tools/
 Infras/
 gitconfig.txt
+!Demo/Demo/Platforms/Windows/Dt_Client.pfx
