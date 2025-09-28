@@ -12,6 +12,10 @@
 		<ApplicationVersion>1</ApplicationVersion>
 		<ApplicationPublisher>Daoting</ApplicationPublisher>
 		<Description>搬运工样例.</Description>
+		
+		<!-- WinAppSdk发布，Platforms\Windows\Dt_Client.pfx -->
+		<PackageCertificateThumbprint>1B239CAC27A596A7E21D79DB0C279D17CA2D5798</PackageCertificateThumbprint>
+		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
 	</PropertyGroup>
 
 	<ItemGroup>
