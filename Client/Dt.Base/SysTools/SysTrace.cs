@@ -124,6 +124,13 @@ namespace Dt.Base.Tools
 #endif
                 
 #if WIN
+                new Nav("打开安装目录", Icons.文件夹) { Callback = (s, n) =>
+                {
+                    Kit.OpenUrl(Windows.ApplicationModel.Package.Current.InstalledPath);
+                    if (s is Dlg dlg)
+                        dlg.Close();
+                } },
+                
                 new Nav("1280 X 720", Icons.新窗口) { Callback = (s, n) =>
                 {
                     UITree.ChangeMainWinSize(1280, 720);
