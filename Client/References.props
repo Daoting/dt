@@ -5,6 +5,10 @@
     
     <!-- 公共引用包 -->
     <ItemGroup>
+        <!-- exe项目引用包，原来在Dt.Client.targets，但WinAppSdk发布时无法自动生成代码和资源 -->
+        <PackageReference Include="Dt.BuildTools" Version="1.5.3" PrivateAssets="none" />
+        <PackageReference Include="Uno.Resizetizer" Version="1.10.3" PrivateAssets="none" />
+        
         <PackageReference Include="Dt.Infras" Version="5.0.0" />
         <PackageReference Include="ScottPlot" Version="5.0.40" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.7" />
@@ -45,6 +49,7 @@
 
     <!-- 非WinAppSdk引用 -->
     <ItemGroup Condition="!$(IsWinAppSdk)">
+        <!-- PrivateAssets="none" 确保项目引用Dt.Client包时，Uno.UI的所有资产都会流入该项目 -->
         <PackageReference Include="Uno.WinUI" Version="$(UnoVersion)" PrivateAssets="none" />
         <!-- 对应CommunityToolkit.WinUI.Lottie库，内部引用SkiaSharp包实现LottieVisualSource -->
         <PackageReference Include="Uno.WinUI.Lottie" Version="$(UnoVersion)" />

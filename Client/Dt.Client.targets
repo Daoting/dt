@@ -3,12 +3,6 @@
         <IsDtClient>true</IsDtClient>
         <UnoVersion>6.2.58</UnoVersion>
     </PropertyGroup>
-    
-    <!-- exe项目引用包 -->
-    <ItemGroup Condition="$(IsExe) == 'true'">
-        <PackageReference Include="Dt.BuildTools" Version="1.5.2" />
-        <PackageReference Include="Uno.Resizetizer" Version="1.8.1" />
-    </ItemGroup>
 
     <!-- Android -->
     <ItemGroup Condition="$(IsAndroid) AND $(IsExe) != 'true'">
