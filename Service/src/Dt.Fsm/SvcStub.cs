@@ -69,14 +69,9 @@ namespace Dt.Fsm
             });
 
             // drive下的所有文件作为网站静态文件，映射到虚拟目录drv，和wwwroot区分
-            // 支持下载msix类型文件
-            var mimeTypeProvider = new FileExtensionContentTypeProvider();
-            mimeTypeProvider.Mappings.TryAdd(".msix", MediaTypeNames.Application.Octet);
-            mimeTypeProvider.Mappings.TryAdd(".cer", MediaTypeNames.Application.Octet);
             p_app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = fileProvider,
-                ContentTypeProvider = mimeTypeProvider,
                 RequestPath = "/drv"
             });
         }
