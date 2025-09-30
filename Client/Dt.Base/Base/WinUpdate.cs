@@ -36,13 +36,18 @@ namespace Dt.Base
                 return;
             }
 
-            //Dict dt = new Dict { { "ver", "4.2.2.0" }, { "force", true }, { "file", "Dt.Shell.Win" } };
+            //Dict dt = new Dict { { "force", true }, { "x64", "Demo_1.0.0.1_x64.msix" }, { "arm64", "Demo_1.0.0.1_arm64.msix" } };
             var dt = await new UnaryRpc(
-                    "fsm",
-                    "FileMgr.GetWinAppVer"
+                    "cm",
+                    "SysKernel.GetWinAppVer"
                 ).Call<Dict>();
 
-            var newVer = new Version(dt.Str("ver"));
+            var file = dt.Str(pkg.Id.Architecture.ToString().ToLower());
+            var ar = file.Split('_');
+            if (ar.Length != 3)
+                return;
+
+            var newVer = new Version(ar[1]);
             var pkgVer = pkg.Id.Version;
             var curVer = new Version(string.Format("{0}.{1}.{2}.{3}", pkgVer.Major, pkgVer.Minor, pkgVer.Build, pkgVer.Revision));
 
@@ -57,7 +62,6 @@ namespace Dt.Base
             if (dt.Bool("force")
                 || await Kit.Confirm("已发现新版本应用，要升级吗？"))
             {
-                var file = $"{dt.Str("file")}_{dt.Str("ver")}_{pkg.Id.Architecture.ToString().ToLower()}.msix";
                 Kit.RunAsync(async () => await UpdatePkg(file));
             }
         }
@@ -94,7 +98,8 @@ namespace Dt.Base
                 RegisterApplicationRestart(null, RestartFlags.NONE);
                 var pm = new PackageManager();
                 var res = await pm.AddPackageAsync(
-                    new Uri($"{At.GetSvcUrl("fsm")}/drv/msix/{p_fileName}"),
+                    // https时会校验证书，无效时安装失败！！！
+                    new Uri($"{At.GetSvcUrl("cm")}/pkg/win/{p_fileName}"),
                     null,
                     DeploymentOptions.ForceApplicationShutdown
                 );
