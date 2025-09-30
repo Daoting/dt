@@ -22,57 +22,52 @@ namespace Dt.Cm
         /// </summary>
         public static Dict WinAppVer { get; private set; }
 
-
-        public static string WinX64File
+        public static string WinCerFile { get; private set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>true 已更新，false 无变化</returns>
+        public static bool UpdatePkgVer()
         {
-            get
-            {
-                if (WinAppVer != null && WinAppVer.Str("x64") != "")
-                {
-                    return WinAppVer.Str("file") + "_" + WinAppVer.Str("x64") + "_x64.msix";
-                }
-                return null;
-            }
-        }
-
-        public static string WinArm64File
-        {
-            get
-            {
-                if (WinAppVer != null && WinAppVer.Str("arm64") != "")
-                {
-                    return WinAppVer.Str("file") + "_" + WinAppVer.Str("arm64") + "_arm64.msix";
-                }
-                return null;
-            }
-        }
-
-        public static void UpdatePkgVer()
-        {
-            var prefix = Cfg.Config.GetValue("WinApp:File", "Dt");
+            var old = WinAppVer;
             WinAppVer = new Dict
             {
-                { "file", prefix },
-                { "force", Cfg.Config.GetValue("WinApp:ForceUpdate", false) },
+                { "force", Cfg.Config.GetValue("ForceUpdateWinApp", false) },
             };
 
-            var ver = GetAppLastVer(prefix, "x64");
-            WinAppVer["x64"] = ver != null ? ver.ToString(4) : "";
-
-            ver = GetAppLastVer(prefix, "arm64");
-            WinAppVer["arm64"] = ver != null ? ver.ToString(4) : "";
-        }
-        
-        static Version GetAppLastVer(string p_prefix, string p_arch)
-        {
             DirectoryInfo di = new DirectoryInfo(Path.Combine(Cfg.PackageDir, "Win"));
             if (!di.Exists)
-                return null;
-                
-            bool exist = false;
-            var ver = new Version("0.0.0.0");
-            foreach (var fi in di.EnumerateFiles($"{p_prefix}_*_{p_arch}.msix"))
             {
+                WinAppVer["x64"] = "";
+                WinAppVer["arm64"] = "";
+            }
+            else
+            {
+                WinAppVer["x64"] = GetAppLastVer("*_x64.msix", di);
+                WinAppVer["arm64"] = GetAppLastVer("*_arm64.msix", di);
+            }
+            WinCerFile = GetAppLastVer("*.cer", di);
+            
+            if (old != null && old.Count == WinAppVer.Count)
+            {
+                foreach (var item in old)
+                {
+                    if (old.Str(item.Key) != WinAppVer.Str(item.Key))
+                        return true;
+                }
+                return false;
+            }
+            return true;
+        }
+
+        static string GetAppLastVer(string p_arch, DirectoryInfo p_di)
+        {
+            var ver = new Version("0.0.0.0");
+            string file = "";
+            foreach (var fi in p_di.EnumerateFiles(p_arch))
+            {
+                // 形如：Demo_1.0.0.1_x64.msix
                 var ar = fi.Name.Split('_');
                 if (ar.Length != 3)
                     continue;
@@ -81,10 +76,10 @@ namespace Dt.Cm
                 if (curVer > ver)
                 {
                     ver = curVer;
-                    exist = true;
+                    file = fi.Name;
                 }
             }
-            return exist? ver : null;
+            return file;
         }
     }
 }

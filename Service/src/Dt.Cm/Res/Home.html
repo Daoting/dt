@@ -87,6 +87,7 @@
             <div class="card_header">
                 <label>安装包</label>
                 <a href="https://daoting.github.io/dt-docs/99%E5%8F%91%E5%B8%83%E9%83%A8%E7%BD%B2/2win%E5%BA%94%E7%94%A8/" target="blank\">安装教程</a>
+                <a onclick="updatePkg()" href="javascript:void(0);">刷新版本</a>
                 <a href="./pkg" target="blank">所有安装包</a>
             </div>
             <div id="pkg" class="card_body"></div>
@@ -109,23 +110,7 @@
 
     <script>
         var _rpcUrl = location.href.substr(0, location.href.lastIndexOf("/")) + "/.c";
-        window.onload = function ()
-        {
-            call('["","HomeApi.GetInitInfo"]').then(function (txt)
-            {
-                var result = JSON.parse(txt);
-                if (result.length == 3)
-                {
-                    var dt = result[2];
-                    document.title = dt[1];
-                    $("lblTitle").innerHTML = dt[1];
-                    $("pkg").innerHTML = dt[2];
-                    $("version").innerHTML = dt[3];
-                    $("svc").innerHTML = dt[4];
-                    $("sqlite").innerHTML = dt[5];
-                }
-            });
-        }
+        window.onload = getInitInfo;
 
         function updateAllModel()
         {
@@ -148,6 +133,44 @@
             {
                 window.location.href = location.href.substr(0, location.href.lastIndexOf("/")) + "/.output";
                 return false;
+            });
+        }
+
+        function updatePkg()
+        {
+            call('["","HomeApi.UpdatePkg"]').then(function (txt)
+            {
+                var result = JSON.parse(txt);
+                if (result.length == 3)
+                {
+                    var dt = result[2];
+                    if (dt == false)
+                    {
+                        alert("安装包版本无变化！");
+                    }
+                    else
+                    {
+                        getInitInfo();
+                    }
+                }
+            });
+        }
+
+        function getInitInfo()
+        {
+            call('["","HomeApi.GetInitInfo"]').then(function (txt)
+            {
+                var result = JSON.parse(txt);
+                if (result.length == 3)
+                {
+                    var dt = result[2];
+                    document.title = dt[1];
+                    $("lblTitle").innerHTML = dt[1];
+                    $("pkg").innerHTML = dt[2];
+                    $("version").innerHTML = dt[3];
+                    $("svc").innerHTML = dt[4];
+                    $("sqlite").innerHTML = dt[5];
+                }
             });
         }
 

@@ -32,10 +32,15 @@ namespace Dt.Cm
             return ls;
         }
 
+        public bool UpdatePkg()
+        {
+            return Pkg.UpdatePkgVer();
+        }
+        
         string GetPkg()
         {
             var sb = new StringBuilder("<div class=\"row\">");
-            
+
             sb.Append("<div class=\"cell\">Win10+</div>");
             var x64 = Pkg.WinAppVer.Str("x64");
             var arm64 = Pkg.WinAppVer.Str("arm64");
@@ -51,7 +56,7 @@ namespace Dt.Cm
                 }
                 else
                 {
-                    sb.Append($"<div class=\"cell\"><a href=\"/pkg/win/{Pkg.WinX64File}\">v{x64.Substring(0, x64.Length - 2)}__x64</a></div>");
+                    sb.Append($"<div class=\"cell\"><a href=\"/pkg/win/{x64}\">{x64}</a></div>");
                 }
 
                 if (arm64 == "")
@@ -60,10 +65,12 @@ namespace Dt.Cm
                 }
                 else
                 {
-                    sb.Append($"<div class=\"cell\"><a href=\"/pkg/win/{Pkg.WinArm64File}\">v{arm64.Substring(0, arm64.Length - 2)}__arm64</a></div>");
+                    sb.Append($"<div class=\"cell\"><a href=\"/pkg/win/{arm64}\">{arm64}</a></div>");
                 }
+
+                if (!string.IsNullOrEmpty(Pkg.WinCerFile))
+                    sb.Append($"<div class=\"cell\"><a href=\"/pkg/win/{Pkg.WinCerFile}\">下载证书</a></div>");
             }
-            sb.Append("<div class=\"cell\"><a href=\"/pkg/win/install.cer\">下载证书</a></div>");
             sb.Append("</div>");
 
             sb.Append("<div class=\"row\"><div class=\"cell\" style=\"margin: 0 1.5rem 0 0;\">手机</div>");
@@ -78,7 +85,7 @@ namespace Dt.Cm
             sb.Append("</div>");
 
             sb.Append("<div class=\"row\"><div class=\"cell\" style=\"margin: 0 1.5rem 0 0;\">Web</div><div class=\"cell\"><a href=\"./wasm\" target=\"blank\">打开Web应用</a></div></div>");
-            
+
             return sb.ToString();
         }
 
