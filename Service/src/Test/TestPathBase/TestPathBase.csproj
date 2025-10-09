@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<ItemGroup>
-		<ProjectReference Include="..\..\Dt.Service\Dt.Service.csproj" />
+		<ProjectReference Include="..\..\Dt.Core\Dt.Core.csproj" />
+		<ProjectReference Include="..\..\Dt.Da\Dt.Da.csproj" />
+		<ProjectReference Include="..\..\Dt.Cm\Dt.Cm.csproj" />
+		<ProjectReference Include="..\..\Dt.Fsm\Dt.Fsm.csproj" />
+		<ProjectReference Include="..\..\Dt.Msg\Dt.Msg.csproj" />
 	</ItemGroup>
 </Project>

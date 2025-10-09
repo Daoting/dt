@@ -2,7 +2,7 @@
 
 	<Import Project="..\..\..\..\Tools\File\ServicePkg.props" Condition="exists('..\..\..\..\Tools\File\ServicePkg.props')" />
 	
-	<ItemGroup Condition="'$(Configuration)' == 'Release'">
+	<ItemGroup>
 		<!--PrivateAssets避免引用项目的 nuget 包-->
 		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" PrivateAssets="all" />
 		<ProjectReference Include="..\Dt.Da\Dt.Da.csproj" PrivateAssets="all" />
@@ -11,15 +11,6 @@
 		<ProjectReference Include="..\Dt.Msg\Dt.Msg.csproj" PrivateAssets="all" />
 	</ItemGroup>
 
-	<!-- 开发时项目引用不屏蔽 -->
-	<ItemGroup Condition="'$(Configuration)' != 'Release'">
-		<ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
-		<ProjectReference Include="..\Dt.Da\Dt.Da.csproj" />
-		<ProjectReference Include="..\Dt.Cm\Dt.Cm.csproj" />
-		<ProjectReference Include="..\Dt.Fsm\Dt.Fsm.csproj" />
-		<ProjectReference Include="..\Dt.Msg\Dt.Msg.csproj" />
-	</ItemGroup>
-	
 	<Import Project="..\References.props" />
 
 </Project>
