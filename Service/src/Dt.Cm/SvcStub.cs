@@ -56,6 +56,12 @@ namespace Dt.Cm
 
             // 注册请求路径处理
             Kit.GetService<SqliteFileHandler>().Init(p_handlers);
+            p_handlers[""] = (p_context) =>
+            {
+                // 重定向到带后缀 /
+                p_context.Response.Redirect(p_context.Request.PathBase + "/");
+                return Task.CompletedTask;
+            };
             p_handlers["/"] = (p_context) => new HomeMiddleware().Handle(p_context);
 
             // 安装包目录可浏览可手动下载

@@ -36,11 +36,12 @@ namespace Dt.Cm
                 { "force", Cfg.Config.GetValue("ForceUpdateWinApp", false) },
             };
 
-            DirectoryInfo di = new DirectoryInfo(Path.Combine(Cfg.PackageDir, "Win"));
+            DirectoryInfo di = new DirectoryInfo(Path.Combine(Cfg.PackageDir, "win"));
             if (!di.Exists)
             {
                 WinAppVer["x64"] = "";
                 WinAppVer["arm64"] = "";
+                di.Create();
             }
             else
             {

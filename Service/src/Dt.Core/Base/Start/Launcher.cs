@@ -160,7 +160,7 @@ namespace Dt.Core
             {
                 // 所有外部定义的微服务
                 var ls = GetAllSvcs();
-                
+
                 if (svcName != "")
                 {
                     // 外部微服务
@@ -190,7 +190,7 @@ namespace Dt.Core
             {
                 string file = svc.SvcName + ".json";
                 string path = Path.Combine(Kit.PathBase, "etc/config", file);
-                
+
                 if (!File.Exists(path))
                 {
                     // 无配置文件，使用默认数据源
@@ -293,16 +293,16 @@ namespace Dt.Core
             Log.Fatal(p_msg);
             throw new Exception(p_msg);
         }
-        
+
         static SvcInfo GetSysSvc(string p_name)
         {
             var path = Path.Combine(AppContext.BaseDirectory, $"Dt.{p_name}.dll");
             var asm = Assembly.LoadFrom(path);
             var svc = asm.GetCustomAttribute<SvcStubAttribute>();
-            
+
             if (svc == null)
                 LogException($"Dt.{p_name}.dll 缺少 SvcStubAttribute 标签！");
-            
+
             return new SvcInfo(svc.SvcName, (Stub)Activator.CreateInstance(svc.StubType));
         }
 
@@ -333,7 +333,14 @@ namespace Dt.Core
                     using var stream = fi.OpenRead();
                     using var peReader = new PEReader(stream);
                     {
-                        var meta = peReader.GetMetadataReader();
+                        MetadataReader meta;
+                        try
+                        {
+                            // 系统dll无PE meta
+                            meta = peReader.GetMetadataReader();
+                        }
+                        catch { continue; }
+
                         var refs = meta.AssemblyReferences;
                         foreach (var ar in refs)
                         {
@@ -371,7 +378,6 @@ namespace Dt.Core
                 catch (Exception ex)
                 {
                     Log.Fatal(ex, $"{fi.Name} 提取Stub时出错！");
-                    throw;
                 }
             }
             return ls;

@@ -56,7 +56,7 @@ namespace Dt.Cm
                 }
                 else
                 {
-                    sb.Append($"<div class=\"cell\"><a href=\"/pkg/win/{x64}\">{x64}</a></div>");
+                    sb.Append($"<div class=\"cell\"><a href=\"./pkg/win/{x64}\">{x64}</a></div>");
                 }
 
                 if (arm64 == "")
@@ -65,23 +65,23 @@ namespace Dt.Cm
                 }
                 else
                 {
-                    sb.Append($"<div class=\"cell\"><a href=\"/pkg/win/{arm64}\">{arm64}</a></div>");
+                    sb.Append($"<div class=\"cell\"><a href=\"./pkg/win/{arm64}\">{arm64}</a></div>");
                 }
 
                 if (!string.IsNullOrEmpty(Pkg.WinCerFile))
-                    sb.Append($"<div class=\"cell\"><a href=\"/pkg/win/{Pkg.WinCerFile}\">下载证书</a></div>");
+                    sb.Append($"<div class=\"cell\"><a href=\"./pkg/win/{Pkg.WinCerFile}\">下载证书</a></div>");
             }
             sb.Append("</div>");
 
             sb.Append("<div class=\"row\"><div class=\"cell\" style=\"margin: 0 1.5rem 0 0;\">手机</div>");
-            sb.Append("<div class=\"cell\"><a href=\"/pkg/win/install.cer\">v1.1.0__安卓5.0+</a></div>");
-            sb.Append("<div class=\"cell\"><a href=\"/pkg/win/install.cer\">v1.1.0__苹果10+</a></div>");
+            sb.Append("<div class=\"cell\"><a href=\"./pkg/win/install.cer\">v1.1.0__安卓5.0+</a></div>");
+            sb.Append("<div class=\"cell\"><a href=\"./pkg/win/install.cer\">v1.1.0__苹果10+</a></div>");
             sb.Append("</div>");
 
             sb.Append("<div class=\"row\"><div class=\"cell\" style=\"margin: 0 1.5rem 0 0;\">桌面</div>");
-            sb.Append("<div class=\"cell\"><a href=\"/pkg/win/install.cer\">Win7-</a></div>");
-            sb.Append("<div class=\"cell\"><a href=\"/pkg/win/install.cer\">Linux</a></div>");
-            sb.Append("<div class=\"cell\"><a href=\"/pkg/win/install.cer\">Mac</a></div>");
+            sb.Append("<div class=\"cell\"><a href=\"./pkg/win/install.cer\">Win7-</a></div>");
+            sb.Append("<div class=\"cell\"><a href=\"./pkg/win/install.cer\">Linux</a></div>");
+            sb.Append("<div class=\"cell\"><a href=\"./pkg/win/install.cer\">Mac</a></div>");
             sb.Append("</div>");
 
             sb.Append("<div class=\"row\"><div class=\"cell\" style=\"margin: 0 1.5rem 0 0;\">Web</div><div class=\"cell\"><a href=\"./wasm\" target=\"blank\">打开Web应用</a></div></div>");

@@ -80,7 +80,7 @@
 <body style="margin: 0; padding: 0; height: 100%; background: #F1F1F1;">
     <div class="divRoot">
         <div class="divTitle">
-            <img src="../pkg/logo.png" width="64" />
+            <img src="./pkg/logo.png" width="64" />
             <label id="lblTitle" />
         </div>
         <div class="card">
@@ -88,7 +88,7 @@
                 <label>安装包</label>
                 <a href="https://daoting.github.io/dt-docs/99%E5%8F%91%E5%B8%83%E9%83%A8%E7%BD%B2/2win%E5%BA%94%E7%94%A8/" target="blank\">安装教程</a>
                 <a onclick="updatePkg()" href="javascript:void(0);">刷新版本</a>
-                <a href="./pkg" target="blank">所有安装包</a>
+                <a href="./pkg/" target="blank">所有安装包</a>
             </div>
             <div id="pkg" class="card_body"></div>
         </div>
@@ -109,7 +109,8 @@
     </div>
 
     <script>
-        var _rpcUrl = location.href.substr(0, location.href.lastIndexOf("/")) + "/.c";
+        var _baseUrl = location.href;
+        var _rpcUrl = _baseUrl + ".c";
         window.onload = getInitInfo;
 
         function updateAllModel()
@@ -119,7 +120,7 @@
 
             call('["","SysKernel.UpdateAllSqliteFile"]').then(function (txt)
             {
-                window.location.href = location.href.substr(0, location.href.lastIndexOf("/")) + "/.output";
+                location.href = _baseUrl + ".output";
                 return false;
             });
         }
@@ -131,7 +132,7 @@
 
             call('["","SysKernel.UpdateSqliteFile", "' + model + '"]').then(function (txt)
             {
-                window.location.href = location.href.substr(0, location.href.lastIndexOf("/")) + "/.output";
+                location.href = _baseUrl + ".output";
                 return false;
             });
         }

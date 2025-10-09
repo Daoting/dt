@@ -1,10 +1,20 @@
 ﻿{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/cos"
+    }
+  },
   "profiles": {
     "Cos": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "",
       "applicationUrl": "https://localhost:1234/"
+    },
+    "IIS": {
+      "commandName": "IIS"
     }
   }
 }
