@@ -109,8 +109,7 @@
     </div>
 
     <script>
-        var _baseUrl = location.href;
-        var _rpcUrl = _baseUrl + ".c";
+        var _rpcUrl = location.href + ".c";
         window.onload = getInitInfo;
 
         function updateAllModel()
@@ -120,7 +119,7 @@
 
             call('["","SysKernel.UpdateAllSqliteFile"]').then(function (txt)
             {
-                location.href = _baseUrl + ".output";
+                location.href += ".output";
                 return false;
             });
         }
@@ -132,7 +131,7 @@
 
             call('["","SysKernel.UpdateSqliteFile", "' + model + '"]').then(function (txt)
             {
-                location.href = _baseUrl + ".output";
+                location.href += ".output";
                 return false;
             });
         }
