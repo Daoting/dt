@@ -32,6 +32,7 @@ namespace Dt.Cm
             mp.TryAdd(".dat", MediaTypeNames.Application.Octet);
             mp.TryAdd(".msix", MediaTypeNames.Application.Octet);
             mp.TryAdd(".cer", MediaTypeNames.Application.Octet);
+            mp.TryAdd(".apk", MediaTypeNames.Application.Octet);
         }
 
         /// <summary>

@@ -23,6 +23,8 @@ namespace Dt.Cm
         public static Dict WinAppVer { get; private set; }
 
         public static string WinCerFile { get; private set; }
+
+        public static string ApkFile { get; private set; }
         
         /// <summary>
         /// 
@@ -49,6 +51,20 @@ namespace Dt.Cm
                 WinAppVer["arm64"] = GetAppLastVer("*_arm64.msix", di);
             }
             WinCerFile = GetAppLastVer("*.cer", di);
+
+            var oldApk = ApkFile;
+            di = new DirectoryInfo(Path.Combine(Cfg.PackageDir, "android"));
+            if (!di.Exists)
+            {
+                ApkFile = "";
+                di.Create();
+            }
+            else
+            {
+                ApkFile = GetAppLastVer("*.apk", di);
+            }
+            if (oldApk != ApkFile)
+                return true;
             
             if (old != null && old.Count == WinAppVer.Count)
             {
@@ -69,8 +85,8 @@ namespace Dt.Cm
             foreach (var fi in p_di.EnumerateFiles(p_arch))
             {
                 // 形如：Demo_1.0.0.1_x64.msix
-                var ar = fi.Name.Split('_');
-                if (ar.Length != 3)
+                var ar = fi.Name.Substring(0, fi.Name.Length - fi.Extension.Length).Split('_');
+                if (ar.Length < 2)
                     continue;
 
                 var curVer = new Version(ar[1]);

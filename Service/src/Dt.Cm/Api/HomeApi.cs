@@ -74,8 +74,10 @@ namespace Dt.Cm
             sb.Append("</div>");
 
             sb.Append("<div class=\"row\"><div class=\"cell\" style=\"margin: 0 1.5rem 0 0;\">手机</div>");
-            sb.Append("<div class=\"cell\"><a href=\"./pkg/win/install.cer\">v1.1.0__安卓5.0+</a></div>");
-            sb.Append("<div class=\"cell\"><a href=\"./pkg/win/install.cer\">v1.1.0__苹果10+</a></div>");
+            if (string.IsNullOrEmpty(Pkg.ApkFile))
+                sb.Append("<div class=\"cell\">无安卓安装包</div>");
+            else
+                sb.Append($"<div class=\"cell\"><a href=\"./pkg/android/{Pkg.ApkFile}\">{Pkg.ApkFile}</a></div>");
             sb.Append("</div>");
 
             sb.Append("<div class=\"row\"><div class=\"cell\" style=\"margin: 0 1.5rem 0 0;\">桌面</div>");
