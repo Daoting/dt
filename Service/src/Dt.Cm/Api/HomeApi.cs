@@ -50,20 +50,12 @@ namespace Dt.Cm
             }
             else
             {
-                if (x64 == "")
-                {
-                    sb.Append("<div class=\"cell\">无x64安装包</div>");
-                }
-                else
+                if (x64 != "")
                 {
                     sb.Append($"<div class=\"cell\"><a href=\"./pkg/win/{x64}\">{x64}</a></div>");
                 }
 
-                if (arm64 == "")
-                {
-                    sb.Append("<div class=\"cell\">无arm64安装包</div>");
-                }
-                else
+                if (arm64 != "")
                 {
                     sb.Append($"<div class=\"cell\"><a href=\"./pkg/win/{arm64}\">{arm64}</a></div>");
                 }
@@ -75,7 +67,7 @@ namespace Dt.Cm
 
             sb.Append("<div class=\"row\"><div class=\"cell\" style=\"margin: 0 1.5rem 0 0;\">手机</div>");
             if (string.IsNullOrEmpty(Pkg.ApkFile))
-                sb.Append("<div class=\"cell\">无安卓安装包</div>");
+                sb.Append("<div class=\"cell\">无安装包</div>");
             else
                 sb.Append($"<div class=\"cell\"><a href=\"./pkg/android/{Pkg.ApkFile}\">{Pkg.ApkFile}</a></div>");
             sb.Append("</div>");

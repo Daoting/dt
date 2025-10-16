@@ -14,30 +14,11 @@
 		<Description>搬运工样例.</Description>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="$(IsWinAppSdk) AND '$(Configuration)' == 'Release'">
-		<!-- WinAppSdk发布，Platforms\Windows\Dt_Client.pfx -->
-		<PackageCertificateThumbprint>1B239CAC27A596A7E21D79DB0C279D17CA2D5798</PackageCertificateThumbprint>
-		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="$(IsAndroid) AND '$(Configuration)' == 'Release'">
-		<!-- 包格式apk，不生成aab -->
-		<AndroidPackageFormat>apk</AndroidPackageFormat>
-		<!-- apk支持的ABI架构，默认支持4种架构，减少支持ABI能缩小apk -->
-		<RuntimeIdentifier>android-arm64</RuntimeIdentifier>
-		<!--<RuntimeIdentifier>android-x64</RuntimeIdentifier>-->
-		<!--<RuntimeIdentifiers>android-arm64;android-arm</RuntimeIdentifiers>-->
-		<!-- 签名相关 -->
-		<AndroidKeyStore>True</AndroidKeyStore>
-		<AndroidSigningKeyStore>Platforms\Android\app.keystore</AndroidSigningKeyStore>
-		<AndroidSigningKeyAlias>key</AndroidSigningKeyAlias>
-		<AndroidSigningKeyPass>111111</AndroidSigningKeyPass>
-		<AndroidSigningStorePass>111111</AndroidSigningStorePass>
-		<!-- 取消AOT，因引用包不支持裁剪 -->
-		<RunAOTCompilation>false</RunAOTCompilation>
-		<PublishTrimmed>false</PublishTrimmed>
-	</PropertyGroup>
-
+	<!-- 发布时配置 -->
+	<Import Project="Properties\win-pub.props" Condition="$(IsWinAppSdk) AND '$(Configuration)' == 'Release'" />
+	<Import Project="Properties\android-pub.props" Condition="$(IsAndroid) AND '$(Configuration)' == 'Release'" />
+	<Import Project="Properties\desktop-pub.props" Condition="$(IsDesktop) AND '$(Configuration)' == 'Release'" />
+	
 	<ItemGroup>
 		<ProjectReference Include="..\Demo.Base\Demo.Base.csproj" />
 		<ProjectReference Include="..\Demo.UI\Demo.UI.csproj" />

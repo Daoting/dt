@@ -1,0 +1,40 @@
+﻿<Project>
+	<PropertyGroup>
+		<ApplicationVersion>5.0.0.*</ApplicationVersion>
+		<PublishDir>D:\Dt\Publish\Desktop\</PublishDir>
+		
+		<ApplicationRevision>0</ApplicationRevision>
+		<BootstrapperEnabled>True</BootstrapperEnabled>
+		<Configuration>Release</Configuration>
+		<CreateWebPageOnPublish>False</CreateWebPageOnPublish>
+		<GenerateManifests>true</GenerateManifests>
+		<Install>True</Install>
+		<InstallFrom>Disk</InstallFrom>
+		<IsRevisionIncremented>True</IsRevisionIncremented>
+		<IsWebBootstrapper>False</IsWebBootstrapper>
+		<MapFileExtensions>True</MapFileExtensions>
+		<OpenBrowserOnPublish>False</OpenBrowserOnPublish>
+		<Platform>x64</Platform>
+		<PublishProtocol>ClickOnce</PublishProtocol>
+		<PublishReadyToRun>False</PublishReadyToRun>
+		<PublishSingleFile>False</PublishSingleFile>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<SelfContained>True</SelfContained>
+		<SignatureAlgorithm>(none)</SignatureAlgorithm>
+		<SignManifests>False</SignManifests>
+		<SkipPublishVerification>false</SkipPublishVerification>
+		<TargetFramework>net9.0-desktop</TargetFramework>
+		<UpdateEnabled>False</UpdateEnabled>
+		<UpdateMode>Foreground</UpdateMode>
+		<UpdateRequired>False</UpdateRequired>
+		<WebPageFileName>Publish.html</WebPageFileName>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<!-- This section needs to be adjusted based on the target framework -->
+		<BootstrapperPackage Include="Microsoft.NetCore.DesktopRuntime.8.0.x64">
+			<Install>true</Install>
+			<ProductName>.NET Desktop Runtime 8.0.10 (x64)</ProductName>
+		</BootstrapperPackage>
+	</ItemGroup>
+</Project>
