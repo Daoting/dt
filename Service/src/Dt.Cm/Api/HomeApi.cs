@@ -73,9 +73,10 @@ namespace Dt.Cm
             sb.Append("</div>");
 
             sb.Append("<div class=\"row\"><div class=\"cell\" style=\"margin: 0 1.5rem 0 0;\">桌面</div>");
-            sb.Append("<div class=\"cell\"><a href=\"./pkg/win/install.cer\">Win7-</a></div>");
-            sb.Append("<div class=\"cell\"><a href=\"./pkg/win/install.cer\">Linux</a></div>");
-            sb.Append("<div class=\"cell\"><a href=\"./pkg/win/install.cer\">Mac</a></div>");
+            if (string.IsNullOrEmpty(Pkg.Win7File))
+                sb.Append("<div class=\"cell\">无安装包</div>");
+            else
+                sb.Append($"<div class=\"cell\"><a href=\"./pkg/desktop/{Pkg.Win7File}\">{Pkg.Win7File}</a></div>");
             sb.Append("</div>");
 
             sb.Append("<div class=\"row\"><div class=\"cell\" style=\"margin: 0 1.5rem 0 0;\">Web</div><div class=\"cell\"><a href=\"./wasm\" target=\"blank\">打开Web应用</a></div></div>");

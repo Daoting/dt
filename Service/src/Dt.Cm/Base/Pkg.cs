@@ -25,13 +25,17 @@ namespace Dt.Cm
         public static string WinCerFile { get; private set; }
 
         public static string ApkFile { get; private set; }
-        
+
+        public static string Win7File { get; private set; }
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns>true 已更新，false 无变化</returns>
         public static bool UpdatePkgVer()
         {
+            bool isUpdated = false;
+            
             var old = WinAppVer;
             WinAppVer = new Dict
             {
@@ -51,8 +55,23 @@ namespace Dt.Cm
                 WinAppVer["arm64"] = GetAppLastVer("*_arm64.msix", di);
             }
             WinCerFile = GetAppLastVer("*.cer", di);
-
-            var oldApk = ApkFile;
+            if (old != null && old.Count == WinAppVer.Count)
+            {
+                foreach (var item in old)
+                {
+                    if (old.Str(item.Key) != WinAppVer.Str(item.Key))
+                    {
+                        isUpdated = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                isUpdated = true;
+            }
+            
+            var oldFile = ApkFile;
             di = new DirectoryInfo(Path.Combine(Cfg.PackageDir, "android"));
             if (!di.Exists)
             {
@@ -63,19 +82,24 @@ namespace Dt.Cm
             {
                 ApkFile = GetAppLastVer("*.apk", di);
             }
-            if (oldApk != ApkFile)
-                return true;
-            
-            if (old != null && old.Count == WinAppVer.Count)
+            if (!isUpdated)
+                isUpdated = oldFile != ApkFile;
+
+            oldFile = Win7File;
+            di = new DirectoryInfo(Path.Combine(Cfg.PackageDir, "desktop"));
+            if (!di.Exists)
             {
-                foreach (var item in old)
-                {
-                    if (old.Str(item.Key) != WinAppVer.Str(item.Key))
-                        return true;
-                }
-                return false;
+                Win7File = "";
+                di.Create();
             }
-            return true;
+            else
+            {
+                Win7File = GetAppLastVer("*.zip", di);
+            }
+            if (!isUpdated)
+                isUpdated = oldFile != Win7File;
+            
+            return isUpdated;
         }
 
         static string GetAppLastVer(string p_arch, DirectoryInfo p_di)
