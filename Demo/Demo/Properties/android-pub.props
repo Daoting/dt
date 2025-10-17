@@ -1,5 +1,5 @@
 ﻿<Project>
-	<PropertyGroup Condition="$(IsAndroid) AND '$(Configuration)' == 'Release'">
+	<PropertyGroup>
 		<!-- 包格式apk，不生成aab -->
 		<AndroidPackageFormat>apk</AndroidPackageFormat>
 		<!-- apk支持的ABI架构，默认支持4种架构，减少支持ABI能缩小apk -->

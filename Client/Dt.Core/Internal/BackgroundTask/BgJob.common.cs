@@ -39,10 +39,14 @@ namespace Dt.Core
             {
                 try
                 {
-                    await GlobalConfig.Load(false);
-                    At.InitConfig(false);
-                    BgJobKit.Log("后台加载配置");
-                    
+                    // 可能已初始化，比如android刚启动时
+                    if (string.IsNullOrEmpty(GlobalConfig.Server))
+                    {
+                        await GlobalConfig.Load(false);
+                        At.InitConfig(false);
+                        BgJobKit.Log("后台加载配置");
+                    }
+
                     await bgJob.Run();
                     BgJobKit.Log("后台结束");
                 }
