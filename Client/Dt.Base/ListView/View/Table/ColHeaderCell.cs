@@ -87,7 +87,10 @@ namespace Dt.Base.ListView
             set { SetValue(SortStateProperty, value); }
         }
 
-        internal Col Col { get; }
+        /// <summary>
+        /// 获取列定义
+        /// </summary>
+        public Col Col { get; }
 
         void OnLoaded(object sender, RoutedEventArgs e)
         {
@@ -105,6 +108,9 @@ namespace Dt.Base.ListView
 
             if (_owner.Lv.AutoSaveCols)
                 RightTapped += OnRightTapped;
+
+            // 触发加载列头事件，自定义样式
+            _owner.Lv.OnLoadColHeaderCell(this);
         }
 
         void OnPointerPressed(object sender, PointerRoutedEventArgs e)

@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Dt.Base.ListView;
 #endregion
 
 namespace Demo.UI
@@ -94,6 +95,39 @@ namespace Demo.UI
         {
             var cols = _lv.View as Cols;
             cols.ShowExcept();
+        }
+
+        void OnSetColHeader(object sender, RoutedEventArgs e)
+        {
+            _lv.LoadColHeaderCell -= OnLoadColHeaderCell;
+            _lv.LoadColHeaderCell += OnLoadColHeaderCell;
+            _lv.ViewMode = ViewMode.List;
+            _lv.ViewMode = ViewMode.Table;
+        }
+
+        void OnLoadColHeaderCell(ColHeaderCell cell)
+        {
+            if (cell.Col.ID == "bh")
+            {
+                cell.Background = Res.TransparentBrush;
+                cell.Foreground = Res.RedBrush;
+            }
+            else if (cell.Col.ID == "xm")
+            {
+                cell.Background = Res.BlackBrush;
+                cell.Foreground = Res.WhiteBrush;
+            }
+            else
+            {
+                
+            }
+        }
+
+        void OnResetColHeader(object sender, RoutedEventArgs e)
+        {
+            _lv.LoadColHeaderCell -= OnLoadColHeaderCell;
+            _lv.ViewMode = ViewMode.List;
+            _lv.ViewMode = ViewMode.Table;
         }
     }
 }

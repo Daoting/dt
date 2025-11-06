@@ -28,13 +28,15 @@
     <!-- ColHeaderCell -->
     <Style TargetType="lv:ColHeaderCell">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 浅灰1}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰2}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="lv:ColHeaderCell">
                     <Border
                         x:Name="Root"
-                        Background="{StaticResource 浅灰1}"
-                        BorderBrush="{StaticResource 浅灰2}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="0,0,1,1">
                         <StackPanel Margin="10,0,10,0" Orientation="Horizontal">
                             <TextBlock Text="{TemplateBinding Title}" VerticalAlignment="Center" />

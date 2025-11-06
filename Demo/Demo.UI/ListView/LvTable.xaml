@@ -85,6 +85,11 @@
                         <Button Content="普通" Click="OnToggleView" Tag="普通" />
                         <Button Content="非固定列宽" Click="OnToggleView" Tag="非固定列宽" />
                     </StackPanel>
+                    <a:CBar Title="列头样式" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="设置列头样式" Click="OnSetColHeader" />
+                        <Button Content="恢复列头样式" Click="OnResetColHeader" />
+                    </StackPanel>
                     <a:CBar Title="隐藏列" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="隐藏编号姓名" Click="OnHideCol" />
