@@ -1,17 +1,17 @@
 ﻿<Project>
     <PropertyGroup>
-        <UnoVersion>6.2.58</UnoVersion>
+        <UnoVersion>6.4.43</UnoVersion>
     </PropertyGroup>
     
     <!-- 公共引用包 -->
     <ItemGroup>
         <!-- exe项目引用包，原来在Dt.Client.targets，但WinAppSdk发布时无法自动生成代码和资源 -->
         <PackageReference Include="Dt.BuildTools" Version="1.5.3" PrivateAssets="none" />
-        <PackageReference Include="Uno.Resizetizer" Version="1.10.3" PrivateAssets="none" />
+        <PackageReference Include="Uno.Resizetizer" Version="1.12.1" PrivateAssets="none" />
         
         <PackageReference Include="Dt.Infras" Version="5.0.0" />
         <PackageReference Include="ScottPlot" Version="5.0.40" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.7" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.11" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.6" />
         
         <!-- 日志，两端版本相同 -->
@@ -44,7 +44,7 @@
         <!-- Lottie动画已正常，Microsoft.Graphics.Win2D需1.2.0以上版本，Microsoft.Maui.Essentials已间接引用 -->
         <PackageReference Include="CommunityToolkit.WinUI.Lottie" Version="8.1.240821" />
         <!-- ScottPlot需要 -->
-        <PackageReference Include="SkiaSharp.Views.WinUI" Version="3.119.0" />
+        <PackageReference Include="SkiaSharp.Views.WinUI" Version="3.119.1" />
     </ItemGroup>
 
     <!-- 非WinAppSdk引用 -->
@@ -53,11 +53,12 @@
         <PackageReference Include="Uno.WinUI" Version="$(UnoVersion)" PrivateAssets="none" />
         <!-- 对应CommunityToolkit.WinUI.Lottie库，内部引用SkiaSharp包实现LottieVisualSource -->
         <PackageReference Include="Uno.WinUI.Lottie" Version="$(UnoVersion)" />
+        <PackageReference Include="Uno.WinUI.Graphics2DSK" Version="$(UnoVersion)" />
         <!-- ScottPlot Lottie都引用，注意版本匹配 -->
-        <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="3.119.0" />
-        <PackageReference Include="SkiaSharp.Skottie" Version="3.119.0" />
+        <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="3.119.1" />
+        <PackageReference Include="SkiaSharp.Skottie" Version="3.119.1" />
         <!-- 异常日志 -->
-        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.7" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.11" />
         <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="$(UnoVersion)" />
     </ItemGroup>
     
