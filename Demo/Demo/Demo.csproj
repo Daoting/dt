@@ -25,4 +25,8 @@
 		<ProjectReference Include="..\Demo.Crud\Demo.Crud.csproj" />
 		<ProjectReference Include="..\Demo.Lob\Demo.Lob.csproj" />
 	</ItemGroup>
+
+	<Target Name="CheckPlatform" BeforeTargets="BeforeBuild">
+		<Message Text="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')): $(_NugetDirectory)" Importance="high" />
+	</Target>
 </Project>

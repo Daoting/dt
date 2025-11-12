@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{ADA70A06
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
 		Dt.Client.targets = Dt.Client.targets
+		DtRef.targets = DtRef.targets
+		..\global.json = ..\global.json
 		References.props = References.props
 	EndProjectSection
 EndProject

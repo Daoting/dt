@@ -24,9 +24,9 @@
 	-->
 
 	<!-- 所有项目引用 -->
-	<ItemGroup Condition="$(SolutionName) == 'Demo'">
-		<PackageReference Include="Dt.Client" Version="5.1.0" />
-	</ItemGroup>
+	<PropertyGroup Condition="$(SolutionName) == 'Demo'">
+		<DtVersion>5.1.0</DtVersion>
+	</PropertyGroup>
 
 	<ItemGroup Condition="$(SolutionName) != 'Demo'">
 		<ProjectReference Include="..\..\Client\Dt.Core\Dt.Core.csproj" />
@@ -34,7 +34,7 @@
 		<ProjectReference Include="..\..\Client\Dt.Mgr\Dt.Mgr.csproj" />
 	</ItemGroup>
 	
-	<Import Project="..\Client\Dt.Client.targets" Condition="$(SolutionName) != 'Demo'" />
+	<Import Project="..\Client\DtRef.targets" Condition="$(SolutionName) != 'Demo'" />
 
 	<ItemGroup>
 		<Using Include="Dt.Core" />
