@@ -8,12 +8,9 @@
 #endregion
 
 #region 引用命名
-using System;
-using System.ComponentModel;
-using System.Reflection;
-using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.JavaScript;
 using System.Text;
-using System.Text.RegularExpressions;
+using Windows.Storage;
 #endregion
 
 namespace Dt.Core
@@ -30,16 +27,7 @@ namespace Dt.Core
         /// <returns>调用结果</returns>
         public static string InvokeJS(string p_js)
         {
-            var r = Interop.Runtime.InvokeJS(p_js, out var exceptionResult);
-            if (exceptionResult != 0)
-            {
-                Console.Error.WriteLine($"Error #{exceptionResult} \"{r}\" executing javascript: \"{p_js}\"");
-            }
-            //else
-            //{
-            //    Console.WriteLine($"InvokeJS: [{p_js}]: {r}");
-            //}
-            return r;
+            return Interop.InvokeJS(p_js);
         }
 
         /// <summary>
@@ -125,6 +113,34 @@ namespace Dt.Core
             }
         }
 
+        /// <summary>
+        /// 获取内容文件的web地址
+        /// </summary>
+        /// <param name="p_fileUrl">内容文件路径，如：ms-appx:///Assets/Html/editor.html</param>
+        /// <returns></returns>
+        public static async Task<string> GetLocalUrl(string p_fileUrl)
+        {
+            string path = null;
+            try
+            {
+                var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(p_fileUrl));
+                int index = file.Path.IndexOf("/package_");
+                if (index < 0)
+                    throw new Exception("路径非法");
+                path = file.Path.Substring(index);
+            }
+            catch {  return null; }
+
+            // 获取浏览器中的地址
+            var str = InvokeJS("location.href");
+            int end = str.LastIndexOf("/index.html");
+            if (end > 0)
+                str = str.Substring(0, end);
+            str = str.TrimEnd('/');
+            
+            return str + "/" + path;
+        }
+        
         // 支持单体服务后统一在Stub中设置
         ///// <summary>
         ///// 根据当前浏览器的url获取服务地址，如：
@@ -155,31 +171,49 @@ namespace Dt.Core
             InvokeJS($"var a=document.createElement(\"a\");a.href=\"{p_url}\";a.target=\"_blank\";a.download=\"{p_name}\";a.click();");
         }
     }
-}
 
-internal sealed class Interop
-{
     /// <summary>
-    /// .NET5 MonoVM and upward specific internal call.
-    /// 禁止混淆名称
+    /// .NET7后的方式，它使用代码生成来创建高性能、符合 CSP 标准、线程安全的互作，并且不使用 eval
+    /// 不采用 JSImport 方式，必须支持 Content Security Policy (CSP)，才能调用 eval
     /// </summary>
-    [Obfuscation(Feature = "renaming", Exclude = true)]
-    internal sealed class Runtime
+    internal static partial class Interop
     {
         /// <summary>
-        /// 升级.NET5后此方法名称由 WebAssembly.Runtime:InvokeJS 转 Interop.Runtime:InvokeJS
-        /// mono-wasm中通过mono_add_internal_call函数在启动时注册方法名称和具体逻辑的映射
-        /// c代码中注册的方法名称：Interop.Runtime:InvokeJS，所以命名空间和名称都不能修改！
-        /// c#调用js最终通过c的宏EM_ASM_INT，详细参加《搬运工客户端手册》的C#与js互相调用
+        /// uno-bootstrap.js 中的 invokeJS 函数，内部调用的 eval
+        /// public static invokeJS(value: string) {
+		///	return eval(value);
+		///}
         /// </summary>
-        /// <remarks>
-        /// Matches https://github.com/dotnet/runtime/blob/54906ea87c9d8ff3df0b341f02ae255fd58820bd/src/mono/wasm/runtime/driver.c#L417
-        /// </remarks>
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        internal static extern string InvokeJS(string str, out int exceptional_result);
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [JSImport("globalThis.Uno.WebAssembly.Bootstrap.Bootstrapper.invokeJS")]
+        public static partial string InvokeJS(string value);
     }
 }
+
+//internal sealed class Interop
+//{
+//    /// <summary>
+//    /// .NET5 MonoVM and upward specific internal call.
+//    /// 禁止混淆名称
+//    /// </summary>
+//    [Obfuscation(Feature = "renaming", Exclude = true)]
+//    internal sealed class Runtime
+//    {
+//        /// <summary>
+//        /// 升级.NET5后此方法名称由 WebAssembly.Runtime:InvokeJS 转 Interop.Runtime:InvokeJS
+//        /// mono-wasm中通过mono_add_internal_call函数在启动时注册方法名称和具体逻辑的映射
+//        /// c代码中注册的方法名称：Interop.Runtime:InvokeJS，所以命名空间和名称都不能修改！
+//        /// c#调用js最终通过c的宏EM_ASM_INT，详细参加《搬运工客户端手册》的C#与js互相调用
+//        /// </summary>
+//        /// <remarks>
+//        /// Matches https://github.com/dotnet/runtime/blob/54906ea87c9d8ff3df0b341f02ae255fd58820bd/src/mono/wasm/runtime/driver.c#L417
+//        /// </remarks>
+//        [MethodImpl(MethodImplOptions.InternalCall)]
+//        [EditorBrowsable(EditorBrowsableState.Never)]
+//        internal static extern string InvokeJS(string str, out int exceptional_result);
+//    }
+//}
 
 //namespace WebAssembly
 //{
