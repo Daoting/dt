@@ -42,7 +42,6 @@ namespace Dt.Base
 
         public MarkdownBox()
         {
-            CoreWebView2Initialized += OnCoreWebView2Initialized;
             EnsureView2();
             SizeChanged += OnSizeChanged;
         }
@@ -82,10 +81,7 @@ namespace Dt.Base
         async void EnsureView2()
         {
             await EnsureCoreWebView2Async();
-        }
 
-        void OnCoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
-        {
             var settings = CoreWebView2.Settings;
             settings.AreDefaultContextMenusEnabled = false;
             settings.IsScriptEnabled = true;

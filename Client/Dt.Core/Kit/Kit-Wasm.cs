@@ -138,7 +138,7 @@ namespace Dt.Core
                 str = str.Substring(0, end);
             str = str.TrimEnd('/');
             
-            return str + "/" + path;
+            return str + path;
         }
         
         // 支持单体服务后统一在Stub中设置

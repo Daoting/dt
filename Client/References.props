@@ -1,6 +1,6 @@
 ﻿<Project>
     <PropertyGroup>
-        <UnoVersion>6.4.43</UnoVersion>
+        <UnoVersion>6.4.106</UnoVersion>
     </PropertyGroup>
     
     <!-- 公共引用包 -->

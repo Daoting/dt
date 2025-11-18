@@ -1,7 +1,7 @@
 ﻿<Project>
     <PropertyGroup>
         <IsDtClient>true</IsDtClient>
-        <UnoVersion>6.4.43</UnoVersion>
+        <UnoVersion>6.4.106</UnoVersion>
     </PropertyGroup>
 
     <!-- Android -->
@@ -30,10 +30,10 @@
     
     <ItemGroup Condition="$(IsBrowserWasm) AND $(IsExe) == 'true'">
         <PackageReference Include="Uno.WinUI.Runtime.Skia.WebAssembly.Browser" Version="$(UnoVersion)" />
-        <PackageReference Include="Uno.Wasm.Bootstrap" Version="9.0.16" />
+        <PackageReference Include="Uno.Wasm.Bootstrap" Version="9.0.20" />
         <PackageReference Include="Uno.WinUI.Runtime.WebAssembly" Version="$(UnoVersion)" PrivateAssets="all" IncludeAssets="none" ExcludeAssets="all" />
         <!-- 不引用link出错 -->
-        <PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.15" />
+        <PackageReference Include="Microsoft.Windows.Compatibility" Version="9.0.11" />
     </ItemGroup>
 
     <!-- Desktop -->
@@ -42,7 +42,7 @@
         <PackageReference Include="Uno.WinUI.MediaPlayer.Skia.X11" Version="$(UnoVersion)" />
         <PackageReference Include="Uno.WinUI.WebView.Skia.X11" Version="$(UnoVersion)" />
         <!-- CoreWebView2同时存在于 Microsoft.Web.WebView2.Core 和 Uno.UI 中，Dt.Sdk中使用别名 -->
-        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3240.44" Aliases="mswebview2" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3595.46" Aliases="mswebview2" />
         <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.21" />
     </ItemGroup>
 

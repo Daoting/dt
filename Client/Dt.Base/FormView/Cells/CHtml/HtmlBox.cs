@@ -25,7 +25,7 @@ namespace Dt.Base
            typeof(bool),
            typeof(HtmlBox),
            new PropertyMetadata(false, OnIsReadOnlyChanged));
-        
+
         static void OnIsReadOnlyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((HtmlBox)d).ApplyNavigate(true);
@@ -39,10 +39,9 @@ namespace Dt.Base
         bool _inNaviCompleted;
         string _html;
         #endregion
-        
+
         public HtmlBox()
         {
-            CoreWebView2Initialized += OnCoreWebView2Initialized;
             EnsureView2();
         }
 
@@ -102,15 +101,12 @@ namespace Dt.Base
                 await this.InvokeScriptAsync("insertVideo", new string[] { p_video });
             }
         }
-        
+
         #region 内部方法
         async void EnsureView2()
         {
             await EnsureCoreWebView2Async();
-        }
 
-        void OnCoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
-        {
             var settings = CoreWebView2.Settings;
             settings.AreDefaultContextMenusEnabled = false;
             settings.IsScriptEnabled = true;
@@ -127,7 +123,7 @@ namespace Dt.Base
             _inNaviCompleted = true;
             ApplyHtml();
         }
-        
+
         async void ApplyNavigate(bool p_update)
         {
             if (_isInited)
