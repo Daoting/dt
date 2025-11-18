@@ -1,7 +1,7 @@
 ﻿<Project>
     <PropertyGroup>
         <IsDtClient>true</IsDtClient>
-        <UnoVersion>6.4.106</UnoVersion>
+        <UnoVersion>6.4.133</UnoVersion>
     </PropertyGroup>
 
     <!-- Android -->
