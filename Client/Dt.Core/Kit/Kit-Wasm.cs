@@ -173,7 +173,7 @@ namespace Dt.Core
     }
 
     /// <summary>
-    /// .NET7后的方式，它使用代码生成来创建高性能、符合 CSP 标准、线程安全的互作，并且不使用 eval
+    /// .NET7后的方式，JSImport/JSExport标签，它使用代码生成来创建高性能、符合 CSP 标准、线程安全的互调用，并且不使用 eval
     /// 不采用 JSImport 方式，必须支持 Content Security Policy (CSP)，才能调用 eval
     /// </summary>
     internal static partial class Interop
