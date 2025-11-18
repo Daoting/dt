@@ -1,7 +1,7 @@
 ﻿{
   // 安装包和wasm静态网站的路径，相对或绝对路径
   "PackagePath": "package",
-  "WasmPath": "wasm",
+  "WasmPath": "D:\\Dt\\Master\\Demo\\Demo\\bin\\Debug\\net9.0-browserwasm\\wwwroot",
 
   // win客户端是否强制更新到最新版本
   "ForceUpdateWinApp": false,

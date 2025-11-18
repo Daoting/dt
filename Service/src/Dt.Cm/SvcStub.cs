@@ -81,9 +81,6 @@ namespace Dt.Cm
             // wasm目录，wasm网站静态文件
             var fileProvider = new PhysicalFileProvider(Cfg.WasmDir);
 
-            // 请求路径指向压缩文件 .gz
-            p_app.UseMiddleware<RewriteGzFileMiddleware>(fileProvider);
-
             // 该中间件处理访问根路径时的默认页，内部只重置 context.Request.Path 的值
             // 所以必须在UseStaticFiles之前调用，最终由 StaticFiles 中间件响应默认页
             p_app.UseDefaultFiles(new DefaultFilesOptions
@@ -91,6 +88,9 @@ namespace Dt.Cm
                 FileProvider = fileProvider,
                 RequestPath = Cfg.WasmVirPath
             });
+
+            // 请求路径指向压缩文件 .gz
+            p_app.UseMiddleware<RewriteGzFileMiddleware>(fileProvider);
 
             p_app.UseStaticFiles(new StaticFileOptions
             {
@@ -112,6 +112,10 @@ namespace Dt.Cm
                             headers["Content-Encoding"] = "gzip";
                             // 重置为实际请求的类型，否则客户端出错
                             headers["Content-Type"] = mimeType;
+                            
+                            // 增加安全策略，确保本地网站可运行
+                            if (fileName == "index.html")
+                                headers["Content-Security-Policy"] = "frame-ancestors 'self' https://html https://md https://pdf;";
                         }
                     }
                 }
