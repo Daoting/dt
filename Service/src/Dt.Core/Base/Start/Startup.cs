@@ -129,7 +129,7 @@ namespace Dt.Core
                             if (!string.IsNullOrEmpty(cerFileName))
                             {
                                 // 加载X509证书
-                                listenOptions.UseHttps(new X509Certificate2(Path.Combine(Kit.PathBase, "etc/config/", cerFileName), cerPwd));
+                                listenOptions.UseHttps(X509CertificateLoader.LoadPkcs12FromFile(Path.Combine(Kit.PathBase, "etc/config/", cerFileName), cerPwd));
                             }
                             else
                             {

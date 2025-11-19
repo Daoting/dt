@@ -62,7 +62,13 @@ namespace Dt.Core.Caches
             {
                 foreach (var val in arr)
                 {
-                    var item = JsonSerializer.Deserialize<TCacheItem>(val, JsonOptions.UnsafeSerializer);
+                    if (val.IsNullOrEmpty)
+                    {
+                        ls.Add(default);
+                        continue;
+                    }
+
+                    var item = JsonSerializer.Deserialize<TCacheItem>(val.ToString(), JsonOptions.UnsafeSerializer);
                     ls.Add(item);
                 }
             }

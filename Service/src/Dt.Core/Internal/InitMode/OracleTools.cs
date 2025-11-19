@@ -118,9 +118,10 @@ namespace Dt.Core
             using (var sr = MySqlTools.GetSqlStream(p_file))
             {
                 bool isComment = false;
-                while (!sr.EndOfStream)
+                string temp;
+                while ((temp = await sr.ReadLineAsync()) is not null)
                 {
-                    var temp = sr.ReadLine().Trim();
+                    temp = temp.Trim();
                     if (temp.StartsWith("--")
                         || temp.StartsWith("//")
                         || temp.StartsWith("prompt ", StringComparison.OrdinalIgnoreCase)

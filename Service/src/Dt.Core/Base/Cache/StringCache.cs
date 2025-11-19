@@ -41,7 +41,7 @@ namespace Dt.Core.Caches
         {
             RedisKey key = GetFullKey(p_key);
             var val = await _db.StringGetAsync(key);
-            if (!val.HasValue)
+            if (val.IsNullOrEmpty)
                 return default;
 
             // 简单类型直接转换
@@ -59,7 +59,7 @@ namespace Dt.Core.Caches
             }
 
             // 反序列化
-            return JsonSerializer.Deserialize<T>(val, JsonOptions.UnsafeSerializer);
+            return JsonSerializer.Deserialize<T>(val.ToString(), JsonOptions.UnsafeSerializer);
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace Dt.Core.Caches
             List<T> res = new List<T>();
             foreach (var val in vals)
             {
-                if (!val.HasValue)
+                if (val.IsNullOrEmpty)
                 {
                     res.Add(default);
                     continue;
@@ -124,7 +124,7 @@ namespace Dt.Core.Caches
                     }
                 }
                 // 反序列化
-                res.Add(JsonSerializer.Deserialize<T>(val, JsonOptions.UnsafeSerializer));
+                res.Add(JsonSerializer.Deserialize<T>(val.ToString(), JsonOptions.UnsafeSerializer));
             }
             return res;
         }
