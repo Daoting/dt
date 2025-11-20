@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Core.Rpc;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -135,6 +136,15 @@ namespace Dt.Core
         public static T GetCfg<T>(string p_key)
         {
             return _config.GetValue<T>(p_key);
+        }
+
+        /// <summary>
+        /// 获取系统版本信息
+        /// </summary>
+        /// <returns></returns>
+        public static string GetSysVersion()
+        {
+            return $"{typeof(Kit).Assembly.GetName().Version.ToString(3)}(net{typeof(WebApplication).Assembly.GetName().Version.ToString(2)})";
         }
 
         /// <summary>

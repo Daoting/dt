@@ -24,9 +24,7 @@ namespace Dt.Cm
             var ls = new List<string>();
             ls.Add($"{Kit.AppName}");
             ls.Add(GetPkg());
-            // 版本号
-            var ver = typeof(HomeApi).Assembly.GetName().Version.ToString(3);
-            ls.Add(ver);
+            ls.Add(Kit.GetSysVersion());
             ls.Add(GetSvcs());
             ls.Add(GetModelInfo());
             return ls;
