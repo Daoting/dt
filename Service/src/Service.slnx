@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/Build/">
+    <File Path="Directory.Build.props" />
+    <File Path="References.props" />
+  </Folder>
+  <Project Path="Dt.Core/Dt.Core.csproj" />
+  <Project Path="Dt.Cm/Dt.Cm.csproj" />
+  <Project Path="Dt.Da/Dt.Da.csproj" />
+  <Project Path="Dt.Fsm/Dt.Fsm.csproj" />
+  <Project Path="Dt.Msg/Dt.Msg.csproj" />
+  <Project Path="Dt.Service/Dt.Service.csproj" />
+  <Folder Name="/Test/">
+    <Project Path="Test/Cm/Cm.csproj" />
+    <Project Path="Test/Da/Da.csproj" />
+    <Project Path="Test/Fsm/Fsm.csproj" />
+    <Project Path="Test/Msg/Msg.csproj" />
+    <Project Path="Test/TestPathBase/TestPathBase.csproj" />
+  </Folder>
+  <Project Path="Cos/Cos.csproj" />
+</Solution>
