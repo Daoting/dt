@@ -128,9 +128,10 @@ namespace Dt.Base.Tools
             using (var sr = new StreamReader(p_fs))
             {
                 bool isComment = false;
-                while (!sr.EndOfStream)
+                string temp;
+                while ((temp = await sr.ReadLineAsync()) is not null)
                 {
-                    var temp = sr.ReadLine().Trim();
+                    temp = temp.Trim();
                     if (temp.StartsWith("--")
                         || temp.StartsWith("//")
                         || temp.StartsWith("prompt ", StringComparison.OrdinalIgnoreCase)

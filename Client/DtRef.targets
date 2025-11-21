@@ -11,7 +11,9 @@
     
     <ItemGroup Condition="$(IsAndroid) AND $(IsExe) == 'true'">
         <PackageReference Include="Uno.WinUI.Runtime.Skia.Android" Version="$(UnoVersion)" />
-        <PackageReference Include="Xamarin.Google.Android.Material" Version="1.10.0.2" />
+        <PackageReference Include="Xamarin.Google.Android.Material" Version="1.12.0.5" />
+        <PackageReference Include="Xamarin.AndroidX.Legacy.Support.V4" Version="1.0.0.33" />
+        <PackageReference Include="Xamarin.AndroidX.SwipeRefreshLayout" Version="1.1.0.29" />
     </ItemGroup>
 
     <!-- IOS -->
@@ -30,10 +32,10 @@
     
     <ItemGroup Condition="$(IsBrowserWasm) AND $(IsExe) == 'true'">
         <PackageReference Include="Uno.WinUI.Runtime.Skia.WebAssembly.Browser" Version="$(UnoVersion)" />
-        <PackageReference Include="Uno.Wasm.Bootstrap" Version="9.0.20" />
+        <PackageReference Include="Uno.Wasm.Bootstrap" Version="10.0.13" />
         <PackageReference Include="Uno.WinUI.Runtime.WebAssembly" Version="$(UnoVersion)" PrivateAssets="all" IncludeAssets="none" ExcludeAssets="all" />
         <!-- 不引用link出错 -->
-        <PackageReference Include="Microsoft.Windows.Compatibility" Version="9.0.11" />
+        <PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.0" />
     </ItemGroup>
 
     <!-- Desktop -->
@@ -62,23 +64,23 @@
 
     <!-- exe项目debug时复制dt的pdb文件，确保可使用github源码调试dt包 -->
     <ItemGroup Condition="'$(Configuration)'=='Debug' AND $(IsExe) == 'true' AND $(IsWinAppSdk)">
-        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)../lib/net9.0-windows10.0.19041/*.pdb" />
+        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)../lib/net10.0-windows10.0.19041/*.pdb" />
     </ItemGroup>
     
     <ItemGroup Condition="'$(Configuration)'=='Debug' AND $(IsExe) == 'true' AND $(IsAndroid)">
-        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)../lib/net9.0-android35.0/*.pdb" />
+        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)../lib/net10.0-android35.0/*.pdb" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)'=='Debug' AND $(IsExe) == 'true' AND $(IsIOS)">
-        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)../lib/net9.0-ios18.0/*.pdb" />
+        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)../lib/net10.0-ios18.0/*.pdb" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)'=='Debug' AND $(IsExe) == 'true' AND $(IsBrowserWasm)">
-        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)../lib/net9.0-browserwasm1.0/*.pdb" />
+        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)../lib/net10.0-browserwasm1.0/*.pdb" />
     </ItemGroup>
     
     <ItemGroup Condition="'$(Configuration)'=='Debug' AND $(IsExe) == 'true' AND $(IsDesktop)">
-        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)../lib/net9.0-desktop1.0/*.pdb" />
+        <ReferenceCopyLocalPaths Include="$(MSBuildThisFileDirectory)../lib/net10.0-desktop1.0/*.pdb" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='Debug' AND $(IsWinAppSdk) AND $(IsExe) == 'true'">

@@ -218,7 +218,7 @@ namespace Dt.Base
                 using (var ciContext = new CIContext())
                 {
                     if (fileExt == "png")
-                        return ciContext.WritePngRepresentation(newImageSource, NSUrl.FromFilename(path), CIFormat.ARGB8, CGColorSpace.CreateSrgb(), new NSDictionary(), out var error2);
+                        return ciContext.WritePngRepresentation(newImageSource, NSUrl.FromFilename(path), CIFormat.Argb8, CGColorSpace.CreateSrgb(), new NSDictionary(), out var error2);
 
                     return ciContext.WriteJpegRepresentation(newImageSource, NSUrl.FromFilename(path), CGColorSpace.CreateSrgb(), new NSDictionary(), out var error);
                 }
