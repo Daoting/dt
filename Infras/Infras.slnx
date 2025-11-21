@@ -1,0 +1,18 @@
+<Solution>
+  <Folder Name="/Build/">
+    <File Path="DelXmlFiles.props" />
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Folder Name="/Lib/">
+    <Project Path="Dt.CalcEngine/Dt.CalcEngine.csproj" />
+    <Project Path="Dt.Cells.Data/Dt.Cells.Data.csproj" />
+    <Project Path="Dt.Charts/Dt.Charts.csproj" />
+    <Project Path="Dt.Pdf/Dt.Pdf.csproj" />
+    <Project Path="Dt.Toolkit/Dt.Toolkit.csproj" />
+    <Project Path="Dt.Xls/Dt.Xls.csproj" />
+  </Folder>
+  <Project Path="Dt.Cells/Dt.Cells.csproj" />
+  <Project Path="Infras.Demo/Infras.Demo.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+</Solution>
