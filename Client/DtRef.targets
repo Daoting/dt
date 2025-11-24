@@ -1,7 +1,7 @@
 ﻿<Project>
     <PropertyGroup>
         <IsDtClient>true</IsDtClient>
-        <UnoVersion>6.4.133</UnoVersion>
+        <UnoVersion>6.4.185</UnoVersion>
     </PropertyGroup>
 
     <!-- Android -->
@@ -12,8 +12,6 @@
     <ItemGroup Condition="$(IsAndroid) AND $(IsExe) == 'true'">
         <PackageReference Include="Uno.WinUI.Runtime.Skia.Android" Version="$(UnoVersion)" />
         <PackageReference Include="Xamarin.Google.Android.Material" Version="1.12.0.5" />
-        <PackageReference Include="Xamarin.AndroidX.Legacy.Support.V4" Version="1.0.0.33" />
-        <PackageReference Include="Xamarin.AndroidX.SwipeRefreshLayout" Version="1.1.0.29" />
     </ItemGroup>
 
     <!-- IOS -->
