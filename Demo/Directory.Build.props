@@ -25,7 +25,7 @@
 
 	<!-- 所有项目引用 -->
 	<PropertyGroup Condition="$(SolutionName) == 'Demo'">
-		<DtVersion>5.1.0</DtVersion>
+		<DtVersion>5.2.0</DtVersion>
 	</PropertyGroup>
 
 	<ItemGroup Condition="$(SolutionName) != 'Demo'">

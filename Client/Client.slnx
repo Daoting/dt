@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/Build/">
+    <File Path="../global.json" />
+    <File Path="Directory.Build.props" />
+    <File Path="Dt.Client.targets" />
+    <File Path="DtRef.targets" />
+    <File Path="References.props" />
+  </Folder>
+  <Project Path="Dt.Base/Dt.Base.csproj" />
+  <Project Path="Dt.Core/Dt.Core.csproj" />
+  <Project Path="Dt.Mgr/Dt.Mgr.csproj" />
+</Solution>
