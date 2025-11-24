@@ -13,7 +13,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <UnoVersion>6.4.133</UnoVersion>
+        <UnoVersion>6.4.185</UnoVersion>
     </PropertyGroup>
         
     <!-- WinAppSdk -->
