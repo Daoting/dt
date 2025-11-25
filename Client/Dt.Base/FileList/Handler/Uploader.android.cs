@@ -65,7 +65,7 @@ namespace Dt.Base
             clientBuilder.CallTimeout(0, TimeUnit.Milliseconds);
 
             // Hostname始终有效
-            clientBuilder.HostnameVerifier((name, ssl) => true);
+            clientBuilder.HostnameVerifier(new HostnameVerifierImpl());
             _client = clientBuilder.Build();
         }
 
@@ -159,6 +159,14 @@ namespace Dt.Base
             var reader = new Utf8JsonReader(p_data);
             reader.Read();
             return JsonRpcSerializer.Deserialize(ref reader) as List<string>;
+        }
+
+        class HostnameVerifierImpl : Java.Lang.Object, IHostnameVerifier
+        {
+            public bool Verify(string hostname, ISSLSession session)
+            {
+                return true;
+            }
         }
     }
 

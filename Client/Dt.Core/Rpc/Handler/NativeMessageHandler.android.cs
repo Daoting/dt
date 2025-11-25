@@ -62,7 +62,7 @@ namespace Dt.Core.Rpc
             clientBuilder.CallTimeout(0, TimeUnit.Milliseconds);
 
             // Hostname始终有效
-            clientBuilder.HostnameVerifier((name, ssl) => true);
+            clientBuilder.HostnameVerifier(new HostnameVerifierImpl());
             _client = clientBuilder.Build();
         }
 
@@ -202,6 +202,14 @@ namespace Dt.Core.Rpc
 
                 _registeredProgressCallbacks.Remove(request);
                 return callback;
+            }
+        }
+        
+        class HostnameVerifierImpl : Java.Lang.Object, IHostnameVerifier
+        {
+            public bool Verify(string hostname, ISSLSession session)
+            {
+                return true;
             }
         }
     }
