@@ -10,7 +10,7 @@
         <PackageReference Include="Uno.Resizetizer" Version="1.12.1" PrivateAssets="none" />
         
         <PackageReference Include="Dt.Infras" Version="5.2.0" />
-        <PackageReference Include="ScottPlot" Version="5.0.40" />
+        <PackageReference Include="ScottPlot" Version="5.1.57" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.0" />
         

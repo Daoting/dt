@@ -337,7 +337,7 @@ namespace Dt.Base
         /// <summary>
         /// Disable visibility for all axes and grids
         /// </summary>
-        public void HideAxesAndGrid(bool showTitle = true) => _plot.HideAxesAndGrid(showTitle);
+        public void HideAxesAndGrid(bool showTitle = true) => _plot.HideAxesAndGrid();
 
         /// <summary>
         /// Disable visibility for all grids

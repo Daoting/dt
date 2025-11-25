@@ -9,7 +9,6 @@
 #region 引用命名
 using Microsoft.UI.Xaml.Controls;
 using ScottPlot;
-using ScottPlot.Control;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
@@ -32,7 +31,7 @@ namespace Dt.Base
             Reset();
         }
 
-        public MenuFlyout GetContextMenu(IPlotControl plotControl)
+        public MenuFlyout GetContextMenu(Plot plot)
         {
             MenuFlyout menu = new();
             foreach (var curr in _menuItems)
@@ -44,7 +43,7 @@ namespace Dt.Base
                 else
                 {
                     var menuItem = new MenuFlyoutItem { Text = curr.Label };
-                    menuItem.Click += (s, e) => curr.OnInvoke(plotControl);
+                    menuItem.Click += (s, e) => curr.OnInvoke(plot);
                     menu.Items.Add(menuItem);
                 }
             }
@@ -53,7 +52,11 @@ namespace Dt.Base
 
         public void ShowContextMenu(Pixel pixel)
         {
-            MenuFlyout flyout = GetContextMenu(_chart);
+            var plot = _chart.GetPlotAtPixel(pixel);
+            if (plot is null)
+                return;
+
+            MenuFlyout flyout = GetContextMenu(plot);
             Windows.Foundation.Point pt = new(pixel.X, pixel.Y);
             flyout.ShowAt(_chart, pt);
         }
@@ -69,7 +72,7 @@ namespace Dt.Base
             _menuItems.Clear();
         }
 
-        public void Add(string Label, Action<IPlotControl> action)
+        public void Add(string Label, Action<Plot> action)
         {
             _menuItems.Add(new ContextMenuItem() { Label = Label, OnInvoke = action });
         }
@@ -86,7 +89,7 @@ namespace Dt.Base
             _menuItems.Add(new() { Label = "自动缩放", OnInvoke = Autoscale });
         }
 
-        async void OpenSaveImageDialog(IPlotControl plotControl)
+        async void OpenSaveImageDialog(Plot plot)
         {
             FileSavePicker dialog = new()
             {
@@ -109,16 +112,16 @@ namespace Dt.Base
             if (file != null)
             {
                 ImageFormat format = ImageFormats.FromFilename(file.Name);
-                PixelSize lastRenderSize = plotControl.Plot.RenderManager.LastRender.FigureRect.Size;
-                plotControl.Plot.Save(file.Path, (int)lastRenderSize.Width, (int)lastRenderSize.Height, format);
+                PixelSize lastRenderSize = plot.RenderManager.LastRender.FigureRect.Size;
+                plot.Save(file.Path, (int)lastRenderSize.Width, (int)lastRenderSize.Height, format);
                 Kit.Msg("保存成功！");
             }
         }
 
-        void CopyImageToClipboard(IPlotControl plotControl)
+        void CopyImageToClipboard(Plot plot)
         {
-            PixelSize lastRenderSize = plotControl.Plot.RenderManager.LastRender.FigureRect.Size;
-            byte[] bytes = plotControl.Plot.GetImage((int)lastRenderSize.Width, (int)lastRenderSize.Height).GetImageBytes();
+            PixelSize lastRenderSize = plot.RenderManager.LastRender.FigureRect.Size;
+            byte[] bytes = plot.GetImage((int)lastRenderSize.Width, (int)lastRenderSize.Height).GetImageBytes();
 
             var stream = new InMemoryRandomAccessStream();
             stream.AsStreamForWrite().Write(bytes);
@@ -130,10 +133,10 @@ namespace Dt.Base
             Kit.Msg("图像已复制到剪贴板！");
         }
 
-        void Autoscale(IPlotControl plotControl)
+        void Autoscale(Plot plot)
         {
-            plotControl.Plot.Axes.AutoScale();
-            plotControl.Refresh();
+            plot.Axes.AutoScale();
+            _chart.Refresh();
         }
     }
 }

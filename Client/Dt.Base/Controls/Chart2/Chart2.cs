@@ -12,7 +12,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using ScottPlot;
-using ScottPlot.Control;
 using ScottPlot.Interactivity;
 using SkiaSharp.Views.Windows;
 using Windows.Storage;
@@ -28,9 +27,8 @@ namespace Dt.Base
     {
         #region 变量
         readonly SKXamlCanvas _canvas;
-        PlotX _plot;
+        Plot _plot;
         UserInputProcessor _inputProcessor;
-        IPlotInteraction _interaction;
         #endregion
 
         #region 静态构造
@@ -69,10 +67,9 @@ namespace Dt.Base
         #region 构造方法
         public Chart2()
         {
-            _plot = new PlotX { PlotControl = this };
-            _inputProcessor = new UserInputProcessor(_plot);
-
-            _interaction = new Interaction(this);
+            _plot = new Plot { PlotControl = this };
+            Multiplot = new Multiplot(_plot);
+            _inputProcessor = new UserInputProcessor(this);
             Menu = new ChartMenu(this);
 
             Background = new SolidColorBrush(Microsoft.UI.Colors.White);
@@ -100,35 +97,23 @@ namespace Dt.Base
         public float DisplayScale { get; set; } = 1;
 
         Plot IPlotControl.Plot => _plot;
+        public IMultiplot Multiplot { get; set; }
         SkiaSharp.GRContext? IPlotControl.GRContext => null;
-        IPlotInteraction IPlotControl.Interaction
-        {
-            get => _interaction;
-            set => _interaction = value;
-        }
+        
         UserInputProcessor IPlotControl.UserInputProcessor => _inputProcessor;
 
         public void Reset()
         {
-            ResetInternal(new PlotX());
+            Reset(new Plot());
         }
 
-        void IPlotControl.Reset(Plot plot)
+        public void Reset(Plot p_plot)
         {
-            if (plot is PlotX p)
-            {
-                ResetInternal(p);
-            }
-        }
-
-        void ResetInternal(PlotX p_plot)
-        {
-            _plot.Dispose();
-            p_plot.PlotControl = this;
             _plot = p_plot;
-            _inputProcessor = new(_plot);
+            _plot.PlotControl = this;
+            Multiplot.Reset(_plot);
         }
-
+        
         public void Refresh()
         {
             _canvas.Invalidate();
@@ -148,6 +133,11 @@ namespace Dt.Base
             }
 
             return DisplayScale;
+        }
+        public void SetCursor(Cursor cursor)
+        {
+            // TODO: How do we set the cursor in WinUI?
+            //InputSystemCursor.Create(cursor.GetCursor());
         }
         #endregion
 
@@ -182,54 +172,43 @@ namespace Dt.Base
         #region 交互
         void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs e)
         {
-            _plot.Render(e.Surface.Canvas, (int)e.Surface.Canvas.LocalClipBounds.Width, (int)e.Surface.Canvas.LocalClipBounds.Height);
+            Multiplot.Render(e.Surface);
         }
 
         void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             Focus(FocusState.Pointer);
-
-            ((IPlotControl)this).Interaction.MouseDown(e.Pixel(this), e.OldToButton(this));
             _inputProcessor.ProcessMouseDown(this, e);
-
             (sender as UIElement)?.CapturePointer(e.Pointer);
-
             base.OnPointerPressed(e);
         }
 
         void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            _interaction.MouseUp(e.Pixel(this), e.OldToButton(this));
             _inputProcessor.ProcessMouseUp(this, e);
-
             (sender as UIElement)?.ReleasePointerCapture(e.Pointer);
-
             base.OnPointerReleased(e);
         }
 
         void OnPointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            _interaction.OnMouseMove(e.Pixel(this));
             _inputProcessor.ProcessMouseMove(this, e);
             base.OnPointerMoved(e);
         }
 
         void OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
-            _interaction.DoubleClick();
             base.OnDoubleTapped(e);
         }
 
         void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
-            _interaction.MouseWheelVertical(e.Pixel(this), e.GetCurrentPoint(this).Properties.MouseWheelDelta);
             _inputProcessor.ProcessMouseWheel(this, e);
             base.OnPointerWheelChanged(e);
         }
 
         void OnKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            _interaction.KeyDown(e.OldToKey());
             _inputProcessor.ProcessKeyDown(this, e);
             base.OnKeyDown(e);
         }
@@ -237,7 +216,6 @@ namespace Dt.Base
         void OnKeyUp(object sender, KeyRoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine($"KEY UP {e.Key}");
-            _interaction.KeyUp(e.OldToKey());
             _inputProcessor.ProcessKeyUp(this, e);
             base.OnKeyUp(e);
         }

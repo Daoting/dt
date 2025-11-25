@@ -408,7 +408,7 @@ namespace Demo.UI
 
                 // determine the width of the largest tick label
                 float largestLabelWidth = 0;
-                using var paint = new SKPaint();
+                using var paint = Paint.NewDisposablePaint();
                 foreach (Tick tick in ticks)
                 {
                     PixelSize size = _c.Axes.Bottom.TickLabelStyle.Measure(tick.Label, paint).Size;

@@ -85,7 +85,7 @@ namespace Demo.UI
                         radiusX: 1,
                         radiusY: 5);
 
-                    el.Rotation = i * 180.0 / count;
+                    el.Rotation = Angle.FromDegrees(i * 180.0 / count);
                 }
 
                 SquareZoomOut rule = new(_c.Axes.Bottom, _c.Axes.Left);

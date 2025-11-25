@@ -102,8 +102,7 @@ namespace Demo.UI
                     var pop = _c.Add.Population(values, x: i);
 
                     pop.Bar.FillColor = pop.Marker.MarkerLineColor.WithAlpha(.5);
-                    pop.Bar.BorderLineWidth = 2;
-                    pop.Bar.ErrorLineWidth = 2;
+                    pop.Bar.LineWidth = 2;
                     pop.Bar.ErrorNegative = false;
                 }
 
@@ -169,8 +168,7 @@ namespace Demo.UI
                     pop.Marker.Shape = MarkerShape.OpenDiamond;
                     pop.Marker.Color = Colors.Black.WithAlpha(.5);
                     pop.Bar.FillColor = Colors.Gray;
-                    pop.Bar.BorderLineWidth = 2;
-                    pop.Bar.ErrorLineWidth = 2;
+                    pop.Bar.LineWidth = 2;
                     pop.Width = 0.5;
                 }
 

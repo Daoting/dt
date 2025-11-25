@@ -92,45 +92,7 @@ namespace Dt.Base
             IUserAction action = new KeyUp(key);
             processor.Process(action);
         }
-
-        internal static ScottPlot.Control.MouseButton OldToButton(this PointerRoutedEventArgs e, Chart2 plotControl)
-        {
-            switch (e.GetCurrentPoint(plotControl).Properties.PointerUpdateKind)
-            {
-                case PointerUpdateKind.MiddleButtonPressed:
-                case PointerUpdateKind.MiddleButtonReleased:
-                    return ScottPlot.Control.MouseButton.Middle;
-                case PointerUpdateKind.LeftButtonPressed:
-                case PointerUpdateKind.LeftButtonReleased:
-                    return ScottPlot.Control.MouseButton.Left;
-                case PointerUpdateKind.RightButtonPressed:
-                case PointerUpdateKind.RightButtonReleased:
-                    return ScottPlot.Control.MouseButton.Right;
-                default:
-                    return ScottPlot.Control.MouseButton.Unknown;
-            }
-        }
-
-        internal static ScottPlot.Control.Key OldToKey(this KeyRoutedEventArgs e)
-        {
-            return e.Key switch
-            {
-                VirtualKey.Control => ScottPlot.Control.Key.Ctrl,
-                VirtualKey.LeftControl => ScottPlot.Control.Key.Ctrl,
-                VirtualKey.RightControl => ScottPlot.Control.Key.Ctrl,
-
-                VirtualKey.Menu => ScottPlot.Control.Key.Alt,
-                VirtualKey.LeftMenu => ScottPlot.Control.Key.Alt,
-                VirtualKey.RightMenu => ScottPlot.Control.Key.Alt,
-
-                VirtualKey.Shift => ScottPlot.Control.Key.Shift,
-                VirtualKey.LeftShift => ScottPlot.Control.Key.Shift,
-                VirtualKey.RightShift => ScottPlot.Control.Key.Shift,
-
-                _ => ScottPlot.Control.Key.Unknown,
-            };
-        }
-
+        
         internal static Key ToKey(this KeyRoutedEventArgs e)
         {
             return e.Key switch

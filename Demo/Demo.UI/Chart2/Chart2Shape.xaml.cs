@@ -73,7 +73,7 @@ namespace Demo.UI
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    var el = _c.Add.Ellipse(0, 0, 1, 10, rotation: i * 10);
+                    var el = _c.Add.Ellipse(0, 0, 1, 10, Angle.FromDegrees(i * 10));
                     double fraction = i / 10.0;
                     el.LineColor = Colors.Blue.WithAlpha(fraction);
                 }
