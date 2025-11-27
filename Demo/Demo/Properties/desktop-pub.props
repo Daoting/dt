@@ -1,7 +1,6 @@
 ﻿<Project>
 	<PropertyGroup>
-		<ApplicationVersion>5.0.0.*</ApplicationVersion>
-		<PublishDir>D:\Dt\Publish\Desktop\</PublishDir>
+		<ApplicationVersion>5.2.0.*</ApplicationVersion>
 		
 		<ApplicationRevision>0</ApplicationRevision>
 		<BootstrapperEnabled>True</BootstrapperEnabled>

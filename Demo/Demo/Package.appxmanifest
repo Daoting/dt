@@ -7,7 +7,7 @@
   xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
   IgnorableNamespaces="uap rescap com desktop">
 
-	<Identity Publisher="CN=Dt Client" Version="5.0.0.0"/>
+	<Identity Publisher="CN=Dt Client" Version="5.2.0.0"/>
 	<Properties />
 
 	<Dependencies>
