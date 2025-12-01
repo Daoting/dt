@@ -26,7 +26,9 @@ namespace Dt.Cm
 
         public static string ApkFile { get; private set; }
 
-        public static string Win7File { get; private set; }
+        public static string Win7X64 { get; private set; }
+
+        public static string Win7X86 { get; private set; }
 
         /// <summary>
         /// 
@@ -85,19 +87,22 @@ namespace Dt.Cm
             if (!isUpdated)
                 isUpdated = oldFile != ApkFile;
 
-            oldFile = Win7File;
+            var oldX64 = Win7X64;
+            var oldX86 = Win7X86;
             di = new DirectoryInfo(Path.Combine(Cfg.PackageDir, "desktop"));
             if (!di.Exists)
             {
-                Win7File = "";
+                Win7X64 = "";
+                Win7X86 = "";
                 di.Create();
             }
             else
             {
-                Win7File = GetAppLastVer("*.zip", di);
+                Win7X64 = GetAppLastVer("*_x64.zip", di);
+                Win7X86 = GetAppLastVer("*_x86.zip", di);
             }
             if (!isUpdated)
-                isUpdated = oldFile != Win7File;
+                isUpdated = (oldX64 != Win7X64 || oldX86 != Win7X86);
             
             return isUpdated;
         }
