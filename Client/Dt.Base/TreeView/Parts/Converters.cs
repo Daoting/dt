@@ -16,7 +16,7 @@ namespace Dt.Base.TreeViews
     /// <summary>
     /// IsSelected -> 字符图标
     /// </summary>
-    class IsSelectedIconConverter : IValueConverter
+    partial class IsSelectedIconConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
@@ -38,7 +38,7 @@ namespace Dt.Base.TreeViews
     /// <summary>
     /// IsSelected -> 背景
     /// </summary>
-    class SelectedBackgroundConverter : IValueConverter
+    partial class SelectedBackgroundConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

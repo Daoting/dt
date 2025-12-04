@@ -246,7 +246,7 @@ namespace Dt.Base.Sketches
         #endregion
     }
 
-    public class RulerLabelConverter : IValueConverter
+    public partial class RulerLabelConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string culture)
         {

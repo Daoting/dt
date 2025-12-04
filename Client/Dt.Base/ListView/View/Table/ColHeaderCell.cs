@@ -355,7 +355,7 @@ namespace Dt.Base.ListView
 #endif
         }
 
-        class ColTitleConverter : IValueConverter
+        partial class ColTitleConverter : IValueConverter
         {
             Col _col;
 

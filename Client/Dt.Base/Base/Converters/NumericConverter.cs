@@ -17,7 +17,7 @@ namespace Dt.Base
     /// <summary>
     /// 数值显示转换类
     /// </summary>
-    public class NumericConverter : IValueConverter
+    public partial class NumericConverter : IValueConverter
     {
         int _scale;
         bool _isPercentage;

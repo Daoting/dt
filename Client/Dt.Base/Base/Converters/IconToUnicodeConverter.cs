@@ -20,7 +20,7 @@ namespace Dt.Base
     /// <summary>
     /// Icons枚举值转unicode字符
     /// </summary>
-    public class IconToUnicodeConverter : IValueConverter
+    public partial class IconToUnicodeConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
@@ -45,7 +45,7 @@ namespace Dt.Base
     /// <summary>
     /// Icons枚举值名称转unicode字符
     /// </summary>
-    public class IconNameToUnicodeConverter : IValueConverter
+    public partial class IconNameToUnicodeConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
@@ -64,7 +64,7 @@ namespace Dt.Base
     /// <summary>
     /// 用于显示icon的name
     /// </summary>
-    public class IconToNameConverter : IValueConverter
+    public partial class IconToNameConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

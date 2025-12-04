@@ -18,7 +18,7 @@ namespace Dt.Base
     /// <summary>
     /// 将颜色值转换为画刷类
     /// </summary>
-    public class ColorToBrushConverter : IValueConverter
+    public partial class ColorToBrushConverter : IValueConverter
     {
         /// <summary>
         /// 将颜色值转换为画刷

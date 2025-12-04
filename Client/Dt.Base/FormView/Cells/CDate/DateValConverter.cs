@@ -59,7 +59,7 @@ namespace Dt.Base
     /// <summary>
     /// 源CDate.Value，目标TextBlock
     /// </summary>
-    class DateValUIConverter : IValueConverter
+    partial class DateValUIConverter : IValueConverter
     {
         CDate _owner;
 
@@ -82,7 +82,7 @@ namespace Dt.Base
     /// <summary>
     /// 源CDate.Value，目标MaskBox
     /// </summary>
-    class ValMaskConverter : IValueConverter
+    partial class ValMaskConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

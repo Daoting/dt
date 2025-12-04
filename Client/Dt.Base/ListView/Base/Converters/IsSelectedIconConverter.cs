@@ -16,7 +16,7 @@ namespace Dt.Base.ListView
     /// <summary>
     /// IsSelected -> 字符图标
     /// </summary>
-    class IsSelectedIconConverter : IValueConverter
+    partial class IsSelectedIconConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

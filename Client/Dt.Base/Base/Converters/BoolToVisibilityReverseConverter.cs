@@ -17,7 +17,7 @@ namespace Dt.Base
     /// <summary>
     /// 先将bool值取反，再转换成Visibility
     /// </summary>
-    public class BoolToVisibilityReverseConverter : IValueConverter
+    public partial class BoolToVisibilityReverseConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

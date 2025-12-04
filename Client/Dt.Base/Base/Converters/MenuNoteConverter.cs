@@ -12,7 +12,7 @@ namespace Dt.Base
     /// <summary>
     /// menu下面的功能信息提示信息转换器，在dt.core中只返回string类型的提示信息，要转成textblock。
     /// </summary>
-    public class MenuNoteConverter : IValueConverter
+    public partial class MenuNoteConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

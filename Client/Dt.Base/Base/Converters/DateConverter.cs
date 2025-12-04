@@ -16,7 +16,7 @@ namespace Dt.Base
     /// <summary>
     /// 日期转换器
     /// </summary>
-    public class DateConverter : IValueConverter
+    public partial class DateConverter : IValueConverter
     {
         string _format = "yyyy-MM-dd";
 

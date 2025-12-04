@@ -17,7 +17,7 @@ namespace Dt.Base
     /// <summary>
     /// 切换垂直显示的文本
     /// </summary>
-    public class VerticalTextConverter : IValueConverter
+    public partial class VerticalTextConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

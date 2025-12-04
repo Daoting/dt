@@ -17,7 +17,7 @@ namespace Dt.Base
     /// <summary>
     /// 表示将布尔值与 Visibility 枚举值相互转换的转换器。
     /// </summary>
-    public class BoolToVisibilityConverter : IValueConverter
+    public partial class BoolToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

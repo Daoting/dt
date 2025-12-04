@@ -316,7 +316,7 @@ namespace Dt.Mgr.Module
         }
     }
 
-    internal class FileItemSelector : DataTemplateSelector
+    internal partial class FileItemSelector : DataTemplateSelector
     {
         readonly DataTemplate _folder;
         readonly DataTemplate _file;

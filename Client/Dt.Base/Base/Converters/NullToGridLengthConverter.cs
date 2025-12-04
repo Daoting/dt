@@ -20,7 +20,7 @@ namespace Dt.Base
     /// <summary>
     /// 目标为null时返回GridLength为*，非null为Auto
     /// </summary>
-    public class NullToStarConverter : IValueConverter
+    public partial class NullToStarConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
@@ -36,7 +36,7 @@ namespace Dt.Base
     /// <summary>
     /// 目标为null时返回GridLength为0，非null为*
     /// </summary>
-    public class NullToZeroConverter : IValueConverter
+    public partial class NullToZeroConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

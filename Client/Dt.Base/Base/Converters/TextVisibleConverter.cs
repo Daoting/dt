@@ -18,7 +18,7 @@ namespace Dt.Base
     /// 两种情况：
     /// 有文本内容时显示，无文本内容时隐藏(不占空间)
     /// </summary>
-    public class TextVisibleConverter : IValueConverter
+    public partial class TextVisibleConverter : IValueConverter
     {
         /// <summary>
         /// 获取设置目标有文本内容时是否显示

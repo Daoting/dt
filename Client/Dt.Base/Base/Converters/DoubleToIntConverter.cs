@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Data;
 
 namespace Dt.Base
 {
-    public class DoubleToIntConverter : IValueConverter
+    public partial class DoubleToIntConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

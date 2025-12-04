@@ -16,7 +16,7 @@ namespace Dt.Base.ListView
     /// <summary>
     /// IsSelected -> 背景
     /// </summary>
-    class HeaderBackgroundConverter : IValueConverter
+    partial class HeaderBackgroundConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

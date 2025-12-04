@@ -59,7 +59,7 @@ namespace Dt.Base
     /// <summary>
     /// 源CList.Value，目标TextBox.Text
     /// </summary>
-    class ListTextConverter : IValueConverter
+    partial class ListTextConverter : IValueConverter
     {
         readonly CList _owner;
 

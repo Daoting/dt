@@ -17,7 +17,7 @@ namespace Dt.Base
     /// <summary>
     /// 将object与 Visibility 枚举值相互转换的转换器。
     /// </summary>
-    public class ObjectToVisibilityConverter : IValueConverter
+    public partial class ObjectToVisibilityConverter : IValueConverter
     {
         /// <summary>
         /// 将object转成Visibility枚举值，字符串"1"或"true"返回Visible，其它情况Collapsed
@@ -52,7 +52,7 @@ namespace Dt.Base
     /// <summary>
     /// 将object取反与 Visibility 枚举值相互转换的转换器。
     /// </summary>
-    public class RObjectToVisibilityConverter : IValueConverter
+    public partial class RObjectToVisibilityConverter : IValueConverter
     {
         /// <summary>
         /// 将object转成Visibility枚举值，字符串"0"或"false"返回Visible，其它情况Collapsed

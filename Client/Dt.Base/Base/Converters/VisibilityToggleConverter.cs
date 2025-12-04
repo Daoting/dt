@@ -17,7 +17,7 @@ namespace Dt.Base
     /// <summary>
     /// 对Visibility取反
     /// </summary>
-    public class VisibilityToggleConverter : IValueConverter
+    public partial class VisibilityToggleConverter : IValueConverter
     {
         /// <summary>
         /// 对Visibility取反

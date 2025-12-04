@@ -16,7 +16,7 @@ namespace Dt.Base
     /// <summary>
     /// 自适应时间转换器，如 昨天，09:13, 2015-04-09
     /// </summary>
-    public class AutoDateTimeConverter : IValueConverter
+    public partial class AutoDateTimeConverter : IValueConverter
     {
         /// <summary>
         /// 将布尔值转成Visibility枚举值

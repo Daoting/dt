@@ -29,7 +29,7 @@ namespace Dt.Base.FormView
         public FvCell Cell { get; }
     }
 
-    class FreeConverter : IValueConverter
+    partial class FreeConverter : IValueConverter
     {
         FvCellBind _owner;
 

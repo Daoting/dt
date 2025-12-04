@@ -16,7 +16,7 @@ namespace Dt.Base
     /// <summary>
     /// 将对象转为字符串的类
     /// </summary>
-    internal class DisplayMemberValueConverter : IValueConverter
+    internal partial class DisplayMemberValueConverter : IValueConverter
     {
         /// <summary>
         /// 将对象转为字符串

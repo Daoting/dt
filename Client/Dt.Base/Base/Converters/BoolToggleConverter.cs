@@ -16,7 +16,7 @@ namespace Dt.Base
     /// <summary>
     /// 对bool取反
     /// </summary>
-    public class BoolToggleConverter : IValueConverter
+    public partial class BoolToggleConverter : IValueConverter
     {
         /// <summary>
         /// 对bool取反

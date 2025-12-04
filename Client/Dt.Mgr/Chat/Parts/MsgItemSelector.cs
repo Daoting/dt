@@ -17,7 +17,7 @@ namespace Dt.Mgr.Chat
     /// <summary>
     /// 聊天消息模板选择器
     /// </summary>
-    internal class MsgItemSelector : DataTemplateSelector
+    internal partial class MsgItemSelector : DataTemplateSelector
     {
         readonly DataTemplate _myMsg;
         readonly DataTemplate _myFile;

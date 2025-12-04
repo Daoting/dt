@@ -17,7 +17,7 @@ namespace Dt.Base
     /// <summary>
     /// 文件长度自动转换为K,M,G
     /// </summary>
-    public class FileLengthConverter : IValueConverter
+    public partial class FileLengthConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

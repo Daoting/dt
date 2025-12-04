@@ -14,7 +14,7 @@ using Microsoft.UI.Xaml.Data;
 
 namespace Dt.Base
 {
-    public class NullableBoolToVisibilityConverter : IValueConverter
+    public partial class NullableBoolToVisibilityConverter : IValueConverter
     {
         public bool IsReversed { get; set; }
         public bool TrueIsVisible { get; set; }

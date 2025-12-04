@@ -364,7 +364,7 @@ namespace Dt.Base
     /// <summary>
     /// SelectionMode多选/单选 -> bool
     /// </summary>
-    class ToggleSelectionModeConverter : IValueConverter
+    partial class ToggleSelectionModeConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

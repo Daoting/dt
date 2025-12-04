@@ -20,7 +20,7 @@ namespace Dt.Base.Docking
     /// <summary>
     /// Win中使用的子项集合，含集合更改事件
     /// </summary>
-    public class PaneList : IList<FrameworkElement>, IEnumerable<FrameworkElement>
+    public partial class PaneList : IList<FrameworkElement>, IEnumerable<FrameworkElement>
     {
         // 所有元素
         readonly IList<FrameworkElement> _list = new List<FrameworkElement>();

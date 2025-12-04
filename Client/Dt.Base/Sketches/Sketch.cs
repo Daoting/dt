@@ -1173,7 +1173,7 @@ namespace Dt.Base
     /// <summary>
     /// ContentPresenter中ContentTemplateSelector
     /// </summary>
-    public class ContentPresenterSelector : DataTemplateSelector
+    public partial class ContentPresenterSelector : DataTemplateSelector
     {
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {

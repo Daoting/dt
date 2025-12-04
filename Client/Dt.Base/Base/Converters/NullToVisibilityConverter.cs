@@ -17,7 +17,7 @@ namespace Dt.Base
     /// <summary>
     /// 目标无内容时控制是否显示
     /// </summary>
-    public class NullToVisibilityConverter : IValueConverter
+    public partial class NullToVisibilityConverter : IValueConverter
     {
         /// <summary>
         /// 获取设置目标无内容时是否显示
