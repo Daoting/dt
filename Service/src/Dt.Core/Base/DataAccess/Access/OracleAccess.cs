@@ -10,6 +10,7 @@
 using Oracle.ManagedDataAccess.Client;
 using System.Collections.ObjectModel;
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 #endregion
 
 namespace Dt.Core
@@ -30,6 +31,7 @@ namespace Dt.Core
         protected override DbConnection CreateConnection()
             => new OracleConnection(_dbInfo.ConnStr);
 
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         protected override Type GetColumnType(DbColumn p_col)
         {
             /* number类型的c#类型的对应关系

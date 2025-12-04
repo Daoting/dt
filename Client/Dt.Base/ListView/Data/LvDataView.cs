@@ -12,6 +12,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Reflection;
@@ -153,6 +154,7 @@ namespace Dt.Base.ListView
         /// 获得过滤排序后的列表
         /// </summary>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         IList GetTransformedList()
         {
             var query = _data.AsQueryable();
@@ -204,6 +206,7 @@ namespace Dt.Base.ListView
         /// 对自带分组的数据源进行过滤排序后的列表
         /// </summary>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         IList GetTransformedGroup()
         {
             List<object> result = new List<object>();

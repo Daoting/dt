@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 #endregion
 
 namespace Dt.Core
@@ -57,6 +58,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_svcType">服务类型</param>
         /// <returns>所有服务对象</returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public static IEnumerable<object> GetServices(Type p_svcType) => _svcProvider.GetServices(p_svcType);
     }
 }

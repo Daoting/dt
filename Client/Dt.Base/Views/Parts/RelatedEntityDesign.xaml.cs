@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Microsoft.UI.Xaml;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 #endregion
 
@@ -24,6 +25,7 @@ namespace Dt.Base.Views
             ShowVeil = true;
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public async Task<string> ShowDlg(string p_params)
         {
             _cfg = string.IsNullOrEmpty(p_params) ? new RelatedEntityCfg() : JsonSerializer.Deserialize<RelatedEntityCfg>(p_params);

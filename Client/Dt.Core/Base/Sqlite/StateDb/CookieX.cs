@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 #endregion
 
@@ -85,6 +86,7 @@ namespace Dt.Core
         /// 查询自启动信息
         /// </summary>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         internal static async Task<AutoStartInfo> GetAutoStart()
         {
             try
@@ -101,6 +103,7 @@ namespace Dt.Core
         /// 保存自启动信息
         /// </summary>
         /// <param name="p_info"></param>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         internal static async Task SaveAutoStart(AutoStartInfo p_info)
         {
             if (p_info != null)

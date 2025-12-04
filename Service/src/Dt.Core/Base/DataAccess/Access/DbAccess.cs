@@ -12,6 +12,7 @@ using Dapper.Oracle;
 using System.Collections;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 #endregion
 
@@ -205,6 +206,7 @@ namespace Dt.Core
         /// <param name="p_sqlOrSp">Sql语句 或 存储过程名</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一列数据的泛型列表</returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public async Task<object> FirstCol(Type p_type, string p_sqlOrSp, object p_params = null)
         {
             Throw.IfNull(p_type);
@@ -350,6 +352,7 @@ namespace Dt.Core
             }
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         protected virtual Type GetColumnType(DbColumn p_col)
         {
             if (p_col.AllowDBNull.HasValue

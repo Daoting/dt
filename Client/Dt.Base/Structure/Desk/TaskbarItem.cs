@@ -16,6 +16,7 @@ using Windows.UI.Popups;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using System.Diagnostics.CodeAnalysis;
 #endregion
 
 namespace Dt.Base
@@ -109,6 +110,7 @@ namespace Dt.Base
         #endregion
 
         #region 上下文菜单
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         static async void ShowMenu(Point p_pos)
         {
             if (_menu == null)

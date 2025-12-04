@@ -8,6 +8,7 @@
 
 #region 引用命名
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 #endregion
 
@@ -100,6 +101,7 @@ namespace Dt.Core
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="p_entity"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public async Task SaveWithChild<TEntity>(TEntity p_entity)
             where TEntity : Entity
         {
@@ -187,6 +189,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_tbl">实体表</param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public async Task Save(Table p_tbl)
         {
             if (p_tbl == null || !p_tbl.GetType().IsGenericType)
@@ -246,6 +249,7 @@ namespace Dt.Core
             }
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         static MethodInfo GetSaveGenericTblMethod()
         {
             if (_saveGenericTbl == null)
@@ -294,6 +298,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_tbl">待删除实体列表</param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public async Task Delete(Table p_tbl)
         {
             if (p_tbl == null
@@ -441,6 +446,7 @@ namespace Dt.Core
             }
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         static MethodInfo GetDeleteGenericTblMethod()
         {
             if (_deleteGenericTbl == null)

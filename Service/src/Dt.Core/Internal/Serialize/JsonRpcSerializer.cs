@@ -13,6 +13,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Buffers.Text;
 using System.Buffers;
+using System.Diagnostics.CodeAnalysis;
 #endregion
 
 namespace Dt.Core
@@ -124,6 +125,7 @@ namespace Dt.Core
             }
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         static void SerializeObject(object p_value, Utf8JsonWriter p_writer)
         {
             p_writer.WriteStartArray();
@@ -327,6 +329,7 @@ namespace Dt.Core
             }
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         static object DeserializeObject(ref Utf8JsonReader p_reader, string p_alias, Type p_tgtType)
         {
             Type type = SerializeTypeAlias.GetType(p_alias);
@@ -377,6 +380,7 @@ namespace Dt.Core
             return target;
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         static object DeserializeObjsArray(ref Utf8JsonReader p_reader)
         {
             List<object> ls = new List<object>();

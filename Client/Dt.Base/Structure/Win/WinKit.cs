@@ -11,6 +11,7 @@ using Dt.Base.Tools;
 using Dt.Core;
 using System.Text.Json;
 using Microsoft.UI.Xaml;
+using System.Diagnostics.CodeAnalysis;
 #endregion
 
 namespace Dt.Base
@@ -28,6 +29,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_elem">标题元素</param>
         /// <param name="p_win">所属窗口</param>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public static void OnPhoneTitleTapped(FrameworkElement p_elem, Win p_win)
         {
             if (p_elem == null || p_win == null)

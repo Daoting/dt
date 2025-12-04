@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Serilog.Extensions.ElapsedTime;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Windows.System;
 #endregion
@@ -30,6 +31,7 @@ namespace Dt.Base
         /// <param name="p_launchArgs"></param>
         /// <param name="p_shareInfo"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         async Task Launch(string p_launchArgs = null, ShareInfo p_shareInfo = null)
         {
             if (!string.IsNullOrEmpty(p_launchArgs))

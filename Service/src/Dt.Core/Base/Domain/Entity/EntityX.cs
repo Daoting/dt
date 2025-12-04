@@ -8,6 +8,7 @@
 
 #region 引用命名
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 #endregion
@@ -370,12 +371,13 @@ namespace Dt.Core
             return await res.Item1.GetScalar<T>(res.Item2, p_params);
 #endif
         }
-        
+
         /// <summary>
         /// 根据主键获得实体对象及所有子实体列表，仅支持单主键，不涉及缓存！
         /// </summary>
         /// <param name="p_id">主键</param>
         /// <returns>返回实体对象或null</returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public static async Task<TEntity> GetByIDWithChild(object p_id)
         {
             if (_isVirEntity)

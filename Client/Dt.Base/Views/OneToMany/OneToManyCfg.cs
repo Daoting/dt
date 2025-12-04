@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
 #endregion
@@ -75,6 +76,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_json"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public static OneToManyCfg Deserialize(string p_json)
         {
             if (string.IsNullOrEmpty(p_json))

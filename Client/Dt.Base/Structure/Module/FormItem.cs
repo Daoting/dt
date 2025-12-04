@@ -15,6 +15,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media.Animation;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 #endregion
 
@@ -274,7 +275,8 @@ namespace Dt.Base
                 ShowFv(Fv.Row);
             }
         }
-        
+
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         async void OnAdd()
         {
             await _form.AddChild(Fv);

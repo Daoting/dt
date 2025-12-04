@@ -9,6 +9,7 @@
 #region 引用命名
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -166,6 +167,7 @@ namespace Dt.Mgr.Module
          }
         
          */
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         async void ParseParams()
         {
             if (!string.IsNullOrEmpty(_params))

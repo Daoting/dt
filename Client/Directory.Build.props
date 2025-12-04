@@ -13,6 +13,12 @@
         <DisableEmbeddedXbf>true</DisableEmbeddedXbf>
         <!-- 生成xml文档 -->
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+        <!-- 分析是否与AOT兼容 -->
+        <IsAotCompatible>true</IsAotCompatible>
+
+        <!-- JSImport/JSExport标签 和 AOT修剪WinRT ABI时需要使用不安全代码 -->
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <!--

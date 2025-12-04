@@ -11,6 +11,7 @@
 using BackgroundTasks;
 using Foundation;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using UIKit;
 using UserNotifications;
@@ -152,6 +153,7 @@ namespace Dt.Core
             }
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public static void Toast(string p_title, string p_content, AutoStartInfo p_startInfo)
         {
             if (string.IsNullOrEmpty(p_title) || string.IsNullOrEmpty(p_content))

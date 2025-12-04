@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Microsoft.UI.Xaml.Controls;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 #endregion
 
@@ -22,6 +23,7 @@ namespace Dt.Base
         /// <param name="p_functionName"></param>
         /// <param name="p_parameters"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public static async Task<string> InvokeScriptAsync(this WebView2 webView2, string p_functionName, params object[] p_parameters)
         {
             string script = p_functionName + "(";

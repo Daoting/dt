@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -517,6 +518,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_rowType">实体类型</param>
         /// <returns>返回新实体表</returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public Table CopyTo(Type p_rowType)
         {
             Table tbl;
@@ -658,6 +660,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_name"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public static Type GetColType(string p_name)
         {
             if (p_name.EndsWith("?"))

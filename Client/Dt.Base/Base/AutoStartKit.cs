@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Microsoft.UI.Xaml;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 #endregion
 
@@ -43,6 +44,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_autoStart"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public static Win CreateAutoStartWin(AutoStartInfo p_autoStart)
         {
             Win win = null;
@@ -79,6 +81,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_win"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public static AutoStartInfo GetAutoStartInfo(Win p_win)
         {
             if (p_win == null)

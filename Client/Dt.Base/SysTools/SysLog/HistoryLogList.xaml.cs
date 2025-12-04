@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Input;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
 using Windows.Storage;
@@ -33,6 +34,7 @@ namespace Dt.Base.Tools
         }
 
         #region 搜索
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public void OnSearch(QueryClause p_clause)
         {
             NaviTo(this);

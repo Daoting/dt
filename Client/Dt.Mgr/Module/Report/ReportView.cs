@@ -11,6 +11,7 @@ using Dt.Base;
 using Dt.Core;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -30,6 +31,7 @@ namespace Dt.Mgr
         /// <param name="p_title">标题</param>
         /// <param name="p_icon">图标</param>
         /// <param name="p_params">启动参数</param>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public async void Run(string p_title, Icons p_icon, object p_params)
         {
             if (p_params == null || string.IsNullOrEmpty(p_params.ToString()))

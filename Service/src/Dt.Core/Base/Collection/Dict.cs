@@ -10,6 +10,7 @@
 using System.Text.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 #endregion
 
 namespace Dt.Core
@@ -263,6 +264,7 @@ namespace Dt.Core
         }
 
         #region IRpcJson
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         void IRpcJson.ReadRpcJson(ref Utf8JsonReader p_reader)
         {
             //[

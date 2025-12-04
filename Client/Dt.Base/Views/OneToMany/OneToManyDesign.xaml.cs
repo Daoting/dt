@@ -9,6 +9,7 @@
 #region 引用命名
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 #endregion
 
@@ -50,6 +51,7 @@ namespace Dt.Base.Views
             return _cfg.Serialize();
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         async void OnEditParent(object sender, TappedRoutedEventArgs e)
         {
             var dlg = new EntityDesign();
@@ -65,6 +67,7 @@ namespace Dt.Base.Views
             }
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         async void OnAddChild()
         {
             var dlg = new EntityDesign();
@@ -110,6 +113,7 @@ namespace Dt.Base.Views
                 EditChild(cfg);
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         async void EditChild(EntityCfg cfg)
         {
             var dlg = new EntityDesign();

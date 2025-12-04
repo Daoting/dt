@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
@@ -38,6 +39,7 @@ namespace Dt.Base
         /// <summary>
         /// 关联实体类全名，包括程序集名称
         /// </summary>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public string RelatedCls
         {
             get => _relatedCls;
@@ -68,6 +70,7 @@ namespace Dt.Base
         /// <summary>
         /// 中间实体类全名，包括程序集名称
         /// </summary>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public string MiddleCls
         {
             get => _middleCls;
@@ -215,6 +218,7 @@ namespace Dt.Base
         /// <param name="p_relatedFks"></param>
         /// <param name="p_mainFk"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public Task<bool> AddRelation(List<long> p_relatedFks, long p_mainFk)
         {
             var tblType = typeof(Table<>).MakeGenericType(_middleType);
@@ -237,6 +241,7 @@ namespace Dt.Base
         /// <param name="p_relatedFks"></param>
         /// <param name="p_mainFk"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public Task<bool> DelRelation(List<long> p_relatedFks, long p_mainFk)
         {
             var tblType = typeof(Table<>).MakeGenericType(_middleType);

@@ -15,6 +15,7 @@ using System.Diagnostics;
 using System.Text.Json;
 using Windows.UI.Notifications;
 using Windows.ApplicationModel.Background;
+using System.Diagnostics.CodeAnalysis;
 #endregion
 
 namespace Dt.Core
@@ -92,6 +93,7 @@ namespace Dt.Core
             BgJobKit.Log("注销后台任务");
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public static void Toast(string p_title, string p_content, AutoStartInfo p_startInfo)
         {
             if (string.IsNullOrEmpty(p_title) && string.IsNullOrEmpty(p_content))

@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
@@ -33,6 +34,7 @@ namespace Dt.Base
         /// <summary>
         /// 实体类全名，包括程序集名称
         /// </summary>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public string Cls
         {
             get => _cls;
@@ -401,6 +403,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_json"></param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public static EntityCfg Deserialize(string p_json)
         {
             if (string.IsNullOrEmpty(p_json))

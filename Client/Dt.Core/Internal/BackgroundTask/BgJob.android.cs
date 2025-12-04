@@ -13,6 +13,8 @@ using Android.Content;
 using AndroidX.Work;
 using Microsoft.Maui.ApplicationModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using static Microsoft.Maui.ApplicationModel.Permissions;
 #endregion
@@ -87,6 +89,7 @@ namespace Dt.Core
             Debug.WriteLine("注销后台任务");
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public static async void Toast(string p_title, string p_content, AutoStartInfo p_startInfo)
         {
             if (string.IsNullOrEmpty(p_title) || string.IsNullOrEmpty(p_content))
@@ -106,7 +109,7 @@ namespace Dt.Core
             {
                 return;
             }
-            
+
             var context = Application.Context;
             if (_manager == null)
             {
@@ -142,7 +145,7 @@ namespace Dt.Core
             _manager.Notify(_id++, notify);
         }
     }
-    
+
     public class PluginWorker : Worker
     {
         public PluginWorker(Context context, WorkerParameters workerParameters)

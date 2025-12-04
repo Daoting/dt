@@ -10,6 +10,7 @@
 using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 #endregion
 
 namespace Dt.Core.Sqlite
@@ -43,6 +44,7 @@ namespace Dt.Core.Sqlite
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public async Task<Table<TEntity>> ExecuteQuery<TEntity>()
             where TEntity : Entity
         {
@@ -133,6 +135,7 @@ namespace Dt.Core.Sqlite
         /// 执行查询，返回数据集
         /// </summary>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public async Task<Table> ExecuteQuery()
         {
             Table tbl = new Table();
@@ -305,6 +308,7 @@ namespace Dt.Core.Sqlite
             Dispose();
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         IEnumerable<TRow> ForEachInternal<TRow>(SqliteDataReader reader)
             where TRow : Row
         {
