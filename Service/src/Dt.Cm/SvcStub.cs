@@ -22,19 +22,6 @@ namespace Dt.Cm
     /// </summary>
     public class SvcStub : Stub
     {
-        readonly FileExtensionContentTypeProvider _mimeTypeProvider;
-
-        public SvcStub()
-        {
-            _mimeTypeProvider = new FileExtensionContentTypeProvider();
-            var mp = _mimeTypeProvider.Mappings;
-            mp.TryAdd(".pdb", MediaTypeNames.Application.Octet);
-            mp.TryAdd(".dat", MediaTypeNames.Application.Octet);
-            mp.TryAdd(".msix", MediaTypeNames.Application.Octet);
-            mp.TryAdd(".cer", MediaTypeNames.Application.Octet);
-            mp.TryAdd(".apk", MediaTypeNames.Application.Octet);
-        }
-
         /// <summary>
         /// 定义全局服务
         /// </summary>
@@ -74,7 +61,7 @@ namespace Dt.Cm
             p_app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Cfg.PackageDir),
-                ContentTypeProvider = _mimeTypeProvider,
+                ContentTypeProvider = MimeTypeProvider,
                 RequestPath = Cfg.PackageVirPath
             });
             
@@ -95,7 +82,7 @@ namespace Dt.Cm
             p_app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = fileProvider,
-                ContentTypeProvider = _mimeTypeProvider,
+                ContentTypeProvider = MimeTypeProvider,
                 RequestPath = Cfg.WasmVirPath,
                 OnPrepareResponse = context =>
                 {
@@ -106,7 +93,7 @@ namespace Dt.Cm
                     int index = fileName.LastIndexOf('.');
                     if (index > 0)
                     {
-                        if (_mimeTypeProvider.TryGetContentType(fileName.Substring(index), out var mimeType))
+                        if (MimeTypeProvider.TryGetContentType(fileName.Substring(index), out var mimeType))
                         {
                             var headers = context.Context.Response.Headers;
                             headers["Content-Encoding"] = "gzip";
@@ -122,5 +109,25 @@ namespace Dt.Cm
             });
             Log.Information($"cm：/  {Cfg.WasmVirPath}  {Cfg.PackageVirPath}，3个虚拟目录");
         }
+
+        FileExtensionContentTypeProvider MimeTypeProvider
+        {
+            get
+            {
+                if (_mimeTypeProvider == null)
+                {
+                    _mimeTypeProvider = new FileExtensionContentTypeProvider();
+                    var mp = _mimeTypeProvider.Mappings;
+                    mp.TryAdd(".pdb", MediaTypeNames.Application.Octet);
+                    mp.TryAdd(".dat", MediaTypeNames.Application.Octet);
+                    mp.TryAdd(".msix", MediaTypeNames.Application.Octet);
+                    mp.TryAdd(".cer", MediaTypeNames.Application.Octet);
+                    mp.TryAdd(".apk", MediaTypeNames.Application.Octet);
+                }
+                return _mimeTypeProvider;
+            }
+        }
+
+        FileExtensionContentTypeProvider _mimeTypeProvider;
     }
 }

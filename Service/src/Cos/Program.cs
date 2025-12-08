@@ -1,1 +1,1 @@
-﻿Launcher.Run(args);
+﻿SvcHost.Run(args);

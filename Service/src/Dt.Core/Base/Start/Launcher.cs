@@ -15,8 +15,6 @@ using Microsoft.Extensions.Hosting;
 using Serilog.Extensions.ElapsedTime;
 using Serilog.Formatting.Compact;
 using System.Reflection;
-using System.Reflection.Metadata;
-using System.Reflection.PortableExecutable;
 #endregion
 
 namespace Dt.Core
@@ -36,7 +34,8 @@ namespace Dt.Core
         /// 此方法不可异步，否则启动有问题！！！
         /// </summary>
         /// <param name="p_args">命令行参数，基础路径，空时dll所在路径为基础路径</param>
-        public static void Run(string[] p_args)
+        /// <param name="p_allStubs">所有可用的服务存根对象</param>
+        public static void Run(string[] p_args, Dictionary<string, Stub> p_allStubs)
         {
             SetPathBase(p_args);
             CreateLogger();
@@ -48,7 +47,7 @@ namespace Dt.Core
             }
             else
             {
-                LoadSvcs();
+                LoadSvcs(p_allStubs);
                 RunWebHost();
             }
             Log.CloseAndFlush();
@@ -145,42 +144,33 @@ namespace Dt.Core
         /// <summary>
         /// 加载服务
         /// </summary>
-        static void LoadSvcs()
+        /// <param name="p_allStubs">所有可用的服务存根对象</param>
+        static void LoadSvcs(Dictionary<string, Stub> p_allStubs)
         {
+            if (p_allStubs == null || p_allStubs.Count == 0)
+            {
+                LogException("未提供任何服务存根对象！");
+            }
+            
             // 服务名
             var svcName = Kit.GetCfg<string>("SvcName", "").Trim().ToLower();
 
             var svcs = new SvcList();
-            if (_sysSvcs.Contains(svcName))
+            if (svcName != "")
             {
-                // 系统内置服务
-                svcs.Add(GetSysSvc(svcName));
+                // 外部微服务
+                if (!p_allStubs.TryGetValue(svcName, out var stub))
+                {
+                    LogException($"服务 {svcName} 不存在！");
+                }
+                svcs.Add(new SvcInfo(svcName, stub));
             }
             else
             {
-                // 所有外部定义的微服务
-                var ls = GetAllSvcs();
-
-                if (svcName != "")
+                // 单体服务模式，所有微服务聚集成一个服务
+                foreach (var item in p_allStubs)
                 {
-                    // 外部微服务
-                    if (!ls.TryGetValue(svcName, out var svc))
-                    {
-                        LogException($"服务 {svcName} 不存在！");
-                    }
-                    svcs.Add(svc);
-                }
-                else
-                {
-                    // 单体服务模式，所有微服务聚集成一个服务
-                    foreach (var svc in ls)
-                    {
-                        svcs.Add(svc);
-                    }
-                    foreach (var name in _sysSvcs)
-                    {
-                        svcs.Add(GetSysSvc(name));
-                    }
+                    svcs.Add(new SvcInfo(item.Key, item.Value));
                 }
             }
             Kit.Svcs = svcs;
@@ -293,97 +283,5 @@ namespace Dt.Core
             Log.Fatal(p_msg);
             throw new Exception(p_msg);
         }
-
-        static SvcInfo GetSysSvc(string p_name)
-        {
-            var path = Path.Combine(AppContext.BaseDirectory, $"Dt.{p_name}.dll");
-            var asm = Assembly.LoadFrom(path);
-            var svc = asm.GetCustomAttribute<SvcStubAttribute>();
-
-            if (svc == null)
-                LogException($"Dt.{p_name}.dll 缺少 SvcStubAttribute 标签！");
-
-            return new SvcInfo(svc.SvcName, (Stub)Activator.CreateInstance(svc.StubType));
-        }
-
-        /// <summary>
-        /// 从所有dll中找出自定义的微服务列表
-        /// </summary>
-        /// <returns></returns>
-        static SvcList GetAllSvcs()
-        {
-            var ls = new SvcList();
-            DirectoryInfo di = new DirectoryInfo(AppContext.BaseDirectory);
-            foreach (FileInfo fi in di.GetFiles("*.dll"))
-            {
-                bool skip = false;
-                foreach (var filter in _dllFilter)
-                {
-                    if (fi.Name.StartsWith(filter))
-                    {
-                        skip = true;
-                        break;
-                    }
-                }
-                if (skip)
-                    continue;
-
-                try
-                {
-                    using var stream = fi.OpenRead();
-                    using var peReader = new PEReader(stream);
-                    {
-                        MetadataReader meta;
-                        try
-                        {
-                            // 系统dll无PE meta
-                            meta = peReader.GetMetadataReader();
-                        }
-                        catch { continue; }
-
-                        var refs = meta.AssemblyReferences;
-                        foreach (var ar in refs)
-                        {
-                            var arf = meta.GetAssemblyReference(ar);
-                            var rn = meta.GetString(arf.Name);
-
-                            // 只处理引用 Dt.Core.dll 的程序集
-                            if (rn == "Dt.Core")
-                            {
-                                // 遍历程序集标签
-                                foreach (var customAttr in meta.CustomAttributes)
-                                {
-                                    var attr = meta.GetCustomAttribute(customAttr);
-                                    try
-                                    {
-                                        // 捕获类型转换的异常
-                                        var constructor = meta.GetMemberReference((MemberReferenceHandle)attr.Constructor);
-                                        var attrType = meta.GetTypeReference((TypeReferenceHandle)constructor.Parent);
-                                        var tpName = meta.GetString(attrType.Name);
-                                        if (tpName == "SvcStubAttribute")
-                                        {
-                                            var asm = Assembly.LoadFrom(fi.FullName);
-                                            var svc = asm.GetCustomAttribute<SvcStubAttribute>();
-                                            ls.Add(new SvcInfo(svc.SvcName, (Stub)Activator.CreateInstance(svc.StubType)));
-                                            break;
-                                        }
-                                    }
-                                    catch { }
-                                }
-                                break;
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Fatal(ex, $"{fi.Name} 提取Stub时出错！");
-                }
-            }
-            return ls;
-        }
-
-        static List<string> _dllFilter = new List<string> { "Microsoft.", "System.", "Autofac.", "Castle.", "Dapper.", "Dt.Core.", "Dt.Da.", "Dt.Cm.", "Dt.Fsm.", "Dt.Msg.", "MailKit.", "MimeKit.", "MySqlConnector.", "Nito.", "Npgsql.", "Oracle.", "Polly.", "RabbitMQ.", "Serilog.", "SQLitePCLRaw.", "StackExchange.", "BouncyCastle.", "Pipelines." };
-        static List<string> _sysSvcs = new List<string> { "cm", "fsm", "msg", "da" };
     }
 }

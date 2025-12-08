@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Directives>
+	<Application>
+		<Assembly Name="Dt.Core" Dynamic="Required All">
+		</Assembly>
+		<Assembly Name="Dt.Da" Dynamic="Required All">
+		</Assembly>
+		<Assembly Name="Dt.Cm" Dynamic="Required All">
+		</Assembly>
+		<Assembly Name="Dt.Fsm" Dynamic="Required All">
+		</Assembly>
+		<Assembly Name="Dt.Msg" Dynamic="Required All">
+		</Assembly>
+		<Assembly Name="Dt.Service" Dynamic="Required All">
+		</Assembly>
+	</Application>
+</Directives>

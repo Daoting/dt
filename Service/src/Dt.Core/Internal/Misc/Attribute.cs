@@ -57,37 +57,6 @@ namespace Dt.Core
         /// </summary>
         Custom
     }
-
-    /// <summary>
-    /// 程序集的服务标签
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false)]
-    public class SvcStubAttribute : Attribute
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="p_svcName">服务名称</param>
-        /// <param name="p_stubType">服务存根类型，程序集内的类型</param>
-        public SvcStubAttribute(string p_svcName, Type p_stubType)
-        {
-            if (string.IsNullOrEmpty(p_svcName) || p_stubType == null)
-                throw new ArgumentNullException("服务名称、服务存根类型不可为空");
-            
-            SvcName = p_svcName.ToLower();
-            StubType = p_stubType;
-        }
-
-        /// <summary>
-        /// 服务名称，小写
-        /// </summary>
-        public string SvcName { get; }
-
-        /// <summary>
-        /// 服务存根类型
-        /// </summary>
-        public Type StubType { get; }
-    }
     
     /// <summary>
     /// 服务类标志
