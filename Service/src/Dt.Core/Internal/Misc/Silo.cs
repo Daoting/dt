@@ -7,11 +7,9 @@
 #endregion
 
 #region 引用命名
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using Autofac.Extras.DynamicProxy;
 using Dt.Core.EventBus;
 using Dt.Core.Rpc;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 #endregion
 
@@ -148,25 +146,25 @@ namespace Dt.Core
 
         #region Startup
         /// <summary>
-        /// 注入服务，提取程序集中的Api列表、事件处理类型、服务列表、可序列化类型列表，注册服务，添加拦截
+        /// 注入服务，提取程序集中的Api列表、事件处理类型、服务列表、可序列化类型列表，注册服务
         /// </summary>
-        /// <param name="p_builder"></param>
+        /// <param name="p_services"></param>
         /// <returns></returns>
-        public static void ConfigureContainer(ContainerBuilder p_builder)
+        public static void ConfigureServices(IServiceCollection p_services)
         {
             // 提取微服务和Dt.Core程序集
-            LoadAssembly(typeof(Silo).Assembly, p_builder, "公共");
+            LoadAssembly(typeof(Silo).Assembly, p_services, "公共");
             foreach (var svc in Kit.Svcs)
             {
-                LoadAssembly(svc.Stub.GetType().Assembly, p_builder, svc.SvcName);
+                LoadAssembly(svc.Stub.GetType().Assembly, p_services, svc.SvcName);
             }
 
             // 内部服务管理Api
-            ExtractApi(typeof(Admin), null, p_builder, null);
+            ExtractApi(typeof(Admin), null, p_services, null);
             Log.Information("注入服务成功");
         }
 
-        static void LoadAssembly(Assembly p_asm, ContainerBuilder p_builder, string p_svcName)
+        static void LoadAssembly(Assembly p_asm, IServiceCollection p_services, string p_svcName)
         {
             // 过滤有用类型，排序为了admin页面显示顺序
             var ls = from tp in p_asm.GetTypes()
@@ -182,34 +180,30 @@ namespace Dt.Core
                     ApiAttribute rpcAttr = type.GetCustomAttribute<ApiAttribute>(false);
                     if (rpcAttr != null)
                     {
-                        ExtractApi(type, rpcAttr, p_builder, rpcAttr.IsTest ? "测试" : p_svcName);
+                        ExtractApi(type, rpcAttr, p_services, rpcAttr.IsTest ? "测试" : p_svcName);
                         continue;
                     }
                 }
 
                 // 注册事件处理
-                if (IsEventHandler(type, p_builder))
+                if (IsEventHandler(type, p_services))
                     continue;
 
                 // 注册服务，支持继承的 ServiceAttribute
                 ServiceAttribute svcAttr = type.GetCustomAttribute<ServiceAttribute>(true);
                 if (svcAttr != null)
                 {
-                    var itps = type.GetInterfaces();
-                    if (itps.Length > 0)
+                    if (svcAttr.Lifetime == ServiceLifetime.Singleton)
                     {
-                        // 注册接口类型
-                        p_builder
-                            .RegisterType(type)
-                            .As(type)
-                            .As(itps)
-                            .ConfigureLifecycle(svcAttr.Lifetime, null);
+                        p_services.AddSingleton(type);
+                    }
+                    else if (svcAttr.Lifetime == ServiceLifetime.Scoped)
+                    {
+                        p_services.AddScoped(type);
                     }
                     else
                     {
-                        p_builder
-                            .RegisterType(type)
-                            .ConfigureLifecycle(svcAttr.Lifetime, null);
+                        p_services.AddTransient(type);
                     }
                     continue;
                 }
@@ -217,13 +211,13 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 提取类型中的Api，注册服务，添加拦截
+        /// 提取类型中的Api，注册服务
         /// </summary>
         /// <param name="p_type"></param>
         /// <param name="p_apiAttr"></param>
-        /// <param name="p_builder"></param>
+        /// <param name="p_services"></param>
         /// <param name="p_groupName">分组名称</param>
-        static void ExtractApi(Type p_type, ApiAttribute p_apiAttr, ContainerBuilder p_builder, string p_groupName)
+        static void ExtractApi(Type p_type, ApiAttribute p_apiAttr, IServiceCollection p_services, string p_groupName)
         {
             // 分组列表
             List<string> grpMethods = null;
@@ -289,34 +283,18 @@ namespace Dt.Core
                 if (grpMethods != null)
                     grpMethods.Add(name);
             }
-
-            if (p_apiAttr != null
-                && p_apiAttr.Interceptors != null
-                && p_apiAttr.Interceptors.Length > 0)
-            {
-                // 将拦截器添加到容器
-                p_builder.RegisterTypes(p_apiAttr.Interceptors);
-                // 注册服务，添加拦截
-                p_builder
-                    .RegisterType(p_type)
-                    .InstancePerDependency()
-                    .EnableClassInterceptors()
-                    .InterceptedBy(p_apiAttr.Interceptors);
-            }
-            else
-            {
-                // 注册服务
-                p_builder.RegisterType(p_type);
-            }
+            
+            // 注册Api服务
+            p_services.AddTransient(p_type);
         }
 
         /// <summary>
         /// 注册事件处理
         /// </summary>
         /// <param name="p_type"></param>
-        /// <param name="p_builder"></param>
+        /// <param name="p_services"></param>
         /// <returns></returns>
-        static bool IsEventHandler(Type p_type, ContainerBuilder p_builder)
+        static bool IsEventHandler(Type p_type, IServiceCollection p_services)
         {
             // 不含标签的排除
             if (p_type.GetCustomAttribute<EventHandlerAttribute>(false) == null)
@@ -332,14 +310,14 @@ namespace Dt.Core
                 if (genType == typeof(IRemoteEventHandler<>))
                 {
                     Type tgtType = typeof(IRemoteEventHandler<>).MakeGenericType(eventType);
-                    p_builder.RegisterType(p_type).As(tgtType);
+                    p_services.AddTransient(tgtType, p_type);
                     RemoteEventBus.Events[eventType.Name] = tgtType;
                     isHandler = true;
                 }
                 else if (genType == typeof(IEventHandler<>))
                 {
                     Type tgtType = typeof(IEventHandler<>).MakeGenericType(eventType);
-                    p_builder.RegisterType(p_type).As(tgtType);
+                    p_services.AddTransient(tgtType, p_type);
                     LocalEventBus.EventHandlerTypes[eventType.Name] = tgtType;
                     isHandler = true;
                 }

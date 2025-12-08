@@ -25,12 +25,7 @@ namespace Dt.Core
         /// 生成代理代码的模式
         /// </summary>
         public AgentMode AgentMode { get; set; }
-
-        /// <summary>
-        /// 拦截器类型数组
-        /// </summary>
-        public Type[] Interceptors { get; set; }
-
+        
         /// <summary>
         /// 是否为测试用的Api
         /// </summary>

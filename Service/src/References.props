@@ -1,11 +1,5 @@
 ﻿<Project>
 	<ItemGroup>
-		<!-- 依赖注入DI -->
-		<PackageReference Include="Autofac" Version="8.4.0" />
-		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
-		<PackageReference Include="Autofac.Extras.DynamicProxy" Version="7.1.0" />
-		<!-- 面向切面编程AOP -->
-		<PackageReference Include="Castle.Core" Version="5.2.1" />
 		<!-- 异步锁 -->
 		<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
 		<!-- 多次重试间隔时间可变 -->

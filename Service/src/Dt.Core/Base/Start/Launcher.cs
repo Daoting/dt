@@ -7,14 +7,12 @@
 #endregion
 
 #region 引用命名
-using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog.Extensions.ElapsedTime;
 using Serilog.Formatting.Compact;
-using System.Reflection;
 #endregion
 
 namespace Dt.Core
@@ -236,8 +234,6 @@ namespace Dt.Core
                 Host.CreateDefaultBuilder()
                     // 为WebHost配置默认设置
                     .ConfigureWebHostDefaults(web => web.UseStartup<Startup>())
-                    // 改用Autofac来实现依赖注入
-                    .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                     // 内部注入AddSingleton<ILoggerFactory>(new SerilogLoggerFactory())
                     .UseSerilog()
                     // 实例化WebHost并初始化，调用Startup.ConfigureServices和Configure

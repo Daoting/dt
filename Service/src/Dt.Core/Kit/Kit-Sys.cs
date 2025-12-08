@@ -8,7 +8,6 @@
 
 #region 引用命名
 using Dt.Core.Rpc;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -238,6 +237,7 @@ namespace Dt.Core
 
             // 以便访问当前的HttpContext
             p_services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            Silo.ConfigureServices(p_services);
         }
 
         public static void Configure(IApplicationBuilder p_app)

@@ -7,17 +7,7 @@
 #endregion
 
 #region 引用命名
-using Castle.Components.DictionaryAdapter.Xml;
-using MySqlConnector;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Common;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 #endregion
 
 namespace Dt.Core

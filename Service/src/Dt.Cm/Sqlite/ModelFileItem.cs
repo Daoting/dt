@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Castle.Core.Configuration;
 using Dt.Core.EventBus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Data.Sqlite;
