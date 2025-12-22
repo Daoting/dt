@@ -22,31 +22,44 @@ namespace Dt.Core
 {
     internal static class WebHostStarter
     {
+        /// <summary>
+        /// 启动Web服务器
+        /// </summary>
         public static void Run()
         {
+            // 为AOT，不再支持Startup及无用的组件
             // CreateSlimBuilder只初始化最少组件，https://learn.microsoft.com/zh-cn/aspnet/core/fundamentals/native-aot?view=aspnetcore-8.0#the-createslimbuilder-method
             //var builder = WebApplication.CreateSlimBuilder();
-            //builder
-            //    .WebHost
-            //    .UseKestrelHttpsConfiguration()
-            //    .UseIIS()
-            //    .UseIISIntegration();
 
-            // 无内置行为，未配置任何服务和中间件
-            var builder = WebApplication.CreateEmptyBuilder(new WebApplicationOptions());
-            builder
-                .WebHost
-                .UseKestrelCore() // 启用 Kestrel，默认不支持https http3
-                .UseKestrelHttpsConfiguration() // Kestrel启用https
-                .UseIIS() // 启用 IISHttpServer
-                .UseIISIntegration(); // 支持IIS集成模式
+            try
+            {
+                // 无内置行为，未配置任何服务和中间件
+                var builder = WebApplication.CreateEmptyBuilder(new WebApplicationOptions());
+                builder
+                    .WebHost
+                    // 启用 Kestrel，默认不支持https http3
+                    .UseKestrelCore()
+                    // Kestrel启用https
+                    .UseKestrelHttpsConfiguration()
+                    // AOT时不支持IIS进程内集成模式，只可进程外运行！
+                    // 为统一，不再启用进程内模式
+                    //.UseIIS()
+                    // 启用进程外模式，需web.config配置
+                    .UseIISIntegration();
 
-            // 配置dt需要的服务
-            ConfigureServices(builder.Services);
+                // 配置dt需要的服务
+                ConfigureServices(builder.Services);
 
-            var app = builder.Build();
-            Configure(app);
-            app.Run();
+                var app = builder.Build();
+                // 配置请求管道的中间件
+                Configure(app);
+                app.Run();
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e, "Web服务器启动失败");
+                throw;
+            }
         }
 
         /// <summary>
