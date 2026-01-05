@@ -91,21 +91,7 @@ namespace Dt.Core
                     Log.Information("请求内容的最大长度 " + Kit.GetFileSizeDesc((ulong)maxSize));
                 }
             });
-
-            // 配置 IISHttpServer
-            p_services.Configure<IISServerOptions>(options =>
-            {
-                Log.Information("配置 IISServer");
-                long maxSize = GetMaxRequestBodySize();
-                if (maxSize > 0)
-                {
-                    // 设置post的body的最大长度，默认28.6M
-                    // web.config 和 service.json都需设置
-                    options.MaxRequestBodySize = maxSize;
-                    Log.Information("请求内容的最大长度 " + Kit.GetFileSizeDesc((ulong)maxSize));
-                }
-            });
-
+            
             Kit.ConfigureServices(p_services);
         }
 
