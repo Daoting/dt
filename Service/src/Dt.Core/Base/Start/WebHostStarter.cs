@@ -20,37 +20,110 @@ using System.Text;
 
 namespace Dt.Core
 {
-    internal static class WebHostStarter
+    internal class WebHostStarter
     {
-        /// <summary>
-        /// 启动Web服务器
-        /// </summary>
-        public static void Run()
+        WebApplicationBuilder _builder;
+
+        public WebHostStarter(string[] p_args)
         {
             // 为AOT，不再支持Startup及无用的组件
             // CreateSlimBuilder只初始化最少组件，https://learn.microsoft.com/zh-cn/aspnet/core/fundamentals/native-aot?view=aspnetcore-8.0#the-createslimbuilder-method
             //var builder = WebApplication.CreateSlimBuilder();
 
+            // 无内置行为，未配置任何服务和中间件
+            _builder = WebApplication.CreateEmptyBuilder(new WebApplicationOptions());
+            if (p_args != null && p_args.Length > 0)
+            {
+                // 命令行参数
+                _builder.Configuration.AddCommandLine(p_args);
+            }
+        }
+
+        /// <summary>
+        /// 确定基础路径
+        /// </summary>
+        public void SetPathBase()
+        {
+            // 读取命令行参数 path 指定的基础路径
+            var path = _builder.WebHost.GetSetting("path");
+            if (!string.IsNullOrEmpty(path))
+            {
+                if (!Path.IsPathRooted(path))
+                {
+                    // 相对路径
+                    path = Path.Combine(AppContext.BaseDirectory, path);
+                }
+                if (!Directory.Exists(path))
+                {
+                    string msg = $"基础路径 {path} 不存在";
+                    Console.WriteLine(msg);
+                    throw new Exception(msg);
+                }
+                Kit.PathBase = path;
+            }
+            else
+            {
+                // dll所在路径为基础路径
+                Kit.PathBase = AppContext.BaseDirectory;
+            }
+        }
+
+        /// <summary>
+        /// 启动Web服务器
+        /// </summary>
+        public void Run()
+        {
             try
             {
-                // 无内置行为，未配置任何服务和中间件
-                var builder = WebApplication.CreateEmptyBuilder(new WebApplicationOptions());
-                builder
+                _builder
                     .WebHost
                     // 启用 Kestrel，默认不支持https http3
                     .UseKestrelCore()
                     // Kestrel启用https
-                    .UseKestrelHttpsConfiguration()
+                    .UseKestrelHttpsConfiguration();
+
+                var proxy = _builder.WebHost.GetSetting("proxy");
+                Log.Information(string.IsNullOrEmpty(proxy) ? "Kestrel无代理" : "Kestrel代理：" + proxy);
+                
+                // iis代理，进程外模式
+                if ("iis".Equals(proxy, StringComparison.OrdinalIgnoreCase))
+                {
                     // AOT时不支持IIS进程内集成模式，只可进程外运行！
                     // 为统一，不再启用进程内模式
                     //.UseIIS()
-                    // 启用进程外模式，需web.config配置
-                    .UseIISIntegration();
-
+                    // 启用进程外模式，需web.config配置 proxy=iis
+                    _builder.WebHost.UseIISIntegration();
+                }
+                
                 // 配置dt需要的服务
-                ConfigureServices(builder.Services);
 
-                var app = builder.Build();
+                // 内部注入AddSingleton<ILoggerFactory>(new SerilogLoggerFactory())
+                _builder.Services.AddSerilog();
+
+                // 配置 KestrelServer
+                _builder.Services.Configure<KestrelServerOptions>(options =>
+                {
+                    Log.Information("配置 Kestrel");
+                    // KestrelServer 监听设置，配置在 kestrel.json
+                    ConfigureKestrelListen(options, !string.IsNullOrEmpty(proxy));
+
+                    // 不限制请求/响应的速率，不适合流模式长时间等待的情况！
+                    options.Limits.MinRequestBodyDataRate = null;
+                    options.Limits.MinResponseDataRate = null;
+
+                    long maxSize = GetMaxRequestBodySize();
+                    if (maxSize > 0)
+                    {
+                        // 设置post的body的最大长度，默认28.6M
+                        options.Limits.MaxRequestBodySize = maxSize;
+                        Log.Information("请求内容的最大长度 " + Kit.GetFileSizeDesc((ulong)maxSize));
+                    }
+                });
+
+                Kit.ConfigureServices(_builder.Services);
+
+                // 固化注入的服务
+                var app = _builder.Build();
                 // 配置请求管道的中间件
                 Configure(app);
                 app.Run();
@@ -63,36 +136,32 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 定义全局服务
+        /// 初始化数据库模式
         /// </summary>
-        /// <param name="p_services"></param>
-        /// <returns></returns>
-        static void ConfigureServices(IServiceCollection p_services)
+        public void RunInitMode()
         {
-            // 内部注入AddSingleton<ILoggerFactory>(new SerilogLoggerFactory())
-            p_services.AddSerilog();
-
-            // 配置 KestrelServer
-            p_services.Configure<KestrelServerOptions>(options =>
+            try
             {
-                Log.Information("配置 KestrelServer");
-                // KestrelServer 监听设置，配置在 kestrel.json
-                ConfigureKestrelListen(options);
+                Log.Information("初始化数据库模式");
 
-                // 不限制请求/响应的速率，不适合流模式长时间等待的情况！
-                options.Limits.MinRequestBodyDataRate = null;
-                options.Limits.MinResponseDataRate = null;
-
-                long maxSize = GetMaxRequestBodySize();
-                if (maxSize > 0)
-                {
-                    // 设置post的body的最大长度，默认28.6M
-                    options.Limits.MaxRequestBodySize = maxSize;
-                    Log.Information("请求内容的最大长度 " + Kit.GetFileSizeDesc((ulong)maxSize));
-                }
-            });
-            
-            Kit.ConfigureServices(p_services);
+                //// 部署在IIS进程内模式时创建 IISHttpServer
+                //// 其他情况创建 KestrelServer
+                //// 两种 Web服务器的配置在Startup.ConfigureServices
+                //Host.CreateDefaultBuilder()
+                //    // 为WebHost配置默认设置
+                //    .ConfigureWebHostDefaults(web => web.UseStartup<InitModeStartup>())
+                //    // 内部注入AddSingleton<ILoggerFactory>(new SerilogLoggerFactory())
+                //    .UseSerilog()
+                //    // 实例化WebHost并初始化，调用Startup.ConfigureServices和Configure
+                //    .Build()
+                //    // 内部调用WebHost.StartAsync()
+                //    .Run();
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e, "Web服务器启动失败");
+                throw;
+            }
         }
 
         /// <summary>
@@ -145,7 +214,8 @@ namespace Dt.Core
         /// KestrelServer 监听设置
         /// </summary>
         /// <param name="p_options"></param>
-        public static void ConfigureKestrelListen(KestrelServerOptions p_options)
+        /// <param name="p_proxy">是否已设置反向代理</param>
+        static void ConfigureKestrelListen(KestrelServerOptions p_options, bool p_proxy)
         {
             if (!File.Exists(Path.Combine(Kit.PathBase, "etc/config", "kestrel.json")))
             {
@@ -162,7 +232,6 @@ namespace Dt.Core
             // 无配置
             if (!sect.Any())
             {
-                // 使用 launchSettings.json 中配置，
                 // 都无配置使用缺省：http://localhost:5000; https://localhost:5001
                 Log.Warning("kestrel.json 无监听配置，使用默认");
                 return;
@@ -180,6 +249,10 @@ namespace Dt.Core
 
                 if ("https".Equals(scheme, StringComparison.OrdinalIgnoreCase))
                 {
+                    // 命令行参数已设置反向代理时跳过https监听
+                    if (p_proxy)
+                        continue;
+                    
                     // https协议
                     p_options.Listen(IPAddress.Parse(address), port, listenOptions =>
                     {

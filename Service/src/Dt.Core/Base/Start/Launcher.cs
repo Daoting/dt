@@ -7,10 +7,7 @@
 #endregion
 
 #region 引用命名
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using Serilog.Extensions.ElapsedTime;
 using Serilog.Formatting.Compact;
 #endregion
@@ -35,50 +32,21 @@ namespace Dt.Core
         /// <param name="p_allStubs">所有可用的服务存根对象</param>
         public static void Run(string[] p_args, Dictionary<string, Stub> p_allStubs)
         {
-            SetPathBase(p_args);
+            var starter = new WebHostStarter(p_args);
+            starter.SetPathBase();
             CreateLogger();
             LoadConfig();
             if ("InitDb".Equals(Kit.GetCfg<string>("SvcName"), StringComparison.OrdinalIgnoreCase))
             {
                 // 进入初始化数据库模式
-                RunInitModeWebHost();
+                starter.RunInitMode();
             }
             else
             {
                 LoadSvcs(p_allStubs);
-                RunWebHost();
+                starter.Run();
             }
             Log.CloseAndFlush();
-        }
-
-        /// <summary>
-        /// 确定基础路径
-        /// </summary>
-        /// <param name="p_args"></param>
-        /// <exception cref="Exception"></exception>
-        static void SetPathBase(string[] p_args)
-        {
-            if (p_args != null && p_args.Length > 0)
-            {
-                var path = p_args[0];
-                if (!Path.IsPathRooted(path))
-                {
-                    // 相对路径
-                    path = Path.Combine(AppContext.BaseDirectory, path);
-                }
-                if (!Directory.Exists(path))
-                {
-                    string msg = $"基础路径 {path} 不存在";
-                    Console.WriteLine(msg);
-                    throw new Exception(msg);
-                }
-                Kit.PathBase = path;
-            }
-            else
-            {
-                // dll所在路径为基础路径
-                Kit.PathBase = AppContext.BaseDirectory;
-            }
         }
 
         /// <summary>
@@ -220,60 +188,7 @@ namespace Dt.Core
             Kit.EnableRabbitMQ = Kit.Svcs.Count == 1;
             Log.Information($"启动 {Kit.AllSvcName}，版本：{Kit.GetSysVersion()}");
         }
-
-        /// <summary>
-        /// 启动Web服务器
-        /// </summary>
-        static void RunWebHost()
-        {
-            try
-            {
-                // 部署在IIS进程内模式时创建 IISHttpServer
-                // 其他情况创建 KestrelServer
-                // 两种 Web服务器的配置在Startup.ConfigureServices
-                Host.CreateDefaultBuilder()
-                    // 为WebHost配置默认设置
-                    .ConfigureWebHostDefaults(web => web.UseStartup<Startup>())
-                    // 内部注入AddSingleton<ILoggerFactory>(new SerilogLoggerFactory())
-                    .UseSerilog()
-                    // 实例化WebHost并初始化，调用Startup.ConfigureServices和Configure
-                    .Build()
-                    // 内部调用WebHost.StartAsync()
-                    .Run();
-            }
-            catch (Exception e)
-            {
-                Log.Fatal(e, "Web服务器启动失败");
-                throw;
-            }
-        }
-
-        static void RunInitModeWebHost()
-        {
-            try
-            {
-                Log.Information("初始化数据库模式");
-
-                // 部署在IIS进程内模式时创建 IISHttpServer
-                // 其他情况创建 KestrelServer
-                // 两种 Web服务器的配置在Startup.ConfigureServices
-                Host.CreateDefaultBuilder()
-                    // 为WebHost配置默认设置
-                    .ConfigureWebHostDefaults(web => web.UseStartup<InitModeStartup>())
-                    // 内部注入AddSingleton<ILoggerFactory>(new SerilogLoggerFactory())
-                    .UseSerilog()
-                    // 实例化WebHost并初始化，调用Startup.ConfigureServices和Configure
-                    .Build()
-                    // 内部调用WebHost.StartAsync()
-                    .Run();
-            }
-            catch (Exception e)
-            {
-                Log.Fatal(e, "Web服务器启动失败");
-                throw;
-            }
-        }
-
+        
         static void LogException(string p_msg)
         {
             Log.Fatal(p_msg);
