@@ -71,7 +71,8 @@ namespace Dt.Core
         /// <summary>
         /// 启动Web服务器
         /// </summary>
-        public void Run()
+        /// <param name="p_isInitMode"></param>
+        public void Run(bool p_isInitMode = false)
         {
             try
             {
@@ -84,7 +85,7 @@ namespace Dt.Core
 
                 var proxy = _builder.WebHost.GetSetting("proxy");
                 Log.Information(string.IsNullOrEmpty(proxy) ? "Kestrel无代理" : "Kestrel代理：" + proxy);
-                
+
                 // iis代理，进程外模式
                 if ("iis".Equals(proxy, StringComparison.OrdinalIgnoreCase))
                 {
@@ -94,7 +95,7 @@ namespace Dt.Core
                     // 启用进程外模式，需web.config配置 proxy=iis
                     _builder.WebHost.UseIISIntegration();
                 }
-                
+
                 // 配置dt需要的服务
 
                 // 内部注入AddSingleton<ILoggerFactory>(new SerilogLoggerFactory())
@@ -121,41 +122,20 @@ namespace Dt.Core
                 });
 
                 Kit.ConfigureServices(_builder.Services);
+                if (!p_isInitMode)
+                    Silo.ConfigureServices(_builder.Services);
 
                 // 固化注入的服务
                 var app = _builder.Build();
+
                 // 配置请求管道的中间件
-                Configure(app);
+                if (p_isInitMode)
+                    ConfigureInitMode(app);
+                else
+                    Configure(app);
+                Log.Information("---启动完毕---");
+
                 app.Run();
-            }
-            catch (Exception e)
-            {
-                Log.Fatal(e, "Web服务器启动失败");
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// 初始化数据库模式
-        /// </summary>
-        public void RunInitMode()
-        {
-            try
-            {
-                Log.Information("初始化数据库模式");
-
-                //// 部署在IIS进程内模式时创建 IISHttpServer
-                //// 其他情况创建 KestrelServer
-                //// 两种 Web服务器的配置在Startup.ConfigureServices
-                //Host.CreateDefaultBuilder()
-                //    // 为WebHost配置默认设置
-                //    .ConfigureWebHostDefaults(web => web.UseStartup<InitModeStartup>())
-                //    // 内部注入AddSingleton<ILoggerFactory>(new SerilogLoggerFactory())
-                //    .UseSerilog()
-                //    // 实例化WebHost并初始化，调用Startup.ConfigureServices和Configure
-                //    .Build()
-                //    // 内部调用WebHost.StartAsync()
-                //    .Run();
             }
             catch (Exception e)
             {
@@ -207,7 +187,13 @@ namespace Dt.Core
             Log.Information($"数据库(服务)：{Kit.DefaultDbInfo.Name}({msg.TrimStart()}){custom}");
 
             DbSchema.SyncDbTime();
-            Log.Information("---启动完毕---");
+        }
+
+        static void ConfigureInitMode(IApplicationBuilder p_app)
+        {
+            // 中间件
+            p_app.UseMiddleware<InitModeMiddleware>();
+            Kit.Configure(p_app);
         }
 
         /// <summary>
@@ -252,7 +238,7 @@ namespace Dt.Core
                     // 命令行参数已设置反向代理时跳过https监听
                     if (p_proxy)
                         continue;
-                    
+
                     // https协议
                     p_options.Listen(IPAddress.Parse(address), port, listenOptions =>
                     {

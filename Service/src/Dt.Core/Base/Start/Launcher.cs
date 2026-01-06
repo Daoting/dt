@@ -38,8 +38,8 @@ namespace Dt.Core
             LoadConfig();
             if ("InitDb".Equals(Kit.GetCfg<string>("SvcName"), StringComparison.OrdinalIgnoreCase))
             {
-                // 进入初始化数据库模式
-                starter.RunInitMode();
+                Log.Information("初始化数据库模式");
+                starter.Run(true);
             }
             else
             {
