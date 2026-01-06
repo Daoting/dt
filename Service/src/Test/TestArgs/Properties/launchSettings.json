@@ -1,10 +1,10 @@
 {
   "profiles": {
-    "da": {
+    "TestArgs": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": ".admin",
-      "applicationUrl": "https://localhost:1002/"
+      "applicationUrl": "https://localhost:1234/"
     }
   }
 }

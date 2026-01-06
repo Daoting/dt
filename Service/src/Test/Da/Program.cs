@@ -1,1 +1,1 @@
-﻿Launcher.Run(args);
+﻿Launcher.Run(args, new Dictionary<string, Stub>() { { "da", new Dt.Da.SvcStub() } });
