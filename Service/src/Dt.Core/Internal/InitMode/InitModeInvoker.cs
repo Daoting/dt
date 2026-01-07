@@ -60,8 +60,11 @@ namespace Dt.Core.Rpc
                 {
                     // 异步有返回值
                     var task = (Task)_method.Invoke(tgt, _args);
-                    task.Wait(_context.RequestAborted);
-                    result = task.GetType().GetProperty("Result").GetValue(task);
+                    await task.WaitAsync(_context.RequestAborted);
+                    var pi = task.GetType().GetProperty("Result");
+                    if (pi == null)
+                        throw new Exception($"AOT无法反射 {task.GetType().Name} 的Result属性！请在 rd.xml 添加 <Type Name=\"System.Threading.Tasks.Task`1[[System.String]]\" Dynamic=\"Required All\" />");
+                    result = pi.GetValue(task);
                 }
                 else
                 {
