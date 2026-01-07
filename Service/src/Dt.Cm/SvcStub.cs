@@ -31,12 +31,6 @@ namespace Dt.Cm
             p_services.AddSingleton<SqliteFileHandler>();
             // 增加浏览目录功能
             p_services.AddDirectoryBrowser();
-
-
-            p_services.ConfigureHttpJsonOptions(options =>
-            {
-                options.SerializerOptions.TypeInfoResolverChain.Add(AppJsonSerializerContext.Default);
-            });
         }
 
         /// <summary>
