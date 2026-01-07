@@ -33,6 +33,11 @@ namespace Dt.Cm
             return "字符串结果";
         }
 
+        public Task<string> GetStringAsync()
+        {
+            return Task.FromResult("字符串结果");
+        }
+        
         /// <summary>
         /// 字符串参数
         /// </summary>
@@ -51,6 +56,11 @@ namespace Dt.Cm
             return true;
         }
 
+        public Task<bool> GetBoolAsync()
+        {
+            return Task.FromResult(true);
+        }
+        
         /// <summary>
         /// bool参数
         /// </summary>
@@ -69,6 +79,11 @@ namespace Dt.Cm
             return 100;
         }
 
+        public Task<int> GetIntAsync()
+        {
+            return Task.FromResult(100);
+        }
+        
         /// <summary>
         /// int参数
         /// </summary>
@@ -87,6 +102,11 @@ namespace Dt.Cm
             return long.MaxValue - 1;
         }
 
+        public Task<long> GetLongAsync()
+        {
+            return Task.FromResult(long.MaxValue - 1);
+        }
+        
         /// <summary>
         /// long参数
         /// </summary>
@@ -105,6 +125,11 @@ namespace Dt.Cm
             return 200d;
         }
 
+        public Task<double> GetDoubleAsync()
+        {
+            return Task.FromResult(200d);
+        }
+        
         /// <summary>
         /// double参数
         /// </summary>
@@ -123,6 +148,11 @@ namespace Dt.Cm
             return DateTime.Now;
         }
 
+        public Task<DateTime> GetDateTimeAsync()
+        {
+            return Task.FromResult(DateTime.Now);
+        }
+        
         /// <summary>
         /// DateTime参数
         /// </summary>
@@ -141,6 +171,11 @@ namespace Dt.Cm
             return new byte[] { 10, 12, 14, 16 };
         }
 
+        public Task<byte[]> GetByteArrayAsync()
+        {
+            return Task.FromResult(new byte[] { 10, 12, 14, 16 });
+        }
+        
         /// <summary>
         /// byte[]参数
         /// </summary>
@@ -163,6 +198,15 @@ namespace Dt.Cm
             };
         }
 
+        public Task<MsgInfo> GetMsgInfoAsync()
+        {
+            return Task.FromResult(new MsgInfo
+            {
+                MethodName = "abc.fun",
+                Params = new List<object> { 1, "a", true },
+            });
+        }
+        
         /// <summary>
         /// MsgInfo参数
         /// </summary>
@@ -183,6 +227,11 @@ namespace Dt.Cm
             return new List<string>() { "first", "second" };
         }
 
+        public Task<List<string>> GetStringListAsync()
+        {
+            return Task.FromResult(new List<string>() { "first", "second" });
+        }
+        
         /// <summary>
         /// 字符串列表
         /// </summary>
@@ -205,6 +254,15 @@ namespace Dt.Cm
             return ls;
         }
 
+        public Task<List<bool>> GetBoolListAsync()
+        {
+            List<bool> ls = new List<bool>();
+            ls.Add(true);
+            ls.Add(false);
+            ls.Add(false);
+            return Task.FromResult(ls);
+        }
+        
         /// <summary>
         /// bool值列表
         /// </summary>
@@ -224,6 +282,12 @@ namespace Dt.Cm
             return ls;
         }
 
+        public Task<List<int>> GetIntListAsync()
+        {
+            List<int> ls = new List<int>() { 1, 2, 3, 4 };
+            return Task.FromResult(ls);
+        }
+        
         /// <summary>
         /// int列表
         /// </summary>
@@ -243,6 +307,12 @@ namespace Dt.Cm
             return ls;
         }
 
+        public Task<List<long>> GetLongListAsync()
+        {
+            List<long> ls = new List<long>() { 1, 2, 3, 4 };
+            return Task.FromResult(ls);
+        }
+        
         /// <summary>
         /// long列表
         /// </summary>
@@ -261,6 +331,11 @@ namespace Dt.Cm
             return new List<double>() { 200.0d, 100d, 50.123d, 123.45d };
         }
 
+        public Task<List<double>> GetDoubleListAsync()
+        {
+            return Task.FromResult(new List<double>() { 200.0d, 100d, 50.123d, 123.45d });
+        }
+        
         /// <summary>
         /// double列表
         /// </summary>
@@ -282,6 +357,14 @@ namespace Dt.Cm
             return tms;
         }
 
+        public Task<List<DateTime>> GetDateTimeListAsync()
+        {
+            List<DateTime> tms = new List<DateTime>();
+            tms.Add(DateTime.Now);
+            tms.Add(DateTime.Now.AddDays(-1));
+            return Task.FromResult(tms);
+        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -306,6 +389,16 @@ namespace Dt.Cm
             return ls;
         }
 
+        public Task<List<object>> GetObjectListAsync()
+        {
+            List<object> ls = new List<object>();
+            ls.Add("asdf");
+            ls.Add(123);
+            ls.Add(DateTime.Now);
+            ls.Add(100.23d);
+            return Task.FromResult(ls);
+        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -327,6 +420,11 @@ namespace Dt.Cm
             return CreateTable();
         }
 
+        public Task<Table> GetTableAsync()
+        {
+            return Task.FromResult(CreateTable());
+        }
+        
         /// <summary>
         /// 由外部传递Table
         /// </summary>
@@ -347,6 +445,11 @@ namespace Dt.Cm
             return CreateTable()[0];
         }
 
+        public Task<Row> GetRowAsync()
+        {
+            return Task.FromResult(CreateTable()[0]);
+        }
+        
         /// <summary>
         /// 由外部传递Row
         /// </summary>
@@ -391,6 +494,17 @@ namespace Dt.Cm
             return dict;
         }
 
+        public Task<Dict> GetTableDictAsync()
+        {
+            Dict dict = new Dict();
+            var tbl = CreateTable();
+            dict["tbl1"] = tbl;
+
+            tbl = CreateTable();
+            dict["tbl2"] = tbl;
+            return Task.FromResult(dict);
+        }
+        
         /// <summary>
         /// 由外部传递多个Table
         /// </summary>
@@ -413,6 +527,17 @@ namespace Dt.Cm
             tbl = CreateTable();
             ls.Add(tbl);
             return ls;
+        }
+
+        public Task<List<Table>> GetTableListAsync()
+        {
+            List<Table> ls = new List<Table>();
+            Table tbl = CreateTable();
+            ls.Add(tbl);
+
+            tbl = CreateTable();
+            ls.Add(tbl);
+            return Task.FromResult(ls);
         }
 
         /// <summary>
@@ -487,6 +612,20 @@ namespace Dt.Cm
             return dict;
         }
 
+        public Task<Dict> GetBaseDictAsync()
+        {
+            Dict dict = new Dict();
+            dict["string"] = "string value";
+            dict["bool"] = true;
+            dict["int"] = 100;
+            dict["long"] = 123234L;
+            dict["double"] = 1234.456d;
+            dict["datetime"] = DateTime.Now;
+            dict["bytearray"] = new byte[] { 10, 12, 14, 16 };
+            dict["null"] = null;
+            return Task.FromResult(dict);
+        }
+        
         /// <summary>
         /// 返回基本数据类型的Dict
         /// </summary>
@@ -554,6 +693,27 @@ namespace Dt.Cm
             return dts;
         }
 
+        public Task<List<Dict>> GetDictListAsync()
+        {
+            List<Dict> dts = new List<Dict>();
+            Dict dict = new Dict();
+            dict["string"] = "string value";
+            dict["bool"] = true;
+            dict["int"] = 100;
+            dict["long"] = 123234L;
+            dict["double"] = 1234.456d;
+            dict["datetime"] = DateTime.Now;
+            dict["bytearray"] = new byte[] { 10, 12, 14, 16 };
+            dict["null"] = null;
+            dts.Add(dict);
+
+            dict = new Dict();
+            dict["string"] = "string value";
+            dict["bool"] = true;
+            dts.Add(dict);
+            return Task.FromResult(dts);
+        }
+        
         /// <summary>
         /// 发送Dict列表
         /// </summary>
@@ -579,6 +739,16 @@ namespace Dt.Cm
             return product;
         }
 
+        public Task<Product> GetCustomBaseAsync()
+        {
+            Product product = new Product();
+            product.Name = "Apple";
+            product.ExpiryDate = new DateTime(2016, 12, 28);
+            product.Price = 3.99M;
+            product.Sizes = new string[] { "Small", "Medium", "Large" };
+            return Task.FromResult(product);
+        }
+        
         /// <summary>
         /// 由外部传递基础自定义类型
         /// </summary>
@@ -609,6 +779,22 @@ namespace Dt.Cm
             return ls;
         }
 
+        public Task<List<Product>> GetCustomListAsync()
+        {
+            var ls = new List<Product>();
+            for (int i = 0; i < 5; i++)
+            {
+                Product product = new Product();
+                product.Name = "Apple" + i.ToString();
+                product.ExpiryDate = new DateTime(2016, 12, 28);
+                product.Price = 3.99M + i;
+                product.Sizes = new string[] { "Small", "Medium", "Large" };
+                ls.Add(product);
+            }
+
+            return Task.FromResult(ls);
+        }
+        
         /// <summary>
         /// 由外部传递自定义对象列表
         /// </summary>
@@ -635,6 +821,18 @@ namespace Dt.Cm
             return person;
         }
 
+        public Task<Student> GetCustomCombineAsync()
+        {
+            Student person = new Student();
+            person.Name = "John Smith";
+            person.LastModified = DateTime.Now;
+            person.Salary = new Dict();
+            person.Salary.Add("一月", 2000);
+            person.Salary.Add("二月", 3000);
+            person.Info = CreateTable();
+            return Task.FromResult(person);
+        }
+        
         /// <summary>
         /// 由外部传递复杂自定义类型
         /// </summary>
@@ -663,6 +861,20 @@ namespace Dt.Cm
             return dept;
         }
 
+        public Task<Department> GetContainCustomAsync()
+        {
+            Department dept = new Department() { Name = "人事部" };
+            Student employee = new Student();
+            employee.Name = "John Smith";
+            employee.LastModified = DateTime.Now;
+            employee.Salary = new Dict();
+            employee.Salary.Add("一月", 2000);
+            employee.Salary.Add("二月", 3000);
+            employee.Info = CreateTable();
+            dept.Employee = employee;
+            return Task.FromResult(dept);
+        }
+        
         /// <summary>
         /// 由外部传递嵌套自定义类型
         /// </summary>
@@ -693,6 +905,13 @@ namespace Dt.Cm
         #endregion
     }
 
+    [JsonSerializable(typeof(Product))]
+    [JsonSerializable(typeof(Student))]
+    [JsonSerializable(typeof(Department))]
+    internal partial class AppJsonSerializerContext : JsonSerializerContext
+    {
+    }
+    
     public class Product
     {
         public string Name { get; set; }

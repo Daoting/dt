@@ -2,6 +2,8 @@
 <Directives>
 	<Application>
 		<Assembly Name="Dt.Core" Dynamic="Required All">
+			<!-- 确保UnaryHandler中的Task`1.Result可访问 -->
+			<Type Name="System.Threading.Tasks.Task`1[[System.String]]" Dynamic="Required All" />
 		</Assembly>
 		<Assembly Name="Dt.Da" Dynamic="Required All">
 		</Assembly>
@@ -12,6 +14,8 @@
 		<Assembly Name="Dt.Msg" Dynamic="Required All">
 		</Assembly>
 		<Assembly Name="Dt.Service" Dynamic="Required All">
+		</Assembly>
+		<Assembly Name="Cos" Dynamic="Required All">
 		</Assembly>
 	</Application>
 </Directives>
