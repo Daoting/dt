@@ -44,8 +44,8 @@ namespace Dt.Core
         /// </summary>
         public void SetPathBase()
         {
-            // 读取命令行参数 path 指定的基础路径
-            var path = _builder.WebHost.GetSetting("path");
+            // 读取命令行参数 pathbase 指定的基础路径
+            var path = _builder.WebHost.GetSetting("pathbase");
             if (!string.IsNullOrEmpty(path))
             {
                 if (!Path.IsPathRooted(path))

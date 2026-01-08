@@ -3,7 +3,7 @@
 Launcher.Run(
     new string[]
     {
-        "path=D:\\Dt\\Master\\Service\\src\\Cos\\bin\\Debug\\net10.0",
+        "pathbase=D:\\Dt\\Master\\Service\\src\\Cos\\bin\\Debug\\net10.0",
         "proxy=nginx"
     },
     new Dictionary<string, Stub>() { { "cm", new Dt.Cm.SvcStub() } }
