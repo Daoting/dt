@@ -114,9 +114,13 @@ namespace Dt.Core
                         // 列表
                         SerializeArray((IEnumerable)p_value, p_writer);
                     }
+                    else if (p_value is JsonObj obj)
+                    {
+                        obj.WriteJson(p_writer);
+                    }
                     else
                     {
-                        SerializeObject(p_value, p_writer);
+                        throw new Exception($"AOT不支持类型反射方式序列化，请将 {tp.Name} 类型继承 JsonObj 或 实现 IRpcJson 接口！");
                     }
                     break;
 
@@ -124,16 +128,7 @@ namespace Dt.Core
                     throw new Exception("未支持序列化类型" + tp.FullName);
             }
         }
-
-        [UnconditionalSuppressMessage("AOT", "IL3050")]
-        static void SerializeObject(object p_value, Utf8JsonWriter p_writer)
-        {
-            p_writer.WriteStartArray();
-            p_writer.WriteStringValue("#" + SerializeTypeAlias.GetAlias(p_value.GetType()));
-            JsonSerializer.Serialize(p_writer, p_value);
-            p_writer.WriteEndArray();
-        }
-
+        
         static void SerializeArray(IEnumerable p_value, Utf8JsonWriter p_writer)
         {
             p_writer.WriteStartArray();
@@ -329,7 +324,6 @@ namespace Dt.Core
             }
         }
 
-        [UnconditionalSuppressMessage("AOT", "IL3050")]
         static object DeserializeObject(ref Utf8JsonReader p_reader, string p_alias, Type p_tgtType)
         {
             Type type = SerializeTypeAlias.GetType(p_alias);
@@ -351,10 +345,15 @@ namespace Dt.Core
                 return tgt;
             }
 
-            // 标准序列化
-            p_reader.Read();
-            object obj = JsonSerializer.Deserialize(ref p_reader, type);
-            return obj;
+            if (type.IsSubclassOf(typeof(JsonObj)))
+            {
+                // JsonObj的默认反序列化
+                object obj = Activator.CreateInstance(type, true);
+                ((JsonObj)obj).ReadJson(ref p_reader);
+                return obj;
+            }
+            
+            throw new Exception($"AOT不支持类型反射方式序列化，请将 {type.Name} 类型继承 JsonObj 或 实现 IRpcJson 接口！");
         }
 
         static object DeserializeArray(ref Utf8JsonReader p_reader, string p_alias, Type p_tgtType)

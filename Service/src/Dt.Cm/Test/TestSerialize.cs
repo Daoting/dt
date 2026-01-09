@@ -7,11 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
-using System.Text.Json;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 #endregion
 
@@ -37,7 +32,7 @@ namespace Dt.Cm
         {
             return Task.FromResult("字符串结果");
         }
-        
+
         /// <summary>
         /// 字符串参数
         /// </summary>
@@ -60,7 +55,7 @@ namespace Dt.Cm
         {
             return Task.FromResult(true);
         }
-        
+
         /// <summary>
         /// bool参数
         /// </summary>
@@ -83,7 +78,7 @@ namespace Dt.Cm
         {
             return Task.FromResult(100);
         }
-        
+
         /// <summary>
         /// int参数
         /// </summary>
@@ -106,7 +101,7 @@ namespace Dt.Cm
         {
             return Task.FromResult(long.MaxValue - 1);
         }
-        
+
         /// <summary>
         /// long参数
         /// </summary>
@@ -129,7 +124,7 @@ namespace Dt.Cm
         {
             return Task.FromResult(200d);
         }
-        
+
         /// <summary>
         /// double参数
         /// </summary>
@@ -152,7 +147,7 @@ namespace Dt.Cm
         {
             return Task.FromResult(DateTime.Now);
         }
-        
+
         /// <summary>
         /// DateTime参数
         /// </summary>
@@ -175,7 +170,7 @@ namespace Dt.Cm
         {
             return Task.FromResult(new byte[] { 10, 12, 14, 16 });
         }
-        
+
         /// <summary>
         /// byte[]参数
         /// </summary>
@@ -206,7 +201,7 @@ namespace Dt.Cm
                 Params = new List<object> { 1, "a", true },
             });
         }
-        
+
         /// <summary>
         /// MsgInfo参数
         /// </summary>
@@ -231,7 +226,7 @@ namespace Dt.Cm
         {
             return Task.FromResult(new List<string>() { "first", "second" });
         }
-        
+
         /// <summary>
         /// 字符串列表
         /// </summary>
@@ -262,7 +257,7 @@ namespace Dt.Cm
             ls.Add(false);
             return Task.FromResult(ls);
         }
-        
+
         /// <summary>
         /// bool值列表
         /// </summary>
@@ -287,7 +282,7 @@ namespace Dt.Cm
             List<int> ls = new List<int>() { 1, 2, 3, 4 };
             return Task.FromResult(ls);
         }
-        
+
         /// <summary>
         /// int列表
         /// </summary>
@@ -312,7 +307,7 @@ namespace Dt.Cm
             List<long> ls = new List<long>() { 1, 2, 3, 4 };
             return Task.FromResult(ls);
         }
-        
+
         /// <summary>
         /// long列表
         /// </summary>
@@ -335,7 +330,7 @@ namespace Dt.Cm
         {
             return Task.FromResult(new List<double>() { 200.0d, 100d, 50.123d, 123.45d });
         }
-        
+
         /// <summary>
         /// double列表
         /// </summary>
@@ -364,7 +359,7 @@ namespace Dt.Cm
             tms.Add(DateTime.Now.AddDays(-1));
             return Task.FromResult(tms);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -398,7 +393,7 @@ namespace Dt.Cm
             ls.Add(100.23d);
             return Task.FromResult(ls);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -424,7 +419,7 @@ namespace Dt.Cm
         {
             return Task.FromResult(CreateTable());
         }
-        
+
         /// <summary>
         /// 由外部传递Table
         /// </summary>
@@ -449,7 +444,7 @@ namespace Dt.Cm
         {
             return Task.FromResult(CreateTable()[0]);
         }
-        
+
         /// <summary>
         /// 由外部传递Row
         /// </summary>
@@ -504,7 +499,7 @@ namespace Dt.Cm
             dict["tbl2"] = tbl;
             return Task.FromResult(dict);
         }
-        
+
         /// <summary>
         /// 由外部传递多个Table
         /// </summary>
@@ -625,7 +620,7 @@ namespace Dt.Cm
             dict["null"] = null;
             return Task.FromResult(dict);
         }
-        
+
         /// <summary>
         /// 返回基本数据类型的Dict
         /// </summary>
@@ -713,7 +708,7 @@ namespace Dt.Cm
             dts.Add(dict);
             return Task.FromResult(dts);
         }
-        
+
         /// <summary>
         /// 发送Dict列表
         /// </summary>
@@ -735,7 +730,7 @@ namespace Dt.Cm
             product.Name = "Apple";
             product.ExpiryDate = new DateTime(2016, 12, 28);
             product.Price = 3.99M;
-            product.Sizes = new string[] { "Small", "Medium", "Large" };
+            product.Sizes = new List<string> { "Small", "Medium", "Large" };
             return product;
         }
 
@@ -745,10 +740,10 @@ namespace Dt.Cm
             product.Name = "Apple";
             product.ExpiryDate = new DateTime(2016, 12, 28);
             product.Price = 3.99M;
-            product.Sizes = new string[] { "Small", "Medium", "Large" };
+            product.Sizes = new List<string> { "Small", "Medium", "Large" };
             return Task.FromResult(product);
         }
-        
+
         /// <summary>
         /// 由外部传递基础自定义类型
         /// </summary>
@@ -756,7 +751,7 @@ namespace Dt.Cm
         /// <returns></returns>
         public bool SetCustomBase(Product p_product)
         {
-            return p_product != null && p_product.Sizes?.Length > 0;
+            return p_product != null && p_product.Sizes?.Count > 0;
         }
 
         /// <summary>
@@ -772,7 +767,7 @@ namespace Dt.Cm
                 product.Name = "Apple" + i.ToString();
                 product.ExpiryDate = new DateTime(2016, 12, 28);
                 product.Price = 3.99M + i;
-                product.Sizes = new string[] { "Small", "Medium", "Large" };
+                product.Sizes = new List<string> { "Small", "Medium", "Large" };
                 ls.Add(product);
             }
 
@@ -788,13 +783,13 @@ namespace Dt.Cm
                 product.Name = "Apple" + i.ToString();
                 product.ExpiryDate = new DateTime(2016, 12, 28);
                 product.Price = 3.99M + i;
-                product.Sizes = new string[] { "Small", "Medium", "Large" };
+                product.Sizes = new List<string> { "Small", "Medium", "Large" };
                 ls.Add(product);
             }
 
             return Task.FromResult(ls);
         }
-        
+
         /// <summary>
         /// 由外部传递自定义对象列表
         /// </summary>
@@ -832,7 +827,7 @@ namespace Dt.Cm
             person.Info = CreateTable();
             return Task.FromResult(person);
         }
-        
+
         /// <summary>
         /// 由外部传递复杂自定义类型
         /// </summary>
@@ -874,7 +869,7 @@ namespace Dt.Cm
             dept.Employee = employee;
             return Task.FromResult(dept);
         }
-        
+
         /// <summary>
         /// 由外部传递嵌套自定义类型
         /// </summary>
@@ -905,14 +900,7 @@ namespace Dt.Cm
         #endregion
     }
 
-    [JsonSerializable(typeof(Product))]
-    [JsonSerializable(typeof(Student))]
-    [JsonSerializable(typeof(Department))]
-    internal partial class AppJsonSerializerContext : JsonSerializerContext
-    {
-    }
-    
-    public class Product
+    public class Product : JsonObj
     {
         public string Name { get; set; }
 
@@ -921,23 +909,21 @@ namespace Dt.Cm
         [JsonIgnore]
         public decimal Price { get; set; }
 
-        public string[] Sizes { get; set; }
+        public List<string> Sizes { get; set; }
     }
 
-    public class Student
+    public class Student : JsonObj
     {
         public string Name { get; set; }
 
         public DateTime LastModified { get; set; }
 
-        [RpcJson]
         public Dict Salary { get; set; }
 
-        [RpcJson]
         public Table Info { get; set; }
     }
 
-    public class Department
+    public class Department : JsonObj
     {
         public string Name { get; set; }
 

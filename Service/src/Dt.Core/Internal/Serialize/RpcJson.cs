@@ -14,6 +14,7 @@ using System.Text.Json.Serialization;
 
 namespace Dt.Core
 {
+    /* AOT不支持动态类型序列化，JsonSerializer
     /// <summary>
     /// 属性自定义json序列化/反序列化，属性类型需实现IRpcJson接口
     /// </summary>
@@ -49,4 +50,5 @@ namespace Dt.Core
             throw new Exception($"类型{typeToConvert.FullName}未实现IRpcJson，无法序列化");
         }
     }
+    */
 }
