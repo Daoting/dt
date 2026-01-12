@@ -49,7 +49,6 @@
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\JsonOptions.cs" Link="Internal\Serialize\JsonOptions.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\JsonRpcSerializer.cs" Link="Internal\Serialize\JsonRpcSerializer.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\RpcJson.cs" Link="Internal\Serialize\RpcJson.cs" />
-        <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\JsonObj.cs" Link="Internal\Serialize\JsonObj.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\SerializeTypeAlias.cs" Link="Internal\Serialize\SerializeTypeAlias.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Kit\Kit-Encrypt.cs" Link="Kit\Kit-Encrypt.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Kit\Kit-Json.cs" Link="Kit\Kit-Json.cs" />

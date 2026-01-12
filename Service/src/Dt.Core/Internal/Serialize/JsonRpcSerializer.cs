@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using System.Buffers.Text;
 using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Text.Json.Serialization;
 #endregion
 
 namespace Dt.Core
@@ -114,13 +116,9 @@ namespace Dt.Core
                         // 列表
                         SerializeArray((IEnumerable)p_value, p_writer);
                     }
-                    else if (p_value is JsonObj obj)
-                    {
-                        obj.WriteJson(p_writer);
-                    }
                     else
                     {
-                        throw new Exception($"AOT不支持类型反射方式序列化，请将 {tp.Name} 类型继承 JsonObj 或 实现 IRpcJson 接口！");
+                        SerializeObject(p_value, p_writer);
                     }
                     break;
 
@@ -128,7 +126,40 @@ namespace Dt.Core
                     throw new Exception("未支持序列化类型" + tp.FullName);
             }
         }
-        
+
+        /// <summary>
+        /// JsonSerializer在AOT时不支持类型反射方式序列化，不再使用 JsonSerializer
+        /// </summary>
+        /// <param name="p_value"></param>
+        /// <param name="p_writer"></param>
+        static void SerializeObject(object p_value, Utf8JsonWriter p_writer)
+        {
+            // 非内置对象
+            //[
+            //    "#object",
+            //    {
+            //        "key1":"val1",
+            //        "key2":"val2"
+            //    }
+            //]
+            p_writer.WriteStartArray();
+            p_writer.WriteStringValue("#object");
+            p_writer.WriteStartObject();
+
+            var props = p_value.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            foreach (PropertyInfo prop in props)
+            {
+                if (!prop.CanWrite || prop.GetCustomAttribute<JsonIgnoreAttribute>(false) != null)
+                    continue;
+
+                p_writer.WritePropertyName(prop.Name);
+                Serialize(prop.GetValue(p_value), p_writer);
+            }
+
+            p_writer.WriteEndObject();
+            p_writer.WriteEndArray();
+        }
+
         static void SerializeArray(IEnumerable p_value, Utf8JsonWriter p_writer)
         {
             p_writer.WriteStartArray();
@@ -232,7 +263,7 @@ namespace Dt.Core
 
                         if (p_tgtType == typeof(DateTime) || p_tgtType == typeof(DateTime?))
                             return p_reader.GetDateTime();
-                        
+
                         if (p_tgtType == typeof(bool))
                         {
                             string val = p_reader.GetString();
@@ -337,23 +368,39 @@ namespace Dt.Core
             }
 
             // 自定义序列化
+            // 无参数构造方法可能为private，如实体类型
+            object tgt = Activator.CreateInstance(type, true);
             if (type.GetInterface("IRpcJson") != null)
             {
-                // 无参数构造方法可能为private，如实体类型
-                object tgt = Activator.CreateInstance(type, true);
                 ((IRpcJson)tgt).ReadRpcJson(ref p_reader);
-                return tgt;
             }
-
-            if (type.IsSubclassOf(typeof(JsonObj)))
+            else
             {
-                // JsonObj的默认反序列化
-                object obj = Activator.CreateInstance(type, true);
-                ((JsonObj)obj).ReadJson(ref p_reader);
-                return obj;
+                // JsonSerializer在AOT时不支持类型反射方式序列化，不再使用 JsonSerializer
+                // 外层 {
+                p_reader.Read();
+
+                // 读取属性
+                var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+                while (p_reader.Read() && p_reader.TokenType == JsonTokenType.PropertyName)
+                {
+                    var name = p_reader.GetString();
+                    // 属性值
+                    p_reader.Read();
+                    var prop = props.FirstOrDefault(p => p.Name == name);
+                    if (prop != null)
+                    {
+                        var val = Deserialize(ref p_reader, prop.PropertyType);
+                        prop.SetValue(tgt, val);
+                    }
+                    else
+                    {
+                        Deserialize(ref p_reader);
+                    }
+                }
+                // 外层 }
             }
-            
-            throw new Exception($"AOT不支持类型反射方式序列化，请将 {type.Name} 类型继承 JsonObj 或 实现 IRpcJson 接口！");
+            return tgt;
         }
 
         static object DeserializeArray(ref Utf8JsonReader p_reader, string p_alias, Type p_tgtType)

@@ -527,7 +527,7 @@ namespace Demo.Crud
             product.Name = "Apple";
             product.ExpiryDate = new DateTime(2016, 12, 28);
             product.Price = 3.99M;
-            product.Sizes = new string[] { "Small", "Medium", "Large" };
+            product.Sizes = new List<string> { "Small", "Medium", "Large" };
             _tbInfo.Text = (await AtTestCm.SetCustomBase(product)) ? "调用成功！" : "调用不成功！";
         }
 
@@ -549,7 +549,7 @@ namespace Demo.Crud
                 product.Name = "Apple" + i.ToString();
                 product.ExpiryDate = new DateTime(2016, 12, 28);
                 product.Price = 3.99M + i;
-                product.Sizes = new string[] { "Small", "Medium", "Large" };
+                product.Sizes = new List<string> { "Small", "Medium", "Large" };
                 ls.Add(product);
             }
             _tbInfo.Text = (await AtTestCm.SetCustomList(ls)) ? "调用成功！" : "调用不成功！";
@@ -751,7 +751,7 @@ namespace Demo.Crud
         [JsonIgnore]
         public decimal Price { get; set; }
 
-        public string[] Sizes { get; set; }
+        public List<string> Sizes { get; set; }
     }
 
     public class Student
@@ -760,10 +760,8 @@ namespace Demo.Crud
 
         public DateTime LastModified { get; set; }
 
-        [RpcJson]
         public Dict Salary { get; set; }
 
-        [RpcJson]
         public Table Info { get; set; }
     }
 

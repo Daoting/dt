@@ -900,7 +900,7 @@ namespace Dt.Cm
         #endregion
     }
 
-    public class Product : JsonObj
+    public class Product
     {
         public string Name { get; set; }
 
@@ -912,7 +912,7 @@ namespace Dt.Cm
         public List<string> Sizes { get; set; }
     }
 
-    public class Student : JsonObj
+    public class Student
     {
         public string Name { get; set; }
 
@@ -923,7 +923,7 @@ namespace Dt.Cm
         public Table Info { get; set; }
     }
 
-    public class Department : JsonObj
+    public class Department
     {
         public string Name { get; set; }
 
