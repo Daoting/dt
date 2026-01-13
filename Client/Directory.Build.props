@@ -8,7 +8,7 @@
         
         <!-- 启用全局using -->
         <ImplicitUsings>enable</ImplicitUsings>
-        <NoWarn>$(NoWarn);1591;NU1701;Uno0001;Uno0006;0252;NETSDK1206;SYSLIB0050;WIN2D0001;IL2090;IL2067;IL2070;IL2026;IL2075;IL2072;IL2091;IL2087;IL2057;IL2080;IL2090;IL2060;IL2096;IL2077</NoWarn>
+        <NoWarn>$(NoWarn);1591;NU1701;Uno0001;Uno0006;0252;NETSDK1206;SYSLIB0050;WIN2D0001;IL2067;IL2070;IL2026;IL2075;IL2072;IL2091;IL2087;IL2057;IL2080;IL2090;IL2060;IL2096;IL2077</NoWarn>
         <!-- 始终禁止xbf嵌入到pri文件，默认debug时不嵌入，release时嵌入，嵌入时包升级会造成引用项目都必须重新编译 -->
         <DisableEmbeddedXbf>true</DisableEmbeddedXbf>
         <!-- 生成xml文档 -->
