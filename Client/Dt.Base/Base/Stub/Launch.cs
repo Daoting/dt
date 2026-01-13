@@ -39,7 +39,7 @@ namespace Dt.Base
                 try
                 {
                     // 带参数启动
-                    DefUICallback._autoStartOnce = JsonSerializer.Deserialize<AutoStartInfo>(p_launchArgs);
+                    DefUICallback._autoStartOnce = Kit.Deserialize<AutoStartInfo>(p_launchArgs);
                 }
                 catch { }
             }

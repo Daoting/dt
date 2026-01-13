@@ -59,7 +59,7 @@ namespace Dt.Base
                     }
                     else
                     {
-                        var par = JsonSerializer.Deserialize(p_autoStart.Params, Type.GetType(p_autoStart.ParamsType));
+                        var par = Kit.Deserialize(p_autoStart.Params, Type.GetType(p_autoStart.ParamsType));
                         win = (Win)Activator.CreateInstance(type, par);
                     }
 
@@ -102,7 +102,7 @@ namespace Dt.Base
             info.Icon = p_win.Icon.ToString();
             if (p_win.Params != null)
             {
-                info.Params = JsonSerializer.Serialize(p_win.Params, JsonOptions.UnsafeSerializer);
+                info.Params = Kit.Serialize(p_win.Params);
                 info.ParamsType = p_win.Params.GetType().AssemblyQualifiedName;
             }
             return info;

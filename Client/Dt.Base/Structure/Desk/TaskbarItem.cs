@@ -151,7 +151,7 @@ namespace Dt.Base
             if (autoStart != null
                 && win != null
                 && autoStart.WinType == win.GetType().AssemblyQualifiedName
-                && (win.Params == null || autoStart.Params == JsonSerializer.Serialize(win.Params, JsonOptions.UnsafeSerializer)))
+                && (win.Params == null || autoStart.Params == Kit.Serialize(win.Params)))
             {
                 _menu.Items[0].Visibility = Visibility.Visible;
                 _menu.Items[1].Visibility = Visibility.Collapsed;

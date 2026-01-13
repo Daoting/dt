@@ -56,7 +56,7 @@ namespace Dt.Base
                 var autoStart = await CookieX.GetAutoStart();
                 if (autoStart != null
                     && autoStart.WinType == p_win.GetType().AssemblyQualifiedName
-                    && (p_win.Params == null || autoStart.Params == JsonSerializer.Serialize(p_win.Params, JsonOptions.UnsafeSerializer)))
+                    && (p_win.Params == null || autoStart.Params == Kit.Serialize(p_win.Params)))
                 {
                     _menu.Items[0].Visibility = Visibility.Visible;
                     _menu.Items[1].Visibility = Visibility.Collapsed;
