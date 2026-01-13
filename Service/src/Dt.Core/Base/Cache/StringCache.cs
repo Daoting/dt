@@ -59,7 +59,7 @@ namespace Dt.Core.Caches
             }
 
             // 反序列化
-            return JsonSerializer.Deserialize<T>(val.ToString(), JsonOptions.UnsafeSerializer);
+            return Kit.Deserialize<T>(val.ToString());
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Dt.Core.Caches
             if (tp == typeof(string) || !tp.IsClass)
                 await _db.StringSetAsync(key, p_value.ToString(), p_expiry);
             else
-                await _db.StringSetAsync(key, JsonSerializer.Serialize(p_value, JsonOptions.UnsafeSerializer), p_expiry);
+                await _db.StringSetAsync(key, Kit.Serialize(p_value), p_expiry);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Dt.Core.Caches
                     }
                 }
                 // 反序列化
-                res.Add(JsonSerializer.Deserialize<T>(val.ToString(), JsonOptions.UnsafeSerializer));
+                res.Add(Kit.Deserialize<T>(val.ToString()));
             }
             return res;
         }

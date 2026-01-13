@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Timer = System.Timers.Timer;
 #endregion
 
@@ -132,24 +133,19 @@ namespace Dt.Core.RabbitMQ
 
             try
             {
-                byte[] data;
+                string data;
                 using (var response = await _mqClient.GetAsync(default(Uri)))
                 {
                     response.EnsureSuccessStatusCode();
-                    data = await response.Content.ReadAsByteArrayAsync();
+                    data = await response.Content.ReadAsStringAsync();
                 }
 
-                var root = JsonSerializer.Deserialize<JsonElement>(data);
-                if (root.ValueKind != JsonValueKind.Array)
-                    throw new Exception("RabbitMQ返回的队列json反序列化异常！");
-
-                foreach (var elem in root.EnumerateArray())
+                var matches = Regex.Matches(data, @"""name"":""([^""]+)""");
+                if (matches.Count > 0)
                 {
-                    if (elem.ValueKind == JsonValueKind.Object
-                        && elem.TryGetProperty("name", out var name)
-                        && name.ValueKind == JsonValueKind.String)
+                    for (int i = 0; i < matches.Count; i++)
                     {
-                        string val = name.GetString();
+                        var val = matches[i].Groups[1].Value;
                         string[] parts = val.Split('.');
                         // 属于当前应用
                         if (parts.Length > 1 && parts[0] == Kit.AppName)

@@ -14,7 +14,7 @@ using System.Text.Json.Serialization;
 
 namespace Dt.Core
 {
-    /* AOT不支持动态类型序列化，JsonSerializer
+    /* JsonSerializer在AOT时不支持类型反射方式序列化，不再使用 JsonSerializer
     /// <summary>
     /// 属性自定义json序列化/反序列化，属性类型需实现IRpcJson接口
     /// </summary>

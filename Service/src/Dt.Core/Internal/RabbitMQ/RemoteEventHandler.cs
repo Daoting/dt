@@ -25,7 +25,7 @@ namespace Dt.Core.RabbitMQ
             EventWrapper body;
             try
             {
-                body = JsonSerializer.Deserialize<EventWrapper>(p_args.Body.Span, JsonOptions.UnsafeSerializer);
+                body = Kit.Deserialize<EventWrapper>(p_args.Body.Span);
             }
             catch (Exception e)
             {
@@ -43,7 +43,7 @@ namespace Dt.Core.RabbitMQ
             object eventObj;
             try
             {
-                eventObj = JsonSerializer.Deserialize(body.Data, hType.GetGenericArguments()[0], JsonOptions.UnsafeSerializer);
+                eventObj = Kit.Deserialize(body.Data, hType.GetGenericArguments()[0]);
             }
             catch (Exception e)
             {

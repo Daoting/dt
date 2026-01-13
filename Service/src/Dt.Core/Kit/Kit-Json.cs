@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using System.IO;
 using System.Text;
 using System.Text.Json;
 #endregion
@@ -20,7 +19,7 @@ namespace Dt.Core
     public partial class Kit
     {
         /// <summary>
-        /// 按照系统规则序列化对象
+        /// 按照rpc json规则序列化对象
         /// </summary>
         /// <param name="p_object"></param>
         /// <returns></returns>
@@ -39,7 +38,7 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 按照系统规则反序列化json串
+        /// 按照rpc json规则反序列化json串
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="p_content"></param>
@@ -51,6 +50,47 @@ namespace Dt.Core
             Utf8JsonReader reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(p_content));
             reader.Read();
             return JsonRpcSerializer.Deserialize<T>(ref reader);
+        }
+
+        /// <summary>
+        /// 按照rpc json规则反序列化json串
+        /// </summary>
+        /// <param name="p_content"></param>
+        /// <param name="p_tgtType"></param>
+        /// <returns></returns>
+        public static object Deserialize(string p_content, Type p_tgtType)
+        {
+            Throw.IfEmpty(p_content);
+
+            Utf8JsonReader reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(p_content));
+            reader.Read();
+            return JsonRpcSerializer.Deserialize(ref reader, p_tgtType);
+        }
+
+        /// <summary>
+        /// 按照rpc json规则反序列化json串
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="p_data"></param>
+        /// <returns></returns>
+        public static T Deserialize<T>(ReadOnlySpan<byte> p_data)
+        {
+            Utf8JsonReader reader = new Utf8JsonReader(p_data);
+            reader.Read();
+            return JsonRpcSerializer.Deserialize<T>(ref reader);
+        }
+
+        /// <summary>
+        /// 按照rpc json规则反序列化json串
+        /// </summary>
+        /// <param name="p_data"></param>
+        /// <param name="p_tgtType"></param>
+        /// <returns></returns>
+        public static object Deserialize(ReadOnlySpan<byte> p_data, Type p_tgtType)
+        {
+            Utf8JsonReader reader = new Utf8JsonReader(p_data);
+            reader.Read();
+            return JsonRpcSerializer.Deserialize(ref reader, p_tgtType);
         }
     }
 }

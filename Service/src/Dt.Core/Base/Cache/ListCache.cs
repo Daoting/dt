@@ -40,7 +40,7 @@ namespace Dt.Core.Caches
             if (!NeedSerialize)
                 return _db.ListRightPushAsync(key, p_value.ToString());
 
-            return _db.ListRightPushAsync(key, JsonSerializer.Serialize(p_value, JsonOptions.UnsafeSerializer));
+            return _db.ListRightPushAsync(key, Kit.Serialize(p_value));
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Dt.Core.Caches
                         continue;
                     }
 
-                    var item = JsonSerializer.Deserialize<TCacheItem>(val.ToString(), JsonOptions.UnsafeSerializer);
+                    var item = Kit.Deserialize<TCacheItem>(val.ToString());
                     ls.Add(item);
                 }
             }

@@ -150,9 +150,9 @@ namespace Dt.Core.EventBus
             EventWrapper body = new EventWrapper
             {
                 EventName = p_event.GetType().Name,
-                Data = JsonSerializer.Serialize(p_event, p_event.GetType(), JsonOptions.UnsafeSerializer)
+                Data = Kit.Serialize(p_event)
             };
-            var data = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(body, JsonOptions.UnsafeSerializer));
+            var data = Encoding.UTF8.GetBytes(Kit.Serialize(body));
             _mq.Publish(data, p_routingKey, p_bindExchange);
         }
     }
