@@ -102,7 +102,7 @@ namespace Dt.Core
             Windows.Data.Xml.Dom.XmlDocument xml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText02);
             if (p_startInfo != null)
             {
-                string json = JsonSerializer.Serialize(p_startInfo, JsonOptions.UnsafeSerializer);
+                string json = Kit.Serialize(p_startInfo);
                 ((Windows.Data.Xml.Dom.XmlElement)xml.FirstChild).SetAttribute("launch", json);
             }
 
@@ -120,7 +120,7 @@ namespace Dt.Core
 
             //if (p_startInfo != null)
             //{
-            //    string json = JsonSerializer.Serialize(p_startInfo, JsonOptions.UnsafeSerializer);
+            //    string json = Kit.Serialize(p_startInfo);
             //    builder.AddArgument("launch", json);
             //}
             //AppNotificationManager.Default.Show(builder.BuildNotification());

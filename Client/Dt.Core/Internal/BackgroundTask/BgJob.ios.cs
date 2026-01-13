@@ -167,7 +167,7 @@ namespace Dt.Core
             content.Badge = 1;
             if (p_startInfo != null)
             {
-                string json = JsonSerializer.Serialize(p_startInfo, JsonOptions.UnsafeSerializer);
+                string json = Kit.Serialize(p_startInfo);
                 content.UserInfo = new NSDictionary<NSString, NSString>(new[] { new NSString(ToastStart) }, new[] { new NSString(json) });
             }
 

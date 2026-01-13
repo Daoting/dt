@@ -129,7 +129,7 @@ namespace Dt.Core
                 .AddCategory(Intent.CategoryLauncher);
             if (p_startInfo != null)
             {
-                string json = JsonSerializer.Serialize(p_startInfo, JsonOptions.UnsafeSerializer);
+                string json = Kit.Serialize(p_startInfo);
                 intent.PutExtra(ActionToast, json);
             }
             var pending = PendingIntent.GetActivity(context, 0, intent, PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);

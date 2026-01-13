@@ -93,7 +93,7 @@ namespace Dt.Core
             {
                 var cc = await GetByID("AutoStart");
                 if (cc != null && !string.IsNullOrEmpty(cc.Val))
-                    return JsonSerializer.Deserialize<AutoStartInfo>(cc.Val);
+                    return Kit.Deserialize<AutoStartInfo>(cc.Val);
             }
             catch { }
             return null;
@@ -108,11 +108,11 @@ namespace Dt.Core
         {
             if (p_info != null)
             {
-                string json = JsonSerializer.Serialize(p_info, JsonOptions.UnsafeSerializer);
+                string json = Kit.Serialize(p_info);
                 var cc = await GetByID("AutoStart");
                 if (cc == null)
                 {
-                    await CookieX.Save("AutoStart", json);
+                    await Save("AutoStart", json);
                 }
                 else
                 {
