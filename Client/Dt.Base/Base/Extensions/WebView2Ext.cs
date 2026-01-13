@@ -23,7 +23,6 @@ namespace Dt.Base
         /// <param name="p_functionName"></param>
         /// <param name="p_parameters"></param>
         /// <returns></returns>
-        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public static async Task<string> InvokeScriptAsync(this WebView2 webView2, string p_functionName, params object[] p_parameters)
         {
             string script = p_functionName + "(";
@@ -31,7 +30,7 @@ namespace Dt.Base
             {
                 for (int i = 0; i < p_parameters.Length; i++)
                 {
-                    script += JsonSerializer.Serialize(p_parameters[i], JsonOptions.UnsafeSerializer);
+                    script += Kit.Serialize(p_parameters[i]);
                     if (i < p_parameters.Length - 1)
                     {
                         script += ", ";
@@ -40,11 +39,9 @@ namespace Dt.Base
             }
             script += ");";
 
-            // 返回json编码的串，undefined时返回"null"
+            // undefined时返回"null"
             string str = await webView2.ExecuteScriptAsync(script);
-            // json解码
-            var val = JsonSerializer.Deserialize<dynamic>(str);
-            return val is null ? "" : val.ToString();
+            return string.IsNullOrEmpty(str) ? "" : Kit.Deserialize<string>(str);
         }
     }
 }
