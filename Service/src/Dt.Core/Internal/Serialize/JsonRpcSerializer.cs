@@ -377,28 +377,31 @@ namespace Dt.Core
             else
             {
                 // JsonSerializer在AOT时不支持类型反射方式序列化，不再使用 JsonSerializer
+                var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+
                 // 外层 {
                 p_reader.Read();
-
-                // 读取属性
-                var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-                while (p_reader.Read() && p_reader.TokenType == JsonTokenType.PropertyName)
+                while (p_reader.Read())
                 {
+                    // 外层 }
+                    if (p_reader.TokenType == JsonTokenType.EndObject)
+                        break;
+
+                    // 读取属性
                     var name = p_reader.GetString();
+                    var prop = props.FirstOrDefault(p => p.Name == name);
+                    if (prop == null)
+                        throw new Exception($"反序列化json失败，{type.Name} 类型不存在 {name} 属性！");
+
                     // 属性值
                     p_reader.Read();
-                    var prop = props.FirstOrDefault(p => p.Name == name);
-                    if (prop != null)
-                    {
-                        var val = Deserialize(ref p_reader, prop.PropertyType);
-                        prop.SetValue(tgt, val);
-                    }
-                    else
-                    {
-                        Deserialize(ref p_reader);
-                    }
+                    var val = Deserialize(ref p_reader, prop.PropertyType);
+                    prop.SetValue(tgt, val);
+
+                    // 普通对象，跳过对象外层的 ]
+                    if (p_reader.TokenType == JsonTokenType.EndObject)
+                        p_reader.Read();
                 }
-                // 外层 }
             }
             return tgt;
         }
@@ -467,8 +470,8 @@ namespace Dt.Core
 
         static object DeserializeFreeObjectArray(ref Utf8JsonReader p_reader, Type p_tgtType)
         {
-            if (!p_tgtType.IsGenericType || p_tgtType.GetGenericTypeDefinition() != typeof(List<>))
-                throw new Exception("非内置对象列表只支持List<T>！");
+            if (!p_tgtType.IsGenericType || p_tgtType.GetInterface("IList") == null)
+                throw new Exception("非内置对象列表只支持IList！");
 
             Type itemType = p_tgtType.GetGenericArguments()[0];
             IList target = Activator.CreateInstance(p_tgtType) as IList;
