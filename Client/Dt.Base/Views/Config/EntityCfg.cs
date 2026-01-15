@@ -342,9 +342,7 @@ namespace Dt.Base
             using (var stream = new MemoryStream())
             using (var writer = new Utf8JsonWriter(stream, JsonOptions.UnsafeWriter))
             {
-                writer.WriteStartObject();
                 DoSerialize(writer);
-                writer.WriteEndObject();
                 writer.Flush();
                 return Encoding.UTF8.GetString(stream.ToArray());
             }
@@ -356,6 +354,18 @@ namespace Dt.Base
         /// <param name="writer"></param>
         public void DoSerialize(Utf8JsonWriter writer)
         {
+            // 非内置对象
+            //[
+            //    "#object",
+            //    {
+            //        "key1":"val1",
+            //        "key2":"val2"
+            //    }
+            //]
+            writer.WriteStartArray();
+            writer.WriteStringValue("#object");
+            writer.WriteStartObject();
+            
             if (!string.IsNullOrEmpty(Cls))
                 writer.WriteString("Cls", Cls);
             if (!string.IsNullOrEmpty(QueryFvXaml))
@@ -368,6 +378,9 @@ namespace Dt.Base
             if (ListCfg.IsChanged)
             {
                 writer.WriteStartObject("ListCfg");
+                writer.WriteStartArray();
+                writer.WriteStringValue("#object");
+                
                 if (!string.IsNullOrEmpty(ListCfg.Xaml))
                     writer.WriteString("Xaml", ListCfg.Xaml);
                 if (!ListCfg.ShowAddMi)
@@ -378,12 +391,17 @@ namespace Dt.Base
                     writer.WriteBoolean("ShowMultiSelMi", ListCfg.ShowMultiSelMi);
                 if (!ListCfg.IsCustomTitle)
                     writer.WriteString("Title", ListCfg.Title);
+
+                writer.WriteEndArray();
                 writer.WriteEndObject();
             }
 
             if (FormCfg.IsChanged)
             {
                 writer.WriteStartObject("FormCfg");
+                writer.WriteStartArray();
+                writer.WriteStringValue("#object");
+                
                 if (!string.IsNullOrEmpty(FormCfg.Xaml))
                     writer.WriteString("Xaml", FormCfg.Xaml);
                 if (!FormCfg.ShowAddMi)
@@ -394,8 +412,13 @@ namespace Dt.Base
                     writer.WriteBoolean("ShowSaveMi", FormCfg.ShowSaveMi);
                 if (!FormCfg.IsCustomTitle)
                     writer.WriteString("Title", ListCfg.Title);
+
+                writer.WriteEndArray();
                 writer.WriteEndObject();
             }
+            
+            writer.WriteEndObject();
+            writer.WriteEndArray();
         }
 
         /// <summary>
@@ -403,13 +426,12 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_json"></param>
         /// <returns></returns>
-        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public static EntityCfg Deserialize(string p_json)
         {
             if (string.IsNullOrEmpty(p_json))
                 return new EntityCfg();
 
-            var cfg = JsonSerializer.Deserialize<EntityCfg>(p_json);
+            var cfg = Kit.Deserialize<EntityCfg>(p_json);
             if (cfg.ListCfg != null)
                 cfg.ListCfg.Owner = cfg;
             if (cfg.FormCfg != null)

@@ -33,7 +33,7 @@ namespace Dt.Base
         /// 是否采用父子表单
         /// </summary>
         public bool IsUnionForm { get; set; }
-        
+
         /// <summary>
         /// 序列化
         /// </summary>
@@ -43,29 +43,33 @@ namespace Dt.Base
             using (var stream = new MemoryStream())
             using (var writer = new Utf8JsonWriter(stream, JsonOptions.UnsafeWriter))
             {
+                writer.WriteStartArray();
+                writer.WriteStringValue("#object");
                 writer.WriteStartObject();
 
                 if (IsUnionForm)
                     writer.WriteBoolean("IsUnionForm", true);
-                
-                writer.WriteStartObject("ParentCfg");
+
                 if (ParentCfg != null)
+                {
+                    writer.WritePropertyName("ParentCfg");
                     ParentCfg.DoSerialize(writer);
-                writer.WriteEndObject();
-                
-                writer.WriteStartArray("ChildCfgs");
+                }
+
                 if (ChildCfgs != null && ChildCfgs.Count > 0)
                 {
+                    writer.WritePropertyName("ChildCfgs");
+                    writer.WriteStartArray();
+                    writer.WriteStringValue("&object");
                     foreach (var cfg in ChildCfgs)
                     {
-                        writer.WriteStartObject();
                         cfg.DoSerialize(writer);
-                        writer.WriteEndObject();
                     }
+                    writer.WriteEndArray();
                 }
-                writer.WriteEndArray();
 
                 writer.WriteEndObject();
+                writer.WriteEndArray();
                 writer.Flush();
                 return Encoding.UTF8.GetString(stream.ToArray());
             }
@@ -76,13 +80,12 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_json"></param>
         /// <returns></returns>
-        [UnconditionalSuppressMessage("AOT", "IL3050")]
         public static OneToManyCfg Deserialize(string p_json)
         {
             if (string.IsNullOrEmpty(p_json))
                 return new OneToManyCfg();
 
-            var cfg = JsonSerializer.Deserialize<OneToManyCfg>(p_json);
+            var cfg = Kit.Deserialize<OneToManyCfg>(p_json);
             if (cfg.ParentCfg != null)
             {
                 if (cfg.ParentCfg.ListCfg != null)

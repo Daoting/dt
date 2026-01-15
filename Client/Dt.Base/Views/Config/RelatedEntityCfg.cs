@@ -268,9 +268,7 @@ namespace Dt.Base
             using (var stream = new MemoryStream())
             using (var writer = new Utf8JsonWriter(stream, JsonOptions.UnsafeWriter))
             {
-                writer.WriteStartObject();
                 DoSerialize(writer);
-                writer.WriteEndObject();
                 writer.Flush();
                 return Encoding.UTF8.GetString(stream.ToArray());
             }
@@ -282,6 +280,10 @@ namespace Dt.Base
         /// <param name="writer"></param>
         public void DoSerialize(Utf8JsonWriter writer)
         {
+            writer.WriteStartArray();
+            writer.WriteStringValue("#object");
+            writer.WriteStartObject();
+            
             if (!string.IsNullOrEmpty(_relatedCls))
                 writer.WriteString("RelatedCls", _relatedCls);
             if (!string.IsNullOrEmpty(_middleCls))
@@ -303,6 +305,8 @@ namespace Dt.Base
                 writer.WriteBoolean("ShowDelMi", ShowDelMi);
             if (!ShowMultiSelMi)
                 writer.WriteBoolean("ShowMultiSelMi", ShowMultiSelMi);
+            writer.WriteEndObject();
+            writer.WriteEndArray();
         }
 
         /// <summary>

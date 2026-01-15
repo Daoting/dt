@@ -38,26 +38,30 @@ namespace Dt.Base
             using (var stream = new MemoryStream())
             using (var writer = new Utf8JsonWriter(stream, JsonOptions.UnsafeWriter))
             {
+                writer.WriteStartArray();
+                writer.WriteStringValue("#object");
                 writer.WriteStartObject();
 
-                writer.WriteStartObject("MainCfg");
                 if (MainCfg != null)
+                {
+                    writer.WritePropertyName("MainCfg");
                     MainCfg.DoSerialize(writer);
-                writer.WriteEndObject();
+                }
 
-                writer.WriteStartArray("RelatedCfgs");
                 if (RelatedCfgs != null && RelatedCfgs.Count > 0)
                 {
+                    writer.WritePropertyName("RelatedCfgs");
+                    writer.WriteStartArray();
+                    writer.WriteStringValue("&object");
                     foreach (var cfg in RelatedCfgs)
                     {
-                        writer.WriteStartObject();
                         cfg.DoSerialize(writer);
-                        writer.WriteEndObject();
                     }
+                    writer.WriteEndArray();
                 }
-                writer.WriteEndArray();
 
                 writer.WriteEndObject();
+                writer.WriteEndArray();
                 writer.Flush();
                 return Encoding.UTF8.GetString(stream.ToArray());
             }
@@ -74,7 +78,7 @@ namespace Dt.Base
             if (string.IsNullOrEmpty(p_json))
                 return new ManyToManyCfg();
 
-            var cfg = JsonSerializer.Deserialize<ManyToManyCfg>(p_json);
+            var cfg = Kit.Deserialize<ManyToManyCfg>(p_json);
             if (cfg.MainCfg != null)
             {
                 if (cfg.MainCfg.ListCfg != null)
@@ -82,7 +86,7 @@ namespace Dt.Base
                 if (cfg.MainCfg.FormCfg != null)
                     cfg.MainCfg.FormCfg.Owner = cfg.MainCfg;
             }
-            
+
             return cfg;
         }
     }

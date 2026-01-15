@@ -58,7 +58,7 @@ namespace Dt.Base.Views
             var json = await dlg.ShowDlg(_cfg.ParentCfg.Serialize());
             if (!string.IsNullOrEmpty(json))
             {
-                var cfg = JsonSerializer.Deserialize<EntityCfg>(json);
+                var cfg = Kit.Deserialize<EntityCfg>(json);
                 if (cfg != null)
                 {
                     _cfg.ParentCfg = cfg;
@@ -74,7 +74,7 @@ namespace Dt.Base.Views
             var json = await dlg.ShowDlg(new EntityCfg { IsChild = true }.Serialize());
             if (!string.IsNullOrEmpty(json))
             {
-                var cfg = JsonSerializer.Deserialize<EntityCfg>(json);
+                var cfg = Kit.Deserialize<EntityCfg>(json);
                 if (cfg != null)
                 {
                     _cfg.ChildCfgs.Add(cfg);
@@ -120,7 +120,7 @@ namespace Dt.Base.Views
             var json = await dlg.ShowDlg(cfg.Serialize());
             if (!string.IsNullOrEmpty(json))
             {
-                var ncfg = JsonSerializer.Deserialize<EntityCfg>(json);
+                var ncfg = Kit.Deserialize<EntityCfg>(json);
                 if (ncfg != null)
                 {
                     int idx = _cfg.ChildCfgs.IndexOf(cfg);

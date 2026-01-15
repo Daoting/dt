@@ -28,7 +28,7 @@ namespace Dt.Base.Views
         [UnconditionalSuppressMessage("AOT", "IL3050")]
         public async Task<string> ShowDlg(string p_params)
         {
-            _cfg = string.IsNullOrEmpty(p_params) ? new RelatedEntityCfg() : JsonSerializer.Deserialize<RelatedEntityCfg>(p_params);
+            _cfg = string.IsNullOrEmpty(p_params) ? new RelatedEntityCfg() : Kit.Deserialize<RelatedEntityCfg>(p_params);
             _fv.Data = _cfg;
             if (await ShowAsync())
             {
