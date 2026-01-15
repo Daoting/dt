@@ -167,39 +167,23 @@ namespace Dt.Mgr.Module
          }
         
          */
-        [UnconditionalSuppressMessage("AOT", "IL3050")]
         async void ParseParams()
         {
             if (!string.IsNullOrEmpty(_params))
             {
-                JsonObject obj = null;
-                using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(_params)))
-                {
-                    try
-                    {
-                        obj = await JsonSerializer.DeserializeAsync<JsonObject>(ms, JsonOptions.UnsafeSerializer);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex, "菜单报表参数json格式错误！");
-                    }
-                }
-
+                var ls = ReportView.GetRptViewParams(_params);
                 int index = 1;
-                foreach (var kv in obj)
+                foreach (var kv in ls)
                 {
-                    if (kv.Value is not JsonObject child)
-                        continue;
-
                     var rpt = RptTbl.AddRow();
                     rpt["id"] = index;
-                    rpt["uri"] = kv.Key;
-                    foreach (var ckv in child)
+                    rpt["uri"] = kv.Uri;
+                    foreach (var ckv in kv.Params)
                     {
                         var par = ParamsTbl.AddRow();
                         par["rptid"] = index;
                         par["name"] = ckv.Key;
-                        par["val"] = ckv.Value.ToString();
+                        par["val"] = ckv.Value;
                     }
                     index++;
                 }
