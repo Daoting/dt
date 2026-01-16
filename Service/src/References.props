@@ -22,7 +22,6 @@
 		<!-- 高版本支持Azure，引用太多，且和 CoreWebView2 冲突，System.IdentityModel.Tokens.Jwt低版本有漏洞 -->
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="2.1.7" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
-		<PackageReference Include="Dapper" Version="2.1.28" />
-		<PackageReference Include="Dapper.Oracle" Version="2.0.3" />
+		<PackageReference Include="Dapper" Version="2.1.66" />
 	</ItemGroup>
 </Project>

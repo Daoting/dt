@@ -8,7 +8,7 @@
 
 #region 引用命名
 using Dapper;
-using Dapper.Oracle;
+using Dt.Core.Oracle;
 using System.Collections;
 using System.Data;
 using System.Data.Common;
