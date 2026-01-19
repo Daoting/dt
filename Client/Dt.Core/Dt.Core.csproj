@@ -37,6 +37,13 @@
         <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\Access\PostgreSqlAccess.cs" Link="Base\DataAccess\DbAccess\PostgreSqlAccess.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\Access\SqlServerAccess.cs" Link="Base\DataAccess\DbAccess\SqlServerAccess.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\DbAccessInfo.cs" Link="Base\DataAccess\DbAccess\DbAccessInfo.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\Access\Oracle\CommandExtensions.cs" Link="Base\DataAccess\DbAccess\Oracle\CommandExtensions.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\Access\Oracle\Downcaster.cs" Link="Base\DataAccess\DbAccess\Oracle\Downcaster.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\Access\Oracle\OracleDynamicParameters.cs" Link="Base\DataAccess\DbAccess\Oracle\OracleDynamicParameters.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\Access\Oracle\OracleMappingType.cs" Link="Base\DataAccess\DbAccess\Oracle\OracleMappingType.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\Access\Oracle\OracleMethodHelper.cs" Link="Base\DataAccess\DbAccess\Oracle\OracleMethodHelper.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\Access\Oracle\SqlMapperExtensions.cs" Link="Base\DataAccess\DbAccess\Oracle\SqlMapperExtensions.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\Access\Oracle\Wrappers.cs" Link="Base\DataAccess\DbAccess\Oracle\Wrappers.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Extensions\EnumEx.cs" Link="Internal\Extensions\EnumEx.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Extensions\ObjectEx.cs" Link="Internal\Extensions\ObjectEx.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\AsyncLocker.cs" Link="Base\Locker\AsyncLocker.cs" />
