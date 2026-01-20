@@ -3,9 +3,9 @@
 		<!-- 异步锁 -->
 		<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
 		<!-- 多次重试间隔时间可变 -->
-		<PackageReference Include="Polly" Version="8.6.3" />
-		<PackageReference Include="RabbitMQ.Client" Version="7.1.2" />
-		<PackageReference Include="StackExchange.Redis" Version="2.9.11" />
+		<PackageReference Include="Polly" Version="8.6.5" />
+		<PackageReference Include="RabbitMQ.Client" Version="7.2.0" />
+		<PackageReference Include="StackExchange.Redis" Version="2.10.1" />
 		
 		<!-- 日志，两端版本相同 -->
 		<PackageReference Include="Serilog" Version="4.3.0" />
@@ -19,8 +19,7 @@
 		<PackageReference Include="MySqlConnector" Version="2.5.0" />
 		<PackageReference Include="Npgsql" Version="10.0.1" />
 		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.26.0" />
-		<!-- 高版本支持Azure，引用太多，且和 CoreWebView2 冲突 -->
-		<PackageReference Include="Microsoft.Data.SqlClient" Version="2.1.7" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
 		<PackageReference Include="Dapper" Version="2.1.66" />
 	</ItemGroup>
 </Project>

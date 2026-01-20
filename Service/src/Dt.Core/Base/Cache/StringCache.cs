@@ -78,9 +78,9 @@ namespace Dt.Core.Caches
             RedisKey key = GetFullKey(p_key);
             Type tp = typeof(T);
             if (tp == typeof(string) || !tp.IsClass)
-                await _db.StringSetAsync(key, p_value.ToString(), p_expiry);
+                await _db.StringSetAsync(key, p_value.ToString(), p_expiry, true);
             else
-                await _db.StringSetAsync(key, Kit.Serialize(p_value), p_expiry);
+                await _db.StringSetAsync(key, Kit.Serialize(p_value), p_expiry, true);
         }
 
         /// <summary>
