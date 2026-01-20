@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 #endregion
 
@@ -143,7 +144,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static string GetSysVersion()
         {
-            return $"{typeof(Kit).Assembly.GetName().Version.ToString(3)}(net{typeof(WebApplication).Assembly.GetName().Version.ToString(2)})";
+            return $"{typeof(Kit).Assembly.GetName().Version.ToString(3)}(net{typeof(WebApplication).Assembly.GetName().Version.ToString(2) + (RuntimeFeature.IsDynamicCodeSupported ? "" : " + aot")})";
         }
 
         /// <summary>
