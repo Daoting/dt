@@ -8,7 +8,6 @@
 
 #region 引用命名
 using Dapper;
-using Dt.Core.Oracle;
 using System.Collections;
 using System.Data;
 using System.Data.Common;
@@ -695,27 +694,28 @@ namespace Dt.Core
             // Sql语句中包含空格，存储过程名无空格！
             bool isSql = p_sqlOrSp.IndexOf(' ') != -1;
 
-            // oracle使用存储过程查询时添加游标输出参数
-            if (!isSql
-                && p_isQuery
-                && _dbInfo.DbType == DatabaseType.Oracle)
-            {
-                var pars = new OracleDynamicParameters();
-                if (p_params != null)
-                    pars.AddDynamicParams(p_params);
+            // oracle使用存储过程查询时添加游标输出参数，由Dapper.Oracle包实现
+            // AOT时无法使用，因很少使用游标输出方式，暂注释掉
+            //if (!isSql
+            //    && p_isQuery
+            //    && _dbInfo.DbType == DatabaseType.Oracle)
+            //{
+            //    var pars = new OracleDynamicParameters();
+            //    if (p_params != null)
+            //        pars.AddDynamicParams(p_params);
 
-                // 添加游标输出参数
-                pars.Add("p_cur", null, OracleMappingType.RefCursor, ParameterDirection.Output);
+            //    // 添加游标输出参数
+            //    pars.Add("p_cur", null, OracleMappingType.RefCursor, ParameterDirection.Output);
 
-                return new CommandDefinition(
-                    p_sqlOrSp,
-                    pars,
-                    _tran,
-                    null,
-                    CommandType.StoredProcedure,
-                    p_deferred ? CommandFlags.Pipelined : CommandFlags.Buffered,
-                    default);
-            }
+            //    return new CommandDefinition(
+            //        p_sqlOrSp,
+            //        pars,
+            //        _tran,
+            //        null,
+            //        CommandType.StoredProcedure,
+            //        p_deferred ? CommandFlags.Pipelined : CommandFlags.Buffered,
+            //        default);
+            //}
 
             return new CommandDefinition(
                 p_sqlOrSp,
