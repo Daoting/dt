@@ -13,20 +13,18 @@
 		<IsWebBootstrapper>False</IsWebBootstrapper>
 		<MapFileExtensions>True</MapFileExtensions>
 		<OpenBrowserOnPublish>False</OpenBrowserOnPublish>
-		<Platform>x64</Platform>
 		<PublishProtocol>ClickOnce</PublishProtocol>
 		<PublishReadyToRun>False</PublishReadyToRun>
 		<PublishSingleFile>False</PublishSingleFile>
-		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<SelfContained>True</SelfContained>
 		<SignatureAlgorithm>(none)</SignatureAlgorithm>
 		<SignManifests>False</SignManifests>
 		<SkipPublishVerification>false</SkipPublishVerification>
-		<TargetFramework>net9.0-desktop</TargetFramework>
 		<UpdateEnabled>False</UpdateEnabled>
 		<UpdateMode>Foreground</UpdateMode>
 		<UpdateRequired>False</UpdateRequired>
 		<WebPageFileName>Publish.html</WebPageFileName>
+		<PublisherName>搬运工</PublisherName>
 	</PropertyGroup>
 	
 	<ItemGroup>
