@@ -264,7 +264,7 @@ namespace Dt.Core
                         if (p_tgtType == typeof(DateTime) || p_tgtType == typeof(DateTime?))
                             return p_reader.GetDateTime();
 
-                        if (p_tgtType == typeof(bool))
+                        if (p_tgtType == typeof(bool) || p_tgtType == typeof(bool?))
                         {
                             string val = p_reader.GetString();
                             return (val == "1" || val == "true");
