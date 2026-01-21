@@ -3,7 +3,7 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-		<NoWarn>1701;1702;1705;1591</NoWarn>
+		<NoWarn>$(NoWarn);1701;1702;1705;1591;IL2026;IL2046;IL2055;IL2057;IL2060;IL2065;IL2067;IL2070;IL2072;IL2075;IL2077;IL2080;IL2087;IL2090;IL2091;IL2093;IL2111;IL2112;IL2122;IL3000;IL3002;IL3050</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -15,6 +15,10 @@
 		<!-- 将包中的pdb文件复制到输出目录，默认不复制 -->
 		<CopyDebugSymbolFilesFromPackages>true</CopyDebugSymbolFilesFromPackages>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<RdXmlFile Include="rd.xml" />
+	</ItemGroup>
 	
 	<ItemGroup>
 		<Using Include="Dt.Core" />

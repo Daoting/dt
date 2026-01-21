@@ -1,1 +1,1 @@
-﻿Launcher.Run(args);
+﻿SvcHost.Run(args, new Dictionary<string, Stub> { { "lob", new Dt.MgrDemo.SvcStub() } });
