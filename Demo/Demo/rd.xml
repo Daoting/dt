@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Directives>
+	<Application>
+		<Assembly Name="Dt.CalcEngine" Dynamic="Required All" />
+		<Assembly Name="Dt.Xls" Dynamic="Required All" />
+		<Assembly Name="Dt.Pdf" Dynamic="Required All" />
+		<Assembly Name="Dt.Charts" Dynamic="Required All" />
+		<Assembly Name="Dt.Cells.Data" Dynamic="Required All" />
+		<Assembly Name="Dt.Cells" Dynamic="Required All" />
+		
+		<Assembly Name="Dt.Core" Dynamic="Required All">
+			<Type Name="System.Threading.Tasks.Task`1[[System.String]]" Dynamic="Required All" />
+		</Assembly>
+		<Assembly Name="Dt.Base" Dynamic="Required All" />
+		<Assembly Name="Dt.Mgr" Dynamic="Required All" />
+
+		<Assembly Name="Demo.Base" Dynamic="Required All" />
+		<Assembly Name="Demo.UI" Dynamic="Required All" />
+		<Assembly Name="Demo.Crud" Dynamic="Required All" />
+		<Assembly Name="Demo.Lob" Dynamic="Required All" />
+		<Assembly Name="Demo" Dynamic="Required All" />
+	</Application>
+</Directives>

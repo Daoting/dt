@@ -26,6 +26,10 @@
 		<ProjectReference Include="..\Demo.Lob\Demo.Lob.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<RdXmlFile Include="rd.xml" />
+	</ItemGroup>
+	
 	<!-- 测试属性值 -->
 	<!--<Target Name="CheckPlatform" BeforeTargets="BeforeBuild">
 		<Message Text="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')): $(_NugetDirectory)" Importance="high" />

@@ -5,17 +5,9 @@
 			<!-- 确保Task`1.Result可访问，Rpc获取调用结果时用，UnaryHandler InitModeInvoker NativeApiInvoker -->
 			<Type Name="System.Threading.Tasks.Task`1[[System.String]]" Dynamic="Required All" />
 		</Assembly>
-		<Assembly Name="Dt.Da" Dynamic="Required All">
-		</Assembly>
-		<Assembly Name="Dt.Cm" Dynamic="Required All">
-		</Assembly>
-		<Assembly Name="Dt.Fsm" Dynamic="Required All">
-		</Assembly>
-		<Assembly Name="Dt.Msg" Dynamic="Required All">
-		</Assembly>
-		<Assembly Name="Dt.Service" Dynamic="Required All">
-		</Assembly>
-		<Assembly Name="Cos" Dynamic="Required All">
-		</Assembly>
+		<Assembly Name="Dt.Da" Dynamic="Required All" />
+		<Assembly Name="Dt.Cm" Dynamic="Required All" />
+		<Assembly Name="Dt.Fsm" Dynamic="Required All" />
+		<Assembly Name="Dt.Msg" Dynamic="Required All" />
 	</Application>
 </Directives>
