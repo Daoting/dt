@@ -16,7 +16,12 @@ namespace Dt.Core
     /// 分组数据源集合类
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class GroupData<T> : List<T>
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class GroupData<T> : List<T>
     {
         /// <summary>
         /// 构造方法

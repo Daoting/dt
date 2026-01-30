@@ -16,7 +16,12 @@ namespace Dt.Core
     /// <summary>
     /// 回调命令类，封装对外部回调方法的调用，与DataCmd配合使用
     /// </summary>
-    public class RelayCommand : ICommand
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class RelayCommand : ICommand
     {
         readonly DataCmd _viewModel;
 

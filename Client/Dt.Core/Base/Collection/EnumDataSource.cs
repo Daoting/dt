@@ -23,7 +23,12 @@ namespace Dt.Core
     /// 1. EnumDataSource.FromType()返回数据源
     /// 2. new EnumDataSource() { EnumType = typeof(XX) }
     /// </summary>
-    public class EnumDataSource : IEnumerable, INotifyCollectionChanged
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class EnumDataSource : IEnumerable, INotifyCollectionChanged
     {
         Type _enumType;
         readonly IList<EnumMember> _viewModels = new List<EnumMember>();

@@ -16,7 +16,12 @@ namespace Dt.Core
     /// <summary>
     /// 普通命令基类，实现ICommand接口
     /// </summary>
-    public class BaseCommand : ICommand
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class BaseCommand : ICommand
     {
         bool _allowExecute;
         Action<object> _executeCallback;

@@ -19,7 +19,12 @@ namespace Dt.Core
     /// 泛型集合
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ItemList<T> : IList<T>, IEnumerable<T>
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class ItemList<T> : IList<T>, IEnumerable<T>
     {
         readonly IList<T> _list = new List<T>();
         int _updating;

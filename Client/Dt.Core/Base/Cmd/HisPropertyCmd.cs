@@ -15,7 +15,12 @@ namespace Dt.Core
     /// <summary>
     /// 可撤消和重做的属性变化历史命令
     /// </summary>
-    public class HisPropertyCmd : BaseCommand
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class HisPropertyCmd : BaseCommand
     {
         bool _isSetting = false;
 

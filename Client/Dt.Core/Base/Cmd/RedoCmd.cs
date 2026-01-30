@@ -15,7 +15,12 @@ namespace Dt.Core
     /// <summary>
     /// 重做命令
     /// </summary>
-    public class RedoCmd : BaseCommand
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class RedoCmd : BaseCommand
     {
         CmdHistory _his;
 

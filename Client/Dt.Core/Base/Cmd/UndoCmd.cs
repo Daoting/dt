@@ -15,7 +15,12 @@ namespace Dt.Core
     /// <summary>
     /// 撤消命令
     /// </summary>
-    public class UndoCmd : BaseCommand
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class UndoCmd : BaseCommand
     {
         CmdHistory _his;
 

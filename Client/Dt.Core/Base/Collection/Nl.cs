@@ -21,7 +21,12 @@ namespace Dt.Core
     /// 具有集合变化通知的泛型列表，NotifyList缩写
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Nl<T> : ObservableCollection<T>, INotifyList
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class Nl<T> : ObservableCollection<T>, INotifyList
     {
         #region 构造方法
         /// <summary>
