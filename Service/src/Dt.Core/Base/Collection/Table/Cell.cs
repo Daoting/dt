@@ -19,7 +19,11 @@ namespace Dt.Core
     /// 注意：string类型时值空为string.Empty，使用时无需考虑null的情况
     /// </summary>
 #if !SERVER
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
     [Microsoft.UI.Xaml.Data.Bindable]
+#endif
 #endif
     public partial class Cell : INotifyPropertyChanged
     {

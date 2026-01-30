@@ -20,10 +20,14 @@ namespace Dt.Core
     /// 数据行管理类
     /// </summary>
 #if !SERVER
-    [Microsoft.UI.Xaml.Data.Bindable]
     [System.Linq.Dynamic.Core.CustomTypeProviders.DynamicLinqType]
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
 #endif
-    public class Row : INotifyPropertyChanged, IRpcJson, IEnumerable
+#endif
+    public partial class Row : INotifyPropertyChanged, IRpcJson, IEnumerable
     {
         #region 成员变量
         const string _indexError = "索引值{0}超出范围(0-{1})！";
