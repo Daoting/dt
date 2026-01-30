@@ -19,6 +19,11 @@ namespace Dt.Base
     /// <summary>
     /// 单元格
     /// </summary>
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
     public partial class FvCell : Control, IFvCell
     {
         #region 静态内容

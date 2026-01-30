@@ -7,8 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
-using System;
 using System.ComponentModel;
 using System.Reflection;
 #endregion
@@ -18,7 +16,12 @@ namespace Dt.Base.FormView
     /// <summary>
     /// 对象属性的视图包装类
     /// </summary>
-    internal class PropertyView : INotifyPropertyChanged, ICell
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    internal partial class PropertyView : INotifyPropertyChanged, ICell
     {
         ObjectView _objView;
         PropertyInfo _info;

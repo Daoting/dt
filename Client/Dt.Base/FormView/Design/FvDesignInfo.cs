@@ -15,7 +15,12 @@ namespace Dt.Base
     /// <summary>
     /// Fv设计信息
     /// </summary>
-    public class FvDesignInfo
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class FvDesignInfo
     {
         /// <summary>
         /// Fv的Xaml
@@ -41,7 +46,12 @@ namespace Dt.Base
     /// <summary>
     /// Fv设计时预置列信息
     /// </summary>
-    public class EntityCol
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class EntityCol
     {
         public EntityCol(string p_name, Type p_type)
         {

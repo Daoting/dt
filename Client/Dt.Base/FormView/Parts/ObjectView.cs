@@ -7,8 +7,6 @@
 #endregion
 
 #region 引用命名
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 #endregion
 
@@ -17,7 +15,12 @@ namespace Dt.Base.FormView
     /// <summary>
     /// 普通对象的视图包装类
     /// </summary>
-    internal class ObjectView : INotifyPropertyChanged
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    internal partial class ObjectView : INotifyPropertyChanged
     {
         readonly List<PropertyView> _props = new List<PropertyView>();
         bool _isChanged;
