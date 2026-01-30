@@ -18,6 +18,11 @@ namespace Dt.Base
     /// <summary>
     /// 分页数据源
     /// </summary>
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
     public partial class PageData : DependencyObject
     {
         #region 静态内容

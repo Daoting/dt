@@ -21,6 +21,11 @@ namespace Dt.Base
     /// <summary>
     /// 为Lv Tv提供筛选功能
     /// </summary>
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
     public partial class FilterCfg : DependencyObject
     {
         #region 静态内容

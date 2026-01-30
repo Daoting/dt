@@ -25,6 +25,11 @@ namespace Dt.Base
     /// 列表控件
     /// </summary>
     [ContentProperty(Name = nameof(View))]
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
     public partial class Lv : Control
     {
         #region 静态内容

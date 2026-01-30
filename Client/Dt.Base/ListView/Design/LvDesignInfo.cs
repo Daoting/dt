@@ -15,7 +15,12 @@ namespace Dt.Base
     /// <summary>
     /// Lv设计信息
     /// </summary>
-    public class LvDesignInfo
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class LvDesignInfo
     {
         /// <summary>
         /// Lv的Xaml

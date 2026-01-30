@@ -15,7 +15,12 @@ namespace Dt.Base
     /// <summary>
     /// Table数据导出打印时的报表设置
     /// </summary>
-    public class TblRptInfo : RptInfo
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class TblRptInfo : RptInfo
     {
         readonly RptTable _tbl;
         

@@ -22,6 +22,11 @@ namespace Dt.Base
     /// 视图项基类，是数据和UI的中间对象
     /// 继承DependencyObject为节省资源，实现INotifyPropertyChanged作为DataContext能更新
     /// </summary>
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
     public abstract partial class ViewItem : DependencyObject, INotifyPropertyChanged, ILvDestroy
     {
         #region 静态内容

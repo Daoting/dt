@@ -20,7 +20,12 @@ namespace Dt.Base
     /// 2. 重写 ReadTemplate 方法，模板在其他位置时
     /// 3. 默认通过Uri查询模板，支持4种格式：rpt local ms-appx embedded
     /// </summary>
-    public abstract class RptInfoBase
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public abstract partial class RptInfoBase
     {
         protected string _uri;
         protected RptUriType _uriType;

@@ -20,6 +20,11 @@ namespace Dt.Base
     /// <summary>
     /// 树节点视图
     /// </summary>
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
     public partial class TvItem : ViewItem
     {
         #region 静态内容

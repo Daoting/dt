@@ -22,7 +22,12 @@ namespace Dt.Base
     /// 2. 重写 ReadTemplate 方法，模板在其他位置时
     /// 3. 默认通过Uri查询模板，支持4种格式：rpt local ms-appx embedded
     /// </summary>
-    public class RptInfo : RptInfoBase
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class RptInfo : RptInfoBase
     {
         #region 成员变量
         // 报表模板缓存

@@ -16,7 +16,12 @@ namespace Dt.Base
     /// <summary>
     /// Lv导出打印时的报表设置
     /// </summary>
-    public class LvRptInfo : TblRptInfo
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class LvRptInfo : TblRptInfo
     {
         public LvRptInfo()
         {

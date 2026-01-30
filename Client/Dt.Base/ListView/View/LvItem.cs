@@ -19,6 +19,11 @@ namespace Dt.Base
     /// <summary>
     /// 视图行，Row/object 和 LvRow 的中间对象
     /// </summary>
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
     public partial class LvItem : ViewItem
     {
         #region 静态内容
