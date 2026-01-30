@@ -9,7 +9,7 @@
 #region 引用命名
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Windows.ApplicationModel.DataTransfer;
+using System.Runtime.CompilerServices;
 using Windows.Storage;
 #endregion
 
@@ -30,7 +30,7 @@ namespace Dt.Base.Tools
             var nav = new NavList
             {
                 ViewMode = NavViewMode.Tile,
-                Title = "系统:Ctrl + 回车　日志:Ctrl + ←　目录:Ctrl + →　🚩V" + typeof(SysTrace).Assembly.GetName().Version.ToString(3),
+                Title = $"系统:Ctrl + 回车　日志:Ctrl + ←　目录:Ctrl + →　🚩V{typeof(SysTrace).Assembly.GetName().Version.ToString(3)}{(RuntimeFeature.IsDynamicCodeSupported ? "" : " AOT")}",
                 To = NavTarget.NewWin
             };
             nav.Data = new Nl<Nav>
