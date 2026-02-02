@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Directives>
 	<Application>
+		<Assembly Name="System.Runtime">
+			<Type Name="System.Threading.Tasks.Task`1[[System.String]]" Dynamic="Required All" />
+		</Assembly>
+		<Assembly Name="Microsoft.Windows.SDK.NET">
+			<Type Name="Windows.Data.Xml.Dom.XmlElement" Dynamic="Required All" />
+		</Assembly>
+		<Assembly Name="Microsoft.InteractiveExperiences.Projection">
+			<Type Name="Microsoft.UI.Windowing.OverlappedPresenter" Dynamic="Required All" />
+		</Assembly>
+		
 		<Assembly Name="Dt.CalcEngine" Dynamic="Required All" />
 		<Assembly Name="Dt.Xls" Dynamic="Required All" />
 		<Assembly Name="Dt.Pdf" Dynamic="Required All" />
 		<Assembly Name="Dt.Charts" Dynamic="Required All" />
 		<Assembly Name="Dt.Cells.Data" Dynamic="Required All" />
 		<Assembly Name="Dt.Cells" Dynamic="Required All" />
-		
-		<Assembly Name="Dt.Core" Dynamic="Required All">
-			<Type Name="System.Threading.Tasks.Task`1[[System.String]]" Dynamic="Required All" />
-		</Assembly>
+
+		<Assembly Name="Dt.Core" Dynamic="Required All" />
 		<Assembly Name="Dt.Base" Dynamic="Required All" />
 		<Assembly Name="Dt.Mgr" Dynamic="Required All" />
 
