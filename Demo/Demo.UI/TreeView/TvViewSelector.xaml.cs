@@ -29,7 +29,12 @@ namespace Demo.UI
         }
     }
 
-    public class TvItemSelector : DataTemplateSelector
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class TvItemSelector : DataTemplateSelector
     {
         public DataTemplate Folder { get; set; }
         public DataTemplate File { get; set; }
