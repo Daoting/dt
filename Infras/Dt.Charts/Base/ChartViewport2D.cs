@@ -128,7 +128,7 @@ namespace Dt.Charts
                     {
                         while (enumerator3.MoveNext())
                         {
-                            enumerator3.Current.Visibility = Utils.VisHidden;
+                            enumerator3.Current.Visibility = Visibility.Collapsed;
                         }
                     }
                     break;

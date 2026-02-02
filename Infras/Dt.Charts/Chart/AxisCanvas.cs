@@ -1250,11 +1250,11 @@ namespace Dt.Charts
             {
                 if (TitleInternal != null)
                 {
-                    TitleInternal.Visibility = Utils.VisHidden;
+                    TitleInternal.Visibility = Visibility.Collapsed;
                 }
                 if (_axis.AxisLine != null)
                 {
-                    _axis.AxisLine.Visibility = Utils.VisHidden;
+                    _axis.AxisLine.Visibility = Visibility.Collapsed;
                 }
                 return;
             }

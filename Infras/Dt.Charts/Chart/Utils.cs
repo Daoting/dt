@@ -25,7 +25,6 @@ namespace Dt.Charts
         public const double Pi2 = 6.2831853071795862;
         public const double PiHalf = 1.5707963267948966;
         public const double RadToDeg = 57.295779513082323;
-        public static Visibility VisHidden = Visibility.Collapsed;
 
         Utils()
         {
