@@ -18,7 +18,7 @@ namespace Dt.Base
     /// <summary>
     /// 图例说明
     /// </summary>
-    public partial class ChartLegend : UnoControl
+    public partial class ChartLegend : Control
     {
         #region 静态内容
         public static readonly DependencyProperty PositionProperty = DependencyProperty.Register(
@@ -119,8 +119,9 @@ namespace Dt.Base
             }
         }
 
-        protected override void OnLoadTemplate()
+        protected override void OnApplyTemplate()
         {
+            base.OnApplyTemplate();
             _pnl = (StackPanel)GetTemplateChild("ItemPanel");
             UpdatePosition();
             OnLegendChanged(null, null);

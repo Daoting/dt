@@ -15,7 +15,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace Dt.Charts
 {
-    public partial class AxisScrollBar : UnoControl, IAxisScrollBar
+    public partial class AxisScrollBar : Control, IAxisScrollBar
     {
         Axis _axis;
         ScrollBar _sb;
@@ -114,9 +114,9 @@ namespace Dt.Charts
             }
         }
 
-
-        protected override void OnLoadTemplate()
+        protected override void OnApplyTemplate()
         {
+            base.OnApplyTemplate();
             _sb = GetTemplateChild("ScrollBar") as ScrollBar;
             InitScrollBar();
         }

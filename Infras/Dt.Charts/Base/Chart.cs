@@ -27,7 +27,7 @@ using Microsoft.UI.Xaml.Media;
 namespace Dt.Base
 {
     [ContentProperty(Name = "Children")]
-    public partial class Chart : UnoControl, IDisposable
+    public partial class Chart : Control, IDisposable
     {
         #region 静态内容
         public static readonly DependencyProperty AggregateProperty = DependencyProperty.Register(
@@ -555,8 +555,9 @@ namespace Dt.Base
         }
 
         #region 重写
-        protected override void OnLoadTemplate()
+        protected override void OnApplyTemplate()
         {
+            base.OnApplyTemplate();
             _rootGrid = (Grid)GetTemplateChild("RootGrid");
             var pre = (ContentPresenter)GetTemplateChild("ViewPresenter");
             pre.Content = View.Viewport;
