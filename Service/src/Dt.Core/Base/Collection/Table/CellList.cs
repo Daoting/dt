@@ -17,9 +17,13 @@ namespace Dt.Core
     /// 内部维护数据项列表类
     /// </summary>
 #if !SERVER
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
     [Microsoft.UI.Xaml.Data.Bindable]
 #endif
-    public class CellList : KeyedCollection<string, Cell>
+#endif
+    public partial class CellList : KeyedCollection<string, Cell>
     {
         /// <summary>
         /// 构造方法，键比较时忽略大小写

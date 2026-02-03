@@ -128,7 +128,12 @@ namespace Demo.UI
         }
     }
 
-    public class VersionInfo
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class VersionInfo
     {
         public string Name { get; set; }
         public string Version { get; set; }

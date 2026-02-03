@@ -152,7 +152,12 @@ namespace Demo.UI
         }
     }
 
-    public class Quotation
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class Quotation
     {
         public DateTime Time
         {

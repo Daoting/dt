@@ -26,7 +26,7 @@ namespace Demo.UI
 {
     public partial class LiveChart : Win
     {
-        ObservableCollection<Point> _pts = new ObservableCollection<Point>();
+        ObservableCollection<TempPoint> _pts = new ObservableCollection<TempPoint>();
         int _counter = 0;
         Random _rnd = new Random();
         DispatcherTimer _dt;
@@ -81,7 +81,7 @@ namespace Demo.UI
             {
                 double r = _rnd.NextDouble();
                 double y = (10 * r * Math.Sin(0.1 * _counter) * Math.Sin(0.6 * _rnd.NextDouble() * _counter));
-                _pts.Add(new Point(_counter++, y * 100));
+                _pts.Add(new TempPoint { X = _counter++, Y = y * 100 });
             }
 
             int ndel = _pts.Count - _nMaxPoints;
@@ -116,5 +116,17 @@ namespace Demo.UI
                 btnTimer.Content = "Start";
             }
         }
+    }
+
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class TempPoint
+    {
+        public double X { get; set; }
+        
+        public double Y { get; set; }
     }
 }
