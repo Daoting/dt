@@ -403,5 +403,80 @@
         <Setter Property="Padding" Value="10,4,10,4" />
     </Style>
 
+    <!-- ****************************** Chart ****************************** -->
+    <!-- 和Dt.Chart项目的Generic.xaml相同，因AOT时无法找到控件模板 -->
+    <Style TargetType="a:Chart">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Padding" Value="10" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="MinWidth" Value="24" />
+        <Setter Property="MinHeight" Value="24" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:Chart">
+                    <Grid
+                        x:Name="RootGrid"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        Padding="{TemplateBinding Padding}"
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <ContentPresenter
+                            Content="{TemplateBinding Header}"
+                            FontSize="15"
+                            HorizontalContentAlignment="Center"
+                            Padding="6,0,6,6"
+                            VerticalContentAlignment="Stretch"
+                            Visibility="{Binding Header, Converter={StaticResource CvTextToVisible}, RelativeSource={RelativeSource TemplatedParent}}"
+                            Grid.ColumnSpan="3" />
+                        <ContentPresenter x:Name="ViewPresenter" Grid.Column="1" Grid.Row="2" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="a:ChartLegend">
+        <Setter Property="BorderBrush" Value="#FF969696" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Margin" Value="2" />
+        <Setter Property="Padding" Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:ChartLegend">
+                    <StackPanel
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}">
+                        <ContentPresenter
+                            Content="{TemplateBinding Title}"
+                            Foreground="{TemplateBinding Foreground}"
+                            HorizontalContentAlignment="Center" />
+                        <StackPanel
+                            x:Name="ItemPanel"
+                            Orientation="{TemplateBinding Orientation}" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- ****************************** 数据模板 ****************************** -->
 </ResourceDictionary>
