@@ -4,13 +4,7 @@
 		<Assembly Name="System.Runtime">
 			<Type Name="System.Threading.Tasks.Task`1[[System.String]]" Dynamic="Required All" />
 		</Assembly>
-		<Assembly Name="Microsoft.Windows.SDK.NET">
-			<Type Name="Windows.Data.Xml.Dom.XmlElement" Dynamic="Required All" />
-		</Assembly>
-		<Assembly Name="Microsoft.InteractiveExperiences.Projection">
-			<Type Name="Microsoft.UI.Windowing.OverlappedPresenter" Dynamic="Required All" />
-		</Assembly>
-		
+
 		<Assembly Name="Dt.CalcEngine" Dynamic="Required All" />
 		<Assembly Name="Dt.Xls" Dynamic="Required All" />
 		<Assembly Name="Dt.Pdf" Dynamic="Required All" />

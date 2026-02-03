@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Directives>
+	<Application>
+		<Assembly Name="Microsoft.Windows.SDK.NET">
+			<Type Name="Windows.Data.Xml.Dom.XmlElement" Dynamic="Required All" />
+		</Assembly>
+		<Assembly Name="Microsoft.InteractiveExperiences.Projection">
+			<Type Name="Microsoft.UI.Windowing.OverlappedPresenter" Dynamic="Required All" />
+		</Assembly>
+		<Assembly Name="Microsoft.WinUI">
+			<Type Name="Microsoft.UI.Xaml.Data.CollectionViewSource" Dynamic="Required All" />
+			
+		</Assembly>
+	</Application>
+</Directives>
