@@ -21,6 +21,11 @@ using Microsoft.UI.Xaml.Markup;
 
 namespace Dt.Base
 {
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
     [ContentProperty(Name = "Children")]
     public partial class ChartData : DependencyObject
     {

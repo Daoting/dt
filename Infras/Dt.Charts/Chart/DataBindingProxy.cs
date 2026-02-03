@@ -13,7 +13,11 @@ using Microsoft.UI.Xaml.Data;
 
 namespace Dt.Charts
 {
-    [Bindable]
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
     public partial class DataBindingProxy : FrameworkElement
     {
         public static readonly DependencyProperty ObjectProperty = Utils.RegisterProperty("Object", typeof(object), typeof(DataBindingProxy));

@@ -16,7 +16,12 @@ namespace Dt.Cells.UI
     /// <summary>
     /// 
     /// </summary>
-    public class AxisAnnotation
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class AxisAnnotation
     {
         /// <summary>
         /// Returns a <see cref="T:System.String" /> that represents this instance.

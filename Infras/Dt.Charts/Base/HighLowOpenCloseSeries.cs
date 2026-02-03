@@ -21,7 +21,11 @@ namespace Dt.Base
     /// <summary>
     /// 财务图表
     /// </summary>
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
     [Microsoft.UI.Xaml.Data.Bindable]
+#endif
     public partial class HighLowOpenCloseSeries : HighLowSeries
     {
         /// <summary>
@@ -235,8 +239,12 @@ namespace Dt.Base
     }
 
 
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
     [Microsoft.UI.Xaml.Data.Bindable]
-    public class HLOCDataPoint : XYDataPoint
+#endif
+    public partial class HLOCDataPoint : XYDataPoint
     {
         internal HLOCDataPoint(DataSeries ds, int seriesIndex, int pointIndex, string[] names) : base(ds, seriesIndex, pointIndex, names)
         {

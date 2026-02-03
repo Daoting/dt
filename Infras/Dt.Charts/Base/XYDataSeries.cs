@@ -22,7 +22,11 @@ namespace Dt.Base
     /// <summary>
     /// 极线图表
     /// </summary>
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
     [Microsoft.UI.Xaml.Data.Bindable]
+#endif
     public partial class XYDataSeries : DataSeries
     {
         /// <summary>
@@ -159,8 +163,12 @@ namespace Dt.Base
     }
 
 
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
     [Microsoft.UI.Xaml.Data.Bindable]
-    public class XYDataPoint : DataPoint
+#endif
+    public partial class XYDataPoint : DataPoint
     {
         internal XYDataPoint(DataSeries ds, int seriesIndex, int pointIndex, string[] names) : base(ds, seriesIndex, pointIndex, names)
         {

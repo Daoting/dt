@@ -15,6 +15,11 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Dt.Charts
 {
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
     public partial class ChartPanelObject : ContentControl
     {
         static Point EmptyPoint = new Point(double.NaN, double.NaN);

@@ -15,8 +15,12 @@ using System.Globalization;
 
 namespace Dt.Charts
 {
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
     [Microsoft.UI.Xaml.Data.Bindable]
-    public class DataPoint
+#endif
+    public partial class DataPoint
     {
         DataSeries _ds;
         object _item;
