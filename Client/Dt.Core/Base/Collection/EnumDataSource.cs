@@ -31,7 +31,7 @@ namespace Dt.Core
     public partial class EnumDataSource : IEnumerable, INotifyCollectionChanged
     {
         Type _enumType;
-        readonly IList<EnumMember> _viewModels = new List<EnumMember>();
+        IList<EnumMember> _viewModels;
 
         /// <summary>
         /// 集合变化事件
@@ -44,7 +44,7 @@ namespace Dt.Core
         /// <typeparam name="TEnum">枚举类型</typeparam>
         /// <returns>EnumMemberViewModel的可枚举集合</returns>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
-        public static IEnumerable<EnumMember> FromType<TEnum>() where TEnum : struct
+        public static IList<EnumMember> FromType<TEnum>() where TEnum : struct
         {
             return FromType(typeof(TEnum));
         }
@@ -54,13 +54,26 @@ namespace Dt.Core
         /// </summary>
         /// <param name="enumType"></param>
         /// <returns></returns>
-        public static IEnumerable<EnumMember> FromType(Type enumType)
+        public static IList<EnumMember> FromType(Type enumType)
         {
             if (!enumType.GetTypeInfo().IsEnum)
             {
                 throw new ArgumentException("应为枚举类型！");
             }
             return FromTypeCore(enumType);
+        }
+
+        static IList<EnumMember> FromTypeCore(Type enumType)
+        {
+            // 返回 IEnumerable<EnumMember> 时AOT会报错
+            var ls = new List<EnumMember>();
+            foreach (FieldInfo info in from f in enumType.GetRuntimeFields()
+                                       where f.IsLiteral
+                                       select f)
+            {
+                ls.Add(new EnumMember(info.GetValue(enumType), info.Name));
+            }
+            return ls;
         }
 
         /// <summary>
@@ -97,23 +110,9 @@ namespace Dt.Core
             return _viewModels.GetEnumerator();
         }
 
-        static IEnumerable<EnumMember> FromTypeCore(Type enumType)
-        {
-            foreach (FieldInfo info in from f in enumType.GetRuntimeFields()
-                                       where f.IsLiteral
-                                       select f)
-            {
-                yield return new EnumMember(info.GetValue(enumType), info.Name);
-            }
-        }
-
         void Refresh()
         {
-            _viewModels.Clear();
-            foreach (var item in FromType(EnumType))
-            {
-                _viewModels.Add(item);
-            }
+            _viewModels = FromType(_enumType);
             RaiseCollectionChanged();
         }
 
@@ -126,7 +125,12 @@ namespace Dt.Core
     /// <summary>
     /// 单个枚举成员的信息
     /// </summary>
-    public class EnumMember
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class EnumMember
     {
         readonly string _name;
         readonly object _value;
