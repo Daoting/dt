@@ -486,13 +486,9 @@ namespace Dt.Core
         /// </summary>
         static void OnSaveWinState(object sender, WindowEventArgs args)
         {
-            // AOT时不是OverlappedPresenter
-            if (MainWin.AppWindow.Presenter is not Microsoft.UI.Windowing.OverlappedPresenter pre)
-                return;
-            
             var maxFile = Path.Combine(Kit.CachePath, _maximizeFlagFile);
             bool existMaxFile = File.Exists(maxFile);
-            var isMaximized = pre.State == Microsoft.UI.Windowing.OverlappedPresenterState.Maximized;
+            var isMaximized = ((Microsoft.UI.Windowing.OverlappedPresenter)MainWin.AppWindow.Presenter).State == Microsoft.UI.Windowing.OverlappedPresenterState.Maximized;
             if (isMaximized)
             {
                 if (!existMaxFile)
