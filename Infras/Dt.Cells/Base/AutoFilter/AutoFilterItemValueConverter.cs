@@ -17,7 +17,7 @@ namespace Dt.Cells.UI
     /// <summary>
     /// Represents a blank value converter.
     /// </summary>
-    public class AutoFilterItemValueConverter : IValueConverter
+    public partial class AutoFilterItemValueConverter : IValueConverter
     {
         /// <summary>
         /// Converts a filter item value to dropdown item's value.

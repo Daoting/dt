@@ -12,6 +12,7 @@ using System;
 using System.IO;
 using System.Xml.Serialization;
 using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
 #endregion
 
 namespace Dt.Pdf.Utility
@@ -67,6 +68,7 @@ namespace Dt.Pdf.Utility
         /// <param name="serializer">serializer</param>
         /// <param name="stream">stream</param>
         /// <returns></returns>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         protected virtual object DoDeserialize(System.Xml.Serialization.XmlSerializer serializer, Stream stream)
         {
             return serializer.Deserialize(stream);
@@ -78,6 +80,7 @@ namespace Dt.Pdf.Utility
         /// <param name="serializer">serializer</param>
         /// <param name="stream">stream</param>
         /// <param name="obj">obj</param>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         protected virtual void DoSerialize(System.Xml.Serialization.XmlSerializer serializer, Stream stream, object obj)
         {
             serializer.Serialize(stream, obj);
@@ -113,6 +116,7 @@ namespace Dt.Pdf.Utility
         /// Gets the XML serializer.
         /// </summary>
         /// <value>The XML serializer.</value>
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         protected System.Xml.Serialization.XmlSerializer XmlSerializer
         {
             get

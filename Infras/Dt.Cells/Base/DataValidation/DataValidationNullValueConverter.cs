@@ -16,7 +16,7 @@ namespace Dt.Cells.UI
     /// <summary>
     /// Represents a data validation null value converter.
     /// </summary>
-    public class DataValidationNullValueConverter : IValueConverter
+    public partial class DataValidationNullValueConverter : IValueConverter
     {
         /// <summary>
         /// Converts a data validation list item value to dropdown item's value.

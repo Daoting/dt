@@ -3,13 +3,19 @@
         <!-- 解决方案右键菜单 - 设置框架，修改后自动重新加载，快、方便 -->
         <TargetFrameworks>net10.0-android;net10.0-ios;net10.0-windows10.0.19041;net10.0-desktop;net10.0-browserwasm</TargetFrameworks>
         
-        <NoWarn>$(NoWarn);1591;8785;NU1701;Uno0001;0252;NETSDK1206;IL2090;IL2067;IL2070;IL2026;IL2075;IL2072;IL2062;IL2091;IL2087;IL2057;IL2080;IL2090;IL2060;IL2096;IL2077</NoWarn>
+        <NoWarn>$(NoWarn);1591;8785;NU1701;Uno0001;0252;NETSDK1206;WMC1510;IL2090;IL2067;IL2070;IL2026;IL2075;IL2072;IL2062;IL2091;IL2087;IL2057;IL2080;IL2090;IL2060;IL2096;IL2077</NoWarn>
         <!-- 始终禁止xbf嵌入到pri文件，默认debug时不嵌入，release时嵌入，嵌入时包升级会造成引用项目都必须重新编译 -->
         <DisableEmbeddedXbf>true</DisableEmbeddedXbf>
 
         <!-- netstandard标志 -->
         <IsToolkit>false</IsToolkit>
         <IsToolkit Condition="$(TargetFramework.Contains('netstandard2.0'))">true</IsToolkit>
+
+        <!-- 分析是否与AOT兼容 -->
+        <IsAotCompatible>true</IsAotCompatible>
+
+        <!-- JSImport/JSExport标签 和 AOT修剪WinRT ABI时需要使用不安全代码 -->
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <PropertyGroup>

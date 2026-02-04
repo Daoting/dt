@@ -19,7 +19,7 @@ using Microsoft.UI;
 
 namespace Dt.Charts
 {
-    internal class ThemeConverter : IValueConverter
+    internal partial class ThemeConverter : IValueConverter
     {
         static Brush DefaultForeground = new SolidColorBrush(Colors.Black);
 

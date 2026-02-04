@@ -14,7 +14,7 @@ using Microsoft.UI.Xaml;
 
 namespace Dt.Charts
 {
-    internal class ChartObservableCollection : ObservableCollection<UIElement>
+    internal partial class ChartObservableCollection : ObservableCollection<UIElement>
     {
         internal event EventHandler OnClear;
 

@@ -25,9 +25,9 @@ namespace Dt.Charts
 
         public Point[] ClipPolygonByRect(Point[] inArray, Rect clipRect)
         {
-            Point[] clipBoundary = (Point[]) Array.CreateInstance( typeof(Point), new int[] { 2 });
-            _outVertexArray = (Point[]) Array.CreateInstance( typeof(Point), new int[] { inArray.Length + ExtraVertices });
-            _inVertexArray = (Point[]) Array.CreateInstance( typeof(Point), new int[] { inArray.Length + ExtraVertices });
+            Point[] clipBoundary = new Point[2];
+            _outVertexArray = new Point[inArray.Length + ExtraVertices];
+            _inVertexArray = new Point[inArray.Length + ExtraVertices];
             Array.Copy(inArray, _inVertexArray, inArray.Length);
             clipBoundary[0] = new Point(clipRect.Left, clipRect.Top);
             clipBoundary[1] = new Point(clipRect.Left, clipRect.Bottom);
@@ -68,7 +68,7 @@ namespace Dt.Charts
             {
                 return null;
             }
-            Point[] pointArray2 = (Point[]) Array.CreateInstance( typeof(Point), new int[] { outLength });
+            Point[] pointArray2 = new Point[outLength];
             for (int i = 0; i < outLength; i++)
             {
                 pointArray2[i] = _outVertexArray[i];

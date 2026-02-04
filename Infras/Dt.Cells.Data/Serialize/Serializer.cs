@@ -28,6 +28,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using System.Diagnostics.CodeAnalysis;
 #endregion
 
 namespace Dt.Cells.Data
@@ -402,6 +403,7 @@ namespace Dt.Cells.Data
             reader2.Close();
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         internal static object DeserializeCellObj(XmlReader reader, Dictionary<string, string> typeMap, Dictionary<string, string> assemblyMap)
         {
             InitReader(reader);
@@ -1211,6 +1213,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         static object Parse(Type type, string str)
         {
             if (string.IsNullOrEmpty(str))
