@@ -17,32 +17,14 @@ using Microsoft.UI.Xaml.Data;
 
 namespace Dt.Cells.Data
 {
+    /// <summary>
+    /// AOT时出错，不使用CollectionViewSource
+    /// </summary>
     internal sealed class CollectionViewConnection : ConnectionBase
     {
-        ICollectionView collectionView;
-        Dictionary<string, BindingField> fields = new Dictionary<string, BindingField>();
-
-        static ICollectionView BuildView(object source)
-        {
-            if ((source is IEnumerable) && !((IEnumerable) source).GetEnumerator().MoveNext())
-            {
-                return null;
-            }
-            ICollectionView view = source as ICollectionView;
-            if (view != null)
-            {
-                return view;
-            }
-            ICollectionViewFactory factory = source as ICollectionViewFactory;
-            if (factory != null)
-            {
-                return factory.CreateView();
-            }
-            var viewSource = new CollectionViewSource();
-            viewSource.Source = source;
-            view = viewSource.View;
-            return view;
-        }
+        Dictionary<string, BindingField> _fields;
+        bool _isValueCollection;
+        Type _valType;
 
         public override bool CanOpen()
         {
@@ -51,49 +33,19 @@ namespace Dt.Cells.Data
 
         public override void Close()
         {
-            if (this.fields != null)
-            {
-                this.fields.Clear();
-            }
-            this.collectionView = null;
+            if (_fields != null)
+                _fields.Clear();
             base.Close();
-        }
-
-        void CreateAvailableFields()
-        {
-            if ((this.Context != null) && ((this.fields == null) || (this.fields.Count == 0)))
-            {
-                Dictionary<string, BindingField> fieldsTemp = new Dictionary<string, BindingField>();
-                if ((this.fields == null) || (this.fields.Count == 0))
-                {
-                    while (this.Context.CurrentItem != null)
-                    {
-                        object currentItem = this.Context.CurrentItem;
-                        if (currentItem != null)
-                        {
-                            // hdt
-                            foreach (PropertyInfo info in currentItem.GetType().GetRuntimeProperties())
-                            {
-                                ParameterInfo[] indexParameters = info.GetIndexParameters();
-                                if ((indexParameters == null) || (indexParameters.Length == 0))
-                                {
-                                    fieldsTemp.Add(info.Name, new BindingField(info.Name, info));
-                                }
-                            }
-                            this.fields = fieldsTemp;
-                            return;
-                        }
-                        this.Context.MoveCurrentToNext();
-                    }
-                }
-            }
         }
 
         public override Type GetColumnDataType(string field)
         {
-            if (this.fields != null)
+            if (_isValueCollection && _valType != null)
+                return _valType;
+            
+            if (_fields != null)
             {
-                BindingField field2 = this.fields[field];
+                BindingField field2 = _fields[field];
                 if (field2 != null)
                 {
                     return field2.DataType;
@@ -115,14 +67,24 @@ namespace Dt.Cells.Data
         {
             try
             {
-                if ((this.Context != null) && this.Context.MoveCurrentToPosition(recordIndex))
+                if (DataSource is IList ic)
                 {
-                    return this.Context.CurrentItem;
+                    return ic[recordIndex];
+                }
+
+                if (DataSource is IEnumerable ie)
+                {
+                    int count = 0;
+                    foreach (var item in ie)
+                    {
+                        if (count == recordIndex)
+                            return item;
+                        count++;
+                    }
+                    return null;
                 }
             }
-            catch
-            {
-            }
+            catch { }
             return null;
         }
 
@@ -132,42 +94,85 @@ namespace Dt.Cells.Data
             {
                 return 0;
             }
-            if (this.Context == null)
+            if (DataSource is ICollection ic)
             {
-                return 0;
+                return ic.Count;
             }
-            return this.Context.Count;
+
+            if (DataSource is IEnumerable ie)
+            {
+                int count = 0;
+                foreach (var item in ie)
+                {
+                    count++;
+                }
+                return count;
+            }
+            return 0;
         }
 
         protected override object GetRecordValue(object record, string field)
         {
+            if (_isValueCollection)
+            {
+                return record;
+            }
+            
             try
             {
-                if ((record != null) && (this.fields != null))
+                if ((record != null) && (_fields != null))
                 {
                     BindingField bindingField = null;
-                    this.fields.TryGetValue(field, out bindingField);
+                    _fields.TryGetValue(field, out bindingField);
                     if (bindingField != null)
                     {
                         return GetFiledValueFromRecord(bindingField, record);
                     }
                 }
             }
-            catch
-            {
-            }
+            catch { }
             return null;
         }
 
         public override void Open()
         {
-            if (!base.IsOpen)
+            if (DataSource is IEnumerable && !IsOpen)
             {
                 base.Open();
-                if (base.IsOpen)
+                CreateAvailableFields();
+            }
+        }
+
+        void CreateAvailableFields()
+        {
+            var ls = DataSource as IEnumerable;
+            foreach (var item in ls)
+            {
+                if (item != null)
                 {
-                    this.collectionView = BuildView(base.DataSource);
-                    this.CreateAvailableFields();
+                    var tp = item.GetType();
+                    if (tp == typeof(string) || tp.IsValueType)
+                    {
+                        // 值类型或字符串
+                        _isValueCollection = true;
+                        _valType = tp;
+                    }
+                    else
+                    {
+                        Dictionary<string, BindingField> fieldsTemp = new Dictionary<string, BindingField>();
+                        // hdt
+                        foreach (PropertyInfo info in tp.GetRuntimeProperties())
+                        {
+                            ParameterInfo[] indexParameters = info.GetIndexParameters();
+                            if ((indexParameters == null) || (indexParameters.Length == 0))
+                            {
+                                fieldsTemp.Add(info.Name, new BindingField(info.Name, info));
+                            }
+                        }
+                        _fields = fieldsTemp;
+                        _isValueCollection = false;
+                    }
+                    return;
                 }
             }
         }
@@ -182,10 +187,10 @@ namespace Dt.Cells.Data
 
         protected override void SetRecordValue(object record, string field, object value)
         {
-            if ((record != null) && (this.fields != null))
+            if ((record != null) && (_fields != null))
             {
                 BindingField bindingField = null;
-                this.fields.TryGetValue(field, out bindingField);
+                _fields.TryGetValue(field, out bindingField);
                 if (bindingField != null)
                 {
                     SetFiledValueFromRecord(bindingField, record, value);
@@ -195,21 +200,20 @@ namespace Dt.Cells.Data
 
         internal override void UpdateCollectionView()
         {
-            this.collectionView = BuildView(base.DataSource);
-        }
-
-        ICollectionView Context
-        {
-            get { return  this.collectionView; }
         }
 
         public override string[] DataFields
         {
             get
             {
-                if (this.fields != null)
+                if (_isValueCollection)
                 {
-                    return Enumerable.ToArray<string>((IEnumerable<string>) this.fields.Keys);
+                    return new string[] { "#a" };
+                }
+                
+                if (_fields != null)
+                {
+                    return Enumerable.ToArray<string>((IEnumerable<string>)_fields.Keys);
                 }
                 return new string[0];
             }
@@ -228,21 +232,21 @@ namespace Dt.Cells.Data
             public BindingField(string name, PropertyInfo pi)
             {
                 this.name = name;
-                this.propertyInfo = pi;
+                propertyInfo = pi;
             }
 
             public object Clone()
             {
-                return new CollectionViewConnection.BindingField { name = this.name, index = this.index, propertyInfo = this.propertyInfo };
+                return new CollectionViewConnection.BindingField { name = name, index = index, propertyInfo = propertyInfo };
             }
 
             public Type DataType
             {
                 get
                 {
-                    if (this.propertyInfo != null)
+                    if (propertyInfo != null)
                     {
-                        return this.propertyInfo.PropertyType;
+                        return propertyInfo.PropertyType;
                     }
                     return typeof(object);
                 }
@@ -250,13 +254,13 @@ namespace Dt.Cells.Data
 
             public int Index
             {
-                get { return  this.index; }
-                set { this.index = value; }
+                get { return index; }
+                set { index = value; }
             }
 
             public string Name
             {
-                get { return  this.name; }
+                get { return name; }
             }
         }
     }
