@@ -126,7 +126,12 @@ namespace Demo.UI
         }
     }
 
-    public class Person : INotifyPropertyChanged
+#if WIN
+    [WinRT.GeneratedBindableCustomProperty]
+#else
+    [Microsoft.UI.Xaml.Data.Bindable]
+#endif
+    public partial class Person : INotifyPropertyChanged
     {
         string _xm;
 

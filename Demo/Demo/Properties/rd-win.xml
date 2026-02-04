@@ -7,9 +7,6 @@
 		<Assembly Name="Microsoft.InteractiveExperiences.Projection">
 			<Type Name="Microsoft.UI.Windowing.OverlappedPresenter" Dynamic="Required All" />
 		</Assembly>
-		<Assembly Name="Microsoft.WinUI">
-			<Type Name="Microsoft.UI.Xaml.Data.CollectionViewSource" Dynamic="Required All" />
-			
-		</Assembly>
+		
 	</Application>
 </Directives>
