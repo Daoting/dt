@@ -182,8 +182,8 @@ namespace Demo.UI
             Ex.SetMenu(_td, null);
         }
     }
-
-    public class RndNodeSelector : DataTemplateSelector
+    
+    public partial class RndNodeSelector : DataTemplateSelector
     {
         public DataTemplate Style1 { get; set; }
         public DataTemplate Style2 { get; set; }

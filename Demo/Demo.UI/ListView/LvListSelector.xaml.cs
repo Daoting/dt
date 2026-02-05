@@ -31,12 +31,7 @@ namespace Demo.UI
             _lv.Data = SampleData.CreatePersonsTbl(50);
         }
     }
-
-#if WIN
-    [WinRT.GeneratedBindableCustomProperty]
-#else
-    [Microsoft.UI.Xaml.Data.Bindable]
-#endif
+    
     public partial class ListItemSelector : DataTemplateSelector
     {
         public DataTemplate Male { get; set; }

@@ -9,6 +9,7 @@
 #region 引用命名
 using Microsoft.UI.Xaml;
 using ScottPlot;
+using System.Diagnostics.CodeAnalysis;
 #endregion
 
 namespace Demo.UI
@@ -52,6 +53,7 @@ namespace Demo.UI
             }
         }
 
+        [UnconditionalSuppressMessage("AOT", "IL3050")]
         void OnAnnotationPos(object sender, RoutedEventArgs e)
         {
             this.NaviChart();
