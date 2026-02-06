@@ -19,16 +19,16 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <UnoVersion>6.4.185</UnoVersion>
+        <UnoVersion>6.5.64</UnoVersion>
     </PropertyGroup>
         
     <!-- WinAppSdk -->
     <ItemGroup Condition="$(IsWinAppSdk)">
         <!-- 1.7版本主线程异步异常会崩溃、后台任务全新方式；1.6不崩溃但原Dt.Tasks无法运行 -->
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250909003" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6901" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7463" />
         <!-- Microsoft.WindowsAppSDK内部引用，排除runtime，否则打包时必须包含 native\WebView2Loader.dll -->
-        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3595.46" ExcludeAssets="runtime" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3719.77" ExcludeAssets="runtime" />
     </ItemGroup>
 
     <!-- 非WinAppSdk引用 -->
@@ -49,7 +49,7 @@
 
     <ItemGroup Condition="$(IsAndroid) AND $(IsExe) == 'true'">
         <PackageReference Include="Uno.WinUI.Runtime.Skia.Android" Version="$(UnoVersion)" />
-        <PackageReference Include="Xamarin.Google.Android.Material" Version="1.10.0.2" />
+        <PackageReference Include="Xamarin.Google.Android.Material" Version="1.12.0.5" />
     </ItemGroup>
 
     <!-- IOS -->
@@ -68,10 +68,10 @@
 
     <ItemGroup Condition="$(IsBrowserWasm) AND $(IsExe) == 'true'">
         <PackageReference Include="Uno.WinUI.Runtime.Skia.WebAssembly.Browser" Version="$(UnoVersion)" />
-        <PackageReference Include="Uno.Wasm.Bootstrap" Version="10.0.13" />
+        <PackageReference Include="Uno.Wasm.Bootstrap" Version="10.0.22" />
         <PackageReference Include="Uno.WinUI.Runtime.WebAssembly" Version="$(UnoVersion)" PrivateAssets="all" IncludeAssets="none" ExcludeAssets="all" />
         <!-- 不引用link出错 -->
-        <PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.0" />
+        <PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.2" />
     </ItemGroup>
 
     <!-- Desktop -->
