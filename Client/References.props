@@ -1,6 +1,6 @@
 ﻿<Project>
     <PropertyGroup>
-        <UnoVersion>6.4.185</UnoVersion>
+        <UnoVersion>6.5.64</UnoVersion>
     </PropertyGroup>
     
     <!-- 公共引用包 -->
@@ -11,20 +11,20 @@
         
         <PackageReference Include="Dt.Infras" Version="5.2.0" />
         <PackageReference Include="ScottPlot" Version="5.1.57" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
-        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />
+        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.1" />
         
         <!-- 日志，两端版本相同 -->
         <PackageReference Include="Serilog" Version="4.3.0" />
         <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
         <PackageReference Include="Serilog.Formatting.Compact" Version="3.0.0" />
-        <PackageReference Include="Serilog.Extensions.ElapsedTime" Version="2.1.1" />
+        <PackageReference Include="Serilog.Extensions.ElapsedTime" Version="2.1.2" />
 
         <!-- Db相关，两端版本相同 -->
         <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.2" />
         <PackageReference Include="MySqlConnector" Version="2.5.0" />
         <PackageReference Include="Npgsql" Version="10.0.1" />
-        <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.26.0" />
+        <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.26.100" />
         <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
         <PackageReference Include="Dapper" Version="2.1.66" />
         
@@ -37,7 +37,7 @@
         <PackageReference Include="Dt.Tasks" Version="5.2.0" />
         <!-- 1.7版本主线程异步异常会崩溃、后台任务全新方式；1.6不崩溃但原Dt.Tasks无法运行 -->
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250909003" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6901" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7463" />
         <!-- Lottie动画已正常，Microsoft.Graphics.Win2D需1.2.0以上版本，Microsoft.Maui.Essentials已间接引用 -->
         <PackageReference Include="CommunityToolkit.WinUI.Lottie" Version="8.2.250604" />
         <!-- ScottPlot需要 -->
@@ -55,7 +55,7 @@
         <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="3.119.1" />
         <PackageReference Include="SkiaSharp.Skottie" Version="3.119.1" />
         <!-- 异常日志 -->
-        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.2" />
         <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="$(UnoVersion)" />
     </ItemGroup>
     
@@ -63,7 +63,7 @@
     <ItemGroup Condition="$(IsAndroid)">
         <PackageReference Include="Uno.WinUI.Runtime.Skia.Android" Version="$(UnoVersion)" PrivateAssets="all" IncludeAssets="build" />
         <PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.7.1.1" />
-        <PackageReference Include="Square.OkHttp3" Version="5.2.1" />
+        <PackageReference Include="Square.OkHttp3" Version="5.3.2.1" />
         <!-- WorkManager后台任务引用 -->
         <PackageReference Include="Xamarin.AndroidX.Work.Runtime" Version="2.10.3" />
     </ItemGroup>
@@ -88,6 +88,6 @@
     <!-- Essentials不支持 linux wasm -->
     <ItemGroup Condition="!$(IsBrowserWasm) and !$(IsDesktop)">
         <!-- UseMauiEssentials已无用，间接引用 Microsoft.Graphics.Win2D 的版本对CommunityToolkit.WinUI.Lottie有影响，需1.2.0以上版本 -->
-        <PackageReference Include="Microsoft.Maui.Essentials" Version="10.0.10" />
+        <PackageReference Include="Microsoft.Maui.Essentials" Version="10.0.31" />
     </ItemGroup>
 </Project>
