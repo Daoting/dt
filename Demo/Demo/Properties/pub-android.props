@@ -1,19 +1,10 @@
 ﻿<Project>
 	<PropertyGroup>
-		<!-- 包格式apk，不生成aab -->
-		<AndroidPackageFormat>apk</AndroidPackageFormat>
-		<!-- apk支持的ABI架构，默认支持4种架构，减少支持ABI能缩小apk -->
-		<RuntimeIdentifier>android-arm64</RuntimeIdentifier>
-		<!--<RuntimeIdentifier>android-x64</RuntimeIdentifier>-->
-		<!--<RuntimeIdentifiers>android-arm64;android-arm</RuntimeIdentifiers>-->
 		<!-- 签名相关 -->
 		<AndroidKeyStore>True</AndroidKeyStore>
 		<AndroidSigningKeyStore>Platforms\Android\app.keystore</AndroidSigningKeyStore>
 		<AndroidSigningKeyAlias>key</AndroidSigningKeyAlias>
 		<AndroidSigningKeyPass>111111</AndroidSigningKeyPass>
 		<AndroidSigningStorePass>111111</AndroidSigningStorePass>
-		<!-- 取消AOT，因引用包不支持裁剪 -->
-		<RunAOTCompilation>false</RunAOTCompilation>
-		<PublishTrimmed>false</PublishTrimmed>
 	</PropertyGroup>
 </Project>
