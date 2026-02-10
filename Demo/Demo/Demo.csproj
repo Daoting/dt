@@ -15,9 +15,9 @@
 	</PropertyGroup>
 
 	<!-- 发布时配置 -->
-	<Import Project="Properties\pub-win.props" Condition="$(IsWinAppSdk) AND '$(Configuration)' == 'Release'" />
-	<Import Project="Properties\pub-android.props" Condition="$(IsAndroid) AND '$(Configuration)' == 'Release'" />
-	<Import Project="Properties\pub-desktop.props" Condition="$(IsDesktop) AND '$(Configuration)' == 'Release'" />
+	<Import Project="Properties\pub-win.props" Condition="$(IsWinAppSdk) == 'true' AND '$(Configuration)' == 'Release'" />
+	<Import Project="Properties\pub-android.props" Condition="$(IsAndroid) == 'true' AND '$(Configuration)' == 'Release'" />
+	<Import Project="Properties\pub-desktop.props" Condition="$(IsDesktop) == 'true' AND '$(Configuration)' == 'Release'" />
 	
 	<ItemGroup>
 		<ProjectReference Include="..\Demo.Base\Demo.Base.csproj" />
@@ -28,7 +28,7 @@
 
 	<ItemGroup>
 		<RdXmlFile Include="Properties\rd.xml" />
-		<RdXmlFile Include="Properties\rd-win.xml" Condition="$(IsWinAppSdk)" />
+		<RdXmlFile Include="Properties\rd-win.xml" Condition="$(IsWinAppSdk) == 'true'" />
 	</ItemGroup>
 	
 	<!-- 测试属性值 -->
