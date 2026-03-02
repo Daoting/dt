@@ -2,18 +2,18 @@
     <PropertyGroup>
         <UnoVersion>6.5.64</UnoVersion>
     </PropertyGroup>
-    
+
     <!-- 公共引用包 -->
     <ItemGroup>
         <!-- exe项目引用包，原来在Dt.Client.targets，但WinAppSdk发布时无法自动生成代码和资源 -->
         <PackageReference Include="Dt.BuildTools" Version="1.5.3" PrivateAssets="none" />
         <PackageReference Include="Uno.Resizetizer" Version="1.12.1" PrivateAssets="none" />
-        
+
         <PackageReference Include="Dt.Infras" Version="5.2.0" />
         <PackageReference Include="ScottPlot" Version="5.1.57" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.1" />
-        
+
         <!-- 日志，两端版本相同 -->
         <PackageReference Include="Serilog" Version="4.3.0" />
         <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
@@ -27,9 +27,11 @@
         <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.26.100" />
         <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
         <PackageReference Include="Dapper" Version="2.1.66" />
-        
-        <!-- 本地化，无用，造成win下引用uno不同版本，编译慢 -->
-        <!-- <PackageReference Include="Uno.Extensions.Localization.WinUI" Version="4.0.0" /> -->
+
+        <!-- Map -->
+        <PackageReference Include="Mapsui" Version="5.1.0-beta.2" />
+        <PackageReference Include="Mapsui.Tiling" Version="5.1.0-beta.2" />
+        <PackageReference Include="Mapsui.Rendering.Skia" Version="5.1.0-beta.2" />
     </ItemGroup>
 
     <!-- WinAppSdk -->
@@ -40,7 +42,7 @@
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7463" />
         <!-- Lottie动画已正常，Microsoft.Graphics.Win2D需1.2.0以上版本，Microsoft.Maui.Essentials已间接引用 -->
         <PackageReference Include="CommunityToolkit.WinUI.Lottie" Version="8.2.250604" />
-        <!-- ScottPlot需要 -->
+        <!-- ScottPlot Mapsui需要 -->
         <PackageReference Include="SkiaSharp.Views.WinUI" Version="3.119.1" />
     </ItemGroup>
 
@@ -57,8 +59,9 @@
         <!-- 异常日志 -->
         <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.2" />
         <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="$(UnoVersion)" />
+        <PackageReference Include="Mapsui.Uno.WinUI" Version="5.1.0-beta.2" />
     </ItemGroup>
-    
+
     <!-- Android -->
     <ItemGroup Condition="$(IsAndroid)">
         <PackageReference Include="Uno.WinUI.Runtime.Skia.Android" Version="$(UnoVersion)" PrivateAssets="all" IncludeAssets="build" />
@@ -82,9 +85,9 @@
 
     <!-- Desktop -->
     <ItemGroup Condition="$(IsDesktop)">
-        
+
     </ItemGroup>
-    
+
     <!-- Essentials不支持 linux wasm -->
     <ItemGroup Condition="!$(IsBrowserWasm) and !$(IsDesktop)">
         <!-- UseMauiEssentials已无用，间接引用 Microsoft.Graphics.Win2D 的版本对CommunityToolkit.WinUI.Lottie有影响，需1.2.0以上版本 -->
