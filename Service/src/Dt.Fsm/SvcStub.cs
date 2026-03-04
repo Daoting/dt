@@ -51,7 +51,7 @@ namespace Dt.Fsm
         /// 自定义请求处理或定义请求管道的中间件
         /// </summary>
         /// <param name="p_app"></param>
-        /// <param name="p_handlers">注册自定义请求处理</param>
+        /// <param name="p_handlers">注册根路由处理</param>
         public override void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_handlers)
         {
             Cfg.Init();

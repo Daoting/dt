@@ -34,7 +34,7 @@ namespace Dt.Core
         /// 自定义请求处理或定义请求管道的中间件
         /// </summary>
         /// <param name="p_app"></param>
-        /// <param name="p_handlers">注册自定义请求处理</param>
-        public virtual void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_handlers) { }
+        /// <param name="p_rootRouteHandlers">注册根路由处理</param>
+        public virtual void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_rootRouteHandlers) { }
     }
 }
