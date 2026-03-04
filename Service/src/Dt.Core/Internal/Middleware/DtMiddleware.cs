@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Core.Rpc;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Frozen;
 using System.Net;
 #endregion
 
@@ -21,9 +22,9 @@ namespace Dt.Core
     {
         #region 成员变量
         /// <summary>
-        /// 外部自定义请求处理
+        /// 根路由处理
         /// </summary>
-        internal static readonly Dictionary<string, RequestDelegate> RequestHandlers = new Dictionary<string, RequestDelegate>();
+        internal static FrozenDictionary<string, RequestDelegate> RootRouteHandlers;
 
         static string _adminPage;
         static string _errorPage;
@@ -58,7 +59,7 @@ namespace Dt.Core
                     p_context.Response.Headers.AccessControlAllowOrigin = "*";
                 }
             }
-            
+
             // 内部特殊路径格式：/.xxx
             string path = p_context.Request.Path.Value.ToLower();
             if (path == "/.c")
@@ -74,11 +75,11 @@ namespace Dt.Core
             if (path == "/.error")
                 return ResponseErrorPage(p_context);
 
-            // 外部自定义路径，截取路径的前一节 /.xxx/xxx/xxx
+            // 根路由处理，截取路径的第一节，如/.d/photo/1.jpg 截取为 /.d
             int index = path.TrimStart('/').IndexOf('/');
             if (index > -1)
                 path = path.Substring(0, index + 1);
-            if (RequestHandlers.TryGetValue(path, out var callback))
+            if (RootRouteHandlers.TryGetValue(path, out var callback))
                 return callback(p_context);
 
             return _next(p_context);
@@ -126,7 +127,7 @@ namespace Dt.Core
                 Log.Warning("未知的预检请求，已拒绝");
             }
         }
-        
+
         /// <summary>
         /// 获取管理页面
         /// </summary>

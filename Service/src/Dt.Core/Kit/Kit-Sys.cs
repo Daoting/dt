@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Frozen;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 #endregion
@@ -248,10 +249,12 @@ namespace Dt.Core
 
             if (Svcs != null)
             {
+                Dictionary<string, RequestDelegate> handlers = new(StringComparer.OrdinalIgnoreCase);
                 foreach (var svc in Svcs)
                 {
-                    svc.Stub.Configure(p_app, DtMiddleware.RequestHandlers);
+                    svc.Stub.Configure(p_app, handlers);
                 }
+                DtMiddleware.RootRouteHandlers = handlers.ToFrozenDictionary();
             }
         }
         #endregion
