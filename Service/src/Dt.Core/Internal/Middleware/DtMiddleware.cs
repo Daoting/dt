@@ -44,46 +44,11 @@ namespace Dt.Core
             // 外站跨域，通常wasm客户端
             if (p_context.Request.Headers.ContainsKey("Origin"))
             {
-                bool isPreflight = p_context.Request.Method == "OPTIONS" && p_context.Request.Headers.ContainsKey("Access-Control-Request-Method");
-                
                 // 预检请求
+                bool isPreflight = p_context.Request.Method == "OPTIONS" && p_context.Request.Headers.ContainsKey("Access-Control-Request-Method");
                 if (isPreflight)
                 {
-                    // 跨域请求特殊标志头
-                    bool isValid = false;
-                    foreach(var h in p_context.Request.Headers.AccessControlRequestHeaders)
-                    {
-                        if (!string.IsNullOrEmpty(h) && h.Contains("dt-wasm"))
-                        {
-                            isValid = true;
-                            break;
-                        }
-                    }
-                    
-                    if (isValid)
-                    {
-                        var headers = p_context.Response.Headers;
-                        // 允许跨域请求的域
-                        headers.AccessControlAllowOrigin = "*";
-                        // 允许跨域请求时的HTTP方法，如 GET PUT POST OPTIONS
-                        headers.AccessControlAllowMethods = "*";
-                        // 允许跨域请求时自定义 header 字段
-                        headers.AccessControlAllowHeaders = "*";
-                        // 预检请求缓存时间，单位秒，Chromium上限2小时
-                        headers.AccessControlMaxAge = "7200";
-
-                        // 若要支持iframe内的跨域请求，需要以下两个header
-                        //headers.Append("Cross-Origin-Embedder-Policy", "require-corp");
-                        //headers.Append("Cross-Origin-Opener-Policy", "same-origin");
-
-                        // 状态码204，无内容响应
-                        p_context.Response.StatusCode = StatusCodes.Status204NoContent;
-                        Log.Information("预检已允许");
-                    }
-                    else
-                    {
-                        Log.Warning("未知的预检请求，已拒绝");
-                    }
+                    Preflight(p_context);
                     return Task.CompletedTask;
                 }
 
@@ -119,6 +84,49 @@ namespace Dt.Core
             return _next(p_context);
         }
 
+        /// <summary>
+        /// 预检请求处理
+        /// </summary>
+        /// <param name="p_context"></param>
+        static void Preflight(HttpContext p_context)
+        {
+            // 跨域请求特殊标志头
+            bool isValid = false;
+            foreach (var h in p_context.Request.Headers.AccessControlRequestHeaders)
+            {
+                if (!string.IsNullOrEmpty(h) && h.Contains("dt-wasm"))
+                {
+                    isValid = true;
+                    break;
+                }
+            }
+
+            if (isValid)
+            {
+                var headers = p_context.Response.Headers;
+                // 允许跨域请求的域
+                headers.AccessControlAllowOrigin = "*";
+                // 允许跨域请求时的HTTP方法，如 GET PUT POST OPTIONS
+                headers.AccessControlAllowMethods = "*";
+                // 允许跨域请求时自定义 header 字段
+                headers.AccessControlAllowHeaders = "*";
+                // 预检请求缓存时间，单位秒，Chromium上限2小时
+                headers.AccessControlMaxAge = "7200";
+
+                // 若要支持iframe内的跨域请求，需要以下两个header
+                //headers.Append("Cross-Origin-Embedder-Policy", "require-corp");
+                //headers.Append("Cross-Origin-Opener-Policy", "same-origin");
+
+                // 状态码204，无内容响应
+                p_context.Response.StatusCode = StatusCodes.Status204NoContent;
+                Log.Information("预检已允许");
+            }
+            else
+            {
+                Log.Warning("未知的预检请求，已拒绝");
+            }
+        }
+        
         /// <summary>
         /// 获取管理页面
         /// </summary>
