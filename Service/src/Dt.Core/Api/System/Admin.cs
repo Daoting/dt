@@ -30,10 +30,7 @@ namespace Dt.Core
             var ls = new List<string>();
             ls.Add($"{Kit.AppName} API");
             ls.Add(GetTopbarHtml());
-
-            // 版本号
-            var ver = typeof(Admin).Assembly.GetName().Version.ToString(3);
-            ls.Add(ver);
+            ls.Add(Kit.GetSysVersion());
 
             ls.Add(GetGroupApi(Kit.Svcs[0].SvcName));
             return ls;

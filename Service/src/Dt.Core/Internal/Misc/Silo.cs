@@ -10,6 +10,7 @@
 using Dt.Core.EventBus;
 using Dt.Core.Rpc;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Frozen;
 using System.Reflection;
 #endregion
 
@@ -153,18 +154,20 @@ namespace Dt.Core
         public static void ConfigureServices(IServiceCollection p_services)
         {
             // 提取微服务和Dt.Core程序集
-            LoadAssembly(typeof(Silo).Assembly, p_services, "公共");
+            Dictionary<string, RouteInvoker> routeInvokers = new();
+            LoadAssembly(typeof(Silo).Assembly, p_services, "公共", routeInvokers);
             foreach (var svc in Kit.Svcs)
             {
-                LoadAssembly(svc.Stub.GetType().Assembly, p_services, svc.SvcName);
+                LoadAssembly(svc.Stub.GetType().Assembly, p_services, svc.SvcName, routeInvokers);
             }
+            DtMiddleware.RouteHandlers = routeInvokers.ToFrozenDictionary();
 
             // 内部服务管理Api
             ExtractApi(typeof(Admin), null, p_services, null);
             Log.Information("注入服务成功");
         }
 
-        static void LoadAssembly(Assembly p_asm, IServiceCollection p_services, string p_svcName)
+        static void LoadAssembly(Assembly p_asm, IServiceCollection p_services, string p_svcName, Dictionary<string, RouteInvoker> p_routeInvokers)
         {
             // 过滤有用类型，排序为了admin页面显示顺序
             var ls = from tp in p_asm.GetTypes()
@@ -174,7 +177,7 @@ namespace Dt.Core
 
             foreach (Type type in ls)
             {
-                // 提取Api
+                // 提取Rpc Api
                 if (type.IsSubclassOf(typeof(DomainSvc)))
                 {
                     ApiAttribute rpcAttr = type.GetCustomAttribute<ApiAttribute>(false);
@@ -185,6 +188,21 @@ namespace Dt.Core
                     }
                 }
 
+                // 提取路由处理类
+                if (type.IsSubclassOf(typeof(RouteApi)))
+                {
+                    // 允许一个类处理多个路由  
+                    var routeAttrs = type.GetCustomAttributes<RouteAttribute>(false).ToList();
+                    if (routeAttrs != null && routeAttrs.Count > 0)
+                    {
+                        foreach (var attr in routeAttrs)
+                        {
+                            p_routeInvokers[attr.Path] = new RouteInvoker(type, attr);
+                        }
+                        continue;
+                    }
+                }
+                
                 // 注册事件处理
                 if (IsEventHandler(type, p_services))
                     continue;
@@ -283,7 +301,7 @@ namespace Dt.Core
                 if (grpMethods != null)
                     grpMethods.Add(name);
             }
-            
+
             // 注册Api服务
             p_services.AddTransient(p_type);
         }

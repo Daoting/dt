@@ -22,6 +22,11 @@ namespace Dt.Core
     {
         #region 成员变量
         /// <summary>
+        /// 路由处理
+        /// </summary>
+        internal static FrozenDictionary<string, RouteInvoker> RouteHandlers;
+        
+        /// <summary>
         /// 根路由处理
         /// </summary>
         internal static FrozenDictionary<string, RequestDelegate> RootRouteHandlers;
@@ -75,6 +80,10 @@ namespace Dt.Core
             if (path == "/.error")
                 return ResponseErrorPage(p_context);
 
+            // 路由处理，不区分大小写，包括整个路径Request.Path
+            if (RouteHandlers.TryGetValue(path, out var invoker))
+                return invoker.Handle(p_context);
+            
             // 根路由处理，截取路径的第一节，如/.d/photo/1.jpg 截取为 /.d
             int index = path.TrimStart('/').IndexOf('/');
             if (index > -1)
