@@ -18,7 +18,7 @@ namespace Dt.Core
     /// <summary>
     /// 内部提供给 admin.html 页面的Api
     /// </summary>
-    public class Admin : DomainSvc
+    public class Admin : RpcApi
     {
         #region Admin页面
         /// <summary>

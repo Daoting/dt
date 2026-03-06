@@ -24,7 +24,7 @@ namespace Dt.Msg.Api
     /// 
     /// </summary>
     [Api(IsTest = true)]
-    public class TestMsg : DomainSvc
+    public class TestMsg : RpcApi
     {
         public async Task<int> CloseAllOnline()
         {

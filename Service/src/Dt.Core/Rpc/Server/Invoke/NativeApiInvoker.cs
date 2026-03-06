@@ -26,7 +26,7 @@ namespace Dt.Core.Rpc
                 throw new Exception($"未找到Api[{p_methodName}]");
 
             var mi = sm.Method;
-            var tgt = Kit.GetService(mi.DeclaringType) as DomainSvc;
+            var tgt = Kit.GetService(mi.DeclaringType) as RpcApi;
             if (tgt == null)
                 throw new Exception($"无法创建服务实例，类型[{mi.DeclaringType.Name}]");
 
@@ -47,7 +47,7 @@ namespace Dt.Core.Rpc
 
         }
 
-        async Task<bool> CallMethod(MethodInfo mi, DomainSvc tgt, object[] p_params)
+        async Task<bool> CallMethod(MethodInfo mi, RpcApi tgt, object[] p_params)
         {
             bool suc = true;
             _result = null;

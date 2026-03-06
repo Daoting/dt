@@ -17,7 +17,7 @@ namespace Dt.Core
     /// 功能测试Api
     /// </summary>
     [Api(AgentMode = AgentMode.Generic, IsTest = true)]
-    public class TestLog : DomainSvc
+    public class TestLog : RpcApi
     {
         /// <summary>
         /// 记录普通日志

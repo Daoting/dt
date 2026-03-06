@@ -11,7 +11,7 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "",
-      "applicationUrl": "https://localhost:1234/"
+      "applicationUrl": "https://localhost:1234/.admin"
     },
     "IIS": {
       "commandName": "IIS"

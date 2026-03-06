@@ -16,7 +16,7 @@ namespace Dt.Core
     /// 所有服务内部使用的工具Api
     /// </summary>
     [Api(AgentMode = AgentMode.Generic)]
-    public class SysTools : DomainSvc
+    public class SysTools : RpcApi
     {
         /// <summary>
         /// 获取所有服务名称

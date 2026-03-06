@@ -17,7 +17,7 @@ namespace Dt.Cm
     /// 默认首页Api
     /// </summary>
     [Api(IsTest = true)]
-    public class HomeApi : DomainSvc
+    public class HomeApi : RpcApi
     {
         public List<string> GetInitInfo()
         {

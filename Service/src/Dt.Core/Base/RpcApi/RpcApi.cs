@@ -15,7 +15,7 @@ namespace Dt.Core
     /// <summary>
     /// 领域服务的抽象基类，也是Rpc Api入口
     /// </summary>
-    public abstract class DomainSvc
+    public abstract class RpcApi
     {
         #region 成员变量
         Bag _bag;

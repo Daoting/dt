@@ -16,7 +16,7 @@ namespace Dt.Cm
     /// 功能测试Api
     /// </summary>
     [Api(IsTest = true)]
-    public class TestSerialize : DomainSvc
+    public class TestSerialize : RpcApi
     {
         #region 基本类型
         /// <summary>

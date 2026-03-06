@@ -18,7 +18,7 @@ namespace Dt.Cm
     /// 功能测试Api
     /// </summary>
     [Api(IsTest = true)]
-    public class TestException : DomainSvc
+    public class TestException : RpcApi
     {
         public string ThrowException()
         {

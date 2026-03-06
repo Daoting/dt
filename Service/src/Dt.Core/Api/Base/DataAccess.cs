@@ -15,7 +15,7 @@ namespace Dt.Core
     /// 默认库的数据访问Api，全称DataAccess
     /// </summary>
     [Api(AgentMode = AgentMode.Generic)]
-    public class Da : DomainSvc
+    public class Da : RpcApi
     {
         /// <summary>
         /// 以参数值方式执行Sql语句，返回结果集

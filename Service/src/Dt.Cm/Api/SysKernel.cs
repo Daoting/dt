@@ -15,7 +15,7 @@ namespace Dt.Cm
     /// 系统内核Api
     /// </summary>
     [Api]
-    public class SysKernel : DomainSvc
+    public class SysKernel : RpcApi
     {
         static readonly SqliteFileHandler _modelHandler = Kit.GetService<SqliteFileHandler>();
         static readonly Dict _config = new Dict();

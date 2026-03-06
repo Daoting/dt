@@ -16,7 +16,7 @@ namespace Dt.Cm
     /// 功能测试Api
     /// </summary>
     [Api(IsTest = true)]
-    public class TestAuth : DomainSvc
+    public class TestAuth : RpcApi
     {
         public string NoAuth()
         {

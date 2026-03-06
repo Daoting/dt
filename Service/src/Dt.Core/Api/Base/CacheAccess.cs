@@ -17,7 +17,7 @@ namespace Dt.Core
     /// Redis缓存的访问Api
     /// </summary>
     [Api(AgentMode = AgentMode.Generic)]
-    public class CacheAccess : DomainSvc
+    public class CacheAccess : RpcApi
     {
         /// <summary>
         /// 根据键查询字符串类型的缓存值

@@ -23,7 +23,7 @@ namespace Dt.Msg
     /// 消息推送Api
     /// </summary>
     [Api]
-    public class Pusher : DomainSvc
+    public class Pusher : RpcApi
     {
         /// <summary>
         /// 客户端注册在线推送
