@@ -78,7 +78,7 @@ namespace Dt.Core
                 return "<p>无路由服务！</p>";
 
             StringBuilder sb = new StringBuilder("<table>");
-            sb.Append("<tr><td><table><tr><td width=\"70%\"><input type=\"text\" id=\"routeQuery\" placeholder=\"Url问号后的查询参数，格式如：key=value\" style=\"width:100%; margin:10px 0 10px 0;\"></td><td rowspan=\"2\" style=\"vertical-align: top;\"><div style=\"line-height: 1.5; margin:10px 20px 20px 40px;\"><div style=\"font-weight: bold;\">返回结果</div><div id=\"routeResult\"></div></td></tr><tr><td><textarea id=\"routeMsg\" placeholder=\"路由消息内容\" style=\"width:100%; height:200px;overflow: auto;\"></textarea></td></tr></table></td></tr>");
+            sb.Append("<tr><td><table><tr><td width=\"70%\"><input type=\"text\" id=\"routeQuery\" placeholder=\"Url问号后的查询参数，格式如：key=value\" style=\"width:100%; margin:10px 0 10px 0;\"></td><td rowspan=\"2\" style=\"vertical-align: top;\"><div style=\"line-height: 1.5; height: 240px; margin:10px 20px 20px 40px;overflow: auto;\"><div style=\"font-weight: bold;\">返回结果</div><div id=\"routeResult\"></div></td></tr><tr><td><textarea id=\"routeMsg\" placeholder=\"路由消息内容\" style=\"width:100%; height:200px;overflow: auto;\"></textarea></td></tr></table></td></tr>");
             
             int index = 0;
             int num = 0;

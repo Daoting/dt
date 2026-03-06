@@ -388,7 +388,7 @@
                 headers: { 'Content-Type': 'text/plain' },
                 body: $("routeMsg").value
             }).then(res => {
-                res.text().then(txt => $("routeResult").innerText = txt);
+                    res.text().then(txt => $("routeResult").innerText = "状态码" + res.status + "\n" + txt);
             }).catch(error => {
                 console.error('请求失败：', error);
                 alert('POST请求失败，请重试！');

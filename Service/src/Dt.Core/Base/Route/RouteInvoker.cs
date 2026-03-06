@@ -61,7 +61,7 @@ namespace Dt.Core
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"[{_handler.Name}] 路由处理异常，路径：{p_context.Request.Path}");
+                Log.Error(ex, $"[{_handler.Name}] 路由处理异常，路径：{p_context.Request.Path.Value}");
                 p_context.Response.StatusCode = 500;
             }
         }

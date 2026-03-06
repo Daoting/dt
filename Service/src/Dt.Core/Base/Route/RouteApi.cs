@@ -109,7 +109,7 @@ namespace Dt.Core
                     {
                         // 程序执行过程的错误，将异常记录日志
                         responseType = ApiResponseType.Error;
-                        error = $"路由{_route}出错";
+                        error = $"路由 [{_route}] 出错";
                         if (ex.InnerException != null && !string.IsNullOrEmpty(ex.InnerException.Message))
                         {
                             _invoker.Log.Error(ex.InnerException, error);
