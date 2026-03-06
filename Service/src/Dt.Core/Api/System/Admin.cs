@@ -31,8 +31,8 @@ namespace Dt.Core
             ls.Add($"{Kit.AppName} API");
             ls.Add(GetTopbarHtml());
             ls.Add(Kit.GetSysVersion());
-
             ls.Add(GetGroupApi(Kit.Svcs[0].SvcName));
+            ls.Add(DtMiddleware.RouteHandlers.Count == 0 ? null : $"路由API({DtMiddleware.RouteHandlers.Count})");
             return ls;
         }
 
