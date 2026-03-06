@@ -80,7 +80,9 @@ namespace Dt.Core
             stopwatch.Start();
             try
             {
-                result = await Handle();
+                using var reader = new StreamReader(_invoker.Context.Request.Body);
+                var body = await reader.ReadToEndAsync();
+                result = await Handle(body, _invoker.Context.Request.Query);
             }
             catch (Exception ex)
             {
@@ -171,7 +173,9 @@ namespace Dt.Core
         /// <summary>
         /// 路由处理，不需要捕获异常
         /// </summary>
-        /// <returns>有内容时自动写入响应Response；自定义响应内容请使用 _context.Response </returns>
-        protected abstract Task<string> Handle();
+        /// <param name="p_body">请求内容</param>
+        /// <param name="p_query">查询参数</param>
+        /// <returns>有内容时自动写入Response；自定义响应内容请直接使用 _context.Response </returns>
+        protected abstract Task<string> Handle(string p_body, IQueryCollection p_query);
     }
 }
