@@ -33,6 +33,34 @@ namespace Dt.Core
     }
 
     /// <summary>
+    /// 路由处理标志
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+    public class RouteAttribute : Attribute
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p_path">路由路径</param>
+        /// <param name="p_dbKey">数据源键名，空时为当前服务的默认数据源</param>
+        public RouteAttribute(string p_path, string p_dbKey = null)
+        {
+            Path = p_path;
+            DbKey = p_dbKey;
+        }
+
+        /// <summary>
+        /// 路由路径
+        /// </summary>
+        public string Path { get; }
+
+        /// <summary>
+        /// 数据源键名，空时为当前服务的默认数据源
+        /// </summary>
+        public string DbKey { get; }
+    }
+    
+    /// <summary>
     /// 生成代理代码的模式
     /// </summary>
     public enum AgentMode
