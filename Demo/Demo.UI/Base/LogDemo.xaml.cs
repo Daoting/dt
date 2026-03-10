@@ -118,68 +118,30 @@ namespace Demo.UI
 
         void OnDsDebug(object sender, RoutedEventArgs e)
         {
-            LogDemoDs.LogDebug();
+            L.Debug("内部调试级信息，含详细内容");
         }
 
         void OnDsNormal(object sender, RoutedEventArgs e)
         {
-            LogDemoDs.LogInfo();
+            L.Info("普通信息内容");
         }
 
         void OnDsWarn(object sender, RoutedEventArgs e)
         {
-            LogDemoDs.LogWarn();
+            L.Warning(new Exception("异常信息内容"), "警告信息内容");
         }
 
         void OnDsError(object sender, RoutedEventArgs e)
         {
-            LogDemoDs.LogError();
+            L.Error(new Exception("异常信息内容"), "出错信息内容");
         }
-
-        void OnEntityDebug(object sender, RoutedEventArgs e)
+        
+        void OnFatal(object sender, RoutedEventArgs e)
         {
-            LogEntityX.LogDebug();
-        }
-
-        void OnEntityNormal(object sender, RoutedEventArgs e)
-        {
-            LogEntityX.LogInfo();
-        }
-
-        void OnEntityWarn(object sender, RoutedEventArgs e)
-        {
-            LogEntityX.LogWarn();
-        }
-
-        void OnEntityError(object sender, RoutedEventArgs e)
-        {
-            LogEntityX.LogError();
+            L.Fatal(new Exception("异常信息内容"), "崩溃信息内容");
         }
     }
-
-    class LogDemoDs : DomainSvc<LogDemoDs>
-    {
-        public static void LogDebug()
-        {
-            _log.Debug("内部调试级信息，含详细内容");
-        }
-
-        public static void LogInfo()
-        {
-            _log.Information("普通信息内容");
-        }
-
-        public static void LogWarn()
-        {
-            _log.Warning(new Exception("异常信息内容"), "警告信息内容");
-        }
-
-        public static void LogError()
-        {
-            _log.Error(new Exception("异常信息内容"), "出错信息内容");
-        }
-    }
-
+    
     class LogEntityX : EntityX<LogEntityX>
     {
         #region 构造方法

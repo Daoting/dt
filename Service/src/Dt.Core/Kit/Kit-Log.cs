@@ -14,9 +14,9 @@ using System.Runtime.CompilerServices;
 namespace Dt.Core
 {
     /// <summary>
-    /// 日志相关，自动添加：文件名:行号
+    /// 输出日志时自动添加：文件名:行号，因使用较多，采用简写类名L，
     /// </summary>
-    public partial class Kit
+    public static class L
     {
         /// <summary>
         /// Information日志，自动添加：文件名:行号
@@ -24,7 +24,7 @@ namespace Dt.Core
         /// <param name="messageTemplate">日志内容</param>
         /// <param name="p_file"></param>
         /// <param name="p_line"></param>
-        public static void LogInfo(
+        public static void Info(
             string messageTemplate,
             [CallerFilePath] string p_file = null,
             [CallerLineNumber] int p_line = 0)
@@ -41,7 +41,7 @@ namespace Dt.Core
         /// <param name="messageTemplate"></param>
         /// <param name="p_file"></param>
         /// <param name="p_line"></param>
-        public static void LogInfo(
+        public static void Info(
             Exception exception,
             string messageTemplate,
             [CallerFilePath] string p_file = null,
@@ -58,7 +58,7 @@ namespace Dt.Core
         /// <param name="messageTemplate">日志内容</param>
         /// <param name="p_file"></param>
         /// <param name="p_line"></param>
-        public static void LogDebug(
+        public static void Debug(
             string messageTemplate,
             [CallerFilePath] string p_file = null,
             [CallerLineNumber] int p_line = 0)
@@ -75,7 +75,7 @@ namespace Dt.Core
         /// <param name="messageTemplate"></param>
         /// <param name="p_file"></param>
         /// <param name="p_line"></param>
-        public static void LogDebug(
+        public static void Debug(
             Exception exception,
             string messageTemplate,
             [CallerFilePath] string p_file = null,
@@ -92,7 +92,7 @@ namespace Dt.Core
         /// <param name="messageTemplate">日志内容</param>
         /// <param name="p_file"></param>
         /// <param name="p_line"></param>
-        public static void LogWarning(
+        public static void Warning(
             string messageTemplate,
             [CallerFilePath] string p_file = null,
             [CallerLineNumber] int p_line = 0)
@@ -109,7 +109,7 @@ namespace Dt.Core
         /// <param name="messageTemplate"></param>
         /// <param name="p_file"></param>
         /// <param name="p_line"></param>
-        public static void LogWarning(
+        public static void Warning(
             Exception exception,
             string messageTemplate,
             [CallerFilePath] string p_file = null,
@@ -126,7 +126,7 @@ namespace Dt.Core
         /// <param name="messageTemplate">日志内容</param>
         /// <param name="p_file"></param>
         /// <param name="p_line"></param>
-        public static void LogError(
+        public static void Error(
             string messageTemplate,
             [CallerFilePath] string p_file = null,
             [CallerLineNumber] int p_line = 0)
@@ -143,7 +143,7 @@ namespace Dt.Core
         /// <param name="messageTemplate"></param>
         /// <param name="p_file"></param>
         /// <param name="p_line"></param>
-        public static void LogError(
+        public static void Error(
             Exception exception,
             string messageTemplate,
             [CallerFilePath] string p_file = null,
@@ -160,7 +160,7 @@ namespace Dt.Core
         /// <param name="messageTemplate">日志内容</param>
         /// <param name="p_file"></param>
         /// <param name="p_line"></param>
-        public static void LogFatal(
+        public static void Fatal(
             string messageTemplate,
             [CallerFilePath] string p_file = null,
             [CallerLineNumber] int p_line = 0)
@@ -177,7 +177,7 @@ namespace Dt.Core
         /// <param name="messageTemplate"></param>
         /// <param name="p_file"></param>
         /// <param name="p_line"></param>
-        public static void LogFatal(
+        public static void Fatal(
             Exception exception,
             string messageTemplate,
             [CallerFilePath] string p_file = null,

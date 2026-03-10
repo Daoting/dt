@@ -20,7 +20,7 @@
             <Button Content="Push推送" Click="OnPush" />
         </StackPanel>
 
-        <a:CBar Title="包含来源的日志" />
+        <a:CBar Title="包含来源属性src的日志" />
         <StackPanel Orientation="Horizontal">
             <Button Content="调试" Click="OnSrcDebug" />
             <Button Content="普通" Click="OnSrcNormal" />
@@ -28,7 +28,7 @@
             <Button Content="出错" Click="OnSrcError" />
         </StackPanel>
 
-        <a:CBar Title="系统日志内置属性" />
+        <a:CBar Title="自定义附加属性" />
         <StackPanel Orientation="Horizontal">
             <Button Content="含IP内置属性" Click="OnAddIP" />
             <Button Content="含用户ID内置属性" Click="OnAddUser" />
@@ -36,20 +36,13 @@
             <Button Content="消息模板" Click="OnFormat" />
         </StackPanel>
 
-        <a:CBar Title="领域服务中的日志" />
+        <a:CBar Title="附加调用位置src的日志" />
         <StackPanel Orientation="Horizontal">
             <Button Content="调试" Click="OnDsDebug" />
             <Button Content="普通" Click="OnDsNormal" />
             <Button Content="警告" Click="OnDsWarn" />
             <Button Content="出错" Click="OnDsError" />
-        </StackPanel>
-
-        <a:CBar Title="实体中的日志" />
-        <StackPanel Orientation="Horizontal">
-            <Button Content="调试" Click="OnEntityDebug" />
-            <Button Content="普通" Click="OnEntityNormal" />
-            <Button Content="警告" Click="OnEntityWarn" />
-            <Button Content="出错" Click="OnEntityError" />
+            <Button Content="严重" Click="OnFatal" />
         </StackPanel>
     </a:Fv>
 </a:Win>
