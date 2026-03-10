@@ -51,7 +51,7 @@ namespace Dt.Core.Rpc
         /// <summary>
         /// 调用的Api名称
         /// </summary>
-        public string ApiName { get; protected set; }
+        public virtual string ApiName { get; protected set; }
 
         /// <summary>
         /// Api方法参数
@@ -72,7 +72,7 @@ namespace Dt.Core.Rpc
         /// <summary>
         /// 服务名称 或 '服务名+数据源键名'(实体)
         /// </summary>
-        public string SvcName { get; private set; }
+        public virtual string SvcName { get; protected set; }
 
         /// <summary>
         /// 客户端ip

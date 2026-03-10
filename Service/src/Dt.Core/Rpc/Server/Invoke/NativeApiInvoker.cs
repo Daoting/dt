@@ -15,10 +15,25 @@ namespace Dt.Core.Rpc
     /// <summary>
     /// 单体服务时本地直接调用
     /// </summary>
-    class NativeApiInvoker
+    class NativeApiInvoker : ApiInvoker
     {
         object _result;
 
+        /// <summary>
+        /// 固定用户标识
+        /// </summary>
+        public override long UserID => 112;
+
+        /// <summary>
+        /// 客户端ip
+        /// </summary>
+        public override string ClientIP => "NativeCall";
+
+        /// <summary>
+        /// 调用的Api名称
+        /// </summary>
+        public override string ApiName { get; protected set; }
+        
         public async Task<T> Call<T>(string p_svcName, string p_methodName, params object[] p_params)
         {
             ApiMethod sm = Silo.GetMethod(p_methodName);
@@ -31,11 +46,9 @@ namespace Dt.Core.Rpc
                 throw new Exception($"无法创建服务实例，类型[{mi.DeclaringType.Name}]");
 
             // 初始化整个调用期间有效的数据包
-            var log = Serilog.Log
-                .ForContext("ip", "NativeCall")
-                .ForContext("src", p_methodName)
-                .ForContext("user", "112");
-            Bag bag = new Bag(p_svcName, 112, log);
+            ApiName = p_methodName;
+            SvcName = p_svcName;
+            Bag bag = new Bag(this);
             tgt.Init(bag);
 
             bool suc = await CallMethod(mi, tgt, p_params);
@@ -113,6 +126,11 @@ namespace Dt.Core.Rpc
                 throw new Exception(string.Format("无法将【{0}】转换到【{1}】类型！", _result, typeof(T)));
             }
             return (T)val;
+        }
+
+        protected override Task WriteResponse(byte[] p_data, bool p_compress)
+        {
+            throw new NotImplementedException();
         }
     }
 }
