@@ -19,7 +19,7 @@ namespace Dt.Mgr.Workflow
     /// <summary>
     /// 流程实例
     /// </summary>
-    public partial class WfiDs : DomainSvc<WfiDs>
+    public static class WfiDs
     {
         #region 保存表单
         public static Task<bool> SaveForm(WfFormInfo p_info)

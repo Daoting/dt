@@ -9,11 +9,9 @@
 #region 引用命名
 #endregion
 
-using Microsoft.UI.Xaml.Controls;
-
 namespace Dt.Mgr.Rbac
 {
-    public partial class RbacDs : DomainSvc<RbacDs>
+    public static class RbacDs
     {
         #region 用户分组
         public static Task<bool> AddUserGroups(long p_userID, List<long> p_groupIDs)

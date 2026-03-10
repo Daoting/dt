@@ -19,7 +19,7 @@ namespace Dt.Mgr
     /// <summary>
     /// 登录注销领域服务
     /// </summary>
-    public class LoginDs : DomainSvc<LoginDs>
+    public static class LoginDs
     {
         #region 登录
         /// <summary>

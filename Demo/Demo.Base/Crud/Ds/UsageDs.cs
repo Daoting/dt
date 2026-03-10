@@ -11,7 +11,7 @@
 
 namespace Demo.Base
 {
-    public class UsageDs : DomainSvc<UsageDs>
+    public static class UsageDs
     {
         public static async Task BatchSave()
         {
@@ -37,9 +37,9 @@ namespace Demo.Base
 
             // 日志源属性有UsageDs，容易识别
             if (suc)
-                _log.Debug("领域服务批量保存成功");
+                L.Debug("领域服务批量保存成功");
             else
-                _log.Warning("领域服务保存失败");
+                L.Warning("领域服务保存失败");
         }
     }
 }

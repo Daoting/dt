@@ -52,6 +52,7 @@
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\SerializeTypeAlias.cs" Link="Internal\Serialize\SerializeTypeAlias.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Kit\Kit-Encrypt.cs" Link="Kit\Kit-Encrypt.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Kit\Kit-Json.cs" Link="Kit\Kit-Json.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Kit\Kit-Log.cs" Link="Kit\Kit-Log.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Rpc\Client\DuplexStream.cs" Link="Rpc\DuplexStream.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Rpc\Client\PushStreamContent.cs" Link="Rpc\PushStreamContent.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Rpc\Client\RequestWriter.cs" Link="Rpc\RequestWriter.cs" />
