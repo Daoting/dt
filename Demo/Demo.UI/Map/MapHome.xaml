@@ -1,0 +1,23 @@
+﻿<a:Win
+    x:Class="Demo.UI.MapHome"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Tab Title="地图列表" a:Ex.Dock="Left">
+        <a:Lv x:Name="_lv" GroupName="group" ItemClick="OnItemClick">
+            <a:Lv.FilterCfg>
+                <a:FilterCfg IsRealtime="True" />
+            </a:Lv.FilterCfg>
+            <DataTemplate>
+                <StackPanel Padding="10">
+                    <a:Dot ID="name" />
+                    <a:Dot ID="note" Foreground="{StaticResource 浅灰2}" />
+                </StackPanel>
+            </DataTemplate>
+        </a:Lv>
+    </a:Tab>
+    <a:Tab Title="地图">
+        <a:MapView x:Name="_map" />
+    </a:Tab>
+</a:Win>

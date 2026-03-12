@@ -28,6 +28,7 @@ namespace Demo.UI
 
         public static Nl<Nav> Dir { get; } = new Nl<Nav>
         {
+            new Nav("地图", typeof(MapHome), Icons.排列) { Desc = "gis控件" },
             new Nav("Tab页", typeof(TabControlDemo), Icons.排列) { Desc = "传统TabControl控件" },
             new Nav("基础事件", typeof(RouteEventDemo), Icons.汉堡),
             new Nav("分隔栏", typeof(SplitterDemo), Icons.分组),
