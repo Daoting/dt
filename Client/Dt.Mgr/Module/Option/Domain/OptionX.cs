@@ -21,7 +21,7 @@ namespace Dt.Mgr.Module
             return new OptionX(
                 ID: await NewID(),
                 Name: Name,
-                Dispidx: await NewSeq("Dispidx"),
+                Dispidx: (int)await NewSeq("Dispidx"),
                 GroupID: GroupID);
         }
 

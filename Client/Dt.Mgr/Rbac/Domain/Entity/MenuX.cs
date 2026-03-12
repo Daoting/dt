@@ -37,7 +37,7 @@ namespace Dt.Mgr.Rbac
                 Params: Params,
                 Icon: Icon,
                 Note: Note,
-                Dispidx: await NewSeq("Dispidx"),
+                Dispidx: (int)await NewSeq("Dispidx"),
                 IsLocked: IsLocked,
                 Ctime: Ctime,
                 Mtime: Mtime);

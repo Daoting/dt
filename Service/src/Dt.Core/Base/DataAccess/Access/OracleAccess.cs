@@ -73,11 +73,11 @@ namespace Dt.Core
             return $"select * from (select a.*,rownum rn from ({p_sql}) a where rownum <= {p_starRow + p_pageSize}) where rn > {p_starRow}";
         }
 
-        public override Task<int> NewSeq(string p_seqName)
+        public override Task<long> NewSeq(string p_seqName)
         {
             if (!string.IsNullOrEmpty(p_seqName))
-                return GetScalar<int>($"select {p_seqName}.nextval from dual");
-            return Task.FromResult(0);
+                return GetScalar<long>($"select {p_seqName}.nextval from dual");
+            return Task.FromResult(0L);
         }
         #endregion
 

@@ -48,13 +48,13 @@ namespace Dt.Mgr.Workflow
                 DateTime time = Kit.Now;
                 p_info.PrcInst.Ctime = time;
                 p_info.PrcInst.Mtime = time;
-                p_info.PrcInst.Dispidx = await WfiPrcX.NewSeq("Dispidx");
+                p_info.PrcInst.Dispidx = (int)await WfiPrcX.NewSeq("Dispidx");
 
                 p_info.AtvInst.Ctime = time;
                 p_info.AtvInst.Mtime = time;
 
                 p_info.WorkItem.AcceptTime = time;
-                p_info.WorkItem.Dispidx = await WfiItemX.NewSeq("Dispidx");
+                p_info.WorkItem.Dispidx = (int)await WfiItemX.NewSeq("Dispidx");
                 p_info.WorkItem.Ctime = time;
                 p_info.WorkItem.Mtime = time;
                 p_info.WorkItem.Stime = time;

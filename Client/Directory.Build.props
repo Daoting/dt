@@ -4,7 +4,7 @@
         <TargetFrameworks>net10.0-android;net10.0-ios;net10.0-windows10.0.19041;net10.0-desktop;net10.0-browserwasm</TargetFrameworks>
 
         <!-- 包和dll的版本 -->
-        <Version>5.2.0</Version>
+        <Version>5.2.1</Version>
         
         <!-- 启用全局using -->
         <ImplicitUsings>enable</ImplicitUsings>

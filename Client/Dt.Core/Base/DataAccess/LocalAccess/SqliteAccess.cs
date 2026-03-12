@@ -164,9 +164,9 @@ namespace Dt.Core
             return Task.FromResult(Kit.NewID);
         }
 
-        public Task<int> NewSeq(string p_seqName)
+        public Task<long> NewSeq(string p_seqName)
         {
-            return Task.FromResult(0);
+            return Task.FromResult(0L);
         }
         #endregion
 

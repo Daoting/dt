@@ -41,7 +41,7 @@ namespace Dt.Mgr.Workflow
                 RoleID: RoleID,
                 UserID: UserID,
                 Note: Note,
-                Dispidx: await NewSeq("Dispidx"),
+                Dispidx: (int)await NewSeq("Dispidx"),
                 Ctime: Ctime,
                 Mtime: Mtime);
         }

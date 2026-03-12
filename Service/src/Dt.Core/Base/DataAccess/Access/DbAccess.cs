@@ -277,7 +277,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_seqName">序列名称，不可为空</param>
         /// <returns>新序列值</returns>
-        public abstract Task<int> NewSeq(string p_seqName);
+        public abstract Task<long> NewSeq(string p_seqName);
 
         async Task QueryInternal<TRow>(Table p_tbl, string p_sqlOrSp, object p_params = null)
             where TRow : Row

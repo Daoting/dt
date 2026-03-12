@@ -19,7 +19,7 @@ namespace Dt.Mgr.Workflow
                 ID: await NewID(),
                 Name: "新流程",
                 IsLocked: true,
-                Dispidx: await NewSeq("Dispidx"),
+                Dispidx: (int)await NewSeq("Dispidx"),
                 Ctime: Kit.Now);
 
             prc.Atvs = await Table<WfdAtvX>.Create();

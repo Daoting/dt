@@ -158,7 +158,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_seqName">序列名称，不可为空</param>
         /// <returns>新序列值</returns>
-        Task<int> NewSeq(string p_seqName);
+        Task<long> NewSeq(string p_seqName);
         #endregion
 
         #region 缓存

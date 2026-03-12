@@ -129,15 +129,18 @@ namespace Dt.Core.RabbitMQ
                 durable: true,      // 持久化
                 autoDelete: false); // 是否自动删除
 
-            var name = Kit.Svcs[0].SvcName;
-            // 每个微服务声明三个消费者队列
-            // 1. 如dt.cm，接收单副本时的直接投递 或 多个服务副本时采用均衡算法投递给其中一个的情况
-            await CreateWorkConsumer(name);
-            // 2. 如dt.cm.xxx，接收对所有副本广播或按服务组播的情况，因每次重启id不同，队列采用自动删除模式
-            await CreateTopicConsumer(name);
-            // 3. 订阅队列变化事件(queue.*)，用来准确获取所有微服务的副本个数
-            // 需要RabbitMQ启用事件通知插件：rabbitmq-plugins enable rabbitmq_event_exchange
-            await CreateQueueChangeConsumer(name);
+            // 单体模式时若启用RabbitMQ，则每个微服务都声明消费者队列
+            foreach (var svc in Kit.Svcs)
+            {
+                // 每个微服务声明三个消费者队列
+                // 1. 如dt.cm，接收单副本时的直接投递 或 多个服务副本时采用均衡算法投递给其中一个的情况
+                await CreateWorkConsumer(svc.SvcName);
+                // 2. 如dt.cm.xxx，接收对所有副本广播或按服务组播的情况，因每次重启id不同，队列采用自动删除模式
+                await CreateTopicConsumer(svc.SvcName);
+                // 3. 订阅队列变化事件(queue.*)，用来准确获取所有微服务的副本个数
+                // 需要RabbitMQ启用事件通知插件：rabbitmq-plugins enable rabbitmq_event_exchange
+                await CreateQueueChangeConsumer(svc.SvcName);
+            }
         }
 
         /// <summary>

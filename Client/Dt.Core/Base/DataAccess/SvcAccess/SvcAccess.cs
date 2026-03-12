@@ -173,13 +173,13 @@ namespace Dt.Core
             ).Call<long>();
         }
 
-        public Task<int> NewSeq(string p_seqName)
+        public Task<long> NewSeq(string p_seqName)
         {
             return new UnaryRpc(
                 _ai.Name,
                 "Da.NewSeq",
                 p_seqName
-            ).Call<int>();
+            ).Call<long>();
         }
         #endregion
 

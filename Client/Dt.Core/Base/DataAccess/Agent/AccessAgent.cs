@@ -203,7 +203,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_seqName">序列名称，不可为空</param>
         /// <returns>新序列值</returns>
-        public static Task<int> NewSeq(string p_seqName)
+        public static Task<long> NewSeq(string p_seqName)
         {
             return _info.GetDa().NewSeq(p_seqName);
         }

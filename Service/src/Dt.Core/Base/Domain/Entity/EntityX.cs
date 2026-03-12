@@ -713,7 +713,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_colName">字段名称，不可为空</param>
         /// <returns>新序列值</returns>
-        public static async Task<int> NewSeq(string p_colName)
+        public static async Task<long> NewSeq(string p_colName)
         {
             Throw.IfEmpty(p_colName, "获取新序列值时，需要提供字段名称！");
             if (_isVirEntity)
@@ -723,7 +723,7 @@ namespace Dt.Core
 
             // 序列名称：表名_字段名，全小写
             var seqName = model.Schema.Name.ToLower() + "_" + p_colName.ToLower();
-            int seq = 0;
+            long seq = 0;
 #if SERVER
             seq = await Kit.DataAccess.NewSeq(seqName);
 #else

@@ -39,11 +39,11 @@ namespace Dt.Core
             return $"select * from ({p_sql}) a limit {p_pageSize} offset {p_starRow}";
         }
 
-        public override Task<int> NewSeq(string p_seqName)
+        public override Task<long> NewSeq(string p_seqName)
         {
             if (!string.IsNullOrEmpty(p_seqName))
-                return GetScalar<int>($"select nextval('{p_seqName}')");
-            return Task.FromResult(0);
+                return GetScalar<long>($"select nextval('{p_seqName}')");
+            return Task.FromResult(0L);
         }
 
         /*
