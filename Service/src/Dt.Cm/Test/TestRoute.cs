@@ -12,7 +12,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace Dt.Cm
 {
-    [Route("/.test/1/普通路由")]
+    /*
+    [Route("/.test/普通路由")]
     public class TestRoute0 : RouteApi
     {
         protected override Task<string> Handle(string p_body, IQueryCollection p_query)
@@ -85,4 +86,5 @@ namespace Dt.Cm
             return null;
         }
     }
+    */
 }
