@@ -15,7 +15,6 @@ using Mapsui.Fetcher;
 using Mapsui.Layers;
 using Mapsui.Logging;
 using Mapsui.Manipulations;
-using Mapsui.Rendering;
 using Mapsui.UI;
 using Mapsui.Utilities;
 using Mapsui.Widgets;
@@ -102,7 +101,7 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
         TryUpdateViewportSize();
     }
 
-    public void SetMapRenderer(IMapRenderer mapRenderer)
+    public void SetMapRenderer(Mapsui.Rendering.IMapRenderer mapRenderer)
     {
         if (_renderController is null)
             return;
@@ -349,7 +348,7 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
     }
 
     /// <inheritdoc />
-    public byte[] GetSnapshot(IEnumerable<ILayer> layers = null, RenderFormat renderFormat = RenderFormat.Png, int quality = 100)
+    public byte[] GetSnapshot(IEnumerable<ILayer> layers = null, Mapsui.Rendering.RenderFormat renderFormat = Mapsui.Rendering.RenderFormat.Png, int quality = 100)
     {
         if (GetPixelDensity() is not float pixelDensity)
             throw new Exception("PixelDensity is not initialized");
