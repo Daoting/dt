@@ -12,4 +12,8 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
+
+	<ItemGroup>
+		<RdXmlFile Include="rd.xml" />
+	</ItemGroup>
 </Project>
