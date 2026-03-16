@@ -146,7 +146,7 @@ namespace Dt.Core
             p_writer.WriteStringValue("#object");
             p_writer.WriteStartObject();
 
-            var props = p_value.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var props = p_value.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (PropertyInfo prop in props)
             {
                 if (!prop.CanWrite || prop.GetCustomAttribute<JsonIgnoreAttribute>(false) != null)
@@ -377,7 +377,7 @@ namespace Dt.Core
             else
             {
                 // JsonSerializer在AOT时不支持类型反射方式序列化，不再使用 JsonSerializer
-                var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+                var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
                 // 外层 {
                 p_reader.Read();
@@ -392,6 +392,8 @@ namespace Dt.Core
                     var prop = props.FirstOrDefault(p => p.Name == name);
                     if (prop == null)
                         throw new Exception($"反序列化json失败，{type.Name} 类型不存在 {name} 属性！");
+                    if (!prop.CanWrite)
+                        throw new Exception($"反序列化json失败，{type.Name} 类型的 {name} 属性只读，无法赋值！");
 
                     // 属性值
                     p_reader.Read();
