@@ -27,7 +27,7 @@ namespace Demo.Base
         {
             return new 基础X(
                 ID: await NewID(),
-                序列: await NewSeq("序列"),
+                序列: (int)await NewSeq("序列"),
                 ParentID: ParentID,
                 名称: 名称,
                 限长4: 限长4,

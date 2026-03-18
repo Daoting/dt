@@ -302,7 +302,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_val"></param>
         /// <param name="p_initVal">是否正在通过InitVal设置默认值，true时不检查IsChanged状态、不检查是否超长、不调用外部hook</param>
-        async void SetValueInternal(object p_val, bool p_initVal)
+        void SetValueInternal(object p_val, bool p_initVal)
         {
             // 过滤多次赋值现象
             if (object.Equals(_val, p_val))
@@ -325,7 +325,9 @@ namespace Dt.Core
                     bool isGbk = false;
                     if (Entity.IsVirEntity(tp))
                     {
-                        var vm = await VirEntitySchema.Get(tp);
+                        var task = VirEntitySchema.Get(tp);
+                        task.Wait();
+                        var vm = task.Result;
 #if SERVER
                         if (vm != null
                             && vm.GetColumn(ID) is TableCol col
@@ -343,7 +345,9 @@ namespace Dt.Core
                     }
                     else
                     {
-                        var model = await EntitySchema.Get(tp);
+                        var task = EntitySchema.Get(tp);
+                        task.Wait();
+                        var model = task.Result;
 #if SERVER
                         if (model != null
                             && model.Schema.GetColumn(ID) is TableCol col

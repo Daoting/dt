@@ -63,6 +63,18 @@ namespace Dt.Core
                 _schema.TryAdd(p_tblName, schema);
                 return schema;
             }
+
+            // 默认库里没有该表结构，查询所有库的表结构
+            foreach (var db in Kit.AllDbInfo)
+            {
+                schema = await db.Value.GetDa().GetTableSchema(p_tblName);
+                if (schema != null)
+                {
+                    _schema.TryAdd(p_tblName, schema);
+                    return schema;
+                }
+            }
+            
             throw new Exception($"未找到表{p_tblName}的结构信息！");
         }
 
