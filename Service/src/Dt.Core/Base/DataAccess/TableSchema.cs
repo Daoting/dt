@@ -76,8 +76,8 @@ namespace Dt.Core
         /// <summary>
         /// 表所在的数据源键名 或 库文件名(sqlite)
         /// </summary>
-        public string DbKey { get; }
-        
+        public string DbKey { get; set; }
+
         /// <summary>
         /// 主键列列表
         /// </summary>

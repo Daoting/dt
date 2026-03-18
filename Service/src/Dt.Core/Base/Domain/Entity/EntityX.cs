@@ -742,8 +742,8 @@ namespace Dt.Core
         public static async Task<IEntityWriter> NewWriter()
         {
 #if SERVER
-            await Task.CompletedTask;
-            return  new EntityWriter(Kit.DataAccess);
+            var model = await EntitySchema.Get(typeof(TEntity));
+            return new EntityWriter(Kit.NewDataAccess(model.Schema.DbKey));
 #else
             var model = await EntitySchema.Get(typeof(TEntity));
             return new EntityWriter(model.AccessInfo.GetDa());

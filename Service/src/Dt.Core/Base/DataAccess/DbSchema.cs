@@ -57,9 +57,12 @@ namespace Dt.Core
             if (_schema.TryGetValue(p_tblName, out schema))
                 return schema;
 
+            // 当表名在多个库里都存在时，优先从默认库里获取表结构，无法区分哪个库的表！！！
+            
             schema = await Kit.NewDataAccess().GetTableSchema(p_tblName);
             if (schema != null)
             {
+                schema.DbKey = Kit.DefaultDbInfo.Name;
                 _schema.TryAdd(p_tblName, schema);
                 return schema;
             }
@@ -70,6 +73,7 @@ namespace Dt.Core
                 schema = await db.Value.GetDa().GetTableSchema(p_tblName);
                 if (schema != null)
                 {
+                    schema.DbKey = db.Key;
                     _schema.TryAdd(p_tblName, schema);
                     return schema;
                 }
