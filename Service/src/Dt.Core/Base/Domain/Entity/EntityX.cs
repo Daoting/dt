@@ -738,15 +738,24 @@ namespace Dt.Core
         /// <summary>
         /// 创建实体写入器
         /// </summary>
+        /// <param name="p_da">null时自动创建da</param>
         /// <returns></returns>
-        public static async Task<IEntityWriter> NewWriter()
+        public static async Task<IEntityWriter> NewWriter(IDataAccess p_da = null)
         {
 #if SERVER
-            var model = await EntitySchema.Get(typeof(TEntity));
-            return new EntityWriter(Kit.NewDataAccess(model.Schema.DbKey));
+            if (p_da == null)
+            {
+                var model = await EntitySchema.Get(typeof(TEntity));
+                p_da = Kit.NewDataAccess(model.Schema.DbKey);
+            }
+            return new EntityWriter(p_da);
 #else
-            var model = await EntitySchema.Get(typeof(TEntity));
-            return new EntityWriter(model.AccessInfo.GetDa());
+            if (p_da == null)
+            {
+                var model = await EntitySchema.Get(typeof(TEntity));
+                p_da = model.AccessInfo.GetDa();
+            }
+            return new EntityWriter(p_da);
 #endif
         }
         #endregion
