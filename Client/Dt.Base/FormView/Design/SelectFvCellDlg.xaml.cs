@@ -11,90 +11,89 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Base.FormView
+namespace Dt.Base.FormView;
+
+public partial class SelectFvCellDlg : Dlg
 {
-    public partial class SelectFvCellDlg : Dlg
+    readonly Row _row;
+
+    public SelectFvCellDlg(FvDesign p_design)
     {
-        readonly Row _row;
-
-        public SelectFvCellDlg(FvDesign p_design)
+        InitializeComponent();
+        IsPinned = true;
+        
+        _row = new Row { { "Type", typeof(Type) }, { "ID", "" } };
+        if (p_design.Info.Cols != null && p_design.Info.Cols.Count > 0)
         {
-            InitializeComponent();
-            IsPinned = true;
+            var ls = new CList { ID = "ID" };
+            if (p_design.Info.AllowCustomCol)
+                ls.IsEditable = true;
             
-            _row = new Row { { "Type", typeof(Type) }, { "ID", "" } };
-            if (p_design.Info.Cols != null && p_design.Info.Cols.Count > 0)
+            var cols = new Nl<string>();
+            foreach (var col in p_design.Info.Cols)
             {
-                var ls = new CList { ID = "ID" };
-                if (p_design.Info.AllowCustomCol)
-                    ls.IsEditable = true;
-                
-                var cols = new Nl<string>();
-                foreach (var col in p_design.Info.Cols)
-                {
-                    if (p_design.Fv.Items.FirstOrDefault(c => c is FvCell fc && fc.ID == col.Name) == null)
-                        cols.Add(col.Name);
-                }
-                ls.Data = cols;
-                
-                _fv.Items.Add(ls);
+                if (p_design.Fv.Items.FirstOrDefault(c => c is FvCell fc && fc.ID == col.Name) == null)
+                    cols.Add(col.Name);
             }
-            else
-            {
-                _fv.Items.Add(new CText { ID = "ID" });
-            }
-            _row[0] = typeof(CText);
-            _fv.Data = _row;
-
-            if (!Kit.IsPhoneUI)
-            {
-                Width = 400;
-                Height = 350;
-            }
+            ls.Data = cols;
+            
+            _fv.Items.Add(ls);
         }
-
-        public Row Row => _row;
-
-        void OnLoadType(CList arg1, AsyncArgs arg2)
+        else
         {
-            arg1.Data = new Nl<Type>
-            {
-                typeof(CBar),
-                typeof(CText),
-                typeof(CList),
-                typeof(CNum),
-                typeof(CDate),
-                typeof(CBool),
-                typeof(CPick),
-                typeof(CTree),
-                typeof(CTip),
-                typeof(CIcon),
-                typeof(CFile),
-                typeof(CLink),
-                typeof(CImage),
-                typeof(CColor),
-                typeof(CHtml),
-                typeof(CMarkdown),
-                typeof(CMask),
-                typeof(CPassword),
-            };
+            _fv.Items.Add(new CText { ID = "ID" });
         }
+        _row[0] = typeof(CText);
+        _fv.Data = _row;
 
-        void OnSave()
+        if (!Kit.IsPhoneUI)
         {
-            var tp = _row["Type"] as Type;
-            if (tp == null)
-            {
-                _fv[0].Warn("请选择格类型！");
-                return;
-            }
-
-            if (tp.IsSubclassOf(typeof(FvCell)) && _row.Str("ID") == "")
-            {
-                _fv[1].Warn("请输入ID！");
-                return;
-            }
-            Close(true);
+            Width = 400;
+            Height = 350;
         }
+    }
+
+    public Row Row => _row;
+
+    void OnLoadType(CList arg1, AsyncArgs arg2)
+    {
+        arg1.Data = new Nl<Type>
+        {
+            typeof(CBar),
+            typeof(CText),
+            typeof(CList),
+            typeof(CNum),
+            typeof(CDate),
+            typeof(CBool),
+            typeof(CPick),
+            typeof(CTree),
+            typeof(CTip),
+            typeof(CIcon),
+            typeof(CFile),
+            typeof(CLink),
+            typeof(CImage),
+            typeof(CColor),
+            typeof(CHtml),
+            typeof(CMarkdown),
+            typeof(CMask),
+            typeof(CPassword),
+        };
+    }
+
+    void OnSave()
+    {
+        var tp = _row["Type"] as Type;
+        if (tp == null)
+        {
+            _fv[0].Warn("请选择格类型！");
+            return;
+        }
+
+        if (tp.IsSubclassOf(typeof(FvCell)) && _row.Str("ID") == "")
+        {
+            _fv[1].Warn("请输入ID！");
+            return;
+        }
+        Close(true);
     }
 }

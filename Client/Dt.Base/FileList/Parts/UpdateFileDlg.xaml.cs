@@ -11,33 +11,32 @@ using Dt.Core;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Base.FileLists
+namespace Dt.Base.FileLists;
+
+public sealed partial class UpdateFileDlg : Dlg
 {
-    public sealed partial class UpdateFileDlg : Dlg
+    int _result = -1;
+
+    public UpdateFileDlg()
     {
-        int _result = -1;
+        InitializeComponent();
+    }
 
-        public UpdateFileDlg()
-        {
-            InitializeComponent();
-        }
+    public async Task<int> ShowDlg()
+    {
+        await ShowAsync();
+        return _result;
+    }
 
-        public async Task<int> ShowDlg()
-        {
-            await ShowAsync();
-            return _result;
-        }
+    void OnSelect(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        _result = 0;
+        Close();
+    }
 
-        void OnSelect(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-        {
-            _result = 0;
-            Close();
-        }
-
-        void OnUpload(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-        {
-            _result = 1;
-            Close();
-        }
+    void OnUpload(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        _result = 1;
+        Close();
     }
 }

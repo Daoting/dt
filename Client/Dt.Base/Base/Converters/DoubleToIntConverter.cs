@@ -11,18 +11,17 @@ using System;
 using Microsoft.UI.Xaml.Data;
 #endregion
 
-namespace Dt.Base
-{
-    public partial class DoubleToIntConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            return (int)(double)value;
-        }
+namespace Dt.Base;
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            return (double)(int)value;
-        }
+public partial class DoubleToIntConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        return (int)(double)value;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        return (double)(int)value;
     }
 }

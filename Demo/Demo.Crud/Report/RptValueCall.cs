@@ -9,19 +9,18 @@
 #region 引用命名
 #endregion
 
-namespace Demo.Crud
+namespace Demo.Crud;
+
+[ValueCall]
+public static class RptValueCall
 {
-    [ValueCall]
-    public static class RptValueCall
+    public static async Task<long> GetMaxID(string p_tblName)
     {
-        public static async Task<long> GetMaxID(string p_tblName)
-        {
-            return await At.GetScalar<long>($"select id from {p_tblName} order by id desc");
-        }
-        
-        public static int GetRandom()
-        {
-            return new Random().Next();
-        }
+        return await At.GetScalar<long>($"select id from {p_tblName} order by id desc");
+    }
+    
+    public static int GetRandom()
+    {
+        return new Random().Next();
     }
 }

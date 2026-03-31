@@ -17,54 +17,53 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class TvItemStyle : Win
 {
-    public partial class TvItemStyle : Win
+    public TvItemStyle()
     {
-        public TvItemStyle()
+        InitializeComponent();
+        _tv.Data = TvData.GetTbl();
+
+        _tv.ItemStyle = (e) =>
         {
-            InitializeComponent();
-            _tv.Data = TvData.GetTbl();
+            string code = e.Row.Str("code");
+            if (code.Length < 4)
+                e.Foreground = Res.RedBrush;
+            else if (code.Length > 4)
+                e.Foreground = Res.GreenBrush;
 
-            _tv.ItemStyle = (e) =>
-            {
-                string code = e.Row.Str("code");
-                if (code.Length < 4)
-                    e.Foreground = Res.RedBrush;
-                else if (code.Length > 4)
-                    e.Foreground = Res.GreenBrush;
-
-                if (e.Children.Count > 4)
-                    e.Background = Res.浅黄;
-            };
-        }
+            if (e.Children.Count > 4)
+                e.Background = Res.浅黄;
+        };
     }
+}
 
-    [LvCall]
-    public class TvItemStyleUI
+[LvCall]
+public class TvItemStyleUI
+{
+    public static void 图标(Env e)
     {
-        public static void 图标(Env e)
+        var tb = new TextBlock
         {
-            var tb = new TextBlock
+            Style = Res.LvTextBlock,
+            FontFamily = Res.IconFont,
+            TextAlignment = TextAlignment.Center,
+        };
+        e.UI = tb;
+        e.Set += c =>
+        {
+            var tbl = (ITreeData)c.Row.Table;
+            var child = tbl.GetTreeItemChildren(c.Row);
+            if (child != null && child.Any())
             {
-                Style = Res.LvTextBlock,
-                FontFamily = Res.IconFont,
-                TextAlignment = TextAlignment.Center,
-            };
-            e.UI = tb;
-            e.Set += c =>
+                tb.Text = "\uE067";
+            }
+            else
             {
-                var tbl = (ITreeData)c.Row.Table;
-                var child = tbl.GetTreeItemChildren(c.Row);
-                if (child != null && child.Any())
-                {
-                    tb.Text = "\uE067";
-                }
-                else
-                {
-                    tb.Text = "\uE002";
-                }
-            };
-        }
+                tb.Text = "\uE002";
+            }
+        };
     }
 }

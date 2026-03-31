@@ -13,49 +13,48 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+public sealed partial class ParamSelectionDlg : Dlg
 {
-    public sealed partial class ParamSelectionDlg : Dlg
+    public ParamSelectionDlg()
     {
-        public ParamSelectionDlg()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        internal async Task<bool> Show(FrameworkElement p_target, RptText p_item)
+    internal async Task<bool> Show(FrameworkElement p_target, RptText p_item)
+    {
+        _lv.Data = p_item.Root.Params.Data;
+        if (!Kit.IsPhoneUI)
         {
-            _lv.Data = p_item.Root.Params.Data;
-            if (!Kit.IsPhoneUI)
-            {
-                WinPlacement = DlgPlacement.TargetOuterLeftTop;
-                PlacementTarget = p_target;
-                ClipElement = p_target;
-                Height = 400;
-                Width = 300;
-            }
-            return await ShowAsync();
+            WinPlacement = DlgPlacement.TargetOuterLeftTop;
+            PlacementTarget = p_target;
+            ClipElement = p_target;
+            Height = 400;
+            Width = 300;
         }
+        return await ShowAsync();
+    }
 
-        public string GetExpression()
-        {
-            return $"Param({_lv.SelectedRow.Str("name")})";
-        }
+    public string GetExpression()
+    {
+        return $"Param({_lv.SelectedRow.Str("name")})";
+    }
 
-        void OnSave(Mi e)
+    void OnSave(Mi e)
+    {
+        if (_lv.SelectedItem == null)
         {
-            if (_lv.SelectedItem == null)
-            {
-                Kit.Warn("请选择参数名！");
-            }
-            else
-            {
-                Close(true);
-            }
+            Kit.Warn("请选择参数名！");
         }
+        else
+        {
+            Close(true);
+        }
+    }
 
-        void OnDoubleClick(object e)
-        {
-            OnSave(null);
-        }
+    void OnDoubleClick(object e)
+    {
+        OnSave(null);
     }
 }

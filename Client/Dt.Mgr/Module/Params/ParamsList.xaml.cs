@@ -11,29 +11,28 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Module
-{
-    public partial class ParamsList : List
-    {
-        public ParamsList()
-        {
-            InitializeComponent();
-            Menu = CreateMenu();
-            _lv.AddMultiSelMenu(Menu);
-            _lv.SetMenu(CreateContextMenu());
-        }
+namespace Dt.Mgr.Module;
 
-        protected override async Task OnQuery()
+public partial class ParamsList : List
+{
+    public ParamsList()
+    {
+        InitializeComponent();
+        Menu = CreateMenu();
+        _lv.AddMultiSelMenu(Menu);
+        _lv.SetMenu(CreateContextMenu());
+    }
+
+    protected override async Task OnQuery()
+    {
+        if (_clause == null)
         {
-            if (_clause == null)
-            {
-                _lv.Data = await ParamsX.Query(null);
-            }
-            else
-            {
-                var par = await _clause.Build<ParamsX>();
-                _lv.Data = await ParamsX.Query(par.Sql, par.Params);
-            }
+            _lv.Data = await ParamsX.Query(null);
+        }
+        else
+        {
+            var par = await _clause.Build<ParamsX>();
+            _lv.Data = await ParamsX.Query(par.Sql, par.Params);
         }
     }
 }

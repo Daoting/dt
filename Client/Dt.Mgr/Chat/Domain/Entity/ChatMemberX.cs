@@ -11,13 +11,12 @@ using Dt.Core;
 using System;
 #endregion
 
-namespace Dt.Mgr.Chat
+namespace Dt.Mgr.Chat;
+
+/// <summary>
+/// 聊天人员信息
+/// </summary>
+public partial class ChatMemberX
 {
-    /// <summary>
-    /// 聊天人员信息
-    /// </summary>
-    public partial class ChatMemberX
-    {
-        
-    }
+    
 }

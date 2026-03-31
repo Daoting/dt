@@ -11,23 +11,22 @@ using System;
 using Microsoft.UI.Xaml.Data;
 #endregion
 
-namespace Dt.Base.ListView
-{
-    /// <summary>
-    /// IsSelected -> 字符图标
-    /// </summary>
-    partial class IsSelectedIconConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            if (value != null && value is bool b)
-                return b ? "\uE059" : "\uE057";
-            return "\uE057";
-        }
+namespace Dt.Base.ListView;
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
-        }
+/// <summary>
+/// IsSelected -> 字符图标
+/// </summary>
+partial class IsSelectedIconConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        if (value != null && value is bool b)
+            return b ? "\uE059" : "\uE057";
+        return "\uE057";
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
     }
 }

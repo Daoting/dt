@@ -9,42 +9,41 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Base.Docking
+namespace Dt.Base.Docking;
+
+/// <summary>
+/// 
+/// </summary>
+public enum DockPosition
 {
     /// <summary>
     /// 
     /// </summary>
-    public enum DockPosition
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        None,
+    None,
 
-        /// <summary>
-        /// 
-        /// </summary>
-        Top,
+    /// <summary>
+    /// 
+    /// </summary>
+    Top,
 
-        /// <summary>
-        /// 
-        /// </summary>
-        Bottom,
+    /// <summary>
+    /// 
+    /// </summary>
+    Bottom,
 
-        /// <summary>
-        /// 
-        /// </summary>
-        Center,
+    /// <summary>
+    /// 
+    /// </summary>
+    Center,
 
-        /// <summary>
-        /// 
-        /// </summary>
-        Left,
+    /// <summary>
+    /// 
+    /// </summary>
+    Left,
 
-        /// <summary>
-        /// 
-        /// </summary>
-        Right
-    }
+    /// <summary>
+    /// 
+    /// </summary>
+    Right
 }
 

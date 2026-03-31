@@ -12,36 +12,35 @@ using System.Linq;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Base.FormView
+namespace Dt.Base.FormView;
+
+public sealed partial class CalendarDlg : Dlg
 {
-    public sealed partial class CalendarDlg : Dlg
+    public CalendarDlg()
     {
-        public CalendarDlg()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        public CDate Owner { get; internal set; }
+    public CDate Owner { get; internal set; }
 
-        public void ShowDlg()
+    public void ShowDlg()
+    {
+        _cv.SelectedDatesChanged -= OnSelectedDatesChanged;
+        _cv.SelectedDates.Clear();
+        if (Owner.Value != default)
         {
-            _cv.SelectedDatesChanged -= OnSelectedDatesChanged;
-            _cv.SelectedDates.Clear();
-            if (Owner.Value != default)
-            {
-                _cv.SelectedDates.Add(Owner.Value);
-                _cv.SetDisplayDate(Owner.Value);
-            }
-            _cv.SelectedDatesChanged += OnSelectedDatesChanged;
-            Show();
+            _cv.SelectedDates.Add(Owner.Value);
+            _cv.SetDisplayDate(Owner.Value);
         }
+        _cv.SelectedDatesChanged += OnSelectedDatesChanged;
+        Show();
+    }
 
-        void OnSelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
-        {
-            var val = Owner.Value;
-            if (sender.SelectedDates.Count > 0)
-                Owner.Value = sender.SelectedDates.FirstOrDefault().Date + (val - val.Date);
-            Close();
-        }
+    void OnSelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
+    {
+        var val = Owner.Value;
+        if (sender.SelectedDates.Count > 0)
+            Owner.Value = sender.SelectedDates.FirstOrDefault().Date + (val - val.Date);
+        Close();
     }
 }

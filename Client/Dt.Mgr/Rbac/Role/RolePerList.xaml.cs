@@ -11,92 +11,91 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Rbac
+namespace Dt.Mgr.Rbac;
+
+public partial class RolePerList : List
 {
-    public partial class RolePerList : List
+    public RolePerList()
     {
-        public RolePerList()
+        InitializeComponent();
+        Menu = Menu.New(Mi.添加(OnAddRelated, enable: false), Mi.删除(OnDelRelated));
+        _lv.AddMultiSelMenu(Menu);
+        _lv.SetMenu(Menu.New(Mi.删除(OnDelRelated)));
+    }
+
+    protected override async Task OnQuery()
+    {
+        if (_parentID > 0)
         {
-            InitializeComponent();
-            Menu = Menu.New(Mi.添加(OnAddRelated, enable: false), Mi.删除(OnDelRelated));
-            _lv.AddMultiSelMenu(Menu);
-            _lv.SetMenu(Menu.New(Mi.删除(OnDelRelated)));
+            _lv.Data = await PermissionX.GetRolePermission(_parentID.Value);
         }
-
-        protected override async Task OnQuery()
+        else
         {
-            if (_parentID > 0)
-            {
-                _lv.Data = await PermissionX.GetRolePermission(_parentID.Value);
-            }
-            else
-            {
-                _lv.Data = null;
-            }
-            Menu["添加"].IsEnabled = _parentID > 0;
+            _lv.Data = null;
         }
-        
-        void OnAddRelated(Mi e)
+        Menu["添加"].IsEnabled = _parentID > 0;
+    }
+    
+    void OnAddRelated(Mi e)
+    {
+        Per4RoleWin win;
+        if (Kit.IsPhoneUI)
         {
-            Per4RoleWin win;
-            if (Kit.IsPhoneUI)
+            win = (Per4RoleWin)Kit.OpenWin(typeof(Per4RoleWin), null, Icons.Edge, _parentID.Value);
+        }
+        else
+        {
+            win = new Per4RoleWin(_parentID.Value);
+            var dlg = new Dlg
             {
-                win = (Per4RoleWin)Kit.OpenWin(typeof(Per4RoleWin), null, Icons.Edge, _parentID.Value);
-            }
-            else
-            {
-                win = new Per4RoleWin(_parentID.Value);
-                var dlg = new Dlg
-                {
-                    WinPlacement = DlgPlacement.TargetBottomLeft,
-                    PlacementTarget = e,
-                    ClipElement = e,
-                    Height = Kit.ViewHeight / 2,
-                    Width = 600,
-                };
-
-                dlg.LoadWin(win);
-                dlg.Show();
-            }
-
-            win.Closed += async (s, e) =>
-            {
-                if (win.IsOK && await RbacDs.AddRolePers(_parentID.Value, win.SelectedIDs))
-                {
-                    await Refresh();
-                }
+                WinPlacement = DlgPlacement.TargetBottomLeft,
+                PlacementTarget = e,
+                ClipElement = e,
+                Height = Kit.ViewHeight / 2,
+                Width = 600,
             };
+
+            dlg.LoadWin(win);
+            dlg.Show();
         }
 
-        async void OnDelRelated(Mi e)
+        win.Closed += async (s, e) =>
         {
-            List<long> ids = null;
-            if (_lv.SelectionMode == Base.SelectionMode.Multiple)
+            if (win.IsOK && await RbacDs.AddRolePers(_parentID.Value, win.SelectedIDs))
             {
-                ids = (from row in _lv.SelectedRows
-                       select row.ID).ToList();
+                await Refresh();
             }
-            else
+        };
+    }
+
+    async void OnDelRelated(Mi e)
+    {
+        List<long> ids = null;
+        if (_lv.SelectionMode == Base.SelectionMode.Multiple)
+        {
+            ids = (from row in _lv.SelectedRows
+                   select row.ID).ToList();
+        }
+        else
+        {
+            Row row = e.Row;
+            if (row == null)
+                row = _lv.SelectedRow;
+
+            if (row != null)
+                ids = new List<long> { row.ID };
+        }
+
+        if (ids != null && ids.Count > 0)
+        {
+            if (!await Kit.Confirm("确认要删除关联吗？"))
             {
-                Row row = e.Row;
-                if (row == null)
-                    row = _lv.SelectedRow;
-
-                if (row != null)
-                    ids = new List<long> { row.ID };
+                Kit.Msg("已取消删除！");
+                return;
             }
 
-            if (ids != null && ids.Count > 0)
-            {
-                if (!await Kit.Confirm("确认要删除关联吗？"))
-                {
-                    Kit.Msg("已取消删除！");
-                    return;
-                }
-
-                if (await RbacDs.RemoveRolePers(_parentID.Value, ids))
-                    await Refresh();
-            }
+            if (await RbacDs.RemoveRolePers(_parentID.Value, ids))
+                await Refresh();
         }
     }
 }

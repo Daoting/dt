@@ -12,94 +12,93 @@ using System.Xml;
 
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+/// <summary>
+/// 粘贴
+/// </summary>
+internal class PasteItemCmd : RptCmdBase
 {
-    /// <summary>
-    /// 粘贴
-    /// </summary>
-    internal class PasteItemCmd : RptCmdBase
+    public static string PasteItemXml = null;
+
+    public override object Execute(object p_args)
     {
-        public static string PasteItemXml = null;
+        if (string.IsNullOrEmpty(PasteItemXml))
+            return null;
 
-        public override object Execute(object p_args)
+        RptItem item = null;
+        var args = (PasteCmdArgs)p_args;
+        try
         {
-            if (string.IsNullOrEmpty(PasteItemXml))
-                return null;
-
-            RptItem item = null;
-            var args = (PasteCmdArgs)p_args;
-            try
+            using (var stream = new StringReader(PasteItemXml))
+            using (var reader = XmlReader.Create(stream, new XmlReaderSettings() { IgnoreWhitespace = true, IgnoreComments = true, IgnoreProcessingInstructions = true }))
             {
-                using (var stream = new StringReader(PasteItemXml))
-                using (var reader = XmlReader.Create(stream, new XmlReaderSettings() { IgnoreWhitespace = true, IgnoreComments = true, IgnoreProcessingInstructions = true }))
+                reader.Read();
+                switch (reader.Name)
                 {
-                    reader.Read();
-                    switch (reader.Name)
-                    {
-                        case "Text":
-                            item = new RptText(args.Body);
-                            break;
-                        case "Table":
-                            item = new RptTable(args.Body);
-                            break;
-                        case "Matrix":
-                            item = new RptMatrix(args.Body);
-                            break;
-                        case "Chart":
-                            item = new RptChart(args.Body);
-                            break;
-                        case "Image":
-                            item = new RptImage(args.Body);
-                            break;
-                        case "Sparkline":
-                            item = new RptSparkline(args.Body);
-                            break;
-                        default:
+                    case "Text":
+                        item = new RptText(args.Body);
+                        break;
+                    case "Table":
+                        item = new RptTable(args.Body);
+                        break;
+                    case "Matrix":
+                        item = new RptMatrix(args.Body);
+                        break;
+                    case "Chart":
+                        item = new RptChart(args.Body);
+                        break;
+                    case "Image":
+                        item = new RptImage(args.Body);
+                        break;
+                    case "Sparkline":
+                        item = new RptSparkline(args.Body);
+                        break;
+                    default:
 
-                            break;
-                    }
-                    if (item == null)
-                        Throw.Msg($"粘贴报表项时错误，无法识别报表项【{reader.Name}】！");
-
-                    item.ReadXml(reader);
-                    item.Row = args.CellRange.Row;
-                    item.Col = args.CellRange.Column;
-                    item.Part.Items.Add(item);
-                    args.RptItem = item;
+                        break;
                 }
-            }
-            catch (Exception ex)
-            {
-                if (ex is not KnownException)
-                    Throw.Msg("粘贴报表项时错误：" + ex.Message);
-            }
+                if (item == null)
+                    Throw.Msg($"粘贴报表项时错误，无法识别报表项【{reader.Name}】！");
 
-            return item;
+                item.ReadXml(reader);
+                item.Row = args.CellRange.Row;
+                item.Col = args.CellRange.Column;
+                item.Part.Items.Add(item);
+                args.RptItem = item;
+            }
         }
-
-        public override void Undo(object p_args)
+        catch (Exception ex)
         {
-            RptItem rptItem = ((PasteCmdArgs)p_args).RptItem;
-            if (rptItem != null)
-                rptItem.Part.Items.Remove(rptItem);
+            if (ex is not KnownException)
+                Throw.Msg("粘贴报表项时错误：" + ex.Message);
         }
+
+        return item;
     }
 
-    internal class PasteCmdArgs
+    public override void Undo(object p_args)
     {
-        public PasteCmdArgs(RptPart p_body, CellRange p_range)
-        {
-            Body = p_body;
-            CellRange = p_range;
-        }
-
-        public RptItem RptItem { get; set; }
-
-        public RptPart Body { get; }
-
-        /// <summary>
-        /// 插入对象的区域。
-        /// </summary>
-        public CellRange CellRange { get; }
+        RptItem rptItem = ((PasteCmdArgs)p_args).RptItem;
+        if (rptItem != null)
+            rptItem.Part.Items.Remove(rptItem);
     }
+}
+
+internal class PasteCmdArgs
+{
+    public PasteCmdArgs(RptPart p_body, CellRange p_range)
+    {
+        Body = p_body;
+        CellRange = p_range;
+    }
+
+    public RptItem RptItem { get; set; }
+
+    public RptPart Body { get; }
+
+    /// <summary>
+    /// 插入对象的区域。
+    /// </summary>
+    public CellRange CellRange { get; }
 }

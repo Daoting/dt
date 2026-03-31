@@ -11,27 +11,26 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Workflow
+namespace Dt.Mgr.Workflow;
+
+using A = WfdTrsX;
+
+public partial class WfdPrcWfdTrsList : List
 {
-    using A = WfdTrsX;
-    
-    public partial class WfdPrcWfdTrsList : List
+    public WfdPrcWfdTrsList()
     {
-        public WfdPrcWfdTrsList()
+        InitializeComponent();
+    }
+    
+    protected override async Task OnQuery()
+    {
+        if (_parentID > 0)
         {
-            InitializeComponent();
+            _lv.Data = await A.QueryWithAtvName(_parentID.Value);
         }
-        
-        protected override async Task OnQuery()
+        else
         {
-            if (_parentID > 0)
-            {
-                _lv.Data = await A.QueryWithAtvName(_parentID.Value);
-            }
-            else
-            {
-                _lv.Data = null;
-            }
+            _lv.Data = null;
         }
     }
 }

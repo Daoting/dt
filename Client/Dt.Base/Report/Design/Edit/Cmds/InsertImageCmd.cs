@@ -11,24 +11,23 @@ using Dt.Cells.Data;
 
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+/// <summary>
+/// 添加图片
+/// </summary>
+internal class InsertImageCmd : InsertCmdBase
 {
-    /// <summary>
-    /// 添加图片
-    /// </summary>
-    internal class InsertImageCmd : InsertCmdBase
+    public override object Execute(object p_args)
     {
-        public override object Execute(object p_args)
-        {
-            InsertCmdArgs args = (InsertCmdArgs)p_args;
-            var img = args.RptItem as RptImage;
-            CellRange range = args.CellRange;
-            img.Row = range.Row;
-            img.Col = range.Column;
-            img.RowSpan = range.RowCount;
-            img.ColSpan = range.ColumnCount;
-            img.Part.Items.Add(img);
-            return img;
-        }
+        InsertCmdArgs args = (InsertCmdArgs)p_args;
+        var img = args.RptItem as RptImage;
+        CellRange range = args.CellRange;
+        img.Row = range.Row;
+        img.Col = range.Column;
+        img.RowSpan = range.RowCount;
+        img.ColSpan = range.ColumnCount;
+        img.Part.Items.Add(img);
+        return img;
     }
 }

@@ -10,27 +10,26 @@
 using Dt.Core;
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+internal class UndoCmd : BaseCommand
 {
-    internal class UndoCmd : BaseCommand
+    RptDesignInfo _owner;
+
+    public UndoCmd(RptDesignInfo p_owner)
     {
-        RptDesignInfo _owner;
+        _owner = p_owner;
+        UpdateAllowExecute();
+        _owner.History.DirtyChanged += (sender, e) => UpdateAllowExecute();
+    }
 
-        public UndoCmd(RptDesignInfo p_owner)
-        {
-            _owner = p_owner;
-            UpdateAllowExecute();
-            _owner.History.DirtyChanged += (sender, e) => UpdateAllowExecute();
-        }
+    protected override void DoExecute(object p_parameter)
+    {
+        _owner.Undo();
+    }
 
-        protected override void DoExecute(object p_parameter)
-        {
-            _owner.Undo();
-        }
-
-        void UpdateAllowExecute()
-        {
-            AllowExecute = _owner.History.CanUndo;
-        }
+    void UpdateAllowExecute()
+    {
+        AllowExecute = _owner.History.CanUndo;
     }
 }

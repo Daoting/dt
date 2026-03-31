@@ -10,26 +10,25 @@
 using System.Collections.Generic;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 加载子节点事件参数
+/// </summary>
+public class LoadingChildArgs : AsyncArgs
 {
-    /// <summary>
-    /// 加载子节点事件参数
-    /// </summary>
-    public class LoadingChildArgs : AsyncArgs
+    public LoadingChildArgs(TvItem p_item)
     {
-        public LoadingChildArgs(TvItem p_item)
-        {
-            CurrentItem = p_item;
-        }
-
-        /// <summary>
-        /// 当前节点
-        /// </summary>
-        public TvItem CurrentItem { get; }
-
-        /// <summary>
-        /// 获取设置子节点集合
-        /// </summary>
-        public IEnumerable<object> Children { get; set; }
+        CurrentItem = p_item;
     }
+
+    /// <summary>
+    /// 当前节点
+    /// </summary>
+    public TvItem CurrentItem { get; }
+
+    /// <summary>
+    /// 获取设置子节点集合
+    /// </summary>
+    public IEnumerable<object> Children { get; set; }
 }

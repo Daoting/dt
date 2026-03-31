@@ -10,13 +10,12 @@
 using Dt.Core;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 记录Fv单元格最后编辑的值
+/// </summary>
+public partial class CellLastValX
 {
-    /// <summary>
-    /// 记录Fv单元格最后编辑的值
-    /// </summary>
-    public partial class CellLastValX
-    {
-        
-    }
+    
 }

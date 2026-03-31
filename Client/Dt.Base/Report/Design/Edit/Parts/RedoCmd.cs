@@ -10,27 +10,26 @@
 using Dt.Core;
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+internal class RedoCmd : BaseCommand
 {
-    internal class RedoCmd : BaseCommand
+    RptDesignInfo _owner;
+
+    public RedoCmd(RptDesignInfo p_owner)
     {
-        RptDesignInfo _owner;
+        _owner = p_owner;
+        UpdateAllowExecute();
+        _owner.History.DirtyChanged += (sender, e) => UpdateAllowExecute();
+    }
 
-        public RedoCmd(RptDesignInfo p_owner)
-        {
-            _owner = p_owner;
-            UpdateAllowExecute();
-            _owner.History.DirtyChanged += (sender, e) => UpdateAllowExecute();
-        }
+    protected override void DoExecute(object p_parameter)
+    {
+        _owner.Redo();
+    }
 
-        protected override void DoExecute(object p_parameter)
-        {
-            _owner.Redo();
-        }
-
-        void UpdateAllowExecute()
-        {
-            AllowExecute = _owner.History.CanRedo;
-        }
+    void UpdateAllowExecute()
+    {
+        AllowExecute = _owner.History.CanRedo;
     }
 }

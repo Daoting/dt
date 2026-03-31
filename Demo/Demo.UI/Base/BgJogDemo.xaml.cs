@@ -13,38 +13,37 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public sealed partial class BgJogDemo : Win
 {
-    public sealed partial class BgJogDemo : Win
+    public BgJogDemo()
     {
-        public BgJogDemo()
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            if (Kit.GetService<IBackgroundJob>() == null)
-            {
-                _tbJob.Text = "无后台任务";
-                _cbBgJob.IsEnabled = false;
-                _btnBgJob.IsEnabled = false;
-            }
-            else
-            {
-                Kit.RunAsync(async () => _cbBgJob.IsChecked = await CookieX.IsEnableBgJob());
-            }
-        }
-        
-        void OnToggleBgJob(object sender, RoutedEventArgs e)
+        if (Kit.GetService<IBackgroundJob>() == null)
         {
-            _ = CookieX.SetEnableBgJob((bool)_cbBgJob.IsChecked);
+            _tbJob.Text = "无后台任务";
+            _cbBgJob.IsEnabled = false;
+            _btnBgJob.IsEnabled = false;
         }
+        else
+        {
+            Kit.RunAsync(async () => _cbBgJob.IsChecked = await CookieX.IsEnableBgJob());
+        }
+    }
+    
+    void OnToggleBgJob(object sender, RoutedEventArgs e)
+    {
+        _ = CookieX.SetEnableBgJob((bool)_cbBgJob.IsChecked);
+    }
 
-        void OnRunBgJob(object sender, RoutedEventArgs e)
-        {
+    void OnRunBgJob(object sender, RoutedEventArgs e)
+    {
 #if IOS
-            BgJob.OnEnterBackground();
+        BgJob.OnEnterBackground();
 #else
-            _ = BgJob.Run();
+        _ = BgJob.Run();
 #endif
-        }
     }
 }

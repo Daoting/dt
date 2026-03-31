@@ -9,11 +9,10 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Core
-{
-    /// <summary>
-    /// 事件，构造方法无参数！禁止事件为泛型！
-    /// </summary>
-    public interface IEvent
-    { }
-}
+namespace Dt.Core;
+
+/// <summary>
+/// 事件，构造方法无参数！禁止事件为泛型！
+/// </summary>
+public interface IEvent
+{ }

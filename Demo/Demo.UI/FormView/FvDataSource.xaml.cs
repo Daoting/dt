@@ -15,53 +15,52 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class FvDataSource : Win
 {
-    public partial class FvDataSource : Win
+    int _rowNum;
+
+    public FvDataSource()
     {
-        int _rowNum;
+        InitializeComponent();
+    }
 
-        public FvDataSource()
+    void OnDataRow(object sender, RoutedEventArgs e)
+    {
+        var r = new Row
         {
-            InitializeComponent();
-        }
+            { "name", $"第{++_rowNum}行" },
+            { "fontsize", 22 },
+            { "id", _rowNum.ToString() },
+        };
 
-        void OnDataRow(object sender, RoutedEventArgs e)
+        r.SetCellHook("name", e =>
         {
-            var r = new Row
-            {
-                { "name", $"第{++_rowNum}行" },
-                { "fontsize", 22 },
-                { "id", _rowNum.ToString() },
-            };
+            e.NewVal = e.Str.ToUpper();
+            Throw.If(e.GbkLength > 8, "超出最大长度", e.Cell);
+        });
 
-            r.SetCellHook("name", e =>
-            {
-                e.NewVal = e.Str.ToUpper();
-                Throw.If(e.GbkLength > 8, "超出最大长度", e.Cell);
-            });
+        _fv.Data = r;
+    }
 
-            _fv.Data = r;
-        }
+    void OnTgt1(object sender, RoutedEventArgs e)
+    {
+        _fv.Data = _tb;
+    }
 
-        void OnTgt1(object sender, RoutedEventArgs e)
-        {
-            _fv.Data = _tb;
-        }
+    void OnTgt2(object sender, RoutedEventArgs e)
+    {
+        _fv.Data = _btn;
+    }
 
-        void OnTgt2(object sender, RoutedEventArgs e)
-        {
-            _fv.Data = _btn;
-        }
+    void OnTgt3(object sender, RoutedEventArgs e)
+    {
+        _fv.Data = _tb2;
+    }
 
-        void OnTgt3(object sender, RoutedEventArgs e)
-        {
-            _fv.Data = _tb2;
-        }
-
-        void OnNull(object sender, RoutedEventArgs e)
-        {
-            _fv.Data = null;
-        }
+    void OnNull(object sender, RoutedEventArgs e)
+    {
+        _fv.Data = null;
     }
 }

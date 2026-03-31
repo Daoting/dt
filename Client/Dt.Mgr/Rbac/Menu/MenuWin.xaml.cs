@@ -18,37 +18,36 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 #endregion
 
-namespace Dt.Mgr.Rbac
+namespace Dt.Mgr.Rbac;
+
+[View(LobViews.菜单管理)]
+public partial class MenuWin : Win
 {
-    [View(LobViews.菜单管理)]
-    public partial class MenuWin : Win
+    readonly MenuForm _form;
+    
+    public MenuWin()
     {
-        readonly MenuForm _form;
-        
-        public MenuWin()
+        InitializeComponent();
+        _form = new MenuForm { OwnWin = this };
+        Attach();
+    }
+
+    public MenuTree Tree => _tree;
+            
+    void Attach()
+    {
+        _tree.Msg += e => _list.Query(e.ID);
+        _tree.Navi += () => NaviTo(_list.Title + "," + _roleList.Title);
+
+        _list.Msg += e => _ = _form.Query(e);
+
+        _form.UpdateList += e =>
         {
-            InitializeComponent();
-            _form = new MenuForm { OwnWin = this };
-            Attach();
-        }
-
-        public MenuTree Tree => _tree;
-                
-        void Attach()
-        {
-            _tree.Msg += e => _list.Query(e.ID);
-            _tree.Navi += () => NaviTo(_list.Title + "," + _roleList.Title);
-
-            _list.Msg += e => _ = _form.Query(e);
-
-            _form.UpdateList += e =>
-            {
-                _ = _list.Refresh(e.ID);
-                var data = _form.Data;
-                if (data != null && data.IsGroup)
-                    _ = _tree.Refresh();
-            };
-            _form.UpdateRelated += e => _roleList.Query(e.ID);
-        }
+            _ = _list.Refresh(e.ID);
+            var data = _form.Data;
+            if (data != null && data.IsGroup)
+                _ = _tree.Refresh();
+        };
+        _form.UpdateRelated += e => _roleList.Query(e.ID);
     }
 }

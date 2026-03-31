@@ -21,45 +21,44 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class BaseChart : Win
 {
-    public partial class BaseChart : Win
+    ChartSampleData _data;
+
+    public BaseChart()
     {
-        ChartSampleData _data;
+        InitializeComponent();
 
-        public BaseChart()
-        {
-            InitializeComponent();
+        //_chart.View.AxisX.Title = "课程";
+        _chart.View.AxisY.Title = "成绩";
 
-            //_chart.View.AxisX.Title = "课程";
-            _chart.View.AxisY.Title = "成绩";
+        _data = new ChartSampleData();
 
-            _data = new ChartSampleData();
+        _chart.Data = _data.GetData(ChartType.Column);
+        _chart.ChartType = ChartType.Column;
+    }
 
-            _chart.Data = _data.GetData(ChartType.Column);
-            _chart.ChartType = ChartType.Column;
-        }
+    void OnChartTypeChanged(FvCell arg1, object e)
+    {
+        _chart.Data = _data.GetData((ChartType)e);
+    }
 
-        void OnChartTypeChanged(FvCell arg1, object e)
-        {
-            _chart.Data = _data.GetData((ChartType)e);
-        }
+    async void OnSnapshot(object sender, RoutedEventArgs e)
+    {
+        var file = await _chart.SaveSnapFile();
+        if (file != null)
+            Kit.Msg(string.Format("截图【{0}】保存成功！", file.Name));
+    }
 
-        async void OnSnapshot(object sender, RoutedEventArgs e)
-        {
-            var file = await _chart.SaveSnapFile();
-            if (file != null)
-                Kit.Msg(string.Format("截图【{0}】保存成功！", file.Name));
-        }
-
-        void OnMajorGrid(object sender, RoutedEventArgs e)
-        {
-            _chart.BeginUpdate();
-            if (_chart.View.AxisY.MajorGridFill == null)
-                _chart.View.AxisY.MajorGridFill = new SolidColorBrush(Colors.Yellow);
-            else
-                _chart.View.AxisY.MajorGridFill = null;
-            _chart.EndUpdate();
-        }
+    void OnMajorGrid(object sender, RoutedEventArgs e)
+    {
+        _chart.BeginUpdate();
+        if (_chart.View.AxisY.MajorGridFill == null)
+            _chart.View.AxisY.MajorGridFill = new SolidColorBrush(Colors.Yellow);
+        else
+            _chart.View.AxisY.MajorGridFill = null;
+        _chart.EndUpdate();
     }
 }

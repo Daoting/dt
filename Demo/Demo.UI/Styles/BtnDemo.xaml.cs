@@ -11,13 +11,12 @@ using Dt.Base;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public sealed partial class BtnDemo : Win
 {
-    public sealed partial class BtnDemo : Win
+    public BtnDemo()
     {
-        public BtnDemo()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

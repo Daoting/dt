@@ -11,34 +11,33 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Rbac
+namespace Dt.Mgr.Rbac;
+
+public partial class PerList : List
 {
-    public partial class PerList : List
+    public PerList()
     {
-        public PerList()
-        {
-            InitializeComponent();
-            Menu = CreateMenu();
-            _lv.SetMenu(CreateContextMenu());
-        }
+        InitializeComponent();
+        Menu = CreateMenu();
+        _lv.SetMenu(CreateContextMenu());
+    }
 
-        protected override async Task OnQuery()
-        {
-            _lv.Data = _parentID > 0 ? await PermissionX.Query("where func_id=" + _parentID) : null;
-            Menu["增加"].IsEnabled = _parentID > 0;
-        }
+    protected override async Task OnQuery()
+    {
+        _lv.Data = _parentID > 0 ? await PermissionX.Query("where func_id=" + _parentID) : null;
+        Menu["增加"].IsEnabled = _parentID > 0;
+    }
 
-        protected override async void OnDel(Mi e)
+    protected override async void OnDel(Mi e)
+    {
+        if (!await Kit.Confirm("确认要删除吗？"))
         {
-            if (!await Kit.Confirm("确认要删除吗？"))
-            {
-                Kit.Msg("已取消删除！");
-            }
-            else if (await e.Data.To<PermissionX>().Delete())
-            {
-                Kit.Warn("请检查该权限是否在程序中用到！");
-                await Refresh();
-            }
+            Kit.Msg("已取消删除！");
+        }
+        else if (await e.Data.To<PermissionX>().Delete())
+        {
+            Kit.Warn("请检查该权限是否在程序中用到！");
+            await Refresh();
         }
     }
 }

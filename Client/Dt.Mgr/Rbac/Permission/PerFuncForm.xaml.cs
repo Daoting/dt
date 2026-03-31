@@ -11,24 +11,23 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Rbac
+namespace Dt.Mgr.Rbac;
+
+public sealed partial class PerFuncForm : Form
 {
-    public sealed partial class PerFuncForm : Form
+    public PerFuncForm()
     {
-        public PerFuncForm()
-        {
-            InitializeComponent();
-            Menu = CreateMenu();
-        }
+        InitializeComponent();
+        Menu = CreateMenu();
+    }
 
-        protected override async Task OnAdd()
-        {
-            _fv.Data = await PermissionFuncX.New(ModuleID: _args.ParentID.Value);
-        }
+    protected override async Task OnAdd()
+    {
+        _fv.Data = await PermissionFuncX.New(ModuleID: _args.ParentID.Value);
+    }
 
-        protected override async Task OnGet()
-        {
-            _fv.Data = await PermissionFuncX.GetByID(_args.ID);
-        }
+    protected override async Task OnGet()
+    {
+        _fv.Data = await PermissionFuncX.GetByID(_args.ID);
     }
 }

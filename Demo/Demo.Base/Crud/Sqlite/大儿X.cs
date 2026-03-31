@@ -9,50 +9,49 @@
 #region 引用命名
 #endregion
 
-namespace Demo.Base.Sqlite
+namespace Demo.Base.Sqlite;
+
+public partial class 大儿X
 {
-    public partial class 大儿X
+    public static async Task<大儿X> New(
+        long ParentID = default,
+        string 大儿名 = default)
     {
-        public static async Task<大儿X> New(
-            long ParentID = default,
-            string 大儿名 = default)
-        {
-            return new 大儿X(
-                ID: await NewID(),
-                ParentID: ParentID,
-                大儿名: 大儿名);
-        }
+        return new 大儿X(
+            ID: await NewID(),
+            ParentID: ParentID,
+            大儿名: 大儿名);
+    }
 
-        protected override void InitHook()
-        {
-            //OnSaving(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+    protected override void InitHook()
+    {
+        //OnSaving(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnSaved(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnSaved(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnDeleting(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnDeleting(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnDeleted(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnDeleted(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnChanging(cName, e =>
-            //{
-                
-            //});
-        }
+        //OnChanging(cName, e =>
+        //{
+            
+        //});
     }
 }

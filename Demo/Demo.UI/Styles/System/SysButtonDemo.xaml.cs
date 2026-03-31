@@ -11,14 +11,13 @@ using Dt.Base;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
-{
-    public sealed partial class SysButtonDemo : Win
-    {
-        public SysButtonDemo()
-        {
-            InitializeComponent();
-        }
+namespace Demo.UI;
 
+public sealed partial class SysButtonDemo : Win
+{
+    public SysButtonDemo()
+    {
+        InitializeComponent();
     }
+
 }

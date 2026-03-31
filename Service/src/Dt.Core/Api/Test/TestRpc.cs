@@ -13,55 +13,54 @@ using System;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 客户端与服务之间Rpc功能测试
+/// </summary>
+[Api(AgentMode = AgentMode.Generic, IsTest = true)]
+public class TestRpc : RpcApi
 {
-    /// <summary>
-    /// 客户端与服务之间Rpc功能测试
-    /// </summary>
-    [Api(AgentMode = AgentMode.Generic, IsTest = true)]
-    public class TestRpc : RpcApi
+    public string GetRpcString()
     {
-        public string GetRpcString()
-        {
-            return "字符串结果";
-        }
+        return "字符串结果";
+    }
 
-        public bool SetRpcString(string p_str)
-        {
-            return !string.IsNullOrEmpty(p_str);
-        }
+    public bool SetRpcString(string p_str)
+    {
+        return !string.IsNullOrEmpty(p_str);
+    }
 
-        public async Task OnServerStream(string p_title, ResponseWriter p_writer)
+    public async Task OnServerStream(string p_title, ResponseWriter p_writer)
+    {
+        int i = 0;
+        while (true)
         {
-            int i = 0;
-            while (true)
-            {
-                var msg = $"{p_title} {i++}";
-                if (!await p_writer.Write(msg) || i > 50)
-                    break;
-                Log.Information("服务端写入：" + msg);
-                await Task.Delay(1000);
-            }
-            Log.Information("写入结束");
+            var msg = $"{p_title} {i++}";
+            if (!await p_writer.Write(msg) || i > 50)
+                break;
+            Log.Information("服务端写入：" + msg);
+            await Task.Delay(1000);
         }
+        Log.Information("写入结束");
+    }
 
-        public async Task OnClientStream(string p_title, RequestReader p_reader)
+    public async Task OnClientStream(string p_title, RequestReader p_reader)
+    {
+        while (await p_reader.MoveNext())
         {
-            while (await p_reader.MoveNext())
-            {
-                Log.Information("服务端读取：" + p_reader.Val<string>());
-            }
+            Log.Information("服务端读取：" + p_reader.Val<string>());
         }
+    }
 
-        public async Task OnDuplexStream(string p_title, RequestReader p_reader, ResponseWriter p_writer)
+    public async Task OnDuplexStream(string p_title, RequestReader p_reader, ResponseWriter p_writer)
+    {
+        while (await p_reader.MoveNext())
         {
-            while (await p_reader.MoveNext())
-            {
-                Log.Information("服务端读取：" + p_reader.Val<string>());
-                var msg = "++" + p_reader.Val<string>();
-                await p_writer.Write(msg);
-                Log.Information("服务端写入：" + msg);
-            }
+            Log.Information("服务端读取：" + p_reader.Val<string>());
+            var msg = "++" + p_reader.Val<string>();
+            await p_writer.Write(msg);
+            Log.Information("服务端写入：" + msg);
         }
     }
 }

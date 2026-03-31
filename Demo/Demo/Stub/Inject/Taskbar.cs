@@ -15,67 +15,66 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 #endregion
 
-namespace Demo
+namespace Demo;
+
+class MyTaskbar : ITaskbar
 {
-    class MyTaskbar : ITaskbar
+    /// <summary>
+    /// 获取任务栏左侧的开始界面
+    /// </summary>
+    /// <returns></returns>
+    public FrameworkElement GetStartUI()
     {
-        /// <summary>
-        /// 获取任务栏左侧的开始界面
-        /// </summary>
-        /// <returns></returns>
-        public FrameworkElement GetStartUI()
+        var btn = new Button
         {
-            var btn = new Button
-            {
-                Content = "\uE08E",
-                Style = Res.字符按钮,
-                Width = 60,
-            };
-            ToolTipService.SetToolTip(btn, "开始");
-            btn.Click += BtnStartClick;
-            return btn;
-        }
+            Content = "\uE08E",
+            Style = Res.字符按钮,
+            Width = 60,
+        };
+        ToolTipService.SetToolTip(btn, "开始");
+        btn.Click += BtnStartClick;
+        return btn;
+    }
 
-        /// <summary>
-        /// 获取任务栏右侧的托盘界面
-        /// </summary>
-        /// <returns></returns>
-        public FrameworkElement GetTrayUI()
+    /// <summary>
+    /// 获取任务栏右侧的托盘界面
+    /// </summary>
+    /// <returns></returns>
+    public FrameworkElement GetTrayUI()
+    {
+        var btn = new Button
         {
-            var btn = new Button
-            {
-                Content = "\uE004",
-                Style = Res.字符按钮,
-                Width = 60,
-            };
-            btn.Click += Btn_Click;
-            return btn;
-        }
+            Content = "\uE004",
+            Style = Res.字符按钮,
+            Width = 60,
+        };
+        btn.Click += Btn_Click;
+        return btn;
+    }
 
-        void Btn_Click(object sender, RoutedEventArgs e)
+    void Btn_Click(object sender, RoutedEventArgs e)
+    {
+        var dlg = new Dlg
         {
-            var dlg = new Dlg
-            {
-                HideTitleBar = true,
-                WinPlacement = DlgPlacement.FromTopRight,
-                Width = 400,
-                Height = 400,
-                Content = new TextBlock { Text = "托盘内容", HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center },
-            };
-            dlg.Show();
-        }
+            HideTitleBar = true,
+            WinPlacement = DlgPlacement.FromTopRight,
+            Width = 400,
+            Height = 400,
+            Content = new TextBlock { Text = "托盘内容", HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center },
+        };
+        dlg.Show();
+    }
 
-        void BtnStartClick(object sender, RoutedEventArgs e)
+    void BtnStartClick(object sender, RoutedEventArgs e)
+    {
+        var dlg = new Dlg
         {
-            var dlg = new Dlg
-            {
-                HideTitleBar = true,
-                WinPlacement = DlgPlacement.FromTopLeft,
-                Width = 400,
-                Height = 600,
-                Content = new TextBlock { Text = "开始", HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center },
-            };
-            dlg.Show();
-        }
+            HideTitleBar = true,
+            WinPlacement = DlgPlacement.FromTopLeft,
+            Width = 400,
+            Height = 600,
+            Content = new TextBlock { Text = "开始", HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center },
+        };
+        dlg.Show();
     }
 }

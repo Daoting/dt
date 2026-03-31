@@ -11,26 +11,25 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.Lob
-{
-    using A = 物资分类X;
-    
-    public sealed partial class 物资分类Form : Form
-    {
-        public 物资分类Form()
-        {
-            InitializeComponent();
-            Menu = CreateMenu();
-        }
-        
-        protected override async Task OnAdd()
-        {
-            _fv.Data = await A.New();
-        }
+namespace Demo.Lob;
 
-        protected override async Task OnGet()
-        {
-            _fv.Data = await A.GetByID(_args.ID);
-        }
+using A = 物资分类X;
+
+public sealed partial class 物资分类Form : Form
+{
+    public 物资分类Form()
+    {
+        InitializeComponent();
+        Menu = CreateMenu();
+    }
+    
+    protected override async Task OnAdd()
+    {
+        _fv.Data = await A.New();
+    }
+
+    protected override async Task OnGet()
+    {
+        _fv.Data = await A.GetByID(_args.ID);
     }
 }

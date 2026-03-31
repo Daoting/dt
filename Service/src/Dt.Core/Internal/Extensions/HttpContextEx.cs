@@ -12,27 +12,26 @@ using System;
 using System.Linq;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 扩展类
+/// </summary>
+public static class HttpContextEx
 {
     /// <summary>
-    /// 扩展类
+    /// 获取客户端的ip地址
     /// </summary>
-    public static class HttpContextEx
+    /// <param name="p_context"></param>
+    /// <returns></returns>
+    public static string GetClientIpPort(this HttpContext p_context)
     {
-        /// <summary>
-        /// 获取客户端的ip地址
-        /// </summary>
-        /// <param name="p_context"></param>
-        /// <returns></returns>
-        public static string GetClientIpPort(this HttpContext p_context)
+        var ip = p_context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+        if (string.IsNullOrEmpty(ip))
         {
-            var ip = p_context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-            if (string.IsNullOrEmpty(ip))
-            {
-                ip = $"{p_context.Connection.RemoteIpAddress}:{p_context.Connection.RemotePort}";
-            }
-            return ip;
+            ip = $"{p_context.Connection.RemoteIpAddress}:{p_context.Connection.RemotePort}";
         }
-
+        return ip;
     }
+
 }

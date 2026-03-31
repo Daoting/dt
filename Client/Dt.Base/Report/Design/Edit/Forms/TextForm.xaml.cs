@@ -17,106 +17,105 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+public sealed partial class TextForm : UserControl
 {
-    public sealed partial class TextForm : UserControl
+    const string _prefix = ":";
+    RptText _item;
+    DataSourceDlg _dlgData;
+    GlobalParamDlg _dlgGlobal;
+    ParamSelectionDlg _dlgParam;
+
+    public TextForm()
     {
-        const string _prefix = ":";
-        RptText _item;
-        DataSourceDlg _dlgData;
-        GlobalParamDlg _dlgGlobal;
-        ParamSelectionDlg _dlgParam;
+        InitializeComponent();
+    }
 
-        public TextForm()
+    internal void LoadItem(RptText p_item)
+    {
+        if (_item != p_item)
         {
-            InitializeComponent();
+            _item = p_item;
+            _fv.Data = _item.Data;
+            var cell = _item.Data.Cells["val"];
+            cell.Changed -= OnValChanged;
+            cell.Changed += OnValChanged;
         }
+    }
 
-        internal void LoadItem(RptText p_item)
-        {
-            if (_item != p_item)
-            {
-                _item = p_item;
-                _fv.Data = _item.Data;
-                var cell = _item.Data.Cells["val"];
-                cell.Changed -= OnValChanged;
-                cell.Changed += OnValChanged;
-            }
-        }
+    void OnScriptVal(object sender, RoutedEventArgs e)
+    {
+        _item.Val = RptText.ScriptValue;
+    }
 
-        void OnScriptVal(object sender, RoutedEventArgs e)
+    async void OnAddDataVal(object sender, RoutedEventArgs e)
+    {
+        if (_dlgData == null)
+            _dlgData = new DataSourceDlg();
+        if (await _dlgData.Show((Button)sender, _item))
         {
-            _item.Val = RptText.ScriptValue;
+            SaveExpression(_prefix + _dlgData.GetExpression());
         }
+    }
 
-        async void OnAddDataVal(object sender, RoutedEventArgs e)
+    async void OnAddParamVal(object sender, RoutedEventArgs e)
+    {
+        if (_dlgParam == null)
+            _dlgParam = new ParamSelectionDlg();
+        if (await _dlgParam.Show((Button)sender, _item))
         {
-            if (_dlgData == null)
-                _dlgData = new DataSourceDlg();
-            if (await _dlgData.Show((Button)sender, _item))
-            {
-                SaveExpression(_prefix + _dlgData.GetExpression());
-            }
+            SaveExpression(_prefix + _dlgParam.GetExpression());
         }
+    }
 
-        async void OnAddParamVal(object sender, RoutedEventArgs e)
+    async void OnAddGlobalVal(object sender, RoutedEventArgs e)
+    {
+        if (_dlgGlobal == null)
+            _dlgGlobal = new GlobalParamDlg();
+        if (await _dlgGlobal.Show((Button)sender))
         {
-            if (_dlgParam == null)
-                _dlgParam = new ParamSelectionDlg();
-            if (await _dlgParam.Show((Button)sender, _item))
-            {
-                SaveExpression(_prefix + _dlgParam.GetExpression());
-            }
+            SaveExpression(_prefix + _dlgGlobal.GetExpression());
         }
+    }
 
-        async void OnAddGlobalVal(object sender, RoutedEventArgs e)
+    void SaveExpression(string exp)
+    {
+        if (!string.IsNullOrEmpty(exp))
         {
-            if (_dlgGlobal == null)
-                _dlgGlobal = new GlobalParamDlg();
-            if (await _dlgGlobal.Show((Button)sender))
-            {
-                SaveExpression(_prefix + _dlgGlobal.GetExpression());
-            }
+            string val = _fv.Row.Str("val");
+            if (val == "" || val == RptText.ScriptValue)
+                _fv.Row["val"] = exp;
+            else
+                _fv.Row["val"] = $"{val}\r\n|| {exp}";
         }
+    }
 
-        void SaveExpression(string exp)
-        {
-            if (!string.IsNullOrEmpty(exp))
-            {
-                string val = _fv.Row.Str("val");
-                if (val == "" || val == RptText.ScriptValue)
-                    _fv.Row["val"] = exp;
-                else
-                    _fv.Row["val"] = $"{val}\r\n|| {exp}";
-            }
-        }
+    void OnValChanged(Cell cell)
+    {
+        _item.ParseVal();
+    }
 
-        void OnValChanged(Cell cell)
+    async void OnIconVal(object sender, RoutedEventArgs e)
+    {
+        RptIconDlg dlg = new RptIconDlg();
+        if (await dlg.ShowAsync())
         {
-            _item.ParseVal();
+            var icon = dlg.SelectIcon;
+            _fv.Row["fontfamily"] = "ms-appx:///icon.ttf#DtIcon";
+            _fv.Row["val"] = Res.GetIconChar(icon);
         }
+    }
 
-        async void OnIconVal(object sender, RoutedEventArgs e)
-        {
-            RptIconDlg dlg = new RptIconDlg();
-            if (await dlg.ShowAsync())
-            {
-                var icon = dlg.SelectIcon;
-                _fv.Row["fontfamily"] = "ms-appx:///icon.ttf#DtIcon";
-                _fv.Row["val"] = Res.GetIconChar(icon);
-            }
-        }
+    async void OnCallVal(object sender, RoutedEventArgs e)
+    {
+        var val = await ValueCallsDlg.ShowDlg((Button)sender);
+        if (!string.IsNullOrEmpty(val))
+            SaveExpression(val);
+    }
 
-        async void OnCallVal(object sender, RoutedEventArgs e)
-        {
-            var val = await ValueCallsDlg.ShowDlg((Button)sender);
-            if (!string.IsNullOrEmpty(val))
-                SaveExpression(val);
-        }
-
-        void OnClearVal(object sender, RoutedEventArgs e)
-        {
-            _item.Val = "";
-        }
+    void OnClearVal(object sender, RoutedEventArgs e)
+    {
+        _item.Val = "";
     }
 }

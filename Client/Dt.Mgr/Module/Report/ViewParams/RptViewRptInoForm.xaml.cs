@@ -9,76 +9,75 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Mgr.Module
+namespace Dt.Mgr.Module;
+
+public partial class RptViewRptInoForm : Form
 {
-    public partial class RptViewRptInoForm : Form
+    RptViewParamsDlg _owner;
+
+    public RptViewRptInoForm(RptViewParamsDlg p_owner)
     {
-        RptViewParamsDlg _owner;
+        InitializeComponent();
+        _owner = p_owner;
+        BeforeAdd = BeforeAddOption.None;
+        CheckChanges = false;
+    }
 
-        public RptViewRptInoForm(RptViewParamsDlg p_owner)
-        {
-            InitializeComponent();
-            _owner = p_owner;
-            BeforeAdd = BeforeAddOption.None;
-            CheckChanges = false;
-        }
+    protected override Task OnAdd()
+    {
+        var r = _owner.RptTbl.AddRow();
+        r["id"] = Kit.NewID;
+        _fv.Data = r;
+        return Task.CompletedTask;
+    }
 
-        protected override Task OnAdd()
+    protected override Task OnGet()
+    {
+        _fv.Data = (from row in _owner.RptTbl
+                    where row.ID == _args.ID
+                    select row).FirstOrDefault();
+        return Task.CompletedTask;
+    }
+    
+    protected override void OnClear()
+    {
+        if (_fv.Data is Row row)
         {
-            var r = _owner.RptTbl.AddRow();
-            r["id"] = Kit.NewID;
-            _fv.Data = r;
-            return Task.CompletedTask;
+            _owner.DeleteRpt(row);
         }
+        _fv.Data = null;
+    }
+    
+    async void OnDefault()
+    {
+        if (_fv.Data is Row r)
+        {
+            var txt = await SelectRptList.ShowDlg();
+            if (!string.IsNullOrEmpty(txt))
+                r["uri"] = txt;
+        }
+    }
 
-        protected override Task OnGet()
-        {
-            _fv.Data = (from row in _owner.RptTbl
-                        where row.ID == _args.ID
-                        select row).FirstOrDefault();
-            return Task.CompletedTask;
-        }
-        
-        protected override void OnClear()
-        {
-            if (_fv.Data is Row row)
-            {
-                _owner.DeleteRpt(row);
-            }
-            _fv.Data = null;
-        }
-        
-        async void OnDefault()
-        {
-            if (_fv.Data is Row r)
-            {
-                var txt = await SelectRptList.ShowDlg();
-                if (!string.IsNullOrEmpty(txt))
-                    r["uri"] = txt;
-            }
-        }
+    void OnContent()
+    {
+        AddTemplate("ms-appx:///程序集名/子路径/模板名称.rpt");
+    }
 
-        void OnContent()
-        {
-            AddTemplate("ms-appx:///程序集名/子路径/模板名称.rpt");
-        }
+    void OnEmbedded()
+    {
+        AddTemplate("embedded://程序集名/完整路径.模板名称.rpt");
+    }
 
-        void OnEmbedded()
+    void OnLocal()
+    {
+        AddTemplate("local://sqlite库名/模板名称");
+    }
+    
+    void AddTemplate(string p_temp)
+    {
+        if (_fv.Data is Row r)
         {
-            AddTemplate("embedded://程序集名/完整路径.模板名称.rpt");
-        }
-
-        void OnLocal()
-        {
-            AddTemplate("local://sqlite库名/模板名称");
-        }
-        
-        void AddTemplate(string p_temp)
-        {
-            if (_fv.Data is Row r)
-            {
-                r["uri"] = p_temp;
-            }
+            r["uri"] = p_temp;
         }
     }
 }

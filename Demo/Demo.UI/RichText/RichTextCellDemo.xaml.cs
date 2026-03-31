@@ -16,26 +16,26 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class RichTextCellDemo : Win
 {
-    public partial class RichTextCellDemo : Win
+    public RichTextCellDemo()
     {
-        public RichTextCellDemo()
+        InitializeComponent();
+        _fv.CellClick += (e) => FvDesignKit.LoadCellProps(e, _pbCell);
+        _fv.Changed += (e) => CellDemoKit.OnChanged(_fv, e);
+        _fv.Data = new Row
         {
-            InitializeComponent();
-            _fv.CellClick += (e) => FvDesignKit.LoadCellProps(e, _pbCell);
-            _fv.Changed += (e) => CellDemoKit.OnChanged(_fv, e);
-            _fv.Data = new Row
-            {
-                { "html", _initHtml },
-                { "md",  _initText },
-            };
-            _pbFv.Data = _fv;
-        }
+            { "html", _initHtml },
+            { "md",  _initText },
+        };
+        _pbFv.Data = _fv;
+    }
 
-        const string _initHtml = @"<p><span style=""font-size: 24px;"">初始内容</span></p><ol><li><span style=""font-size: 14px;""><strong>粗体</strong></span></li><li><s>删除线</s></li></ol>";
+    const string _initHtml = @"<p><span style=""font-size: 24px;"">初始内容</span></p><ol><li><span style=""font-size: 14px;""><strong>粗体</strong></span></li><li><s>删除线</s></li></ol>";
 
-        const string _initText = @"事实上, 编写 Web 内容很麻烦. [WYSIWYG]^(所见即所得) 编辑器帮助减轻了这一任务. 但通常会导致代码太糟, 或更糟糕的是, 网页也会很丑.
+    const string _initText = @"事实上, 编写 Web 内容很麻烦. [WYSIWYG]^(所见即所得) 编辑器帮助减轻了这一任务. 但通常会导致代码太糟, 或更糟糕的是, 网页也会很丑.
 
 没有通常伴随的所有复杂和丑陋的问题, **Markdown** 是一种更好的生成 **HTML** 内容的方式.
 
@@ -55,5 +55,4 @@ John Gruber, Markdown 的作者如是说:
 > 而不会看起来像被标签或格式说明所标记.
 > 虽然 Markdown 的语法受到几种现有的文本到 HTML 转换工具的影响,
 > 但 Markdown 语法的最大灵感来源是纯文本电子邮件的格式.";
-    }
 }

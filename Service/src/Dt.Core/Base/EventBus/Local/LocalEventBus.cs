@@ -14,48 +14,47 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core.EventBus
+namespace Dt.Core.EventBus;
+
+/// <summary>
+/// 本地事件总线
+/// </summary>
+[Service(ServiceLifetime.Singleton)]
+public sealed class LocalEventBus
 {
-    /// <summary>
-    /// 本地事件总线
-    /// </summary>
-    [Service(ServiceLifetime.Singleton)]
-    public sealed class LocalEventBus
+    readonly ILogger<LocalEventBus> _log;
+
+    public LocalEventBus(ILogger<LocalEventBus> p_log)
     {
-        readonly ILogger<LocalEventBus> _log;
+        _log = p_log;
+    }
 
-        public LocalEventBus(ILogger<LocalEventBus> p_log)
+    /// <summary>
+    /// 键为事件类型名称，值为ILocalHandler泛型
+    /// </summary>
+    internal static readonly Dictionary<string, Type> EventHandlerTypes = new Dictionary<string, Type>();
+
+    /// <summary>
+    /// 发布本地事件
+    /// </summary>
+    /// <param name="p_event">事件内容</param>
+    public async Task Publish(IEvent p_event)
+    {
+        Type tp;
+        if (p_event == null || !EventHandlerTypes.TryGetValue(p_event.GetType().Name, out tp))
+            return;
+
+        var mi = tp.GetMethod("Handle");
+        foreach (var h in Kit.GetServices(tp))
         {
-            _log = p_log;
-        }
-
-        /// <summary>
-        /// 键为事件类型名称，值为ILocalHandler泛型
-        /// </summary>
-        internal static readonly Dictionary<string, Type> EventHandlerTypes = new Dictionary<string, Type>();
-
-        /// <summary>
-        /// 发布本地事件
-        /// </summary>
-        /// <param name="p_event">事件内容</param>
-        public async Task Publish(IEvent p_event)
-        {
-            Type tp;
-            if (p_event == null || !EventHandlerTypes.TryGetValue(p_event.GetType().Name, out tp))
-                return;
-
-            var mi = tp.GetMethod("Handle");
-            foreach (var h in Kit.GetServices(tp))
+            try
             {
-                try
-                {
-                    // 按顺序调用
-                    await (Task)mi.Invoke(h, new object[] { p_event });
-                }
-                catch (Exception e)
-                {
-                    _log.LogWarning(e, $"{h.GetType().Name}处理本地事件时异常！");
-                }
+                // 按顺序调用
+                await (Task)mi.Invoke(h, new object[] { p_event });
+            }
+            catch (Exception e)
+            {
+                _log.LogWarning(e, $"{h.GetType().Name}处理本地事件时异常！");
             }
         }
     }

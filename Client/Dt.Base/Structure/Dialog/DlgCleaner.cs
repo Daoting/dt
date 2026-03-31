@@ -27,60 +27,59 @@ using Microsoft.UI.Input;
 using System.Collections.Concurrent;
 #endregion
 
-namespace Dt.Base
-{
-    class DlgCleaner
-    {
-#if WIN
-        static readonly BlockingCollection<Dlg> _queue;
-        
-        static DlgCleaner()
-        {
-            _queue = new BlockingCollection<Dlg>();
-            Task.Run(Clean);
-        }
-        
-        public static bool Add(Dlg p_dlg)
-        {
-            if (p_dlg == null || p_dlg.Content == null)
-                return false;
-            return _queue.TryAdd(p_dlg);
-        }
+namespace Dt.Base;
 
-        static void Clean()
+class DlgCleaner
+{
+#if WIN
+    static readonly BlockingCollection<Dlg> _queue;
+    
+    static DlgCleaner()
+    {
+        _queue = new BlockingCollection<Dlg>();
+        Task.Run(Clean);
+    }
+    
+    public static bool Add(Dlg p_dlg)
+    {
+        if (p_dlg == null || p_dlg.Content == null)
+            return false;
+        return _queue.TryAdd(p_dlg);
+    }
+
+    static void Clean()
+    {
+        while (true)
         {
-            while (true)
+            try
             {
-                try
+                var dlg = _queue.Take();
+                Kit.RunSync(() =>
                 {
-                    var dlg = _queue.Take();
-                    Kit.RunSync(() =>
+                    try
                     {
-                        try
+                        if (dlg.Content is IDestroy tc)
                         {
-                            if (dlg.Content is IDestroy tc)
+                            tc.Destroy();
+                        }
+                        else if (dlg.Content is UIElement elem)
+                        {
+                            foreach (var cl in elem.FindChildrenByType<IDestroy>())
                             {
-                                tc.Destroy();
-                            }
-                            else if (dlg.Content is UIElement elem)
-                            {
-                                foreach (var cl in elem.FindChildrenByType<IDestroy>())
-                                {
-                                    cl.Destroy();
-                                }
+                                cl.Destroy();
                             }
                         }
-                        catch { }
+                    }
+                    catch { }
 
-                        dlg.Content = null;
-                        dlg = null;
-                    });
-                }
-                catch { }
+                    dlg.Content = null;
+                    dlg = null;
+                });
             }
+            catch { }
         }
-#else
-        public static bool Add(Dlg p_dlg) => false;
-#endif
     }
+#else
+    public static bool Add(Dlg p_dlg) => false;
+#endif
 }

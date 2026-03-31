@@ -11,144 +11,144 @@
 
 using Windows.Storage;
 
-namespace Dt.Base.Tools
+namespace Dt.Base.Tools;
+
+class SqlServerTools : IDbTools
 {
-    class SqlServerTools : IDbTools
+    DbInitInfo _info;
+    const string _sqlDrop = "IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[{0}]') AND type IN ('U')) DROP TABLE [dbo].[{0}]";
+    SqlServerAccess _da;
+    string _host;
+
+    public SqlServerTools(DbInitInfo p_info)
     {
-        DbInitInfo _info;
-        const string _sqlDrop = "IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[{0}]') AND type IN ('U')) DROP TABLE [dbo].[{0}]";
-        SqlServerAccess _da;
-        string _host;
+        _info = p_info;
+        _host = $"Data Source={_info.Host},{_info.Port}";
+        var connStr = $"{_host};Initial Catalog={_info.DefDb};User ID={_info.DefUser};Password={_info.Pwd};Encrypt=True;TrustServerCertificate=True;";
+        _da = new SqlServerAccess(new DbAccessInfo("sqlserver", connStr, DatabaseType.SqlServer));
+    }
 
-        public SqlServerTools(DbInitInfo p_info)
+    public async Task<bool> ExistsDb()
+    {
+        return await _da.GetScalar<int>($"select count(*) from sys.sysdatabases where name='{_info.NewDb}'") > 0;
+    }
+
+    public async Task<bool> ExistsUser()
+    {
+        return await _da.GetScalar<int>($"select count(*) from sys.server_principals where type_desc='SQL_LOGIN' and name='{_info.NewUser}'") > 0;
+    }
+
+    public async Task<bool> IsPwdCorrect()
+    {
+        var connStr = $"{_host};Initial Catalog={_info.NewDb};User ID={_info.NewUser};Password={_info.NewPwd};Encrypt=True;TrustServerCertificate=True;";
+        var da = new SqlServerAccess(new DbAccessInfo("sqlserver", connStr, DatabaseType.SqlServer));
+        try
         {
-            _info = p_info;
-            _host = $"Data Source={_info.Host},{_info.Port}";
-            var connStr = $"{_host};Initial Catalog={_info.DefDb};User ID={_info.DefUser};Password={_info.Pwd};Encrypt=True;TrustServerCertificate=True;";
-            _da = new SqlServerAccess(new DbAccessInfo("sqlserver", connStr, DatabaseType.SqlServer));
+            await da.SyncDbTime();
         }
-
-        public async Task<bool> ExistsDb()
+        catch
         {
-            return await _da.GetScalar<int>($"select count(*) from sys.sysdatabases where name='{_info.NewDb}'") > 0;
+            return false;
         }
+        return true;
+    }
 
-        public async Task<bool> ExistsUser()
+    public Task CreateDb()
+    {
+        return Task.Run(async () =>
         {
-            return await _da.GetScalar<int>($"select count(*) from sys.server_principals where type_desc='SQL_LOGIN' and name='{_info.NewUser}'") > 0;
-        }
+            _da.AutoClose = false;
+            await DropExists();
 
-        public async Task<bool> IsPwdCorrect()
+            await DoCreateDb();
+            await CreateUser();
+            await _da.Close(true);
+            _info.Log("创建空库成功");
+        });
+    }
+
+    public Task DeleteDb()
+    {
+        return Task.Run(async () =>
         {
-            var connStr = $"{_host};Initial Catalog={_info.NewDb};User ID={_info.NewUser};Password={_info.NewPwd};Encrypt=True;TrustServerCertificate=True;";
-            var da = new SqlServerAccess(new DbAccessInfo("sqlserver", connStr, DatabaseType.SqlServer));
-            try
+            _da.AutoClose = false;
+            await DropExists();
+            await _da.Close(true);
+        });
+    }
+
+    public Task ImportInit()
+    {
+        return Task.Run(async () =>
+        {
+            await Import(DbKit.GetFileStream("sqlserver-init.sql"));
+        });
+    }
+
+    public Task ImportFromFile(StorageFile p_file)
+    {
+        return Task.Run(async () =>
+        {
+            if (p_file != null)
             {
-                await da.SyncDbTime();
+                var fs = await p_file.OpenStreamForReadAsync();
+                await Import(fs);
             }
-            catch
-            {
-                return false;
-            }
-            return true;
+        });
+    }
+
+    async Task Import(Stream p_fs)
+    {
+        var connStr = $"{_host};Initial Catalog={_info.NewDb};User ID={_info.NewUser};Password={_info.NewPwd};Encrypt=True;TrustServerCertificate=True;";
+        var da = new SqlServerAccess(new DbAccessInfo("sqlserver", connStr, DatabaseType.SqlServer));
+        da.AutoClose = false;
+
+        using (var sr = new StreamReader(p_fs))
+        {
+            var sql = sr.ReadToEnd();
+            await ImportSql(sql, da);
         }
 
-        public Task CreateDb()
-        {
-            return Task.Run(async () =>
-            {
-                _da.AutoClose = false;
-                await DropExists();
+        int cntTbl = await da.GetScalar<int>("select count(*) from sysobjects where xtype='U'");
+        int cntView = await da.GetScalar<int>("select count(*) from sysobjects where xtype='V'");
+        int cntSp = await da.GetScalar<int>("select count(*) from sysobjects where xtype='P'");
+        int cntSeq = await da.GetScalar<int>("select count(*) from sys.sequences");
 
-                await DoCreateDb();
-                await CreateUser();
-                await _da.Close(true);
-                _info.Log("创建空库成功");
-            });
-        }
+        _info.Log($"导入成功，当前库：\r\n{cntTbl}个表\r\n{cntSeq}个序列\r\n{cntSp}个存储过程\r\n{cntView}个视图\r\n");
 
-        public Task DeleteDb()
-        {
-            return Task.Run(async () =>
-            {
-                _da.AutoClose = false;
-                await DropExists();
-                await _da.Close(true);
-            });
-        }
+        await da.Close(true);
 
-        public Task ImportInit()
-        {
-            return Task.Run(async () =>
-            {
-                await Import(DbKit.GetFileStream("sqlserver-init.sql"));
-            });
-        }
+        _info.Log("连接串：\r\n" + connStr);
+    }
 
-        public Task ImportFromFile(StorageFile p_file)
+    async Task ImportSql(string p_sql, SqlServerAccess p_da)
+    {
+        var ls = p_sql.Split("GO");
+        foreach (var item in ls)
         {
-            return Task.Run(async () =>
+            if (!string.IsNullOrWhiteSpace(item))
             {
-                if (p_file != null)
+                try
                 {
-                    var fs = await p_file.OpenStreamForReadAsync();
-                    await Import(fs);
+                    await p_da.Exec(item);
                 }
-            });
-        }
-
-        async Task Import(Stream p_fs)
-        {
-            var connStr = $"{_host};Initial Catalog={_info.NewDb};User ID={_info.NewUser};Password={_info.NewPwd};Encrypt=True;TrustServerCertificate=True;";
-            var da = new SqlServerAccess(new DbAccessInfo("sqlserver", connStr, DatabaseType.SqlServer));
-            da.AutoClose = false;
-
-            using (var sr = new StreamReader(p_fs))
-            {
-                var sql = sr.ReadToEnd();
-                await ImportSql(sql, da);
-            }
-
-            int cntTbl = await da.GetScalar<int>("select count(*) from sysobjects where xtype='U'");
-            int cntView = await da.GetScalar<int>("select count(*) from sysobjects where xtype='V'");
-            int cntSp = await da.GetScalar<int>("select count(*) from sysobjects where xtype='P'");
-            int cntSeq = await da.GetScalar<int>("select count(*) from sys.sequences");
-
-            _info.Log($"导入成功，当前库：\r\n{cntTbl}个表\r\n{cntSeq}个序列\r\n{cntSp}个存储过程\r\n{cntView}个视图\r\n");
-
-            await da.Close(true);
-
-            _info.Log("连接串：\r\n" + connStr);
-        }
-
-        async Task ImportSql(string p_sql, SqlServerAccess p_da)
-        {
-            var ls = p_sql.Split("GO");
-            foreach (var item in ls)
-            {
-                if (!string.IsNullOrWhiteSpace(item))
+                catch (Exception ex)
                 {
-                    try
-                    {
-                        await p_da.Exec(item);
-                    }
-                    catch (Exception ex)
-                    {
-                        _info.Log(ex.Message);
-                    }
+                    _info.Log(ex.Message);
                 }
             }
         }
-        
-        async Task DoCreateDb()
-        {
-            _info.Log($"创建数据库【{_info.NewDb}】...");
+    }
+    
+    async Task DoCreateDb()
+    {
+        _info.Log($"创建数据库【{_info.NewDb}】...");
 
-            // 数据文件和默认库放在同一路径
-            var path = await _da.GetScalar<string>($"select filename from sys.sysdatabases where name='{_info.DefDb}'");
-            path = path.Substring(0, path.LastIndexOf('\\'));
+        // 数据文件和默认库放在同一路径
+        var path = await _da.GetScalar<string>($"select filename from sys.sysdatabases where name='{_info.DefDb}'");
+        path = path.Substring(0, path.LastIndexOf('\\'));
 
-            await _da.Exec(string.Format(
+        await _da.Exec(string.Format(
 @"CREATE DATABASE {0} ON
 (NAME = {0}_dat,
     FILENAME = '{1}\{0}dat.mdf',
@@ -162,30 +162,30 @@ LOG ON
     MAXSIZE = 25 MB,
     FILEGROWTH = 5 MB)", _info.NewDb, path));
 
-            _info.Log("创建成功！");
-        }
+        _info.Log("创建成功！");
+    }
 
-        async Task CreateUser()
+    async Task CreateUser()
+    {
+        _info.Log($"创建用户【{_info.NewUser}】...");
+        await _da.Exec($"create login {_info.NewUser} with password='{_info.NewPwd}',default_database={_info.NewDb}");
+        await _da.Exec("use " + _info.NewDb);
+        await _da.Exec(string.Format("create user {0} for login {0} with default_schema=dbo", _info.NewUser));
+        _info.Log($"创建成功！密码：{_info.NewPwd}");
+
+        _info.Log($"数据库【{_info.NewDb}】的所有权限授予给用户【{_info.NewUser}】...");
+        await _da.Exec("sp_addrolemember", new { rolename = "db_owner", membername = _info.NewUser });
+        _info.Log("授权成功！");
+    }
+
+    async Task DropExists()
+    {
+        if (await ExistsDb())
         {
-            _info.Log($"创建用户【{_info.NewUser}】...");
-            await _da.Exec($"create login {_info.NewUser} with password='{_info.NewPwd}',default_database={_info.NewDb}");
-            await _da.Exec("use " + _info.NewDb);
-            await _da.Exec(string.Format("create user {0} for login {0} with default_schema=dbo", _info.NewUser));
-            _info.Log($"创建成功！密码：{_info.NewPwd}");
+            _info.Log($"数据库【{_info.NewDb}】已存在，正在删除...");
 
-            _info.Log($"数据库【{_info.NewDb}】的所有权限授予给用户【{_info.NewUser}】...");
-            await _da.Exec("sp_addrolemember", new { rolename = "db_owner", membername = _info.NewUser });
-            _info.Log("授权成功！");
-        }
-
-        async Task DropExists()
-        {
-            if (await ExistsDb())
-            {
-                _info.Log($"数据库【{_info.NewDb}】已存在，正在删除...");
-
-                // 强制关闭连接
-                var ls = await _da.FirstCol<string>(string.Format(@"
+            // 强制关闭连接
+            var ls = await _da.FirstCol<string>(string.Format(@"
 SELECT * FROM 
 [Master].[dbo].[SYSPROCESSES] WHERE [DBID] 
 IN 
@@ -197,29 +197,28 @@ IN
   WHERE 
    NAME='{0}'  
 )", _info.NewDb));
-                foreach (var id in ls)
-                {
-                    await _da.Exec("kill " + id);
-                }
-
-                // 删库后用户自动删除
-                await _da.Exec($"drop database {_info.NewDb}");
-                if (!await ExistsDb())
-                {
-                    _info.Log($"【{_info.NewDb}】删除成功！");
-                }
-                else
-                {
-                    throw new Exception("数据库删除失败！");
-                }
-            }
-
-            if (await ExistsUser())
+            foreach (var id in ls)
             {
-                _info.Log($"登录名【{_info.NewUser}】已存在，正在删除...");
-                await _da.Exec($"drop login {_info.NewUser}");
-                _info.Log($"【{_info.NewUser}】删除成功！");
+                await _da.Exec("kill " + id);
             }
+
+            // 删库后用户自动删除
+            await _da.Exec($"drop database {_info.NewDb}");
+            if (!await ExistsDb())
+            {
+                _info.Log($"【{_info.NewDb}】删除成功！");
+            }
+            else
+            {
+                throw new Exception("数据库删除失败！");
+            }
+        }
+
+        if (await ExistsUser())
+        {
+            _info.Log($"登录名【{_info.NewUser}】已存在，正在删除...");
+            await _da.Exec($"drop login {_info.NewUser}");
+            _info.Log($"【{_info.NewUser}】删除成功！");
         }
     }
 }

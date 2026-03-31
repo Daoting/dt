@@ -17,35 +17,34 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class LvPullToRefresh : Win
 {
-    public partial class LvPullToRefresh : Win
+    public LvPullToRefresh()
     {
-        public LvPullToRefresh()
-        {
-            InitializeComponent();
-            _lv.Data = SampleData.CreatePersonsTbl(10);
-            _lv.RefreshRequested += OnRefreshRequested;
-        }
+        InitializeComponent();
+        _lv.Data = SampleData.CreatePersonsTbl(10);
+        _lv.RefreshRequested += OnRefreshRequested;
+    }
 
-        async void OnRefreshRequested(AsyncArgs e)
+    async void OnRefreshRequested(AsyncArgs e)
+    {
+        using (e.Wait())
         {
-            using (e.Wait())
-            {
-                await Task.Delay(2000);
-                var tbl = _lv.Table;
-                _lv.Data = SampleData.CreatePersonsTbl(tbl.Count + 10);
-            }
+            await Task.Delay(2000);
+            var tbl = _lv.Table;
+            _lv.Data = SampleData.CreatePersonsTbl(tbl.Count + 10);
         }
+    }
 
-        void OnRequestRefresh(object sender, RoutedEventArgs e)
-        {
-            _lv.RequestRefresh();
-        }
+    void OnRequestRefresh(object sender, RoutedEventArgs e)
+    {
+        _lv.RequestRefresh();
+    }
 
-        void OnPullToRefreshCheck(object sender, RoutedEventArgs e)
-        {
-            _lv.PullToRefresh = (bool)_cb.IsChecked;
-        }
+    void OnPullToRefreshCheck(object sender, RoutedEventArgs e)
+    {
+        _lv.PullToRefresh = (bool)_cb.IsChecked;
     }
 }

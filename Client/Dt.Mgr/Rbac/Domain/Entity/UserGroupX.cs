@@ -12,28 +12,27 @@ using System.Linq;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Mgr.Rbac
+namespace Dt.Mgr.Rbac;
+
+public partial class UserGroupX
 {
-    public partial class UserGroupX
+    protected override void InitHook()
     {
-        protected override void InitHook()
-        {
-            //OnSaving(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnSaving(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnDeleting(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnDeleting(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnChanging<string>(nameof(Name), v =>
-            //{
-                
-            //});
-        }
+        //OnChanging<string>(nameof(Name), v =>
+        //{
+            
+        //});
     }
 }

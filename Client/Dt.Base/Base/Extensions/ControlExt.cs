@@ -11,48 +11,47 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// Control扩展类
+/// </summary>
+public static class ControlExt
 {
     /// <summary>
-    /// Control扩展类
+    /// 连续状态迁移
     /// </summary>
-    public static class ControlExt
+    /// <param name="source"></param>
+    /// <param name="p_stateNames"></param>
+    public static void GoToState(this Control source, params string[] p_stateNames)
     {
-        /// <summary>
-        /// 连续状态迁移
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="p_stateNames"></param>
-        public static void GoToState(this Control source, params string[] p_stateNames)
+        if (p_stateNames != null)
         {
-            if (p_stateNames != null)
+            foreach (string str in p_stateNames)
             {
-                foreach (string str in p_stateNames)
+                if (VisualStateManager.GoToState(source, str, true))
                 {
-                    if (VisualStateManager.GoToState(source, str, true))
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
         }
+    }
 
-        /// <summary>
-        /// 连续状态迁移
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="p_useTransitions"></param>
-        /// <param name="p_stateNames"></param>
-        public static void GoToState(this Control source, bool p_useTransitions, params string[] p_stateNames)
+    /// <summary>
+    /// 连续状态迁移
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="p_useTransitions"></param>
+    /// <param name="p_stateNames"></param>
+    public static void GoToState(this Control source, bool p_useTransitions, params string[] p_stateNames)
+    {
+        if (p_stateNames != null)
         {
-            if (p_stateNames != null)
+            foreach (string str in p_stateNames)
             {
-                foreach (string str in p_stateNames)
+                if (VisualStateManager.GoToState(source, str, p_useTransitions))
                 {
-                    if (VisualStateManager.GoToState(source, str, p_useTransitions))
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
         }

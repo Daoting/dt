@@ -9,10 +9,9 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Mgr.Workflow
+namespace Dt.Mgr.Workflow;
+
+public partial class WfdAtvRoleX
 {
-    public partial class WfdAtvRoleX
-    {
-        
-    }
+    
 }

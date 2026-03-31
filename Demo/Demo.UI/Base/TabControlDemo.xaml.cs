@@ -13,43 +13,42 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+/// <summary>
+/// 
+/// </summary>
+public partial class TabControlDemo : Win
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public partial class TabControlDemo : Win
+    public TabControlDemo()
     {
-        public TabControlDemo()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        void OnAddTabItem(object sender, RoutedEventArgs e)
-        {
-            TabItem item = new TabItem();
-            item.Title = "新增加标签";
-            _tab.Items.Add(item);
-        }
+    void OnAddTabItem(object sender, RoutedEventArgs e)
+    {
+        TabItem item = new TabItem();
+        item.Title = "新增加标签";
+        _tab.Items.Add(item);
+    }
 
-        void OnRemoveTabItem(object sender, RoutedEventArgs e)
-        {
-            _tab.Items.RemoveAt(_tab.Items.Count - 1);
-        }
+    void OnRemoveTabItem(object sender, RoutedEventArgs e)
+    {
+        _tab.Items.RemoveAt(_tab.Items.Count - 1);
+    }
 
-        void OnReplaceItem(object sender, RoutedEventArgs e)
+    void OnReplaceItem(object sender, RoutedEventArgs e)
+    {
+        string msg = "新替换" + new Random().Next(1000);
+        _tab.ReplaceItem(_tab.SelectedItem, new TabItem
         {
-            string msg = "新替换" + new Random().Next(1000);
-            _tab.ReplaceItem(_tab.SelectedItem, new TabItem
-            {
-                Title = msg,
-                Content = new TextBlock
-                { 
-                    Text = msg,
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center
-                }
-            });
-        }
+            Title = msg,
+            Content = new TextBlock
+            { 
+                Text = msg,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            }
+        });
     }
 }

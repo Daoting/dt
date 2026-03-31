@@ -12,238 +12,237 @@ using Microsoft.Extensions.Configuration;
 using System.Text;
 #endregion
 
-namespace Dt.Cm
+namespace Dt.Cm;
+
+/// <summary>
+/// 数据导出到sqlite文件及sqlite文件下载的处理
+/// </summary>
+public class SqliteFileHandler
 {
+    #region 成员变量
+    static DirectoryInfo _path = new DirectoryInfo(System.IO.Path.Combine(Kit.PathBase, "etc/sqlite"));
+
+    readonly ModelFileItem _model = new ModelFileItem();
+    readonly Dictionary<string, SqliteFileItem> _fileItem = new Dictionary<string, SqliteFileItem>(StringComparer.OrdinalIgnoreCase);
+    #endregion
+
     /// <summary>
-    /// 数据导出到sqlite文件及sqlite文件下载的处理
+    /// sqlite文件路径
     /// </summary>
-    public class SqliteFileHandler
+    public static DirectoryInfo Path => _path;
+
+    /// <summary>
+    /// 初始化 sqlite.json 配置
+    /// </summary>
+    public void Init(IDictionary<string, RequestDelegate> p_handlers)
     {
-        #region 成员变量
-        static DirectoryInfo _path = new DirectoryInfo(System.IO.Path.Combine(Kit.PathBase, "etc/sqlite"));
+        if (!_path.Exists)
+            _path.Create();
 
-        readonly ModelFileItem _model = new ModelFileItem();
-        readonly Dictionary<string, SqliteFileItem> _fileItem = new Dictionary<string, SqliteFileItem>(StringComparer.OrdinalIgnoreCase);
-        #endregion
+        var root = Cfg.Config.GetSection("SqliteModel");
+        
+        // db模型的sqlite文件
+        _model.Init(root);
 
-        /// <summary>
-        /// sqlite文件路径
-        /// </summary>
-        public static DirectoryInfo Path => _path;
-
-        /// <summary>
-        /// 初始化 sqlite.json 配置
-        /// </summary>
-        public void Init(IDictionary<string, RequestDelegate> p_handlers)
+        // 普通sqlite文件
+        foreach (var item in root.GetSection("Files").GetChildren())
         {
-            if (!_path.Exists)
-                _path.Create();
-
-            var root = Cfg.Config.GetSection("SqliteModel");
-            
-            // db模型的sqlite文件
-            _model.Init(root);
-
-            // 普通sqlite文件
-            foreach (var item in root.GetSection("Files").GetChildren())
-            {
-                _fileItem[item.Key] = new SqliteFileItem(item);
-            }
-
-            // 注册请求路径处理
-            p_handlers["/.sqlite"] = GetData;
-
-            UpdateVersion();
+            _fileItem[item.Key] = new SqliteFileItem(item);
         }
 
-        /// <summary>
-        /// 刷新所有sqlite文件
-        /// </summary>
-        /// <returns></returns>
-        public string RefreshAll()
+        // 注册请求路径处理
+        p_handlers["/.sqlite"] = GetData;
+
+        UpdateVersion();
+    }
+
+    /// <summary>
+    /// 刷新所有sqlite文件
+    /// </summary>
+    /// <returns></returns>
+    public string RefreshAll()
+    {
+        string start = "";
+
+        if (!_model.IsRefreshing)
         {
-            string start = "";
+            start = "model";
+        }
 
-            if (!_model.IsRefreshing)
+        foreach (var item in _fileItem)
+        {
+            if (!item.Value.IsRefreshing)
             {
-                start = "model";
+                start += " " + item.Key;
             }
+        }
 
-            foreach (var item in _fileItem)
+        if (start != "")
+        {
+            start = $"开始更新 {start} 模型文件";
+            Task.Run(async () =>
             {
-                if (!item.Value.IsRefreshing)
+                if (!_model.IsRefreshing)
+                    await _model.Refresh();
+
+                foreach (var item in _fileItem)
                 {
-                    start += " " + item.Key;
+                    if (!item.Value.IsRefreshing)
+                    {
+                        await item.Value.Refresh();
+                    }
                 }
-            }
+                UpdateVersion();
+                Log.Information("所有模型文件更新完毕！");
+            });
+        }
+        else
+        {
+            start = "所有模型文件更新中，无需重复提交更新请求！";
+        }
+        
+        Log.Information(start);
+        return start;
+    }
 
-            if (start != "")
+    /// <summary>
+    /// 刷新sqlite文件
+    /// </summary>
+    /// <returns></returns>
+    public string Refresh(string p_fileName)
+    {
+        string msg;
+        if (string.IsNullOrEmpty(p_fileName))
+        {
+            msg = "待更新的文件名不可为空！";
+        }
+        else if ("model".Equals(p_fileName, StringComparison.OrdinalIgnoreCase))
+        {
+            if (_model.IsRefreshing)
             {
-                start = $"开始更新 {start} 模型文件";
+                msg = "model 文件更新中，无需重复提交更新请求！";
+            }
+            else
+            {
+                msg = "开始更新 model 模型文件...";
                 Task.Run(async () =>
                 {
-                    if (!_model.IsRefreshing)
-                        await _model.Refresh();
-
-                    foreach (var item in _fileItem)
-                    {
-                        if (!item.Value.IsRefreshing)
-                        {
-                            await item.Value.Refresh();
-                        }
-                    }
+                    await _model.Refresh();
                     UpdateVersion();
-                    Log.Information("所有模型文件更新完毕！");
+                    Log.Information("更新完毕！");
                 });
             }
-            else
-            {
-                start = "所有模型文件更新中，无需重复提交更新请求！";
-            }
-            
-            Log.Information(start);
-            return start;
         }
-
-        /// <summary>
-        /// 刷新sqlite文件
-        /// </summary>
-        /// <returns></returns>
-        public string Refresh(string p_fileName)
+        else if (_fileItem.TryGetValue(p_fileName, out var item))
         {
-            string msg;
-            if (string.IsNullOrEmpty(p_fileName))
+            if (item.IsRefreshing)
             {
-                msg = "待更新的文件名不可为空！";
-            }
-            else if ("model".Equals(p_fileName, StringComparison.OrdinalIgnoreCase))
-            {
-                if (_model.IsRefreshing)
-                {
-                    msg = "model 文件更新中，无需重复提交更新请求！";
-                }
-                else
-                {
-                    msg = "开始更新 model 模型文件...";
-                    Task.Run(async () =>
-                    {
-                        await _model.Refresh();
-                        UpdateVersion();
-                        Log.Information("更新完毕！");
-                    });
-                }
-            }
-            else if (_fileItem.TryGetValue(p_fileName, out var item))
-            {
-                if (item.IsRefreshing)
-                {
-                    msg = p_fileName + "文件更新中，无需重复提交更新请求！";
-                }
-                else
-                {
-                    msg = $"开始更新 {p_fileName} 模型文件...";
-                    Task.Run(async () =>
-                    {
-                        await item.Refresh();
-                        UpdateVersion();
-                        Log.Information("更新完毕！");
-                    });
-                }
+                msg = p_fileName + "文件更新中，无需重复提交更新请求！";
             }
             else
             {
-                msg = $"无 {p_fileName} 模型配置，无法更新它的模型文件！";
+                msg = $"开始更新 {p_fileName} 模型文件...";
+                Task.Run(async () =>
+                {
+                    await item.Refresh();
+                    UpdateVersion();
+                    Log.Information("更新完毕！");
+                });
             }
-            Log.Information(msg);
-            return msg;
         }
-
-        /// <summary>
-        /// 获取所有sqlite文件名
-        /// </summary>
-        /// <returns></returns>
-        public List<string> GetAllFile()
+        else
         {
-            var ls = _fileItem.Keys.ToList();
-            ls.Insert(0, "model");
-            return ls;
+            msg = $"无 {p_fileName} 模型配置，无法更新它的模型文件！";
         }
+        Log.Information(msg);
+        return msg;
+    }
 
-        /// <summary>
-        /// 向客户端返回sqlite文件内容
-        /// </summary>
-        /// <param name="p_context"></param>
-        /// <returns></returns>
-        Task GetData(HttpContext p_context)
+    /// <summary>
+    /// 获取所有sqlite文件名
+    /// </summary>
+    /// <returns></returns>
+    public List<string> GetAllFile()
+    {
+        var ls = _fileItem.Keys.ToList();
+        ls.Insert(0, "model");
+        return ls;
+    }
+
+    /// <summary>
+    /// 向客户端返回sqlite文件内容
+    /// </summary>
+    /// <param name="p_context"></param>
+    /// <returns></returns>
+    Task GetData(HttpContext p_context)
+    {
+        p_context.Response.ContentType = "application/dt";
+
+        // 形如 /.sqlite/model
+        string path = p_context.Request.Path.Value;
+        int index = path.LastIndexOf('/');
+
+        if (index < 1)
         {
-            p_context.Response.ContentType = "application/dt";
-
-            // 形如 /.sqlite/model
-            string path = p_context.Request.Path.Value;
-            int index = path.LastIndexOf('/');
-
-            if (index < 1)
-            {
-                // 未传递文件名参数，无文件
-                p_context.Response.StatusCode = 404;
-                return Task.CompletedTask;
-            }
-
-            byte[] data = null;
-            path = path.Substring(index + 1);
-            if ("model".Equals(path, StringComparison.OrdinalIgnoreCase))
-            {
-                data = _model.GetData();
-            }
-            else if (_fileItem.TryGetValue(path, out var fileItem))
-            {
-                data = fileItem.GetData();
-            }
-
-            if (data != null)
-            {
-                return p_context.Response.Body.WriteAsync(data, 0, data.Length);
-            }
-
-            // 无文件
+            // 未传递文件名参数，无文件
             p_context.Response.StatusCode = 404;
             return Task.CompletedTask;
         }
 
-        void UpdateVersion()
+        byte[] data = null;
+        path = path.Substring(index + 1);
+        if ("model".Equals(path, StringComparison.OrdinalIgnoreCase))
         {
-            bool isValid = true;
+            data = _model.GetData();
+        }
+        else if (_fileItem.TryGetValue(path, out var fileItem))
+        {
+            data = fileItem.GetData();
+        }
 
-            if (_model.Version == null)
-            {
-                isValid = false;
-            }
-            else
-            {
-                foreach (var item in _fileItem)
-                {
-                    if (item.Value.Version == null)
-                    {
-                        isValid = false;
-                        break;
-                    }
-                }
-            }
+        if (data != null)
+        {
+            return p_context.Response.Body.WriteAsync(data, 0, data.Length);
+        }
 
-            if (!isValid)
-            {
-                // 缺少sqlite文件
-                SysKernel.Config.Remove("SqliteVer");
-                return;
-            }
+        // 无文件
+        p_context.Response.StatusCode = 404;
+        return Task.CompletedTask;
+    }
 
-            List<string> ls = new List<string>();
-            ls.Add(_model.Version);
+    void UpdateVersion()
+    {
+        bool isValid = true;
+
+        if (_model.Version == null)
+        {
+            isValid = false;
+        }
+        else
+        {
             foreach (var item in _fileItem)
             {
-                ls.Add(item.Value.Version);
+                if (item.Value.Version == null)
+                {
+                    isValid = false;
+                    break;
+                }
             }
-            SysKernel.Config["SqliteVer"] = ls;
         }
+
+        if (!isValid)
+        {
+            // 缺少sqlite文件
+            SysKernel.Config.Remove("SqliteVer");
+            return;
+        }
+
+        List<string> ls = new List<string>();
+        ls.Add(_model.Version);
+        foreach (var item in _fileItem)
+        {
+            ls.Add(item.Value.Version);
+        }
+        SysKernel.Config["SqliteVer"] = ls;
     }
 }

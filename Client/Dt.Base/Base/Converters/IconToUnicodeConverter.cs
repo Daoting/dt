@@ -15,75 +15,74 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// Icons枚举值转unicode字符
+/// </summary>
+public partial class IconToUnicodeConverter : IValueConverter
 {
-    /// <summary>
-    /// Icons枚举值转unicode字符
-    /// </summary>
-    public partial class IconToUnicodeConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, string language)
     {
-        public object Convert(object value, Type targetType, object parameter, string language)
+        if (value != null)
         {
-            if (value != null)
+            try
             {
-                try
-                {
-                    Icons icon = (Icons)value;
-                    return Res.GetIconChar(icon);
-                }
-                catch { }
+                Icons icon = (Icons)value;
+                return Res.GetIconChar(icon);
             }
-            return "";
+            catch { }
         }
-
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
-        }
+        return "";
     }
 
-    /// <summary>
-    /// Icons枚举值名称转unicode字符
-    /// </summary>
-    public partial class IconNameToUnicodeConverter : IValueConverter
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            Icons icon = Icons.None;
-            if (value != null)
-                Enum.TryParse<Icons>(value.ToString(), true, out icon);
-            return Res.GetIconChar(icon);
-        }
+        throw new NotImplementedException();
+    }
+}
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
-        }
+/// <summary>
+/// Icons枚举值名称转unicode字符
+/// </summary>
+public partial class IconNameToUnicodeConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        Icons icon = Icons.None;
+        if (value != null)
+            Enum.TryParse<Icons>(value.ToString(), true, out icon);
+        return Res.GetIconChar(icon);
     }
 
-    /// <summary>
-    /// 用于显示icon的name
-    /// </summary>
-    public partial class IconToNameConverter : IValueConverter
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            if (value != null)
-            {
-                try
-                {
-                    Icons icon = (Icons)value;
-                    return icon.ToString();
-                }
-                catch { }
-            }
-            return "";
-        }
+        throw new NotImplementedException();
+    }
+}
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
+/// <summary>
+/// 用于显示icon的name
+/// </summary>
+public partial class IconToNameConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        if (value != null)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Icons icon = (Icons)value;
+                return icon.ToString();
+            }
+            catch { }
         }
+        return "";
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
     }
 }
 

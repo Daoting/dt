@@ -11,35 +11,34 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Workflow
+namespace Dt.Mgr.Workflow;
+
+public sealed partial class WfdPrcQuery : Tab
 {
-    public sealed partial class WfdPrcQuery : Tab
+    public WfdPrcQuery()
     {
-        public WfdPrcQuery()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        /// <summary>
-        /// 查询事件
-        /// </summary>
-        public event Action<QueryClause> Query
-        {
-            add { _fv.Query += value; }
-            remove { _fv.Query -= value; }
-        }
+    /// <summary>
+    /// 查询事件
+    /// </summary>
+    public event Action<QueryClause> Query
+    {
+        add { _fv.Query += value; }
+        remove { _fv.Query -= value; }
+    }
 
-        protected override void OnFirstLoaded()
-        {
-            var row = new Row();
-            row.Add<string>("name");
-            row.Add<bool>("is_locked");
-            row.Add<bool>("singleton");
-            row.Add<DateTime>("ctime_min");
-            row.Add<DateTime>("ctime_max");
-            row.Add<DateTime>("mtime_min");
-            row.Add<DateTime>("mtime_max");
-            _fv.Data = row;
-        }
+    protected override void OnFirstLoaded()
+    {
+        var row = new Row();
+        row.Add<string>("name");
+        row.Add<bool>("is_locked");
+        row.Add<bool>("singleton");
+        row.Add<DateTime>("ctime_min");
+        row.Add<DateTime>("ctime_max");
+        row.Add<DateTime>("mtime_min");
+        row.Add<DateTime>("mtime_max");
+        _fv.Data = row;
     }
 }

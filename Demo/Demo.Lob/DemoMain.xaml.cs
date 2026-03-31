@@ -16,41 +16,40 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 #endregion
 
-namespace Demo.Lob
-{
-    [View("业务样例")]
-    public partial class DemoMain : Win
-    {
-        public DemoMain()
-        {
-            InitializeComponent();
-            LoadBase();
-        }
+namespace Demo.Lob;
 
-        void LoadBase()
+[View("业务样例")]
+public partial class DemoMain : Win
+{
+    public DemoMain()
+    {
+        InitializeComponent();
+        LoadBase();
+    }
+
+    void LoadBase()
+    {
+        var ds = new Nl<GroupData<Nav>>();
+        var group = new GroupData<Nav>
         {
-            var ds = new Nl<GroupData<Nav>>();
-            var group = new GroupData<Nav>
+            new Nav("共享视图", Icons.命令) { Desc ="项目之间共享带有[View]标签的窗口或实现 IView 的类型", Callback = (s, n) => Kit.OpenView("基础") },
+            new Nav("共享Tab", typeof(ShareTabWin), Icons.文件) { Desc ="项目之间共享带有[Share]标签的List Form等Tab类型" },
+            new Nav("共享Form", Icons.命令) { Desc ="用共享Form显示数据，并禁止修改", Callback = async (s, n) =>
             {
-                new Nav("共享视图", Icons.命令) { Desc ="项目之间共享带有[View]标签的窗口或实现 IView 的类型", Callback = (s, n) => Kit.OpenView("基础") },
-                new Nav("共享Tab", typeof(ShareTabWin), Icons.文件) { Desc ="项目之间共享带有[Share]标签的List Form等Tab类型" },
-                new Nav("共享Form", Icons.命令) { Desc ="用共享Form显示数据，并禁止修改", Callback = async (s, n) =>
+                var en = await 基础X.First(null);
+                if (en != null)
                 {
-                    var en = await 基础X.First(null);
-                    if (en != null)
-                    {
-                        var form = Kit.GetShareObj<Form>("Crud基础Form");
-                        form.Menu = null;
-                        form.MainFv.IsReadOnly = true;
-                        await form.Query(en.ID, true);
-                    }
-                } },
-                
-            };
-            group.Title = "类型共享";
-            ds.Add(group);
+                    var form = Kit.GetShareObj<Form>("Crud基础Form");
+                    form.Menu = null;
+                    form.MainFv.IsReadOnly = true;
+                    await form.Query(en.ID, true);
+                }
+            } },
             
-            _navBase.Data = ds;
-        }
+        };
+        group.Title = "类型共享";
+        ds.Add(group);
+        
+        _navBase.Data = ds;
     }
 }

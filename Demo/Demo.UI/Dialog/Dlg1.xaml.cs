@@ -15,44 +15,43 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public sealed partial class Dlg1 : Dlg
 {
-    public sealed partial class Dlg1 : Dlg
+    public Dlg1()
     {
-        public Dlg1()
-        {
-            InitializeComponent();
-            Closing += OnClosing;
-            Closed += OnClosed;
-        }
+        InitializeComponent();
+        Closing += OnClosing;
+        Closed += OnClosed;
+    }
 
-        public string Result { get { return _tbResult.Text; } }
+    public string Result { get { return _tbResult.Text; } }
 
-        void OnCloseClick(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
+    void OnCloseClick(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 
-        async void OnClosing(Dlg arg1, DlgClosingArgs arg2)
+    async void OnClosing(Dlg arg1, DlgClosingArgs arg2)
+    {
+        using (arg2.Wait())
         {
-            using (arg2.Wait())
-            {
-                await Task.Delay(100);
-                arg2.Cancel = (bool)_cbClosing.IsChecked;
-                if (arg2.Cancel)
-                    Kit.Msg("事件中设置禁止关闭");
-            }
+            await Task.Delay(100);
+            arg2.Cancel = (bool)_cbClosing.IsChecked;
+            if (arg2.Cancel)
+                Kit.Msg("事件中设置禁止关闭");
         }
+    }
 
-        void OnClosed(Dlg arg1, bool arg2)
-        {
-            Kit.Msg("关闭后事件");
-        }
+    void OnClosed(Dlg arg1, bool arg2)
+    {
+        Kit.Msg("关闭后事件");
+    }
 
-        void OnNewDlg(object sender, RoutedEventArgs e)
-        {
-            var dlg = new Dlg1();
-            dlg.Show();
-        }
+    void OnNewDlg(object sender, RoutedEventArgs e)
+    {
+        var dlg = new Dlg1();
+        dlg.Show();
     }
 }

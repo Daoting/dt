@@ -12,61 +12,60 @@ using Serilog.Formatting;
 using Serilog.Formatting.Display;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// Trace的日志项
+/// </summary>
+public class TraceLogItem
 {
+    static ITextFormatter _ftMsg = new MessageTemplateTextFormatter("{Message:lj}{NewLine}{Exception}");
+    static ITextFormatter _ftInfo = new MessageTemplateTextFormatter("[{Timestamp:HH:mm:ss.fff} {Level:u3}] {src}");
+    string _info;
+    string _msg;
+
     /// <summary>
-    /// Trace的日志项
+    /// 日志项
     /// </summary>
-    public class TraceLogItem
+    public LogEvent Log { get; set; }
+
+    /// <summary>
+    /// 日志描述信息
+    /// </summary>
+    public string Info
     {
-        static ITextFormatter _ftMsg = new MessageTemplateTextFormatter("{Message:lj}{NewLine}{Exception}");
-        static ITextFormatter _ftInfo = new MessageTemplateTextFormatter("[{Timestamp:HH:mm:ss.fff} {Level:u3}] {src}");
-        string _info;
-        string _msg;
-
-        /// <summary>
-        /// 日志项
-        /// </summary>
-        public LogEvent Log { get; set; }
-
-        /// <summary>
-        /// 日志描述信息
-        /// </summary>
-        public string Info
+        get
         {
-            get
+            if (_info == null)
             {
-                if (_info == null)
+                using (var buffer = new StringWriter())
                 {
-                    using (var buffer = new StringWriter())
-                    {
-                        _ftInfo.Format(Log, buffer);
-                        _info = buffer.ToString().Trim();
-                    }
+                    _ftInfo.Format(Log, buffer);
+                    _info = buffer.ToString().Trim();
                 }
-                return _info;
             }
-            set { _info = value; }
+            return _info;
         }
+        set { _info = value; }
+    }
 
-        /// <summary>
-        /// 日志详细内容
-        /// </summary>
-        public string Msg
+    /// <summary>
+    /// 日志详细内容
+    /// </summary>
+    public string Msg
+    {
+        get
         {
-            get
+            if (_msg == null)
             {
-                if (_msg == null)
+                using (var buffer = new StringWriter())
                 {
-                    using (var buffer = new StringWriter())
-                    {
-                        _ftMsg.Format(Log, buffer);
-                        _msg = buffer.ToString().Trim();
-                    }
+                    _ftMsg.Format(Log, buffer);
+                    _msg = buffer.ToString().Trim();
                 }
-                return _msg;
             }
-            set { _msg = value; }
+            return _msg;
         }
+        set { _msg = value; }
     }
 }

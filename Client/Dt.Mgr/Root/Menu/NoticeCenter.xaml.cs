@@ -11,34 +11,33 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Home
+namespace Dt.Mgr.Home;
+
+public partial class NoticeCenter : Tab
 {
-    public partial class NoticeCenter : Tab
+    public NoticeCenter()
     {
-        public NoticeCenter()
-        {
-            InitializeComponent();
-            _lv.Data = Kit.AllTrayMsg;
-        }
+        InitializeComponent();
+        _lv.Data = Kit.AllTrayMsg;
+    }
 
-        void OnItemClick(ItemClickArgs e)
+    void OnItemClick(ItemClickArgs e)
+    {
+        if (e.Row.Tag is NotifyInfo ni
+            && ni.LinkCallback != null)
         {
-            if (e.Row.Tag is NotifyInfo ni
-                && ni.LinkCallback != null)
-            {
-                ni.LinkCallback.Invoke(ni);
-                Kit.AllTrayMsg.Remove(e.Row);
-            }
+            ni.LinkCallback.Invoke(ni);
+            Kit.AllTrayMsg.Remove(e.Row);
         }
+    }
 
-        void OnClear()
-        {
-            Kit.AllTrayMsg.Clear();
-        }
+    void OnClear()
+    {
+        Kit.AllTrayMsg.Clear();
+    }
 
-        void OnCloseItem(object sender, RoutedEventArgs e)
-        {
-            Kit.AllTrayMsg.Remove(((LvItem)((Button)sender).DataContext).Row);
-        }
+    void OnCloseItem(object sender, RoutedEventArgs e)
+    {
+        Kit.AllTrayMsg.Remove(((LvItem)((Button)sender).DataContext).Row);
     }
 }

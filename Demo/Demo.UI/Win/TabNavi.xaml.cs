@@ -15,15 +15,14 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
-{
-    public partial class TabNavi : Win
-    {
-        public TabNavi()
-        {
-            InitializeComponent();
-        }
+namespace Demo.UI;
 
-        public TabNaviItem LeftTab => _leftTab;
+public partial class TabNavi : Win
+{
+    public TabNavi()
+    {
+        InitializeComponent();
     }
+
+    public TabNaviItem LeftTab => _leftTab;
 }

@@ -12,17 +12,16 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Markup;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 窗口主区，中部停靠项列表，在xaml中标志作用，不加载到可视树
+/// </summary>
+[ContentProperty(Name = nameof(Items))]
+public sealed partial class Main : Control, IPaneList
 {
     /// <summary>
-    /// 窗口主区，中部停靠项列表，在xaml中标志作用，不加载到可视树
+    /// 获取内容元素集合
     /// </summary>
-    [ContentProperty(Name = nameof(Items))]
-    public sealed partial class Main : Control, IPaneList
-    {
-        /// <summary>
-        /// 获取内容元素集合
-        /// </summary>
-        public PaneList Items { get; } = new PaneList();
-    }
+    public PaneList Items { get; } = new PaneList();
 }

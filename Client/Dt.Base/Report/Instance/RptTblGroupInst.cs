@@ -18,18 +18,17 @@ using Microsoft.UI.Xaml.Media;
 
 #endregion
 
-namespace Dt.Base.Report
-{
-    public class RptTblGroupInst : RptTblPartInst
-    {
-        public RptTblGroupInst(RptItemBase p_item)
-            : base(p_item)
-        {
-        }
+namespace Dt.Base.Report;
 
-        protected override void DoOutput()
-        {
-            OutputChildren();
-        }
+public class RptTblGroupInst : RptTblPartInst
+{
+    public RptTblGroupInst(RptItemBase p_item)
+        : base(p_item)
+    {
+    }
+
+    protected override void DoOutput()
+    {
+        OutputChildren();
     }
 }

@@ -9,31 +9,30 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Base.FileLists
+namespace Dt.Base.FileLists;
+
+/// <summary>
+/// 上传下载文件的状态
+/// </summary>
+enum FileItemState
 {
     /// <summary>
-    /// 上传下载文件的状态
+    /// 普通状态，无正在上传下载
     /// </summary>
-    enum FileItemState
-    {
-        /// <summary>
-        /// 普通状态，无正在上传下载
-        /// </summary>
-        None,
+    None,
 
-        /// <summary>
-        /// 等待上传
-        /// </summary>
-        UploadWaiting,
+    /// <summary>
+    /// 等待上传
+    /// </summary>
+    UploadWaiting,
 
-        /// <summary>
-        /// 正在上传
-        /// </summary>
-        Uploading,
-        
-        /// <summary>
-        /// 正在下载
-        /// </summary>
-        Downloading
-    }
+    /// <summary>
+    /// 正在上传
+    /// </summary>
+    Uploading,
+    
+    /// <summary>
+    /// 正在下载
+    /// </summary>
+    Downloading
 }

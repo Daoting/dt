@@ -11,27 +11,26 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.Lob
+namespace Demo.Lob;
+
+using A = 物资详单X;
+
+public partial class 入出详单List : List
 {
-    using A = 物资详单X;
-    
-    public partial class 入出详单List : List
+    public 入出详单List()
     {
-        public 入出详单List()
+        InitializeComponent();
+    }
+    
+    protected override async Task OnQuery()
+    {
+        if (_parentID > 0)
         {
-            InitializeComponent();
+            _lv.Data = await A.Query($"where 单据id={_parentID}");
         }
-        
-        protected override async Task OnQuery()
+        else
         {
-            if (_parentID > 0)
-            {
-                _lv.Data = await A.Query($"where 单据id={_parentID}");
-            }
-            else
-            {
-                _lv.Data = null;
-            }
+            _lv.Data = null;
         }
     }
 }

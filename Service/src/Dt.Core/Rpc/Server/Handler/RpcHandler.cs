@@ -12,69 +12,68 @@ using System;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core.Rpc
+namespace Dt.Core.Rpc;
+
+/// <summary>
+/// 请求处理基类
+/// </summary>
+abstract class RpcHandler
 {
-    /// <summary>
-    /// 请求处理基类
-    /// </summary>
-    abstract class RpcHandler
+    #region 成员变量
+    // 是否输出所有调用的Api名称
+    internal static bool TraceRpc;
+
+    protected readonly ApiInvoker _invoker;
+    protected RpcApi _tgt;
+    #endregion
+
+    public RpcHandler(ApiInvoker p_invoker)
     {
-        #region 成员变量
-        // 是否输出所有调用的Api名称
-        internal static bool TraceRpc;
+        _invoker = p_invoker;
+    }
 
-        protected readonly ApiInvoker _invoker;
-        protected RpcApi _tgt;
-        #endregion
-
-        public RpcHandler(ApiInvoker p_invoker)
+    /// <summary>
+    /// 执行Rpc调用
+    /// </summary>
+    /// <returns></returns>
+    public async Task Call()
+    {
+        // 创建服务实例
+        _tgt = Kit.GetService(_invoker.Api.Method.DeclaringType) as RpcApi;
+        if (_tgt != null)
         {
-            _invoker = p_invoker;
-        }
+            // 创建整个http请求期间有效的数据包
+            _tgt.Init(new Bag(_invoker));
 
-        /// <summary>
-        /// 执行Rpc调用
-        /// </summary>
-        /// <returns></returns>
-        public async Task Call()
+            bool suc = await CallMethod();
+            
+            // Api调用结束后释放资源
+            await _tgt.Close(suc);
+        }
+        else
         {
-            // 创建服务实例
-            _tgt = Kit.GetService(_invoker.Api.Method.DeclaringType) as RpcApi;
-            if (_tgt != null)
-            {
-                // 创建整个http请求期间有效的数据包
-                _tgt.Init(new Bag(_invoker));
-
-                bool suc = await CallMethod();
-                
-                // Api调用结束后释放资源
-                await _tgt.Close(suc);
-            }
-            else
-            {
-                var msg = $"无法创建服务实例，类型{_invoker.Api.Method.DeclaringType.Name}！";
-                _invoker.Log.Warning(msg);
-                await _invoker.Response(ApiResponseType.Error, 0, msg);
-            }
+            var msg = $"无法创建服务实例，类型{_invoker.Api.Method.DeclaringType.Name}！";
+            _invoker.Log.Warning(msg);
+            await _invoker.Response(ApiResponseType.Error, 0, msg);
         }
+    }
 
-        /// <summary>
-        /// 调用服务方法
-        /// </summary>
-        /// <returns></returns>
-        protected abstract Task<bool> CallMethod();
+    /// <summary>
+    /// 调用服务方法
+    /// </summary>
+    /// <returns></returns>
+    protected abstract Task<bool> CallMethod();
 
-        /// <summary>
-        /// 记录调用过程的错误日志
-        /// </summary>
-        /// <param name="p_ex"></param>
-        protected void LogCallError(Exception p_ex)
-        {
-            string error = $"调用{_invoker.ApiName}出错";
-            if (p_ex.InnerException != null && !string.IsNullOrEmpty(p_ex.InnerException.Message))
-                _invoker.Log.Error(p_ex.InnerException, error);
-            else
-                _invoker.Log.Error(p_ex, error);
-        }
+    /// <summary>
+    /// 记录调用过程的错误日志
+    /// </summary>
+    /// <param name="p_ex"></param>
+    protected void LogCallError(Exception p_ex)
+    {
+        string error = $"调用{_invoker.ApiName}出错";
+        if (p_ex.InnerException != null && !string.IsNullOrEmpty(p_ex.InnerException.Message))
+            _invoker.Log.Error(p_ex.InnerException, error);
+        else
+            _invoker.Log.Error(p_ex, error);
     }
 }

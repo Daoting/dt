@@ -9,52 +9,51 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 定义选择模式的常量
+/// </summary>
+public enum SelectionMode
 {
     /// <summary>
-    /// 定义选择模式的常量
+    /// 不能选择项
     /// </summary>
-    public enum SelectionMode
-    {
-        /// <summary>
-        /// 不能选择项
-        /// </summary>
-        None = 0,
-
-        /// <summary>
-        /// 只能选择单个项
-        /// </summary>
-        Single = 1,
-
-        /// <summary>
-        /// 可以选择多个项
-        /// </summary>
-        Multiple = 2,
-    }
+    None = 0,
 
     /// <summary>
-    /// 视图类型
+    /// 只能选择单个项
     /// </summary>
-    public enum ViewMode
-    {
-        /// <summary>
-        /// 自动视图类型，根据View类型自行决定
-        /// </summary>
-        Auto,
+    Single = 1,
 
-        /// <summary>
-        /// 列表视图
-        /// </summary>
-        List,
+    /// <summary>
+    /// 可以选择多个项
+    /// </summary>
+    Multiple = 2,
+}
 
-        /// <summary>
-        /// 表格视图
-        /// </summary>
-        Table,
+/// <summary>
+/// 视图类型
+/// </summary>
+public enum ViewMode
+{
+    /// <summary>
+    /// 自动视图类型，根据View类型自行决定
+    /// </summary>
+    Auto,
 
-        /// <summary>
-        /// 磁贴视图
-        /// </summary>
-        Tile,
-    }
+    /// <summary>
+    /// 列表视图
+    /// </summary>
+    List,
+
+    /// <summary>
+    /// 表格视图
+    /// </summary>
+    Table,
+
+    /// <summary>
+    /// 磁贴视图
+    /// </summary>
+    Tile,
 }

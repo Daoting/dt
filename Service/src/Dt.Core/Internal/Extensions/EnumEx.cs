@@ -12,80 +12,79 @@ using System.Linq;
 using System.Reflection;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 枚举扩展类
+/// </summary>
+public static class EnumEx
 {
     /// <summary>
-    /// 枚举扩展类
+    /// 得到类型的字段数组
     /// </summary>
-    public static class EnumEx
+    /// <param name="e"></param>
+    /// <returns></returns>
+    public static Array GetValues(this Enum e)
     {
-        /// <summary>
-        /// 得到类型的字段数组
-        /// </summary>
-        /// <param name="e"></param>
-        /// <returns></returns>
-        public static Array GetValues(this Enum e)
-        {
-            return GetValues(e.GetType());
-        }
+        return GetValues(e.GetType());
+    }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static T[] GetTypedValues<T>()
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static T[] GetTypedValues<T>()
+    {
+        Array values = GetValues(typeof(T));
+        T[] localArray = new T[values.Length];
+        for (int i = 0; i < values.Length; i++)
         {
-            Array values = GetValues(typeof(T));
-            T[] localArray = new T[values.Length];
-            for (int i = 0; i < values.Length; i++)
-            {
-                localArray[i] = (T)values.GetValue(i);
-            }
-            return localArray;
+            localArray[i] = (T)values.GetValue(i);
         }
+        return localArray;
+    }
 
-        /// <summary>
-        /// 根据枚举类型获取字段数据数组
-        /// </summary>
-        /// <param name="enumType">枚举类型</param>
-        /// <returns>字段值数组</returns>
-        public static Array GetValues(Type enumType)
+    /// <summary>
+    /// 根据枚举类型获取字段数据数组
+    /// </summary>
+    /// <param name="enumType">枚举类型</param>
+    /// <returns>字段值数组</returns>
+    public static Array GetValues(Type enumType)
+    {
+        FieldInfo[] fields = (from field in enumType.GetRuntimeFields()
+                              where ((field.Attributes & FieldAttributes.Public) == FieldAttributes.Public || (field.Attributes & FieldAttributes.Static) == FieldAttributes.Static)
+                              select field).ToArray();
+        object[] objArray = new object[fields.Length];
+        for (int i = 0; i < fields.Length; i++)
         {
-            FieldInfo[] fields = (from field in enumType.GetRuntimeFields()
-                                  where ((field.Attributes & FieldAttributes.Public) == FieldAttributes.Public || (field.Attributes & FieldAttributes.Static) == FieldAttributes.Static)
-                                  select field).ToArray();
-            object[] objArray = new object[fields.Length];
-            for (int i = 0; i < fields.Length; i++)
-            {
-                objArray[i] = fields[i].GetValue(null);
-            }
-            return objArray;
+            objArray[i] = fields[i].GetValue(null);
         }
+        return objArray;
+    }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEnum"></typeparam>
-        /// <param name="valueAsString"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static bool EnumTryParse<TEnum>(string valueAsString, out TEnum value) where TEnum : struct
-        {
-            return EnumTryParse<TEnum>(valueAsString, false, out value);
-        }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TEnum"></typeparam>
+    /// <param name="valueAsString"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static bool EnumTryParse<TEnum>(string valueAsString, out TEnum value) where TEnum : struct
+    {
+        return EnumTryParse<TEnum>(valueAsString, false, out value);
+    }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEnum"></typeparam>
-        /// <param name="valueAsString"></param>
-        /// <param name="ignoreCase"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static bool EnumTryParse<TEnum>(string valueAsString, bool ignoreCase, out TEnum value) where TEnum : struct
-        {
-            return Enum.TryParse<TEnum>(valueAsString, ignoreCase, out value);
-        }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TEnum"></typeparam>
+    /// <param name="valueAsString"></param>
+    /// <param name="ignoreCase"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static bool EnumTryParse<TEnum>(string valueAsString, bool ignoreCase, out TEnum value) where TEnum : struct
+    {
+        return Enum.TryParse<TEnum>(valueAsString, ignoreCase, out value);
     }
 }

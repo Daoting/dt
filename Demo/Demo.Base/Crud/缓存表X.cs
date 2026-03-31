@@ -9,25 +9,24 @@
 #region 引用命名
 #endregion
 
-namespace Demo.Base
+namespace Demo.Base;
+
+public partial class 缓存表X
 {
-    public partial class 缓存表X
+    public static async Task<缓存表X> New(
+        string 手机号 = default,
+        string 姓名 = default)
     {
-        public static async Task<缓存表X> New(
-            string 手机号 = default,
-            string 姓名 = default)
-        {
-            return new 缓存表X(
-                ID: await NewID(),
-                手机号: 手机号,
-                姓名: 姓名);
-        }
+        return new 缓存表X(
+            ID: await NewID(),
+            手机号: 手机号,
+            姓名: 姓名);
+    }
 
-        protected override void InitHook()
-        {
-            OnSaved(async () => await this.ClearCache(c手机号.ID));
+    protected override void InitHook()
+    {
+        OnSaved(async () => await this.ClearCache(c手机号.ID));
 
-            OnDeleted(async () => await this.ClearCache(c手机号.ID));
-        }
+        OnDeleted(async () => await this.ClearCache(c手机号.ID));
     }
 }

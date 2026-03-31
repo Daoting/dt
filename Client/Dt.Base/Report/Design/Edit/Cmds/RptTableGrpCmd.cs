@@ -20,108 +20,107 @@ using Microsoft.UI.Xaml.Controls;
 
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+/// <summary>
+/// 插入表格分组
+/// </summary>
+internal class InsertTblGrpCmd : RptCmdBase
 {
-    /// <summary>
-    /// 插入表格分组
-    /// </summary>
-    internal class InsertTblGrpCmd : RptCmdBase
+    public override object Execute(object p_args)
     {
-        public override object Execute(object p_args)
+        InsertTblGrpCmdArgs args = (InsertTblGrpCmdArgs)p_args;
+        RptTable table = args.Table;
+        if (table.Groups == null)
         {
-            InsertTblGrpCmdArgs args = (InsertTblGrpCmdArgs)p_args;
-            RptTable table = args.Table;
-            if (table.Groups == null)
-            {
-                table.Groups = new List<RptTblGroup>();
-            }
-            RptTblPartRow row = new RptTblPartRow(args.Grp);
-            InsertTableCmd.BuildCells(row, table.ColSpan, true);
-            args.Grp.Rows.Add(row);
-            args.Table.Groups.Add(args.Grp);
-            args.Table.CalcRowSpan();
-            args.Table.Update(false);
-            return null;
+            table.Groups = new List<RptTblGroup>();
         }
-
-        public override void Undo(object p_args)
-        {
-            InsertTblGrpCmdArgs args = (InsertTblGrpCmdArgs)p_args;
-            args.Table.Groups.Remove(args.Grp);
-            args.Table.CalcRowSpan();
-            args.Table.Update(true);
-        }
+        RptTblPartRow row = new RptTblPartRow(args.Grp);
+        InsertTableCmd.BuildCells(row, table.ColSpan, true);
+        args.Grp.Rows.Add(row);
+        args.Table.Groups.Add(args.Grp);
+        args.Table.CalcRowSpan();
+        args.Table.Update(false);
+        return null;
     }
 
-    /// <summary>
-    /// 删除分组
-    /// </summary>
-    internal class DelTblGrpCmd : RptCmdBase
+    public override void Undo(object p_args)
     {
-        public override object Execute(object p_args)
-        {
-            var args = (InsertTblGrpCmdArgs)p_args;
-            args.Table.Groups.Remove(args.Grp);
-            args.Table.CalcRowSpan();
-            args.Table.Update(true);
-            return null;
-        }
+        InsertTblGrpCmdArgs args = (InsertTblGrpCmdArgs)p_args;
+        args.Table.Groups.Remove(args.Grp);
+        args.Table.CalcRowSpan();
+        args.Table.Update(true);
+    }
+}
 
-        public override void Undo(object p_args)
-        {
-            var args = (InsertTblGrpCmdArgs)p_args;
-            args.Table.Groups.Add(args.Grp);
-            args.Table.CalcRowSpan();
-            args.Table.Update(false);
-        }
+/// <summary>
+/// 删除分组
+/// </summary>
+internal class DelTblGrpCmd : RptCmdBase
+{
+    public override object Execute(object p_args)
+    {
+        var args = (InsertTblGrpCmdArgs)p_args;
+        args.Table.Groups.Remove(args.Grp);
+        args.Table.CalcRowSpan();
+        args.Table.Update(true);
+        return null;
     }
 
-    /// <summary>
-    /// 清空表格分组
-    /// </summary>
-    internal class ClearTblGrpCmd : RptCmdBase
+    public override void Undo(object p_args)
     {
-        public override object Execute(object p_args)
-        {
-            ClearTblGrpCmdArgs args = (ClearTblGrpCmdArgs)p_args;
-            args.Table.Groups = null;
-            args.Table.CalcRowSpan();
-            args.Table.Update(true);
-            return null;
-        }
+        var args = (InsertTblGrpCmdArgs)p_args;
+        args.Table.Groups.Add(args.Grp);
+        args.Table.CalcRowSpan();
+        args.Table.Update(false);
+    }
+}
 
-        public override void Undo(object p_args)
-        {
-            ClearTblGrpCmdArgs args = (ClearTblGrpCmdArgs)p_args;
-            args.Table.Groups = args.Grps;
-            args.Table.CalcRowSpan();
-            args.Table.Update(false);
-        }
+/// <summary>
+/// 清空表格分组
+/// </summary>
+internal class ClearTblGrpCmd : RptCmdBase
+{
+    public override object Execute(object p_args)
+    {
+        ClearTblGrpCmdArgs args = (ClearTblGrpCmdArgs)p_args;
+        args.Table.Groups = null;
+        args.Table.CalcRowSpan();
+        args.Table.Update(true);
+        return null;
     }
 
-    internal class InsertTblGrpCmdArgs
+    public override void Undo(object p_args)
     {
-        public InsertTblGrpCmdArgs(RptTable p_table, RptTblGroup p_grp)
-        {
-            Table = p_table;
-            Grp = p_grp;
-        }
+        ClearTblGrpCmdArgs args = (ClearTblGrpCmdArgs)p_args;
+        args.Table.Groups = args.Grps;
+        args.Table.CalcRowSpan();
+        args.Table.Update(false);
+    }
+}
 
-        public RptTblGroup Grp { get; }
-
-        public RptTable Table { get; }
+internal class InsertTblGrpCmdArgs
+{
+    public InsertTblGrpCmdArgs(RptTable p_table, RptTblGroup p_grp)
+    {
+        Table = p_table;
+        Grp = p_grp;
     }
 
-    internal class ClearTblGrpCmdArgs
+    public RptTblGroup Grp { get; }
+
+    public RptTable Table { get; }
+}
+
+internal class ClearTblGrpCmdArgs
+{
+    public ClearTblGrpCmdArgs(RptTable p_table, List<RptTblGroup> p_grps)
     {
-        public ClearTblGrpCmdArgs(RptTable p_table, List<RptTblGroup> p_grps)
-        {
-            Table = p_table;
-            Grps = p_grps;
-        }
-
-        public RptTable Table { get; }
-
-        public List<RptTblGroup> Grps { get; }
+        Table = p_table;
+        Grps = p_grps;
     }
+
+    public RptTable Table { get; }
+
+    public List<RptTblGroup> Grps { get; }
 }

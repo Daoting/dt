@@ -14,40 +14,39 @@ using System;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Mgr.Module
+namespace Dt.Mgr.Module;
+
+public class AppRptDesignInfo : RptDesignInfo
 {
-    public class AppRptDesignInfo : RptDesignInfo
+    RptX _rpt;
+
+    public AppRptDesignInfo(RptX p_rpt)
     {
-        RptX _rpt;
+        _rpt = p_rpt;
+        Name = p_rpt.Name;
+        ShowSave = true;
+    }
 
-        public AppRptDesignInfo(RptX p_rpt)
+    public override Task<string> ReadTemplate()
+    {
+        return At.GetScalar<string>($"select define from cm_rpt where id={_rpt.ID}");
+    }
+
+    public override async Task<bool> SaveTemplate(string p_xml)
+    {
+        if (!_rpt.Contains("define"))
+            _rpt.Add<string>("define");
+        _rpt["define"] = p_xml;
+
+        if (_rpt.IsAdded)
         {
-            _rpt = p_rpt;
-            Name = p_rpt.Name;
-            ShowSave = true;
+            _rpt["ctime"] = _rpt["mtime"] = Kit.Now;
+        }
+        else
+        {
+            _rpt["mtime"] = Kit.Now;
         }
 
-        public override Task<string> ReadTemplate()
-        {
-            return At.GetScalar<string>($"select define from cm_rpt where id={_rpt.ID}");
-        }
-
-        public override async Task<bool> SaveTemplate(string p_xml)
-        {
-            if (!_rpt.Contains("define"))
-                _rpt.Add<string>("define");
-            _rpt["define"] = p_xml;
-
-            if (_rpt.IsAdded)
-            {
-                _rpt["ctime"] = _rpt["mtime"] = Kit.Now;
-            }
-            else
-            {
-                _rpt["mtime"] = Kit.Now;
-            }
-
-            return await _rpt.Save();
-        }
+        return await _rpt.Save();
     }
 }

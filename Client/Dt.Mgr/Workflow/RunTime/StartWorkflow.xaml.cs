@@ -11,43 +11,42 @@ using Dt.Base;
 using Dt.Core;
 #endregion
 
-namespace Dt.Mgr.Workflow
+namespace Dt.Mgr.Workflow;
+
+/// <summary>
+/// 发起任务
+/// </summary>
+public sealed partial class StartWorkflow : Dlg
 {
-    /// <summary>
-    /// 发起任务
-    /// </summary>
-    public sealed partial class StartWorkflow : Dlg
+    public StartWorkflow()
     {
-        public StartWorkflow()
-        {
-            InitializeComponent();
-            Load();
-        }
+        InitializeComponent();
+        Load();
+    }
 
-        async void Load()
+    async void Load()
+    {
+        if (!Kit.IsPhoneUI)
         {
-            if (!Kit.IsPhoneUI)
-            {
-                Height = 600;
-                Width = 400;
-            }
-            _lv.Data = await WfdDs.GetMyStartablePrc();
+            Height = 600;
+            Width = 400;
         }
+        _lv.Data = await WfdDs.GetMyStartablePrc();
+    }
 
-        void OnItemDoubleClick(object e)
-        {
-            StartNew(e.To<Row>().Str("name"));
-        }
+    void OnItemDoubleClick(object e)
+    {
+        StartNew(e.To<Row>().Str("name"));
+    }
 
-        void OnStart(Mi e)
-        {
-            StartNew(_lv.SelectedRow.Str("name"));
-        }
+    void OnStart(Mi e)
+    {
+        StartNew(_lv.SelectedRow.Str("name"));
+    }
 
-        void StartNew(string p_prcName)
-        {
-            Close();
-            AtWf.OpenFormWin(p_prcName: p_prcName);
-        }
+    void StartNew(string p_prcName)
+    {
+        Close();
+        AtWf.OpenFormWin(p_prcName: p_prcName);
     }
 }

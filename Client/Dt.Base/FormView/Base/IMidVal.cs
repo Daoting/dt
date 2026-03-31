@@ -9,25 +9,24 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 格取值赋值接口
+/// </summary>
+public interface IFvCall
 {
     /// <summary>
-    /// 格取值赋值接口
+    /// 从数据源取值
     /// </summary>
-    public interface IFvCall
-    {
-        /// <summary>
-        /// 从数据源取值
-        /// </summary>
-        /// <param name="m"></param>
-        /// <returns></returns>
-        object Get(Mid m);
+    /// <param name="m"></param>
+    /// <returns></returns>
+    object Get(Mid m);
 
-        /// <summary>
-        /// 将值写入数据源
-        /// </summary>
-        /// <param name="m"></param>
-        /// <returns></returns>
-        object Set(Mid m);
-    }
+    /// <summary>
+    /// 将值写入数据源
+    /// </summary>
+    /// <param name="m"></param>
+    /// <returns></returns>
+    object Set(Mid m);
 }

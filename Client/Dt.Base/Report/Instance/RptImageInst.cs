@@ -10,16 +10,15 @@
 
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+/// <summary>
+/// 图片实例
+/// </summary>
+public class RptImageInst : RptOutputInst
 {
-    /// <summary>
-    /// 图片实例
-    /// </summary>
-    public class RptImageInst : RptOutputInst
+    public RptImageInst(RptItemBase p_item)
+        : base(p_item)
     {
-        public RptImageInst(RptItemBase p_item)
-            : base(p_item)
-        {
-        }
     }
 }

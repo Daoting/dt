@@ -11,57 +11,56 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Workflow
+namespace Dt.Mgr.Workflow;
+
+/// <summary>
+/// 活动授权
+/// </summary>
+public sealed partial class AtvRole : UserControl
 {
-    /// <summary>
-    /// 活动授权
-    /// </summary>
-    public sealed partial class AtvRole : UserControl
+    long _atvID;
+
+    public AtvRole()
     {
-        long _atvID;
+        InitializeComponent();
+        _lv.Filter = OnFilter;
+    }
 
-        public AtvRole()
-        {
-            InitializeComponent();
-            _lv.Filter = OnFilter;
-        }
+    public void LoadRoles(long p_atvID, Table<WfdAtvRoleX> p_atvRoles)
+    {
+        _atvID = p_atvID;
+        _lv.Data = p_atvRoles;
+        _lv.Refresh();
+    }
 
-        public void LoadRoles(long p_atvID, Table<WfdAtvRoleX> p_atvRoles)
-        {
-            _atvID = p_atvID;
-            _lv.Data = p_atvRoles;
-            _lv.Refresh();
-        }
+    /// <summary>
+    /// 数据行过滤
+    /// </summary>
+    /// <param name="row"></param>
+    /// <returns></returns>
+    bool OnFilter(object row)
+    {
+        return ((WfdAtvRoleX)row).AtvID == _atvID;
+    }
 
-        /// <summary>
-        /// 数据行过滤
-        /// </summary>
-        /// <param name="row"></param>
-        /// <returns></returns>
-        bool OnFilter(object row)
+    async void OnAddRole(object sender, RoutedEventArgs e)
+    {
+        var dlg = new SelectRolesDlg();
+        if (await dlg.Show(_atvID.ToString(), (Button)sender))
         {
-            return ((WfdAtvRoleX)row).AtvID == _atvID;
-        }
-
-        async void OnAddRole(object sender, RoutedEventArgs e)
-        {
-            var dlg = new SelectRolesDlg();
-            if (await dlg.Show(_atvID.ToString(), (Button)sender))
+            foreach (var row in dlg.SelectedItems.OfType<Row>())
             {
-                foreach (var row in dlg.SelectedItems.OfType<Row>())
-                {
-                    var ar = new WfdAtvRoleX(
-                        AtvID: _atvID,
-                        RoleID: row.ID);
-                    ar.Add("role", row.Str("name"));
-                    _lv.Data.Add(ar);
-                }
+                var ar = new WfdAtvRoleX(
+                    AtvID: _atvID,
+                    RoleID: row.ID);
+                ar.Add("role", row.Str("name"));
+                _lv.Data.Add(ar);
             }
         }
+    }
 
-        void OnDelete(Mi e)
-        {
-            _lv.Data.Remove(e.Data);
-        }
+    void OnDelete(Mi e)
+    {
+        _lv.Data.Remove(e.Data);
     }
 }

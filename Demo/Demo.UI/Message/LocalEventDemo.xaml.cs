@@ -12,64 +12,63 @@ using Microsoft.UI.Xaml;
 using System.Text;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class LocalEventDemo : Win
 {
-    public partial class LocalEventDemo : Win
+    public LocalEventDemo()
     {
-        public LocalEventDemo()
-        {
-            InitializeComponent();
-        }
-
-        void OnPub(object sender, RoutedEventArgs e)
-        {
-            _ = Kit.PublishEvent(new TestEventData { Name = new Random().Next().ToString() });
-        }
-
-        void OnPubMulti(object sender, RoutedEventArgs e)
-        {
-            _ = Kit.PublishEvent(new KesEvent { Name = new Random().Next().ToString() });
-        }
+        InitializeComponent();
     }
 
-    public class TestEventData : IEvent
+    void OnPub(object sender, RoutedEventArgs e)
     {
-        public string Name { get; set; }
+        _ = Kit.PublishEvent(new TestEventData { Name = new Random().Next().ToString() });
     }
 
-    [EventHandler]
-    public class TestHandler2 : IEventHandler<TestEventData>
+    void OnPubMulti(object sender, RoutedEventArgs e)
     {
-        public Task Handle(TestEventData p_event)
-        {
-            Log.Information($"{GetType().Name}已处理，Name：{p_event.Name}");
-            return Task.CompletedTask;
-        }
+        _ = Kit.PublishEvent(new KesEvent { Name = new Random().Next().ToString() });
     }
+}
 
-    public class KesEvent : IEvent
+public class TestEventData : IEvent
+{
+    public string Name { get; set; }
+}
+
+[EventHandler]
+public class TestHandler2 : IEventHandler<TestEventData>
+{
+    public Task Handle(TestEventData p_event)
     {
-        public string Name { get; set; }
+        Log.Information($"{GetType().Name}已处理，Name：{p_event.Name}");
+        return Task.CompletedTask;
     }
+}
 
-    [EventHandler]
-    public class KesLocalHandler1 : IEventHandler<KesEvent>
+public class KesEvent : IEvent
+{
+    public string Name { get; set; }
+}
+
+[EventHandler]
+public class KesLocalHandler1 : IEventHandler<KesEvent>
+{
+    public Task Handle(KesEvent p_event)
     {
-        public Task Handle(KesEvent p_event)
-        {
-            Log.Information($"{GetType().Name}已处理，Name：{p_event.Name}");
-            return Task.CompletedTask;
-        }
+        Log.Information($"{GetType().Name}已处理，Name：{p_event.Name}");
+        return Task.CompletedTask;
     }
+}
 
-    [EventHandler]
-    public class KesLocalHandler2 : IEventHandler<KesEvent>
+[EventHandler]
+public class KesLocalHandler2 : IEventHandler<KesEvent>
+{
+    public Task Handle(KesEvent p_event)
     {
-        public Task Handle(KesEvent p_event)
-        {
-            Log.Information($"{GetType().Name}已处理，Name：{p_event.Name}");
-            return Task.CompletedTask;
-            //throw new Exception("测试异常");
-        }
+        Log.Information($"{GetType().Name}已处理，Name：{p_event.Name}");
+        return Task.CompletedTask;
+        //throw new Exception("测试异常");
     }
 }

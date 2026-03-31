@@ -13,42 +13,41 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Mgr.Module
+namespace Dt.Mgr.Module;
+
+public sealed partial class SelectFileDlg : Dlg, ISelectFileDlg
 {
-    public sealed partial class SelectFileDlg : Dlg, ISelectFileDlg
+    public SelectFileDlg()
     {
-        public SelectFileDlg()
+        InitializeComponent();
+    }
+
+    /// <summary>
+    /// 已选择的文件列表，每个字符串为独立的文件描述json，如：["v0/52/37/142888904373956608.xlsx","12","xlsx文件",8153,"daoting","2020-10-29 15:09"]
+    /// </summary>
+    public List<string> SelectedFiles { get; set; }
+
+    public bool IsMultiSelection { get; private set; }
+
+    public string TypeFilter { get; private set; }
+
+    /// <summary>
+    /// 显示文件选择对话框
+    /// </summary>
+    /// <param name="p_isMultiSelection">是否允许多选</param>
+    /// <param name="p_typeFilter">按文件扩展名过滤</param>
+    /// <returns></returns>
+    public async Task<bool> Show(bool p_isMultiSelection, string p_typeFilter)
+    {
+        IsMultiSelection = p_isMultiSelection;
+        TypeFilter = p_typeFilter;
+        if (!Kit.IsPhoneUI)
         {
-            InitializeComponent();
+            Width = 400;
+            Height = 600;
         }
 
-        /// <summary>
-        /// 已选择的文件列表，每个字符串为独立的文件描述json，如：["v0/52/37/142888904373956608.xlsx","12","xlsx文件",8153,"daoting","2020-10-29 15:09"]
-        /// </summary>
-        public List<string> SelectedFiles { get; set; }
-
-        public bool IsMultiSelection { get; private set; }
-
-        public string TypeFilter { get; private set; }
-
-        /// <summary>
-        /// 显示文件选择对话框
-        /// </summary>
-        /// <param name="p_isMultiSelection">是否允许多选</param>
-        /// <param name="p_typeFilter">按文件扩展名过滤</param>
-        /// <returns></returns>
-        public async Task<bool> Show(bool p_isMultiSelection, string p_typeFilter)
-        {
-            IsMultiSelection = p_isMultiSelection;
-            TypeFilter = p_typeFilter;
-            if (!Kit.IsPhoneUI)
-            {
-                Width = 400;
-                Height = 600;
-            }
-
-            LoadTab(new SelectLibPage(this));
-            return await ShowAsync();
-        }
+        LoadTab(new SelectLibPage(this));
+        return await ShowAsync();
     }
 }

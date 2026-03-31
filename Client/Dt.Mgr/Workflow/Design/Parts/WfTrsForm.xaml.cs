@@ -13,51 +13,50 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Workflow
+namespace Dt.Mgr.Workflow;
+
+/// <summary>
+/// 迁移属性表单
+/// </summary>
+public sealed partial class WfTrsForm : UserControl
 {
-    /// <summary>
-    /// 迁移属性表单
-    /// </summary>
-    public sealed partial class WfTrsForm : UserControl
+    Table<WfdTrsX> _trss;
+    WfdTrsX _curTrs;
+
+    public WfTrsForm()
     {
-        Table<WfdTrsX> _trss;
-        WfdTrsX _curTrs;
+        InitializeComponent();
+    }
 
-        public WfTrsForm()
+    public void LoadData(Table<WfdTrsX> p_trss, WfdTrsX p_trs)
+    {
+        _trss = p_trss;
+        _curTrs = p_trs;
+        _cbBack.IsChecked = (from item in _trss.OfType<WfdTrsX>()
+                             where item.TrsID == _curTrs.ID
+                             select item).Any();
+    }
+
+    async void OnBackClick(object sender, RoutedEventArgs e)
+    {
+        if (_cbBack.IsChecked == true)
         {
-            InitializeComponent();
+            WfdTrsX trs = await WfdTrsX.New(
+                PrcID: _curTrs.PrcID,
+                IsRollback: true,
+                SrcAtvID: _curTrs.TgtAtvID,
+                TgtAtvID: _curTrs.SrcAtvID,
+                TrsID: _curTrs.ID);
+            _trss.Add(trs);
         }
-
-        public void LoadData(Table<WfdTrsX> p_trss, WfdTrsX p_trs)
+        else
         {
-            _trss = p_trss;
-            _curTrs = p_trs;
-            _cbBack.IsChecked = (from item in _trss.OfType<WfdTrsX>()
-                                 where item.TrsID == _curTrs.ID
-                                 select item).Any();
-        }
-
-        async void OnBackClick(object sender, RoutedEventArgs e)
-        {
-            if (_cbBack.IsChecked == true)
+            var trs = (from item in _trss.OfType<WfdTrsX>()
+                       where item.TrsID == _curTrs.ID
+                       select item).FirstOrDefault();
+            if (trs != null)
             {
-                WfdTrsX trs = await WfdTrsX.New(
-                    PrcID: _curTrs.PrcID,
-                    IsRollback: true,
-                    SrcAtvID: _curTrs.TgtAtvID,
-                    TgtAtvID: _curTrs.SrcAtvID,
-                    TrsID: _curTrs.ID);
-                _trss.Add(trs);
-            }
-            else
-            {
-                var trs = (from item in _trss.OfType<WfdTrsX>()
-                           where item.TrsID == _curTrs.ID
-                           select item).FirstOrDefault();
-                if (trs != null)
-                {
-                    _trss.Remove(trs);
-                }
+                _trss.Remove(trs);
             }
         }
     }

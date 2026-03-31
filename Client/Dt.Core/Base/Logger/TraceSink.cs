@@ -11,13 +11,12 @@ using Serilog.Core;
 using Serilog.Events;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+class TraceSink : ILogEventSink
 {
-    class TraceSink : ILogEventSink
+    public void Emit(LogEvent logEvent)
     {
-        public void Emit(LogEvent logEvent)
-        {
-            TraceLogs.AddLogEvent(logEvent);
-        }
+        TraceLogs.AddLogEvent(logEvent);
     }
 }

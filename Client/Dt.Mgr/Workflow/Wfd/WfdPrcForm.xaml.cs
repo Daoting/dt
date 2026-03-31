@@ -11,46 +11,45 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Workflow
+namespace Dt.Mgr.Workflow;
+
+using A = WfdPrcX;
+
+public sealed partial class WfdPrcForm : Form
 {
-    using A = WfdPrcX;
-    
-    public sealed partial class WfdPrcForm : Form
+    public WfdPrcForm()
     {
-        public WfdPrcForm()
-        {
-            InitializeComponent();
-            Menu = CreateMenu();
-            Menu.Add("流程图", Icons.双绞线, call: OnDesign);
-        }
+        InitializeComponent();
+        Menu = CreateMenu();
+        Menu.Add("流程图", Icons.双绞线, call: OnDesign);
+    }
 
-        protected override async Task OnAdd()
-        {
-            _fv.Data = await A.New();
-        }
+    protected override async Task OnAdd()
+    {
+        _fv.Data = await A.New();
+    }
 
-        protected override async Task OnGet()
-        {
-            _fv.Data = await A.GetByID(_args.ID);
-        }
+    protected override async Task OnGet()
+    {
+        _fv.Data = await A.GetByID(_args.ID);
+    }
 
-        async void OnDesign()
+    async void OnDesign()
+    {
+        var x = _fv.Data as A;
+        if (x == null)
+            return;
+        
+        if (x.IsAdded || x.IsChanged)
         {
-            var x = _fv.Data as A;
-            if (x == null)
-                return;
-            
-            if (x.IsAdded || x.IsChanged)
+            if (!await x.Save(false))
             {
-                if (!await x.Save(false))
-                {
-                    Kit.Warn("自动保存失败！");
-                    return;
-                }
+                Kit.Warn("自动保存失败！");
+                return;
             }
-            
-            Kit.OpenWin(typeof(WorkflowDesign), x.Name, Icons.双绞线, x.ID);
-            Close();
         }
+        
+        Kit.OpenWin(typeof(WorkflowDesign), x.Name, Icons.双绞线, x.ID);
+        Close();
     }
 }

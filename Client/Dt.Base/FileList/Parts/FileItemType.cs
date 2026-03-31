@@ -9,31 +9,30 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Base.FileLists
+namespace Dt.Base.FileLists;
+
+/// <summary>
+/// 文件种类
+/// </summary>
+enum FileItemType
 {
     /// <summary>
-    /// 文件种类
+    /// 文件
     /// </summary>
-    enum FileItemType
-    {
-        /// <summary>
-        /// 文件
-        /// </summary>
-        File,
+    File,
 
-        /// <summary>
-        /// 图片
-        /// </summary>
-        Image,
+    /// <summary>
+    /// 图片
+    /// </summary>
+    Image,
 
-        /// <summary>
-        /// 声音
-        /// </summary>
-        Sound,
+    /// <summary>
+    /// 声音
+    /// </summary>
+    Sound,
 
-        /// <summary>
-        /// 视频
-        /// </summary>
-        Video
-    }
+    /// <summary>
+    /// 视频
+    /// </summary>
+    Video
 }

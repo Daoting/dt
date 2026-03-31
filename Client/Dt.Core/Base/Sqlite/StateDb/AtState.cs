@@ -10,18 +10,17 @@
 using System.Text.Json;
 #endregion
 
-namespace Dt.Core
-{
-    /// <summary>
-    /// 本地sqlite状态库，At = Access To
-    /// </summary>
-    public class AtState : AccessAgent<AtState.Info>
-    {
-        public class Info : AgentInfo
-        {
-            public override AccessType Type => AccessType.Local;
+namespace Dt.Core;
 
-            public override string Name => "state";
-        }
+/// <summary>
+/// 本地sqlite状态库，At = Access To
+/// </summary>
+public class AtState : AccessAgent<AtState.Info>
+{
+    public class Info : AgentInfo
+    {
+        public override AccessType Type => AccessType.Local;
+
+        public override string Name => "state";
     }
 }

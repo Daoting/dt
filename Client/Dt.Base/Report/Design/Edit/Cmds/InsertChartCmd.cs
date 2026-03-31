@@ -10,24 +10,23 @@
 using Dt.Cells.Data;
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+/// <summary>
+/// 添加图表
+/// </summary>
+internal class InsertChartCmd : InsertCmdBase
 {
-    /// <summary>
-    /// 添加图表
-    /// </summary>
-    internal class InsertChartCmd : InsertCmdBase
+    public override object Execute(object p_args)
     {
-        public override object Execute(object p_args)
-        {
-            InsertCmdArgs args = (InsertCmdArgs)p_args;
-            RptChart chart = args.RptItem as RptChart;
-            CellRange range = args.CellRange;
-            chart.Row = range.Row;
-            chart.Col = range.Column;
-            chart.RowSpan = range.RowCount;
-            chart.ColSpan = range.ColumnCount;
-            chart.Part.Items.Add(chart);
-            return chart;
-        }
+        InsertCmdArgs args = (InsertCmdArgs)p_args;
+        RptChart chart = args.RptItem as RptChart;
+        CellRange range = args.CellRange;
+        chart.Row = range.Row;
+        chart.Col = range.Column;
+        chart.RowSpan = range.RowCount;
+        chart.ColSpan = range.ColumnCount;
+        chart.Part.Items.Add(chart);
+        return chart;
     }
 }

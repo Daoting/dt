@@ -11,31 +11,30 @@ using Dt.Core.Rpc;
 using System.IO;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 文件下载描述
+/// </summary>
+public class DownloadInfo
 {
     /// <summary>
-    /// 文件下载描述
+    /// 获取设置要下载的文件路径
     /// </summary>
-    public class DownloadInfo
-    {
-        /// <summary>
-        /// 获取设置要下载的文件路径
-        /// </summary>
-        public string Path { get; set; }
+    public string Path { get; set; }
 
-        /// <summary>
-        /// 获取设置下载内容要保存的目标文件流
-        /// </summary>
-        public Stream TgtStream { get; set; }
+    /// <summary>
+    /// 获取设置下载内容要保存的目标文件流
+    /// </summary>
+    public Stream TgtStream { get; set; }
 
-        /// <summary>
-        /// 获取设置错误提示信息
-        /// </summary>
-        public string Error { get; set; }
+    /// <summary>
+    /// 获取设置错误提示信息
+    /// </summary>
+    public string Error { get; set; }
 
-        /// <summary>
-        /// 下载进度，可以为null
-        /// </summary>
-        public ProgressDelegate Progress { get; set; }
-    }
+    /// <summary>
+    /// 下载进度，可以为null
+    /// </summary>
+    public ProgressDelegate Progress { get; set; }
 }

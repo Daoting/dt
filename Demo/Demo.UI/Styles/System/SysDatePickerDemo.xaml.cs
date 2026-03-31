@@ -11,14 +11,13 @@ using Dt.Base;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
-{
-    public sealed partial class SysDatePickerDemo : Win
-    {
-        public SysDatePickerDemo()
-        {
-            InitializeComponent();
-        }
+namespace Demo.UI;
 
+public sealed partial class SysDatePickerDemo : Win
+{
+    public SysDatePickerDemo()
+    {
+        InitializeComponent();
     }
+
 }

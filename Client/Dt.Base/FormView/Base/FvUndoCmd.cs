@@ -10,34 +10,33 @@
 using Dt.Core;
 #endregion
 
-namespace Dt.Base.FormView
+namespace Dt.Base.FormView;
+
+/// <summary>
+/// Undo命令
+/// </summary>
+public class FvUndoCmd : BaseCommand
 {
-    /// <summary>
-    /// Undo命令
-    /// </summary>
-    public class FvUndoCmd : BaseCommand
+    Fv _owner;
+
+    public FvUndoCmd(Fv p_owner)
     {
-        Fv _owner;
+        _owner = p_owner;
+        UpdateAllowExecute();
+        _owner.Dirty += (e) => UpdateAllowExecute();
+    }
 
-        public FvUndoCmd(Fv p_owner)
-        {
-            _owner = p_owner;
-            UpdateAllowExecute();
-            _owner.Dirty += (e) => UpdateAllowExecute();
-        }
+    /// <summary>
+    /// 执行命令
+    /// </summary>
+    /// <param name="p_parameter"></param>
+    protected override void DoExecute(object p_parameter)
+    {
+        _owner.RejectChanges();
+    }
 
-        /// <summary>
-        /// 执行命令
-        /// </summary>
-        /// <param name="p_parameter"></param>
-        protected override void DoExecute(object p_parameter)
-        {
-            _owner.RejectChanges();
-        }
-
-        void UpdateAllowExecute()
-        {
-            AllowExecute = _owner.IsDirty;
-        }
+    void UpdateAllowExecute()
+    {
+        AllowExecute = _owner.IsDirty;
     }
 }

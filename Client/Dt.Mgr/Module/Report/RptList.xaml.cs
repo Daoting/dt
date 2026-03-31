@@ -12,62 +12,61 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Module
+namespace Dt.Mgr.Module;
+
+public partial class RptList : List
 {
-    public partial class RptList : List
+    public RptList()
     {
-        public RptList()
+        InitializeComponent();
+    }
+
+    protected override async Task OnQuery()
+    {
+        var query = _clause?.FuzzyOrWhere;
+        if (string.IsNullOrEmpty(query) || query == "#全部")
         {
-            InitializeComponent();
+            _lv.Data = await RptX.Query("select id,name,note,ctime,mtime from cm_rpt order by name");
+        }
+        else
+        {
+            _lv.Data = await RptX.Query($"select id,name,note,ctime,mtime from cm_rpt where name like '%{query}%' order by name");
+        }
+    }
+
+    protected override async void OnDel(Mi e)
+    {
+        if (!await Kit.Confirm("确认要删除吗？\r\n做个报表不容易，请慎重删除！"))
+        {
+            Kit.Msg("已取消删除！");
+            return;
         }
 
-        protected override async Task OnQuery()
+        if (_lv.SelectionMode == SelectionMode.Multiple)
         {
-            var query = _clause?.FuzzyOrWhere;
-            if (string.IsNullOrEmpty(query) || query == "#全部")
+            var ls = _lv.SelectedItems.Cast<RptX>().ToList();
+            if (await ls.Delete())
             {
-                _lv.Data = await RptX.Query("select id,name,note,ctime,mtime from cm_rpt order by name");
-            }
-            else
-            {
-                _lv.Data = await RptX.Query($"select id,name,note,ctime,mtime from cm_rpt where name like '%{query}%' order by name");
+                await Refresh();
             }
         }
+        else
+        {
+            var d = e.Data.To<RptX>();
+            if (await d.Delete())
+            {
+                await Refresh();
+            }
+        }
+    }
 
-        protected override async void OnDel(Mi e)
-        {
-            if (!await Kit.Confirm("确认要删除吗？\r\n做个报表不容易，请慎重删除！"))
-            {
-                Kit.Msg("已取消删除！");
-                return;
-            }
-
-            if (_lv.SelectionMode == SelectionMode.Multiple)
-            {
-                var ls = _lv.SelectedItems.Cast<RptX>().ToList();
-                if (await ls.Delete())
-                {
-                    await Refresh();
-                }
-            }
-            else
-            {
-                var d = e.Data.To<RptX>();
-                if (await d.Delete())
-                {
-                    await Refresh();
-                }
-            }
-        }
-
-        async void OnEditTemp(Mi e)
-        {
-            await Rpt.ShowDesign(new AppRptDesignInfo(e.Data as RptX));
-        }
-        
-        void OnRefresh()
-        {
-            RefreshSqliteWin.UpdateSqliteFile("report");
-        }
+    async void OnEditTemp(Mi e)
+    {
+        await Rpt.ShowDesign(new AppRptDesignInfo(e.Data as RptX));
+    }
+    
+    void OnRefresh()
+    {
+        RefreshSqliteWin.UpdateSqliteFile("report");
     }
 }

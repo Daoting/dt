@@ -11,26 +11,25 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.Lob
+namespace Demo.Lob;
+
+using A = 部门X;
+
+public sealed partial class 部门Form : Form
 {
-    using A = 部门X;
-    
-    public sealed partial class 部门Form : Form
+    public 部门Form()
     {
-        public 部门Form()
-        {
-            InitializeComponent();
-            Menu = CreateMenu();
-        }
+        InitializeComponent();
+        Menu = CreateMenu();
+    }
 
-        protected override async Task OnAdd()
-        {
-            _fv.Data = await A.New(上级id: _args.ParentID > 0 ? _args.ParentID : null);
-        }
+    protected override async Task OnAdd()
+    {
+        _fv.Data = await A.New(上级id: _args.ParentID > 0 ? _args.ParentID : null);
+    }
 
-        protected override async Task OnGet()
-        {
-            _fv.Data = await A.View1.GetByID(_args.ID);
-        }
+    protected override async Task OnGet()
+    {
+        _fv.Data = await A.View1.GetByID(_args.ID);
     }
 }

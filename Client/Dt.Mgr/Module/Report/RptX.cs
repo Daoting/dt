@@ -12,53 +12,52 @@ using System.Linq;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Mgr.Module
+namespace Dt.Mgr.Module;
+
+public partial class RptX
 {
-    public partial class RptX
+    public static async Task<RptX> New(
+       string Name = default,
+       string Define = default,
+       string Note = default,
+       DateTime Ctime = default,
+       DateTime Mtime = default)
     {
-        public static async Task<RptX> New(
-           string Name = default,
-           string Define = default,
-           string Note = default,
-           DateTime Ctime = default,
-           DateTime Mtime = default)
-        {
-            return new RptX(
-                ID: await NewID(),
-                Name: Name,
-                Define: Define,
-                Note: Note,
-                Ctime: Ctime,
-                Mtime: Mtime);
-        }
+        return new RptX(
+            ID: await NewID(),
+            Name: Name,
+            Define: Define,
+            Note: Note,
+            Ctime: Ctime,
+            Mtime: Mtime);
+    }
 
-        protected override void InitHook()
+    protected override void InitHook()
+    {
+        OnSaving(async () =>
         {
-            OnSaving(async () =>
+            Throw.IfEmpty(Name, "报表名称不可为空！", cName);
+
+            if ((IsAdded || Cells["name"].IsChanged)
+                && await GetCount($"where name='{Name}'") > 0)
             {
-                Throw.IfEmpty(Name, "报表名称不可为空！", cName);
+                Throw.Msg("报表名称重复！", cName);
+            }
 
-                if ((IsAdded || Cells["name"].IsChanged)
-                    && await GetCount($"where name='{Name}'") > 0)
-                {
-                    Throw.Msg("报表名称重复！", cName);
-                }
+            if (!IsAdded && Cells["name"].IsChanged)
+            {
+                if (!await Kit.Confirm("报表名称可能存在外部引用，比如菜单视图参数，\r\n确认要修改吗？"))
+                    Throw.Msg("已取消保存！");
+            }
 
-                if (!IsAdded && Cells["name"].IsChanged)
-                {
-                    if (!await Kit.Confirm("报表名称可能存在外部引用，比如菜单视图参数，\r\n确认要修改吗？"))
-                        Throw.Msg("已取消保存！");
-                }
-
-                if (IsAdded)
-                {
-                    Ctime = Mtime = Kit.Now;
-                }
-                else
-                {
-                    Mtime = Kit.Now;
-                }
-            });
-        }
+            if (IsAdded)
+            {
+                Ctime = Mtime = Kit.Now;
+            }
+            else
+            {
+                Mtime = Kit.Now;
+            }
+        });
     }
 }

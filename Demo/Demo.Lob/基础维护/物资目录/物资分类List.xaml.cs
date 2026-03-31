@@ -11,37 +11,36 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.Lob
-{
-    using A = 物资分类X;
-    
-    public partial class 物资分类List : List
-    {
-        public 物资分类List()
-        {
-            InitializeComponent();
-            Menu = CreateMenu();
-            _lv.SetMenu(CreateContextMenu());
-            _lv.FilterCfg = new FilterCfg
-            {
-                FilterCols = "名称",
-                EnablePinYin = true,
-                Placeholder = "文字或拼音简码",
-                IsRealtime = true,
-            };
-        }
+namespace Demo.Lob;
 
-        protected override async Task OnQuery()
+using A = 物资分类X;
+
+public partial class 物资分类List : List
+{
+    public 物资分类List()
+    {
+        InitializeComponent();
+        Menu = CreateMenu();
+        _lv.SetMenu(CreateContextMenu());
+        _lv.FilterCfg = new FilterCfg
         {
-            if (_clause == null)
-            {
-                _lv.Data = await A.Query(null);
-            }
-            else
-            {
-                var par = await _clause.Build<A>();
-                _lv.Data = await A.Query(par.Sql, par.Params);
-            }
+            FilterCols = "名称",
+            EnablePinYin = true,
+            Placeholder = "文字或拼音简码",
+            IsRealtime = true,
+        };
+    }
+
+    protected override async Task OnQuery()
+    {
+        if (_clause == null)
+        {
+            _lv.Data = await A.Query(null);
+        }
+        else
+        {
+            var par = await _clause.Build<A>();
+            _lv.Data = await A.Query(par.Sql, par.Params);
         }
     }
 }

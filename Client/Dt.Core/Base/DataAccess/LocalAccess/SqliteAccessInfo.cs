@@ -10,22 +10,21 @@
 
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+class SqliteAccessInfo : IAccessInfo
 {
-    class SqliteAccessInfo : IAccessInfo
+    readonly SqliteAccess _da;
+
+    public SqliteAccessInfo(string p_name)
     {
-        readonly SqliteAccess _da;
-
-        public SqliteAccessInfo(string p_name)
-        {
-            Name = p_name;
-            _da = new SqliteAccess(this);
-        }
-
-        public AccessType Type => AccessType.Local;
-
-        public string Name { get; }
-
-        public IDataAccess GetDa() => _da;
+        Name = p_name;
+        _da = new SqliteAccess(this);
     }
+
+    public AccessType Type => AccessType.Local;
+
+    public string Name { get; }
+
+    public IDataAccess GetDa() => _da;
 }

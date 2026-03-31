@@ -11,29 +11,28 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Module
+namespace Dt.Mgr.Module;
+
+public partial class OptionGroupOptionList : List
 {
-    public partial class OptionGroupOptionList : List
+    public OptionGroupOptionList()
     {
-        public OptionGroupOptionList()
+        InitializeComponent();
+        Menu = CreateMenu();
+        _lv.AddMultiSelMenu(Menu);
+        _lv.SetMenu(CreateContextMenu());
+    }
+    
+    protected override async Task OnQuery()
+    {
+        if (_parentID > 0)
         {
-            InitializeComponent();
-            Menu = CreateMenu();
-            _lv.AddMultiSelMenu(Menu);
-            _lv.SetMenu(CreateContextMenu());
+            _lv.Data = await OptionX.Query($"SELECT a.*,b.Name as GroupName FROM cm_option a, cm_option_group b where a.group_id=b.ID and a.group_id={_parentID} order by Dispidx");
         }
-        
-        protected override async Task OnQuery()
+        else
         {
-            if (_parentID > 0)
-            {
-                _lv.Data = await OptionX.Query($"SELECT a.*,b.Name as GroupName FROM cm_option a, cm_option_group b where a.group_id=b.ID and a.group_id={_parentID} order by Dispidx");
-            }
-            else
-            {
-                _lv.Data = null;
-            }
-            Menu["增加"].IsEnabled = _parentID > 0;
+            _lv.Data = null;
         }
+        Menu["增加"].IsEnabled = _parentID > 0;
     }
 }

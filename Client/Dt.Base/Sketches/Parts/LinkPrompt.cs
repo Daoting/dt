@@ -20,28 +20,27 @@ using Microsoft.UI.Xaml.Input;
 
 #endregion
 
-namespace Dt.Base.Sketches
+namespace Dt.Base.Sketches;
+
+/// <summary>
+/// 
+/// </summary>
+public sealed partial class LinkPrompt : Control
 {
     /// <summary>
     /// 
     /// </summary>
-    public sealed partial class LinkPrompt : Control
+    public LinkPrompt()
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public LinkPrompt()
-        {
-            DefaultStyleKey = typeof(LinkPrompt);
-        }
+        DefaultStyleKey = typeof(LinkPrompt);
+    }
 
-        /// <summary>
-        /// 设置有效点
-        /// </summary>
-        /// <param name="p_pos"></param>
-        public void SetValidPos(LinkPortPosition p_pos)
-        {
-            VisualStateManager.GoToState(this, p_pos.ToString(), true);
-        }
+    /// <summary>
+    /// 设置有效点
+    /// </summary>
+    /// <param name="p_pos"></param>
+    public void SetValidPos(LinkPortPosition p_pos)
+    {
+        VisualStateManager.GoToState(this, p_pos.ToString(), true);
     }
 }

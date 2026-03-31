@@ -10,16 +10,15 @@
 using System;
 #endregion
 
-namespace Dt.Mgr
+namespace Dt.Mgr;
+
+/// <summary>
+/// 标志处理服务器推送的标签
+/// </summary>
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+public class PushApiAttribute : TypeAliasAttribute
 {
-    /// <summary>
-    /// 标志处理服务器推送的标签
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class PushApiAttribute : TypeAliasAttribute
+    public PushApiAttribute()
     {
-        public PushApiAttribute()
-        {
-        }
     }
 }

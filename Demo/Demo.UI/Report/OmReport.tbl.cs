@@ -12,51 +12,50 @@ using System.Linq;
 using System.Threading.Tasks;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+[Sqlite("rptdemo")]
+public partial class OmReportX : EntityX<OmReportX>
 {
-    [Sqlite("rptdemo")]
-    public partial class OmReportX : EntityX<OmReportX>
+    #region 构造方法
+    OmReportX() { }
+
+    public OmReportX(CellList p_cells) : base(p_cells) { }
+
+    public OmReportX(
+        long ID,
+        string Name = default,
+        string Define = default)
     {
-        #region 构造方法
-        OmReportX() { }
+        Add("ID", ID);
+        Add("Name", Name);
+        Add("Define", Define);
+        IsAdded = true;
+    }
+    #endregion
 
-        public OmReportX(CellList p_cells) : base(p_cells) { }
+    /// <summary>
+    /// 主键标识
+    /// </summary>
+    [PrimaryKey]
+    new public long ID
+    {
+        get { return (long)this["ID"]; }
+        set { this["ID"] = value; }
+    }
 
-        public OmReportX(
-            long ID,
-            string Name = default,
-            string Define = default)
-        {
-            Add("ID", ID);
-            Add("Name", Name);
-            Add("Define", Define);
-            IsAdded = true;
-        }
-        #endregion
+    /// <summary>
+    /// 名称
+    /// </summary>
+    public string Name
+    {
+        get { return (string)this["Name"]; }
+        set { this["Name"] = value; }
+    }
 
-        /// <summary>
-        /// 主键标识
-        /// </summary>
-        [PrimaryKey]
-        new public long ID
-        {
-            get { return (long)this["ID"]; }
-            set { this["ID"] = value; }
-        }
-
-        /// <summary>
-        /// 名称
-        /// </summary>
-        public string Name
-        {
-            get { return (string)this["Name"]; }
-            set { this["Name"] = value; }
-        }
-
-        public string Define
-        {
-            get { return (string)this["Define"]; }
-            set { this["Define"] = value; }
-        }
+    public string Define
+    {
+        get { return (string)this["Define"]; }
+        set { this["Define"] = value; }
     }
 }

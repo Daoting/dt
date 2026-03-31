@@ -13,28 +13,27 @@ using Microsoft.UI.Xaml;
 using System.Threading.Tasks;
 #endregion
 
-namespace Demo.Crud
+namespace Demo.Crud;
+
+public partial class AuthAccess : Win
 {
-    public partial class AuthAccess : Win
+    public AuthAccess()
     {
-        public AuthAccess()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        async void OnNoAuth(object sender, RoutedEventArgs e)
-        {
-            Kit.Msg(await AtTestCm.NoAuth());
-        }
+    async void OnNoAuth(object sender, RoutedEventArgs e)
+    {
+        Kit.Msg(await AtTestCm.NoAuth());
+    }
 
-        async void OnAuth(object sender, RoutedEventArgs e)
-        {
-            Kit.Msg(await AtTestCm.Auth());
-        }
+    async void OnAuth(object sender, RoutedEventArgs e)
+    {
+        Kit.Msg(await AtTestCm.Auth());
+    }
 
-        async void OnCustomAuth(object sender, RoutedEventArgs e)
-        {
-            Kit.Msg(await AtTestCm.CustomAuth());
-        }
+    async void OnCustomAuth(object sender, RoutedEventArgs e)
+    {
+        Kit.Msg(await AtTestCm.CustomAuth());
     }
 }

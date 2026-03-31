@@ -10,16 +10,15 @@
 
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 自定义单元格UI类型的标签
+/// </summary>
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+public class LvCallAttribute : TypeAliasAttribute
 {
-    /// <summary>
-    /// 自定义单元格UI类型的标签
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class LvCallAttribute : TypeAliasAttribute
+    public LvCallAttribute()
     {
-        public LvCallAttribute()
-        {
-        }
     }
 }

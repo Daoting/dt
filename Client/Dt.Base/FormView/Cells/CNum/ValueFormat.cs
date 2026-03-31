@@ -9,26 +9,25 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 值的显示方式
+/// </summary>
+public enum ValueFormat
 {
     /// <summary>
-    /// 值的显示方式
+    /// 
     /// </summary>
-    public enum ValueFormat
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        Numeric,
+    Numeric,
 
-        /// <summary>
-        /// 货币标识
-        /// </summary>
-        Currency,
+    /// <summary>
+    /// 货币标识
+    /// </summary>
+    Currency,
 
-        /// <summary>
-        /// 百分数
-        /// </summary>
-        Percentage
-    }
+    /// <summary>
+    /// 百分数
+    /// </summary>
+    Percentage
 }

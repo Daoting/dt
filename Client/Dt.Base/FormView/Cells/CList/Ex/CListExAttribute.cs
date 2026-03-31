@@ -10,16 +10,15 @@
 
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// CList功能扩展的类型标签
+/// </summary>
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+public class CListExAttribute : TypeAliasAttribute
 {
-    /// <summary>
-    /// CList功能扩展的类型标签
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class CListExAttribute : TypeAliasAttribute
+    public CListExAttribute()
     {
-        public CListExAttribute()
-        {
-        }
     }
 }

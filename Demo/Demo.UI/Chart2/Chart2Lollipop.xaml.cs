@@ -13,66 +13,65 @@ using ScottPlot.AxisRules;
 using ScottPlot.Hatches;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class Chart2Lollipop : Win
 {
-    public partial class Chart2Lollipop : Win
+    public Chart2Lollipop()
     {
-        public Chart2Lollipop()
+        InitializeComponent();
+    }
+
+    void OnDef(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            InitializeComponent();
+            double[] values = Generate.Sin(25);
+            _c.Add.Lollipop(values);
         }
+    }
 
-        void OnDef(object sender, RoutedEventArgs e)
+    void OnPosition(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                double[] values = Generate.Sin(25);
-                _c.Add.Lollipop(values);
-            }
+            double[] xs = Generate.Range(0, 6.28, 0.314);
+            double[] ys = xs.Select(Math.Sin).ToArray();
+            var lollipop = _c.Add.Lollipop(ys, xs);
         }
+    }
 
-        void OnPosition(object sender, RoutedEventArgs e)
+    void OnCustom(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                double[] xs = Generate.Range(0, 6.28, 0.314);
-                double[] ys = xs.Select(Math.Sin).ToArray();
-                var lollipop = _c.Add.Lollipop(ys, xs);
-            }
+            double[] values = Generate.Sin(21);
+            var lollipop = _c.Add.Lollipop(values);
+
+            lollipop.MarkerColor = Colors.Red;
+            lollipop.MarkerSize = 15;
+            lollipop.MarkerShape = MarkerShape.FilledDiamond;
+
+            lollipop.LineColor = Colors.Green;
+            lollipop.LineWidth = 3;
+            lollipop.LinePattern = LinePattern.Dotted;
         }
+    }
 
-        void OnCustom(object sender, RoutedEventArgs e)
+    void OnHor(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                double[] values = Generate.Sin(21);
-                var lollipop = _c.Add.Lollipop(values);
+            double[] xs = Generate.Sin(21);
+            double[] ys = Generate.Consecutive(21);
+            Coordinates[] coordinates = Coordinates.Zip(xs, ys);
 
-                lollipop.MarkerColor = Colors.Red;
-                lollipop.MarkerSize = 15;
-                lollipop.MarkerShape = MarkerShape.FilledDiamond;
-
-                lollipop.LineColor = Colors.Green;
-                lollipop.LineWidth = 3;
-                lollipop.LinePattern = LinePattern.Dotted;
-            }
-        }
-
-        void OnHor(object sender, RoutedEventArgs e)
-        {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                double[] xs = Generate.Sin(21);
-                double[] ys = Generate.Consecutive(21);
-                Coordinates[] coordinates = Coordinates.Zip(xs, ys);
-
-                var lollipop = _c.Add.Lollipop(coordinates);
-                lollipop.Orientation = Orientation.Horizontal;
-            }
+            var lollipop = _c.Add.Lollipop(coordinates);
+            lollipop.Orientation = Orientation.Horizontal;
         }
     }
 }

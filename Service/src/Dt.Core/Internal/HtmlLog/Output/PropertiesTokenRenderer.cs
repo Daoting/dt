@@ -14,59 +14,58 @@ using System.IO;
 using System.Linq;
 #endregion
 
-namespace Dt.Core.HtmlLog
+namespace Dt.Core.HtmlLog;
+
+class PropertiesTokenRenderer : OutputRenderer
 {
-    class PropertiesTokenRenderer : OutputRenderer
+    readonly MessageTemplate _outputTemplate;
+    readonly HtmlTheme _theme;
+    readonly PropertyToken _token;
+    readonly ThemedValueFormatter _valueFormatter;
+
+    public PropertiesTokenRenderer(HtmlTheme theme, PropertyToken token, MessageTemplate outputTemplate)
     {
-        readonly MessageTemplate _outputTemplate;
-        readonly HtmlTheme _theme;
-        readonly PropertyToken _token;
-        readonly ThemedValueFormatter _valueFormatter;
+        _outputTemplate = outputTemplate;
+        _theme = theme ?? throw new ArgumentNullException(nameof(theme));
+        _token = token ?? throw new ArgumentNullException(nameof(token));
+        var isJson = false;
 
-        public PropertiesTokenRenderer(HtmlTheme theme, PropertyToken token, MessageTemplate outputTemplate)
+        if (token.Format != null)
         {
-            _outputTemplate = outputTemplate;
-            _theme = theme ?? throw new ArgumentNullException(nameof(theme));
-            _token = token ?? throw new ArgumentNullException(nameof(token));
-            var isJson = false;
-
-            if (token.Format != null)
+            for (var i = 0; i < token.Format.Length; ++i)
             {
-                for (var i = 0; i < token.Format.Length; ++i)
-                {
-                    if (token.Format[i] == 'j')
-                        isJson = true;
-                }
+                if (token.Format[i] == 'j')
+                    isJson = true;
             }
-
-            _valueFormatter = isJson
-                ? (ThemedValueFormatter)new ThemedJsonValueFormatter(theme)
-                : new ThemedDisplayValueFormatter(theme);
         }
 
-        public override void Render(LogEvent logEvent, TextWriter output)
-        {
-            var included = logEvent.Properties
-                .Where(p => !TemplateContainsPropertyName(logEvent.MessageTemplate, p.Key) &&
-                            !TemplateContainsPropertyName(_outputTemplate, p.Key))
-                .Select(p => new LogEventProperty(p.Key, p.Value));
+        _valueFormatter = isJson
+            ? (ThemedValueFormatter)new ThemedJsonValueFormatter(theme)
+            : new ThemedDisplayValueFormatter(theme);
+    }
 
-            var value = new StructureValue(included);
-            _valueFormatter.Format(value, output, null);
-        }
+    public override void Render(LogEvent logEvent, TextWriter output)
+    {
+        var included = logEvent.Properties
+            .Where(p => !TemplateContainsPropertyName(logEvent.MessageTemplate, p.Key) &&
+                        !TemplateContainsPropertyName(_outputTemplate, p.Key))
+            .Select(p => new LogEventProperty(p.Key, p.Value));
 
-        static bool TemplateContainsPropertyName(MessageTemplate template, string propertyName)
+        var value = new StructureValue(included);
+        _valueFormatter.Format(value, output, null);
+    }
+
+    static bool TemplateContainsPropertyName(MessageTemplate template, string propertyName)
+    {
+        foreach (var token in template.Tokens)
         {
-            foreach (var token in template.Tokens)
+            if (token is PropertyToken namedProperty
+                && namedProperty.PropertyName == propertyName)
             {
-                if (token is PropertyToken namedProperty
-                    && namedProperty.PropertyName == propertyName)
-                {
-                    return true;
-                }
+                return true;
             }
-
-            return false;
         }
+
+        return false;
     }
 }

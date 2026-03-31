@@ -17,29 +17,28 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 #endregion
 
-namespace Demo.Crud
-{
-    public partial class CListDemo : Win
-    {
-        public CListDemo()
-        {
-            InitializeComponent();
-            _fv.Data = new Row
-            {
-                { "code", "汉族" },
-                { "degree", "本科" },
-                { "menu", typeof(string) },
-                { "role", typeof(string) },
-                { "parentid", typeof(long) },
-                { "parent", typeof(string) },
-                { "child1", typeof(string) },
-                { "child2", typeof(string) },
-                { "maxparent", typeof(string) },
-                { "localmenu", typeof(string) },
-            };
-            CList ls = new CList();
-            var a = ls.Sql;
+namespace Demo.Crud;
 
-        }
+public partial class CListDemo : Win
+{
+    public CListDemo()
+    {
+        InitializeComponent();
+        _fv.Data = new Row
+        {
+            { "code", "汉族" },
+            { "degree", "本科" },
+            { "menu", typeof(string) },
+            { "role", typeof(string) },
+            { "parentid", typeof(long) },
+            { "parent", typeof(string) },
+            { "child1", typeof(string) },
+            { "child2", typeof(string) },
+            { "maxparent", typeof(string) },
+            { "localmenu", typeof(string) },
+        };
+        CList ls = new CList();
+        var a = ls.Sql;
+
     }
 }

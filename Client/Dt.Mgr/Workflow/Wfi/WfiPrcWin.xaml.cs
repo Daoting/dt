@@ -11,32 +11,31 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Workflow
+namespace Dt.Mgr.Workflow;
+
+public partial class WfiPrcWin : Win
 {
-    public partial class WfiPrcWin : Win
+    public WfiPrcWin()
     {
-        public WfiPrcWin()
+        InitializeComponent();
+        Attach();
+    }
+    
+    void Attach()
+    {
+        _query.Query += e =>
         {
-            InitializeComponent();
-            Attach();
-        }
+            _parentList.Query(e);
+            NaviTo(_parentList.Title);
+        };
         
-        void Attach()
-        {
-            _query.Query += e =>
-            {
-                _parentList.Query(e);
-                NaviTo(_parentList.Title);
-            };
-            
-            _parentList.Msg += e => _wfiAtvList.Query(e.ID);
-            _parentList.Navi += () => NaviTo(_wfiAtvList.Title);
-            
-        }
+        _parentList.Msg += e => _wfiAtvList.Query(e.ID);
+        _parentList.Navi += () => NaviTo(_wfiAtvList.Title);
         
-        public void Query(WfdPrcX p_prcd)
-        {
-            
-        }
+    }
+    
+    public void Query(WfdPrcX p_prcd)
+    {
+        
     }
 }

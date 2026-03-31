@@ -33,24 +33,23 @@ using Microsoft.UI.Xaml.Shapes;
 using Cell = Dt.Cells.Data.Cell;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class TouchExcel : Win
 {
-    public partial class TouchExcel : Win
+    public TouchExcel()
     {
-        public TouchExcel()
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            using (_excel.Defer())
-            {
-                _excel.ActiveSheet.SetValue(2, 1, "Goods");
-                _excel.ActiveSheet.AddTable("sampleTable1", 3, 0, 5, 4, TableStyles.Medium3);
-            }
-        }
-
-        void OnAutoFill(object sender, RoutedEventArgs e)
+        using (_excel.Defer())
         {
-            _excel.ShowAutoFillIndicator();
+            _excel.ActiveSheet.SetValue(2, 1, "Goods");
+            _excel.ActiveSheet.AddTable("sampleTable1", 3, 0, 5, 4, TableStyles.Medium3);
         }
+    }
+
+    void OnAutoFill(object sender, RoutedEventArgs e)
+    {
+        _excel.ShowAutoFillIndicator();
     }
 }

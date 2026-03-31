@@ -10,18 +10,17 @@
 using Dt.Base;
 #endregion
 
-namespace Demo.UI
-{
-    public sealed partial class SearchMvWin : Win
-    {
-        public SearchMvWin()
-        {
-            InitializeComponent();
-        }
+namespace Demo.UI;
 
-        void OnSearch(string e)
-        {
-            
-        }
+public sealed partial class SearchMvWin : Win
+{
+    public SearchMvWin()
+    {
+        InitializeComponent();
+    }
+
+    void OnSearch(string e)
+    {
+        
     }
 }

@@ -9,31 +9,30 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Mgr.Module
-{
-    public partial class OptionX
-    {
-        public static async Task<OptionX> New(
-            string Name = default,
-            int Dispidx = default,
-            long GroupID = default)
-        {
-            return new OptionX(
-                ID: await NewID(),
-                Name: Name,
-                Dispidx: (int)await NewSeq("Dispidx"),
-                GroupID: GroupID);
-        }
+namespace Dt.Mgr.Module;
 
-        protected override void InitHook()
+public partial class OptionX
+{
+    public static async Task<OptionX> New(
+        string Name = default,
+        int Dispidx = default,
+        long GroupID = default)
+    {
+        return new OptionX(
+            ID: await NewID(),
+            Name: Name,
+            Dispidx: (int)await NewSeq("Dispidx"),
+            GroupID: GroupID);
+    }
+
+    protected override void InitHook()
+    {
+        OnSaving(() =>
         {
-            OnSaving(() =>
-            {
-                // 避免上下移动时判断
-                if (IsAdded || Cells["Name"].IsChanged)
-                    Throw.IfEmpty(Name, "选项名称不可为空！");
-                return Task.CompletedTask;
-            });
-        }
+            // 避免上下移动时判断
+            if (IsAdded || Cells["Name"].IsChanged)
+                Throw.IfEmpty(Name, "选项名称不可为空！");
+            return Task.CompletedTask;
+        });
     }
 }

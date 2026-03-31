@@ -10,23 +10,22 @@
 using System;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 视图参数编辑器的别名标签
+/// </summary>
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+public class ViewParamsEditorAttribute : TypeAliasAttribute
 {
     /// <summary>
-    /// 视图参数编辑器的别名标签
+    /// 
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class ViewParamsEditorAttribute : TypeAliasAttribute
+    /// <param name="p_alias">别名，推荐 string Enum 类型</param>
+    public ViewParamsEditorAttribute(object p_alias)
+        : base(p_alias == null ? null : p_alias.ToString())
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="p_alias">别名，推荐 string Enum 类型</param>
-        public ViewParamsEditorAttribute(object p_alias)
-            : base(p_alias == null ? null : p_alias.ToString())
-        {
-        }
-
-        public ViewParamsEditorAttribute() { }
     }
+
+    public ViewParamsEditorAttribute() { }
 }

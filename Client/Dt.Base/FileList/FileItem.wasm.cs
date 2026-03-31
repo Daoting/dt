@@ -32,75 +32,74 @@ using Windows.UI.Core;
 using Windows.UI.Input;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+public partial class FileItem
 {
-    public partial class FileItem
+    /// <summary>
+    /// 打开文件
+    /// <para>预览图片、播放音视频</para>
+    /// <para>其他文件类型提示下载</para>
+    /// </summary>
+    async Task OpenFileWasm()
     {
-        /// <summary>
-        /// 打开文件
-        /// <para>预览图片、播放音视频</para>
-        /// <para>其他文件类型提示下载</para>
-        /// </summary>
-        async Task OpenFileWasm()
+        switch (FileType)
         {
-            switch (FileType)
-            {
-                case FileItemType.Image:
-                    await new ImageFileView().ShowDlg(_owner, this);
-                    break;
+            case FileItemType.Image:
+                await new ImageFileView().ShowDlg(_owner, this);
+                break;
 
-                case FileItemType.Video:
-                case FileItemType.Sound:
-                    var url = $"{At.GetSvcUrl("fsm")}/drv/{ID}";
-                    Play(url);
-                    break;
+            case FileItemType.Video:
+            case FileItemType.Sound:
+                var url = $"{At.GetSvcUrl("fsm")}/drv/{ID}";
+                Play(url);
+                break;
 
-                default:
-                    if (await Kit.Confirm($"要下载《{Title}》吗？"))
-                        DownloadFileWasm();
-                    break;
-            }
-            _owner.OnOpenedFile(this);
+            default:
+                if (await Kit.Confirm($"要下载《{Title}》吗？"))
+                    DownloadFileWasm();
+                break;
         }
+        _owner.OnOpenedFile(this);
+    }
 
-        /// <summary>
-        /// 共享文件
-        /// </summary>
-        Task ShareFileWasm()
-        {
-            Kit.Warn("wasm版未实现分享功能");
-            return Task.CompletedTask;
-        }
+    /// <summary>
+    /// 共享文件
+    /// </summary>
+    Task ShareFileWasm()
+    {
+        Kit.Warn("wasm版未实现分享功能");
+        return Task.CompletedTask;
+    }
 
-        /// <summary>
-        /// 文件另存为，直接下载文件
-        /// </summary>
-        void SaveAsWasm()
-        {
-            DownloadFileWasm();
-        }
+    /// <summary>
+    /// 文件另存为，直接下载文件
+    /// </summary>
+    void SaveAsWasm()
+    {
+        DownloadFileWasm();
+    }
 
-        /// <summary>
-        /// 下载文件
-        /// </summary>
-        /// <returns></returns>
-        void DownloadFileWasm()
-        {
+    /// <summary>
+    /// 下载文件
+    /// </summary>
+    /// <returns></returns>
+    void DownloadFileWasm()
+    {
 #if WASM
-            Kit.Download($"{At.GetSvcUrl("fsm")}/drv/{ID}", Title);
+        Kit.Download($"{At.GetSvcUrl("fsm")}/drv/{ID}", Title);
 #endif
-        }
+    }
 
-        Task<string> EnsureFileExistsWasm()
-        {
-            return Task.FromResult($"{At.GetSvcUrl("fsm")}/drv/{ID}");
-        }
+    Task<string> EnsureFileExistsWasm()
+    {
+        return Task.FromResult($"{At.GetSvcUrl("fsm")}/drv/{ID}");
+    }
 
-        async Task LoadImageWasm()
-        {
-            var exists = await AtFsm.IsFileExists(ID + ThumbPostfix);
-            var path = exists ?  new Uri($"{At.GetSvcUrl("fsm")}/drv/{ID}{ThumbPostfix}") : new Uri($"{At.GetSvcUrl("fsm")}/drv/{ID}");
-            Bitmap = new BitmapImage(path);
-        }
+    async Task LoadImageWasm()
+    {
+        var exists = await AtFsm.IsFileExists(ID + ThumbPostfix);
+        var path = exists ?  new Uri($"{At.GetSvcUrl("fsm")}/drv/{ID}{ThumbPostfix}") : new Uri($"{At.GetSvcUrl("fsm")}/drv/{ID}");
+        Bitmap = new BitmapImage(path);
     }
 }

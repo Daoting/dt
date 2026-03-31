@@ -9,57 +9,57 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Mgr.Module
+namespace Dt.Mgr.Module;
+
+public static class FileDs
 {
-    public static class FileDs
+    public static async Task<Table> SearchFiles(string p_name, string p_ext)
     {
-        public static async Task<Table> SearchFiles(string p_name, string p_ext)
+        var dbType = await At.GetDbType();
+
+        string sql;
+        if (string.IsNullOrEmpty(p_ext))
         {
-            var dbType = await At.GetDbType();
-
-            string sql;
-            if (string.IsNullOrEmpty(p_ext))
-            {
-                switch (dbType)
-                {
-                    case DatabaseType.Oracle:
-                        sql = string.Format(Sql搜索所有文件, $"%{p_name}%", Kit.UserID, "", "where rownum<50");
-                        break;
-
-                    case DatabaseType.SqlServer:
-                        sql = string.Format(Sql搜索所有文件, $"%{p_name}%", Kit.UserID, "top 50", "");
-                        break;
-
-                    default:
-                        sql = string.Format(Sql搜索所有文件, $"%{p_name}%", Kit.UserID, "", "limit 50");
-                        break;
-                }
-                return await At.Query(sql);
-            }
-
             switch (dbType)
             {
                 case DatabaseType.Oracle:
-                    sql = string.Format(Sql搜索扩展名文件, $"%{p_name}%", p_ext, Kit.UserID, "instr", "", "where rownum<50");
+                    sql = string.Format(Sql搜索所有文件, $"%{p_name}%", Kit.UserID, "", "where rownum<50");
                     break;
 
                 case DatabaseType.SqlServer:
-                    sql = string.Format(Sql搜索扩展名文件, $"%{p_name}%", p_ext, Kit.UserID, "charindex", "top 50", "");
-                    break;
-
-                case DatabaseType.PostgreSql:
-                    sql = string.Format(Sql搜索扩展名文件, $"%{p_name}%", p_ext, Kit.UserID, "strpos", "", "limit 50");
+                    sql = string.Format(Sql搜索所有文件, $"%{p_name}%", Kit.UserID, "top 50", "");
                     break;
 
                 default:
-                    sql = string.Format(Sql搜索扩展名文件, $"%{p_name}%", p_ext, Kit.UserID, "locate", "", "limit 50");
+                    sql = string.Format(Sql搜索所有文件, $"%{p_name}%", Kit.UserID, "", "limit 50");
                     break;
             }
             return await At.Query(sql);
         }
 
-        #region Sql
-        const string Sql搜索所有文件 = @"
+        switch (dbType)
+        {
+            case DatabaseType.Oracle:
+                sql = string.Format(Sql搜索扩展名文件, $"%{p_name}%", p_ext, Kit.UserID, "instr", "", "where rownum<50");
+                break;
+
+            case DatabaseType.SqlServer:
+                sql = string.Format(Sql搜索扩展名文件, $"%{p_name}%", p_ext, Kit.UserID, "charindex", "top 50", "");
+                break;
+
+            case DatabaseType.PostgreSql:
+                sql = string.Format(Sql搜索扩展名文件, $"%{p_name}%", p_ext, Kit.UserID, "strpos", "", "limit 50");
+                break;
+
+            default:
+                sql = string.Format(Sql搜索扩展名文件, $"%{p_name}%", p_ext, Kit.UserID, "locate", "", "limit 50");
+                break;
+        }
+        return await At.Query(sql);
+    }
+
+    #region Sql
+    const string Sql搜索所有文件 = @"
 select {2} * from
 (
 select info from cm_file_pub
@@ -76,7 +76,7 @@ where
 {3}
 ";
 
-        const string Sql搜索扩展名文件 = @"
+    const string Sql搜索扩展名文件 = @"
 select {4} * from
 (
 select info from cm_file_pub
@@ -96,6 +96,5 @@ where
 ";
 
 
-        #endregion
-    }
+    #endregion
 }

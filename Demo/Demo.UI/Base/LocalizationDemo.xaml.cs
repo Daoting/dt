@@ -11,30 +11,29 @@ using Dt.Base;
 using Microsoft.UI.Xaml;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class LocalizationDemo : Win
 {
-    public partial class LocalizationDemo : Win
+    public LocalizationDemo()
     {
-        public LocalizationDemo()
-        {
-            InitializeComponent();
-        }
-
-        void GetLocalStr(object sender, RoutedEventArgs e)
-        {
-            //string str = "Name".Loc();
-            //str += "\r\n" + "LocBar.Title".Loc();
-            //str += "\r\n" + "LocFormat".LocFormat(23, 99);
-            //Kit.Msg(str);
-        }
+        InitializeComponent();
     }
-    
-    //static class Localizer
-    //{
-    //    static readonly ResourceStringLocalizer _loc = new ResourceStringLocalizer(typeof(Localizer).Assembly.GetName().Name);
 
-    //    public static LocalizedString Loc(this string p_key) => _loc[p_key];
-
-    //    public static LocalizedString LocFormat(this string p_name, params object[] p_args) => _loc[p_name, p_args];
-    //}
+    void GetLocalStr(object sender, RoutedEventArgs e)
+    {
+        //string str = "Name".Loc();
+        //str += "\r\n" + "LocBar.Title".Loc();
+        //str += "\r\n" + "LocFormat".LocFormat(23, 99);
+        //Kit.Msg(str);
+    }
 }
+
+//static class Localizer
+//{
+//    static readonly ResourceStringLocalizer _loc = new ResourceStringLocalizer(typeof(Localizer).Assembly.GetName().Name);
+
+//    public static LocalizedString Loc(this string p_key) => _loc[p_key];
+
+//    public static LocalizedString LocFormat(this string p_name, params object[] p_args) => _loc[p_name, p_args];
+//}

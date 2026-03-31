@@ -15,65 +15,64 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+public sealed partial class GlobalParamDlg : Dlg
 {
-    public sealed partial class GlobalParamDlg : Dlg
+    public GlobalParamDlg()
     {
-        public GlobalParamDlg()
-        {
-            InitializeComponent();
-            LoadItems();
-        }
+        InitializeComponent();
+        LoadItems();
+    }
 
-        internal async Task<bool> Show(FrameworkElement p_target)
+    internal async Task<bool> Show(FrameworkElement p_target)
+    {
+        if (!Kit.IsPhoneUI)
         {
-            if (!Kit.IsPhoneUI)
-            {
-                WinPlacement = DlgPlacement.TargetOuterLeftTop;
-                PlacementTarget = p_target;
-                ClipElement = p_target;
-                Height = 400;
-                Width = 300;
-            }
-            return await ShowAsync();
+            WinPlacement = DlgPlacement.TargetOuterLeftTop;
+            PlacementTarget = p_target;
+            ClipElement = p_target;
+            Height = 400;
+            Width = 300;
         }
+        return await ShowAsync();
+    }
 
-        public string GetExpression()
-        {
-            return $"Var({_lv.SelectedRow.Str("name")})";
-        }
+    public string GetExpression()
+    {
+        return $"Var({_lv.SelectedRow.Str("name")})";
+    }
 
-        void OnSave(Mi e)
+    void OnSave(Mi e)
+    {
+        if (_lv.SelectedItem == null)
         {
-            if (_lv.SelectedItem == null)
-            {
-                Kit.Warn("请选择变量名！");
-            }
-            else
-            {
-                Close(true);
-            }
+            Kit.Warn("请选择变量名！");
         }
+        else
+        {
+            Close(true);
+        }
+    }
 
-        void LoadItems()
-        {
-            Table tbl = new Table { { "name" } };
-            tbl.AddRow(new { name = "页号" });
-            tbl.AddRow(new { name = "总页数" });
-            tbl.AddRow(new { name = "水平页号" });
-            tbl.AddRow(new { name = "垂直页号" });
-            tbl.AddRow(new { name = "报表名称" });
-            tbl.AddRow(new { name = "日期" });
-            tbl.AddRow(new { name = "时间" });
-            tbl.AddRow(new { name = "日期时间" });
-            tbl.AddRow(new { name = "用户id" });
-            tbl.AddRow(new { name = "用户姓名" });
-            _lv.Data = tbl;
-        }
+    void LoadItems()
+    {
+        Table tbl = new Table { { "name" } };
+        tbl.AddRow(new { name = "页号" });
+        tbl.AddRow(new { name = "总页数" });
+        tbl.AddRow(new { name = "水平页号" });
+        tbl.AddRow(new { name = "垂直页号" });
+        tbl.AddRow(new { name = "报表名称" });
+        tbl.AddRow(new { name = "日期" });
+        tbl.AddRow(new { name = "时间" });
+        tbl.AddRow(new { name = "日期时间" });
+        tbl.AddRow(new { name = "用户id" });
+        tbl.AddRow(new { name = "用户姓名" });
+        _lv.Data = tbl;
+    }
 
-        void OnDoubleClick(object e)
-        {
-            OnSave(null);
-        }
+    void OnDoubleClick(object e)
+    {
+        OnSave(null);
     }
 }

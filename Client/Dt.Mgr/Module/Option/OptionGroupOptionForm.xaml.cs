@@ -11,24 +11,23 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Module
-{
-    public sealed partial class OptionGroupOptionForm : Form
-    {
-        public OptionGroupOptionForm()
-        {
-            InitializeComponent();
-            Menu = CreateMenu();
-        }
-        
-        protected override async Task OnAdd()
-        {
-            _fv.Data = await OptionX.New(GroupID: _args.ParentID.Value);
-        }
+namespace Dt.Mgr.Module;
 
-        protected override async Task OnGet()
-        {
-            _fv.Data = await OptionX.GetByID(_args.ID);
-        }
+public sealed partial class OptionGroupOptionForm : Form
+{
+    public OptionGroupOptionForm()
+    {
+        InitializeComponent();
+        Menu = CreateMenu();
+    }
+    
+    protected override async Task OnAdd()
+    {
+        _fv.Data = await OptionX.New(GroupID: _args.ParentID.Value);
+    }
+
+    protected override async Task OnGet()
+    {
+        _fv.Data = await OptionX.GetByID(_args.ID);
     }
 }

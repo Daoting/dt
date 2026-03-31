@@ -33,55 +33,54 @@ using Microsoft.UI.Xaml.Shapes;
 using Cell = Dt.Cells.Data.Cell;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class ImgExcel : Win
 {
-    public partial class ImgExcel : Win
+    public ImgExcel()
     {
-        public ImgExcel()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        async void AddPictureButton_Click(object sender, RoutedEventArgs e)
-        {
-            var filePicker = Kit.GetFileOpenPicker();
-            filePicker.FileTypeFilter.Add(".jpg");
-            filePicker.FileTypeFilter.Add(".jpeg");
-            filePicker.FileTypeFilter.Add(".png");
-            filePicker.FileTypeFilter.Add(".bmp");
-            filePicker.FileTypeFilter.Add(".gif");
-            StorageFile file = await filePicker.PickSingleFileAsync();
-            if (file == null)
-                return;
+    async void AddPictureButton_Click(object sender, RoutedEventArgs e)
+    {
+        var filePicker = Kit.GetFileOpenPicker();
+        filePicker.FileTypeFilter.Add(".jpg");
+        filePicker.FileTypeFilter.Add(".jpeg");
+        filePicker.FileTypeFilter.Add(".png");
+        filePicker.FileTypeFilter.Add(".bmp");
+        filePicker.FileTypeFilter.Add(".gif");
+        StorageFile file = await filePicker.PickSingleFileAsync();
+        if (file == null)
+            return;
 
-            int startRow = 0;
-            int startColumn = 0;
-            Worksheet sheet = _excel.ActiveSheet;
-            int selectCount = sheet.Selections.Count;
-            if (selectCount >= 1)
-            {
-                CellRange cellRange = sheet.Selections[selectCount - 1];
-                startRow = cellRange.Row;
-                startColumn = cellRange.Column;
-            }
-            try
-            {
-                _excel.SuspendEvent();
-                var stream = await file.OpenStreamForReadAsync();
-                sheet.AddPicture(CreatePictureName(), stream);
-                stream.Dispose();
-            }
-            finally
-            {
-                _excel.ResumeEvent();
-                _excel.RefreshPictures();
-            }
-        }
-
-        string CreatePictureName()
+        int startRow = 0;
+        int startColumn = 0;
+        Worksheet sheet = _excel.ActiveSheet;
+        int selectCount = sheet.Selections.Count;
+        if (selectCount >= 1)
         {
-            SpreadPictures picutres = _excel.ActiveSheet.Pictures;
-            return "Picture" + (picutres.Count > 0 ? Int32.Parse(picutres[picutres.Count - 1].Name.Substring(7)) + 1 : 1);
+            CellRange cellRange = sheet.Selections[selectCount - 1];
+            startRow = cellRange.Row;
+            startColumn = cellRange.Column;
         }
+        try
+        {
+            _excel.SuspendEvent();
+            var stream = await file.OpenStreamForReadAsync();
+            sheet.AddPicture(CreatePictureName(), stream);
+            stream.Dispose();
+        }
+        finally
+        {
+            _excel.ResumeEvent();
+            _excel.RefreshPictures();
+        }
+    }
+
+    string CreatePictureName()
+    {
+        SpreadPictures picutres = _excel.ActiveSheet.Pictures;
+        return "Picture" + (picutres.Count > 0 ? Int32.Parse(picutres[picutres.Count - 1].Name.Substring(7)) + 1 : 1);
     }
 }

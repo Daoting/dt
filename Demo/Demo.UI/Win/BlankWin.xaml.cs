@@ -19,60 +19,59 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class BlankWin : Win
 {
-    public partial class BlankWin : Win
+    ParamsWin _nextWin;
+    int _rnd = 0;
+
+    public BlankWin()
     {
-        ParamsWin _nextWin;
-        int _rnd = 0;
+        InitializeComponent();
+        Closing += OnClosing;
+        Closed += OnClosed;
+    }
 
-        public BlankWin()
-        {
-            InitializeComponent();
-            Closing += OnClosing;
-            Closed += OnClosed;
-        }
+    void OnToggleIcon(object sender, RoutedEventArgs e)
+    {
+        int index = (int)Icon + 1;
+        if (index >= 200)
+            index = 0;
+        Icon = (Icons)index;
+    }
 
-        void OnToggleIcon(object sender, RoutedEventArgs e)
+    void OnNewWin(object sender, RoutedEventArgs e)
+    {
+        if (_nextWin == null)
         {
-            int index = (int)Icon + 1;
-            if (index >= 200)
-                index = 0;
-            Icon = (Icons)index;
+            _nextWin = new ParamsWin();
+            string rnd = new Random().Next(1000).ToString();
+            _nextWin.Title = "窗口" + rnd;
+            ((Button)sender).Content = "子窗口" + rnd;
         }
+        _nextWin.Open();
+    }
 
-        void OnNewWin(object sender, RoutedEventArgs e)
+    void OnParamsWin(object sender, RoutedEventArgs e)
+    {
+        if (_rnd == 0)
         {
-            if (_nextWin == null)
-            {
-                _nextWin = new ParamsWin();
-                string rnd = new Random().Next(1000).ToString();
-                _nextWin.Title = "窗口" + rnd;
-                ((Button)sender).Content = "子窗口" + rnd;
-            }
-            _nextWin.Open();
+            _rnd = new Random().Next(1000);
+            ((Button)sender).Content = "参数子窗口" + _rnd.ToString();
         }
+        Kit.OpenWin(typeof(ParamsWin), $"参数窗口{_rnd}", Icons.None, _rnd);
+    }
 
-        void OnParamsWin(object sender, RoutedEventArgs e)
-        {
-            if (_rnd == 0)
-            {
-                _rnd = new Random().Next(1000);
-                ((Button)sender).Content = "参数子窗口" + _rnd.ToString();
-            }
-            Kit.OpenWin(typeof(ParamsWin), $"参数窗口{_rnd}", Icons.None, _rnd);
-        }
+    void OnClosing(object sender, AsyncCancelArgs e)
+    {
+        e.Cancel = (bool)_cbClosing.IsChecked;
+        if (e.Cancel)
+            Kit.Msg($"{Title} - 事件中设置禁止关闭");
+    }
 
-        void OnClosing(object sender, AsyncCancelArgs e)
-        {
-            e.Cancel = (bool)_cbClosing.IsChecked;
-            if (e.Cancel)
-                Kit.Msg($"{Title} - 事件中设置禁止关闭");
-        }
-
-        void OnClosed(object sender, EventArgs e)
-        {
-            Kit.Msg($"{Title} - 关闭后事件");
-        }
+    void OnClosed(object sender, EventArgs e)
+    {
+        Kit.Msg($"{Title} - 关闭后事件");
     }
 }

@@ -10,16 +10,15 @@
 
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 报表查询面板的类型标签
+/// </summary>
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+public class RptQueryAttribute : TypeAliasAttribute
 {
-    /// <summary>
-    /// 报表查询面板的类型标签
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class RptQueryAttribute : TypeAliasAttribute
+    public RptQueryAttribute()
     {
-        public RptQueryAttribute()
-        {
-        }
     }
 }

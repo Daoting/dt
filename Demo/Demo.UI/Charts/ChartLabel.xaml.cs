@@ -24,21 +24,20 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class ChartLabel : Win
 {
-    public partial class ChartLabel : Win
+
+    public ChartLabel()
     {
+        InitializeComponent();
 
-        public ChartLabel()
-        {
-            InitializeComponent();
+        _cbType.ItemsSource = new List<string> { "Column", "LineSymbols", "Pie" };
+    }
 
-            _cbType.ItemsSource = new List<string> { "Column", "LineSymbols", "Pie" };
-        }
-
-        void OnChartTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            _chart.ChartType = (ChartType)Enum.Parse(typeof(ChartType), _cbType.SelectedItem.ToString(), false);
-        }
+    void OnChartTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        _chart.ChartType = (ChartType)Enum.Parse(typeof(ChartType), _cbType.SelectedItem.ToString(), false);
     }
 }

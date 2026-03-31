@@ -10,14 +10,13 @@
 
 #endregion
 
-namespace Demo
+namespace Demo;
+
+[PushApi]
+public class PushApi
 {
-    [PushApi]
-    public class PushApi
+    public void Hello(string p_msg)
     {
-        public void Hello(string p_msg)
-        {
-            Kit.Msg($"【收到服务端推送】\r\n{p_msg}\r\n当前位置：PushApi.Hello");
-        }
+        Kit.Msg($"【收到服务端推送】\r\n{p_msg}\r\n当前位置：PushApi.Hello");
     }
 }

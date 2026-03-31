@@ -20,23 +20,22 @@ using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 静态方法
+/// </summary>
+public partial class Menu
 {
     /// <summary>
-    /// 静态方法
+    /// 创建新菜单并添加菜单项
     /// </summary>
-    public partial class Menu
+    /// <param name="p_arr">菜单项</param>
+    /// <returns></returns>
+    public static Menu New(params Mi[] p_arr)
     {
-        /// <summary>
-        /// 创建新菜单并添加菜单项
-        /// </summary>
-        /// <param name="p_arr">菜单项</param>
-        /// <returns></returns>
-        public static Menu New(params Mi[] p_arr)
-        {
-            Menu menu = new Menu();
-            menu.Items.AddRange(p_arr);
-            return menu;
-        }
+        Menu menu = new Menu();
+        menu.Items.AddRange(p_arr);
+        return menu;
     }
 }

@@ -14,86 +14,85 @@ using System.Linq;
 using System.Text;
 #endregion
 
-namespace Dt.Mgr.Module
+namespace Dt.Mgr.Module;
+
+/// <summary>
+/// 文件
+/// </summary>
+[View(LobViews.文件)]
+public partial class FileHome : Win
 {
-    /// <summary>
-    /// 文件
-    /// </summary>
-    [View(LobViews.文件)]
-    public partial class FileHome : Win
+    public FileHome()
     {
-        public FileHome()
+        InitializeComponent();
+        LoadContent();
+    }
+
+    void LoadContent()
+    {
+        var setting = new FileMgrSetting
         {
-            InitializeComponent();
-            LoadContent();
-        }
+            AllowEdit = async () => await Per.系统预留.文件管理.公共文件增删,
+            OnOpenedFile = LoadHistory,
+        };
+        _tabPub.NaviParams = new PubFileMgr { Setting = setting };
 
-        void LoadContent()
+        setting = new FileMgrSetting
         {
-            var setting = new FileMgrSetting
-            {
-                AllowEdit = async () => await Per.系统预留.文件管理.公共文件增删,
-                OnOpenedFile = LoadHistory,
-            };
-            _tabPub.NaviParams = new PubFileMgr { Setting = setting };
+            AllowEdit = () => Task.FromResult(true),
+            OnOpenedFile = LoadHistory,
+        };
+        _tabMy.NaviParams = new MyFileMgr { Setting = setting };
 
-            setting = new FileMgrSetting
-            {
-                AllowEdit = () => Task.FromResult(true),
-                OnOpenedFile = LoadHistory,
-            };
-            _tabMy.NaviParams = new MyFileMgr { Setting = setting };
+        LoadHistory();
+    }
 
-            LoadHistory();
-        }
-
-        void LoadHistory()
+    void LoadHistory()
+    {
+        Kit.RunAsync(async () =>
         {
-            Kit.RunAsync(async () =>
+            var ls = await AtLob.Each<ReadFileHistoryX>("select info from ReadFileHistory order by LastReadTime desc limit 20");
+            StringBuilder sb = new StringBuilder();
+            foreach (var file in ls)
             {
-                var ls = await AtLob.Each<ReadFileHistoryX>("select info from ReadFileHistory order by LastReadTime desc limit 20");
-                StringBuilder sb = new StringBuilder();
-                foreach (var file in ls)
+                if (!string.IsNullOrEmpty(file.Info))
                 {
-                    if (!string.IsNullOrEmpty(file.Info))
-                    {
-                        if (sb.Length > 0)
-                            sb.Append(",");
-                        sb.Append(file.Info.Substring(1, file.Info.Length - 2));
-                    }
+                    if (sb.Length > 0)
+                        sb.Append(",");
+                    sb.Append(file.Info.Substring(1, file.Info.Length - 2));
                 }
-                if (sb.Length > 0)
-                {
-                    sb.Insert(0, "[");
-                    sb.Append("]");
-                    _fl.Data = sb.ToString();
-                }
-                else
-                {
-                    _fl.Data = null;
-                }
-            });
-        }
-
-        async void OnClearHis(Mi e)
-        {
-            if (_fl.Items.Count() == 0)
-                return;
-
-            if (await Kit.Confirm("确认要清空历史记录吗？"))
+            }
+            if (sb.Length > 0)
             {
-                await AtLob.Exec("delete from ReadFileHistory");
+                sb.Insert(0, "[");
+                sb.Append("]");
+                _fl.Data = sb.ToString();
+            }
+            else
+            {
                 _fl.Data = null;
             }
-        }
+        });
+    }
 
-        async void OnDeleteHis(Mi e)
+    async void OnClearHis(Mi e)
+    {
+        if (_fl.Items.Count() == 0)
+            return;
+
+        if (await Kit.Confirm("确认要清空历史记录吗？"))
         {
-            if (await Kit.Confirm("确认要删除当前历史记录吗？"))
-            {
-                if (await AtLob.Exec("delete from ReadFileHistory where info like @info", new Dict { { "info", $"[[\"{((FileItem)e.DataContext).ID}%" } }) > 0)
-                    LoadHistory();
-            }
+            await AtLob.Exec("delete from ReadFileHistory");
+            _fl.Data = null;
+        }
+    }
+
+    async void OnDeleteHis(Mi e)
+    {
+        if (await Kit.Confirm("确认要删除当前历史记录吗？"))
+        {
+            if (await AtLob.Exec("delete from ReadFileHistory where info like @info", new Dict { { "info", $"[[\"{((FileItem)e.DataContext).ID}%" } }) > 0)
+                LoadHistory();
         }
     }
 }

@@ -13,45 +13,44 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// Frame扩展类
+/// </summary>
+public static class FrameExt
 {
     /// <summary>
-    /// Frame扩展类
+    /// 在Frame页面导航时自动设置可水平滑屏
     /// </summary>
-    public static class FrameExt
+    /// <param name="p_frame"></param>
+    public static void AllowTranslateX(this Frame p_frame)
     {
-        /// <summary>
-        /// 在Frame页面导航时自动设置可水平滑屏
-        /// </summary>
-        /// <param name="p_frame"></param>
-        public static void AllowTranslateX(this Frame p_frame)
-        {
-            if (p_frame != null)
-                p_frame.Navigated += OnFrameNavigated;
-        }
+        if (p_frame != null)
+            p_frame.Navigated += OnFrameNavigated;
+    }
 
-        /// <summary>
-        /// 完成导航时对内容附加事件中设置可水平滑屏
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        static void OnFrameNavigated(object sender, NavigationEventArgs e)
-        {
-            FrameworkElement elem = e.Content as FrameworkElement;
-            if (elem != null)
-                elem.Loaded += OnContentLoaded;
-        }
+    /// <summary>
+    /// 完成导航时对内容附加事件中设置可水平滑屏
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    static void OnFrameNavigated(object sender, NavigationEventArgs e)
+    {
+        FrameworkElement elem = e.Content as FrameworkElement;
+        if (elem != null)
+            elem.Loaded += OnContentLoaded;
+    }
 
-        /// <summary>
-        /// 内容加载时
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        internal static void OnContentLoaded(object sender, RoutedEventArgs e)
-        {
-            var elem = sender as FrameworkElement;
-            elem.Loaded -= OnContentLoaded;
-            Kit.RunAsync(() => elem.AllowTranslateX());
-        }
+    /// <summary>
+    /// 内容加载时
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    internal static void OnContentLoaded(object sender, RoutedEventArgs e)
+    {
+        var elem = sender as FrameworkElement;
+        elem.Loaded -= OnContentLoaded;
+        Kit.RunAsync(() => elem.AllowTranslateX());
     }
 }

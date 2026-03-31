@@ -10,24 +10,23 @@
 using System.Collections.Generic;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 树状数据接口
+/// </summary>
+public interface ITreeData
 {
     /// <summary>
-    /// 树状数据接口
+    /// 获取树根节点数据
     /// </summary>
-    public interface ITreeData
-    {
-        /// <summary>
-        /// 获取树根节点数据
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<object> GetTreeRoot();
+    /// <returns></returns>
+    IEnumerable<object> GetTreeRoot();
 
-        /// <summary>
-        /// 获取指定节点的子节点数据
-        /// </summary>
-        /// <param name="p_parent"></param>
-        /// <returns></returns>
-        IEnumerable<object> GetTreeItemChildren(object p_parent);
-    }
+    /// <summary>
+    /// 获取指定节点的子节点数据
+    /// </summary>
+    /// <param name="p_parent"></param>
+    /// <returns></returns>
+    IEnumerable<object> GetTreeItemChildren(object p_parent);
 }

@@ -14,73 +14,72 @@ using Microsoft.UI.Xaml;
 using System.Diagnostics.CodeAnalysis;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// UI交互代理类
+/// </summary>
+internal static class WinKit
 {
+    static Menu _menu;
+    static Win _currentWin;
+
     /// <summary>
-    /// UI交互代理类
+    /// Phone模式附加标题右键菜单
     /// </summary>
-    internal static class WinKit
+    /// <param name="p_elem">标题元素</param>
+    /// <param name="p_win">所属窗口</param>
+    [UnconditionalSuppressMessage("AOT", "IL3050")]
+    public static void OnPhoneTitleTapped(FrameworkElement p_elem, Win p_win)
     {
-        static Menu _menu;
-        static Win _currentWin;
+        if (p_elem == null || p_win == null)
+            return;
 
-        /// <summary>
-        /// Phone模式附加标题右键菜单
-        /// </summary>
-        /// <param name="p_elem">标题元素</param>
-        /// <param name="p_win">所属窗口</param>
-        [UnconditionalSuppressMessage("AOT", "IL3050")]
-        public static void OnPhoneTitleTapped(FrameworkElement p_elem, Win p_win)
+        p_elem.RightTapped += async (s, e) =>
         {
-            if (p_elem == null || p_win == null)
-                return;
-
-            p_elem.RightTapped += async (s, e) =>
+            if (_menu == null)
             {
-                if (_menu == null)
-                {
-                    _menu = new Menu { IsContextMenu = true, Placement = MenuPosition.BottomLeft };
-                    var item = new Mi { ID = "取消自启动", Icon = Icons.圈停止 };
-                    item.Click += (a) => AutoStartKit.DelAutoStart();
-                    _menu.Items.Add(item);
+                _menu = new Menu { IsContextMenu = true, Placement = MenuPosition.BottomLeft };
+                var item = new Mi { ID = "取消自启动", Icon = Icons.圈停止 };
+                item.Click += (a) => AutoStartKit.DelAutoStart();
+                _menu.Items.Add(item);
 
-                    item = new Mi { ID = "设置自启动", Icon = Icons.圈播放 };
-                    item.Click += SetAutoStart;
-                    _menu.Items.Add(item);
+                item = new Mi { ID = "设置自启动", Icon = Icons.圈播放 };
+                item.Click += SetAutoStart;
+                _menu.Items.Add(item);
 
-                    item = new Mi { ID = "系统", Icon = Icons.设置 };
-                    item.Click += (a) => SysTrace.ShowSysBox();
-                    _menu.Items.Add(item);
-                }
+                item = new Mi { ID = "系统", Icon = Icons.设置 };
+                item.Click += (a) => SysTrace.ShowSysBox();
+                _menu.Items.Add(item);
+            }
 
-                var autoStart = await CookieX.GetAutoStart();
-                if (autoStart != null
-                    && autoStart.WinType == p_win.GetType().AssemblyQualifiedName
-                    && (p_win.Params == null || autoStart.Params == Kit.Serialize(p_win.Params)))
-                {
-                    _menu.Items[0].Visibility = Visibility.Visible;
-                    _menu.Items[1].Visibility = Visibility.Collapsed;
-                }
-                else if (UITree.RootFrame.BackStackDepth > 0)
-                {
-                    _menu.Items[0].Visibility = Visibility.Collapsed;
-                    _menu.Items[1].Visibility = Visibility.Visible;
-                    _currentWin = p_win;
-                }
-                else
-                {
-                    // 主页
-                    _menu.Items[0].Visibility = Visibility.Collapsed;
-                    _menu.Items[1].Visibility = Visibility.Collapsed;
-                }
-                _ = _menu.OpenContextMenu(default, p_elem);
-            };
-        }
+            var autoStart = await CookieX.GetAutoStart();
+            if (autoStart != null
+                && autoStart.WinType == p_win.GetType().AssemblyQualifiedName
+                && (p_win.Params == null || autoStart.Params == Kit.Serialize(p_win.Params)))
+            {
+                _menu.Items[0].Visibility = Visibility.Visible;
+                _menu.Items[1].Visibility = Visibility.Collapsed;
+            }
+            else if (UITree.RootFrame.BackStackDepth > 0)
+            {
+                _menu.Items[0].Visibility = Visibility.Collapsed;
+                _menu.Items[1].Visibility = Visibility.Visible;
+                _currentWin = p_win;
+            }
+            else
+            {
+                // 主页
+                _menu.Items[0].Visibility = Visibility.Collapsed;
+                _menu.Items[1].Visibility = Visibility.Collapsed;
+            }
+            _ = _menu.OpenContextMenu(default, p_elem);
+        };
+    }
 
-        static void SetAutoStart(Mi e)
-        {
-            AutoStartKit.SetAutoStart(_currentWin);
-            _currentWin = null;
-        }
+    static void SetAutoStart(Mi e)
+    {
+        AutoStartKit.SetAutoStart(_currentWin);
+        _currentWin = null;
     }
 }

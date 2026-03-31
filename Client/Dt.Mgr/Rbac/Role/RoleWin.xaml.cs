@@ -11,39 +11,38 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Rbac
+namespace Dt.Mgr.Rbac;
+
+[View(LobViews.系统角色)]
+public partial class RoleWin : Win
 {
-    [View(LobViews.系统角色)]
-    public partial class RoleWin : Win
+    readonly RoleForm _mainForm;
+    
+    public RoleWin()
     {
-        readonly RoleForm _mainForm;
-        
-        public RoleWin()
+        InitializeComponent();
+        _mainForm = new RoleForm { OwnWin = this };
+        Attach();
+    }
+
+    void Attach()
+    {
+        _query.Search += e =>
         {
-            InitializeComponent();
-            _mainForm = new RoleForm { OwnWin = this };
-            Attach();
-        }
+            _mainList.Query(new QueryClause(e));
+            NaviTo(_mainList.Title);
+        };
 
-        void Attach()
+        _mainList.Msg += e => _ = _mainForm.Query(e);
+        _mainList.Navi += () => NaviTo(_userList.Title + "," + _menuList.Title + "," + _permissionList.Title + "," + _groupList.Title);
+
+        _mainForm.UpdateList += e => _ = _mainList.Refresh(e.ID);
+        _mainForm.UpdateRelated += e =>
         {
-            _query.Search += e =>
-            {
-                _mainList.Query(new QueryClause(e));
-                NaviTo(_mainList.Title);
-            };
-
-            _mainList.Msg += e => _ = _mainForm.Query(e);
-            _mainList.Navi += () => NaviTo(_userList.Title + "," + _menuList.Title + "," + _permissionList.Title + "," + _groupList.Title);
-
-            _mainForm.UpdateList += e => _ = _mainList.Refresh(e.ID);
-            _mainForm.UpdateRelated += e =>
-            {
-                _userList.Query(e.ID);
-                _menuList.Query(e.ID);
-                _permissionList.Query(e.ID);
-                _groupList.Query(e.ID);
-            };
-        }
+            _userList.Query(e.ID);
+            _menuList.Query(e.ID);
+            _permissionList.Query(e.ID);
+            _groupList.Query(e.ID);
+        };
     }
 }

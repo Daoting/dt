@@ -11,23 +11,22 @@ using System;
 using Microsoft.UI.Xaml.Data;
 #endregion
 
-namespace Dt.Base.ListView
-{
-    /// <summary>
-    /// IsSelected -> 背景
-    /// </summary>
-    partial class HeaderBackgroundConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            if (value != null && value is bool b)
-                return b ? Res.中黄 : Res.浅灰1;
-            return Res.浅灰1;
-        }
+namespace Dt.Base.ListView;
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
-        }
+/// <summary>
+/// IsSelected -> 背景
+/// </summary>
+partial class HeaderBackgroundConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        if (value != null && value is bool b)
+            return b ? Res.中黄 : Res.浅灰1;
+        return Res.浅灰1;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
     }
 }

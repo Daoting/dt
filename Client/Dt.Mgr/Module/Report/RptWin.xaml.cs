@@ -11,41 +11,40 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Module
+namespace Dt.Mgr.Module;
+
+[View(LobViews.报表设计)]
+public partial class RptWin : Win
 {
-    [View(LobViews.报表设计)]
-    public partial class RptWin : Win
+    readonly RptForm _form;
+
+    public RptWin()
     {
-        readonly RptForm _form;
+        InitializeComponent();
+        _form = new RptForm { OwnWin = this };
+        Attach();
+    }
 
-        public RptWin()
+    void Attach()
+    {
+        _query.Search += e =>
         {
-            InitializeComponent();
-            _form = new RptForm { OwnWin = this };
-            Attach();
-        }
+            _list.Query(new QueryClause(e));
+            NaviTo(_list.Title);
+        };
 
-        void Attach()
+        _list.Msg += async e =>
         {
-            _query.Search += e =>
+            if (e.Event == LvEventType.DbClick)
             {
-                _list.Query(new QueryClause(e));
-                NaviTo(_list.Title);
-            };
-
-            _list.Msg += async e =>
+                await Rpt.ShowDesign(new AppRptDesignInfo(e.Data as RptX));
+            }
+            else
             {
-                if (e.Event == LvEventType.DbClick)
-                {
-                    await Rpt.ShowDesign(new AppRptDesignInfo(e.Data as RptX));
-                }
-                else
-                {
-                    await _form.Query(e);
-                }
-            };
+                await _form.Query(e);
+            }
+        };
 
-            _form.UpdateList += e => _ = _list.Refresh(e.ID);
-        }
+        _form.UpdateList += e => _ = _list.Refresh(e.ID);
     }
 }

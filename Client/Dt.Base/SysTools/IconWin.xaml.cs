@@ -17,56 +17,55 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Base.Tools
+namespace Dt.Base.Tools;
+
+public sealed partial class IconWin : Win
 {
-    public sealed partial class IconWin : Win
+    public IconWin()
     {
-        public IconWin()
-        {
-            InitializeComponent();
-            _lv.Data = IconItem.GetAllIcons();
-            _lv.Filter = OnFilter;
-        }
-
-        void OnSearch(string e)
-        {
-            _lv.Refresh();
-        }
-
-        bool OnFilter(object p_obj)
-        {
-            return ((IconItem)p_obj).IsMatched(_sb.Text);
-        }
-
-        void OnCopyIcons(Mi e)
-        {
-            ToClipboard($"Icons.{((IconItem)e.Data).Name}");
-        }
-
-        void OnCopyName(Mi e)
-        {
-            ToClipboard(((IconItem)e.Data).Name);
-        }
-
-        void OnCopyButton(Mi e)
-        {
-            var icon = (IconItem)e.Data;
-            ToClipboard($"<Button Content=\"&#x{icon.Hex};\" Style=\"{{StaticResource 字符按钮}}\" />");
-        }
-
-        void OnCopyBlock(Mi e)
-        {
-            var icon = (IconItem)e.Data;
-            ToClipboard($"<TextBlock Text=\"&#x{icon.Hex};\" FontFamily=\"{{StaticResource IconFont}}\" />");
-        }
-
-        void ToClipboard(string p_content)
-        {
-            DataPackage data = new DataPackage();
-            data.SetText(p_content);
-            Clipboard.SetContent(data);
-            Kit.Msg(string.Format("已复制到剪贴板：\r\n{0}", p_content));
-        }
-
+        InitializeComponent();
+        _lv.Data = IconItem.GetAllIcons();
+        _lv.Filter = OnFilter;
     }
+
+    void OnSearch(string e)
+    {
+        _lv.Refresh();
+    }
+
+    bool OnFilter(object p_obj)
+    {
+        return ((IconItem)p_obj).IsMatched(_sb.Text);
+    }
+
+    void OnCopyIcons(Mi e)
+    {
+        ToClipboard($"Icons.{((IconItem)e.Data).Name}");
+    }
+
+    void OnCopyName(Mi e)
+    {
+        ToClipboard(((IconItem)e.Data).Name);
+    }
+
+    void OnCopyButton(Mi e)
+    {
+        var icon = (IconItem)e.Data;
+        ToClipboard($"<Button Content=\"&#x{icon.Hex};\" Style=\"{{StaticResource 字符按钮}}\" />");
+    }
+
+    void OnCopyBlock(Mi e)
+    {
+        var icon = (IconItem)e.Data;
+        ToClipboard($"<TextBlock Text=\"&#x{icon.Hex};\" FontFamily=\"{{StaticResource IconFont}}\" />");
+    }
+
+    void ToClipboard(string p_content)
+    {
+        DataPackage data = new DataPackage();
+        data.SetText(p_content);
+        Clipboard.SetContent(data);
+        Kit.Msg(string.Format("已复制到剪贴板：\r\n{0}", p_content));
+    }
+
 }

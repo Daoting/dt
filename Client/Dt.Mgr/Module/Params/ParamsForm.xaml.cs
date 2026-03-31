@@ -11,24 +11,23 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Module
+namespace Dt.Mgr.Module;
+
+public sealed partial class ParamsForm : Form
 {
-    public sealed partial class ParamsForm : Form
+    public ParamsForm()
     {
-        public ParamsForm()
-        {
-            InitializeComponent();
-            Menu = CreateMenu();
-        }
+        InitializeComponent();
+        Menu = CreateMenu();
+    }
 
-        protected override async Task OnAdd()
-        {
-            _fv.Data = await ParamsX.New();
-        }
+    protected override async Task OnAdd()
+    {
+        _fv.Data = await ParamsX.New();
+    }
 
-        protected override async Task OnGet()
-        {
-            _fv.Data = await ParamsX.GetByID(_args.ID);
-        }
+    protected override async Task OnGet()
+    {
+        _fv.Data = await ParamsX.GetByID(_args.ID);
     }
 }

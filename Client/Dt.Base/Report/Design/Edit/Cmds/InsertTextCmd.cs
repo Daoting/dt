@@ -11,28 +11,27 @@ using Dt.Cells.Data;
 
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+/// <summary>
+/// 添加文本
+/// </summary>
+internal class InsertTextCmd : InsertCmdBase
 {
-    /// <summary>
-    /// 添加文本
-    /// </summary>
-    internal class InsertTextCmd : InsertCmdBase
+    public override object Execute(object p_args)
     {
-        public override object Execute(object p_args)
-        {
-            InsertCmdArgs args = (InsertCmdArgs)p_args;
-            RptText txt = args.RptItem as RptText;
-            CellRange range = args.CellRange;
-            txt.Row = range.Row;
-            txt.Col = range.Column;
-            txt.RowSpan = range.RowCount;
-            txt.ColSpan = range.ColumnCount;
-            txt.LeftStyle = BorderLineStyle.None;
-            txt.TopStyle = BorderLineStyle.None;
-            txt.RightStyle = BorderLineStyle.None;
-            txt.BottomStyle = BorderLineStyle.None;
-            txt.Part.Items.Add(txt);
-            return txt;
-        }
+        InsertCmdArgs args = (InsertCmdArgs)p_args;
+        RptText txt = args.RptItem as RptText;
+        CellRange range = args.CellRange;
+        txt.Row = range.Row;
+        txt.Col = range.Column;
+        txt.RowSpan = range.RowCount;
+        txt.ColSpan = range.ColumnCount;
+        txt.LeftStyle = BorderLineStyle.None;
+        txt.TopStyle = BorderLineStyle.None;
+        txt.RightStyle = BorderLineStyle.None;
+        txt.BottomStyle = BorderLineStyle.None;
+        txt.Part.Items.Add(txt);
+        return txt;
     }
 }

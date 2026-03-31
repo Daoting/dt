@@ -11,43 +11,42 @@ using Dt.Base;
 using System;
 #endregion
 
-namespace Dt.Mgr.Module
+namespace Dt.Mgr.Module;
+
+/// <summary>
+/// 选择移动到的目标文件夹
+/// </summary>
+public sealed partial class MoveFilePage : Tab
 {
-    /// <summary>
-    /// 选择移动到的目标文件夹
-    /// </summary>
-    public sealed partial class MoveFilePage : Tab
+    readonly IFileMgr _fileMgr;
+    readonly MoveFileDlg _owner;
+
+    public MoveFilePage(IFileMgr p_fileMgr, MoveFileDlg p_owner)
     {
-        readonly IFileMgr _fileMgr;
-        readonly MoveFileDlg _owner;
+        InitializeComponent();
+        _fileMgr = p_fileMgr;
+        _owner = p_owner;
+        LoadData();
+        Title = _fileMgr.FolderName;
+    }
 
-        public MoveFilePage(IFileMgr p_fileMgr, MoveFileDlg p_owner)
-        {
-            InitializeComponent();
-            _fileMgr = p_fileMgr;
-            _owner = p_owner;
-            LoadData();
-            Title = _fileMgr.FolderName;
-        }
+    async void LoadData()
+    {
+        var tbl = await _fileMgr.GetChildFolders();
+        _owner.RemoveSelection(tbl, _fileMgr);
+        _lv.Data = tbl;
+    }
 
-        async void LoadData()
-        {
-            var tbl = await _fileMgr.GetChildFolders();
-            _owner.RemoveSelection(tbl, _fileMgr);
-            _lv.Data = tbl;
-        }
+    void OnItemClick(ItemClickArgs e)
+    {
+        var mgr = (IFileMgr)Activator.CreateInstance(_fileMgr.GetType());
+        mgr.FolderID = e.Row.ID;
+        mgr.FolderName = e.Row.Str("name");
+        Forward(new MoveFilePage(mgr, _owner));
+    }
 
-        void OnItemClick(ItemClickArgs e)
-        {
-            var mgr = (IFileMgr)Activator.CreateInstance(_fileMgr.GetType());
-            mgr.FolderID = e.Row.ID;
-            mgr.FolderName = e.Row.Str("name");
-            Forward(new MoveFilePage(mgr, _owner));
-        }
-
-        void OnSelect(Mi e)
-        {
-            _owner.MoveTo(_fileMgr);
-        }
+    void OnSelect(Mi e)
+    {
+        _owner.MoveTo(_fileMgr);
     }
 }

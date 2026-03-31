@@ -14,57 +14,56 @@ using ScottPlot.Hatches;
 using ScottPlot.Plottables;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class Chart2Vector : Win
 {
-    public partial class Chart2Vector : Win
+    public Chart2Vector()
     {
-        public Chart2Vector()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        void OnDef(object sender, RoutedEventArgs e)
+    void OnDef(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
+            double[] xs = Generate.Consecutive(10);
+            double[] ys = Generate.Consecutive(10);
+
+            // create a collection of vectors
+            List<RootedCoordinateVector> vectors = new();
+            for (int i = 0; i < xs.Length; i++)
             {
-                double[] xs = Generate.Consecutive(10);
-                double[] ys = Generate.Consecutive(10);
-
-                // create a collection of vectors
-                List<RootedCoordinateVector> vectors = new();
-                for (int i = 0; i < xs.Length; i++)
+                for (int j = 0; j < ys.Length; j++)
                 {
-                    for (int j = 0; j < ys.Length; j++)
-                    {
-                        // point on the grid
-                        Coordinates pt = new(xs[i], ys[j]);
+                    // point on the grid
+                    Coordinates pt = new(xs[i], ys[j]);
 
-                        // direction & magnitude
-                        float dX = (float)ys[j];
-                        float dY = -9.81f / 0.5f * (float)Math.Sin(xs[i]);
-                        System.Numerics.Vector2 v = new(dX, dY);
+                    // direction & magnitude
+                    float dX = (float)ys[j];
+                    float dY = -9.81f / 0.5f * (float)Math.Sin(xs[i]);
+                    System.Numerics.Vector2 v = new(dX, dY);
 
-                        // add to the collection
-                        RootedCoordinateVector vector = new(pt, v);
-                        vectors.Add(vector);
-                    }
+                    // add to the collection
+                    RootedCoordinateVector vector = new(pt, v);
+                    vectors.Add(vector);
                 }
-
-                // plot the collection of rooted vectors as a vector field
-                _c.Add.VectorField(vectors);
             }
+
+            // plot the collection of rooted vectors as a vector field
+            _c.Add.VectorField(vectors);
         }
+    }
 
-        void OnColor(object sender, RoutedEventArgs e)
+    void OnColor(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                RootedCoordinateVector[] vectors = Generate.SampleVectors();
-                var vf = _c.Add.VectorField(vectors);
-                vf.Colormap = new ScottPlot.Colormaps.Turbo();
-            }
+            RootedCoordinateVector[] vectors = Generate.SampleVectors();
+            var vf = _c.Add.VectorField(vectors);
+            vf.Colormap = new ScottPlot.Colormaps.Turbo();
         }
     }
 }

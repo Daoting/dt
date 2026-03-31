@@ -11,15 +11,14 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
-{
-    public partial class RptTemplateEditor : Win
-    {
-        public RptTemplateEditor()
-        {
-            InitializeComponent();
-            _btns.Init(2, "报表模板编辑列表");
-        }
+namespace Demo.UI;
 
+public partial class RptTemplateEditor : Win
+{
+    public RptTemplateEditor()
+    {
+        InitializeComponent();
+        _btns.Init(2, "报表模板编辑列表");
     }
+
 }

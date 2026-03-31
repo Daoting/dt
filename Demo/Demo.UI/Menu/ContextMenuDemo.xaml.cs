@@ -17,13 +17,12 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class ContextMenuDemo : Win
 {
-    public partial class ContextMenuDemo : Win
+    public ContextMenuDemo()
     {
-        public ContextMenuDemo()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

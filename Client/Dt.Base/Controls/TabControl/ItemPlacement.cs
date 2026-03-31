@@ -10,37 +10,36 @@
 
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 一个控件相对另一控件的摆放位置
+/// </summary>
+public enum ItemPlacement
 {
     /// <summary>
-    /// 一个控件相对另一控件的摆放位置
+    /// 左侧
     /// </summary>
-    public enum ItemPlacement
-    {
-        /// <summary>
-        /// 左侧
-        /// </summary>
-        Left = 0,
-        
-        /// <summary>
-        /// 顶部
-        /// </summary>
-        Top = 1,
+    Left = 0,
+    
+    /// <summary>
+    /// 顶部
+    /// </summary>
+    Top = 1,
 
-        /// <summary>
-        /// 右侧
-        /// </summary>
-        Right = 2,
-        
-        /// <summary>
-        /// 底部
-        /// </summary>
-        Bottom = 3,
+    /// <summary>
+    /// 右侧
+    /// </summary>
+    Right = 2,
+    
+    /// <summary>
+    /// 底部
+    /// </summary>
+    Bottom = 3,
 
-        /// <summary>
-        /// 在左上角显示为Tab列表，用在Tabs中，TabControl暂不可见
-        /// </summary>
-        TopLeft = 4
-    }
+    /// <summary>
+    /// 在左上角显示为Tab列表，用在Tabs中，TabControl暂不可见
+    /// </summary>
+    TopLeft = 4
 }
 

@@ -10,27 +10,26 @@
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 可承载在PhonePage页面中的内容需要实现的接口
+/// </summary>
+public interface IPhonePage
 {
     /// <summary>
-    /// 可承载在PhonePage页面中的内容需要实现的接口
+    /// 正在加载到PhonePage
     /// </summary>
-    public interface IPhonePage
-    {
-        /// <summary>
-        /// 正在加载到PhonePage
-        /// </summary>
-        void OnOpening();
-        
-        /// <summary>
-        /// 关闭或后退之前，返回false表示禁止关闭
-        /// </summary>
-        /// <returns>true 表允许关闭</returns>
-        Task<bool> OnClosing();
+    void OnOpening();
+    
+    /// <summary>
+    /// 关闭或后退之前，返回false表示禁止关闭
+    /// </summary>
+    /// <returns>true 表允许关闭</returns>
+    Task<bool> OnClosing();
 
-        /// <summary>
-        /// 关闭或后退之后
-        /// </summary>
-        void OnClosed();
-    }
+    /// <summary>
+    /// 关闭或后退之后
+    /// </summary>
+    void OnClosed();
 }

@@ -9,17 +9,16 @@
 #region 引用命名
 #endregion
 
-namespace Demo
+namespace Demo;
+
+class ReceiveShare : IReceiveShare
 {
-    class ReceiveShare : IReceiveShare
+    /// <summary>
+    /// 接收分享内容
+    /// </summary>
+    /// <param name="p_info">分享内容描述</param>
+    public void OnReceive(ShareInfo p_info)
     {
-        /// <summary>
-        /// 接收分享内容
-        /// </summary>
-        /// <param name="p_info">分享内容描述</param>
-        public void OnReceive(ShareInfo p_info)
-        {
-            Kit.OpenWin(Type.GetType("Demo.UI.ReceiveShareWin,Demo.UI"), "接收分享", Icons.分享, p_info);
-        }
+        Kit.OpenWin(Type.GetType("Demo.UI.ReceiveShareWin,Demo.UI"), "接收分享", Icons.分享, p_info);
     }
 }

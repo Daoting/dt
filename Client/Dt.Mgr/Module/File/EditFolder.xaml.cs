@@ -12,60 +12,59 @@ using Dt.Core;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Mgr.Module
+namespace Dt.Mgr.Module;
+
+public sealed partial class EditFolder : Tab
 {
-    public sealed partial class EditFolder : Tab
+    IFileMgr _fileMgr;
+
+    public EditFolder(IFileMgr p_fileMgr)
     {
-        IFileMgr _fileMgr;
+        InitializeComponent();
+        _fileMgr = p_fileMgr;
+    }
 
-        public EditFolder(IFileMgr p_fileMgr)
+    protected override void OnFirstLoaded()
+    {
+        Row row = CreateData();
+        if (NaviParams is Row r)
         {
-            InitializeComponent();
-            _fileMgr = p_fileMgr;
+            row.InitVal(0, r.ID);
+            row.InitVal(1, r["name"]);
         }
+        _fv.Data = row;
+    }
 
-        protected override void OnFirstLoaded()
+    protected override Task<bool> OnClosing()
+    {
+        if (_fv.Row.IsChanged)
+            return Kit.Confirm("数据未保存，要放弃修改吗？");
+        return Task.FromResult(true);
+    }
+
+    Row CreateData()
+    {
+        Row row = new Row();
+        row.Add<long>("id", -1);
+        row.Add("name", "新目录");
+        return row;
+    }
+
+    async void OnSave(Mi e)
+    {
+        if (_fv.ExistNull("name"))
+            return;
+
+        Row row = _fv.Row;
+        if (await _fileMgr.SaveFolder(row.ID, row.Str("name")))
         {
-            Row row = CreateData();
-            if (NaviParams is Row r)
-            {
-                row.InitVal(0, r.ID);
-                row.InitVal(1, r["name"]);
-            }
-            _fv.Data = row;
+            row.AcceptChanges();
+            Result = true;
         }
+    }
 
-        protected override Task<bool> OnClosing()
-        {
-            if (_fv.Row.IsChanged)
-                return Kit.Confirm("数据未保存，要放弃修改吗？");
-            return Task.FromResult(true);
-        }
-
-        Row CreateData()
-        {
-            Row row = new Row();
-            row.Add<long>("id", -1);
-            row.Add("name", "新目录");
-            return row;
-        }
-
-        async void OnSave(Mi e)
-        {
-            if (_fv.ExistNull("name"))
-                return;
-
-            Row row = _fv.Row;
-            if (await _fileMgr.SaveFolder(row.ID, row.Str("name")))
-            {
-                row.AcceptChanges();
-                Result = true;
-            }
-        }
-
-        void OnAdd(Mi e)
-        {
-            _fv.Data = CreateData();
-        }
+    void OnAdd(Mi e)
+    {
+        _fv.Data = CreateData();
     }
 }

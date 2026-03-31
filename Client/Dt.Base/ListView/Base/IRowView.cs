@@ -10,18 +10,17 @@
 using Microsoft.UI.Xaml;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 动态创建行视图接口
+/// </summary>
+public interface IRowView
 {
     /// <summary>
-    /// 动态创建行视图接口
+    /// 动态创建行视图内容
     /// </summary>
-    public interface IRowView
-    {
-        /// <summary>
-        /// 动态创建行视图内容
-        /// </summary>
-        /// <param name="p_item">行</param>
-        /// <returns>返回行UI</returns>
-        UIElement Create(LvItem p_item);
-    }
+    /// <param name="p_item">行</param>
+    /// <returns>返回行UI</returns>
+    UIElement Create(LvItem p_item);
 }

@@ -12,16 +12,15 @@ using System.Linq;
 using System.Threading.Tasks;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class OmReportX
 {
-    public partial class OmReportX
+    public static async Task<OmReportX> New(string Name, string Define)
     {
-        public static async Task<OmReportX> New(string Name, string Define)
-        {
-            return new OmReportX(
-                ID: await NewID(),
-                Name: Name,
-                Define: Define);
-        }
+        return new OmReportX(
+            ID: await NewID(),
+            Name: Name,
+            Define: Define);
     }
 }

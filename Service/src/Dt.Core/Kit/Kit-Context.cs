@@ -10,49 +10,48 @@
 using Serilog;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 当前整个http请求期间的上下文
+/// </summary>
+public partial class Kit
 {
+    internal const string ContextItemName = "bag";
+
     /// <summary>
-    /// 当前整个http请求期间的上下文
+    /// 获取当前http请求上下文的用户标识，UI客户端rpc为实际登录用户ID
+    /// <para>特殊标识：110为admin页面，111为RabbitMQ rpc，112为本地调用，113无http请求上下文</para>
     /// </summary>
-    public partial class Kit
+    public static long ContextUserID
     {
-        internal const string ContextItemName = "bag";
-
-        /// <summary>
-        /// 获取当前http请求上下文的用户标识，UI客户端rpc为实际登录用户ID
-        /// <para>特殊标识：110为admin页面，111为RabbitMQ rpc，112为本地调用，113无http请求上下文</para>
-        /// </summary>
-        public static long ContextUserID
+        get
         {
-            get
+            if (HttpContext != null && HttpContext.Items.TryGetValue(ContextItemName, out var obj))
             {
-                if (HttpContext != null && HttpContext.Items.TryGetValue(ContextItemName, out var obj))
-                {
-                    return ((Bag) obj).UserID;
-                }
-                return 113;
+                return ((Bag) obj).UserID;
             }
+            return 113;
         }
-
-        /// <summary>
-        /// 获取当前http请求上下文的日志对象，日志中比静态Log类多出Api名称和当前UserID，无http请求上下文时返回全局对象
-        /// </summary>
-        public static ILogger ContextLog
-        {
-            get
-            {
-                if (HttpContext != null && HttpContext.Items.TryGetValue(ContextItemName, out var obj))
-                {
-                    return ((Bag)obj).Log;
-                }
-                return Log.Logger;
-            }
-        }
-
-        /// <summary>
-        /// 当前http请求是否为匿名用户
-        /// </summary>
-        public static bool ContextIsAnonymous => ContextUserID == -1;
     }
+
+    /// <summary>
+    /// 获取当前http请求上下文的日志对象，日志中比静态Log类多出Api名称和当前UserID，无http请求上下文时返回全局对象
+    /// </summary>
+    public static ILogger ContextLog
+    {
+        get
+        {
+            if (HttpContext != null && HttpContext.Items.TryGetValue(ContextItemName, out var obj))
+            {
+                return ((Bag)obj).Log;
+            }
+            return Log.Logger;
+        }
+    }
+
+    /// <summary>
+    /// 当前http请求是否为匿名用户
+    /// </summary>
+    public static bool ContextIsAnonymous => ContextUserID == -1;
 }

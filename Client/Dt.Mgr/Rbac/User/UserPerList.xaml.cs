@@ -12,25 +12,24 @@ using Dt.Core;
 using System.Collections.Generic;
 #endregion
 
-namespace Dt.Mgr.Rbac
+namespace Dt.Mgr.Rbac;
+
+public sealed partial class UserPerList : List
 {
-    public sealed partial class UserPerList : List
+    public UserPerList()
     {
-        public UserPerList()
+        InitializeComponent();
+    }
+    
+    protected override async Task OnQuery()
+    {
+        if (_parentID > 0)
         {
-            InitializeComponent();
+            _lv.Data = await PermissionX.GetUserPersAndModule(_parentID.Value);
         }
-        
-        protected override async Task OnQuery()
+        else
         {
-            if (_parentID > 0)
-            {
-                _lv.Data = await PermissionX.GetUserPersAndModule(_parentID.Value);
-            }
-            else
-            {
-                _lv.Data = null;
-            }
+            _lv.Data = null;
         }
     }
 }

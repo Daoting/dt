@@ -9,27 +9,26 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 双工流
+/// </summary>
+public class DuplexStream
 {
-    /// <summary>
-    /// 双工流
-    /// </summary>
-    public class DuplexStream
+    internal DuplexStream(RequestWriter p_requestWriter, ResponseReader p_responseReader)
     {
-        internal DuplexStream(RequestWriter p_requestWriter, ResponseReader p_responseReader)
-        {
-            RequestWriter = p_requestWriter;
-            ResponseReader = p_responseReader;
-        }
-
-        /// <summary>
-        /// 向服务器的写入流
-        /// </summary>
-        public RequestWriter RequestWriter { get; }
-
-        /// <summary>
-        /// 读取服务器的返回流
-        /// </summary>
-        public ResponseReader ResponseReader { get; }
+        RequestWriter = p_requestWriter;
+        ResponseReader = p_responseReader;
     }
+
+    /// <summary>
+    /// 向服务器的写入流
+    /// </summary>
+    public RequestWriter RequestWriter { get; }
+
+    /// <summary>
+    /// 读取服务器的返回流
+    /// </summary>
+    public ResponseReader ResponseReader { get; }
 }

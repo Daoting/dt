@@ -10,14 +10,13 @@
 using System;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 事件处理类型标签
+/// </summary>
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+public class EventHandlerAttribute : TypeListAliasAttribute
 {
-    /// <summary>
-    /// 事件处理类型标签
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class EventHandlerAttribute : TypeListAliasAttribute
-    {
-        public EventHandlerAttribute() { }
-    }
+    public EventHandlerAttribute() { }
 }

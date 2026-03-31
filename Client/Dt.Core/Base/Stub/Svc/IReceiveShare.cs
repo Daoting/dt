@@ -10,17 +10,16 @@
 
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 接收分享内容接口
+/// </summary>
+public interface IReceiveShare
 {
     /// <summary>
-    /// 接收分享内容接口
+    /// 接收分享内容
     /// </summary>
-    public interface IReceiveShare
-    {
-        /// <summary>
-        /// 接收分享内容
-        /// </summary>
-        /// <param name="p_info">分享内容描述</param>
-        void OnReceive(ShareInfo p_info);
-    }
+    /// <param name="p_info">分享内容描述</param>
+    void OnReceive(ShareInfo p_info);
 }

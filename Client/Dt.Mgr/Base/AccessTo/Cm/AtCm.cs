@@ -9,16 +9,15 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Mgr
+namespace Dt.Mgr;
+
+/// <summary>
+/// cm服务的数据访问
+/// </summary>
+public partial class AtCm : AccessAgent<AtCm.Info>
 {
-    /// <summary>
-    /// cm服务的数据访问
-    /// </summary>
-    public partial class AtCm : AccessAgent<AtCm.Info>
+    public class Info : AgentInfo
     {
-        public class Info : AgentInfo
-        {
-            public override string Name => "cm";
-        }
+        public override string Name => "cm";
     }
 }

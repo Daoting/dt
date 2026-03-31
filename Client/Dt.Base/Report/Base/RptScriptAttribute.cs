@@ -10,16 +10,15 @@
 
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 报表脚本的类型标签
+/// </summary>
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+public class RptScriptAttribute : TypeAliasAttribute
 {
-    /// <summary>
-    /// 报表脚本的类型标签
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class RptScriptAttribute : TypeAliasAttribute
+    public RptScriptAttribute()
     {
-        public RptScriptAttribute()
-        {
-        }
     }
 }

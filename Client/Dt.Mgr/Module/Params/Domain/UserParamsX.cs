@@ -9,28 +9,27 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Mgr.Module
+namespace Dt.Mgr.Module;
+
+public partial class UserParamsX
 {
-    public partial class UserParamsX
+    protected override void InitHook()
     {
-        protected override void InitHook()
-        {
-            //OnSaving(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnSaving(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnDeleting(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnDeleting(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnChanging<string>(nameof(Name), v =>
-            //{
-                
-            //});
-        }
+        //OnChanging<string>(nameof(Name), v =>
+        //{
+            
+        //});
     }
 }

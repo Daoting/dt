@@ -15,13 +15,12 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public sealed partial class Dlg2 : Dlg
 {
-    public sealed partial class Dlg2 : Dlg
+    public Dlg2()
     {
-        public Dlg2()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

@@ -15,21 +15,20 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Mgr
-{
-    /// <summary>
-    /// 发送前事件参数
-    /// </summary>
-    public class WfSendingArgs : AsyncArgs
-    {
-        public WfSendingArgs(AtvRecvs p_recvs)
-        {
-            Recvs = p_recvs;
-        }
+namespace Dt.Mgr;
 
-        /// <summary>
-        /// 获取后续活动相关内容
-        /// </summary>
-        public AtvRecvs Recvs { get; }
+/// <summary>
+/// 发送前事件参数
+/// </summary>
+public class WfSendingArgs : AsyncArgs
+{
+    public WfSendingArgs(AtvRecvs p_recvs)
+    {
+        Recvs = p_recvs;
     }
+
+    /// <summary>
+    /// 获取后续活动相关内容
+    /// </summary>
+    public AtvRecvs Recvs { get; }
 }

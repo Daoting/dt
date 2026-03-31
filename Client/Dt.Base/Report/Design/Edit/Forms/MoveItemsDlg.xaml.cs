@@ -9,29 +9,28 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+public partial class MoveItemsDlg : Dlg
 {
-    public partial class MoveItemsDlg : Dlg
+    public MoveItemsDlg()
     {
-        public MoveItemsDlg()
+        InitializeComponent();
+
+        if (!Kit.IsPhoneUI)
         {
-            InitializeComponent();
-
-            if (!Kit.IsPhoneUI)
-            {
-                Width = 300;
-                Height = 200;
-            }
-            _fv.Data = new Row { { "x", 0 }, { "y", 0 } };
+            Width = 300;
+            Height = 200;
         }
+        _fv.Data = new Row { { "x", 0 }, { "y", 0 } };
+    }
 
-        public int DeltaX => _fv.Row.Int("x");
+    public int DeltaX => _fv.Row.Int("x");
 
-        public int DeltaY => _fv.Row.Int("y");
-        
-        void OnOk()
-        {
-            Close(true);
-        }
+    public int DeltaY => _fv.Row.Int("y");
+    
+    void OnOk()
+    {
+        Close(true);
     }
 }

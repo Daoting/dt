@@ -11,130 +11,129 @@ using Dt.Base;
 using Microsoft.UI.Text;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+[FvCall]
+public class TenTimesMid : IFvCall
 {
-    [FvCall]
-    public class TenTimesMid : IFvCall
+    public object Get(Mid m)
     {
-        public object Get(Mid m)
-        {
-            return m.Int / 100;
-        }
+        return m.Int / 100;
+    }
 
-        public object Set(Mid m)
+    public object Set(Mid m)
+    {
+        return m.Int * 100;
+    }
+}
+
+[FvCall]
+public class StyleMid : IFvCall
+{
+    public object Get(Mid m)
+    {
+        ApplyStyle(m);
+        return m.Val;
+    }
+
+    public object Set(Mid m)
+    {
+        ApplyStyle(m);
+        return m.Val;
+    }
+
+    void ApplyStyle(Mid m)
+    {
+        int n = m.Int;
+        if (n < 10)
         {
-            return m.Int * 100;
+            m.Warn("不可小于10");
+            m.Foreground = Res.RedBrush;
+            m.FontWeight = FontWeights.Bold;
+        }
+        else if (n < 50)
+        {
+            m.Msg("偏小");
+            m.Foreground = Res.GreenBrush;
+            m.FontWeight = FontWeights.Normal;
+        }
+        else
+        {
+            m.Msg("偏大");
+            m.Foreground = Res.亮蓝;
+            m.FontWeight = FontWeights.Bold;
+        }
+    }
+}
+
+[FvCall]
+public class PrefixMid : IFvCall
+{
+    public object Get(Mid m)
+    {
+        return $"第{m.Str}号";
+    }
+
+    public object Set(Mid m)
+    {
+        return m.Str.TrimStart('第').TrimEnd('号');
+    }
+}
+
+[FvCall]
+public class MergeMid : IFvCall
+{
+    public object Get(Mid m)
+    {
+        return $"{m.Str} - {m.GetVal<string>("merge1")} - {m.GetVal<string>("merge2")}";
+    }
+
+    public object Set(Mid m)
+    {
+        var strs = m.Str.Split('-');
+        if (strs.Length > 2)
+        {
+            m["merge1"] = strs[1].Trim();
+            m["merge2"] = strs[2].Trim();
+        }
+        else if (strs.Length > 1)
+        {
+            m["merge1"] = strs[1].Trim();
+        }
+        return strs[0].Trim();
+    }
+}
+
+[FvCall]
+public class ReplaceMid : IFvCall
+{
+    public object Get(Mid m)
+    {
+        switch (m.Str)
+        {
+            case "a":
+                return "1";
+
+            case "b":
+                return "2";
+
+            default:
+                return "3";
         }
     }
 
-    [FvCall]
-    public class StyleMid : IFvCall
+    public object Set(Mid m)
     {
-        public object Get(Mid m)
+        switch (m.Str)
         {
-            ApplyStyle(m);
-            return m.Val;
-        }
+            case "1":
+                return "a";
 
-        public object Set(Mid m)
-        {
-            ApplyStyle(m);
-            return m.Val;
-        }
+            case "2":
+                return "b";
 
-        void ApplyStyle(Mid m)
-        {
-            int n = m.Int;
-            if (n < 10)
-            {
-                m.Warn("不可小于10");
-                m.Foreground = Res.RedBrush;
-                m.FontWeight = FontWeights.Bold;
-            }
-            else if (n < 50)
-            {
-                m.Msg("偏小");
-                m.Foreground = Res.GreenBrush;
-                m.FontWeight = FontWeights.Normal;
-            }
-            else
-            {
-                m.Msg("偏大");
-                m.Foreground = Res.亮蓝;
-                m.FontWeight = FontWeights.Bold;
-            }
-        }
-    }
-
-    [FvCall]
-    public class PrefixMid : IFvCall
-    {
-        public object Get(Mid m)
-        {
-            return $"第{m.Str}号";
-        }
-
-        public object Set(Mid m)
-        {
-            return m.Str.TrimStart('第').TrimEnd('号');
-        }
-    }
-
-    [FvCall]
-    public class MergeMid : IFvCall
-    {
-        public object Get(Mid m)
-        {
-            return $"{m.Str} - {m.GetVal<string>("merge1")} - {m.GetVal<string>("merge2")}";
-        }
-
-        public object Set(Mid m)
-        {
-            var strs = m.Str.Split('-');
-            if (strs.Length > 2)
-            {
-                m["merge1"] = strs[1].Trim();
-                m["merge2"] = strs[2].Trim();
-            }
-            else if (strs.Length > 1)
-            {
-                m["merge1"] = strs[1].Trim();
-            }
-            return strs[0].Trim();
-        }
-    }
-
-    [FvCall]
-    public class ReplaceMid : IFvCall
-    {
-        public object Get(Mid m)
-        {
-            switch (m.Str)
-            {
-                case "a":
-                    return "1";
-
-                case "b":
-                    return "2";
-
-                default:
-                    return "3";
-            }
-        }
-
-        public object Set(Mid m)
-        {
-            switch (m.Str)
-            {
-                case "1":
-                    return "a";
-
-                case "2":
-                    return "b";
-
-                default:
-                    return "c";
-            }
+            default:
+                return "c";
         }
     }
 }

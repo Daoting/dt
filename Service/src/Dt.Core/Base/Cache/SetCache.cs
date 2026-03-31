@@ -9,17 +9,16 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Core.Caches
+namespace Dt.Core.Caches;
+
+/// <summary>
+/// 值为无序字符串集合的缓存基类
+/// </summary>
+/// <typeparam name="TCacheItem">缓存类型，可以为任意类型</typeparam>
+public class SetCache<TCacheItem> : BaseCache
 {
-    /// <summary>
-    /// 值为无序字符串集合的缓存基类
-    /// </summary>
-    /// <typeparam name="TCacheItem">缓存类型，可以为任意类型</typeparam>
-    public class SetCache<TCacheItem> : BaseCache
+    public SetCache(string p_keyPrefix)
+        : base(p_keyPrefix)
     {
-        public SetCache(string p_keyPrefix)
-            : base(p_keyPrefix)
-        {
-        }
     }
 }

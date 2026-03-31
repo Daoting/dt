@@ -15,314 +15,313 @@ using RabbitMQ.Client.Events;
 using Serilog;
 #endregion
 
-namespace Dt.Core.RabbitMQ
+namespace Dt.Core.RabbitMQ;
+
+/// <summary>
+/// RabbitMQ 信道、队列、发布消息管理
+/// </summary>
+[Service(ServiceLifetime.Singleton)]
+public sealed class RabbitMQCenter
 {
-    /// <summary>
-    /// RabbitMQ 信道、队列、发布消息管理
-    /// </summary>
-    [Service(ServiceLifetime.Singleton)]
-    public sealed class RabbitMQCenter
+    #region 成员变量
+    // 交换机名称
+    readonly string _exchangeName = Kit.AppName;
+    readonly RabbitMQConnection _conn;
+    readonly AsyncLock _mutex;
+    IChannel _chPublish;
+    #endregion
+
+    #region 构造方法
+    public RabbitMQCenter()
     {
-        #region 成员变量
-        // 交换机名称
-        readonly string _exchangeName = Kit.AppName;
-        readonly RabbitMQConnection _conn;
-        readonly AsyncLock _mutex;
-        IChannel _chPublish;
-        #endregion
+        // 未启用RabbitMQ，如：单体服务、Boot服务
+        if (!Kit.EnableRabbitMQ)
+            return;
 
-        #region 构造方法
-        public RabbitMQCenter()
-        {
-            // 未启用RabbitMQ，如：单体服务、Boot服务
-            if (!Kit.EnableRabbitMQ)
-                return;
+        _conn = new RabbitMQConnection();
+        _mutex = new AsyncLock();
+        _ = Init();
+    }
+    #endregion
 
-            _conn = new RabbitMQConnection();
-            _mutex = new AsyncLock();
-            _ = Init();
-        }
-        #endregion
-
-        #region 发布
-        /// <summary>
-        /// 发布 RabbitMQ 消息
-        /// </summary>
-        /// <param name="p_data"></param>
-        /// <param name="p_routingKey"></param>
-        /// <param name="p_bindExchange"></param>
-        /// <param name="p_correlationId"></param>
-        /// <param name="p_replyTo"></param>
-        public async void Publish(
-            byte[] p_data,
-            string p_routingKey,
-            bool p_bindExchange,
-            string p_correlationId = null,
-            string p_replyTo = null)
-        {
-            // IModel实例不支持多个线程同时使用
-            using (await _mutex.LockAsync())
-            {
-                if (!_conn.IsConnected)
-                    await _conn.TryConnect();
-
-                if (_chPublish == null)
-                {
-                    _chPublish = await _conn.CreateChannel();
-                    _chPublish.ChannelShutdownAsync += (s, e) =>
-                    {
-                        _chPublish.Dispose();
-                        _chPublish = null;
-                        return Task.CompletedTask;
-                    };
-                }
-
-                var props = new BasicProperties();
-                if (!string.IsNullOrEmpty(p_correlationId))
-                    props.CorrelationId = p_correlationId;
-                if (!string.IsNullOrEmpty(p_replyTo))
-                    props.ReplyTo = p_replyTo;
-
-                await _chPublish.BasicPublishAsync(
-                    exchange: p_bindExchange ? _exchangeName : "",
-                    routingKey: p_routingKey,
-                    mandatory: false,
-                    basicProperties: props,
-                    body: p_data);
-            }
-        }
-        #endregion
-
-        #region 订阅
-        /// <summary>
-        /// 初始化 RabbitMQ 信道、队列
-        /// </summary>
-        /// <param name="p_provider"></param>
-        internal static void Subscribe(IServiceProvider p_provider)
-        {
-            // 单例对象，实例化时进行订阅
-            p_provider.GetRequiredService<RabbitMQCenter>();
-        }
-
-        async Task Init()
+    #region 发布
+    /// <summary>
+    /// 发布 RabbitMQ 消息
+    /// </summary>
+    /// <param name="p_data"></param>
+    /// <param name="p_routingKey"></param>
+    /// <param name="p_bindExchange"></param>
+    /// <param name="p_correlationId"></param>
+    /// <param name="p_replyTo"></param>
+    public async void Publish(
+        byte[] p_data,
+        string p_routingKey,
+        bool p_bindExchange,
+        string p_correlationId = null,
+        string p_replyTo = null)
+    {
+        // IModel实例不支持多个线程同时使用
+        using (await _mutex.LockAsync())
         {
             if (!_conn.IsConnected)
                 await _conn.TryConnect();
 
-            // 负责生产消息的通道
-            _chPublish = await _conn.CreateChannel();
-            _chPublish.ChannelShutdownAsync += (s, e) =>
+            if (_chPublish == null)
             {
-                _chPublish.Dispose();
-                _chPublish = null;
-                return Task.CompletedTask;
-            };
-
-            // 声明交换机，路由规则：
-            // direct：发送给同一个交换机下的拥有相应RoutingKey的队列
-            // fanout：发送给同一个交换机下的所有队列
-            // topic：发送给同一个交换机下的按正则表达式对RoutingKey匹配的队列
-            // headers：发送给同一个交换机下的拥有相应RoutingKey或者headers的队列
-            await _chPublish.ExchangeDeclareAsync(
-                _exchangeName,      // 采用应用名称区分交换机
-                "topic",            // 按正则表达式匹配队列
-                durable: true,      // 持久化
-                autoDelete: false); // 是否自动删除
-
-            // 单体模式时若启用RabbitMQ，则每个微服务都声明消费者队列
-            foreach (var svc in Kit.Svcs)
-            {
-                // 每个微服务声明三个消费者队列
-                // 1. 如dt.cm，接收单副本时的直接投递 或 多个服务副本时采用均衡算法投递给其中一个的情况
-                await CreateWorkConsumer(svc.SvcName);
-                // 2. 如dt.cm.xxx，接收对所有副本广播或按服务组播的情况，因每次重启id不同，队列采用自动删除模式
-                await CreateTopicConsumer(svc.SvcName);
-                // 3. 订阅队列变化事件(queue.*)，用来准确获取所有微服务的副本个数
-                // 需要RabbitMQ启用事件通知插件：rabbitmq-plugins enable rabbitmq_event_exchange
-                await CreateQueueChangeConsumer(svc.SvcName);
+                _chPublish = await _conn.CreateChannel();
+                _chPublish.ChannelShutdownAsync += (s, e) =>
+                {
+                    _chPublish.Dispose();
+                    _chPublish = null;
+                    return Task.CompletedTask;
+                };
             }
+
+            var props = new BasicProperties();
+            if (!string.IsNullOrEmpty(p_correlationId))
+                props.CorrelationId = p_correlationId;
+            if (!string.IsNullOrEmpty(p_replyTo))
+                props.ReplyTo = p_replyTo;
+
+            await _chPublish.BasicPublishAsync(
+                exchange: p_bindExchange ? _exchangeName : "",
+                routingKey: p_routingKey,
+                mandatory: false,
+                basicProperties: props,
+                body: p_data);
         }
+    }
+    #endregion
 
-        /// <summary>
-        /// 声明消费者队列 AppName.SvcName，work模式，未绑定交换机，只支持和队列名称完全匹配时投递
-        /// 用于接收单副本时的直接投递 或 多个服务副本时采用均衡算法投递给其中一个的情况
-        /// </summary>
-        /// <param name="p_svcName"></param>
-        async Task CreateWorkConsumer(string p_svcName)
+    #region 订阅
+    /// <summary>
+    /// 初始化 RabbitMQ 信道、队列
+    /// </summary>
+    /// <param name="p_provider"></param>
+    internal static void Subscribe(IServiceProvider p_provider)
+    {
+        // 单例对象，实例化时进行订阅
+        p_provider.GetRequiredService<RabbitMQCenter>();
+    }
+
+    async Task Init()
+    {
+        if (!_conn.IsConnected)
+            await _conn.TryConnect();
+
+        // 负责生产消息的通道
+        _chPublish = await _conn.CreateChannel();
+        _chPublish.ChannelShutdownAsync += (s, e) =>
         {
-            string queueName = $"{Kit.AppName}.{p_svcName}";
-            var channel = await _conn.CreateChannel();
+            _chPublish.Dispose();
+            _chPublish = null;
+            return Task.CompletedTask;
+        };
 
-            // 声明队列
-            await channel.QueueDeclareAsync(
-                queueName,         // 队列名称
-                durable: false,    // 是否持久化
-                exclusive: false,  // 是否为排他队列，若排他则只首次连接可见，连接断开时删除
-                autoDelete: true); // true时若没有任何订阅者的话，该队列会被自动删除，这种队列适用于临时队列
+        // 声明交换机，路由规则：
+        // direct：发送给同一个交换机下的拥有相应RoutingKey的队列
+        // fanout：发送给同一个交换机下的所有队列
+        // topic：发送给同一个交换机下的按正则表达式对RoutingKey匹配的队列
+        // headers：发送给同一个交换机下的拥有相应RoutingKey或者headers的队列
+        await _chPublish.ExchangeDeclareAsync(
+            _exchangeName,      // 采用应用名称区分交换机
+            "topic",            // 按正则表达式匹配队列
+            durable: true,      // 持久化
+            autoDelete: false); // 是否自动删除
 
-            // 创建消费者
-            var consumer = new AsyncEventingBasicConsumer(channel);
-            consumer.ReceivedAsync += async (s, e) =>
-            {
-                OnConsumeMessage(e);
-                await channel.BasicAckAsync(e.DeliveryTag, false);
-            };
-
-            // 限流的设置
-            // 参数一： 0表消息的大小不做任何限制
-            // 参数二： 1表服务器给的最大的消息数，这里是一条一条的消费，如果消费者没有确认消费，将不会接受新消息
-            // 参数三： false级别为consumer 
-            await channel.BasicQosAsync(0, 1, false);
-
-            // 要想做限流必须将autoAck设置为false
-            await channel.BasicConsumeAsync(queue: queueName, autoAck: false, consumer: consumer);
-
-            // 异常处理
-            channel.CallbackExceptionAsync += async (s, e) =>
-            {
-                try
-                {
-                    channel.Dispose();
-                    channel = null;
-
-                    if (!_conn.IsConnected)
-                        await _conn.TryConnect();
-                    if (_conn.IsConnected)
-                        await CreateWorkConsumer(p_svcName);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, $"重建RabbitMQ队列{queueName}时异常！");
-                }
-            };
+        // 单体模式时若启用RabbitMQ，则每个微服务都声明消费者队列
+        foreach (var svc in Kit.Svcs)
+        {
+            // 每个微服务声明三个消费者队列
+            // 1. 如dt.cm，接收单副本时的直接投递 或 多个服务副本时采用均衡算法投递给其中一个的情况
+            await CreateWorkConsumer(svc.SvcName);
+            // 2. 如dt.cm.xxx，接收对所有副本广播或按服务组播的情况，因每次重启id不同，队列采用自动删除模式
+            await CreateTopicConsumer(svc.SvcName);
+            // 3. 订阅队列变化事件(queue.*)，用来准确获取所有微服务的副本个数
+            // 需要RabbitMQ启用事件通知插件：rabbitmq-plugins enable rabbitmq_event_exchange
+            await CreateQueueChangeConsumer(svc.SvcName);
         }
+    }
 
-        /// <summary>
-        /// 声明消费者队列 AppName.SvcName.SvcID，绑定交换机，topic模式，支持按正则表达式匹配队列
-        /// AppName.SvcName.*  接收对服务所有副本的投递
-        /// #.SvcID  接收对当前副本的投递
-        /// </summary>
-        /// <param name="p_svcName"></param>
-        async Task CreateTopicConsumer(string p_svcName)
+    /// <summary>
+    /// 声明消费者队列 AppName.SvcName，work模式，未绑定交换机，只支持和队列名称完全匹配时投递
+    /// 用于接收单副本时的直接投递 或 多个服务副本时采用均衡算法投递给其中一个的情况
+    /// </summary>
+    /// <param name="p_svcName"></param>
+    async Task CreateWorkConsumer(string p_svcName)
+    {
+        string queueName = $"{Kit.AppName}.{p_svcName}";
+        var channel = await _conn.CreateChannel();
+
+        // 声明队列
+        await channel.QueueDeclareAsync(
+            queueName,         // 队列名称
+            durable: false,    // 是否持久化
+            exclusive: false,  // 是否为排他队列，若排他则只首次连接可见，连接断开时删除
+            autoDelete: true); // true时若没有任何订阅者的话，该队列会被自动删除，这种队列适用于临时队列
+
+        // 创建消费者
+        var consumer = new AsyncEventingBasicConsumer(channel);
+        consumer.ReceivedAsync += async (s, e) =>
         {
-            string queueName = $"{Kit.AppName}.{p_svcName}.{Kit.SvcID}";
-            var channel = await _conn.CreateChannel();
+            OnConsumeMessage(e);
+            await channel.BasicAckAsync(e.DeliveryTag, false);
+        };
 
-            // 声明队列
-            await channel.QueueDeclareAsync(
-                queueName,         // 队列名称
-                durable: false,    // 是否持久化
-                exclusive: false,  // 是否为排他队列，若排他则只首次连接可见，连接断开时删除
-                autoDelete: true); // true时若没有任何订阅者的话，该队列会被自动删除，这种队列适用于临时队列
+        // 限流的设置
+        // 参数一： 0表消息的大小不做任何限制
+        // 参数二： 1表服务器给的最大的消息数，这里是一条一条的消费，如果消费者没有确认消费，将不会接受新消息
+        // 参数三： false级别为consumer 
+        await channel.BasicQosAsync(0, 1, false);
 
-            // 绑定队列
-            await channel.QueueBindAsync(
-                queue: queueName,          // 队列名称
-                exchange: _exchangeName,   // 绑定的交换机
-                routingKey: $"{Kit.AppName}.{p_svcName}.*"); // 路由名称
-            await channel.QueueBindAsync(
-                queue: queueName,           // 队列名称
-                exchange: _exchangeName,    // 绑定的交换机
-                routingKey: $"#.{Kit.SvcID}"); // 路由名称
+        // 要想做限流必须将autoAck设置为false
+        await channel.BasicConsumeAsync(queue: queueName, autoAck: false, consumer: consumer);
 
-            // 创建消费者
-            var consumer = new AsyncEventingBasicConsumer(channel);
-            consumer.ReceivedAsync += async (s, e) =>
-            {
-                OnConsumeMessage(e);
-                await channel.BasicAckAsync(e.DeliveryTag, false);
-            };
-
-            // 限流的设置
-            // 参数一： 0表消息的大小不做任何限制
-            // 参数二： 1表服务器给的最大的消息数，这里是一条一条的消费，如果消费者没有确认消费，将不会接受新消息
-            // 参数三： false级别为consumer 
-            await channel.BasicQosAsync(0, 1, false);
-
-            // 要想做限流必须将autoAck设置为false
-            await channel.BasicConsumeAsync(queue: queueName, autoAck: false, consumer: consumer);
-
-            // 异常处理
-            channel.CallbackExceptionAsync += async (s, e) =>
-            {
-                try
-                {
-                    channel.Dispose();
-                    channel = null;
-
-                    if (!_conn.IsConnected)
-                        await _conn.TryConnect();
-                    if (_conn.IsConnected)
-                        await CreateTopicConsumer(p_svcName);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, $"重建RabbitMQ队列{queueName}时异常！");
-                }
-            };
-        }
-
-        /// <summary>
-        /// 订阅系统队列变化事件(queue.*)，用来准确获取所有微服务的副本个数
-        /// </summary>
-        async Task CreateQueueChangeConsumer(string p_svcName)
+        // 异常处理
+        channel.CallbackExceptionAsync += async (s, e) =>
         {
-            // 用'-'隔开为了和其他两队列区分，避免获取的服务列表错误！
-            string queueName = $"{Kit.AppName}-{p_svcName}-{Kit.SvcID}-queue";
-            var channel = await _conn.CreateChannel();
-
-            // 创建一个排他的、自动删除的、非持久化的队列
-            await channel.QueueDeclareAsync(
-                queueName,         // 队列名称
-                durable: false,    // 是否持久化
-                exclusive: true,   // 是否为排他队列，若排他则只首次连接可见，连接断开时删除
-                autoDelete: true); // true时若没有任何订阅者的话，该队列会被自动删除，这种队列适用于临时队列
-
-            // 绑定queue.*队列
-            await channel.QueueBindAsync(
-               queue: queueName,
-               exchange: "amq.rabbitmq.event",
-               routingKey: "queue.*");
-
-            // 队列变化时更新微服务列表
-            var consumer = new AsyncEventingBasicConsumer(channel);
-            consumer.ReceivedAsync += (s, e) =>
+            try
             {
-                Kit.UpdateSvcList();
-                return Task.CompletedTask;
-            };
+                channel.Dispose();
+                channel = null;
 
-            await channel.BasicConsumeAsync(queue: queueName, true, consumer: consumer);
+                if (!_conn.IsConnected)
+                    await _conn.TryConnect();
+                if (_conn.IsConnected)
+                    await CreateWorkConsumer(p_svcName);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"重建RabbitMQ队列{queueName}时异常！");
+            }
+        };
+    }
 
-            // 保证首次更新列表
+    /// <summary>
+    /// 声明消费者队列 AppName.SvcName.SvcID，绑定交换机，topic模式，支持按正则表达式匹配队列
+    /// AppName.SvcName.*  接收对服务所有副本的投递
+    /// #.SvcID  接收对当前副本的投递
+    /// </summary>
+    /// <param name="p_svcName"></param>
+    async Task CreateTopicConsumer(string p_svcName)
+    {
+        string queueName = $"{Kit.AppName}.{p_svcName}.{Kit.SvcID}";
+        var channel = await _conn.CreateChannel();
+
+        // 声明队列
+        await channel.QueueDeclareAsync(
+            queueName,         // 队列名称
+            durable: false,    // 是否持久化
+            exclusive: false,  // 是否为排他队列，若排他则只首次连接可见，连接断开时删除
+            autoDelete: true); // true时若没有任何订阅者的话，该队列会被自动删除，这种队列适用于临时队列
+
+        // 绑定队列
+        await channel.QueueBindAsync(
+            queue: queueName,          // 队列名称
+            exchange: _exchangeName,   // 绑定的交换机
+            routingKey: $"{Kit.AppName}.{p_svcName}.*"); // 路由名称
+        await channel.QueueBindAsync(
+            queue: queueName,           // 队列名称
+            exchange: _exchangeName,    // 绑定的交换机
+            routingKey: $"#.{Kit.SvcID}"); // 路由名称
+
+        // 创建消费者
+        var consumer = new AsyncEventingBasicConsumer(channel);
+        consumer.ReceivedAsync += async (s, e) =>
+        {
+            OnConsumeMessage(e);
+            await channel.BasicAckAsync(e.DeliveryTag, false);
+        };
+
+        // 限流的设置
+        // 参数一： 0表消息的大小不做任何限制
+        // 参数二： 1表服务器给的最大的消息数，这里是一条一条的消费，如果消费者没有确认消费，将不会接受新消息
+        // 参数三： false级别为consumer 
+        await channel.BasicQosAsync(0, 1, false);
+
+        // 要想做限流必须将autoAck设置为false
+        await channel.BasicConsumeAsync(queue: queueName, autoAck: false, consumer: consumer);
+
+        // 异常处理
+        channel.CallbackExceptionAsync += async (s, e) =>
+        {
+            try
+            {
+                channel.Dispose();
+                channel = null;
+
+                if (!_conn.IsConnected)
+                    await _conn.TryConnect();
+                if (_conn.IsConnected)
+                    await CreateTopicConsumer(p_svcName);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"重建RabbitMQ队列{queueName}时异常！");
+            }
+        };
+    }
+
+    /// <summary>
+    /// 订阅系统队列变化事件(queue.*)，用来准确获取所有微服务的副本个数
+    /// </summary>
+    async Task CreateQueueChangeConsumer(string p_svcName)
+    {
+        // 用'-'隔开为了和其他两队列区分，避免获取的服务列表错误！
+        string queueName = $"{Kit.AppName}-{p_svcName}-{Kit.SvcID}-queue";
+        var channel = await _conn.CreateChannel();
+
+        // 创建一个排他的、自动删除的、非持久化的队列
+        await channel.QueueDeclareAsync(
+            queueName,         // 队列名称
+            durable: false,    // 是否持久化
+            exclusive: true,   // 是否为排他队列，若排他则只首次连接可见，连接断开时删除
+            autoDelete: true); // true时若没有任何订阅者的话，该队列会被自动删除，这种队列适用于临时队列
+
+        // 绑定queue.*队列
+        await channel.QueueBindAsync(
+           queue: queueName,
+           exchange: "amq.rabbitmq.event",
+           routingKey: "queue.*");
+
+        // 队列变化时更新微服务列表
+        var consumer = new AsyncEventingBasicConsumer(channel);
+        consumer.ReceivedAsync += (s, e) =>
+        {
             Kit.UpdateSvcList();
-        }
+            return Task.CompletedTask;
+        };
 
-        /// <summary>
-        /// 处理接收到的消息
-        /// </summary>
-        /// <param name="p_args"></param>
-        void OnConsumeMessage(BasicDeliverEventArgs p_args)
+        await channel.BasicConsumeAsync(queue: queueName, true, consumer: consumer);
+
+        // 保证首次更新列表
+        Kit.UpdateSvcList();
+    }
+
+    /// <summary>
+    /// 处理接收到的消息
+    /// </summary>
+    /// <param name="p_args"></param>
+    void OnConsumeMessage(BasicDeliverEventArgs p_args)
+    {
+        if (!string.IsNullOrEmpty(p_args.BasicProperties.CorrelationId))
         {
-            if (!string.IsNullOrEmpty(p_args.BasicProperties.CorrelationId))
+            // Rpc
+            if (!string.IsNullOrEmpty(p_args.BasicProperties.ReplyTo))
             {
-                // Rpc
-                if (!string.IsNullOrEmpty(p_args.BasicProperties.ReplyTo))
-                {
-                    // 接收Rpc调用
-                    _ = new RabbitMQApiInvoker().Process(p_args);
-                }
-                else
-                {
-                    // 接收Rpc返回的结果
-                    new RabbitMQRpcResponse().Process(p_args);
-                }
+                // 接收Rpc调用
+                _ = new RabbitMQApiInvoker().Process(p_args);
             }
             else
             {
-                _ = new RemoteEventHandler().Process(p_args);
+                // 接收Rpc返回的结果
+                new RabbitMQRpcResponse().Process(p_args);
             }
         }
-        #endregion
+        else
+        {
+            _ = new RemoteEventHandler().Process(p_args);
+        }
     }
+    #endregion
 }

@@ -10,21 +10,20 @@
 using RabbitMQ.Client.Events;
 #endregion
 
-namespace Dt.Core.Rpc
+namespace Dt.Core.Rpc;
+
+/// <summary>
+/// RabbitMQ远程调用的结果处理
+/// </summary>
+class RabbitMQRpcResponse
 {
-    /// <summary>
-    /// RabbitMQ远程调用的结果处理
-    /// </summary>
-    class RabbitMQRpcResponse
+    
+    public void Process(BasicDeliverEventArgs p_args)
     {
-        
-        public void Process(BasicDeliverEventArgs p_args)
+        if (RabbitMQRpc.RunningCalls.TryGetValue(p_args.BasicProperties.CorrelationId, out var tcs))
         {
-            if (RabbitMQRpc.RunningCalls.TryGetValue(p_args.BasicProperties.CorrelationId, out var tcs))
-            {
-                tcs.TrySetResult(p_args);
-                RabbitMQRpc.RunningCalls.Remove(p_args.BasicProperties.CorrelationId, out _);
-            }
+            tcs.TrySetResult(p_args);
+            RabbitMQRpc.RunningCalls.Remove(p_args.BasicProperties.CorrelationId, out _);
         }
     }
 }

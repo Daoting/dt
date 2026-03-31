@@ -12,126 +12,125 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core.Rpc
+namespace Dt.Core.Rpc;
+
+/// <summary>
+/// 请求/响应模式的处理类
+/// </summary>
+class UnaryHandler : RpcHandler
 {
+    public UnaryHandler(ApiInvoker p_invoker)
+        : base(p_invoker)
+    { }
+
     /// <summary>
-    /// 请求/响应模式的处理类
+    /// 调用服务方法
     /// </summary>
-    class UnaryHandler : RpcHandler
+    /// <returns></returns>
+    protected override async Task<bool> CallMethod()
     {
-        public UnaryHandler(ApiInvoker p_invoker)
-            : base(p_invoker)
-        { }
+        object result = null;
+        UnaryResult resultType = UnaryResult.Success;
+        ApiResponseType responseType = ApiResponseType.Success;
+        string error = null;
 
-        /// <summary>
-        /// 调用服务方法
-        /// </summary>
-        /// <returns></returns>
-        protected override async Task<bool> CallMethod()
+        // 输出耗时
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+        try
         {
-            object result = null;
-            UnaryResult resultType = UnaryResult.Success;
-            ApiResponseType responseType = ApiResponseType.Success;
-            string error = null;
-
-            // 输出耗时
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            try
+            var mi = _invoker.Api.Method;
+            if (mi.ReturnType == typeof(Task))
             {
-                var mi = _invoker.Api.Method;
-                if (mi.ReturnType == typeof(Task))
-                {
-                    // 异步无返回值时
-                    var task = (Task)mi.Invoke(_tgt, _invoker.Args);
-                    await task.WaitAsync(_invoker.RequestAborted);
-                }
-                else if (typeof(Task).IsAssignableFrom(mi.ReturnType))
-                {
-                    // 异步有返回值
-                    var task = (Task)mi.Invoke(_tgt, _invoker.Args);
-                    await task.WaitAsync(_invoker.RequestAborted);
-                    var pi = task.GetType().GetProperty("Result");
-                    if (pi == null)
-                        throw new Exception($"AOT无法反射 {task.GetType().Name} 的Result属性！请在 rd.xml 添加 <Type Name=\"System.Threading.Tasks.Task`1[[System.String]]\" Dynamic=\"Required All\" />");
-                    result = pi.GetValue(task);
-                }
-                else
-                {
-                    // 调用同步方法
-                    result = mi.Invoke(_tgt, _invoker.Args);
-                }
+                // 异步无返回值时
+                var task = (Task)mi.Invoke(_tgt, _invoker.Args);
+                await task.WaitAsync(_invoker.RequestAborted);
             }
-            catch (Exception ex)
+            else if (typeof(Task).IsAssignableFrom(mi.ReturnType))
             {
-                if (ex is OperationCanceledException
-                    || ex.InnerException is OperationCanceledException)
+                // 异步有返回值
+                var task = (Task)mi.Invoke(_tgt, _invoker.Args);
+                await task.WaitAsync(_invoker.RequestAborted);
+                var pi = task.GetType().GetProperty("Result");
+                if (pi == null)
+                    throw new Exception($"AOT无法反射 {task.GetType().Name} 的Result属性！请在 rd.xml 添加 <Type Name=\"System.Threading.Tasks.Task`1[[System.String]]\" Dynamic=\"Required All\" />");
+                result = pi.GetValue(task);
+            }
+            else
+            {
+                // 调用同步方法
+                result = mi.Invoke(_tgt, _invoker.Args);
+            }
+        }
+        catch (Exception ex)
+        {
+            if (ex is OperationCanceledException
+                || ex.InnerException is OperationCanceledException)
+            {
+                // 客户端取消请求，不记录日志，不Response
+                resultType = UnaryResult.Cancel;
+            }
+            else
+            {
+                resultType = UnaryResult.Error;
+                KnownException rpcEx = ex.InnerException as KnownException;
+                if (rpcEx == null)
+                    rpcEx = ex as KnownException;
+
+                if (rpcEx != null)
                 {
-                    // 客户端取消请求，不记录日志，不Response
-                    resultType = UnaryResult.Cancel;
+                    // 业务异常，在客户端作为提示消息，不记日志
+                    responseType = ApiResponseType.Warning;
+                    error = rpcEx.Message;
                 }
                 else
                 {
-                    resultType = UnaryResult.Error;
-                    KnownException rpcEx = ex.InnerException as KnownException;
-                    if (rpcEx == null)
-                        rpcEx = ex as KnownException;
-
-                    if (rpcEx != null)
+                    // 程序执行过程的错误，将异常记录日志
+                    responseType = ApiResponseType.Error;
+                    error = $"调用{_invoker.ApiName}出错";
+                    if (ex.InnerException != null && !string.IsNullOrEmpty(ex.InnerException.Message))
                     {
-                        // 业务异常，在客户端作为提示消息，不记日志
-                        responseType = ApiResponseType.Warning;
-                        error = rpcEx.Message;
+                        _invoker.Log.Error(ex.InnerException, error);
+                        error += "\r\n" + ex.InnerException.Message;
                     }
                     else
                     {
-                        // 程序执行过程的错误，将异常记录日志
-                        responseType = ApiResponseType.Error;
-                        error = $"调用{_invoker.ApiName}出错";
-                        if (ex.InnerException != null && !string.IsNullOrEmpty(ex.InnerException.Message))
-                        {
-                            _invoker.Log.Error(ex.InnerException, error);
-                            error += "\r\n" + ex.InnerException.Message;
-                        }
-                        else
-                        {
-                            _invoker.Log.Error(ex, error);
-                            error += "\r\n" + ex.Message;
-                        }
+                        _invoker.Log.Error(ex, error);
+                        error += "\r\n" + ex.Message;
                     }
                 }
             }
-            finally
-            {
-                stopwatch.Stop();
-            }
-
-            if (resultType != UnaryResult.Cancel)
-            {
-                if (TraceRpc)
-                    _invoker.Log.Information("{0} — {1}ms", _invoker.ApiName, stopwatch.ElapsedMilliseconds);
-
-                await _invoker.Response(responseType, stopwatch.ElapsedMilliseconds, error == null ? result : error);
-            }
-            return resultType == UnaryResult.Success;
         }
+        finally
+        {
+            stopwatch.Stop();
+        }
+
+        if (resultType != UnaryResult.Cancel)
+        {
+            if (TraceRpc)
+                _invoker.Log.Information("{0} — {1}ms", _invoker.ApiName, stopwatch.ElapsedMilliseconds);
+
+            await _invoker.Response(responseType, stopwatch.ElapsedMilliseconds, error == null ? result : error);
+        }
+        return resultType == UnaryResult.Success;
     }
+}
 
-    enum UnaryResult
-    {
-        /// <summary>
-        /// 调用成功
-        /// </summary>
-        Success = 0,
+enum UnaryResult
+{
+    /// <summary>
+    /// 调用成功
+    /// </summary>
+    Success = 0,
 
-        /// <summary>
-        /// 调用过程中出错
-        /// </summary>
-        Error = 1,
+    /// <summary>
+    /// 调用过程中出错
+    /// </summary>
+    Error = 1,
 
-        /// <summary>
-        /// 取消调用
-        /// </summary>
-        Cancel = 2,
-    }
+    /// <summary>
+    /// 取消调用
+    /// </summary>
+    Cancel = 2,
 }

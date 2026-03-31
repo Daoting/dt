@@ -18,48 +18,47 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class ReceiveShareWin : Win
 {
-    public partial class ReceiveShareWin : Win
+    ShareInfo _info;
+
+    public ReceiveShareWin(ShareInfo p_info)
     {
-        ShareInfo _info;
+        InitializeComponent();
+        _info = p_info;
 
-        public ReceiveShareWin(ShareInfo p_info)
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine("分享类型：" + _info.DataType.ToString());
+        if (!string.IsNullOrEmpty(_info.Content))
+            sb.AppendLine("文本内容：" + _info.Content);
+        if (!string.IsNullOrEmpty(_info.FileName))
         {
-            InitializeComponent();
-            _info = p_info;
-
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("分享类型：" + _info.DataType.ToString());
-            if (!string.IsNullOrEmpty(_info.Content))
-                sb.AppendLine("文本内容：" + _info.Content);
-            if (!string.IsNullOrEmpty(_info.FileName))
-            {
-                sb.AppendLine("文件名：" + _info.FileName);
-                // 异常
-                //sb.AppendLine("文件大小：" + _info.FileLength.ToString());
-            }
-
-            _tb.Text = sb.ToString();
+            sb.AppendLine("文件名：" + _info.FileName);
+            // 异常
+            //sb.AppendLine("文件大小：" + _info.FileLength.ToString());
         }
 
-        void OnEnd(object sender, RoutedEventArgs e)
-        {
-            _info.ShareCompleted();
-        }
+        _tb.Text = sb.ToString();
+    }
 
-        async void OnCopy(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrEmpty(_info.FilePath))
-                return;
+    void OnEnd(object sender, RoutedEventArgs e)
+    {
+        _info.ShareCompleted();
+    }
 
-            string id = Kit.NewGuid + _info.FileExt;
-            using (var stream = _info.GetStream())
-            using (var fs = File.Create(Path.Combine(Kit.CachePath, id)))
-            {
-                await stream.CopyToAsync(fs);
-                Kit.Msg("复制成功！");
-            }
+    async void OnCopy(object sender, RoutedEventArgs e)
+    {
+        if (string.IsNullOrEmpty(_info.FilePath))
+            return;
+
+        string id = Kit.NewGuid + _info.FileExt;
+        using (var stream = _info.GetStream())
+        using (var fs = File.Create(Path.Combine(Kit.CachePath, id)))
+        {
+            await stream.CopyToAsync(fs);
+            Kit.Msg("复制成功！");
         }
     }
 }

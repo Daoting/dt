@@ -18,42 +18,41 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Workflow
+namespace Dt.Mgr.Workflow;
+
+public sealed partial class SelectRolesDlg : Dlg
 {
-    public sealed partial class SelectRolesDlg : Dlg
+    public SelectRolesDlg()
     {
-        public SelectRolesDlg()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        public IEnumerable<object> SelectedItems
-        {
-            get { return _lv.SelectedItems; }
-        }
+    public IEnumerable<object> SelectedItems
+    {
+        get { return _lv.SelectedItems; }
+    }
 
-        public async Task<bool> Show(string p_tgtID, FrameworkElement p_target)
+    public async Task<bool> Show(string p_tgtID, FrameworkElement p_target)
+    {
+        _lv.Data = await RoleX.Query($"where not exists (select role_id from cm_wfd_atv_role b where a.id=b.role_id and atv_id={p_tgtID})");
+        if (!Kit.IsPhoneUI)
         {
-            _lv.Data = await RoleX.Query($"where not exists (select role_id from cm_wfd_atv_role b where a.id=b.role_id and atv_id={p_tgtID})");
-            if (!Kit.IsPhoneUI)
-            {
-                WinPlacement = DlgPlacement.TargetBottomLeft;
-                PlacementTarget = p_target;
-                ClipElement = p_target;
-                MaxHeight = 400;
-                MaxWidth = 300;
-            }
-            return await ShowAsync();
+            WinPlacement = DlgPlacement.TargetBottomLeft;
+            PlacementTarget = p_target;
+            ClipElement = p_target;
+            MaxHeight = 400;
+            MaxWidth = 300;
         }
+        return await ShowAsync();
+    }
 
-        void OnSelectAll(object sender, RoutedEventArgs e)
-        {
-            _lv.Select(((Button)sender).DataContext as IList);
-        }
+    void OnSelectAll(object sender, RoutedEventArgs e)
+    {
+        _lv.Select(((Button)sender).DataContext as IList);
+    }
 
-        void OnClear(object sender, RoutedEventArgs e)
-        {
-            _lv.RemoveSelection(((Button)sender).DataContext as IList);
-        }
+    void OnClear(object sender, RoutedEventArgs e)
+    {
+        _lv.RemoveSelection(((Button)sender).DataContext as IList);
     }
 }

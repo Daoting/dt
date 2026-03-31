@@ -14,34 +14,33 @@ using System.Reflection;
 using System.Text;
 #endregion
 
-namespace Dt.Base.FormView
+namespace Dt.Base.FormView;
+
+public partial class FvXamlEditDlg : Dlg
 {
-    public partial class FvXamlEditDlg : Dlg
+    FvDesign _design;
+
+    public FvXamlEditDlg()
     {
-        FvDesign _design;
-
-        public FvXamlEditDlg()
+        InitializeComponent();
+        IsPinned = true;
+        if (!Kit.IsPhoneUI)
         {
-            InitializeComponent();
-            IsPinned = true;
-            if (!Kit.IsPhoneUI)
-            {
-                Width = 600;
-                Height = 500;
-            }
+            Width = 600;
+            Height = 500;
         }
+    }
 
-        public void ShowDlg(FvDesign p_design)
-        {
-            _design = p_design;
-            _tb.Text = _design.Fv.ExportXaml();
-            Show();
-        }
+    public void ShowDlg(FvDesign p_design)
+    {
+        _design = p_design;
+        _tb.Text = _design.Fv.ExportXaml();
+        Show();
+    }
 
-        void OnApply()
-        {
-            _design.Jz(_tb.Text);
-            Close();
-        }
+    void OnApply()
+    {
+        _design.Jz(_tb.Text);
+        Close();
     }
 }

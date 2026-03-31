@@ -9,65 +9,65 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Mgr.Module
+namespace Dt.Mgr.Module;
+
+public static class ParamsDs
 {
-    public static class ParamsDs
+    public static async Task<bool> SaveParams(string p_paramID, string p_value)
     {
-        public static async Task<bool> SaveParams(string p_paramID, string p_value)
-        {
-            if (!long.TryParse(p_paramID, out var paramID))
-                Throw.Msg("参数标识错误！");
+        if (!long.TryParse(p_paramID, out var paramID))
+            Throw.Msg("参数标识错误！");
 
-            var w = await UserParamsX.NewWriter();
-            var old = new UserParamsX(
+        var w = await UserParamsX.NewWriter();
+        var old = new UserParamsX(
+            UserID: Kit.UserID,
+            ParamID: paramID);
+        await w.Delete(old);
+
+        var def = await ParamsX.GetByID(p_paramID);
+        if (def.Value != p_value)
+        {
+            // 和默认值不同
+            var up = new UserParamsX(
                 UserID: Kit.UserID,
-                ParamID: paramID);
-            await w.Delete(old);
-
-            var def = await ParamsX.GetByID(p_paramID);
-            if (def.Value != p_value)
-            {
-                // 和默认值不同
-                var up = new UserParamsX(
-                    UserID: Kit.UserID,
-                    ParamID: paramID,
-                    Value: p_value,
-                    Mtime: Kit.Now);
-                await w.Save(up);
-            }
-
-            return await w.Commit(false);
+                ParamID: paramID,
+                Value: p_value,
+                Mtime: Kit.Now);
+            await w.Save(up);
         }
 
-        public static async Task<T> GetParamByID<T>(long p_paramID)
-        {
-            var ls = await At.FirstCol<string>(string.Format(Sql用户参数值byid, Kit.UserID, p_paramID));
-            if (ls == null || ls.Count == 0)
-                Throw.Msg($"用户参数[{p_paramID}]不存在！");
+        return await w.Commit(false);
+    }
 
-            if (string.IsNullOrEmpty(ls[0]))
-                return default;
-            return ls[0].To<T>();
-        }
+    public static async Task<T> GetParamByID<T>(long p_paramID)
+    {
+        var ls = await At.FirstCol<string>(string.Format(Sql用户参数值byid, Kit.UserID, p_paramID));
+        if (ls == null || ls.Count == 0)
+            Throw.Msg($"用户参数[{p_paramID}]不存在！");
 
-        public static async Task<T> GetParamByName<T>(string p_paramName)
-        {
-            var ls = await At.FirstCol<string>(string.Format(Sql用户参数值byname, Kit.UserID, p_paramName));
-            if (ls == null || ls.Count == 0)
-                Throw.Msg($"用户参数[{p_paramName}]不存在！");
+        if (string.IsNullOrEmpty(ls[0]))
+            return default;
+        return ls[0].To<T>();
+    }
 
-            if (string.IsNullOrEmpty(ls[0]))
-                return default;
-            return ls[0].To<T>();
-        }
+    public static async Task<T> GetParamByName<T>(string p_paramName)
+    {
+        var ls = await At.FirstCol<string>(string.Format(Sql用户参数值byname, Kit.UserID, p_paramName));
+        if (ls == null || ls.Count == 0)
+            Throw.Msg($"用户参数[{p_paramName}]不存在！");
 
-        public static Task<Table> GetUserParams(long p_userID)
-        {
-            return At.Query(string.Format(Sql用户参数列表, p_userID));
-        }
+        if (string.IsNullOrEmpty(ls[0]))
+            return default;
+        return ls[0].To<T>();
+    }
 
-        #region Sql
-        const string Sql用户参数值byid = @"
+    public static Task<Table> GetUserParams(long p_userID)
+    {
+        return At.Query(string.Format(Sql用户参数列表, p_userID));
+    }
+
+    #region Sql
+    const string Sql用户参数值byid = @"
 select value from cm_user_params
 where
 	user_id = {0}
@@ -78,7 +78,7 @@ where
 	id = {1}
 ";
 
-        const string Sql用户参数值byname = @"
+    const string Sql用户参数值byname = @"
 select a.value
 from
 	cm_user_params a,
@@ -93,7 +93,7 @@ where
 	name = '{1}'
 ";
 
-        const string Sql用户参数列表 = @"
+    const string Sql用户参数列表 = @"
 select param_id,value from cm_user_params
 where user_id={0}
 union
@@ -105,6 +105,5 @@ where
 	    a.id = b.param_id 
 	    and user_id = {0} )
 ";
-        #endregion
-    }
+    #endregion
 }

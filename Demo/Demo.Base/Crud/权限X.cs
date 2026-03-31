@@ -9,48 +9,47 @@
 #region 引用命名
 #endregion
 
-namespace Demo.Base
+namespace Demo.Base;
+
+public partial class 权限X
 {
-    public partial class 权限X
+    public static async Task<权限X> New(
+        string 权限名称 = default)
     {
-        public static async Task<权限X> New(
-            string 权限名称 = default)
-        {
-            return new 权限X(
-                ID: await NewID(),
-                权限名称: 权限名称);
-        }
+        return new 权限X(
+            ID: await NewID(),
+            权限名称: 权限名称);
+    }
 
-        protected override void InitHook()
-        {
-            //OnSaving(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+    protected override void InitHook()
+    {
+        //OnSaving(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnSaved(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnSaved(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnDeleting(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnDeleting(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnDeleted(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnDeleted(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnChanging(cName, e =>
-            //{
-                
-            //});
-        }
+        //OnChanging(cName, e =>
+        //{
+            
+        //});
     }
 }

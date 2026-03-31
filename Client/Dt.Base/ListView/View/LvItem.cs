@@ -14,123 +14,122 @@ using System.Reflection;
 using Microsoft.UI.Xaml;
 #endregion
 
-namespace Dt.Base
-{
-    /// <summary>
-    /// 视图行，Row/object 和 LvRow 的中间对象
-    /// </summary>
+namespace Dt.Base;
+
+/// <summary>
+/// 视图行，Row/object 和 LvRow 的中间对象
+/// </summary>
 #if WIN
-    [WinRT.GeneratedBindableCustomProperty]
+[WinRT.GeneratedBindableCustomProperty]
 #else
-    [Microsoft.UI.Xaml.Data.Bindable]
+[Microsoft.UI.Xaml.Data.Bindable]
 #endif
-    public partial class LvItem : ViewItem
+public partial class LvItem : ViewItem
+{
+    #region 静态内容
+    public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(
+        "IsSelected",
+        typeof(bool),
+        typeof(LvItem),
+        new PropertyMetadata(false, OnIsSelectedChanged));
+
+    static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        #region 静态内容
-        public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(
-            "IsSelected",
-            typeof(bool),
-            typeof(LvItem),
-            new PropertyMetadata(false, OnIsSelectedChanged));
+        ((LvItem)d).OnPropertyChanged("IsSelected");
+    }
 
-        static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <summary>
+    /// 卸载标志对象
+    /// </summary>
+    internal static LvItem UnloadFlagItem = new LvItem(null, Dot.UnloadFlag, -1);
+    #endregion
+
+    #region 成员变量
+    Lv _owner;
+    int _index;
+    #endregion
+
+    #region 构造方法
+    public LvItem(Lv p_lv, object p_data, int p_index)
+        : base(p_data)
+    {
+        _owner = p_lv;
+        _index = p_index;
+    }
+    #endregion
+
+    /// <summary>
+    /// 获取当前行是否为选择状态
+    /// </summary>
+    public bool IsSelected
+    {
+        get { return (bool)GetValue(IsSelectedProperty); }
+        internal set { SetValue(IsSelectedProperty, value); }
+    }
+
+    /// <summary>
+    /// 获取行索引
+    /// </summary>
+    public int Index
+    {
+        get { return _index; }
+        internal set
         {
-            ((LvItem)d).OnPropertyChanged("IsSelected");
-        }
-
-        /// <summary>
-        /// 卸载标志对象
-        /// </summary>
-        internal static LvItem UnloadFlagItem = new LvItem(null, Dot.UnloadFlag, -1);
-        #endregion
-
-        #region 成员变量
-        Lv _owner;
-        int _index;
-        #endregion
-
-        #region 构造方法
-        public LvItem(Lv p_lv, object p_data, int p_index)
-            : base(p_data)
-        {
-            _owner = p_lv;
-            _index = p_index;
-        }
-        #endregion
-
-        /// <summary>
-        /// 获取当前行是否为选择状态
-        /// </summary>
-        public bool IsSelected
-        {
-            get { return (bool)GetValue(IsSelectedProperty); }
-            internal set { SetValue(IsSelectedProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取行索引
-        /// </summary>
-        public int Index
-        {
-            get { return _index; }
-            internal set
+            if (_index != value)
             {
-                if (_index != value)
-                {
-                    _index = value;
-                    OnPropertyChanged("Index");
-                    OnPropertyChanged("FullIndex");
-                }
+                _index = value;
+                OnPropertyChanged("Index");
+                OnPropertyChanged("FullIndex");
             }
         }
+    }
 
-        /// <summary>
-        /// 获取完整行索引
-        /// </summary>
-        public string FullIndex
+    /// <summary>
+    /// 获取完整行索引
+    /// </summary>
+    public string FullIndex
+    {
+        get { return $"{_index}/{_owner?.Rows.Count}"; }
+    }
+
+    /// <summary>
+    /// 宿主
+    /// </summary>
+    internal override IViewItemHost Host => _owner;
+
+    /// <summary>
+    /// 单击行
+    /// </summary>
+    internal void OnClick()
+    {
+        if (_owner.SelectionMode == SelectionMode.Multiple)
         {
-            get { return $"{_index}/{_owner?.Rows.Count}"; }
+            // 多选时切换选择状态
+            var old = _owner.SelectedLvItems.LastOrDefault();
+            if (IsSelected)
+                _owner.SelectedLvItems.Remove(this);
+            else
+                _owner.SelectedLvItems.Add(this);
+            _owner.OnItemClick(Data, (old != null) ? old.Data : null);
         }
-
-        /// <summary>
-        /// 宿主
-        /// </summary>
-        internal override IViewItemHost Host => _owner;
-
-        /// <summary>
-        /// 单击行
-        /// </summary>
-        internal void OnClick()
+        else
         {
-            if (_owner.SelectionMode == SelectionMode.Multiple)
+            // 单选
+            if (IsSelected)
             {
-                // 多选时切换选择状态
-                var old = _owner.SelectedLvItems.LastOrDefault();
-                if (IsSelected)
-                    _owner.SelectedLvItems.Remove(this);
-                else
-                    _owner.SelectedLvItems.Add(this);
-                _owner.OnItemClick(Data, (old != null) ? old.Data : null);
+                _owner.OnItemClick(Data, Data);
             }
             else
             {
-                // 单选
-                if (IsSelected)
-                {
-                    _owner.OnItemClick(Data, Data);
-                }
-                else
-                {
-                    object old = _owner.SelectedItem;
-                    _owner.OnToggleSelected(this);
-                    _owner.OnItemClick(Data, old);
-                }
+                object old = _owner.SelectedItem;
+                _owner.OnToggleSelected(this);
+                _owner.OnItemClick(Data, old);
             }
         }
+    }
 
-        internal void OnDoubleClick()
-        {
-            _owner.OnItemDoubleClick(Data);
-        }
+    internal void OnDoubleClick()
+    {
+        _owner.OnItemDoubleClick(Data);
     }
 }

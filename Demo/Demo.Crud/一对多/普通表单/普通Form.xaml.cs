@@ -11,26 +11,25 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.Crud
+namespace Demo.Crud;
+
+using A = 父表X;
+
+public sealed partial class 普通Form : Form
 {
-    using A = 父表X;
-    
-    public sealed partial class 普通Form : Form
+    public 普通Form()
     {
-        public 普通Form()
-        {
-            InitializeComponent();
-            Menu = CreateMenu();
-        }
+        InitializeComponent();
+        Menu = CreateMenu();
+    }
 
-        protected override async Task OnAdd()
-        {
-            _fv.Data = await A.New();
-        }
+    protected override async Task OnAdd()
+    {
+        _fv.Data = await A.New();
+    }
 
-        protected override async Task OnGet()
-        {
-            _fv.Data = await A.GetByID(_args.ID);
-        }
+    protected override async Task OnGet()
+    {
+        _fv.Data = await A.GetByID(_args.ID);
     }
 }

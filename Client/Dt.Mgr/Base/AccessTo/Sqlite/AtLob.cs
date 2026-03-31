@@ -9,18 +9,17 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Mgr
-{
-    /// <summary>
-    /// 本地业务库，At = Access To
-    /// </summary>
-    public class AtLob : AccessAgent<AtLob.Info>
-    {
-        public class Info : AgentInfo
-        {
-            public override AccessType Type => AccessType.Local;
+namespace Dt.Mgr;
 
-            public override string Name => "lob";
-        }
+/// <summary>
+/// 本地业务库，At = Access To
+/// </summary>
+public class AtLob : AccessAgent<AtLob.Info>
+{
+    public class Info : AgentInfo
+    {
+        public override AccessType Type => AccessType.Local;
+
+        public override string Name => "lob";
     }
 }

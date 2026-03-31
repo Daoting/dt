@@ -12,23 +12,22 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.UI.Xaml;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// DependencyObject扩展类
+/// </summary>
+public static class DependencyObjectExt
 {
     /// <summary>
-    /// DependencyObject扩展类
+    /// 判断依赖属性是否已设置本地值
     /// </summary>
-    public static class DependencyObjectExt
+    /// <seealso cref="M:System.Windows.DependencyObject.ReadLocalValue(System.Windows.DependencyProperty)" />
+    /// <param name="source">依赖对象</param>
+    /// <param name="p_property">依赖属性</param>
+    /// <returns></returns>
+    public static bool ExistLocalValue(this DependencyObject source, DependencyProperty p_property)
     {
-        /// <summary>
-        /// 判断依赖属性是否已设置本地值
-        /// </summary>
-        /// <seealso cref="M:System.Windows.DependencyObject.ReadLocalValue(System.Windows.DependencyProperty)" />
-        /// <param name="source">依赖对象</param>
-        /// <param name="p_property">依赖属性</param>
-        /// <returns></returns>
-        public static bool ExistLocalValue(this DependencyObject source, DependencyProperty p_property)
-        {
-            return (source.ReadLocalValue(p_property) != DependencyProperty.UnsetValue);
-        }
+        return (source.ReadLocalValue(p_property) != DependencyProperty.UnsetValue);
     }
 }

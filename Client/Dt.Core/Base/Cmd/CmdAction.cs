@@ -10,41 +10,40 @@
 
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 可撤消、重做的命令动作描述类
+/// </summary>
+public class CmdAction
 {
+    BaseCommand _cmd;
+    object _args;
+
     /// <summary>
-    /// 可撤消、重做的命令动作描述类
+    /// 
     /// </summary>
-    public class CmdAction
+    /// <param name="p_cmd"></param>
+    /// <param name="p_args"></param>
+    public CmdAction(BaseCommand p_cmd, object p_args)
     {
-        BaseCommand _cmd;
-        object _args;
+        _cmd = p_cmd;
+        _args = p_args;
+    }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="p_cmd"></param>
-        /// <param name="p_args"></param>
-        public CmdAction(BaseCommand p_cmd, object p_args)
-        {
-            _cmd = p_cmd;
-            _args = p_args;
-        }
+    /// <summary>
+    /// 撤消
+    /// </summary>
+    public void Undo()
+    {
+        _cmd.Undo(_args);
+    }
 
-        /// <summary>
-        /// 撤消
-        /// </summary>
-        public void Undo()
-        {
-            _cmd.Undo(_args);
-        }
-
-        /// <summary>
-        /// 重做
-        /// </summary>
-        public void Redo()
-        {
-            _cmd.Redo(_args);
-        }
+    /// <summary>
+    /// 重做
+    /// </summary>
+    public void Redo()
+    {
+        _cmd.Redo(_args);
     }
 }

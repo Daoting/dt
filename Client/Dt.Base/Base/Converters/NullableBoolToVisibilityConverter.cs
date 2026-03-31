@@ -12,43 +12,42 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 #endregion
 
-namespace Dt.Base
-{
-    public partial class NullableBoolToVisibilityConverter : IValueConverter
-    {
-        public bool IsReversed { get; set; }
-        public bool TrueIsVisible { get; set; }
+namespace Dt.Base;
 
-        public object Convert(object value, Type targetType, object parameter, string language)
+public partial class NullableBoolToVisibilityConverter : IValueConverter
+{
+    public bool IsReversed { get; set; }
+    public bool TrueIsVisible { get; set; }
+
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        if (IsReversed)
         {
-            if (IsReversed)
-            {
-                var vis = (Visibility) value;
-                return (bool?)(((vis == Visibility.Visible) && TrueIsVisible) || ((vis == Visibility.Collapsed) && !TrueIsVisible));
-            }
-            
+            var vis = (Visibility) value;
+            return (bool?)(((vis == Visibility.Visible) && TrueIsVisible) || ((vis == Visibility.Collapsed) && !TrueIsVisible));
+        }
+        
+        var val = value as bool?;
+
+        return 
+            (val.HasValue && val.Value) ?
+            (TrueIsVisible ? Visibility.Visible : Visibility.Collapsed) :
+            (!TrueIsVisible ? Visibility.Visible : Visibility.Collapsed);
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        if (IsReversed)
+        {
             var val = value as bool?;
 
-            return 
+            return
                 (val.HasValue && val.Value) ?
                 (TrueIsVisible ? Visibility.Visible : Visibility.Collapsed) :
                 (!TrueIsVisible ? Visibility.Visible : Visibility.Collapsed);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            if (IsReversed)
-            {
-                var val = value as bool?;
-
-                return
-                    (val.HasValue && val.Value) ?
-                    (TrueIsVisible ? Visibility.Visible : Visibility.Collapsed) :
-                    (!TrueIsVisible ? Visibility.Visible : Visibility.Collapsed);
-            }
-
-            var vis = (Visibility)value;
-            return (bool?)(((vis == Visibility.Visible) && TrueIsVisible) || ((vis == Visibility.Collapsed) && !TrueIsVisible));
-        }
+        var vis = (Visibility)value;
+        return (bool?)(((vis == Visibility.Visible) && TrueIsVisible) || ((vis == Visibility.Collapsed) && !TrueIsVisible));
     }
 }

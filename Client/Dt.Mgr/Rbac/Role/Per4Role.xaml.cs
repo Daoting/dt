@@ -11,30 +11,29 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Rbac
+namespace Dt.Mgr.Rbac;
+
+public sealed partial class Per4Role : Dlg
 {
-    public sealed partial class Per4Role : Dlg
+    public Per4Role()
     {
-        public Per4Role()
-        {
-            InitializeComponent();
-            Menu = Menu.New(Mi.确定(OnOK));
-        }
+        InitializeComponent();
+        Menu = Menu.New(Mi.确定(OnOK));
+    }
 
-        public IEnumerable<Row> SelectedRows => _lv.SelectedRows;
+    public IEnumerable<Row> SelectedRows => _lv.SelectedRows;
 
-        public async Task<bool> Show(long p_releatedID, FrameworkElement p_target)
+    public async Task<bool> Show(long p_releatedID, FrameworkElement p_target)
+    {
+        _lv.Data = await PermissionX.Query($"where not exists ( select per_id from cm_role_per b where a.ID = b.per_id and role_id={p_releatedID} )");
+        if (!Kit.IsPhoneUI)
         {
-            _lv.Data = await PermissionX.Query($"where not exists ( select per_id from cm_role_per b where a.ID = b.per_id and role_id={p_releatedID} )");
-            if (!Kit.IsPhoneUI)
-            {
-                WinPlacement = DlgPlacement.TargetBottomLeft;
-                PlacementTarget = p_target;
-                ClipElement = p_target;
-                Height = Kit.ViewHeight / 2;
-                Width = Kit.ViewWidth / 4;
-            }
-            return await ShowAsync();
+            WinPlacement = DlgPlacement.TargetBottomLeft;
+            PlacementTarget = p_target;
+            ClipElement = p_target;
+            Height = Kit.ViewHeight / 2;
+            Width = Kit.ViewWidth / 4;
         }
+        return await ShowAsync();
     }
 }

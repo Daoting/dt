@@ -10,16 +10,15 @@
 
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+/// <summary>
+/// 迷你图实例
+/// </summary>
+public class RptSparklineInst : RptOutputInst
 {
-    /// <summary>
-    /// 迷你图实例
-    /// </summary>
-    public class RptSparklineInst : RptOutputInst
+    public RptSparklineInst(RptItemBase p_item)
+        : base(p_item)
     {
-        public RptSparklineInst(RptItemBase p_item)
-            : base(p_item)
-        {
-        }
     }
 }

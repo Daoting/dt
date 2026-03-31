@@ -13,132 +13,131 @@ using ScottPlot.AxisRules;
 using ScottPlot.Hatches;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class Chart2Marker : Win
 {
-    public partial class Chart2Marker : Win
+    public Chart2Marker()
     {
-        public Chart2Marker()
+        InitializeComponent();
+    }
+
+    void OnDef(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            InitializeComponent();
+            _c.Add.Signal(Generate.Sin());
+            _c.Add.Signal(Generate.Cos());
+
+            _c.Add.Marker(25, .5);
+            _c.Add.Marker(35, .6);
+            _c.Add.Marker(45, .7);
         }
+    }
 
-        void OnDef(object sender, RoutedEventArgs e)
+    void OnPosition(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                _c.Add.Signal(Generate.Sin());
-                _c.Add.Signal(Generate.Cos());
+            MarkerShape[] markerShapes = Enum.GetValues<MarkerShape>().ToArray();
+            ScottPlot.Palettes.Category20 palette = new();
 
-                _c.Add.Marker(25, .5);
-                _c.Add.Marker(35, .6);
-                _c.Add.Marker(45, .7);
+            for (int i = 0; i < markerShapes.Length; i++)
+            {
+                var mp = _c.Add.Marker(x: i, y: 0);
+                mp.MarkerStyle.Shape = markerShapes[i];
+                mp.MarkerStyle.Size = 10;
+
+                // markers made from filled shapes have can be customized
+                mp.MarkerStyle.FillColor = palette.GetColor(i).WithAlpha(.5);
+
+                // markers made from filled shapes have optional outlines
+                mp.MarkerStyle.OutlineColor = palette.GetColor(i);
+                mp.MarkerStyle.OutlineWidth = 2;
+
+                // markers created from lines can be customized
+                mp.MarkerStyle.LineWidth = 2f;
+                mp.MarkerStyle.LineColor = palette.GetColor(i);
+
+                var txt = _c.Add.Text(markerShapes[i].ToString(), i, 0.15);
+                txt.LabelRotation = -90;
+                txt.LabelAlignment = Alignment.MiddleLeft;
+                txt.LabelFontColor = Colors.Black;
             }
+
+            _c.Title = "Marker Names";
+            _c.Axes.SetLimits(-1, markerShapes.Length, -1, 4);
+            _c.HideGrid();
         }
+    }
 
-        void OnPosition(object sender, RoutedEventArgs e)
+    void OnCustom(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                MarkerShape[] markerShapes = Enum.GetValues<MarkerShape>().ToArray();
-                ScottPlot.Palettes.Category20 palette = new();
+            var sin = _c.Add.Signal(Generate.Sin());
+            sin.LegendText = "Sine";
 
-                for (int i = 0; i < markerShapes.Length; i++)
-                {
-                    var mp = _c.Add.Marker(x: i, y: 0);
-                    mp.MarkerStyle.Shape = markerShapes[i];
-                    mp.MarkerStyle.Size = 10;
+            var cos = _c.Add.Signal(Generate.Cos());
+            cos.LegendText = "Cosine";
 
-                    // markers made from filled shapes have can be customized
-                    mp.MarkerStyle.FillColor = palette.GetColor(i).WithAlpha(.5);
-
-                    // markers made from filled shapes have optional outlines
-                    mp.MarkerStyle.OutlineColor = palette.GetColor(i);
-                    mp.MarkerStyle.OutlineWidth = 2;
-
-                    // markers created from lines can be customized
-                    mp.MarkerStyle.LineWidth = 2f;
-                    mp.MarkerStyle.LineColor = palette.GetColor(i);
-
-                    var txt = _c.Add.Text(markerShapes[i].ToString(), i, 0.15);
-                    txt.LabelRotation = -90;
-                    txt.LabelAlignment = Alignment.MiddleLeft;
-                    txt.LabelFontColor = Colors.Black;
-                }
-
-                _c.Title = "Marker Names";
-                _c.Axes.SetLimits(-1, markerShapes.Length, -1, 4);
-                _c.HideGrid();
-            }
+            var marker = _c.Add.Marker(25, .5);
+            marker.LegendText = "Marker";
+            _c.ShowLegend();
         }
+    }
 
-        void OnCustom(object sender, RoutedEventArgs e)
+    void OnHor(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                var sin = _c.Add.Signal(Generate.Sin());
-                sin.LegendText = "Sine";
+            double[] xs = Generate.Consecutive(51);
+            double[] sin = Generate.Sin(51);
+            double[] cos = Generate.Cos(51);
 
-                var cos = _c.Add.Signal(Generate.Cos());
-                cos.LegendText = "Cosine";
-
-                var marker = _c.Add.Marker(25, .5);
-                marker.LegendText = "Marker";
-                _c.ShowLegend();
-            }
+            _c.Add.Markers(xs, sin, MarkerShape.OpenCircle, 15, Colors.Green);
+            _c.Add.Markers(xs, cos, MarkerShape.FilledDiamond, 10, Colors.Magenta);
         }
+    }
 
-        void OnHor(object sender, RoutedEventArgs e)
+    void OnColor(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                double[] xs = Generate.Consecutive(51);
-                double[] sin = Generate.Sin(51);
-                double[] cos = Generate.Cos(51);
+            double[] xs = Generate.Consecutive(51);
+            double[] ys = Generate.Sin(51);
 
-                _c.Add.Markers(xs, sin, MarkerShape.OpenCircle, 15, Colors.Green);
-                _c.Add.Markers(xs, cos, MarkerShape.FilledDiamond, 10, Colors.Magenta);
-            }
+            var markers = _c.Add.Markers(xs, ys);
+            markers.Colormap = new ScottPlot.Colormaps.Turbo();
         }
+    }
 
-        void OnColor(object sender, RoutedEventArgs e)
+    void OnImg(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                double[] xs = Generate.Consecutive(51);
-                double[] ys = Generate.Sin(51);
+            _c.Add.Signal(Generate.Sin());
+            _c.Add.Signal(Generate.Cos());
 
-                var markers = _c.Add.Markers(xs, ys);
-                markers.Colormap = new ScottPlot.Colormaps.Turbo();
-            }
-        }
+            // An image can be loaded from a file or created dynamically
+            ScottPlot.Image image = SampleImages.ScottPlotLogo(48, 48);
 
-        void OnImg(object sender, RoutedEventArgs e)
-        {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                _c.Add.Signal(Generate.Sin());
-                _c.Add.Signal(Generate.Cos());
+            Coordinates location1 = new(5, .5);
+            Coordinates location2 = new(25, .5);
 
-                // An image can be loaded from a file or created dynamically
-                ScottPlot.Image image = SampleImages.ScottPlotLogo(48, 48);
+            _c.Add.ImageMarker(location1, image);
+            _c.Add.ImageMarker(location2, image, scale: 2);
 
-                Coordinates location1 = new(5, .5);
-                Coordinates location2 = new(25, .5);
-
-                _c.Add.ImageMarker(location1, image);
-                _c.Add.ImageMarker(location2, image, scale: 2);
-
-                var m1 = _c.Add.Marker(location1);
-                var m2 = _c.Add.Marker(location2);
-                m1.Color = Colors.Orange;
-                m2.Color = Colors.Orange;
-            }
+            var m1 = _c.Add.Marker(location1);
+            var m2 = _c.Add.Marker(location2);
+            m1.Color = Colors.Orange;
+            m2.Color = Colors.Orange;
         }
     }
 }

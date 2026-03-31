@@ -10,49 +10,48 @@
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 报表查询面板
+/// </summary>
+public partial class RptQuery : UserControl
 {
+    protected Row _row;
+    QueryFv _fv;
+
+    public RptQuery()
+    { }
+
     /// <summary>
-    /// 报表查询面板
+    /// 查询事件
     /// </summary>
-    public partial class RptQuery : UserControl
+    public event Action<Row> Query;
+
+    public virtual QueryFv Fv => _fv;
+
+    internal void LoadData(Row p_row, QueryFv p_fv)
     {
-        protected Row _row;
-        QueryFv _fv;
+        _row = p_row;
 
-        public RptQuery()
-        { }
-
-        /// <summary>
-        /// 查询事件
-        /// </summary>
-        public event Action<Row> Query;
-
-        public virtual QueryFv Fv => _fv;
-
-        internal void LoadData(Row p_row, QueryFv p_fv)
+        // 根据xaml创建的查询面板
+        if (p_fv != null)
         {
-            _row = p_row;
-
-            // 根据xaml创建的查询面板
-            if (p_fv != null)
-            {
-                _fv = p_fv;
-                Content = _fv;
-            }
-            
-            var fv = Fv;
-            fv.Data = _row;
-            fv.Query += OnQuery;
-            OnInit();
+            _fv = p_fv;
+            Content = _fv;
         }
+        
+        var fv = Fv;
+        fv.Data = _row;
+        fv.Query += OnQuery;
+        OnInit();
+    }
 
-        protected virtual void OnInit()
-        { }
+    protected virtual void OnInit()
+    { }
 
-        void OnQuery(QueryClause clause)
-        {
-            Query?.Invoke(_row);
-        }
+    void OnQuery(QueryClause clause)
+    {
+        Query?.Invoke(_row);
     }
 }

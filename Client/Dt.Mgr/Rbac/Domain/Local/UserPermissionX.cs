@@ -9,29 +9,28 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Mgr
+namespace Dt.Mgr;
+
+/// <summary>
+/// 用户具有的权限
+/// </summary>
+[Sqlite("lob")]
+public class UserPermissionX : EntityX<UserPermissionX>
 {
-    /// <summary>
-    /// 用户具有的权限
-    /// </summary>
-    [Sqlite("lob")]
-    public class UserPermissionX : EntityX<UserPermissionX>
+    #region 构造方法
+    UserPermissionX() { }
+
+    public UserPermissionX(long ID)
     {
-        #region 构造方法
-        UserPermissionX() { }
+        Add("ID", ID);
+        IsAdded = true;
+    }
+    #endregion
 
-        public UserPermissionX(long ID)
-        {
-            Add("ID", ID);
-            IsAdded = true;
-        }
-        #endregion
-
-        [PrimaryKey]
-        new public long ID
-        {
-            get { return (long)this["ID"]; }
-            set { this["ID"] = value; }
-        }
+    [PrimaryKey]
+    new public long ID
+    {
+        get { return (long)this["ID"]; }
+        set { this["ID"] = value; }
     }
 }

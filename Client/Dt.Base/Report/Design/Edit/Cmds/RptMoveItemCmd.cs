@@ -21,52 +21,52 @@ using Dt.Cells.UI;
 
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+internal class MoveRptItemCmd : RptCmdBase
 {
-    internal class MoveRptItemCmd : RptCmdBase
+    public override object Execute(object p_args)
     {
-        public override object Execute(object p_args)
-        {
-            MoveRptItemArgs args = (MoveRptItemArgs)p_args;
-            RptItem drgItem = args.RptItem;
-            CellEventArgs dstPos = args.DstPos;
+        MoveRptItemArgs args = (MoveRptItemArgs)p_args;
+        RptItem drgItem = args.RptItem;
+        CellEventArgs dstPos = args.DstPos;
 
-            args.OldRow = drgItem.Row;
-            args.OldCol = drgItem.Col;            
-            drgItem.Row = dstPos.Row;
-            drgItem.Col = dstPos.Column;
-            drgItem.Update(true);
-            return drgItem;
-        }
-
-        public override void Undo(object p_args)
-        {
-            MoveRptItemArgs args = (MoveRptItemArgs)p_args;
-            RptItem drgItem = args.RptItem;
-            drgItem.Row = args.OldRow;
-            drgItem.Col = args.OldCol;
-            drgItem.Update(true);
-        }
+        args.OldRow = drgItem.Row;
+        args.OldCol = drgItem.Col;            
+        drgItem.Row = dstPos.Row;
+        drgItem.Col = dstPos.Column;
+        drgItem.Update(true);
+        return drgItem;
     }
 
-    internal class MoveRptItemArgs
+    public override void Undo(object p_args)
     {
-        public MoveRptItemArgs(RptItem p_rptItem, CellEventArgs p_dstPos)
-        {
-            RptItem = p_rptItem;
-            DstPos = p_dstPos;
-        }
+        MoveRptItemArgs args = (MoveRptItemArgs)p_args;
+        RptItem drgItem = args.RptItem;
+        drgItem.Row = args.OldRow;
+        drgItem.Col = args.OldCol;
+        drgItem.Update(true);
+    }
+}
 
-        /// <summary>
-        /// 获取要放置的区域
-        /// </summary>
-        public RptItem RptItem { get; }
-
-        public int OldRow { get; set; }
-
-        public int OldCol { get; set; }
-
-        public CellEventArgs DstPos { get; }
+internal class MoveRptItemArgs
+{
+    public MoveRptItemArgs(RptItem p_rptItem, CellEventArgs p_dstPos)
+    {
+        RptItem = p_rptItem;
+        DstPos = p_dstPos;
     }
 
-} 
+    /// <summary>
+    /// 获取要放置的区域
+    /// </summary>
+    public RptItem RptItem { get; }
+
+    public int OldRow { get; set; }
+
+    public int OldCol { get; set; }
+
+    public CellEventArgs DstPos { get; }
+}
+
+

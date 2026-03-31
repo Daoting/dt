@@ -11,25 +11,24 @@
 
 using Windows.Storage;
 
-namespace Dt.Base.Tools
+namespace Dt.Base.Tools;
+
+/// <summary>
+/// 数据库操作接口
+/// </summary>
+interface IDbTools
 {
-    /// <summary>
-    /// 数据库操作接口
-    /// </summary>
-    interface IDbTools
-    {
-        Task<bool> ExistsDb();
+    Task<bool> ExistsDb();
 
-        Task<bool> ExistsUser();
+    Task<bool> ExistsUser();
 
-        Task<bool> IsPwdCorrect();
+    Task<bool> IsPwdCorrect();
 
-        Task CreateDb();
+    Task CreateDb();
 
-        Task DeleteDb();
+    Task DeleteDb();
 
-        Task ImportInit();
+    Task ImportInit();
 
-        Task ImportFromFile(StorageFile p_file);
-    }
+    Task ImportFromFile(StorageFile p_file);
 }

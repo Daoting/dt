@@ -19,115 +19,114 @@ using Microsoft.UI.Xaml.Controls;
 using System.Linq.Dynamic.Core;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class LvFilter : Win
 {
-    public partial class LvFilter : Win
+    public LvFilter()
     {
-        public LvFilter()
-        {
-            InitializeComponent();
-            _lv.Data = SampleData.CreatePersonXs(100);
-        }
+        InitializeComponent();
+        _lv.Data = SampleData.CreatePersonXs(100);
+    }
 
-        void OnWhere1(object sender, RoutedEventArgs e)
-        {
-            SetWhere("Xm.StartsWith('李')");
-        }
+    void OnWhere1(object sender, RoutedEventArgs e)
+    {
+        SetWhere("Xm.StartsWith('李')");
+    }
 
-        void OnWhere2(object sender, RoutedEventArgs e)
-        {
-            SetWhere("Xm.Contains('涛') && Bh < 15");
-        }
+    void OnWhere2(object sender, RoutedEventArgs e)
+    {
+        SetWhere("Xm.Contains('涛') && Bh < 15");
+    }
 
-        void OnWhere3(object sender, RoutedEventArgs e)
-        {
-            SetWhere("it.Str(\"Xm\") == \"李全亮\"");
-        }
+    void OnWhere3(object sender, RoutedEventArgs e)
+    {
+        SetWhere("it.Str(\"Xm\") == \"李全亮\"");
+    }
 
-        void OnWhere4(object sender, RoutedEventArgs e)
-        {
-            SetWhere("it.Str(\"Xm\").StartsWith('李')");
-        }
+    void OnWhere4(object sender, RoutedEventArgs e)
+    {
+        SetWhere("it.Str(\"Xm\").StartsWith('李')");
+    }
 
-        void OnMyWhere(object sender, RoutedEventArgs e)
-        {
-            SetWhere(_tb.Text.Trim());
-        }
+    void OnMyWhere(object sender, RoutedEventArgs e)
+    {
+        SetWhere(_tb.Text.Trim());
+    }
 
-        void OnCombin(object sender, RoutedEventArgs e)
+    void OnCombin(object sender, RoutedEventArgs e)
+    {
+        SetFilter(() =>
         {
-            SetFilter(() =>
-            {
-                _lv.Where = "Xm.StartsWith('李')";
-                _lv.Filter = FilterCallback;
-            });
-        }
+            _lv.Where = "Xm.StartsWith('李')";
+            _lv.Filter = FilterCallback;
+        });
+    }
 
-        void OnFilter(object sender, RoutedEventArgs e)
-        {
-            SetFilter(() => _lv.Filter = FilterCallback);
-        }
+    void OnFilter(object sender, RoutedEventArgs e)
+    {
+        SetFilter(() => _lv.Filter = FilterCallback);
+    }
 
-        void OnFilterCfg(object sender, RoutedEventArgs e)
-        {
-            _lv.FilterCfg = new FilterCfg();
-        }
+    void OnFilterCfg(object sender, RoutedEventArgs e)
+    {
+        _lv.FilterCfg = new FilterCfg();
+    }
 
-        void OnCustFilterCfg(object sender, RoutedEventArgs e)
+    void OnCustFilterCfg(object sender, RoutedEventArgs e)
+    {
+        _lv.FilterCfg = new FilterCfg
         {
-            _lv.FilterCfg = new FilterCfg
-            {
-                FilterCols = "xm,bh",
-                EnablePinYin = true,
-                IsRealtime = true,
-            };
-        }
+            FilterCols = "xm,bh",
+            EnablePinYin = true,
+            IsRealtime = true,
+        };
+    }
 
-        void OnMyFilterCfg(object sender, RoutedEventArgs e)
+    void OnMyFilterCfg(object sender, RoutedEventArgs e)
+    {
+        var cfg = new FilterCfg();
+        cfg.MyFilter = (o, txt) =>
         {
-            var cfg = new FilterCfg();
-            cfg.MyFilter = (o, txt) =>
-            {
-                return true;
-            };
-            _lv.FilterCfg = cfg;
-        }
+            return true;
+        };
+        _lv.FilterCfg = cfg;
+    }
 
-        void OnClearFilter(object sender, RoutedEventArgs e)
+    void OnClearFilter(object sender, RoutedEventArgs e)
+    {
+        using (_lv.Defer())
         {
-            using (_lv.Defer())
-            {
-                _lv.Where = null;
-                _lv.Filter = null;
-                _lv.FilterCfg = null;
-            }
+            _lv.Where = null;
+            _lv.Filter = null;
+            _lv.FilterCfg = null;
         }
+    }
 
-        void SetWhere(string p_where)
+    void SetWhere(string p_where)
+    {
+        using (_lv.Defer())
         {
-            using (_lv.Defer())
-            {
-                _lv.Filter = null;
-                _lv.FilterCfg = null;
-                _lv.Where = p_where;
-            }
+            _lv.Filter = null;
+            _lv.FilterCfg = null;
+            _lv.Where = p_where;
         }
+    }
 
-        void SetFilter(Action p_call)
+    void SetFilter(Action p_call)
+    {
+        using (_lv.Defer())
         {
-            using (_lv.Defer())
-            {
-                _lv.Where = null;
-                _lv.Filter = null;
-                _lv.FilterCfg = null;
-                p_call();
-            }
+            _lv.Where = null;
+            _lv.Filter = null;
+            _lv.FilterCfg = null;
+            p_call();
         }
+    }
 
-        bool FilterCallback(object obj)
-        {
-            var per = obj as PersonX;
-            return per.Bumen == "肾内科二";
-        }
+    bool FilterCallback(object obj)
+    {
+        var per = obj as PersonX;
+        return per.Bumen == "肾内科二";
     }
 }

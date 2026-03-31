@@ -9,27 +9,26 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Core.Rpc
+namespace Dt.Core.Rpc;
+
+/// <summary>
+/// Api调用结果种类
+/// </summary>
+public enum ApiResponseType
 {
     /// <summary>
-    /// Api调用结果种类
+    /// 调用成功
     /// </summary>
-    public enum ApiResponseType
-    {
-        /// <summary>
-        /// 调用成功
-        /// </summary>
-        Success = 0,
+    Success = 0,
 
-        /// <summary>
-        /// 调用过程中出错
-        /// </summary>
-        Error = 1,
+    /// <summary>
+    /// 调用过程中出错
+    /// </summary>
+    Error = 1,
 
-        /// <summary>
-        /// 调用过程中产生业务警告提示
-        /// </summary>
-        Warning = 2,
-    }
+    /// <summary>
+    /// 调用过程中产生业务警告提示
+    /// </summary>
+    Warning = 2,
 }
 

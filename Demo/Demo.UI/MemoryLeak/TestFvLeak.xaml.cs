@@ -17,69 +17,68 @@ using Microsoft.UI.Xaml.Input;
 using Windows.UI;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class TestFvLeak : Win
 {
-    public partial class TestFvLeak : Win
+    Table _tbl;
+    int _rowNum;
+
+    public TestFvLeak()
     {
-        Table _tbl;
-        int _rowNum;
+        InitializeComponent();
+        CreateTable();
+        OnRow(null, null);
+    }
 
-        public TestFvLeak()
+    void CreateTable()
+    {
+        _tbl = new Table
         {
-            InitializeComponent();
-            CreateTable();
-            OnRow(null, null);
-        }
+            { "txt" },
+            { "liststr" },
+            { "num", typeof(double) },
+            { "query" },
+            { "tree" },
+            { "hm" },
+            { "icon", typeof(Icons) },
+            { "color", typeof(Color) },
+            { "date", typeof(DateTime) },
+            { "tip" },
+        };
+    }
 
-        void CreateTable()
+    void OnRow(object sender, RoutedEventArgs e)
+    {
+        _rowNum++;
+        DateTime now = DateTime.Now;
+        _fv.Data = _tbl.AddRow(new
         {
-            _tbl = new Table
-            {
-                { "txt" },
-                { "liststr" },
-                { "num", typeof(double) },
-                { "query" },
-                { "tree" },
-                { "hm" },
-                { "icon", typeof(Icons) },
-                { "color", typeof(Color) },
-                { "date", typeof(DateTime) },
-                { "tip" },
-            };
-        }
+            txt = $"文本{_rowNum}",
+            num = _rowNum,
+            mask = "",
+            date = now,
+            tip = "只读信息内容",
+            
+        });
+    }
 
-        void OnRow(object sender, RoutedEventArgs e)
+    void OnSearch(CPick arg1, string arg2)
+    {
+        arg1.Data = SampleData.CreatePersonsTbl(100);
+        arg1.Lv.Filter = obj =>
         {
-            _rowNum++;
-            DateTime now = DateTime.Now;
-            _fv.Data = _tbl.AddRow(new
-            {
-                txt = $"文本{_rowNum}",
-                num = _rowNum,
-                mask = "",
-                date = now,
-                tip = "只读信息内容",
-                
-            });
-        }
+            var xm = obj.To<Row>().Str("xm");
+            return xm.Contains(arg2) || Kit.GetPinYin(xm).Contains(arg2.ToLower());
+        };
+    }
 
-        void OnSearch(CPick arg1, string arg2)
-        {
-            arg1.Data = SampleData.CreatePersonsTbl(100);
-            arg1.Lv.Filter = obj =>
-            {
-                var xm = obj.To<Row>().Str("xm");
-                return xm.Contains(arg2) || Kit.GetPinYin(xm).Contains(arg2.ToLower());
-            };
-        }
+    void OnLoadTreeData(CTree arg1, AsyncArgs arg2)
+    {
+        arg1.Data = TvData.GetTbl();
+    }
 
-        void OnLoadTreeData(CTree arg1, AsyncArgs arg2)
-        {
-            arg1.Data = TvData.GetTbl();
-        }
-
-        void OnTipClick(object sender, TappedRoutedEventArgs e)
-        {
-        }
+    void OnTipClick(object sender, TappedRoutedEventArgs e)
+    {
     }
 }

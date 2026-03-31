@@ -16,38 +16,38 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class MarkdownBoxDemo : Win
 {
-    public partial class MarkdownBoxDemo : Win
+    public MarkdownBoxDemo()
     {
-        public MarkdownBoxDemo()
-        {
-            InitializeComponent();
-            _md.SetText(_initText);
-        }
+        InitializeComponent();
+        _md.SetText(_initText);
+    }
 
-        void OnLoad1(object sender, RoutedEventArgs e)
-        {
-            _md.SetText("## 内容1");
-        }
+    void OnLoad1(object sender, RoutedEventArgs e)
+    {
+        _md.SetText("## 内容1");
+    }
 
-        void OnLoad2(object sender, RoutedEventArgs e)
-        {
-            _md.SetText("## 内容2");
-        }
+    void OnLoad2(object sender, RoutedEventArgs e)
+    {
+        _md.SetText("## 内容2");
+    }
 
-        async void OnGet(object sender, RoutedEventArgs e)
-        {
-            var str = await _md.GetText();
-            Kit.Msg("内容：\r\n" + str);
-        }
+    async void OnGet(object sender, RoutedEventArgs e)
+    {
+        var str = await _md.GetText();
+        Kit.Msg("内容：\r\n" + str);
+    }
 
-        protected override void OnClosed()
-        {
-            _md.Close();
-        }
-        
-        const string _initText = @"事实上, 编写 Web 内容很麻烦. [WYSIWYG]^(所见即所得) 编辑器帮助减轻了这一任务. 但通常会导致代码太糟, 或更糟糕的是, 网页也会很丑.
+    protected override void OnClosed()
+    {
+        _md.Close();
+    }
+    
+    const string _initText = @"事实上, 编写 Web 内容很麻烦. [WYSIWYG]^(所见即所得) 编辑器帮助减轻了这一任务. 但通常会导致代码太糟, 或更糟糕的是, 网页也会很丑.
 
 没有通常伴随的所有复杂和丑陋的问题, **Markdown** 是一种更好的生成 **HTML** 内容的方式.
 
@@ -788,5 +788,4 @@ Content for chapter one.
 {{< admonition tip >}}
 **LoveIt** 主题提供了一个包含更多功能的 [图片的 shortcode](../theme-documentation-extended-shortcodes#image).
 {{< /admonition >}}";
-    }
 }

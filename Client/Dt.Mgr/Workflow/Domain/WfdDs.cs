@@ -11,66 +11,66 @@ using System.Text;
 using System.Text.Json;
 #endregion
 
-namespace Dt.Mgr.Workflow
+namespace Dt.Mgr.Workflow;
+
+public static class WfdDs
 {
-    public static class WfdDs
+    public static async Task<bool> SavePrc(WfdPrcX p_prc)
     {
-        public static async Task<bool> SavePrc(WfdPrcX p_prc)
-        {
-            var w = await WfdPrcX.NewWriter();
-            await w.Save(p_prc);
-            await w.Save(p_prc.Atvs);
-            await w.Save(p_prc.Trss);
-            await w.Save(p_prc.AtvRoles);
-            return await w.Commit();
-        }
+        var w = await WfdPrcX.NewWriter();
+        await w.Save(p_prc);
+        await w.Save(p_prc.Atvs);
+        await w.Save(p_prc.Trss);
+        await w.Save(p_prc.AtvRoles);
+        return await w.Commit();
+    }
 
-        public static Task<long> GetWfdTrsID(long p_prcid, long p_srcAtvID, long p_tgtAtvID, bool p_isRollback)
-        {
-            return At.GetScalar<long>($"select ID from cm_wfd_trs where prc_id={p_prcid} and src_atv_id={p_srcAtvID} and tgt_atv_id={p_tgtAtvID} and is_rollback='{(p_isRollback ? 1 : 0)}'");
-        }
+    public static Task<long> GetWfdTrsID(long p_prcid, long p_srcAtvID, long p_tgtAtvID, bool p_isRollback)
+    {
+        return At.GetScalar<long>($"select ID from cm_wfd_trs where prc_id={p_prcid} and src_atv_id={p_srcAtvID} and tgt_atv_id={p_tgtAtvID} and is_rollback='{(p_isRollback ? 1 : 0)}'");
+    }
 
-        public static Task<Table> GetAllMyPrc()
-        {
-            return At.Query(string.Format(Sql参与的流程, Kit.UserID));
-        }
+    public static Task<Table> GetAllMyPrc()
+    {
+        return At.Query(string.Format(Sql参与的流程, Kit.UserID));
+    }
 
-        public static Task<Table> GetMyStartablePrc()
-        {
-            return At.Query(string.Format(Sql可启动流程, Kit.UserID));
-        }
+    public static Task<Table> GetMyStartablePrc()
+    {
+        return At.Query(string.Format(Sql可启动流程, Kit.UserID));
+    }
 
-        public static Task<Table> GetMyTodoTasks()
-        {
-            return At.Query(string.Format(Sql待办任务, Kit.UserID));
-        }
+    public static Task<Table> GetMyTodoTasks()
+    {
+        return At.Query(string.Format(Sql待办任务, Kit.UserID));
+    }
 
-        public static Task<int> GetMyTotalTodoTasks()
-        {
-            return At.GetScalar<int>(string.Format(Sql待办任务总数, Kit.UserID));
-        }
+    public static Task<int> GetMyTotalTodoTasks()
+    {
+        return At.GetScalar<int>(string.Format(Sql待办任务总数, Kit.UserID));
+    }
 
-        public static async Task<Table> GetMyHistoryPrcs(bool p_allItems, DateTime p_start, DateTime p_end, int p_status, long p_prcdID)
-        {
-            var dt = new { p_userid = Kit.UserID, p_start = p_start, p_end = p_end, p_status = p_status };
+    public static async Task<Table> GetMyHistoryPrcs(bool p_allItems, DateTime p_start, DateTime p_end, int p_status, long p_prcdID)
+    {
+        var dt = new { p_userid = Kit.UserID, p_start = p_start, p_end = p_end, p_status = p_status };
 
-            string sql = p_allItems ? Sql所有经办历史任务 : Sql历史任务;
-            sql = string.Format(sql, p_prcdID > 0 ? $"and prcd_id={p_prcdID}" : "");
+        string sql = p_allItems ? Sql所有经办历史任务 : Sql历史任务;
+        sql = string.Format(sql, p_prcdID > 0 ? $"and prcd_id={p_prcdID}" : "");
 
-            var db = await At.GetDbType();
-            if (db == DatabaseType.Oracle)
-                sql = sql.Replace("@", ":");
+        var db = await At.GetDbType();
+        if (db == DatabaseType.Oracle)
+            sql = sql.Replace("@", ":");
 
-            return await At.Query(sql, dt);
-        }
+        return await At.Query(sql, dt);
+    }
 
-        public static async Task<bool> IsStartable(string p_prcName)
-        {
-            return await At.GetScalar<long>(string.Format(Sql是否可启动某流程, p_prcName, Kit.UserID)) > 0;
-        }
-        
-        #region Sql
-        const string Sql参与的流程 = @"
+    public static async Task<bool> IsStartable(string p_prcName)
+    {
+        return await At.GetScalar<long>(string.Format(Sql是否可启动某流程, p_prcName, Kit.UserID)) > 0;
+    }
+    
+    #region Sql
+    const string Sql参与的流程 = @"
 select distinct(p.id),p.name,p.dispidx
 from
 	cm_wfd_prc p,
@@ -86,7 +86,7 @@ order by
 	p.dispidx
 ";
 
-        const string Sql可启动流程 = @"
+    const string Sql可启动流程 = @"
 select
 	pd.id,
 	name 
@@ -114,8 +114,8 @@ order by
 	dispidx
 ";
 
-        // 用户只能看到一个流程实例的最后完成的任务
-        const string Sql历史任务 = @"
+    // 用户只能看到一个流程实例的最后完成的任务
+    const string Sql历史任务 = @"
 select * from
 (select wi.id item_id,
        pi.id prci_id,
@@ -161,8 +161,8 @@ from cm_wfi_atv ai,
  order by stime desc
 ";
 
-        // 用户在一个流程实例中参与的所有任务
-        const string Sql所有经办历史任务 = @"
+    // 用户在一个流程实例中参与的所有任务
+    const string Sql所有经办历史任务 = @"
 select wi.id item_id,
        pi.id prci_id,
        pd.id prcd_id,
@@ -203,7 +203,7 @@ from cm_wfi_atv ai,
  order by wi.stime desc
 ";
 
-        const string Sql待办任务 = @"
+    const string Sql待办任务 = @"
 select wi.id   item_id,
        pi.id   prci_id,
        pd.id   prcd_id,
@@ -242,7 +242,7 @@ where ai.id = wi.atvi_id
 order by wi.stime desc
 ";
 
-        const string Sql待办任务总数 = @"
+    const string Sql待办任务总数 = @"
 select
 	sum( 1 ) allTask 
 from
@@ -260,7 +260,7 @@ where
 	)
 ";
 
-        const string Sql是否可启动某流程 = @"
+    const string Sql是否可启动某流程 = @"
 SELECT DISTINCT P
 	.ID 
 FROM
@@ -277,6 +277,5 @@ WHERE
 	AND ( r.role_id = u.role_id OR r.role_id = 1 ) 
 	AND u.user_id = {1}
 ";
-        #endregion
-    }
+    #endregion
 }

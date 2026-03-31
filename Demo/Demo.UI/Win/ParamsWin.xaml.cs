@@ -10,22 +10,21 @@
 using Dt.Base;
 #endregion
 
-namespace Demo.UI
-{
-    public partial class ParamsWin : Win
-    {
-        public ParamsWin()
-        {
-            InitializeComponent();
-            _tb.Text = "无参数";
-            Params = 0;
-        }
+namespace Demo.UI;
 
-        public ParamsWin(int p_params)
-        {
-            InitializeComponent();
-            _tb.Text = "参数值：" + p_params.ToString();
-            Params = p_params;
-        }
+public partial class ParamsWin : Win
+{
+    public ParamsWin()
+    {
+        InitializeComponent();
+        _tb.Text = "无参数";
+        Params = 0;
+    }
+
+    public ParamsWin(int p_params)
+    {
+        InitializeComponent();
+        _tb.Text = "参数值：" + p_params.ToString();
+        Params = p_params;
     }
 }

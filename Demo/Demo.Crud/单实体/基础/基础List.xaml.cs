@@ -11,32 +11,31 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.Crud
+namespace Demo.Crud;
+
+using A = 基础X;
+
+[Share]
+public partial class 基础List : List
 {
-    using A = 基础X;
-
-    [Share]
-    public partial class 基础List : List
+    public 基础List()
     {
-        public 基础List()
-        {
-            InitializeComponent();
-            Menu = CreateMenu();
-            _lv.AddMultiSelMenu(Menu);
-            _lv.SetMenu(CreateContextMenu());
-        }
+        InitializeComponent();
+        Menu = CreateMenu();
+        _lv.AddMultiSelMenu(Menu);
+        _lv.SetMenu(CreateContextMenu());
+    }
 
-        protected override async Task OnQuery()
+    protected override async Task OnQuery()
+    {
+        if (_clause == null)
         {
-            if (_clause == null)
-            {
-                _lv.Data = await A.Query(null);
-            }
-            else
-            {
-                var par = await _clause.Build<A>();
-                _lv.Data = await A.Query(par.Sql, par.Params);
-            }
+            _lv.Data = await A.Query(null);
+        }
+        else
+        {
+            var par = await _clause.Build<A>();
+            _lv.Data = await A.Query(par.Sql, par.Params);
         }
     }
 }

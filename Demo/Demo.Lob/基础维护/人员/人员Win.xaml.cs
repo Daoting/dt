@@ -11,33 +11,32 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.Lob
+namespace Demo.Lob;
+
+[View("人员管理")]
+public partial class 人员Win : Win
 {
-    [View("人员管理")]
-    public partial class 人员Win : Win
+    readonly 人员Form _mainForm;
+
+    public 人员Win()
     {
-        readonly 人员Form _mainForm;
+        InitializeComponent();
+        _mainForm = new 人员Form { OwnWin = this };
+        Attach();
+    }
 
-        public 人员Win()
+    void Attach()
+    {
+        _query.Query += e =>
         {
-            InitializeComponent();
-            _mainForm = new 人员Form { OwnWin = this };
-            Attach();
-        }
+            _mainList.Query(e);
+            NaviTo(_mainList.Title);
+        };
 
-        void Attach()
-        {
-            _query.Query += e =>
-            {
-                _mainList.Query(e);
-                NaviTo(_mainList.Title);
-            };
+        _mainList.Msg += e => _ = _mainForm.Query(e);
+        _mainList.Navi += () => NaviTo(_部门List.Title);
 
-            _mainList.Msg += e => _ = _mainForm.Query(e);
-            _mainList.Navi += () => NaviTo(_部门List.Title);
-
-            _mainForm.UpdateList += e => _ = _mainList.Refresh(e.ID);
-            _mainForm.UpdateRelated += e => _部门List.Query(e.ID);
-        }
+        _mainForm.UpdateList += e => _ = _mainList.Refresh(e.ID);
+        _mainForm.UpdateRelated += e => _部门List.Query(e.ID);
     }
 }

@@ -19,32 +19,31 @@ using Microsoft.UI.Xaml.Controls;
 using Dt.Core.Sqlite;
 #endregion
 
-namespace Dt.Base.Tools
+namespace Dt.Base.Tools;
+
+/// <summary>
+/// 历史日志
+/// </summary>
+public sealed partial class HistoryLogWin : Win
 {
-    /// <summary>
-    /// 历史日志
-    /// </summary>
-    public sealed partial class HistoryLogWin : Win
+    public HistoryLogWin()
     {
-        public HistoryLogWin()
-        {
-            InitializeComponent();
-        }
-
-        public HistoryLogList List => _list;
-
-        public TraceLogForm Form => _fm;
-
-        public HistoryLogQuery Query => _query;
+        InitializeComponent();
     }
 
-    public class AtDtlog : AccessAgent<AtDtlog.Info>
-    {
-        public class Info : AgentInfo
-        {
-            public override AccessType Type => AccessType.Local;
+    public HistoryLogList List => _list;
 
-            public override string Name => "dtlog";
-        }
+    public TraceLogForm Form => _fm;
+
+    public HistoryLogQuery Query => _query;
+}
+
+public class AtDtlog : AccessAgent<AtDtlog.Info>
+{
+    public class Info : AgentInfo
+    {
+        public override AccessType Type => AccessType.Local;
+
+        public override string Name => "dtlog";
     }
 }

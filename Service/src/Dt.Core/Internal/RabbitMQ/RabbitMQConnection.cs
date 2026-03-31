@@ -17,146 +17,145 @@ using RabbitMQ.Client.Exceptions;
 using System.Net.Sockets;
 #endregion
 
-namespace Dt.Core.RabbitMQ
+namespace Dt.Core.RabbitMQ;
+
+/// <summary>
+/// 管理与RabbitMQ的连接，单例
+/// </summary>
+class RabbitMQConnection : IDisposable
 {
-    /// <summary>
-    /// 管理与RabbitMQ的连接，单例
-    /// </summary>
-    class RabbitMQConnection : IDisposable
+    #region 成员变量
+    readonly IConnectionFactory _connectionFactory;
+    readonly AsyncLock _mutex = new AsyncLock();
+    IConnection _connection;
+    bool _disposed;
+    #endregion
+
+    #region 构造方法
+    public RabbitMQConnection()
     {
-        #region 成员变量
-        readonly IConnectionFactory _connectionFactory;
-        readonly AsyncLock _mutex = new AsyncLock();
-        IConnection _connection;
-        bool _disposed;
-        #endregion
+        var cfg = Kit.Config.GetSection("RabbitMq");
+        if (!cfg.Exists())
+            throw new InvalidOperationException("未找到RabbitMq配置节！");
 
-        #region 构造方法
-        public RabbitMQConnection()
+        // RabbitMQ连接配置
+        _connectionFactory = new ConnectionFactory()
         {
-            var cfg = Kit.Config.GetSection("RabbitMq");
-            if (!cfg.Exists())
-                throw new InvalidOperationException("未找到RabbitMq配置节！");
+            HostName = cfg["HostName"],
+            UserName = cfg["UserName"],
+            Password = cfg["Password"],
+            Port = cfg.GetValue<int>("Port"),
+        };
+    }
+    #endregion
 
-            // RabbitMQ连接配置
-            _connectionFactory = new ConnectionFactory()
+    /// <summary>
+    /// 是否已连接RabbitMQ
+    /// </summary>
+    public bool IsConnected
+    {
+        get { return _connection != null && _connection.IsOpen && !_disposed; }
+    }
+
+    /// <summary>
+    /// 执行连接
+    /// </summary>
+    /// <returns></returns>
+    public async Task<bool> TryConnect()
+    {
+        using (await _mutex.LockAsync())
+        {
+            // 出现异常时重试5次，每次间隔时间增加
+            var options = new RetryStrategyOptions
             {
-                HostName = cfg["HostName"],
-                UserName = cfg["UserName"],
-                Password = cfg["Password"],
-                Port = cfg.GetValue<int>("Port"),
-            };
-        }
-        #endregion
-
-        /// <summary>
-        /// 是否已连接RabbitMQ
-        /// </summary>
-        public bool IsConnected
-        {
-            get { return _connection != null && _connection.IsOpen && !_disposed; }
-        }
-
-        /// <summary>
-        /// 执行连接
-        /// </summary>
-        /// <returns></returns>
-        public async Task<bool> TryConnect()
-        {
-            using (await _mutex.LockAsync())
-            {
-                // 出现异常时重试5次，每次间隔时间增加
-                var options = new RetryStrategyOptions
+                ShouldHandle = new PredicateBuilder().Handle<SocketException>().Handle<BrokerUnreachableException>(),
+                MaxRetryAttempts = 3,
+                DelayGenerator = static args =>
                 {
-                    ShouldHandle = new PredicateBuilder().Handle<SocketException>().Handle<BrokerUnreachableException>(),
-                    MaxRetryAttempts = 3,
-                    DelayGenerator = static args =>
+                    return new ValueTask<TimeSpan?>(TimeSpan.FromSeconds(Math.Pow(2, args.AttemptNumber)));
+                },
+                OnRetry = args =>
+                {
+                    if (args.Outcome.Exception is Exception ex)
                     {
-                        return new ValueTask<TimeSpan?>(TimeSpan.FromSeconds(Math.Pow(2, args.AttemptNumber)));
-                    },
-                    OnRetry = args =>
-                    {
-                        if (args.Outcome.Exception is Exception ex)
-                        {
-                            Log.Warning($"RabbitMQ第 {args.AttemptNumber + 1} 次连接失败：{ex.Message}");
-                            if (args.AttemptNumber + 1 == 3)
-                                Log.Error("重试3次，连接 RabbitMQ 失败！");
-                        }
-                        return ValueTask.CompletedTask;
+                        Log.Warning($"RabbitMQ第 {args.AttemptNumber + 1} 次连接失败：{ex.Message}");
+                        if (args.AttemptNumber + 1 == 3)
+                            Log.Error("重试3次，连接 RabbitMQ 失败！");
                     }
-                };
-                var pipeline = new ResiliencePipelineBuilder()
-                    .AddRetry(options)
-                    .Build();
-
-                _connection = await pipeline.ExecuteAsync(async token => await _connectionFactory.CreateConnectionAsync());
-                
-                if (IsConnected)
-                {
-                    _connection.ConnectionShutdownAsync += OnConnectionShutdown;
-                    _connection.CallbackExceptionAsync += OnCallbackException;
-                    _connection.ConnectionBlockedAsync += OnConnectionBlocked;
-
-                    Log.Information("RabbitMQ 连接成功");
-                    return true;
+                    return ValueTask.CompletedTask;
                 }
+            };
+            var pipeline = new ResiliencePipelineBuilder()
+                .AddRetry(options)
+                .Build();
 
-                return false;
-            }
-        }
-        
-        /// <summary>
-        /// 创建通道
-        /// </summary>
-        /// <returns></returns>
-        public Task<IChannel> CreateChannel()
-        {
-            if (!IsConnected)
-                throw new InvalidOperationException("未创建RabbitMQ连接！");
-            return _connection.CreateChannelAsync();;
-        }
-
-        public void Dispose()
-        {
-            if (_disposed)
-                return;
-
-            try
+            _connection = await pipeline.ExecuteAsync(async token => await _connectionFactory.CreateConnectionAsync());
+            
+            if (IsConnected)
             {
-                _disposed = true;
-                _connection.Dispose();
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "RabbitMQ 关闭连接异常");
-            }
-        }
+                _connection.ConnectionShutdownAsync += OnConnectionShutdown;
+                _connection.CallbackExceptionAsync += OnCallbackException;
+                _connection.ConnectionBlockedAsync += OnConnectionBlocked;
 
-        async Task OnConnectionBlocked(object sender, ConnectionBlockedEventArgs e)
-        {
-            if (!_disposed)
-            {
-                Log.Warning("RabbitMQ 连接关闭，正在重连...");
-                await TryConnect();
+                Log.Information("RabbitMQ 连接成功");
+                return true;
             }
-        }
 
-        async Task OnCallbackException(object sender, CallbackExceptionEventArgs e)
-        {
-            if (!_disposed)
-            {
-                Log.Warning("RabbitMQ 连接异常，正在重连...");
-                await TryConnect();
-            }
+            return false;
         }
+    }
+    
+    /// <summary>
+    /// 创建通道
+    /// </summary>
+    /// <returns></returns>
+    public Task<IChannel> CreateChannel()
+    {
+        if (!IsConnected)
+            throw new InvalidOperationException("未创建RabbitMQ连接！");
+        return _connection.CreateChannelAsync();;
+    }
 
-        async Task OnConnectionShutdown(object sender, ShutdownEventArgs reason)
+    public void Dispose()
+    {
+        if (_disposed)
+            return;
+
+        try
         {
-            if (!_disposed)
-            {
-                Log.Warning("RabbitMQ 连接关闭，正在重连...");
-                await TryConnect();
-            }
+            _disposed = true;
+            _connection.Dispose();
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "RabbitMQ 关闭连接异常");
+        }
+    }
+
+    async Task OnConnectionBlocked(object sender, ConnectionBlockedEventArgs e)
+    {
+        if (!_disposed)
+        {
+            Log.Warning("RabbitMQ 连接关闭，正在重连...");
+            await TryConnect();
+        }
+    }
+
+    async Task OnCallbackException(object sender, CallbackExceptionEventArgs e)
+    {
+        if (!_disposed)
+        {
+            Log.Warning("RabbitMQ 连接异常，正在重连...");
+            await TryConnect();
+        }
+    }
+
+    async Task OnConnectionShutdown(object sender, ShutdownEventArgs reason)
+    {
+        if (!_disposed)
+        {
+            Log.Warning("RabbitMQ 连接关闭，正在重连...");
+            await TryConnect();
         }
     }
 }

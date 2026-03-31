@@ -15,23 +15,22 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class WinNavi : Win
 {
-    public partial class WinNavi : Win
+    public WinNavi()
     {
-        public WinNavi()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        void OnNavi(object sender, RoutedEventArgs e)
-        {
-            NaviTo((string)((Button)sender).Content);
-        }
+    void OnNavi(object sender, RoutedEventArgs e)
+    {
+        NaviTo((string)((Button)sender).Content);
+    }
 
-        void OnClosWin(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
+    void OnClosWin(object sender, RoutedEventArgs e)
+    {
+        Close();
     }
 }

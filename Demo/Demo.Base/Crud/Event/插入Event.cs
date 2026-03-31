@@ -9,20 +9,19 @@
 #region 引用命名
 #endregion
 
-namespace Demo.Base
-{
-    public class 插入Event : IEvent
-    {
-        public long ID { get; set; }
-    }
+namespace Demo.Base;
 
-    [EventHandler]
-    public class 插入Handler : IEventHandler<插入Event>
+public class 插入Event : IEvent
+{
+    public long ID { get; set; }
+}
+
+[EventHandler]
+public class 插入Handler : IEventHandler<插入Event>
+{
+    public Task Handle(插入Event p_event)
     {
-        public Task Handle(插入Event p_event)
-        {
-            Kit.Msg("新增ID：" + p_event.ID.ToString());
-            return Task.CompletedTask;
-        }
+        Kit.Msg("新增ID：" + p_event.ID.ToString());
+        return Task.CompletedTask;
     }
 }

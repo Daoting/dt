@@ -17,17 +17,16 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr
+namespace Dt.Mgr;
+
+/// <summary>
+/// 主页
+/// </summary>
+[View(LobViews.主页)]
+public partial class DefaultHome : Win
 {
-    /// <summary>
-    /// 主页
-    /// </summary>
-    [View(LobViews.主页)]
-    public partial class DefaultHome : Win
+    public DefaultHome()
     {
-        public DefaultHome()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

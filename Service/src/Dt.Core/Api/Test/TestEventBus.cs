@@ -14,101 +14,100 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 功能测试Api
+/// </summary>
+[Api(AgentMode = AgentMode.Generic, IsTest = true)]
+public class TestEventBus : RpcApi
 {
-    /// <summary>
-    /// 功能测试Api
-    /// </summary>
-    [Api(AgentMode = AgentMode.Generic, IsTest = true)]
-    public class TestEventBus : RpcApi
+    public void Broadcast(List<string> p_svcs, bool p_isAllSvcInst)
     {
-        public void Broadcast(List<string> p_svcs, bool p_isAllSvcInst)
-        {
-            Kit.RemoteBroadcast(new TestEventData(), p_svcs, p_isAllSvcInst);
-        }
-
-        public void Multicast(string p_svcName)
-        {
-            Kit.RemoteMulticast(new TestEventData(), p_svcName);
-        }
-
-        public void Push(string p_svcName)
-        {
-            Kit.RemotePush(new TestEventData(), p_svcName);
-        }
-
-        public void PushFixed(string p_svcID)
-        {
-            Kit.RemotePushFixed(new TestEventData(), p_svcID);
-        }
-
-        public void LocalPublish()
-        {
-            _ = Kit.PublishEvent(new KesEvent());
-        }
-
-        public string TestLoadBalance()
-        {
-            return Kit.SvcID;
-        }
+        Kit.RemoteBroadcast(new TestEventData(), p_svcs, p_isAllSvcInst);
     }
 
-    public class TestEventData : IEvent
+    public void Multicast(string p_svcName)
     {
-
+        Kit.RemoteMulticast(new TestEventData(), p_svcName);
     }
 
-    [EventHandler]
-    public class TestHandler1 : IRemoteEventHandler<TestEventData>
+    public void Push(string p_svcName)
     {
-        public Task Handle(TestEventData p_event)
-        {
-            Log.Information($"{GetType().Name}已处理");
-            return Task.CompletedTask;
-        }
+        Kit.RemotePush(new TestEventData(), p_svcName);
     }
 
-    [EventHandler]
-    public class TestHandler2 : IRemoteEventHandler<TestEventData>
+    public void PushFixed(string p_svcID)
     {
-        public Task Handle(TestEventData p_event)
-        {
-            Log.Information($"{GetType().Name}已处理");
-            return Task.CompletedTask;
-        }
+        Kit.RemotePushFixed(new TestEventData(), p_svcID);
     }
 
-    [EventHandler]
-    public class KesHandler : IRemoteEventHandler<KesEvent>
+    public void LocalPublish()
     {
-        public Task Handle(KesEvent p_event)
-        {
-            Log.Information($"{GetType().Name}已处理");
-            return Task.CompletedTask;
-        }
+        _ = Kit.PublishEvent(new KesEvent());
     }
 
-    [EventHandler]
-    public class KesLocalHandler : IEventHandler<KesEvent>
+    public string TestLoadBalance()
     {
-        public Task Handle(KesEvent p_event)
-        {
-            Log.Information($"{GetType().Name}已处理");
-            return Task.CompletedTask;
-        }
+        return Kit.SvcID;
     }
-    public class KesEvent : IEvent
-    {
-    }
+}
 
-    [EventHandler]
-    public class KesLocalHandler2 : IEventHandler<KesEvent>
+public class TestEventData : IEvent
+{
+
+}
+
+[EventHandler]
+public class TestHandler1 : IRemoteEventHandler<TestEventData>
+{
+    public Task Handle(TestEventData p_event)
     {
-        public Task Handle(KesEvent p_event)
-        {
-            Log.Information($"{GetType().Name}已处理");
-            return Task.CompletedTask;
-            //throw new Exception("测试异常");
-        }
+        Log.Information($"{GetType().Name}已处理");
+        return Task.CompletedTask;
+    }
+}
+
+[EventHandler]
+public class TestHandler2 : IRemoteEventHandler<TestEventData>
+{
+    public Task Handle(TestEventData p_event)
+    {
+        Log.Information($"{GetType().Name}已处理");
+        return Task.CompletedTask;
+    }
+}
+
+[EventHandler]
+public class KesHandler : IRemoteEventHandler<KesEvent>
+{
+    public Task Handle(KesEvent p_event)
+    {
+        Log.Information($"{GetType().Name}已处理");
+        return Task.CompletedTask;
+    }
+}
+
+[EventHandler]
+public class KesLocalHandler : IEventHandler<KesEvent>
+{
+    public Task Handle(KesEvent p_event)
+    {
+        Log.Information($"{GetType().Name}已处理");
+        return Task.CompletedTask;
+    }
+}
+public class KesEvent : IEvent
+{
+}
+
+[EventHandler]
+public class KesLocalHandler2 : IEventHandler<KesEvent>
+{
+    public Task Handle(KesEvent p_event)
+    {
+        Log.Information($"{GetType().Name}已处理");
+        return Task.CompletedTask;
+        //throw new Exception("测试异常");
     }
 }

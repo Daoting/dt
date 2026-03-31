@@ -11,27 +11,26 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Workflow
+namespace Dt.Mgr.Workflow;
+
+using A = WfiItemX;
+
+public partial class WfiItemList : List
 {
-    using A = WfiItemX;
-    
-    public partial class WfiItemList : List
+    public WfiItemList()
     {
-        public WfiItemList()
+        InitializeComponent();
+    }
+    
+    protected override async Task OnQuery()
+    {
+        if (_parentID > 0)
         {
-            InitializeComponent();
+            _lv.Data = await A.Query($"where atvi_id={_parentID}");
         }
-        
-        protected override async Task OnQuery()
+        else
         {
-            if (_parentID > 0)
-            {
-                _lv.Data = await A.Query($"where atvi_id={_parentID}");
-            }
-            else
-            {
-                _lv.Data = null;
-            }
+            _lv.Data = null;
         }
     }
 }

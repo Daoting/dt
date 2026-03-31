@@ -11,27 +11,26 @@ using Dt.Base.ListView;
 using Dt.Base.Report;
 #endregion
 
-namespace Dt.Base
-{
-    /// <summary>
-    /// Lv导出打印时的报表设置
-    /// </summary>
-#if WIN
-    [WinRT.GeneratedBindableCustomProperty]
-#else
-    [Microsoft.UI.Xaml.Data.Bindable]
-#endif
-    public partial class LvRptInfo : TblRptInfo
-    {
-        public LvRptInfo()
-        {
-            Name = "Lv导出";
-            ScriptObj = new LvRptScript();
-        }
+namespace Dt.Base;
 
-        /// <summary>
-        /// 只导出选择行数据，默认false
-        /// </summary>
-        public bool OnlySelection { get; set; }
+/// <summary>
+/// Lv导出打印时的报表设置
+/// </summary>
+#if WIN
+[WinRT.GeneratedBindableCustomProperty]
+#else
+[Microsoft.UI.Xaml.Data.Bindable]
+#endif
+public partial class LvRptInfo : TblRptInfo
+{
+    public LvRptInfo()
+    {
+        Name = "Lv导出";
+        ScriptObj = new LvRptScript();
     }
+
+    /// <summary>
+    /// 只导出选择行数据，默认false
+    /// </summary>
+    public bool OnlySelection { get; set; }
 }

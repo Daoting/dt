@@ -17,33 +17,32 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class MenuDemo : Win
 {
-    public partial class MenuDemo : Win
+    public MenuDemo()
     {
-        public MenuDemo()
+        InitializeComponent();
+        if (!Kit.IsPhoneUI)
         {
-            InitializeComponent();
-            if (!Kit.IsPhoneUI)
-            {
-                _lv.Data = _m.AllItems.ToNl();
-                _lv.ItemClick += OnSelectMi;
-            }
+            _lv.Data = _m.AllItems.ToNl();
+            _lv.ItemClick += OnSelectMi;
         }
+    }
 
-        void OnItemClick(Mi e)
-        {
-            Kit.Msg(string.Format("点击菜单项：{0}", e.ID));
-        }
+    void OnItemClick(Mi e)
+    {
+        Kit.Msg(string.Format("点击菜单项：{0}", e.ID));
+    }
 
-        void OnSelectMi(ItemClickArgs e)
-        {
-            _fv.Data = e.Data;
-        }
+    void OnSelectMi(ItemClickArgs e)
+    {
+        _fv.Data = e.Data;
+    }
 
-        void OnBtnCall()
-        {
-            Kit.Msg("内置按钮点击事件");
-        }
+    void OnBtnCall()
+    {
+        Kit.Msg("内置按钮点击事件");
     }
 }

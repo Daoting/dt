@@ -11,86 +11,85 @@ using System.Text;
 using System.Text.Json;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// json字符串处理
+/// </summary>
+public partial class Kit
 {
     /// <summary>
-    /// json字符串处理
+    /// 按照rpc json规则序列化对象
     /// </summary>
-    public partial class Kit
+    /// <param name="p_object"></param>
+    /// <returns></returns>
+    public static string Serialize(object p_object)
     {
-        /// <summary>
-        /// 按照rpc json规则序列化对象
-        /// </summary>
-        /// <param name="p_object"></param>
-        /// <returns></returns>
-        public static string Serialize(object p_object)
-        {
-            Throw.IfNull(p_object);
+        Throw.IfNull(p_object);
 
-            using (var stream = new MemoryStream())
+        using (var stream = new MemoryStream())
+        {
+            using (var writer = new Utf8JsonWriter(stream, JsonOptions.UnsafeWriter))
             {
-                using (var writer = new Utf8JsonWriter(stream, JsonOptions.UnsafeWriter))
-                {
-                    JsonRpcSerializer.Serialize(p_object, writer);
-                }
-                return Encoding.UTF8.GetString(stream.ToArray());
+                JsonRpcSerializer.Serialize(p_object, writer);
             }
+            return Encoding.UTF8.GetString(stream.ToArray());
         }
+    }
 
-        /// <summary>
-        /// 按照rpc json规则反序列化json串
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="p_content"></param>
-        /// <returns></returns>
-        public static T Deserialize<T>(string p_content)
-        {
-            Throw.IfEmpty(p_content);
+    /// <summary>
+    /// 按照rpc json规则反序列化json串
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="p_content"></param>
+    /// <returns></returns>
+    public static T Deserialize<T>(string p_content)
+    {
+        Throw.IfEmpty(p_content);
 
-            Utf8JsonReader reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(p_content));
-            reader.Read();
-            return JsonRpcSerializer.Deserialize<T>(ref reader);
-        }
+        Utf8JsonReader reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(p_content));
+        reader.Read();
+        return JsonRpcSerializer.Deserialize<T>(ref reader);
+    }
 
-        /// <summary>
-        /// 按照rpc json规则反序列化json串
-        /// </summary>
-        /// <param name="p_content"></param>
-        /// <param name="p_tgtType"></param>
-        /// <returns></returns>
-        public static object Deserialize(string p_content, Type p_tgtType)
-        {
-            Throw.IfEmpty(p_content);
+    /// <summary>
+    /// 按照rpc json规则反序列化json串
+    /// </summary>
+    /// <param name="p_content"></param>
+    /// <param name="p_tgtType"></param>
+    /// <returns></returns>
+    public static object Deserialize(string p_content, Type p_tgtType)
+    {
+        Throw.IfEmpty(p_content);
 
-            Utf8JsonReader reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(p_content));
-            reader.Read();
-            return JsonRpcSerializer.Deserialize(ref reader, p_tgtType);
-        }
+        Utf8JsonReader reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(p_content));
+        reader.Read();
+        return JsonRpcSerializer.Deserialize(ref reader, p_tgtType);
+    }
 
-        /// <summary>
-        /// 按照rpc json规则反序列化json串
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="p_data"></param>
-        /// <returns></returns>
-        public static T Deserialize<T>(ReadOnlySpan<byte> p_data)
-        {
-            Utf8JsonReader reader = new Utf8JsonReader(p_data);
-            reader.Read();
-            return JsonRpcSerializer.Deserialize<T>(ref reader);
-        }
+    /// <summary>
+    /// 按照rpc json规则反序列化json串
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="p_data"></param>
+    /// <returns></returns>
+    public static T Deserialize<T>(ReadOnlySpan<byte> p_data)
+    {
+        Utf8JsonReader reader = new Utf8JsonReader(p_data);
+        reader.Read();
+        return JsonRpcSerializer.Deserialize<T>(ref reader);
+    }
 
-        /// <summary>
-        /// 按照rpc json规则反序列化json串
-        /// </summary>
-        /// <param name="p_data"></param>
-        /// <param name="p_tgtType"></param>
-        /// <returns></returns>
-        public static object Deserialize(ReadOnlySpan<byte> p_data, Type p_tgtType)
-        {
-            Utf8JsonReader reader = new Utf8JsonReader(p_data);
-            reader.Read();
-            return JsonRpcSerializer.Deserialize(ref reader, p_tgtType);
-        }
+    /// <summary>
+    /// 按照rpc json规则反序列化json串
+    /// </summary>
+    /// <param name="p_data"></param>
+    /// <param name="p_tgtType"></param>
+    /// <returns></returns>
+    public static object Deserialize(ReadOnlySpan<byte> p_data, Type p_tgtType)
+    {
+        Utf8JsonReader reader = new Utf8JsonReader(p_data);
+        reader.Read();
+        return JsonRpcSerializer.Deserialize(ref reader, p_tgtType);
     }
 }

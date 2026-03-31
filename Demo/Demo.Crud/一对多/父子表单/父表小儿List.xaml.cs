@@ -11,27 +11,26 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.Crud
+namespace Demo.Crud;
+
+using A = 小儿X;
+
+public partial class 父表小儿List : List
 {
-    using A = 小儿X;
-    
-    public partial class 父表小儿List : List
+    public 父表小儿List()
     {
-        public 父表小儿List()
+        InitializeComponent();
+    }
+    
+    protected override async Task OnQuery()
+    {
+        if (_parentID > 0)
         {
-            InitializeComponent();
+            _lv.Data = await A.Query($"where group_id={_parentID}");
         }
-        
-        protected override async Task OnQuery()
+        else
         {
-            if (_parentID > 0)
-            {
-                _lv.Data = await A.Query($"where group_id={_parentID}");
-            }
-            else
-            {
-                _lv.Data = null;
-            }
+            _lv.Data = null;
         }
     }
 }

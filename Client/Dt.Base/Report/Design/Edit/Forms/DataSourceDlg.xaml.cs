@@ -13,144 +13,143 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+public sealed partial class DataSourceDlg : Dlg
 {
-    public sealed partial class DataSourceDlg : Dlg
+    RptText _item;
+
+    public DataSourceDlg()
     {
-        RptText _item;
+        InitializeComponent();
+        _dataSets.SelectionChanged += OnSelctionChanged;
+    }
 
-        public DataSourceDlg()
+    internal async Task<bool> Show(FrameworkElement p_target, RptText p_item)
+    {
+        _item = p_item;
+        if (_dataSets.Items != null && _dataSets.Items.Count > 0)
+            _dataSets.Items.Clear();
+
+        Table dataSet = p_item.Root.Data.DataSet;
+        if (dataSet.Count > 0)
         {
-            InitializeComponent();
-            _dataSets.SelectionChanged += OnSelctionChanged;
-        }
-
-        internal async Task<bool> Show(FrameworkElement p_target, RptText p_item)
-        {
-            _item = p_item;
-            if (_dataSets.Items != null && _dataSets.Items.Count > 0)
-                _dataSets.Items.Clear();
-
-            Table dataSet = p_item.Root.Data.DataSet;
-            if (dataSet.Count > 0)
+            foreach (var r in dataSet)
             {
-                foreach (var r in dataSet)
+                var temp = new ComboBoxItem();
+                temp.Content = r.Str("name");
+                _dataSets.Items.Add(temp);
+            }
+
+            if (_dataSets.Items.Count == 1)
+            {
+                // 只一项时默认选中，并触发selectionChanged事件，加载其字段集填充显示字段Lv
+                _dataSets.SelectedIndex = 0;
+            }
+            else
+            {
+                // 默认选中单元格所在对象的数据集
+                RptItem topItem = null;
+                foreach (RptItem item in p_item.Part.Items)
                 {
-                    var temp = new ComboBoxItem();
-                    temp.Content = r.Str("name");
-                    _dataSets.Items.Add(temp);
+                    if (item.Row <= p_item.Row
+                        && item.Row + item.RowSpan - 1 >= p_item.Row
+                        && item.Col <= p_item.Col
+                        && item.Col + item.ColSpan - 1 >= p_item.Col)
+                    {
+                        topItem = item;
+                        break;
+                    }
                 }
 
-                if (_dataSets.Items.Count == 1)
+                string itemDataName;
+                if (topItem != null
+                    && topItem.Data != null
+                    && topItem.Data.Contains("tbl")
+                    && (itemDataName = topItem.Data.Str("tbl")) != "")
                 {
-                    // 只一项时默认选中，并触发selectionChanged事件，加载其字段集填充显示字段Lv
-                    _dataSets.SelectedIndex = 0;
-                }
-                else
-                {
-                    // 默认选中单元格所在对象的数据集
-                    RptItem topItem = null;
-                    foreach (RptItem item in p_item.Part.Items)
+                    for (int i = 0; i < _dataSets.Items.Count; i++)
                     {
-                        if (item.Row <= p_item.Row
-                            && item.Row + item.RowSpan - 1 >= p_item.Row
-                            && item.Col <= p_item.Col
-                            && item.Col + item.ColSpan - 1 >= p_item.Col)
+                        if ((_dataSets.Items[i] as ComboBoxItem).Content as string == itemDataName)
                         {
-                            topItem = item;
+                            _dataSets.SelectedIndex = i;
                             break;
                         }
                     }
-
-                    string itemDataName;
-                    if (topItem != null
-                        && topItem.Data != null
-                        && topItem.Data.Contains("tbl")
-                        && (itemDataName = topItem.Data.Str("tbl")) != "")
-                    {
-                        for (int i = 0; i < _dataSets.Items.Count; i++)
-                        {
-                            if ((_dataSets.Items[i] as ComboBoxItem).Content as string == itemDataName)
-                            {
-                                _dataSets.SelectedIndex = i;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (_dataSets.SelectedIndex == -1)
-                        _dataSets.SelectedIndex = 0;
                 }
-            }
 
-            if (!Kit.IsPhoneUI)
-            {
-                WinPlacement = DlgPlacement.TargetBottomLeft;
-                PlacementTarget = p_target;
-                ClipElement = p_target;
-                Height = 400;
-                Width = 300;
+                if (_dataSets.SelectedIndex == -1)
+                    _dataSets.SelectedIndex = 0;
             }
-            return await ShowAsync();
         }
 
-        public string GetExpression()
+        if (!Kit.IsPhoneUI)
         {
-            string dsName = _dataSets.SelectionBoxItem as string;
-            string colName = _lv.SelectedRow?.Str("name");
-            switch (_func.SelectionBoxItem as string)
-            {
-                case "数据":
-                    return $"Val({dsName},{colName})";
-                case "合计":
-                    return $"Sum({dsName},{colName})";
-                case "最大":
-                    return $"Max({dsName},{colName})";
-                case "最小":
-                    return $"Min({dsName},{colName})";
-                case "平均":
-                    return $"Avg({dsName},{colName})";
-                case "序号":
-                    return $"Index({dsName})";
-                case "总数":
-                    return $"Count({dsName})";
-                case "分组值":
-                    return $"Group({dsName},{colName})";
-            }
-            return null;
+            WinPlacement = DlgPlacement.TargetBottomLeft;
+            PlacementTarget = p_target;
+            ClipElement = p_target;
+            Height = 400;
+            Width = 300;
         }
+        return await ShowAsync();
+    }
 
-        void OnSave(Mi e)
+    public string GetExpression()
+    {
+        string dsName = _dataSets.SelectionBoxItem as string;
+        string colName = _lv.SelectedRow?.Str("name");
+        switch (_func.SelectionBoxItem as string)
         {
-            var fun = _func.SelectionBoxItem as string;
-            if (_lv.SelectedItem == null
-                && fun != "序号"
-                && fun != "总数")
-            {
-                Kit.Warn("请选择列名！");
-            }
-            else
-            {
-                Close(true);
-            }
+            case "数据":
+                return $"Val({dsName},{colName})";
+            case "合计":
+                return $"Sum({dsName},{colName})";
+            case "最大":
+                return $"Max({dsName},{colName})";
+            case "最小":
+                return $"Min({dsName},{colName})";
+            case "平均":
+                return $"Avg({dsName},{colName})";
+            case "序号":
+                return $"Index({dsName})";
+            case "总数":
+                return $"Count({dsName})";
+            case "分组值":
+                return $"Group({dsName},{colName})";
         }
+        return null;
+    }
 
-        void OnSelctionChanged(object sender, RoutedEventArgs e)
+    void OnSave(Mi e)
+    {
+        var fun = _func.SelectionBoxItem as string;
+        if (_lv.SelectedItem == null
+            && fun != "序号"
+            && fun != "总数")
         {
-            if (_dataSets.SelectedIndex > -1)
-            {
-                string dsName = (_dataSets.SelectedItem as ComboBoxItem).Content as string;
-                _lv.Data = _item.Root.Data.GetColsData(dsName);
-            }
-            else
-            {
-                _lv.Data = null;
-            }
+            Kit.Warn("请选择列名！");
         }
+        else
+        {
+            Close(true);
+        }
+    }
 
-        void OnDoubleClick(object e)
+    void OnSelctionChanged(object sender, RoutedEventArgs e)
+    {
+        if (_dataSets.SelectedIndex > -1)
         {
-            OnSave(null);
+            string dsName = (_dataSets.SelectedItem as ComboBoxItem).Content as string;
+            _lv.Data = _item.Root.Data.GetColsData(dsName);
         }
+        else
+        {
+            _lv.Data = null;
+        }
+    }
+
+    void OnDoubleClick(object e)
+    {
+        OnSave(null);
     }
 }

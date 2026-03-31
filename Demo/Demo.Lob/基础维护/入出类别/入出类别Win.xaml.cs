@@ -11,29 +11,28 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.Lob
+namespace Demo.Lob;
+
+[View("物资入出类别")]
+public partial class 入出类别Win : Win
 {
-    [View("物资入出类别")]
-    public partial class 入出类别Win : Win
+    readonly 入出类别Form _form;
+
+    public 入出类别Win()
     {
-        readonly 入出类别Form _form;
+        InitializeComponent();
+        _form = new 入出类别Form { OwnWin = this };
+        Attach();
+    }
 
-        public 入出类别Win()
+    void Attach()
+    {
+        _query.Query += e =>
         {
-            InitializeComponent();
-            _form = new 入出类别Form { OwnWin = this };
-            Attach();
-        }
-
-        void Attach()
-        {
-            _query.Query += e =>
-            {
-                _list.Query(e);
-                NaviTo(_list.Title);
-            };
-            //_list.Msg += e => _ = _form.Query(e);
-            //_form.UpdateList += e => _ = _list.Refresh(e.ID);
-        }
+            _list.Query(e);
+            NaviTo(_list.Title);
+        };
+        //_list.Msg += e => _ = _form.Query(e);
+        //_form.UpdateList += e => _ = _list.Refresh(e.ID);
     }
 }

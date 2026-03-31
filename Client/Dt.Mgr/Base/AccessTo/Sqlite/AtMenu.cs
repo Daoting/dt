@@ -9,18 +9,17 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Mgr
-{
-    /// <summary>
-    /// 本地库
-    /// </summary>
-    public class AtMenu : AccessAgent<AtMenu.Info>
-    {
-        public class Info : AgentInfo
-        {
-            public override AccessType Type => AccessType.Local;
+namespace Dt.Mgr;
 
-            public override string Name => "menu";
-        }
+/// <summary>
+/// 本地库
+/// </summary>
+public class AtMenu : AccessAgent<AtMenu.Info>
+{
+    public class Info : AgentInfo
+    {
+        public override AccessType Type => AccessType.Local;
+
+        public override string Name => "menu";
     }
 }

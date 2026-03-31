@@ -11,24 +11,23 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Rbac
+namespace Dt.Mgr.Rbac;
+
+public sealed partial class GroupForm : Form
 {
-    public sealed partial class GroupForm : Form
+    public GroupForm()
     {
-        public GroupForm()
-        {
-            InitializeComponent();
-            Menu = CreateMenu();
-        }
+        InitializeComponent();
+        Menu = CreateMenu();
+    }
 
-        protected override async Task OnAdd()
-        {
-            _fv.Data = await GroupX.New();
-        }
+    protected override async Task OnAdd()
+    {
+        _fv.Data = await GroupX.New();
+    }
 
-        protected override async Task OnGet()
-        {
-            _fv.Data = await GroupX.GetByID(_args.ID);
-        }
+    protected override async Task OnGet()
+    {
+        _fv.Data = await GroupX.GetByID(_args.ID);
     }
 }

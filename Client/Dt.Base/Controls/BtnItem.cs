@@ -14,75 +14,74 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 列表项按钮
+/// </summary>
+public partial class BtnItem : Button
 {
+    #region 静态内容
     /// <summary>
-    /// 列表项按钮
+    /// 按钮图标
     /// </summary>
-    public partial class BtnItem : Button
+    public readonly static DependencyProperty IconProperty = DependencyProperty.Register(
+        "Icon",
+        typeof(Icons),
+        typeof(BtnItem),
+        new PropertyMetadata(default(Icons)));
+
+    /// <summary>
+    /// 按钮标题
+    /// </summary>
+    public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
+        "Title",
+        typeof(string),
+        typeof(BtnItem),
+        null);
+
+    /// <summary>
+    /// 按钮描述信息
+    /// </summary>
+    public readonly static DependencyProperty DescProperty = DependencyProperty.Register(
+        "Desc",
+        typeof(string),
+        typeof(BtnItem),
+        null);
+    #endregion
+
+    /// <summary>
+    /// 构造方法
+    /// </summary>
+    public BtnItem()
     {
-        #region 静态内容
-        /// <summary>
-        /// 按钮图标
-        /// </summary>
-        public readonly static DependencyProperty IconProperty = DependencyProperty.Register(
-            "Icon",
-            typeof(Icons),
-            typeof(BtnItem),
-            new PropertyMetadata(default(Icons)));
+        DefaultStyleKey = typeof(BtnItem);
+    }
 
-        /// <summary>
-        /// 按钮标题
-        /// </summary>
-        public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
-            "Title",
-            typeof(string),
-            typeof(BtnItem),
-            null);
+    /// <summary>
+    /// 获取设置按钮图标
+    /// </summary>
+    public Icons Icon
+    {
+        get { return (Icons)GetValue(IconProperty); }
+        set { SetValue(IconProperty, value); }
+    }
 
-        /// <summary>
-        /// 按钮描述信息
-        /// </summary>
-        public readonly static DependencyProperty DescProperty = DependencyProperty.Register(
-            "Desc",
-            typeof(string),
-            typeof(BtnItem),
-            null);
-        #endregion
+    /// <summary>
+    /// 获取设置按钮标题
+    /// </summary>
+    public string Title
+    {
+        get { return (string)GetValue(TitleProperty); }
+        set { SetValue(TitleProperty, value); }
+    }
 
-        /// <summary>
-        /// 构造方法
-        /// </summary>
-        public BtnItem()
-        {
-            DefaultStyleKey = typeof(BtnItem);
-        }
-
-        /// <summary>
-        /// 获取设置按钮图标
-        /// </summary>
-        public Icons Icon
-        {
-            get { return (Icons)GetValue(IconProperty); }
-            set { SetValue(IconProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置按钮标题
-        /// </summary>
-        public string Title
-        {
-            get { return (string)GetValue(TitleProperty); }
-            set { SetValue(TitleProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置按钮描述信息
-        /// </summary>
-        public string Desc
-        {
-            get { return (string)GetValue(DescProperty); }
-            set { SetValue(DescProperty, value); }
-        }
+    /// <summary>
+    /// 获取设置按钮描述信息
+    /// </summary>
+    public string Desc
+    {
+        get { return (string)GetValue(DescProperty); }
+        set { SetValue(DescProperty, value); }
     }
 }

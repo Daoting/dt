@@ -9,26 +9,25 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Core.Rpc
+namespace Dt.Core.Rpc;
+
+/// <summary>
+/// 远程回调结果包装类
+/// </summary>
+internal class RpcResult
 {
     /// <summary>
-    /// 远程回调结果包装类
+    /// 结果类型
     /// </summary>
-    internal class RpcResult
-    {
-        /// <summary>
-        /// 结果类型
-        /// </summary>
-        public RpcResultType ResultType { get; set; }
+    public RpcResultType ResultType { get; set; }
 
-        /// <summary>
-        /// 提示信息
-        /// </summary>
-        public string Info { get; set; }
+    /// <summary>
+    /// 提示信息
+    /// </summary>
+    public string Info { get; set; }
 
-        /// <summary>
-        /// 耗时
-        /// </summary>
-        public string Elapsed { get; set; }
-    }
+    /// <summary>
+    /// 耗时
+    /// </summary>
+    public string Elapsed { get; set; }
 }

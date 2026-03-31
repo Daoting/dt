@@ -10,18 +10,17 @@
 
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 模型库的回调接口
+/// </summary>
+public interface IModelCallback
 {
     /// <summary>
-    /// 模型库的回调接口
+    /// 查询表结构信息
     /// </summary>
-    public interface IModelCallback
-    {
-        /// <summary>
-        /// 查询表结构信息
-        /// </summary>
-        /// <param name="p_tblAttr">实体类属性标签</param>
-        /// <returns></returns>
-        Task<TableSchema> GetTableSchema(TblAttribute p_tblAttr);
-    }
+    /// <param name="p_tblAttr">实体类属性标签</param>
+    /// <returns></returns>
+    Task<TableSchema> GetTableSchema(TblAttribute p_tblAttr);
 }

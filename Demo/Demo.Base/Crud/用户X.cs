@@ -9,52 +9,51 @@
 #region 引用命名
 #endregion
 
-namespace Demo.Base
+namespace Demo.Base;
+
+public partial class 用户X
 {
-    public partial class 用户X
+    public static async Task<用户X> New(
+        string 手机号 = default,
+        string 姓名 = default,
+        string 密码 = default)
     {
-        public static async Task<用户X> New(
-            string 手机号 = default,
-            string 姓名 = default,
-            string 密码 = default)
-        {
-            return new 用户X(
-                ID: await NewID(),
-                手机号: 手机号,
-                姓名: 姓名,
-                密码: 密码);
-        }
+        return new 用户X(
+            ID: await NewID(),
+            手机号: 手机号,
+            姓名: 姓名,
+            密码: 密码);
+    }
 
-        protected override void InitHook()
-        {
-            //OnSaving(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+    protected override void InitHook()
+    {
+        //OnSaving(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnSaved(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnSaved(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnDeleting(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnDeleting(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnDeleted(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnDeleted(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnChanging(cName, e =>
-            //{
-                
-            //});
-        }
+        //OnChanging(cName, e =>
+        //{
+            
+        //});
     }
 }

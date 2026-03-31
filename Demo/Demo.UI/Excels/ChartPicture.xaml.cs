@@ -36,75 +36,74 @@ using Windows.Graphics.Imaging;
 using System.Runtime.InteropServices.WindowsRuntime;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class ChartPicture : Win
 {
-    public partial class ChartPicture : Win
+    ChartSampleData _data;
+
+    public ChartPicture()
     {
-        ChartSampleData _data;
+        InitializeComponent();
 
-        public ChartPicture()
+        _data = new ChartSampleData();
+        _chart.Data = _data.GetData(ChartType.Column);
+    }
+
+    void OnChartTypeChanged(FvCell arg1, object e)
+    {
+        _chart.Data = _data.GetData((ChartType)e);
+    }
+    
+    async void OnAddChart(object sender, RoutedEventArgs e)
+    {
+        Worksheet sheet = _excel.ActiveSheet;
+        if (sheet.Selections.Count == 0)
+            return;
+
+        CellRange range = sheet.Selections[0];
+        Rect rc = sheet.GetRangeLocation(range);
+
+        Chart ct = new Chart();
+        ct.Width = rc.Width;
+        ct.Height = rc.Height;
+        ct.ChartType = _chart.ChartType;
+        ct.Palette = _chart.Palette;
+        ct.Header = _chart.Header;
+        ChartLegend legend = _chart.Children[0] as ChartLegend;
+        if (legend.Visibility == Visibility.Visible)
         {
-            InitializeComponent();
-
-            _data = new ChartSampleData();
-            _chart.Data = _data.GetData(ChartType.Column);
+            ChartLegend lg = new ChartLegend();
+            lg.Title = legend.Title;
+            lg.Position = legend.Position;
+            lg.Orientation = legend.Orientation;
+            lg.OverlapChart = legend.OverlapChart;
+            ct.Children.Add(lg);
         }
+        ct.View.AxisX.Title = _chart.View.AxisX.Title;
+        ct.View.AxisY.Title = _chart.View.AxisY.Title;
+        ct.View.Inverted = _chart.View.Inverted;
+        ct.Data = _data.GetData(ct.ChartType);
 
-        void OnChartTypeChanged(FvCell arg1, object e)
-        {
-            _chart.Data = _data.GetData((ChartType)e);
-        }
+        RenderTargetBitmap bmp = new RenderTargetBitmap();
+        await bmp.RenderAsync(_chart);
+
+        var pixelBuffer = await bmp.GetPixelsAsync();
+        var ms = new MemoryStream();
+        var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, ms.AsRandomAccessStream());
+
+        // 换算成物理像素
+        float dpi = (float)XamlRoot.RasterizationScale * 96;
+        encoder.SetPixelData(
+            BitmapPixelFormat.Bgra8,
+            BitmapAlphaMode.Ignore,
+            (uint)bmp.PixelWidth,
+            (uint)bmp.PixelHeight,
+            dpi,
+            dpi,
+            pixelBuffer.ToArray());
+        await encoder.FlushAsync();
         
-        async void OnAddChart(object sender, RoutedEventArgs e)
-        {
-            Worksheet sheet = _excel.ActiveSheet;
-            if (sheet.Selections.Count == 0)
-                return;
-
-            CellRange range = sheet.Selections[0];
-            Rect rc = sheet.GetRangeLocation(range);
-
-            Chart ct = new Chart();
-            ct.Width = rc.Width;
-            ct.Height = rc.Height;
-            ct.ChartType = _chart.ChartType;
-            ct.Palette = _chart.Palette;
-            ct.Header = _chart.Header;
-            ChartLegend legend = _chart.Children[0] as ChartLegend;
-            if (legend.Visibility == Visibility.Visible)
-            {
-                ChartLegend lg = new ChartLegend();
-                lg.Title = legend.Title;
-                lg.Position = legend.Position;
-                lg.Orientation = legend.Orientation;
-                lg.OverlapChart = legend.OverlapChart;
-                ct.Children.Add(lg);
-            }
-            ct.View.AxisX.Title = _chart.View.AxisX.Title;
-            ct.View.AxisY.Title = _chart.View.AxisY.Title;
-            ct.View.Inverted = _chart.View.Inverted;
-            ct.Data = _data.GetData(ct.ChartType);
-
-            RenderTargetBitmap bmp = new RenderTargetBitmap();
-            await bmp.RenderAsync(_chart);
-
-            var pixelBuffer = await bmp.GetPixelsAsync();
-            var ms = new MemoryStream();
-            var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, ms.AsRandomAccessStream());
-
-            // 换算成物理像素
-            float dpi = (float)XamlRoot.RasterizationScale * 96;
-            encoder.SetPixelData(
-                BitmapPixelFormat.Bgra8,
-                BitmapAlphaMode.Ignore,
-                (uint)bmp.PixelWidth,
-                (uint)bmp.PixelHeight,
-                dpi,
-                dpi,
-                pixelBuffer.ToArray());
-            await encoder.FlushAsync();
-            
-            sheet.AddPicture("pic" + sheet.Pictures.Count.ToString(), ms, rc.Left, rc.Top, rc.Width, rc.Height);
-        }
+        sheet.AddPicture("pic" + sheet.Pictures.Count.ToString(), ms, rc.Left, rc.Top, rc.Width, rc.Height);
     }
 }

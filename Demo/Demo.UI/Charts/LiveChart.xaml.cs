@@ -22,111 +22,110 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class LiveChart : Win
 {
-    public partial class LiveChart : Win
+    ObservableCollection<TempPoint> _pts = new ObservableCollection<TempPoint>();
+    int _counter = 0;
+    Random _rnd = new Random();
+    DispatcherTimer _dt;
+    int _nMaxPoints = 60;
+    int _nAddPoints = 1;
+
+    public LiveChart()
     {
-        ObservableCollection<TempPoint> _pts = new ObservableCollection<TempPoint>();
-        int _counter = 0;
-        Random _rnd = new Random();
-        DispatcherTimer _dt;
-        int _nMaxPoints = 60;
-        int _nAddPoints = 1;
+        InitializeComponent();
 
-        public LiveChart()
+        _chart.ChartType = ChartType.Line;
+
+        XYDataSeries ds = new XYDataSeries()
         {
-            InitializeComponent();
+            XValueBinding = new Binding() { Path = new PropertyPath("X") },
+            ValueBinding = new Binding() { Path = new PropertyPath("Y") },
+            ConnectionStrokeThickness = 2,
+            Label = "raw",
+        };
+        _chart.Data.Children.Add(ds);
+        _chart.Data.ItemsSource = _pts;
 
-            _chart.ChartType = ChartType.Line;
+        _chart.View.AxisY.Min = -1000;
+        _chart.View.AxisY.Max = 1000;
 
-            XYDataSeries ds = new XYDataSeries()
-            {
-                XValueBinding = new Binding() { Path = new PropertyPath("X") },
-                ValueBinding = new Binding() { Path = new PropertyPath("Y") },
-                ConnectionStrokeThickness = 2,
-                Label = "raw",
-            };
-            _chart.Data.Children.Add(ds);
-            _chart.Data.ItemsSource = _pts;
+        _dt = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(0.2) };
+        _dt.Tick += (s, e) => Update();
 
-            _chart.View.AxisY.Min = -1000;
-            _chart.View.AxisY.Max = 1000;
+        _chart.Loaded += LiveChart_Loaded;
+        _chart.Unloaded += LiveChart_Unloaded;
+    }
 
-            _dt = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(0.2) };
-            _dt.Tick += (s, e) => Update();
+    void LiveChart_Loaded(object sender, RoutedEventArgs e)
+    {
+        _chart.Loaded -= LiveChart_Loaded;
+        _dt.Start();
+        btnTimer.Content = "Stop";
+    }
 
-            _chart.Loaded += LiveChart_Loaded;
-            _chart.Unloaded += LiveChart_Unloaded;
+    void LiveChart_Unloaded(object sender, RoutedEventArgs e)
+    {
+        _dt.Stop();
+        btnTimer.Content = "Start";
+    }
+
+    void Update()
+    {
+        _chart.BeginUpdate();
+
+        int cnt = _nAddPoints;
+        for (int i = 0; i < cnt; i++)
+        {
+            double r = _rnd.NextDouble();
+            double y = (10 * r * Math.Sin(0.1 * _counter) * Math.Sin(0.6 * _rnd.NextDouble() * _counter));
+            _pts.Add(new TempPoint { X = _counter++, Y = y * 100 });
         }
 
-        void LiveChart_Loaded(object sender, RoutedEventArgs e)
+        int ndel = _pts.Count - _nMaxPoints;
+        if (ndel > 0)
+            for (int i = 0; i < ndel; i++)
+                _pts.RemoveAt(0);
+
+        _chart.EndUpdate();
+    }
+
+    void Button_Click(object sender, RoutedEventArgs e)
+    {
+        Button btn = (Button)sender;
+
+        if (_dt.IsEnabled)
         {
-            _chart.Loaded -= LiveChart_Loaded;
+            _dt.Stop();
+            btn.Content = "Start";
+        }
+        else
+        {
             _dt.Start();
-            btnTimer.Content = "Stop";
+            btn.Content = "Stop";
         }
+    }
 
-        void LiveChart_Unloaded(object sender, RoutedEventArgs e)
+    internal void StopTimer()
+    {
+        if (_dt.IsEnabled)
         {
             _dt.Stop();
             btnTimer.Content = "Start";
         }
-
-        void Update()
-        {
-            _chart.BeginUpdate();
-
-            int cnt = _nAddPoints;
-            for (int i = 0; i < cnt; i++)
-            {
-                double r = _rnd.NextDouble();
-                double y = (10 * r * Math.Sin(0.1 * _counter) * Math.Sin(0.6 * _rnd.NextDouble() * _counter));
-                _pts.Add(new TempPoint { X = _counter++, Y = y * 100 });
-            }
-
-            int ndel = _pts.Count - _nMaxPoints;
-            if (ndel > 0)
-                for (int i = 0; i < ndel; i++)
-                    _pts.RemoveAt(0);
-
-            _chart.EndUpdate();
-        }
-
-        void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Button btn = (Button)sender;
-
-            if (_dt.IsEnabled)
-            {
-                _dt.Stop();
-                btn.Content = "Start";
-            }
-            else
-            {
-                _dt.Start();
-                btn.Content = "Stop";
-            }
-        }
-
-        internal void StopTimer()
-        {
-            if (_dt.IsEnabled)
-            {
-                _dt.Stop();
-                btnTimer.Content = "Start";
-            }
-        }
     }
+}
 
 #if WIN
-    [WinRT.GeneratedBindableCustomProperty]
+[WinRT.GeneratedBindableCustomProperty]
 #else
-    [Microsoft.UI.Xaml.Data.Bindable]
+[Microsoft.UI.Xaml.Data.Bindable]
 #endif
-    public partial class TempPoint
-    {
-        public double X { get; set; }
-        
-        public double Y { get; set; }
-    }
+public partial class TempPoint
+{
+    public double X { get; set; }
+    
+    public double Y { get; set; }
 }

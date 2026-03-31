@@ -34,268 +34,267 @@ using Cell = Dt.Cells.Data.Cell;
 using Microsoft.UI;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class FloatingObject : Win
 {
-    public partial class FloatingObject : Win
+    int ellipseCount = 1;
+    int rectangleCount = 1;
+
+    MyShape myRectangle;
+    public FloatingObject()
     {
-        int ellipseCount = 1;
-        int rectangleCount = 1;
+        InitializeComponent();
 
-        MyShape myRectangle;
-        public FloatingObject()
+        using (_excel.Defer())
         {
-            InitializeComponent();
+            Color color = Colors.Red;
+            color.A = (byte)((1 - 0.8) * 255);
+            AddEllipse(new Point(150, 100), color);
+            color = Colors.Green;
+            color.A = (byte)((1 - 0.8) * 255);
+            AddRectangle(new Point(500, 100), color);
+        }
+        _excel.SelectionChanging += OnSelectionChaging;
+    }
 
-            using (_excel.Defer())
-            {
-                Color color = Colors.Red;
-                color.A = (byte)((1 - 0.8) * 255);
-                AddEllipse(new Point(150, 100), color);
-                color = Colors.Green;
-                color.A = (byte)((1 - 0.8) * 255);
-                AddRectangle(new Point(500, 100), color);
-            }
-            _excel.SelectionChanging += OnSelectionChaging;
+    void AddRectangleButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        Point point = new Point(0, 0);
+        AddRectangle(point, GetRandomColor());
+    }
+
+    void AddEllipseButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        Point point = new Point(0, 0);
+        AddEllipse(point, GetRandomColor());
+    }
+
+    void testButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        Worksheet sheet = _excel.ActiveSheet;
+        if (sheet.Selections.Count == 0)
+            return;
+
+        CellRange cr = sheet.Selections[0];
+        double X = 0d, Y = 0d;
+        double width = 0d;
+        double height = 0d;
+        for (int i = 0; i < cr.Row; i++)
+        {
+            Y += sheet.GetRowHeight(i);
+        }
+        for (int i = 0; i < cr.Column; i++)
+        {
+            X += sheet.GetColumnWidth(i);
+        }
+        for (int i = 0; i < cr.RowCount; i++)
+        {
+            height += sheet.GetRowHeight(cr.Row + i);
+        }
+        for (int i = 0; i < cr.ColumnCount; i++)
+        {
+            width += sheet.GetColumnWidth(cr.Column + i);
         }
 
-        void AddRectangleButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        if (myRectangle != null)
         {
-            Point point = new Point(0, 0);
-            AddRectangle(point, GetRandomColor());
+            sheet.FloatingObjects.Remove(myRectangle);
+            myRectangle = null;
+        }
+        myRectangle = new MyShape("selRec", X, Y, width, height);
+        Rectangle rectangle = new Rectangle()
+        {
+            Fill = new SolidColorBrush(Colors.Transparent),
+            StrokeThickness = 3,
+            Stroke = new SolidColorBrush(Colors.Black),
+        };
+        (myRectangle.Content as Grid).Children.Add(rectangle);
+        sheet.FloatingObjects.Add(myRectangle);
+    }
+
+    void selectButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        Worksheet sheet = _excel.ActiveSheet;
+        if (sheet.Selections.Count == 0)
+            return;
+
+        CellRange cr = sheet.Selections[0];
+
+        _excel.SuspendEvent();
+        sheet.SelectionPolicy = SelectionPolicy.MultiRange;
+        sheet.SelectionUnit = SelectionUnit.Cell;
+
+        sheet.AddSelection(cr.Row, cr.Column, 1, 1);
+        sheet.AddSelection(cr);
+        sheet.SelectionPolicy = SelectionPolicy.Range;
+
+        sheet.SelectionBackground = new SolidColorBrush(Colors.Teal);
+        sheet.SelectionBorderColor = Colors.Red;
+        _excel.ResumeEvent();
+    }
+
+    void lineButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        Worksheet sheet = _excel.ActiveSheet;
+        if (sheet.Selections.Count == 0)
+            return;
+
+        CellRange cr = sheet.Selections[0];
+        double X = 0d, Y = 0d;
+        double width = 0d;
+        double height = 0d;
+        for (int i = 0; i < cr.Row; i++)
+        {
+            Y += sheet.GetRowHeight(i);
+        }
+        for (int i = 0; i < cr.Column; i++)
+        {
+            X += sheet.GetColumnWidth(i);
+        }
+        for (int i = 0; i < cr.RowCount; i++)
+        {
+            height += sheet.GetRowHeight(cr.Row + i);
+        }
+        for (int i = 0; i < cr.ColumnCount; i++)
+        {
+            width += sheet.GetColumnWidth(cr.Column + i);
         }
 
-        void AddEllipseButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        if (myRectangle != null)
         {
-            Point point = new Point(0, 0);
-            AddEllipse(point, GetRandomColor());
+            sheet.FloatingObjects.Remove(myRectangle);
+            myRectangle = null;
         }
-
-        void testButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        myRectangle = new MyShape("selRec", X, 0, 3, 500);
+        Rectangle rectangle = new Rectangle()
         {
-            Worksheet sheet = _excel.ActiveSheet;
-            if (sheet.Selections.Count == 0)
-                return;
+            Fill = new SolidColorBrush(Colors.Transparent),
+            StrokeThickness = 1,
+            Stroke = new SolidColorBrush(Colors.Black),
+        };
+        (myRectangle.Content as Grid).Children.Add(rectangle);
+        sheet.FloatingObjects.Add(myRectangle);
+        myRectangle.CanPrint = false;
+        myRectangle.DynamicMove = false;
+        myRectangle.DynamicSize = false;
+    }
 
-            CellRange cr = sheet.Selections[0];
-            double X = 0d, Y = 0d;
-            double width = 0d;
-            double height = 0d;
-            for (int i = 0; i < cr.Row; i++)
-            {
-                Y += sheet.GetRowHeight(i);
-            }
-            for (int i = 0; i < cr.Column; i++)
-            {
-                X += sheet.GetColumnWidth(i);
-            }
-            for (int i = 0; i < cr.RowCount; i++)
-            {
-                height += sheet.GetRowHeight(cr.Row + i);
-            }
-            for (int i = 0; i < cr.ColumnCount; i++)
-            {
-                width += sheet.GetColumnWidth(cr.Column + i);
-            }
+    void resetSelectionStyle()
+    {
+        Worksheet sheet = _excel.ActiveSheet;
 
-            if (myRectangle != null)
-            {
-                sheet.FloatingObjects.Remove(myRectangle);
-                myRectangle = null;
-            }
-            myRectangle = new MyShape("selRec", X, Y, width, height);
-            Rectangle rectangle = new Rectangle()
-            {
-                Fill = new SolidColorBrush(Colors.Transparent),
-                StrokeThickness = 3,
-                Stroke = new SolidColorBrush(Colors.Black),
-            };
-            (myRectangle.Content as Grid).Children.Add(rectangle);
-            sheet.FloatingObjects.Add(myRectangle);
-        }
+        sheet.SelectionBackground = new SolidColorBrush(Colors.Transparent);
+        sheet.SelectionBorderColor = Colors.Black;
+    }
 
-        void selectButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    void OnSelectionChaging(object sender, EventArgs e)
+    {
+        resetSelectionStyle();
+    }
+    void AddRectangle(Point point, Color fillColor)
+    {
+        MyShape myShape = new MyShape("Rectuangle" + rectangleCount, point.X, point.Y, 200, 200);
+        Rectangle rectangle = new Rectangle()
         {
-            Worksheet sheet = _excel.ActiveSheet;
-            if (sheet.Selections.Count == 0)
-                return;
+            Fill = new SolidColorBrush(fillColor),
+            StrokeThickness = 4,
+            Stroke = new SolidColorBrush(Colors.Black),
+        };
+        (myShape.Content as Grid).Children.Add(rectangle);
+        _excel.ActiveSheet.FloatingObjects.Add(myShape);
+        rectangleCount++;
+    }
 
-            CellRange cr = sheet.Selections[0];
 
-            _excel.SuspendEvent();
-            sheet.SelectionPolicy = SelectionPolicy.MultiRange;
-            sheet.SelectionUnit = SelectionUnit.Cell;
-
-            sheet.AddSelection(cr.Row, cr.Column, 1, 1);
-            sheet.AddSelection(cr);
-            sheet.SelectionPolicy = SelectionPolicy.Range;
-
-            sheet.SelectionBackground = new SolidColorBrush(Colors.Teal);
-            sheet.SelectionBorderColor = Colors.Red;
-            _excel.ResumeEvent();
-        }
-
-        void lineButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    void AddEllipse(Point point, Color fillColor)
+    {
+        MyShape myShape = new MyShape("Ellipse" + ellipseCount, point.X, point.Y, 200, 200);
+        Ellipse ellipse = new Ellipse()
         {
-            Worksheet sheet = _excel.ActiveSheet;
-            if (sheet.Selections.Count == 0)
-                return;
+            Fill = new SolidColorBrush(fillColor),
+            StrokeThickness = 4,
+            Stroke = new SolidColorBrush(Colors.Black),
+        };
+        (myShape.Content as Grid).Children.Add(ellipse);
+        _excel.ActiveSheet.FloatingObjects.Add(myShape);
+        ellipseCount++;
+    }
 
-            CellRange cr = sheet.Selections[0];
-            double X = 0d, Y = 0d;
-            double width = 0d;
-            double height = 0d;
-            for (int i = 0; i < cr.Row; i++)
-            {
-                Y += sheet.GetRowHeight(i);
-            }
-            for (int i = 0; i < cr.Column; i++)
-            {
-                X += sheet.GetColumnWidth(i);
-            }
-            for (int i = 0; i < cr.RowCount; i++)
-            {
-                height += sheet.GetRowHeight(cr.Row + i);
-            }
-            for (int i = 0; i < cr.ColumnCount; i++)
-            {
-                width += sheet.GetColumnWidth(cr.Column + i);
-            }
 
-            if (myRectangle != null)
-            {
-                sheet.FloatingObjects.Remove(myRectangle);
-                myRectangle = null;
-            }
-            myRectangle = new MyShape("selRec", X, 0, 3, 500);
-            Rectangle rectangle = new Rectangle()
-            {
-                Fill = new SolidColorBrush(Colors.Transparent),
-                StrokeThickness = 1,
-                Stroke = new SolidColorBrush(Colors.Black),
-            };
-            (myRectangle.Content as Grid).Children.Add(rectangle);
-            sheet.FloatingObjects.Add(myRectangle);
-            myRectangle.CanPrint = false;
-            myRectangle.DynamicMove = false;
-            myRectangle.DynamicSize = false;
-        }
+    class MyShape : CustomFloatingObject, IXmlSerializable
+    {
+        public MyShape(string name, double x, double y, double width, double height)
+            : base(name, x, y, width, height)
+        { }
 
-        void resetSelectionStyle()
+        public MyShape(string name)
+            : base(name, 0.0, 0.0, 200.0, 200.0)
+        { }
+
+        public MyShape()
+            : base(string.Empty)
+        { }
+
+        FrameworkElement _content;
+        public override FrameworkElement Content
         {
-            Worksheet sheet = _excel.ActiveSheet;
-
-            sheet.SelectionBackground = new SolidColorBrush(Colors.Transparent);
-            sheet.SelectionBorderColor = Colors.Black;
-        }
-
-        void OnSelectionChaging(object sender, EventArgs e)
-        {
-            resetSelectionStyle();
-        }
-        void AddRectangle(Point point, Color fillColor)
-        {
-            MyShape myShape = new MyShape("Rectuangle" + rectangleCount, point.X, point.Y, 200, 200);
-            Rectangle rectangle = new Rectangle()
+            get
             {
-                Fill = new SolidColorBrush(fillColor),
-                StrokeThickness = 4,
-                Stroke = new SolidColorBrush(Colors.Black),
-            };
-            (myShape.Content as Grid).Children.Add(rectangle);
-            _excel.ActiveSheet.FloatingObjects.Add(myShape);
-            rectangleCount++;
-        }
-
-
-        void AddEllipse(Point point, Color fillColor)
-        {
-            MyShape myShape = new MyShape("Ellipse" + ellipseCount, point.X, point.Y, 200, 200);
-            Ellipse ellipse = new Ellipse()
-            {
-                Fill = new SolidColorBrush(fillColor),
-                StrokeThickness = 4,
-                Stroke = new SolidColorBrush(Colors.Black),
-            };
-            (myShape.Content as Grid).Children.Add(ellipse);
-            _excel.ActiveSheet.FloatingObjects.Add(myShape);
-            ellipseCount++;
-        }
-
-
-        class MyShape : CustomFloatingObject, IXmlSerializable
-        {
-            public MyShape(string name, double x, double y, double width, double height)
-                : base(name, x, y, width, height)
-            { }
-
-            public MyShape(string name)
-                : base(name, 0.0, 0.0, 200.0, 200.0)
-            { }
-
-            public MyShape()
-                : base(string.Empty)
-            { }
-
-            FrameworkElement _content;
-            public override FrameworkElement Content
-            {
-                get
+                if (_content == null)
                 {
-                    if (_content == null)
-                    {
-                        _content = new Grid();
-                    }
-                    return _content;
+                    _content = new Grid();
                 }
+                return _content;
             }
-
-            public override object Clone()
-            {
-                MyShape myShape = new MyShape();
-                myShape.Size = Size;
-                Shape shape = (Shape)(Content as Grid).Children[0];
-                //   string typeName = shape.GetType().UnderlyingSystemType.Name;
-                string typeName = shape.GetType().Name;
-                if (typeName.Equals("Rectangle"))
-                {
-                    Rectangle rectangleClone = new Rectangle()
-                    {
-                        Stroke = shape.Stroke,
-                        StrokeThickness = shape.StrokeThickness,
-                        Fill = shape.Fill
-                    };
-                    (myShape.Content as Grid).Children.Add(rectangleClone);
-                    return myShape;
-                }
-                else
-                {
-                    Ellipse ellipseClone = new Ellipse()
-                    {
-                        Stroke = shape.Stroke,
-                        StrokeThickness = shape.StrokeThickness,
-                        Fill = shape.Fill
-                    };
-                    (myShape.Content as Grid).Children.Add(ellipseClone);
-                    return myShape;
-                }
-            }
-
         }
 
-        Color GetRandomColor()
+        public override object Clone()
         {
-            Color color = new Color();
-            Random random = new Random();
-            int randomNmber = 0;
-            randomNmber = random.Next(0, 255);
-            color.A = (byte)randomNmber;
-            randomNmber = random.Next(0, 255);
-            color.R = (byte)randomNmber;
-            randomNmber = random.Next(0, 255);
-            color.G = (byte)randomNmber;
-            randomNmber = random.Next(0, 255);
-            color.B = (byte)randomNmber;
-            return color;
+            MyShape myShape = new MyShape();
+            myShape.Size = Size;
+            Shape shape = (Shape)(Content as Grid).Children[0];
+            //   string typeName = shape.GetType().UnderlyingSystemType.Name;
+            string typeName = shape.GetType().Name;
+            if (typeName.Equals("Rectangle"))
+            {
+                Rectangle rectangleClone = new Rectangle()
+                {
+                    Stroke = shape.Stroke,
+                    StrokeThickness = shape.StrokeThickness,
+                    Fill = shape.Fill
+                };
+                (myShape.Content as Grid).Children.Add(rectangleClone);
+                return myShape;
+            }
+            else
+            {
+                Ellipse ellipseClone = new Ellipse()
+                {
+                    Stroke = shape.Stroke,
+                    StrokeThickness = shape.StrokeThickness,
+                    Fill = shape.Fill
+                };
+                (myShape.Content as Grid).Children.Add(ellipseClone);
+                return myShape;
+            }
         }
+
+    }
+
+    Color GetRandomColor()
+    {
+        Color color = new Color();
+        Random random = new Random();
+        int randomNmber = 0;
+        randomNmber = random.Next(0, 255);
+        color.A = (byte)randomNmber;
+        randomNmber = random.Next(0, 255);
+        color.R = (byte)randomNmber;
+        randomNmber = random.Next(0, 255);
+        color.G = (byte)randomNmber;
+        randomNmber = random.Next(0, 255);
+        color.B = (byte)randomNmber;
+        return color;
     }
 }

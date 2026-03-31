@@ -10,24 +10,23 @@
 using System;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 类型别名标签，一个别名对应一个类型列表
+/// </summary>
+public abstract class TypeListAliasAttribute : Attribute
 {
-    /// <summary>
-    /// 类型别名标签，一个别名对应一个类型列表
-    /// </summary>
-    public abstract class TypeListAliasAttribute : Attribute
+    protected TypeListAliasAttribute(string p_alias)
     {
-        protected TypeListAliasAttribute(string p_alias)
-        {
-            Alias = p_alias;
-        }
-
-        protected TypeListAliasAttribute()
-        { }
-
-        /// <summary>
-        /// 类型别名
-        /// </summary>
-        public string Alias { get; }
+        Alias = p_alias;
     }
+
+    protected TypeListAliasAttribute()
+    { }
+
+    /// <summary>
+    /// 类型别名
+    /// </summary>
+    public string Alias { get; }
 }

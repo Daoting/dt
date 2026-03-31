@@ -9,29 +9,28 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// CList功能扩展基类
+/// </summary>
+public abstract class CListEx
 {
-    /// <summary>
-    /// CList功能扩展基类
-    /// </summary>
-    public abstract class CListEx
+    protected CList _owner;
+    protected ListDlg _dlg;
+    protected string _params;
+
+    public void Init(CList p_owner, ListDlg p_dlg, string p_params)
     {
-        protected CList _owner;
-        protected ListDlg _dlg;
-        protected string _params;
-
-        public void Init(CList p_owner, ListDlg p_dlg, string p_params)
-        {
-            _owner = p_owner;
-            _dlg = p_dlg;
-            _params = p_params;
-            OnInit();
-        }
-
-        protected virtual void OnInit()
-        {
-        }
-
-        public abstract Task<INotifyList> GetData();
+        _owner = p_owner;
+        _dlg = p_dlg;
+        _params = p_params;
+        OnInit();
     }
+
+    protected virtual void OnInit()
+    {
+    }
+
+    public abstract Task<INotifyList> GetData();
 }

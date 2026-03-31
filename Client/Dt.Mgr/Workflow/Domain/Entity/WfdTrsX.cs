@@ -9,33 +9,33 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Mgr.Workflow
+namespace Dt.Mgr.Workflow;
+
+public partial class WfdTrsX
 {
-    public partial class WfdTrsX
+    public static async Task<WfdTrsX> New(
+        long PrcID = default,
+        long SrcAtvID = default,
+        long TgtAtvID = default,
+        bool IsRollback = default,
+        long? TrsID = default)
     {
-        public static async Task<WfdTrsX> New(
-            long PrcID = default,
-            long SrcAtvID = default,
-            long TgtAtvID = default,
-            bool IsRollback = default,
-            long? TrsID = default)
-        {
-            return new WfdTrsX(
-                ID: await NewID(),
-                PrcID: PrcID,
-                SrcAtvID: SrcAtvID,
-                TgtAtvID: TgtAtvID,
-                IsRollback: IsRollback,
-                TrsID: TrsID);
-        }
+        return new WfdTrsX(
+            ID: await NewID(),
+            PrcID: PrcID,
+            SrcAtvID: SrcAtvID,
+            TgtAtvID: TgtAtvID,
+            IsRollback: IsRollback,
+            TrsID: TrsID);
+    }
 
-        public static Task<Table<WfdTrsX>> QueryWithAtvName(long p_prcID)
-        {
-            return Query(string.Format(_sqlAtvName, p_prcID));
-        }
+    public static Task<Table<WfdTrsX>> QueryWithAtvName(long p_prcID)
+    {
+        return Query(string.Format(_sqlAtvName, p_prcID));
+    }
 
-        #region sql
-        const string _sqlAtvName = @"
+    #region sql
+    const string _sqlAtvName = @"
 SELECT a.name src_atv,
 	c.name tgt_atv,
 	is_rollback 
@@ -48,6 +48,5 @@ WHERE
 	AND b.tgt_atv_id = c.ID
 	AND b.prc_id={0}
 ";
-        #endregion
-    }
+    #endregion
 }

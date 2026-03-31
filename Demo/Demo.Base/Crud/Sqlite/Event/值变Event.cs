@@ -9,22 +9,21 @@
 #region 引用命名
 #endregion
 
-namespace Demo.Base.Sqlite
+namespace Demo.Base.Sqlite;
+
+public class Sqlite值变Event : IEvent
 {
-    public class Sqlite值变Event : IEvent
-    {
-        public string OriginalVal { get; set; }
+    public string OriginalVal { get; set; }
 
-        public string NewVal { get; set; }
-    }
+    public string NewVal { get; set; }
+}
 
-    [EventHandler]
-    public class Sqlite值变Handler : IEventHandler<Sqlite值变Event>
+[EventHandler]
+public class Sqlite值变Handler : IEventHandler<Sqlite值变Event>
+{
+    public Task Handle(Sqlite值变Event p_event)
     {
-        public Task Handle(Sqlite值变Event p_event)
-        {
-            Kit.Msg($"原值：{p_event.OriginalVal}\r\n新值：{p_event.NewVal}");
-            return Task.CompletedTask;
-        }
+        Kit.Msg($"原值：{p_event.OriginalVal}\r\n新值：{p_event.NewVal}");
+        return Task.CompletedTask;
     }
 }

@@ -12,59 +12,58 @@ using Microsoft.UI.Xaml.Controls;
 using Windows.Storage;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class RptTabDemo : Win
 {
-    public partial class RptTabDemo : Win
+    public RptTabDemo()
     {
-        public RptTabDemo()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        async void OnLocal(object sender, RoutedEventArgs e)
+    async void OnLocal(object sender, RoutedEventArgs e)
+    {
+        // 表中模板不存在时先插入
+        var da = new AgentInfo(AccessType.Local, "rptdemo").GetAccessInfo().GetDa();
+        var cnt = await da.GetScalar<int>($"select count(*) from OmReport where name='综合'");
+        if (cnt == 0)
         {
-            // 表中模板不存在时先插入
-            var da = new AgentInfo(AccessType.Local, "rptdemo").GetAccessInfo().GetDa();
-            var cnt = await da.GetScalar<int>($"select count(*) from OmReport where name='综合'");
-            if (cnt == 0)
+            string define = null;
+            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Demo.UI/Assets/zh.rpt"));
+            using (var stream = await file.OpenStreamForReadAsync())
+            using (var reader = new StreamReader(stream))
             {
-                string define = null;
-                var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Demo.UI/Assets/zh.rpt"));
-                using (var stream = await file.OpenStreamForReadAsync())
-                using (var reader = new StreamReader(stream))
-                {
-                    define = reader.ReadToEnd();
-                }
-                var entity = await OmReportX.New("综合", define);
-                await entity.Save(false);
+                define = reader.ReadToEnd();
             }
-
-            _rpt.LoadReport(new RptInfo { Uri = "local://rptdemo/综合" });
+            var entity = await OmReportX.New("综合", define);
+            await entity.Save(false);
         }
 
-        void OnContent(object sender, RoutedEventArgs e)
-        {
-            _rpt.LoadReport(new RptInfo { Uri = "ms-appx:///Demo.UI/Assets/zh.rpt" });
-        }
+        _rpt.LoadReport(new RptInfo { Uri = "local://rptdemo/综合" });
+    }
 
-        void OnEmbedded(object sender, RoutedEventArgs e)
-        {
-            _rpt.LoadReport(new RptInfo { Uri = "embedded://Demo.UI/Demo.UI.Bag.模板.综合.rpt" });
-        }
+    void OnContent(object sender, RoutedEventArgs e)
+    {
+        _rpt.LoadReport(new RptInfo { Uri = "ms-appx:///Demo.UI/Assets/zh.rpt" });
+    }
 
-        void OnNoMenu(object sender, RoutedEventArgs e)
-        {
-            _rpt.LoadReport(new RptInfo { Uri = "embedded://Demo.UI/Demo.UI.Bag.模板.无工具栏.rpt" });
-        }
+    void OnEmbedded(object sender, RoutedEventArgs e)
+    {
+        _rpt.LoadReport(new RptInfo { Uri = "embedded://Demo.UI/Demo.UI.Bag.模板.综合.rpt" });
+    }
 
-        void OnContextMenu(object sender, RoutedEventArgs e)
-        {
-            _rpt.LoadReport(new RptInfo { Uri = "embedded://Demo.UI/Demo.UI.Bag.模板.右键菜单.rpt" });
-        }
+    void OnNoMenu(object sender, RoutedEventArgs e)
+    {
+        _rpt.LoadReport(new RptInfo { Uri = "embedded://Demo.UI/Demo.UI.Bag.模板.无工具栏.rpt" });
+    }
 
-        void OnCustomMenu(object sender, RoutedEventArgs e)
-        {
-            _rpt.LoadReport(new RptInfo { Uri = "embedded://Demo.UI/Demo.UI.Bag.模板.交互脚本.rpt" });
-        }
+    void OnContextMenu(object sender, RoutedEventArgs e)
+    {
+        _rpt.LoadReport(new RptInfo { Uri = "embedded://Demo.UI/Demo.UI.Bag.模板.右键菜单.rpt" });
+    }
+
+    void OnCustomMenu(object sender, RoutedEventArgs e)
+    {
+        _rpt.LoadReport(new RptInfo { Uri = "embedded://Demo.UI/Demo.UI.Bag.模板.交互脚本.rpt" });
     }
 }

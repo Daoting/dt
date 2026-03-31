@@ -15,31 +15,30 @@ using System;
 using System.Net;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 参照 https://github.com/serilog/serilog-sinks-console
+/// </summary>
+public static class HtmlLogKit
 {
+    static readonly object DefaultSyncRoot = new object();
+    const string DefaultConsoleOutputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] {ip} {src} {user}\n{Message:lj}{NewLine}{Exception}\n";
+
     /// <summary>
-    /// 参照 https://github.com/serilog/serilog-sinks-console
+    /// 扩展方法 WriteTo.Html()
     /// </summary>
-    public static class HtmlLogKit
+    /// <param name="sinkConfiguration"></param>
+    /// <param name="outputTemplate"></param>
+    /// <returns></returns>
+    public static LoggerConfiguration Html(
+        this LoggerSinkConfiguration sinkConfiguration,
+        string outputTemplate = DefaultConsoleOutputTemplate)
     {
-        static readonly object DefaultSyncRoot = new object();
-        const string DefaultConsoleOutputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] {ip} {src} {user}\n{Message:lj}{NewLine}{Exception}\n";
+        if (sinkConfiguration is null) throw new ArgumentNullException(nameof(sinkConfiguration));
+        if (outputTemplate is null) throw new ArgumentNullException(nameof(outputTemplate));
 
-        /// <summary>
-        /// 扩展方法 WriteTo.Html()
-        /// </summary>
-        /// <param name="sinkConfiguration"></param>
-        /// <param name="outputTemplate"></param>
-        /// <returns></returns>
-        public static LoggerConfiguration Html(
-            this LoggerSinkConfiguration sinkConfiguration,
-            string outputTemplate = DefaultConsoleOutputTemplate)
-        {
-            if (sinkConfiguration is null) throw new ArgumentNullException(nameof(sinkConfiguration));
-            if (outputTemplate is null) throw new ArgumentNullException(nameof(outputTemplate));
-
-            var formatter = new OutputFormatter(outputTemplate);
-            return sinkConfiguration.Sink(new HtmlSink(formatter, DefaultSyncRoot), LevelAlias.Minimum, null);
-        }
+        var formatter = new OutputFormatter(outputTemplate);
+        return sinkConfiguration.Sink(new HtmlSink(formatter, DefaultSyncRoot), LevelAlias.Minimum, null);
     }
 }

@@ -19,37 +19,36 @@ using Microsoft.UI;
 using System.Text;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class QueryFvDemo : Win
 {
-    public partial class QueryFvDemo : Win
+    public QueryFvDemo()
     {
-        public QueryFvDemo()
-        {
-            InitializeComponent();
-            _fvFull.Data = _fv;
-            _fv.CellClick += (e) => _fvCell.Data = e;
-            _fv.Query += OnQuery;
-            LoadData();
-        }
+        InitializeComponent();
+        _fvFull.Data = _fv;
+        _fv.CellClick += (e) => _fvCell.Data = e;
+        _fv.Query += OnQuery;
+        LoadData();
+    }
 
-        void OnQuery(QueryClause e)
-        {
-            Kit.Msg("执行查询");
-        }
+    void OnQuery(QueryClause e)
+    {
+        Kit.Msg("执行查询");
+    }
 
-        void LoadData()
-        {
-            var row = new Row();
-            row.Add<string>("字符串");
-            row.Add<double>("数值");
-            row.Add<double?>("可空数值");
-            row.Add<DateTime?>("可空时间");
-            row.Add<DateTime>("时间_min");
-            row.Add<DateTime>("时间_max");
-            row.Add<int>("值_min");
-            row.Add<int>("值_max");
-            row.Add<string>("忽略");
-            _fv.Data = row;
-        }
+    void LoadData()
+    {
+        var row = new Row();
+        row.Add<string>("字符串");
+        row.Add<double>("数值");
+        row.Add<double?>("可空数值");
+        row.Add<DateTime?>("可空时间");
+        row.Add<DateTime>("时间_min");
+        row.Add<DateTime>("时间_max");
+        row.Add<int>("值_min");
+        row.Add<int>("值_max");
+        row.Add<string>("忽略");
+        _fv.Data = row;
     }
 }

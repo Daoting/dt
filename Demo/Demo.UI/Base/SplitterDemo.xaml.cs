@@ -1,12 +1,11 @@
 ﻿using Dt.Base;
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public sealed partial class SplitterDemo : Win
 {
-    public sealed partial class SplitterDemo : Win
+    public SplitterDemo()
     {
-        public SplitterDemo()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

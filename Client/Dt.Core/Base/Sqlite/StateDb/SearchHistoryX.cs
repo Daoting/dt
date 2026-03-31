@@ -9,21 +9,20 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 查询面板历史
+/// </summary>
+public partial class SearchHistoryX
 {
-    /// <summary>
-    /// 查询面板历史
-    /// </summary>
-    public partial class SearchHistoryX
+    public static async Task<SearchHistoryX> New(
+        string BaseUri = default,
+        string Content = default)
     {
-        public static async Task<SearchHistoryX> New(
-            string BaseUri = default,
-            string Content = default)
-        {
-            return new SearchHistoryX(
-                ID: await NewID(),
-                BaseUri: BaseUri,
-                Content: Content);
-        }
+        return new SearchHistoryX(
+            ID: await NewID(),
+            BaseUri: BaseUri,
+            Content: Content);
     }
 }

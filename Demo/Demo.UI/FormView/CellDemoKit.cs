@@ -13,17 +13,16 @@ using Dt.Core;
 using System.Reflection;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+static class CellDemoKit
 {
-    static class CellDemoKit
+    public static void OnChanged(Fv p_fv, ICell p_tgtCell)
     {
-        public static void OnChanged(Fv p_fv, ICell p_tgtCell)
-        {
-            FvCell cell = p_fv[p_tgtCell.ID];
-            if (cell != null)
-                Kit.Msg($"{cell.Title}：{(p_tgtCell.Val != null ? p_tgtCell.Val : "空")}");
-            else
-                Kit.Msg($"{p_tgtCell.ID}：{(p_tgtCell.Val != null ? p_tgtCell.Val : "空")}");
-        }
+        FvCell cell = p_fv[p_tgtCell.ID];
+        if (cell != null)
+            Kit.Msg($"{cell.Title}：{(p_tgtCell.Val != null ? p_tgtCell.Val : "空")}");
+        else
+            Kit.Msg($"{p_tgtCell.ID}：{(p_tgtCell.Val != null ? p_tgtCell.Val : "空")}");
     }
 }

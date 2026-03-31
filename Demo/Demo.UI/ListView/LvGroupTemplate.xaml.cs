@@ -15,48 +15,47 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class LvGroupTemplate : Win
 {
-    public partial class LvGroupTemplate : Win
+    public LvGroupTemplate()
     {
-        public LvGroupTemplate()
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            _lv.GroupName = "bumen";
-            _lv.GroupContext = typeof(MyGroupContext);
-            _lv.Data = SampleData.CreatePersonsTbl(100);
-        }
-
-        void OnGridView(object sender, RoutedEventArgs e)
-        {
-            _lv.ChangeView(Resources["TableView"], ViewMode.Table);
-        }
-
-        void OnListView(object sender, RoutedEventArgs e)
-        {
-            _lv.ChangeView(Resources["ListView"], ViewMode.List);
-        }
-
-        void OnTileView(object sender, RoutedEventArgs e)
-        {
-            _lv.ChangeView(Resources["TileView"], ViewMode.Tile);
-        }
-
-        void OnLoadData(object sender, RoutedEventArgs e)
-        {
-            _lv.Data = SampleData.CreatePersonsTbl(int.Parse(((Button)sender).Tag.ToString()));
-        }
+        _lv.GroupName = "bumen";
+        _lv.GroupContext = typeof(MyGroupContext);
+        _lv.Data = SampleData.CreatePersonsTbl(100);
     }
 
-    public class MyGroupContext : GroupContext
+    void OnGridView(object sender, RoutedEventArgs e)
     {
-        public double Sum => SumDouble("shengao");
-
-        public string Average => AverageDouble("shengao").ToString("n2");
-
-        public double Max => MaxDouble("shengao");
-
-        public double Min => MinDouble("shengao");
+        _lv.ChangeView(Resources["TableView"], ViewMode.Table);
     }
+
+    void OnListView(object sender, RoutedEventArgs e)
+    {
+        _lv.ChangeView(Resources["ListView"], ViewMode.List);
+    }
+
+    void OnTileView(object sender, RoutedEventArgs e)
+    {
+        _lv.ChangeView(Resources["TileView"], ViewMode.Tile);
+    }
+
+    void OnLoadData(object sender, RoutedEventArgs e)
+    {
+        _lv.Data = SampleData.CreatePersonsTbl(int.Parse(((Button)sender).Tag.ToString()));
+    }
+}
+
+public class MyGroupContext : GroupContext
+{
+    public double Sum => SumDouble("shengao");
+
+    public string Average => AverageDouble("shengao").ToString("n2");
+
+    public double Max => MaxDouble("shengao");
+
+    public double Min => MinDouble("shengao");
 }

@@ -12,49 +12,48 @@ using Microsoft.UI.Xaml;
 using Windows.Graphics.Printing;
 #endregion
 
-namespace Dt.Base.ListView
+namespace Dt.Base.ListView;
+
+public partial class LvRptSettingDlg : Dlg
 {
-    public partial class LvRptSettingDlg : Dlg
+    public LvRptSettingDlg()
     {
-        public LvRptSettingDlg()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        public Task<bool> ShowDlg(LvRptInfo p_info)
-        {
-            _fv.Data = p_info;
-            return ShowAsync();
-        }
+    public Task<bool> ShowDlg(LvRptInfo p_info)
+    {
+        _fv.Data = p_info;
+        return ShowAsync();
+    }
 
-        void OnPaperChanged(CList arg1, object arg2)
+    void OnPaperChanged(CList arg1, object arg2)
+    {
+        var size = PaperSize.Dict[(PrintMediaSize)Enum.Parse(typeof(PrintMediaSize), (string)arg2)];
+        if (!size.IsEmpty)
         {
-            var size = PaperSize.Dict[(PrintMediaSize)Enum.Parse(typeof(PrintMediaSize), (string)arg2)];
-            if (!size.IsEmpty)
-            {
-                _fv["PageHeight"].Val = Math.Round(size.Height / 0.96);
-                _fv["PageWidth"].Val = Math.Round(size.Width / 0.96);
-            }
+            _fv["PageHeight"].Val = Math.Round(size.Height / 0.96);
+            _fv["PageWidth"].Val = Math.Round(size.Width / 0.96);
         }
+    }
 
-        void OnLoadPaperName(CList arg1, AsyncArgs arg2)
+    void OnLoadPaperName(CList arg1, AsyncArgs arg2)
+    {
+        Nl<string> ls = new Nl<string>();
+        foreach (var item in PaperSize.Dict.Keys)
         {
-            Nl<string> ls = new Nl<string>();
-            foreach (var item in PaperSize.Dict.Keys)
-            {
-                ls.Add(item.ToString());
-            }
-            arg1.Data = ls;
+            ls.Add(item.ToString());
         }
+        arg1.Data = ls;
+    }
 
-        void OnClose(object sender, RoutedEventArgs e)
-        {
-            Close(true);
-        }
+    void OnClose(object sender, RoutedEventArgs e)
+    {
+        Close(true);
+    }
 
-        void OnCancel(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
+    void OnCancel(object sender, RoutedEventArgs e)
+    {
+        Close();
     }
 }

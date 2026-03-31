@@ -6,21 +6,20 @@
 ******************************************************************************/
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 应用类型
+/// </summary>
+public enum AppType
 {
-    /// <summary>
-    /// 应用类型
-    /// </summary>
-    public enum AppType
-    {
-        Windows,
+    Windows,
 
-        iOS,
+    iOS,
 
-        Android,
+    Android,
 
-        Wasm,
+    Wasm,
 
-        Desktop,
-    }
+    Desktop,
 }

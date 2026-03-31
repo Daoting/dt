@@ -10,16 +10,15 @@
 
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 格取值赋值过程的类型标签
+/// </summary>
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+public class FvCallAttribute : TypeAliasAttribute
 {
-    /// <summary>
-    /// 格取值赋值过程的类型标签
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class FvCallAttribute : TypeAliasAttribute
+    public FvCallAttribute()
     {
-        public FvCallAttribute()
-        {
-        }
     }
 }

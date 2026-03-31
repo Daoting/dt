@@ -12,26 +12,25 @@ using Dt.Core;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Workflow
-{
-    /// <summary>
-    /// 起始活动模板表单
-    /// </summary>
-    public sealed partial class WfStartAtvForm : UserControl
-    {
-        public WfStartAtvForm()
-        {
-            InitializeComponent();
-        }
+namespace Dt.Mgr.Workflow;
 
-        public void LoadNode(SNode p_node, Table<WfdAtvRoleX> p_atvRoles)
+/// <summary>
+/// 起始活动模板表单
+/// </summary>
+public sealed partial class WfStartAtvForm : UserControl
+{
+    public WfStartAtvForm()
+    {
+        InitializeComponent();
+    }
+
+    public void LoadNode(SNode p_node, Table<WfdAtvRoleX> p_atvRoles)
+    {
+        if (p_node.Tag != _fv.Data)
         {
-            if (p_node.Tag != _fv.Data)
-            {
-                _propBox.LoadNode(p_node);
-                _fv.Data = p_node.Tag;
-                _atvRole.LoadRoles(p_node.ID, p_atvRoles);
-            }
+            _propBox.LoadNode(p_node);
+            _fv.Data = p_node.Tag;
+            _atvRole.LoadRoles(p_node.ID, p_atvRoles);
         }
     }
 }

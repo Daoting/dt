@@ -9,13 +9,12 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Base.Docking
+namespace Dt.Base.Docking;
+
+/// <summary>
+/// 含子项集合的接口
+/// </summary>
+public interface IPaneList
 {
-    /// <summary>
-    /// 含子项集合的接口
-    /// </summary>
-    public interface IPaneList
-    {
-        PaneList Items { get; }
-    }
+    PaneList Items { get; }
 }

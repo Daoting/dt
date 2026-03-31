@@ -17,76 +17,75 @@ using System.Data;
 using Windows.Storage;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public sealed partial class TestLvLeak : Win
 {
-    public sealed partial class TestLvLeak : Win
+    public TestLvLeak()
     {
-        public TestLvLeak()
-        {
-            InitializeComponent();
-            _lv.View = Resources["TableView"];
-            _lv.GroupName = "bumen";
-            _lv.Data = SampleData.CreatePersonsTbl(100);
-        }
+        InitializeComponent();
+        _lv.View = Resources["TableView"];
+        _lv.GroupName = "bumen";
+        _lv.Data = SampleData.CreatePersonsTbl(100);
+    }
 
-        void OnLoadData(object sender, RoutedEventArgs e)
-        {
-            _lv.Data = SampleData.CreatePersonsTbl(int.Parse(((Button)sender).Tag.ToString()));
-        }
+    void OnLoadData(object sender, RoutedEventArgs e)
+    {
+        _lv.Data = SampleData.CreatePersonsTbl(int.Parse(((Button)sender).Tag.ToString()));
+    }
 
-        void OnLoadNull(object sender, RoutedEventArgs e)
-        {
-            _lv.Data = null;
-        }
-        
-        void OnGridView(object sender, RoutedEventArgs e)
-        {
-            SelectTab(0);
-            _lv.ChangeView(Resources["TableView"], ViewMode.Table);
-        }
+    void OnLoadNull(object sender, RoutedEventArgs e)
+    {
+        _lv.Data = null;
+    }
+    
+    void OnGridView(object sender, RoutedEventArgs e)
+    {
+        SelectTab(0);
+        _lv.ChangeView(Resources["TableView"], ViewMode.Table);
+    }
 
-        void OnListView(object sender, RoutedEventArgs e)
-        {
-            SelectTab(0);
-            _lv.ChangeView(Resources["ListView"], ViewMode.List);
-        }
+    void OnListView(object sender, RoutedEventArgs e)
+    {
+        SelectTab(0);
+        _lv.ChangeView(Resources["ListView"], ViewMode.List);
+    }
 
-        void OnFormList(object sender, RoutedEventArgs e)
-        {
-            SelectTab(0);
-            _lv.ChangeView(Resources["TableView"], ViewMode.List);
-        }
+    void OnFormList(object sender, RoutedEventArgs e)
+    {
+        SelectTab(0);
+        _lv.ChangeView(Resources["TableView"], ViewMode.List);
+    }
 
-        void OnTileView(object sender, RoutedEventArgs e)
-        {
-            SelectTab(0);
-            _lv.ChangeView(Resources["TileView"], ViewMode.Tile);
-        }
+    void OnTileView(object sender, RoutedEventArgs e)
+    {
+        SelectTab(0);
+        _lv.ChangeView(Resources["TileView"], ViewMode.Tile);
+    }
 
-        void OnFormTile(object sender, RoutedEventArgs e)
-        {
-            SelectTab(0);
-            _lv.ChangeView(Resources["TableView"], ViewMode.Tile);
-        }
-        
-        void OnGroup(object sender, RoutedEventArgs e)
-        {
-            _lv.GroupName = "bumen";
-        }
+    void OnFormTile(object sender, RoutedEventArgs e)
+    {
+        SelectTab(0);
+        _lv.ChangeView(Resources["TableView"], ViewMode.Tile);
+    }
+    
+    void OnGroup(object sender, RoutedEventArgs e)
+    {
+        _lv.GroupName = "bumen";
+    }
 
-        void OnDelGroup(object sender, RoutedEventArgs e)
-        {
-            _lv.GroupName = null;
-        }
+    void OnDelGroup(object sender, RoutedEventArgs e)
+    {
+        _lv.GroupName = null;
+    }
 
-        void OnAutoHeight(object sender, RoutedEventArgs e)
-        {
-            _lv.ItemHeight = double.NaN;
-        }
+    void OnAutoHeight(object sender, RoutedEventArgs e)
+    {
+        _lv.ItemHeight = double.NaN;
+    }
 
-        void OnVir(object sender, RoutedEventArgs e)
-        {
-            _lv.ItemHeight = 0;
-        }
+    void OnVir(object sender, RoutedEventArgs e)
+    {
+        _lv.ItemHeight = 0;
     }
 }

@@ -16,142 +16,141 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 #endregion
 
-namespace Dt.Base.ListView
+namespace Dt.Base.ListView;
+
+/// <summary>
+/// 分组导航头
+/// </summary>
+public partial class GroupHeader : Panel
 {
-    /// <summary>
-    /// 分组导航头
-    /// </summary>
-    public partial class GroupHeader : Panel
+    Border _border;
+    double _left;
+    double _maxTrans;
+    GroupHeaderCell _cellSelected;
+
+    #region 构造方法
+    public GroupHeader(Lv p_owner)
     {
-        Border _border;
-        double _left;
-        double _maxTrans;
-        GroupHeaderCell _cellSelected;
-
-        #region 构造方法
-        public GroupHeader(Lv p_owner)
+        Lv = p_owner;
+        Background = Res.WhiteBrush;
+        foreach (var grp in p_owner.GroupRows)
         {
-            Lv = p_owner;
-            Background = Res.WhiteBrush;
-            foreach (var grp in p_owner.GroupRows)
-            {
-                Children.Add(new GroupHeaderCell(grp, this));
-            }
-            _border = new Border { BorderThickness = new Thickness(0, 0, 0, 1), BorderBrush = Res.浅灰2, IsHitTestVisible = false };
-            Children.Add(_border);
-
-            if (!Kit.IsPhoneUI)
-                PointerWheelChanged += OnPointerWheelChanged;
+            Children.Add(new GroupHeaderCell(grp, this));
         }
-        #endregion
+        _border = new Border { BorderThickness = new Thickness(0, 0, 0, 1), BorderBrush = Res.浅灰2, IsHitTestVisible = false };
+        Children.Add(_border);
 
-        internal Lv Lv { get; }
+        if (!Kit.IsPhoneUI)
+            PointerWheelChanged += OnPointerWheelChanged;
+    }
+    #endregion
 
-        internal void SetCurrentGroup(GroupRow p_group)
+    internal Lv Lv { get; }
+
+    internal void SetCurrentGroup(GroupRow p_group)
+    {
+        if (_cellSelected != null && _cellSelected.Group == p_group)
+            return;
+
+        foreach (var cell in Children.OfType<GroupHeaderCell>())
         {
-            if (_cellSelected != null && _cellSelected.Group == p_group)
-                return;
-
-            foreach (var cell in Children.OfType<GroupHeaderCell>())
-            {
-                if (cell.Group == p_group)
-                    _cellSelected = cell;
-                else
-                    cell.ClearValue(GroupHeaderCell.IsSelectedProperty);
-            }
-            if (_cellSelected != null)
-            {
-                _cellSelected.IsSelected = true;
-                if (_cellSelected.Left < 0)
-                {
-                    _left -= _cellSelected.Left;
-                    InvalidateArrange();
-                }
-                else if (_cellSelected.Left + _cellSelected.DesiredSize.Width > DesiredSize.Width)
-                {
-                    _left -= _cellSelected.Left + _cellSelected.DesiredSize.Width - DesiredSize.Width;
-                    InvalidateArrange();
-                }
-            }
+            if (cell.Group == p_group)
+                _cellSelected = cell;
+            else
+                cell.ClearValue(GroupHeaderCell.IsSelectedProperty);
         }
-
-        internal void DoHorScroll(double p_delta)
+        if (_cellSelected != null)
         {
-            if (p_delta < 0 && _left > -_maxTrans)
+            _cellSelected.IsSelected = true;
+            if (_cellSelected.Left < 0)
             {
-                _left = Math.Max(-_maxTrans, _left + p_delta);
+                _left -= _cellSelected.Left;
                 InvalidateArrange();
             }
-            else if (p_delta > 0 && _left < 0)
+            else if (_cellSelected.Left + _cellSelected.DesiredSize.Width > DesiredSize.Width)
             {
-                _left = Math.Min(0, _left + p_delta);
+                _left -= _cellSelected.Left + _cellSelected.DesiredSize.Width - DesiredSize.Width;
                 InvalidateArrange();
             }
         }
+    }
 
-        internal void Destroy()
+    internal void DoHorScroll(double p_delta)
+    {
+        if (p_delta < 0 && _left > -_maxTrans)
         {
-            while (Children.Count > 0)
-            {
-                var hc = Children[0] as GroupHeaderCell;
-                Children.RemoveAt(0);
-                hc?.Destroy();
-            }
-            _cellSelected = null;
-            _border = null;
-            PointerWheelChanged -= OnPointerWheelChanged;
+            _left = Math.Max(-_maxTrans, _left + p_delta);
+            InvalidateArrange();
         }
-
-        void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        else if (p_delta > 0 && _left < 0)
         {
-            e.Handled = true;
-            DoHorScroll(e.GetCurrentPoint(null).Properties.MouseWheelDelta);
+            _left = Math.Min(0, _left + p_delta);
+            InvalidateArrange();
         }
+    }
 
-        #region 测量布局
-        protected override Size MeasureOverride(Size availableSize)
+    internal void Destroy()
+    {
+        while (Children.Count > 0)
         {
-            Size size = new Size(availableSize.Width, Res.RowOuterHeight);
-            double width = 0;
-            foreach (var elem in Children.OfType<GroupHeaderCell>())
-            {
-                elem.Measure(size);
-                width += elem.DesiredSize.Width;
-            }
-            _border.Measure(size);
-            // 水平最大平移范围
-            _maxTrans = Math.Max(width - availableSize.Width, 0);
-            return size;
+            var hc = Children[0] as GroupHeaderCell;
+            Children.RemoveAt(0);
+            hc?.Destroy();
         }
+        _cellSelected = null;
+        _border = null;
+        PointerWheelChanged -= OnPointerWheelChanged;
+    }
 
-        protected override Size ArrangeOverride(Size finalSize)
+    void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
+    {
+        e.Handled = true;
+        DoHorScroll(e.GetCurrentPoint(null).Properties.MouseWheelDelta);
+    }
+
+    #region 测量布局
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        Size size = new Size(availableSize.Width, Res.RowOuterHeight);
+        double width = 0;
+        foreach (var elem in Children.OfType<GroupHeaderCell>())
         {
-            // uno中布局时只要宽或高有一个大于0就绘制，造成本来不显示的堆在一起绘制！
-            if (finalSize.Height == 0 || finalSize.Width == 0)
-            {
-                foreach (var elem in Children)
-                {
-                    elem.Arrange(Res.HideRect);
-                }
-                return finalSize;
-            }
+            elem.Measure(size);
+            width += elem.DesiredSize.Width;
+        }
+        _border.Measure(size);
+        // 水平最大平移范围
+        _maxTrans = Math.Max(width - availableSize.Width, 0);
+        return size;
+    }
 
-            double left = _left;
-            foreach (var cell in Children.OfType<GroupHeaderCell>())
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        // uno中布局时只要宽或高有一个大于0就绘制，造成本来不显示的堆在一起绘制！
+        if (finalSize.Height == 0 || finalSize.Width == 0)
+        {
+            foreach (var elem in Children)
             {
-                // 完全不显示、显示部分、显示全部
-                if (left > finalSize.Width)
-                    cell.Arrange(Res.HideRect);
-                else if (left + cell.DesiredSize.Width > finalSize.Width)
-                    cell.Arrange(new Rect(left, 0, finalSize.Width - left, Res.RowOuterHeight));
-                else
-                    cell.Arrange(new Rect(left, 0, cell.DesiredSize.Width, Res.RowOuterHeight));
-                cell.Left = left;
-                left += cell.DesiredSize.Width;
+                elem.Arrange(Res.HideRect);
             }
-            _border.Arrange(new Rect(new Point(), finalSize));
             return finalSize;
         }
-        #endregion
+
+        double left = _left;
+        foreach (var cell in Children.OfType<GroupHeaderCell>())
+        {
+            // 完全不显示、显示部分、显示全部
+            if (left > finalSize.Width)
+                cell.Arrange(Res.HideRect);
+            else if (left + cell.DesiredSize.Width > finalSize.Width)
+                cell.Arrange(new Rect(left, 0, finalSize.Width - left, Res.RowOuterHeight));
+            else
+                cell.Arrange(new Rect(left, 0, cell.DesiredSize.Width, Res.RowOuterHeight));
+            cell.Left = left;
+            left += cell.DesiredSize.Width;
+        }
+        _border.Arrange(new Rect(new Point(), finalSize));
+        return finalSize;
     }
+    #endregion
 }

@@ -11,37 +11,36 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Rbac
+namespace Dt.Mgr.Rbac;
+
+[View(LobViews.用户组)]
+public partial class GroupWin : Win
 {
-    [View(LobViews.用户组)]
-    public partial class GroupWin : Win
+    readonly GroupForm _mainForm;
+    
+    public GroupWin()
     {
-        readonly GroupForm _mainForm;
-        
-        public GroupWin()
+        InitializeComponent();
+        _mainForm = new GroupForm { OwnWin = this };
+        Attach();
+    }
+
+    void Attach()
+    {
+        _query.Search += e =>
         {
-            InitializeComponent();
-            _mainForm = new GroupForm { OwnWin = this };
-            Attach();
-        }
+            _mainList.Query(new QueryClause(e));
+            NaviTo(_mainList.Title);
+        };
 
-        void Attach()
+        _mainList.Msg += e => _ = _mainForm.Query(e);
+        _mainList.Navi += () => NaviTo(_userList.Title + "," + _roleList.Title);
+
+        _mainForm.UpdateList += e => _ = _mainList.Refresh(e.ID);
+        _mainForm.UpdateRelated += e =>
         {
-            _query.Search += e =>
-            {
-                _mainList.Query(new QueryClause(e));
-                NaviTo(_mainList.Title);
-            };
-
-            _mainList.Msg += e => _ = _mainForm.Query(e);
-            _mainList.Navi += () => NaviTo(_userList.Title + "," + _roleList.Title);
-
-            _mainForm.UpdateList += e => _ = _mainList.Refresh(e.ID);
-            _mainForm.UpdateRelated += e =>
-            {
-                _userList.Query(e.ID);
-                _roleList.Query(e.ID);
-            };
-        }
+            _userList.Query(e.ID);
+            _roleList.Query(e.ID);
+        };
     }
 }

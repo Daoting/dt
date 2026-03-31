@@ -10,30 +10,29 @@
 using Microsoft.UI.Xaml;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// PhonePage附加依赖属性
+/// </summary>
+internal static class PhonePageEx
 {
     /// <summary>
-    /// PhonePage附加依赖属性
+    /// 所属页面
     /// </summary>
-    internal static class PhonePageEx
+    public static readonly DependencyProperty ParentPageProperty = DependencyProperty.RegisterAttached(
+        "ParentPage",
+        typeof(PhonePage),
+        typeof(PhonePageEx),
+        new PropertyMetadata(null));
+
+    public static PhonePage GetParentPage(FrameworkElement element)
     {
-        /// <summary>
-        /// 所属页面
-        /// </summary>
-        public static readonly DependencyProperty ParentPageProperty = DependencyProperty.RegisterAttached(
-            "ParentPage",
-            typeof(PhonePage),
-            typeof(PhonePageEx),
-            new PropertyMetadata(null));
+        return (PhonePage)element.GetValue(ParentPageProperty);
+    }
 
-        public static PhonePage GetParentPage(FrameworkElement element)
-        {
-            return (PhonePage)element.GetValue(ParentPageProperty);
-        }
-
-        public static void SetParentPage(FrameworkElement element, PhonePage value)
-        {
-            element.SetValue(ParentPageProperty, value);
-        }
+    public static void SetParentPage(FrameworkElement element, PhonePage value)
+    {
+        element.SetValue(ParentPageProperty, value);
     }
 }

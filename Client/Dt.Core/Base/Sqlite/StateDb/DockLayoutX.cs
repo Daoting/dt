@@ -10,13 +10,12 @@
 using Dt.Core;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 客户端Win布局设置
+/// </summary>
+public partial class DockLayoutX
 {
-    /// <summary>
-    /// 客户端Win布局设置
-    /// </summary>
-    public partial class DockLayoutX
-    {
-        
-    }
+    
 }

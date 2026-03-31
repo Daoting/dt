@@ -10,23 +10,22 @@
 using Microsoft.UI.Xaml;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 桌面任务栏接口
+/// </summary>
+public interface ITaskbar
 {
     /// <summary>
-    /// 桌面任务栏接口
+    /// 获取任务栏左侧的开始界面
     /// </summary>
-    public interface ITaskbar
-    {
-        /// <summary>
-        /// 获取任务栏左侧的开始界面
-        /// </summary>
-        /// <returns></returns>
-        FrameworkElement GetStartUI();
+    /// <returns></returns>
+    FrameworkElement GetStartUI();
 
-        /// <summary>
-        /// 获取任务栏右侧的托盘界面
-        /// </summary>
-        /// <returns></returns>
-        FrameworkElement GetTrayUI();
-    }
+    /// <summary>
+    /// 获取任务栏右侧的托盘界面
+    /// </summary>
+    /// <returns></returns>
+    FrameworkElement GetTrayUI();
 }

@@ -10,22 +10,21 @@
 using System;
 #endregion
 
-namespace Dt.Base.FormView
-{
-    /// <summary>
-    /// 格参数标志
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
-    public class CellParamAttribute : Attribute
-    {
-        public CellParamAttribute(string p_title)
-        {
-            Title = p_title;
-        }
+namespace Dt.Base.FormView;
 
-        /// <summary>
-        /// 获取参数标题
-        /// </summary>
-        public string Title { get; }
+/// <summary>
+/// 格参数标志
+/// </summary>
+[AttributeUsage(AttributeTargets.Property)]
+public class CellParamAttribute : Attribute
+{
+    public CellParamAttribute(string p_title)
+    {
+        Title = p_title;
     }
+
+    /// <summary>
+    /// 获取参数标题
+    /// </summary>
+    public string Title { get; }
 }

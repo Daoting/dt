@@ -10,78 +10,77 @@
 using System.IO;
 #endregion
 
-namespace Dt.Core.HtmlLog
+namespace Dt.Core.HtmlLog;
+
+class HtmlTheme
 {
-    class HtmlTheme
+    public HtmlTheme()
     {
-        public HtmlTheme()
-        {
-        }
-
-        public virtual StyleReset Apply(TextWriter output, HtmlThemeStyle style)
-        {
-            switch (style)
-            {
-                case HtmlThemeStyle.LevelVerbose:
-                case HtmlThemeStyle.LevelDebug:
-                case HtmlThemeStyle.SecondaryText:
-                case HtmlThemeStyle.Name:
-                    output.Write("<span style=\"color: gray\">");
-                    break;
-
-                case HtmlThemeStyle.TertiaryText:
-                    output.Write("<span style=\"color: darkgray\">");
-                    break;
-
-                case HtmlThemeStyle.LevelWarning:
-                case HtmlThemeStyle.Invalid:
-                    output.Write("<span style=\"color: yellow\">");
-                    break;
-
-                case HtmlThemeStyle.Null:
-                case HtmlThemeStyle.Boolean:
-                    output.Write("<span style=\"color: blue\">");
-                    break;
-
-                case HtmlThemeStyle.String:
-                    output.Write("<span style=\"color: cyan\">");
-                    break;
-
-                case HtmlThemeStyle.Number:
-                    output.Write("<span style=\"color: magenta\">");
-                    break;
-
-                case HtmlThemeStyle.Scalar:
-                    output.Write("<span style=\"color: green\">");
-                    break;
-
-
-                case HtmlThemeStyle.LevelError:
-                case HtmlThemeStyle.LevelFatal:
-                    output.Write("<span style=\"color: white; background: red;\">");
-                    break;
-            }
-            return new StyleReset(this, output, style);
-        }
-
-        public virtual void Reset(TextWriter output, HtmlThemeStyle style)
-        {
-            // 默认为黑底白字
-            if (style != HtmlThemeStyle.Text && style != HtmlThemeStyle.LevelInformation)
-                output.Write("</span>");
-        }
     }
 
-    class EmptyHtmlTheme : HtmlTheme
+    public virtual StyleReset Apply(TextWriter output, HtmlThemeStyle style)
     {
-        public override StyleReset Apply(TextWriter output, HtmlThemeStyle style)
+        switch (style)
         {
-            return new StyleReset(this, output, style);
-        }
+            case HtmlThemeStyle.LevelVerbose:
+            case HtmlThemeStyle.LevelDebug:
+            case HtmlThemeStyle.SecondaryText:
+            case HtmlThemeStyle.Name:
+                output.Write("<span style=\"color: gray\">");
+                break;
 
-        public override void Reset(TextWriter output, HtmlThemeStyle style)
-        {
+            case HtmlThemeStyle.TertiaryText:
+                output.Write("<span style=\"color: darkgray\">");
+                break;
 
+            case HtmlThemeStyle.LevelWarning:
+            case HtmlThemeStyle.Invalid:
+                output.Write("<span style=\"color: yellow\">");
+                break;
+
+            case HtmlThemeStyle.Null:
+            case HtmlThemeStyle.Boolean:
+                output.Write("<span style=\"color: blue\">");
+                break;
+
+            case HtmlThemeStyle.String:
+                output.Write("<span style=\"color: cyan\">");
+                break;
+
+            case HtmlThemeStyle.Number:
+                output.Write("<span style=\"color: magenta\">");
+                break;
+
+            case HtmlThemeStyle.Scalar:
+                output.Write("<span style=\"color: green\">");
+                break;
+
+
+            case HtmlThemeStyle.LevelError:
+            case HtmlThemeStyle.LevelFatal:
+                output.Write("<span style=\"color: white; background: red;\">");
+                break;
         }
+        return new StyleReset(this, output, style);
+    }
+
+    public virtual void Reset(TextWriter output, HtmlThemeStyle style)
+    {
+        // 默认为黑底白字
+        if (style != HtmlThemeStyle.Text && style != HtmlThemeStyle.LevelInformation)
+            output.Write("</span>");
+    }
+}
+
+class EmptyHtmlTheme : HtmlTheme
+{
+    public override StyleReset Apply(TextWriter output, HtmlThemeStyle style)
+    {
+        return new StyleReset(this, output, style);
+    }
+
+    public override void Reset(TextWriter output, HtmlThemeStyle style)
+    {
+
     }
 }

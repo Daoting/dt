@@ -11,26 +11,25 @@ using System;
 using Microsoft.UI.Xaml.Data;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 描述显示和实际值类
+/// </summary>
+public class IDStr
 {
     /// <summary>
-    /// 描述显示和实际值类
+    /// 获取设置实际值
     /// </summary>
-    public class IDStr
+    public string ID { get; set; }
+
+    /// <summary>
+    /// 获取设置要显示的字符串
+    /// </summary>
+    public string Str { get; set; }
+
+    public override string ToString()
     {
-        /// <summary>
-        /// 获取设置实际值
-        /// </summary>
-        public string ID { get; set; }
-
-        /// <summary>
-        /// 获取设置要显示的字符串
-        /// </summary>
-        public string Str { get; set; }
-
-        public override string ToString()
-        {
-            return Str;
-        }
+        return Str;
     }
 }

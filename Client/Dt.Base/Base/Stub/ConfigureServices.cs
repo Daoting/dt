@@ -10,16 +10,15 @@
 using Microsoft.Extensions.DependencyInjection;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 注入默认服务
+/// </summary>
+public partial class DefaultStub : Stub
 {
-    /// <summary>
-    /// 注入默认服务
-    /// </summary>
-    public partial class DefaultStub : Stub
+    protected override void ConfigureServices(IServiceCollection p_svcs)
     {
-        protected override void ConfigureServices(IServiceCollection p_svcs)
-        {
-            p_svcs.AddSingleton<IUICallback, DefUICallback>();
-        }
+        p_svcs.AddSingleton<IUICallback, DefUICallback>();
     }
 }

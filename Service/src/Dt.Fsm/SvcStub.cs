@@ -18,62 +18,61 @@ using System.Collections.Generic;
 using System.Net.Mime;
 #endregion
 
-namespace Dt.Fsm
+namespace Dt.Fsm;
+
+/// <summary>
+/// 服务存根
+/// </summary>
+public class SvcStub : Stub
 {
     /// <summary>
-    /// 服务存根
+    /// 当前微服务http post请求的最大长度，0时采用默认28.6M
     /// </summary>
-    public class SvcStub : Stub
+    public override long MaxRequestBodySize => 1073741824;
+    
+    /// <summary>
+    /// 定义全局服务
+    /// </summary>
+    /// <param name="p_services"></param>
+    public override void ConfigureServices(IServiceCollection p_services)
     {
-        /// <summary>
-        /// 当前微服务http post请求的最大长度，0时采用默认28.6M
-        /// </summary>
-        public override long MaxRequestBodySize => 1073741824;
-        
-        /// <summary>
-        /// 定义全局服务
-        /// </summary>
-        /// <param name="p_services"></param>
-        public override void ConfigureServices(IServiceCollection p_services)
+        // 解决Multipart body length limit 134217728 exceeded
+        p_services.Configure<FormOptions>(x =>
         {
-            // 解决Multipart body length limit 134217728 exceeded
-            p_services.Configure<FormOptions>(x =>
-            {
-                x.ValueLengthLimit = int.MaxValue;
-                x.MultipartBodyLengthLimit = int.MaxValue;
-            });
+            x.ValueLengthLimit = int.MaxValue;
+            x.MultipartBodyLengthLimit = int.MaxValue;
+        });
 
-            // 增加浏览目录功能
-            p_services.AddDirectoryBrowser();
-        }
+        // 增加浏览目录功能
+        p_services.AddDirectoryBrowser();
+    }
 
-        /// <summary>
-        /// 自定义请求处理或定义请求管道的中间件
-        /// </summary>
-        /// <param name="p_app"></param>
-        /// <param name="p_handlers">注册根路由处理</param>
-        public override void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_handlers)
+    /// <summary>
+    /// 自定义请求处理或定义请求管道的中间件
+    /// </summary>
+    /// <param name="p_app"></param>
+    /// <param name="p_handlers">注册根路由处理</param>
+    public override void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_handlers)
+    {
+        Cfg.Init();
+
+        // 注册请求路径处理
+        p_handlers["/.u"] = (p_context) => new Uploader(p_context).Handle();
+        p_handlers["/.d"] = (p_context) => new Downloader(p_context).Handle();
+
+        // 设置可浏览目录的根目录
+        var fileProvider = new PhysicalFileProvider(Cfg.Root);
+        p_app.UseDirectoryBrowser(new DirectoryBrowserOptions
         {
-            Cfg.Init();
+            FileProvider = fileProvider,
+            RequestPath = "/drv"
+        });
 
-            // 注册请求路径处理
-            p_handlers["/.u"] = (p_context) => new Uploader(p_context).Handle();
-            p_handlers["/.d"] = (p_context) => new Downloader(p_context).Handle();
-
-            // 设置可浏览目录的根目录
-            var fileProvider = new PhysicalFileProvider(Cfg.Root);
-            p_app.UseDirectoryBrowser(new DirectoryBrowserOptions
-            {
-                FileProvider = fileProvider,
-                RequestPath = "/drv"
-            });
-
-            // drive下的所有文件作为网站静态文件，映射到虚拟目录drv，和wwwroot区分
-            p_app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = fileProvider,
-                RequestPath = "/drv"
-            });
-        }
+        // drive下的所有文件作为网站静态文件，映射到虚拟目录drv，和wwwroot区分
+        p_app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = fileProvider,
+            RequestPath = "/drv"
+        });
     }
 }

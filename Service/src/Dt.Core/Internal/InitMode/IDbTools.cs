@@ -9,21 +9,20 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 数据库操作接口
+/// </summary>
+interface IDbTools
 {
-    /// <summary>
-    /// 数据库操作接口
-    /// </summary>
-    interface IDbTools
-    {
-        Task<bool> ExistsDb();
+    Task<bool> ExistsDb();
 
-        Task<bool> ExistsUser();
+    Task<bool> ExistsUser();
 
-        Task<bool> IsPwdCorrect();
+    Task<bool> IsPwdCorrect();
 
-        Task InitDb();
+    Task InitDb();
 
-        Task Import();
-    }
+    Task Import();
 }

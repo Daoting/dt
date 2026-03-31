@@ -9,52 +9,51 @@
 #region 引用命名
 #endregion
 
-namespace Demo.Base
+namespace Demo.Base;
+
+public partial class 物资分类X
 {
-    public partial class 物资分类X
+    public static async Task<物资分类X> New(
+        string 名称 = default)
     {
-        public static async Task<物资分类X> New(
-            string 名称 = default)
-        {
-            return new 物资分类X(
-                ID: await NewID(),
-                名称: 名称);
-        }
-
-        protected override void InitHook()
-        {
-            //OnSaving(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
-
-            //OnSaved(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
-
-            //OnDeleting(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
-
-            //OnDeleted(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
-
-            //OnChanging(cName, e =>
-            //{
-                
-            //});
-        }
-
-        #region Sql
-
-        #endregion
+        return new 物资分类X(
+            ID: await NewID(),
+            名称: 名称);
     }
+
+    protected override void InitHook()
+    {
+        //OnSaving(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
+
+        //OnSaved(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
+
+        //OnDeleting(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
+
+        //OnDeleted(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
+
+        //OnChanging(cName, e =>
+        //{
+            
+        //});
+    }
+
+    #region Sql
+
+    #endregion
 }

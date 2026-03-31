@@ -10,15 +10,14 @@
 using Dt.Base;
 #endregion
 
-namespace Demo
-{
-    public partial class App : AppBase
-    {
-        public App()
-        {
-            InitializeComponent();
-        }
+namespace Demo;
 
-        protected override Stub NewStub() => new AppStub();
+public partial class App : AppBase
+{
+    public App()
+    {
+        InitializeComponent();
     }
+
+    protected override Stub NewStub() => new AppStub();
 }

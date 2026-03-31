@@ -14,94 +14,93 @@ using System.Text;
 using System.Xml;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 设计时
+/// </summary>
+public partial class FvCell
 {
     /// <summary>
-    /// 设计时
+    /// 导出xaml
     /// </summary>
-    public partial class FvCell
+    /// <param name="p_xw"></param>
+    public void ExportXaml(XmlWriter p_xw)
     {
-        /// <summary>
-        /// 导出xaml
-        /// </summary>
-        /// <param name="p_xw"></param>
-        public void ExportXaml(XmlWriter p_xw)
+        if (p_xw == null)
+            return;
+
+        Type tp = GetType();
+        p_xw.WriteStartElement("a", tp.Name, null);
+
+        if (ID != null)
+            p_xw.WriteAttributeString("ID", ID);
+        if (Title != null && Title != ID)
+            p_xw.WriteAttributeString("Title", Title);
+
+        foreach (var prop in FvDesignKit.GetCellProps(tp))
         {
-            if (p_xw == null)
-                return;
-
-            Type tp = GetType();
-            p_xw.WriteStartElement("a", tp.Name, null);
-
-            if (ID != null)
-                p_xw.WriteAttributeString("ID", ID);
-            if (Title != null && Title != ID)
-                p_xw.WriteAttributeString("Title", Title);
-
-            foreach (var prop in FvDesignKit.GetCellProps(tp))
-            {
-                var val = prop.Info.GetValue(this);
-                // 默认值不写入xaml
-                if (!object.Equals(val, prop.DefaultValue))
-                    p_xw.WriteAttributeString(prop.Info.Name, val.ToString());
-            }
-            ExportCustomXaml(p_xw);
-            
-            p_xw.WriteEndElement();
+            var val = prop.Info.GetValue(this);
+            // 默认值不写入xaml
+            if (!object.Equals(val, prop.DefaultValue))
+                p_xw.WriteAttributeString(prop.Info.Name, val.ToString());
         }
-
-        protected virtual void ExportCustomXaml(XmlWriter p_xw)
-        {
-        }
+        ExportCustomXaml(p_xw);
         
-        /// <summary>
-        /// 创建当前单元格设计时的属性单元格
-        /// </summary>
-        /// <param name="p_info"></param>
-        /// <returns></returns>
-        public virtual FvCell CreateDesignCell(CellPropertyInfo p_info)
+        p_xw.WriteEndElement();
+    }
+
+    protected virtual void ExportCustomXaml(XmlWriter p_xw)
+    {
+    }
+    
+    /// <summary>
+    /// 创建当前单元格设计时的属性单元格
+    /// </summary>
+    /// <param name="p_info"></param>
+    /// <returns></returns>
+    public virtual FvCell CreateDesignCell(CellPropertyInfo p_info)
+    {
+        var fc = Fv.CreateCell(p_info.Info.PropertyType, p_info.Info.Name);
+        if (p_info.Info.PropertyType == typeof(bool))
         {
-            var fc = Fv.CreateCell(p_info.Info.PropertyType, p_info.Info.Name);
-            if (p_info.Info.PropertyType == typeof(bool))
+            fc.Title = p_info.Title;
+            fc.ShowTitle = false;
+            fc.ColSpan = 0.5;
+        }
+        else
+        {
+            var length = Kit.GetByteCount(p_info.Title);
+            if (length > 26)
+            {
+                fc.ShowTitle = false;
+            }
+            else if (length > 13)
             {
                 fc.Title = p_info.Title;
-                fc.ShowTitle = false;
-                fc.ColSpan = 0.5;
+                fc.TitleWidth = 240;
             }
             else
             {
-                var length = Kit.GetByteCount(p_info.Title);
-                if (length > 26)
-                {
-                    fc.ShowTitle = false;
-                }
-                else if (length > 13)
-                {
-                    fc.Title = p_info.Title;
-                    fc.TitleWidth = 240;
-                }
-                else
-                {
-                    fc.Title = p_info.Title;
-                }
+                fc.Title = p_info.Title;
             }
-            return fc;
         }
+        return fc;
+    }
 
-        /// <summary>
-        /// 添加自定义设计时属性单元格
-        /// </summary>
-        /// <param name="p_items"></param>
-        public virtual void AddCustomDesignCells(FvItems p_items)
-        {
-        }
+    /// <summary>
+    /// 添加自定义设计时属性单元格
+    /// </summary>
+    /// <param name="p_items"></param>
+    public virtual void AddCustomDesignCells(FvItems p_items)
+    {
+    }
 
-        /// <summary>
-        /// 设计时加载内容xaml
-        /// </summary>
-        /// <param name="p_node"></param>
-        public virtual void LoadXamlString(XmlNode p_node)
-        {
-        }
+    /// <summary>
+    /// 设计时加载内容xaml
+    /// </summary>
+    /// <param name="p_node"></param>
+    public virtual void LoadXamlString(XmlNode p_node)
+    {
     }
 }

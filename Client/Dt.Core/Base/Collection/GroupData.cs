@@ -10,48 +10,47 @@
 using System.Collections.Generic;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 分组数据源集合类
+/// </summary>
+/// <typeparam name="T"></typeparam>
+#if WIN
+[WinRT.GeneratedBindableCustomProperty]
+#else
+[Microsoft.UI.Xaml.Data.Bindable]
+#endif
+public partial class GroupData<T> : List<T>
 {
     /// <summary>
-    /// 分组数据源集合类
+    /// 构造方法
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-#if WIN
-    [WinRT.GeneratedBindableCustomProperty]
-#else
-    [Microsoft.UI.Xaml.Data.Bindable]
-#endif
-    public partial class GroupData<T> : List<T>
+    public GroupData()
     {
-        /// <summary>
-        /// 构造方法
-        /// </summary>
-        public GroupData()
-        {
-        }
+    }
 
-        /// <summary>
-        /// 构造方法
-        /// </summary>
-        /// <param name="p_title">组名</param>
-        /// <param name="p_items">数据集合</param>
-        public GroupData(string p_title, IEnumerable<T> p_items = null)
-        {
-            Title = p_title;
-            if (p_items != null)
-                AddRange(p_items);
-        }
+    /// <summary>
+    /// 构造方法
+    /// </summary>
+    /// <param name="p_title">组名</param>
+    /// <param name="p_items">数据集合</param>
+    public GroupData(string p_title, IEnumerable<T> p_items = null)
+    {
+        Title = p_title;
+        if (p_items != null)
+            AddRange(p_items);
+    }
 
-        /// <summary>
-        /// 获取设置数据源集合的组名
-        /// </summary>
-        public string Title { get; set; }
+    /// <summary>
+    /// 获取设置数据源集合的组名
+    /// </summary>
+    public string Title { get; set; }
 
-        public override string ToString()
-        {
-            if (!string.IsNullOrEmpty(Title))
-                return Title;
-            return base.ToString();
-        }
+    public override string ToString()
+    {
+        if (!string.IsNullOrEmpty(Title))
+            return Title;
+        return base.ToString();
     }
 }

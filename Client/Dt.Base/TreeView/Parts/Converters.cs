@@ -11,49 +11,48 @@ using System;
 using Microsoft.UI.Xaml.Data;
 #endregion
 
-namespace Dt.Base.TreeViews
-{
-    /// <summary>
-    /// IsSelected -> 字符图标
-    /// </summary>
-    partial class IsSelectedIconConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            if (value != null)
-            {
-                bool? selected = (bool?)value;
-                if (selected.HasValue)
-                    return selected.Value ? "\uE059" : "\uE057";
-            }
-            return "\uE058";
-        }
+namespace Dt.Base.TreeViews;
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
+/// <summary>
+/// IsSelected -> 字符图标
+/// </summary>
+partial class IsSelectedIconConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        if (value != null)
         {
-            throw new NotImplementedException();
+            bool? selected = (bool?)value;
+            if (selected.HasValue)
+                return selected.Value ? "\uE059" : "\uE057";
         }
+        return "\uE058";
     }
 
-    /// <summary>
-    /// IsSelected -> 背景
-    /// </summary>
-    partial class SelectedBackgroundConverter : IValueConverter
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
     {
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            if (value != null)
-            {
-                bool? selected = (bool?)value;
-                if (selected.HasValue)
-                    return selected.Value ? Res.暗遮罩 : null;
-            }
-            return Res.暗遮罩;
-        }
+        throw new NotImplementedException();
+    }
+}
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
+/// <summary>
+/// IsSelected -> 背景
+/// </summary>
+partial class SelectedBackgroundConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        if (value != null)
         {
-            throw new NotImplementedException();
+            bool? selected = (bool?)value;
+            if (selected.HasValue)
+                return selected.Value ? Res.暗遮罩 : null;
         }
+        return Res.暗遮罩;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
     }
 }

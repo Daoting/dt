@@ -15,56 +15,55 @@ using Windows.Management.Deployment;
 using Windows.Storage;
 #endregion
 
-namespace Dt.Base.Tools
+namespace Dt.Base.Tools;
+
+public class PackageKit
 {
-    public class PackageKit
+    public static Nl<LogPathInfo> GetLogPaths()
     {
-        public static Nl<LogPathInfo> GetLogPaths()
+        PackageManager pkgMgr = new PackageManager();
+
+        try
         {
-            PackageManager pkgMgr = new PackageManager();
+            // 等于 %UserProfile%
+            var profile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-            try
+            // 当前app包名
+            var curName = Package.Current.Id.FamilyName;
+
+            var ls = new Nl<LogPathInfo>();
+            var pkgs = pkgMgr.FindPackages();
+            foreach (var pk in pkgs)
             {
-                // 等于 %UserProfile%
-                var profile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                if (pk.IsFramework || pk.IsOptional || pk.IsBundle || pk.IsResourcePackage || pk.IsStub)
+                    continue;
 
-                // 当前app包名
-                var curName = Package.Current.Id.FamilyName;
+                // 是Dt应用 且 不是当前应用
+                if (!File.Exists(Path.Combine(pk.InstalledPath, "Dt.Core.dll"))
+                    || pk.Id.FamilyName == curName)
+                    continue;
 
-                var ls = new Nl<LogPathInfo>();
-                var pkgs = pkgMgr.FindPackages();
-                foreach (var pk in pkgs)
-                {
-                    if (pk.IsFramework || pk.IsOptional || pk.IsBundle || pk.IsResourcePackage || pk.IsStub)
-                        continue;
-
-                    // 是Dt应用 且 不是当前应用
-                    if (!File.Exists(Path.Combine(pk.InstalledPath, "Dt.Core.dll"))
-                        || pk.Id.FamilyName == curName)
-                        continue;
-
-                    var path = $"{profile}\\AppData\\Local\\Packages\\{pk.Id.FamilyName}\\LocalState\\.log";
-                    ls.Add(new LogPathInfo { AppName = pk.DisplayName, Path = path });
-                }
-
-                return ls;
+                var path = $"{profile}\\AppData\\Local\\Packages\\{pk.Id.FamilyName}\\LocalState\\.log";
+                ls.Add(new LogPathInfo { AppName = pk.DisplayName, Path = path });
             }
-            catch (UnauthorizedAccessException)
-            {
-                Kit.Warn("当前无权访问其它App信息，请“以管理员身份运行”当前应用！");
-            }
-            catch (Exception ex)
-            {
-                Kit.Warn("访问其它应用包异常：\r\n" + ex.Message);
-            }
-            return null;
+
+            return ls;
         }
-
-        public class LogPathInfo
+        catch (UnauthorizedAccessException)
         {
-            public string Path { get; set; }
-
-            public string AppName { get; set; }
+            Kit.Warn("当前无权访问其它App信息，请“以管理员身份运行”当前应用！");
         }
+        catch (Exception ex)
+        {
+            Kit.Warn("访问其它应用包异常：\r\n" + ex.Message);
+        }
+        return null;
+    }
+
+    public class LogPathInfo
+    {
+        public string Path { get; set; }
+
+        public string AppName { get; set; }
     }
 }

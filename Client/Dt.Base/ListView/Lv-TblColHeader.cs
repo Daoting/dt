@@ -14,25 +14,24 @@ using Dt.Base.ListView;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 表格视图列头相关
+/// </summary>
+public partial class Lv
 {
     /// <summary>
-    /// 表格视图列头相关
+    /// 加载表格视图列头事件
     /// </summary>
-    public partial class Lv
-    {
-        /// <summary>
-        /// 加载表格视图列头事件
-        /// </summary>
-        public event Action<ColHeaderCell> LoadColHeaderCell;
+    public event Action<ColHeaderCell> LoadColHeaderCell;
 
-        /// <summary>
-        /// 触发加载表格视图列头事件
-        /// </summary>
-        /// <param name="e"></param>
-        internal void OnLoadColHeaderCell(ColHeaderCell e)
-        {
-            LoadColHeaderCell?.Invoke(e);
-        }
+    /// <summary>
+    /// 触发加载表格视图列头事件
+    /// </summary>
+    /// <param name="e"></param>
+    internal void OnLoadColHeaderCell(ColHeaderCell e)
+    {
+        LoadColHeaderCell?.Invoke(e);
     }
 }

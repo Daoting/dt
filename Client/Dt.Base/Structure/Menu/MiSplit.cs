@@ -10,25 +10,24 @@
 using Microsoft.UI.Xaml;
 #endregion
 
-namespace Dt.Base
-{
-    /// <summary>
-    /// 菜单分割行
-    /// </summary>
-    public partial class MiSplit : Mi
-    {
-        public MiSplit()
-        {
-            DefaultStyleKey = typeof(MiSplit);
-            MinHeight = 0;
-        }
+namespace Dt.Base;
 
-        protected override void UpdateRoleState()
-        {
-            if (ParentMi != null || Owner.IsContextMenu)
-                VisualStateManager.GoToState(this, "SubSplit", true);
-            else
-                VisualStateManager.GoToState(this, "TopSplit", true);
-        }
+/// <summary>
+/// 菜单分割行
+/// </summary>
+public partial class MiSplit : Mi
+{
+    public MiSplit()
+    {
+        DefaultStyleKey = typeof(MiSplit);
+        MinHeight = 0;
+    }
+
+    protected override void UpdateRoleState()
+    {
+        if (ParentMi != null || Owner.IsContextMenu)
+            VisualStateManager.GoToState(this, "SubSplit", true);
+        else
+            VisualStateManager.GoToState(this, "TopSplit", true);
     }
 }

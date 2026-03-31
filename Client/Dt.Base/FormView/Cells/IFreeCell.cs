@@ -10,28 +10,27 @@
 using Microsoft.UI.Xaml.Data;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 自定义格内容接口
+/// </summary>
+public interface IFreeCell
 {
     /// <summary>
-    /// 自定义格内容接口
+    /// 获取设置所属格
     /// </summary>
-    public interface IFreeCell
-    {
-        /// <summary>
-        /// 获取设置所属格
-        /// </summary>
-        FvCell Owner { get; set; }
+    FvCell Owner { get; set; }
 
-        /// <summary>
-        /// 数据源绑定编辑器
-        /// </summary>
-        /// <param name="p_bind"></param>
-        void SetValBinding(Binding p_bind);
+    /// <summary>
+    /// 数据源绑定编辑器
+    /// </summary>
+    /// <param name="p_bind"></param>
+    void SetValBinding(Binding p_bind);
 
-        /// <summary>
-        /// 设置编辑焦点
-        /// </summary>
-        /// <returns></returns>
-        bool SetFocus();
-    }
+    /// <summary>
+    /// 设置编辑焦点
+    /// </summary>
+    /// <returns></returns>
+    bool SetFocus();
 }

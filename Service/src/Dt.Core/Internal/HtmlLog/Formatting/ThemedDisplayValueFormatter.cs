@@ -20,192 +20,191 @@ using System.IO;
 using System.Net;
 #endregion
 
-namespace Dt.Core.HtmlLog
+namespace Dt.Core.HtmlLog;
+
+class ThemedDisplayValueFormatter : ThemedValueFormatter
 {
-    class ThemedDisplayValueFormatter : ThemedValueFormatter
+    public ThemedDisplayValueFormatter(HtmlTheme theme)
+        : base(theme)
     {
-        public ThemedDisplayValueFormatter(HtmlTheme theme)
-            : base(theme)
+    }
+
+    public override ThemedValueFormatter SwitchTheme(HtmlTheme theme)
+    {
+        return new ThemedDisplayValueFormatter(theme);
+    }
+
+    protected override int VisitScalarValue(ThemedValueFormatterState state, ScalarValue scalar)
+    {
+        if (scalar is null)
+            throw new ArgumentNullException(nameof(scalar));
+        return FormatLiteralValue(scalar, state.Output, state.Format);
+    }
+
+    protected override int VisitSequenceValue(ThemedValueFormatterState state, SequenceValue sequence)
+    {
+        if (sequence is null)
+            throw new ArgumentNullException(nameof(sequence));
+
+        using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
+            state.Output.Write('[');
+
+        var delim = string.Empty;
+        for (var index = 0; index < sequence.Elements.Count; ++index)
         {
+            if (delim.Length != 0)
+            {
+                using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
+                    state.Output.Write(delim);
+            }
+
+            delim = ", ";
+            Visit(state, sequence.Elements[index]);
         }
 
-        public override ThemedValueFormatter SwitchTheme(HtmlTheme theme)
+        using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
+            state.Output.Write(']');
+
+        return 0;
+    }
+
+    protected override int VisitStructureValue(ThemedValueFormatterState state, StructureValue structure)
+    {
+        var count = 0;
+
+        if (structure.TypeTag != null)
         {
-            return new ThemedDisplayValueFormatter(theme);
+            using (ApplyStyle(state.Output, HtmlThemeStyle.Name))
+                state.Output.Write(structure.TypeTag);
+
+            state.Output.Write(' ');
         }
 
-        protected override int VisitScalarValue(ThemedValueFormatterState state, ScalarValue scalar)
+        using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
+            state.Output.Write('{');
+
+        var delim = string.Empty;
+        for (var index = 0; index < structure.Properties.Count; ++index)
         {
-            if (scalar is null)
-                throw new ArgumentNullException(nameof(scalar));
-            return FormatLiteralValue(scalar, state.Output, state.Format);
+            if (delim.Length != 0)
+            {
+                using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
+                    state.Output.Write(delim);
+            }
+
+            delim = ", ";
+
+            var property = structure.Properties[index];
+
+            using (ApplyStyle(state.Output, HtmlThemeStyle.Name))
+                state.Output.Write(property.Name);
+
+            using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
+                state.Output.Write('=');
+
+            count += Visit(state.Nest(), property.Value);
         }
 
-        protected override int VisitSequenceValue(ThemedValueFormatterState state, SequenceValue sequence)
+        using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
+            state.Output.Write('}');
+
+        return count;
+    }
+
+    protected override int VisitDictionaryValue(ThemedValueFormatterState state, DictionaryValue dictionary)
+    {
+        var count = 0;
+
+        using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
+            state.Output.Write('{');
+
+        var delim = string.Empty;
+        foreach (var element in dictionary.Elements)
         {
-            if (sequence is null)
-                throw new ArgumentNullException(nameof(sequence));
+            if (delim.Length != 0)
+            {
+                using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
+                    state.Output.Write(delim);
+            }
+
+            delim = ", ";
 
             using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
                 state.Output.Write('[');
 
-            var delim = string.Empty;
-            for (var index = 0; index < sequence.Elements.Count; ++index)
-            {
-                if (delim.Length != 0)
-                {
-                    using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
-                        state.Output.Write(delim);
-                }
-
-                delim = ", ";
-                Visit(state, sequence.Elements[index]);
-            }
+            using (ApplyStyle(state.Output, HtmlThemeStyle.String))
+                count += Visit(state.Nest(), element.Key);
 
             using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
-                state.Output.Write(']');
+                state.Output.Write("]=");
 
-            return 0;
+            count += Visit(state.Nest(), element.Value);
         }
 
-        protected override int VisitStructureValue(ThemedValueFormatterState state, StructureValue structure)
+        using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
+            state.Output.Write('}');
+
+        return count;
+    }
+
+    public int FormatLiteralValue(ScalarValue scalar, TextWriter output, string format)
+    {
+        var value = scalar.Value;
+        var count = 0;
+
+        if (value is null)
         {
-            var count = 0;
-
-            if (structure.TypeTag != null)
-            {
-                using (ApplyStyle(state.Output, HtmlThemeStyle.Name))
-                    state.Output.Write(structure.TypeTag);
-
-                state.Output.Write(' ');
-            }
-
-            using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
-                state.Output.Write('{');
-
-            var delim = string.Empty;
-            for (var index = 0; index < structure.Properties.Count; ++index)
-            {
-                if (delim.Length != 0)
-                {
-                    using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
-                        state.Output.Write(delim);
-                }
-
-                delim = ", ";
-
-                var property = structure.Properties[index];
-
-                using (ApplyStyle(state.Output, HtmlThemeStyle.Name))
-                    state.Output.Write(property.Name);
-
-                using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
-                    state.Output.Write('=');
-
-                count += Visit(state.Nest(), property.Value);
-            }
-
-            using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
-                state.Output.Write('}');
-
+            using (ApplyStyle(output, HtmlThemeStyle.Null))
+                output.Write("null");
             return count;
         }
 
-        protected override int VisitDictionaryValue(ThemedValueFormatterState state, DictionaryValue dictionary)
+        if (value is string str)
         {
-            var count = 0;
-
-            using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
-                state.Output.Write('{');
-
-            var delim = string.Empty;
-            foreach (var element in dictionary.Elements)
+            using (ApplyStyle(output, HtmlThemeStyle.String))
             {
-                if (delim.Length != 0)
-                {
-                    using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
-                        state.Output.Write(delim);
-                }
-
-                delim = ", ";
-
-                using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
-                    state.Output.Write('[');
-
-                using (ApplyStyle(state.Output, HtmlThemeStyle.String))
-                    count += Visit(state.Nest(), element.Key);
-
-                using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
-                    state.Output.Write("]=");
-
-                count += Visit(state.Nest(), element.Value);
+                if (format != "l")
+                    JsonValueFormatter.WriteQuotedJsonString(str, output);
+                else
+                    output.Write(str);
             }
-
-            using (ApplyStyle(state.Output, HtmlThemeStyle.TertiaryText))
-                state.Output.Write('}');
-
             return count;
         }
 
-        public int FormatLiteralValue(ScalarValue scalar, TextWriter output, string format)
+        if (value is ValueType)
         {
-            var value = scalar.Value;
-            var count = 0;
-
-            if (value is null)
+            if (value is int || value is uint || value is long || value is ulong ||
+                value is decimal || value is byte || value is sbyte || value is short ||
+                value is ushort || value is float || value is double)
             {
-                using (ApplyStyle(output, HtmlThemeStyle.Null))
-                    output.Write("null");
+                using (ApplyStyle(output, HtmlThemeStyle.Number))
+                    scalar.Render(output, format);
                 return count;
             }
 
-            if (value is string str)
+            if (value is bool b)
             {
-                using (ApplyStyle(output, HtmlThemeStyle.String))
-                {
-                    if (format != "l")
-                        JsonValueFormatter.WriteQuotedJsonString(str, output);
-                    else
-                        output.Write(str);
-                }
+                using (ApplyStyle(output, HtmlThemeStyle.Boolean))
+                    output.Write(b);
+
                 return count;
             }
 
-            if (value is ValueType)
+            if (value is char ch)
             {
-                if (value is int || value is uint || value is long || value is ulong ||
-                    value is decimal || value is byte || value is sbyte || value is short ||
-                    value is ushort || value is float || value is double)
+                using (ApplyStyle(output, HtmlThemeStyle.Scalar))
                 {
-                    using (ApplyStyle(output, HtmlThemeStyle.Number))
-                        scalar.Render(output, format);
-                    return count;
+                    output.Write('\'');
+                    output.Write(ch);
+                    output.Write('\'');
                 }
-
-                if (value is bool b)
-                {
-                    using (ApplyStyle(output, HtmlThemeStyle.Boolean))
-                        output.Write(b);
-
-                    return count;
-                }
-
-                if (value is char ch)
-                {
-                    using (ApplyStyle(output, HtmlThemeStyle.Scalar))
-                    {
-                        output.Write('\'');
-                        output.Write(ch);
-                        output.Write('\'');
-                    }
-                    return count;
-                }
+                return count;
             }
-
-            using (ApplyStyle(output, HtmlThemeStyle.Scalar))
-                scalar.Render(output, format);
-
-            return count;
         }
+
+        using (ApplyStyle(output, HtmlThemeStyle.Scalar))
+            scalar.Render(output, format);
+
+        return count;
     }
 }

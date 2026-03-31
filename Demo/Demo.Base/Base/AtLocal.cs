@@ -6,18 +6,17 @@
 ******************************************************************************/
 #endregion
 
-namespace Demo.Base
-{
-    /// <summary>
-    /// 本地sqlite库，文件名 local.db
-    /// </summary>
-    public class AtLocal : AccessAgent<AtLocal.Info>
-    {
-        public class Info : AgentInfo
-        {
-            public override AccessType Type => AccessType.Local;
+namespace Demo.Base;
 
-            public override string Name => "local";
-        }
+/// <summary>
+/// 本地sqlite库，文件名 local.db
+/// </summary>
+public class AtLocal : AccessAgent<AtLocal.Info>
+{
+    public class Info : AgentInfo
+    {
+        public override AccessType Type => AccessType.Local;
+
+        public override string Name => "local";
     }
 }

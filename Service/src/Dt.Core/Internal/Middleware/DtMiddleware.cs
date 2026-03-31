@@ -13,252 +13,251 @@ using System.Collections.Frozen;
 using System.Net;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 系统内置中间件，完成内部特殊路径处理；
+/// </summary>
+public class DtMiddleware
 {
+    #region 成员变量
     /// <summary>
-    /// 系统内置中间件，完成内部特殊路径处理；
+    /// 路由处理
     /// </summary>
-    public class DtMiddleware
+    internal static FrozenDictionary<string, RouteInvoker> RouteHandlers;
+    
+    /// <summary>
+    /// 根路由处理
+    /// </summary>
+    internal static FrozenDictionary<string, RequestDelegate> RootRouteHandlers;
+
+    static string _adminPage;
+    static string _errorPage;
+    static string _logPage;
+
+    readonly RequestDelegate _next;
+    #endregion
+
+    #region 构造方法
+    public DtMiddleware(RequestDelegate p_next)
     {
-        #region 成员变量
-        /// <summary>
-        /// 路由处理
-        /// </summary>
-        internal static FrozenDictionary<string, RouteInvoker> RouteHandlers;
+        _next = p_next ?? throw new ArgumentNullException(nameof(p_next));
+    }
+    #endregion
+
+    public Task Invoke(HttpContext p_context)
+    {
+        // 外站跨域，通常wasm客户端
+        if (p_context.Request.Headers.ContainsKey("Origin"))
+        {
+            // 预检请求
+            bool isPreflight = p_context.Request.Method == "OPTIONS" && p_context.Request.Headers.ContainsKey("Access-Control-Request-Method");
+            if (isPreflight)
+            {
+                Preflight(p_context);
+                return Task.CompletedTask;
+            }
+
+            // 被允许的跨域请求设标志，继续处理
+            if (p_context.Request.Headers.ContainsKey("dt-wasm"))
+            {
+                p_context.Response.Headers.AccessControlAllowOrigin = "*";
+            }
+        }
+
+        // 内部特殊路径格式：/.xxx
+        string path = p_context.Request.Path.Value.ToLower();
+        if (path == "/.c")
+            return new HttpApiInvoker(p_context).Handle();
+        if (path == "/.admin")
+            return ResponseAdminPage(p_context);
+        if (path == "/.log")
+            return ResponseLog(p_context);
+        if (path == "/.output")
+            return ResponseOutputPage(p_context);
+        if (path == "/.download")
+            return DownloadFile(p_context);
+        if (path == "/.error")
+            return ResponseErrorPage(p_context);
+
+        // 路由处理，不区分大小写，包括整个路径Request.Path
+        if (RouteHandlers.TryGetValue(path, out var invoker))
+            return invoker.Handle(p_context);
         
-        /// <summary>
-        /// 根路由处理
-        /// </summary>
-        internal static FrozenDictionary<string, RequestDelegate> RootRouteHandlers;
+        // 根路由处理，截取路径的第一节，如/.d/photo/1.jpg 截取为 /.d
+        int index = path.TrimStart('/').IndexOf('/');
+        if (index > -1)
+            path = path.Substring(0, index + 1);
+        if (RootRouteHandlers.TryGetValue(path, out var callback))
+            return callback(p_context);
 
-        static string _adminPage;
-        static string _errorPage;
-        static string _logPage;
+        return _next(p_context);
+    }
 
-        readonly RequestDelegate _next;
-        #endregion
-
-        #region 构造方法
-        public DtMiddleware(RequestDelegate p_next)
+    /// <summary>
+    /// 预检请求处理
+    /// </summary>
+    /// <param name="p_context"></param>
+    static void Preflight(HttpContext p_context)
+    {
+        // 跨域请求特殊标志头
+        bool isValid = false;
+        foreach (var h in p_context.Request.Headers.AccessControlRequestHeaders)
         {
-            _next = p_next ?? throw new ArgumentNullException(nameof(p_next));
-        }
-        #endregion
-
-        public Task Invoke(HttpContext p_context)
-        {
-            // 外站跨域，通常wasm客户端
-            if (p_context.Request.Headers.ContainsKey("Origin"))
+            if (!string.IsNullOrEmpty(h) && h.Contains("dt-wasm"))
             {
-                // 预检请求
-                bool isPreflight = p_context.Request.Method == "OPTIONS" && p_context.Request.Headers.ContainsKey("Access-Control-Request-Method");
-                if (isPreflight)
-                {
-                    Preflight(p_context);
-                    return Task.CompletedTask;
-                }
-
-                // 被允许的跨域请求设标志，继续处理
-                if (p_context.Request.Headers.ContainsKey("dt-wasm"))
-                {
-                    p_context.Response.Headers.AccessControlAllowOrigin = "*";
-                }
-            }
-
-            // 内部特殊路径格式：/.xxx
-            string path = p_context.Request.Path.Value.ToLower();
-            if (path == "/.c")
-                return new HttpApiInvoker(p_context).Handle();
-            if (path == "/.admin")
-                return ResponseAdminPage(p_context);
-            if (path == "/.log")
-                return ResponseLog(p_context);
-            if (path == "/.output")
-                return ResponseOutputPage(p_context);
-            if (path == "/.download")
-                return DownloadFile(p_context);
-            if (path == "/.error")
-                return ResponseErrorPage(p_context);
-
-            // 路由处理，不区分大小写，包括整个路径Request.Path
-            if (RouteHandlers.TryGetValue(path, out var invoker))
-                return invoker.Handle(p_context);
-            
-            // 根路由处理，截取路径的第一节，如/.d/photo/1.jpg 截取为 /.d
-            int index = path.TrimStart('/').IndexOf('/');
-            if (index > -1)
-                path = path.Substring(0, index + 1);
-            if (RootRouteHandlers.TryGetValue(path, out var callback))
-                return callback(p_context);
-
-            return _next(p_context);
-        }
-
-        /// <summary>
-        /// 预检请求处理
-        /// </summary>
-        /// <param name="p_context"></param>
-        static void Preflight(HttpContext p_context)
-        {
-            // 跨域请求特殊标志头
-            bool isValid = false;
-            foreach (var h in p_context.Request.Headers.AccessControlRequestHeaders)
-            {
-                if (!string.IsNullOrEmpty(h) && h.Contains("dt-wasm"))
-                {
-                    isValid = true;
-                    break;
-                }
-            }
-
-            if (isValid)
-            {
-                var headers = p_context.Response.Headers;
-                // 允许跨域请求的域
-                headers.AccessControlAllowOrigin = "*";
-                // 允许跨域请求时的HTTP方法，如 GET PUT POST OPTIONS
-                headers.AccessControlAllowMethods = "*";
-                // 允许跨域请求时自定义 header 字段
-                headers.AccessControlAllowHeaders = "*";
-                // 预检请求缓存时间，单位秒，Chromium上限2小时
-                headers.AccessControlMaxAge = "7200";
-
-                // 若要支持iframe内的跨域请求，需要以下两个header
-                //headers.Append("Cross-Origin-Embedder-Policy", "require-corp");
-                //headers.Append("Cross-Origin-Opener-Policy", "same-origin");
-
-                // 状态码204，无内容响应
-                p_context.Response.StatusCode = StatusCodes.Status204NoContent;
-                Log.Information("预检已允许");
-            }
-            else
-            {
-                Log.Warning("未知的预检请求，已拒绝");
+                isValid = true;
+                break;
             }
         }
 
-        /// <summary>
-        /// 获取管理页面
-        /// </summary>
-        /// <param name="p_context"></param>
-        /// <returns></returns>
-        static async Task ResponseAdminPage(HttpContext p_context)
+        if (isValid)
         {
-            if (string.IsNullOrEmpty(_adminPage))
-            {
-                try
-                {
-                    using (var sr = new StreamReader(typeof(DtMiddleware).Assembly.GetManifestResourceStream("Dt.Core.Res.Admin.html")))
-                    {
-                        _adminPage = sr.ReadToEnd();
-                    }
-                }
-                catch { }
-            }
-            p_context.Response.ContentType = "text/html";
-            await p_context.Response.WriteAsync(_adminPage);
-        }
+            var headers = p_context.Response.Headers;
+            // 允许跨域请求的域
+            headers.AccessControlAllowOrigin = "*";
+            // 允许跨域请求时的HTTP方法，如 GET PUT POST OPTIONS
+            headers.AccessControlAllowMethods = "*";
+            // 允许跨域请求时自定义 header 字段
+            headers.AccessControlAllowHeaders = "*";
+            // 预检请求缓存时间，单位秒，Chromium上限2小时
+            headers.AccessControlMaxAge = "7200";
 
-        /// <summary>
-        /// 获取出错页面
-        /// </summary>
-        /// <param name="p_context"></param>
-        /// <returns></returns>
-        static async Task ResponseErrorPage(HttpContext p_context)
+            // 若要支持iframe内的跨域请求，需要以下两个header
+            //headers.Append("Cross-Origin-Embedder-Policy", "require-corp");
+            //headers.Append("Cross-Origin-Opener-Policy", "same-origin");
+
+            // 状态码204，无内容响应
+            p_context.Response.StatusCode = StatusCodes.Status204NoContent;
+            Log.Information("预检已允许");
+        }
+        else
         {
-            if (string.IsNullOrEmpty(_errorPage))
-            {
-                try
-                {
-                    using (var sr = new StreamReader(typeof(DtMiddleware).Assembly.GetManifestResourceStream("Dt.Core.Res.Error.html")))
-                    {
-                        _errorPage = sr.ReadToEnd();
-                    }
-                }
-                catch { }
-            }
-            p_context.Response.ContentType = "text/html";
-            await p_context.Response.WriteAsync(_errorPage);
+            Log.Warning("未知的预检请求，已拒绝");
         }
+    }
 
-        /// <summary>
-        /// 实时获取日志内容，未使用.c的rpc方式，因为方法内部若输出日志会造成死循环！
-        /// </summary>
-        /// <param name="p_context"></param>
-        /// <returns></returns>
-        internal static async Task ResponseLog(HttpContext p_context)
+    /// <summary>
+    /// 获取管理页面
+    /// </summary>
+    /// <param name="p_context"></param>
+    /// <returns></returns>
+    static async Task ResponseAdminPage(HttpContext p_context)
+    {
+        if (string.IsNullOrEmpty(_adminPage))
         {
             try
             {
-                string msg = null;
-                p_context.Response.ContentType = "text/html";
-                if (p_context.Request.Query.TryGetValue("index", out var val)
-                    && int.TryParse(val, out int index))
+                using (var sr = new StreamReader(typeof(DtMiddleware).Assembly.GetManifestResourceStream("Dt.Core.Res.Admin.html")))
                 {
-                    // 实时获取日志
-                    msg = await HtmlLogHub.GetLog(index);
+                    _adminPage = sr.ReadToEnd();
                 }
-                await p_context.Response.WriteAsync(msg == null ? "" : msg, p_context.RequestAborted);
             }
             catch { }
         }
+        p_context.Response.ContentType = "text/html";
+        await p_context.Response.WriteAsync(_adminPage);
+    }
 
-        /// <summary>
-        /// 获取日志输出页面
-        /// </summary>
-        /// <param name="p_context"></param>
-        /// <returns></returns>
-        static async Task ResponseOutputPage(HttpContext p_context)
+    /// <summary>
+    /// 获取出错页面
+    /// </summary>
+    /// <param name="p_context"></param>
+    /// <returns></returns>
+    static async Task ResponseErrorPage(HttpContext p_context)
+    {
+        if (string.IsNullOrEmpty(_errorPage))
         {
-            if (string.IsNullOrEmpty(_logPage))
-            {
-                try
-                {
-                    using (var sr = new StreamReader(typeof(DtMiddleware).Assembly.GetManifestResourceStream("Dt.Core.Res.Log.html")))
-                    {
-                        _logPage = sr.ReadToEnd();
-                    }
-                }
-                catch { }
-            }
-            p_context.Response.ContentType = "text/html";
-            await p_context.Response.WriteAsync(_logPage);
-        }
-
-        /// <summary>
-        /// 下载文件，如：admin页面下载日志
-        /// </summary>
-        /// <param name="p_context"></param>
-        /// <returns></returns>
-        static async Task DownloadFile(HttpContext p_context)
-        {
-            string filePath;
-            using (StreamReader sr = new StreamReader(p_context.Request.Body))
-            {
-                // 客户端提供完整路径
-                filePath = Path.Combine(Kit.PathBase, await sr.ReadToEndAsync());
-            }
-
-            FileInfo fileInfo = new FileInfo(filePath);
-            if (!fileInfo.Exists)
-            {
-                p_context.Response.Headers["error"] = WebUtility.UrlEncode("😢下载失败，文件不存在！");
-                Log.Information("文件不存在：" + filePath);
-                return;
-            }
-
-            var response = p_context.Response;
-            response.Headers["Content-Type"] = "application/octet-stream";
-            response.Headers["Content-Transfer-Encoding"] = "binary";
-            response.Headers["Content-Length"] = fileInfo.Length.ToString();
-            // 不以附件形式下载
-            //response.Headers["Content-Disposition"] = "attachment;filename=" + path.Substring(path.LastIndexOf('/') + 1);
-
             try
             {
-                await response.SendFileAsync(filePath, p_context.RequestAborted);
+                using (var sr = new StreamReader(typeof(DtMiddleware).Assembly.GetManifestResourceStream("Dt.Core.Res.Error.html")))
+                {
+                    _errorPage = sr.ReadToEnd();
+                }
             }
             catch { }
         }
+        p_context.Response.ContentType = "text/html";
+        await p_context.Response.WriteAsync(_errorPage);
+    }
+
+    /// <summary>
+    /// 实时获取日志内容，未使用.c的rpc方式，因为方法内部若输出日志会造成死循环！
+    /// </summary>
+    /// <param name="p_context"></param>
+    /// <returns></returns>
+    internal static async Task ResponseLog(HttpContext p_context)
+    {
+        try
+        {
+            string msg = null;
+            p_context.Response.ContentType = "text/html";
+            if (p_context.Request.Query.TryGetValue("index", out var val)
+                && int.TryParse(val, out int index))
+            {
+                // 实时获取日志
+                msg = await HtmlLogHub.GetLog(index);
+            }
+            await p_context.Response.WriteAsync(msg == null ? "" : msg, p_context.RequestAborted);
+        }
+        catch { }
+    }
+
+    /// <summary>
+    /// 获取日志输出页面
+    /// </summary>
+    /// <param name="p_context"></param>
+    /// <returns></returns>
+    static async Task ResponseOutputPage(HttpContext p_context)
+    {
+        if (string.IsNullOrEmpty(_logPage))
+        {
+            try
+            {
+                using (var sr = new StreamReader(typeof(DtMiddleware).Assembly.GetManifestResourceStream("Dt.Core.Res.Log.html")))
+                {
+                    _logPage = sr.ReadToEnd();
+                }
+            }
+            catch { }
+        }
+        p_context.Response.ContentType = "text/html";
+        await p_context.Response.WriteAsync(_logPage);
+    }
+
+    /// <summary>
+    /// 下载文件，如：admin页面下载日志
+    /// </summary>
+    /// <param name="p_context"></param>
+    /// <returns></returns>
+    static async Task DownloadFile(HttpContext p_context)
+    {
+        string filePath;
+        using (StreamReader sr = new StreamReader(p_context.Request.Body))
+        {
+            // 客户端提供完整路径
+            filePath = Path.Combine(Kit.PathBase, await sr.ReadToEndAsync());
+        }
+
+        FileInfo fileInfo = new FileInfo(filePath);
+        if (!fileInfo.Exists)
+        {
+            p_context.Response.Headers["error"] = WebUtility.UrlEncode("😢下载失败，文件不存在！");
+            Log.Information("文件不存在：" + filePath);
+            return;
+        }
+
+        var response = p_context.Response;
+        response.Headers["Content-Type"] = "application/octet-stream";
+        response.Headers["Content-Transfer-Encoding"] = "binary";
+        response.Headers["Content-Length"] = fileInfo.Length.ToString();
+        // 不以附件形式下载
+        //response.Headers["Content-Disposition"] = "attachment;filename=" + path.Substring(path.LastIndexOf('/') + 1);
+
+        try
+        {
+            await response.SendFileAsync(filePath, p_context.RequestAborted);
+        }
+        catch { }
     }
 }

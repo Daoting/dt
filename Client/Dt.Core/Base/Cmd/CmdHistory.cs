@@ -12,102 +12,101 @@ using System;
 using System.Collections.Generic;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 命令的撤消与重做管理类
+/// </summary>
+public class CmdHistory
 {
+    const int _depth = 1000;
+    readonly Stack<CmdAction> _redoStack = new Stack<CmdAction>();
+    readonly Stack<CmdAction> _undoStack = new Stack<CmdAction>();
+
     /// <summary>
-    /// 命令的撤消与重做管理类
+    /// 命令变化事件
     /// </summary>
-    public class CmdHistory
+    public event EventHandler CmdChanged;
+
+    /// <summary>
+    /// 添加可撤消的动作
+    /// </summary>
+    /// <param name="p_action"></param>
+    public void RecordAction(CmdAction p_action)
     {
-        const int _depth = 1000;
-        readonly Stack<CmdAction> _redoStack = new Stack<CmdAction>();
-        readonly Stack<CmdAction> _undoStack = new Stack<CmdAction>();
+        if (_undoStack.Count > _depth)
+            _undoStack.Pop();
+        _undoStack.Push(p_action);
+        _redoStack.Clear();
+        OnCmdChanged();
+    }
 
-        /// <summary>
-        /// 命令变化事件
-        /// </summary>
-        public event EventHandler CmdChanged;
-
-        /// <summary>
-        /// 添加可撤消的动作
-        /// </summary>
-        /// <param name="p_action"></param>
-        public void RecordAction(CmdAction p_action)
+    /// <summary>
+    /// 执行撤消操作
+    /// </summary>
+    public void Undo()
+    {
+        if (CanUndo)
         {
-            if (_undoStack.Count > _depth)
-                _undoStack.Pop();
-            _undoStack.Push(p_action);
-            _redoStack.Clear();
+            CmdAction action = _undoStack.Pop();
+            action.Undo();
+            if (_redoStack.Count < _depth)
+                _redoStack.Push(action);
             OnCmdChanged();
         }
-
-        /// <summary>
-        /// 执行撤消操作
-        /// </summary>
-        public void Undo()
+        else
         {
-            if (CanUndo)
-            {
-                CmdAction action = _undoStack.Pop();
-                action.Undo();
-                if (_redoStack.Count < _depth)
-                    _redoStack.Push(action);
-                OnCmdChanged();
-            }
-            else
-            {
-                Kit.Msg("没有可撤消的操作！");
-            }
+            Kit.Msg("没有可撤消的操作！");
         }
+    }
 
-        /// <summary>
-        /// 执行重做操作
-        /// </summary>
-        public void Redo()
+    /// <summary>
+    /// 执行重做操作
+    /// </summary>
+    public void Redo()
+    {
+        if (CanRedo)
         {
-            if (CanRedo)
-            {
-                CmdAction action = _redoStack.Pop();
-                action.Redo();
-                if (_undoStack.Count < _depth)
-                    _undoStack.Push(action);
-                OnCmdChanged();
-            }
-            else
-            {
-                Kit.Msg("无操作可重做！");
-            }
-        }
-
-        /// <summary>
-        /// 清空所有撤消、重做的动作
-        /// </summary>
-        public void Clear()
-        {
-            _undoStack.Clear();
-            _redoStack.Clear();
+            CmdAction action = _redoStack.Pop();
+            action.Redo();
+            if (_undoStack.Count < _depth)
+                _undoStack.Push(action);
             OnCmdChanged();
         }
-
-        /// <summary>
-        /// 是否可重做
-        /// </summary>
-        public bool CanRedo
+        else
         {
-            get { return _redoStack.Count > 0; }
+            Kit.Msg("无操作可重做！");
         }
+    }
 
-        /// <summary>
-        /// 是否可撤消
-        /// </summary>
-        public bool CanUndo
-        {
-            get { return _undoStack.Count > 0; }
-        }
+    /// <summary>
+    /// 清空所有撤消、重做的动作
+    /// </summary>
+    public void Clear()
+    {
+        _undoStack.Clear();
+        _redoStack.Clear();
+        OnCmdChanged();
+    }
 
-        void OnCmdChanged()
-        {
-            CmdChanged?.Invoke(this, EventArgs.Empty);
-        }
+    /// <summary>
+    /// 是否可重做
+    /// </summary>
+    public bool CanRedo
+    {
+        get { return _redoStack.Count > 0; }
+    }
+
+    /// <summary>
+    /// 是否可撤消
+    /// </summary>
+    public bool CanUndo
+    {
+        get { return _undoStack.Count > 0; }
+    }
+
+    void OnCmdChanged()
+    {
+        CmdChanged?.Invoke(this, EventArgs.Empty);
     }
 }

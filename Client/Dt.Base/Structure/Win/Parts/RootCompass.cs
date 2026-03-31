@@ -10,20 +10,19 @@
 
 #endregion
 
-namespace Dt.Base.Docking
+namespace Dt.Base.Docking;
+
+/// <summary>
+/// 全局停靠导航，最底层四个停靠位置
+/// </summary>
+public partial class RootCompass : Compass
 {
     /// <summary>
-    /// 全局停靠导航，最底层四个停靠位置
+    /// 构造函数
     /// </summary>
-    public partial class RootCompass : Compass
+    public RootCompass()
     {
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        public RootCompass()
-        {
-            DefaultStyleKey = typeof(RootCompass);
-        }
+        DefaultStyleKey = typeof(RootCompass);
     }
 }
 

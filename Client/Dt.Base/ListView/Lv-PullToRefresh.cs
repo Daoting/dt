@@ -14,105 +14,104 @@ using Dt.Base.ListView;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 下拉刷新相关
+/// </summary>
+public partial class Lv
 {
-    /// <summary>
-    /// 下拉刷新相关
-    /// </summary>
-    public partial class Lv
+    #region 静态内容
+    public static readonly DependencyProperty PullToRefreshProperty = DependencyProperty.Register(
+        "PullToRefresh",
+        typeof(bool),
+        typeof(Lv),
+        new PropertyMetadata(false, OnReloadPullToRefresh));
+
+    static void OnReloadPullToRefresh(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        #region 静态内容
-        public static readonly DependencyProperty PullToRefreshProperty = DependencyProperty.Register(
-            "PullToRefresh",
-            typeof(bool),
-            typeof(Lv),
-            new PropertyMetadata(false, OnReloadPullToRefresh));
+        ((Lv)d).TogglePullToRefresh();
+    }
+    #endregion
 
-        static void OnReloadPullToRefresh(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    /// <summary>
+    /// 下拉刷新事件
+    /// </summary>
+    public event Action<AsyncArgs> RefreshRequested;
+
+    /// <summary>
+    /// 获取设置是否允许下拉以刷新，默认false
+    /// </summary>
+    public bool PullToRefresh
+    {
+        get { return (bool)GetValue(PullToRefreshProperty); }
+        set { SetValue(PullToRefreshProperty, value); }
+    }
+
+    /// <summary>
+    /// 请求下拉刷新过程
+    /// </summary>
+    public void RequestRefresh()
+    {
+        if (IsInnerScroll
+            && PullToRefresh
+            && _root.Child is RefreshContainer rc)
         {
-            ((Lv)d).TogglePullToRefresh();
+            rc.RequestRefresh();
         }
-        #endregion
+    }
 
-        /// <summary>
-        /// 下拉刷新事件
-        /// </summary>
-        public event Action<AsyncArgs> RefreshRequested;
+    void TogglePullToRefresh()
+    {
+        // 只有滚动栏在内部时支持下拉刷新
+        if (!IsInnerScroll)
+            return;
 
-        /// <summary>
-        /// 获取设置是否允许下拉以刷新，默认false
-        /// </summary>
-        public bool PullToRefresh
+        if (PullToRefresh)
         {
-            get { return (bool)GetValue(PullToRefreshProperty); }
-            set { SetValue(PullToRefreshProperty, value); }
-        }
-
-        /// <summary>
-        /// 请求下拉刷新过程
-        /// </summary>
-        public void RequestRefresh()
-        {
-            if (IsInnerScroll
-                && PullToRefresh
-                && _root.Child is RefreshContainer rc)
+            if (_root.Child is ScrollViewer sv)
             {
-                rc.RequestRefresh();
-            }
-        }
-
-        void TogglePullToRefresh()
-        {
-            // 只有滚动栏在内部时支持下拉刷新
-            if (!IsInnerScroll)
-                return;
-
-            if (PullToRefresh)
-            {
-                if (_root.Child is ScrollViewer sv)
-                {
-                    _root.Child = null;
+                _root.Child = null;
 
 #if WIN
-                    // 不可反复切换
-                    //sv.Content = null;
-                    //var svNew = new ScrollViewer { Content = _panel };
-                    //svNew.HorizontalScrollMode = sv.HorizontalScrollMode;
-                    //svNew.HorizontalScrollBarVisibility = sv.HorizontalScrollBarVisibility;
-                    //svNew.VerticalScrollMode = sv.VerticalScrollMode;
-                    //svNew.VerticalScrollBarVisibility = sv.VerticalScrollBarVisibility;
-                    //sv = svNew;
+                // 不可反复切换
+                //sv.Content = null;
+                //var svNew = new ScrollViewer { Content = _panel };
+                //svNew.HorizontalScrollMode = sv.HorizontalScrollMode;
+                //svNew.HorizontalScrollBarVisibility = sv.HorizontalScrollBarVisibility;
+                //svNew.VerticalScrollMode = sv.VerticalScrollMode;
+                //svNew.VerticalScrollBarVisibility = sv.VerticalScrollBarVisibility;
+                //sv = svNew;
 #endif
 
-                    var rc = new RefreshContainer { Content = sv };
-                    _root.Child = rc;
-                    rc.RefreshRequested += OnRefreshRequested;
-                }
-            }
-            else if (_root.Child is RefreshContainer rc)
-            {
-                rc.RefreshRequested -= OnRefreshRequested;
-                var sv = rc.Content as ScrollViewer;
-                rc.Content = null;
-                _root.Child = sv;
+                var rc = new RefreshContainer { Content = sv };
+                _root.Child = rc;
+                rc.RefreshRequested += OnRefreshRequested;
             }
         }
-
-        /// <summary>
-        /// 触发下拉刷新事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        async void OnRefreshRequested(RefreshContainer sender, RefreshRequestedEventArgs e)
+        else if (_root.Child is RefreshContainer rc)
         {
-            using (var RefreshCompletionDeferral = e.GetDeferral())
+            rc.RefreshRequested -= OnRefreshRequested;
+            var sv = rc.Content as ScrollViewer;
+            rc.Content = null;
+            _root.Child = sv;
+        }
+    }
+
+    /// <summary>
+    /// 触发下拉刷新事件
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    async void OnRefreshRequested(RefreshContainer sender, RefreshRequestedEventArgs e)
+    {
+        using (var RefreshCompletionDeferral = e.GetDeferral())
+        {
+            if (RefreshRequested != null)
             {
-                if (RefreshRequested != null)
-                {
-                    var args = new AsyncArgs();
-                    RefreshRequested(args);
-                    await args.EnsureAllCompleted();
-                }
+                var args = new AsyncArgs();
+                RefreshRequested(args);
+                await args.EnsureAllCompleted();
             }
         }
     }

@@ -11,31 +11,30 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// Json序列化选项
+/// </summary>
+public static class JsonOptions
 {
     /// <summary>
-    /// Json序列化选项
+    /// JsonWriter序列化时不对中文和转义字符进行编码
     /// </summary>
-    public static class JsonOptions
-    {
-        /// <summary>
-        /// JsonWriter序列化时不对中文和转义字符进行编码
-        /// </summary>
-        public static readonly JsonWriterOptions UnsafeWriter = new JsonWriterOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+    public static readonly JsonWriterOptions UnsafeWriter = new JsonWriterOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
 
-        /// <summary>
-        /// JsonWriter序列化时不对中文和转义字符进行编码，含有缩进
-        /// </summary>
-        public static readonly JsonWriterOptions IndentedWriter = new JsonWriterOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, Indented = true };
+    /// <summary>
+    /// JsonWriter序列化时不对中文和转义字符进行编码，含有缩进
+    /// </summary>
+    public static readonly JsonWriterOptions IndentedWriter = new JsonWriterOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, Indented = true };
 
-        /// <summary>
-        /// 序列化时不对中文和转义字符进行编码
-        /// </summary>
-        public static readonly JsonSerializerOptions UnsafeSerializer = new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+    /// <summary>
+    /// 序列化时不对中文和转义字符进行编码
+    /// </summary>
+    public static readonly JsonSerializerOptions UnsafeSerializer = new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
 
-        /// <summary>
-        /// 序列化时不对中文和转义字符进行编码，含有缩进
-        /// </summary>
-        public static readonly JsonSerializerOptions IndentedSerializer = new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true };
-    }
+    /// <summary>
+    /// 序列化时不对中文和转义字符进行编码，含有缩进
+    /// </summary>
+    public static readonly JsonSerializerOptions IndentedSerializer = new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true };
 }

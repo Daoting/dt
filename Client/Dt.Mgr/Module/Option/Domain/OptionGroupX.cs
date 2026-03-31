@@ -10,36 +10,35 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Mgr.Module
+namespace Dt.Mgr.Module;
+
+public partial class OptionGroupX
 {
-    public partial class OptionGroupX
+    public static async Task<OptionGroupX> New(
+        string Name = default)
     {
-        public static async Task<OptionGroupX> New(
-            string Name = default)
+        return new OptionGroupX(
+            ID: await NewID(),
+            Name: Name);
+    }
+
+    protected override void InitHook()
+    {
+        OnSaving(async () =>
         {
-            return new OptionGroupX(
-                ID: await NewID(),
-                Name: Name);
-        }
+            Throw.IfEmpty(Name, "分组名称不可为空！");
 
-        protected override void InitHook()
+            if ((IsAdded || Cells["name"].IsChanged)
+                && await GetCount($"where name='{Name}'") > 0)
+            {
+                Throw.Msg("分组名称重复！");
+            }
+        });
+
+        OnDeleting(async () =>
         {
-            OnSaving(async () =>
-            {
-                Throw.IfEmpty(Name, "分组名称不可为空！");
-
-                if ((IsAdded || Cells["name"].IsChanged)
-                    && await GetCount($"where name='{Name}'") > 0)
-                {
-                    Throw.Msg("分组名称重复！");
-                }
-            });
-
-            OnDeleting(async () =>
-            {
-                int count = await OptionX.GetCount($"where group_id={ID}");
-                Throw.If(count > 0, "该分组含选项无法删除！");
-            });
-        }
+            int count = await OptionX.GetCount($"where group_id={ID}");
+            Throw.If(count > 0, "该分组含选项无法删除！");
+        });
     }
 }

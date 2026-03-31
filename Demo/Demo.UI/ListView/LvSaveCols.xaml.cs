@@ -17,34 +17,32 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class LvSaveCols : Win
 {
-    public partial class LvSaveCols : Win
+    public LvSaveCols()
     {
-        public LvSaveCols()
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            _lv.Data = SampleData.CreatePersonsTbl(100);
-        }
+        _lv.Data = SampleData.CreatePersonsTbl(100);
     }
+}
 
-    [LvCall]
-    public class SaveColsCall
+[LvCall]
+public class SaveColsCall
+{
+    public static void Format(Env e)
     {
-        public static void Format(Env e)
+        var tb = new TextBlock
         {
-            var tb = new TextBlock
-            {
-                Style = Res.LvTextBlock,
-                TextAlignment = TextAlignment.Center,
-            };
-            e.UI = tb;
-            e.Set += c =>
-            {
-                tb.Text = c.Bool ? "男" : "女";
-            };
-        }
+            Style = Res.LvTextBlock,
+            TextAlignment = TextAlignment.Center,
+        };
+        e.UI = tb;
+        e.Set += c =>
+        {
+            tb.Text = c.Bool ? "男" : "女";
+        };
     }
-
 }

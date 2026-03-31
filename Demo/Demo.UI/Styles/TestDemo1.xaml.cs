@@ -17,24 +17,23 @@ using System;
 using Windows.Storage;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public sealed partial class TestDemo1 : Win
 {
-    public sealed partial class TestDemo1 : Win
+    public TestDemo1()
     {
-        public TestDemo1()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
 
-        void OnTest1(object sender, RoutedEventArgs e)
-        {
-            
-        }
+    void OnTest1(object sender, RoutedEventArgs e)
+    {
+        
+    }
 
-        void OnTest2(object sender, RoutedEventArgs e)
-        {
-            
-        }
+    void OnTest2(object sender, RoutedEventArgs e)
+    {
+        
     }
 }

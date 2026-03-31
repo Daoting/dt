@@ -11,109 +11,108 @@ using System;
 using System.Collections.ObjectModel;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 数据表中的列集合，可以按索引或列名获取Column对象
+/// </summary>
+public class ColumnList : KeyedCollection<string, Column>
 {
+    Table _owner;
+
     /// <summary>
-    /// 数据表中的列集合，可以按索引或列名获取Column对象
+    /// 构造方法，键比较时忽略大小写
     /// </summary>
-    public class ColumnList : KeyedCollection<string, Column>
+    public ColumnList(Table p_owner)
+        : base(StringComparer.OrdinalIgnoreCase)
     {
-        Table _owner;
+        _owner = p_owner;
+    }
 
-        /// <summary>
-        /// 构造方法，键比较时忽略大小写
-        /// </summary>
-        public ColumnList(Table p_owner)
-            : base(StringComparer.OrdinalIgnoreCase)
+    /// <summary>
+    /// 添加列，同步到所有Row
+    /// </summary>
+    /// <param name="p_col">列</param>
+    new public void Add(Column p_col)
+    {
+        base.Add(p_col);
+        if (_owner.Count > 0)
         {
-            _owner = p_owner;
-        }
-
-        /// <summary>
-        /// 添加列，同步到所有Row
-        /// </summary>
-        /// <param name="p_col">列</param>
-        new public void Add(Column p_col)
-        {
-            base.Add(p_col);
-            if (_owner.Count > 0)
+            foreach (var row in _owner)
             {
-                foreach (var row in _owner)
-                {
-                    new Cell(row, p_col.ID, p_col.Type);
-                }
+                new Cell(row, p_col.ID, p_col.Type);
             }
         }
+    }
 
-        /// <summary>
-        /// 删除列，同步到所有Row
-        /// </summary>
-        /// <param name="p_colName"></param>
-        /// <returns></returns>
-        new public bool Remove(string p_colName)
+    /// <summary>
+    /// 删除列，同步到所有Row
+    /// </summary>
+    /// <param name="p_colName"></param>
+    /// <returns></returns>
+    new public bool Remove(string p_colName)
+    {
+        bool success = false;
+        if (this.Contains(p_colName))
         {
-            bool success = false;
-            if (this.Contains(p_colName))
+            success = base.Remove(p_colName);
+            RemoveColumnData(p_colName);
+        }
+        return success;
+    }
+
+    /// <summary>
+    /// 删除列，同步到所有Row
+    /// </summary>
+    /// <param name="p_col"></param>
+    /// <returns></returns>
+    new public bool Remove(Column p_col)
+    {
+        bool success = false;
+        if (this.Contains(p_col))
+        {
+            success = base.Remove(p_col);
+            RemoveColumnData(p_col.ID);
+        }
+        return success;
+    }
+
+    /// <summary>
+    /// 删除列，同步到Row
+    /// </summary>
+    /// <param name="p_index"></param>
+    new public void RemoveAt(int p_index)
+    {
+        if (p_index < 0 || p_index >= Count)
+            return;
+
+        Column col = this[p_index];
+        base.RemoveAt(p_index);
+        RemoveColumnData(col.ID);
+    }
+
+    /// <summary>
+    /// 删除列数据
+    /// </summary>
+    /// <param name="p_colName"></param>
+    void RemoveColumnData(string p_colName)
+    {
+        if (_owner.Count > 0)
+        {
+            foreach (var row in _owner)
             {
-                success = base.Remove(p_colName);
-                RemoveColumnData(p_colName);
-            }
-            return success;
-        }
-
-        /// <summary>
-        /// 删除列，同步到所有Row
-        /// </summary>
-        /// <param name="p_col"></param>
-        /// <returns></returns>
-        new public bool Remove(Column p_col)
-        {
-            bool success = false;
-            if (this.Contains(p_col))
-            {
-                success = base.Remove(p_col);
-                RemoveColumnData(p_col.ID);
-            }
-            return success;
-        }
-
-        /// <summary>
-        /// 删除列，同步到Row
-        /// </summary>
-        /// <param name="p_index"></param>
-        new public void RemoveAt(int p_index)
-        {
-            if (p_index < 0 || p_index >= Count)
-                return;
-
-            Column col = this[p_index];
-            base.RemoveAt(p_index);
-            RemoveColumnData(col.ID);
-        }
-
-        /// <summary>
-        /// 删除列数据
-        /// </summary>
-        /// <param name="p_colName"></param>
-        void RemoveColumnData(string p_colName)
-        {
-            if (_owner.Count > 0)
-            {
-                foreach (var row in _owner)
-                {
-                    row.Cells.Remove(p_colName);
-                }
+                row.Cells.Remove(p_colName);
             }
         }
+    }
 
-        /// <summary>
-        /// 根据数据列获得列字段名
-        /// </summary>
-        /// <param name="item">数据列</param>
-        /// <returns>列字段名</returns>
-        protected override string GetKeyForItem(Column item)
-        {
-            return item.ID;
-        }
+    /// <summary>
+    /// 根据数据列获得列字段名
+    /// </summary>
+    /// <param name="item">数据列</param>
+    /// <returns>列字段名</returns>
+    protected override string GetKeyForItem(Column item)
+    {
+        return item.ID;
     }
 }

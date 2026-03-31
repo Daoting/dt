@@ -15,266 +15,265 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 只读信息格，始终只读
+/// </summary>
+public partial class CTip : FvCell
 {
-    /// <summary>
-    /// 只读信息格，始终只读
-    /// </summary>
-    public partial class CTip : FvCell
+    #region 静态内容
+    public static readonly DependencyProperty FormatProperty = DependencyProperty.Register(
+        "Format",
+        typeof(string),
+        typeof(CTip),
+        new PropertyMetadata(null, OnFormatChanged));
+
+    public readonly static DependencyProperty ChildProperty = DependencyProperty.Register(
+        "Child",
+        typeof(FrameworkElement),
+        typeof(CTip),
+        new PropertyMetadata(null));
+
+    static void OnFormatChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        #region 静态内容
-        public static readonly DependencyProperty FormatProperty = DependencyProperty.Register(
-            "Format",
-            typeof(string),
-            typeof(CTip),
-            new PropertyMetadata(null, OnFormatChanged));
-
-        public readonly static DependencyProperty ChildProperty = DependencyProperty.Register(
-            "Child",
-            typeof(FrameworkElement),
-            typeof(CTip),
-            new PropertyMetadata(null));
-
-        static void OnFormatChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        CTip tip = (CTip)d;
+        if (tip._isLoaded)
         {
-            CTip tip = (CTip)d;
-            if (tip._isLoaded)
+            var tb = (TextBlock)tip.GetTemplateChild("Block");
+            if (tb != null)
             {
-                var tb = (TextBlock)tip.GetTemplateChild("Block");
-                if (tb != null)
-                {
-                    tb.ClearValue(TextBlock.TextProperty);
-                    tb.SetBinding(TextBlock.TextProperty, tip.ValBinding);
-                }
+                tb.ClearValue(TextBlock.TextProperty);
+                tb.SetBinding(TextBlock.TextProperty, tip.ValBinding);
             }
         }
-        #endregion
+    }
+    #endregion
 
-        TextBlock _tb;
+    TextBlock _tb;
 
-        #region 构造方法
-        public CTip()
+    #region 构造方法
+    public CTip()
+    {
+        DefaultStyleKey = typeof(CTip);
+    }
+    #endregion
+
+    #region 事件
+    /// <summary>
+    /// 点击事件
+    /// </summary>
+    public event TappedEventHandler Click
+    {
+        add
         {
-            DefaultStyleKey = typeof(CTip);
-        }
-        #endregion
-
-        #region 事件
-        /// <summary>
-        /// 点击事件
-        /// </summary>
-        public event TappedEventHandler Click
-        {
-            add
+            Grid g = Child as Grid;
+            if (g == null)
             {
-                Grid g = Child as Grid;
-                if (g == null)
-                {
-                    g = LoadInteractiveChild();
-                }
-                g.AddHandler(TappedEvent, value, true);
+                g = LoadInteractiveChild();
             }
-            remove
+            g.AddHandler(TappedEvent, value, true);
+        }
+        remove
+        {
+            if (Child is Grid g)
             {
-                if (Child is Grid g)
-                {
-                    g.RemoveHandler(TappedEvent, value);
-                    LoadTextChild();
-                }
-            }
-        }
-        #endregion
-
-        /// <summary>
-        /// 获取设置格式串，时间格式如：yyyy-MM-dd HH:mm:ss
-        /// </summary>
-        [CellParam("格式串")]
-        public string Format
-        {
-            get { return (string)GetValue(FormatProperty); }
-            set { SetValue(FormatProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置单元格内容
-        /// </summary>
-        public FrameworkElement Child
-        {
-            get { return (FrameworkElement)GetValue(ChildProperty); }
-            set { SetValue(ChildProperty, value); }
-        }
-
-        #region 重写
-        protected override IFvCall DefaultMiddle => new TipValConverter();
-
-        protected override void OnApplyCellTemplate()
-        {
-            if (Child == null)
+                g.RemoveHandler(TappedEvent, value);
                 LoadTextChild();
-        }
-
-        protected override void SetValBinding()
-        {
-            _tb?.SetBinding(TextBlock.TextProperty, ValBinding);
-        }
-
-        protected override bool SetFocus()
-        {
-            return false;
-        }
-
-        public override void Destroy()
-        {
-            if (Child is Grid g)
-            {
-                g.PointerEntered -= OnGridPointerEntered;
-                g.PointerPressed -= OnGridPointerPressed;
-                g.PointerReleased -= OnGridPointerReleased;
-                g.PointerExited -= OnGridPointerExited;
-                g.PointerCaptureLost -= OnGridPointerExited;
             }
         }
+    }
+    #endregion
 
-        public override FvCell CreateDesignCell(CellPropertyInfo p_info)
-        {
-            if (p_info.Info.Name == "Format")
-            {
-                return new CList
-                {
-                    ID = p_info.Info.Name,
-                    Title = p_info.Title,
-                    IsEditable = true,
-                    Items = { "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "HH:mm:ss", "d2" }
-                };
-            }
-
-            return base.CreateDesignCell(p_info);
-        }
-        #endregion
-
-        #region 动态内容
-        void LoadTextChild()
-        {
-            Child = CreateTextBlock();
-            if (_isLoaded)
-                SetValBinding();
-        }
-
-        TextBlock CreateTextBlock()
-        {
-            _tb = new TextBlock
-            {
-                Margin = new Thickness(10, 0, 10, 0),
-                VerticalAlignment = VerticalAlignment.Center,
-                IsTextSelectionEnabled = true,
-                TextWrapping = TextWrapping.Wrap,
-            };
-            return _tb;
-        }
-
-        Grid LoadInteractiveChild()
-        {
-            Grid g = new Grid
-            {
-                ColumnDefinitions =
-                {
-                    new ColumnDefinition { Width = GridLength.Auto },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                },
-                Background = Res.TransparentBrush,
-            };
-            g.Children.Add(CreateTextBlock());
-
-            var tb = new TextBlock
-            {
-                Text = "\uE011",
-                FontFamily = Res.IconFont,
-                FontSize = 20,
-                Margin = new Thickness(10, 0, 10, 0),
-                VerticalAlignment = VerticalAlignment.Center,
-                HorizontalAlignment = HorizontalAlignment.Right,
-            };
-            Grid.SetColumn(tb, 1);
-            g.Children.Add(tb);
-
-            g.PointerEntered += OnGridPointerEntered;
-            g.PointerPressed += OnGridPointerPressed;
-            g.PointerReleased += OnGridPointerReleased;
-            g.PointerExited += OnGridPointerExited;
-            g.PointerCaptureLost += OnGridPointerExited;
-            Child = g;
-
-            if (_isLoaded)
-                SetValBinding();
-            return g;
-        }
-
-        void OnGridPointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            if (Child is Grid g)
-                g.Background = Res.暗遮罩;
-        }
-
-        void OnGridPointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            var props = e.GetCurrentPoint(null).Properties;
-            if (props.IsLeftButtonPressed)
-            {
-                if (Child is Grid g)
-                    g.Background = Res.深暗遮罩;
-            }
-        }
-
-        void OnGridPointerReleased(object sender, PointerRoutedEventArgs e)
-        {
-            if (Child is Grid g)
-                g.Background = Res.暗遮罩;
-        }
-
-        void OnGridPointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            if (Child is Grid g)
-                g.Background = Res.TransparentBrush;
-        }
-        #endregion
+    /// <summary>
+    /// 获取设置格式串，时间格式如：yyyy-MM-dd HH:mm:ss
+    /// </summary>
+    [CellParam("格式串")]
+    public string Format
+    {
+        get { return (string)GetValue(FormatProperty); }
+        set { SetValue(FormatProperty, value); }
     }
 
     /// <summary>
-    /// 源CTip.Data，目标TextBlock.Text
+    /// 获取设置单元格内容
     /// </summary>
-    class TipValConverter : IFvCall
+    public FrameworkElement Child
     {
-        public object Get(Mid m)
-        {
-            var val = m.Val;
-            if (val == null)
-                return "";
+        get { return (FrameworkElement)GetValue(ChildProperty); }
+        set { SetValue(ChildProperty, value); }
+    }
 
-            string format = ((CTip)m.Cell).Format;
-            if (val is DateTime dt)
+    #region 重写
+    protected override IFvCall DefaultMiddle => new TipValConverter();
+
+    protected override void OnApplyCellTemplate()
+    {
+        if (Child == null)
+            LoadTextChild();
+    }
+
+    protected override void SetValBinding()
+    {
+        _tb?.SetBinding(TextBlock.TextProperty, ValBinding);
+    }
+
+    protected override bool SetFocus()
+    {
+        return false;
+    }
+
+    public override void Destroy()
+    {
+        if (Child is Grid g)
+        {
+            g.PointerEntered -= OnGridPointerEntered;
+            g.PointerPressed -= OnGridPointerPressed;
+            g.PointerReleased -= OnGridPointerReleased;
+            g.PointerExited -= OnGridPointerExited;
+            g.PointerCaptureLost -= OnGridPointerExited;
+        }
+    }
+
+    public override FvCell CreateDesignCell(CellPropertyInfo p_info)
+    {
+        if (p_info.Info.Name == "Format")
+        {
+            return new CList
             {
-                try
-                {
-                    if (string.IsNullOrEmpty(format))
-                        return dt.ToString("yyyy-MM-dd");
-                    return dt.ToString(format);
-                }
-                catch { }
-            }
-            else if (!string.IsNullOrEmpty(format) && val is IFormattable f)
-            {
-                try
-                {
-                    return f.ToString(format, null);
-                }
-                catch { }
-            }
-            return val.ToString();
+                ID = p_info.Info.Name,
+                Title = p_info.Title,
+                IsEditable = true,
+                Items = { "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "HH:mm:ss", "d2" }
+            };
         }
 
-        public object Set(Mid m)
+        return base.CreateDesignCell(p_info);
+    }
+    #endregion
+
+    #region 动态内容
+    void LoadTextChild()
+    {
+        Child = CreateTextBlock();
+        if (_isLoaded)
+            SetValBinding();
+    }
+
+    TextBlock CreateTextBlock()
+    {
+        _tb = new TextBlock
         {
-            return m.Val;
+            Margin = new Thickness(10, 0, 10, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            IsTextSelectionEnabled = true,
+            TextWrapping = TextWrapping.Wrap,
+        };
+        return _tb;
+    }
+
+    Grid LoadInteractiveChild()
+    {
+        Grid g = new Grid
+        {
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = GridLength.Auto },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+            },
+            Background = Res.TransparentBrush,
+        };
+        g.Children.Add(CreateTextBlock());
+
+        var tb = new TextBlock
+        {
+            Text = "\uE011",
+            FontFamily = Res.IconFont,
+            FontSize = 20,
+            Margin = new Thickness(10, 0, 10, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Right,
+        };
+        Grid.SetColumn(tb, 1);
+        g.Children.Add(tb);
+
+        g.PointerEntered += OnGridPointerEntered;
+        g.PointerPressed += OnGridPointerPressed;
+        g.PointerReleased += OnGridPointerReleased;
+        g.PointerExited += OnGridPointerExited;
+        g.PointerCaptureLost += OnGridPointerExited;
+        Child = g;
+
+        if (_isLoaded)
+            SetValBinding();
+        return g;
+    }
+
+    void OnGridPointerEntered(object sender, PointerRoutedEventArgs e)
+    {
+        if (Child is Grid g)
+            g.Background = Res.暗遮罩;
+    }
+
+    void OnGridPointerPressed(object sender, PointerRoutedEventArgs e)
+    {
+        var props = e.GetCurrentPoint(null).Properties;
+        if (props.IsLeftButtonPressed)
+        {
+            if (Child is Grid g)
+                g.Background = Res.深暗遮罩;
         }
+    }
+
+    void OnGridPointerReleased(object sender, PointerRoutedEventArgs e)
+    {
+        if (Child is Grid g)
+            g.Background = Res.暗遮罩;
+    }
+
+    void OnGridPointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        if (Child is Grid g)
+            g.Background = Res.TransparentBrush;
+    }
+    #endregion
+}
+
+/// <summary>
+/// 源CTip.Data，目标TextBlock.Text
+/// </summary>
+class TipValConverter : IFvCall
+{
+    public object Get(Mid m)
+    {
+        var val = m.Val;
+        if (val == null)
+            return "";
+
+        string format = ((CTip)m.Cell).Format;
+        if (val is DateTime dt)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(format))
+                    return dt.ToString("yyyy-MM-dd");
+                return dt.ToString(format);
+            }
+            catch { }
+        }
+        else if (!string.IsNullOrEmpty(format) && val is IFormattable f)
+        {
+            try
+            {
+                return f.ToString(format, null);
+            }
+            catch { }
+        }
+        return val.ToString();
+    }
+
+    public object Set(Mid m)
+    {
+        return m.Val;
     }
 }

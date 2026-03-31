@@ -11,89 +11,88 @@ using System;
 using Microsoft.UI.Xaml.Data;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 源CDate.Data，目标CDate.Value
+/// </summary>
+class DateValConverter : IFvCall
 {
-    /// <summary>
-    /// 源CDate.Data，目标CDate.Value
-    /// </summary>
-    class DateValConverter : IFvCall
+    public object Get(Mid m)
     {
-        public object Get(Mid m)
-        {
-            if (m.Val == null)
-                return default(DateTime);
-
-            if (m.Val.GetType() == typeof(DateTime))
-                return (DateTime)m.Val;
-
-            try
-            {
-                return System.Convert.ToDateTime(m.Val);
-            }
-            catch { }
+        if (m.Val == null)
             return default(DateTime);
-        }
 
-        public object Set(Mid m)
+        if (m.Val.GetType() == typeof(DateTime))
+            return (DateTime)m.Val;
+
+        try
         {
-            if (m.ValType == typeof(DateTime))
-                return m.Val;
-
-            if (m.ValType == typeof(DateTime?))
-            {
-                if ((DateTime)m.Val == default(DateTime))
-                    return null;
-                return m.Val;
-            }
-
-            object result = null;
-            try
-            {
-                result = System.Convert.ChangeType(m.Val, m.ValType);
-            }
-            catch { }
-            return result;
+            return System.Convert.ToDateTime(m.Val);
         }
+        catch { }
+        return default(DateTime);
     }
 
-    /// <summary>
-    /// 源CDate.Value，目标TextBlock
-    /// </summary>
-    partial class DateValUIConverter : IValueConverter
+    public object Set(Mid m)
     {
-        CDate _owner;
+        if (m.ValType == typeof(DateTime))
+            return m.Val;
 
-        public DateValUIConverter(CDate p_owner)
+        if (m.ValType == typeof(DateTime?))
         {
-            _owner = p_owner;
+            if ((DateTime)m.Val == default(DateTime))
+                return null;
+            return m.Val;
         }
 
-        public object Convert(object value, Type targetType, object parameter, string language)
+        object result = null;
+        try
         {
-            return ((DateTime)value).ToString(_owner.Format);
+            result = System.Convert.ChangeType(m.Val, m.ValType);
         }
+        catch { }
+        return result;
+    }
+}
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
-        }
+/// <summary>
+/// 源CDate.Value，目标TextBlock
+/// </summary>
+partial class DateValUIConverter : IValueConverter
+{
+    CDate _owner;
+
+    public DateValUIConverter(CDate p_owner)
+    {
+        _owner = p_owner;
     }
 
-    /// <summary>
-    /// 源CDate.Value，目标MaskBox
-    /// </summary>
-    partial class ValMaskConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, string language)
     {
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            return value;
-        }
+        return ((DateTime)value).ToString(_owner.Format);
+    }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            if (value == null)
-                return default(DateTime);
-            return value;
-        }
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+/// <summary>
+/// 源CDate.Value，目标MaskBox
+/// </summary>
+partial class ValMaskConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        return value;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        if (value == null)
+            return default(DateTime);
+        return value;
     }
 }

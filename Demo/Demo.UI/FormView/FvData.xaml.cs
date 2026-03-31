@@ -10,49 +10,48 @@
 using Dt.Base;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class FvData : Win
 {
-    public partial class FvData : Win
+    public FvData()
     {
-        public FvData()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        void OnNewLocal(Mi e)
-        {
-            _fv1.Data = new CookieX("键名");
-        }
+    void OnNewLocal(Mi e)
+    {
+        _fv1.Data = new CookieX("键名");
+    }
 
-        async void OnLocalSave(Mi e)
+    async void OnLocalSave(Mi e)
+    {
+        if (await ((CookieX)_fv1.Data).Save(false))
         {
-            if (await ((CookieX)_fv1.Data).Save(false))
-            {
-                _fv1.AcceptChanges();
-                Kit.Msg("本地库保存成功！");
-            }
-            else
-            {
-                Kit.Msg("本地库保存失败！");
-            }
+            _fv1.AcceptChanges();
+            Kit.Msg("本地库保存成功！");
         }
-
-        async void OnQueryLocal(Mi e)
+        else
         {
-            var tbl = await AtState.Query<CookieX>("select * from Cookie limit 1");
-            if (tbl.Count > 0)
-                _fv1.Data = tbl[0];
-            else
-                Kit.Msg("本地库无数据！");
+            Kit.Msg("本地库保存失败！");
         }
+    }
 
-        async void OnLocalDel(Mi e)
+    async void OnQueryLocal(Mi e)
+    {
+        var tbl = await AtState.Query<CookieX>("select * from Cookie limit 1");
+        if (tbl.Count > 0)
+            _fv1.Data = tbl[0];
+        else
+            Kit.Msg("本地库无数据！");
+    }
+
+    async void OnLocalDel(Mi e)
+    {
+        if (await Kit.Confirm("确认要删除码？"))
         {
-            if (await Kit.Confirm("确认要删除码？"))
-            {
-                if (await ((CookieX)_fv1.Data).Delete())
-                    _fv1.Data = null;
-            }
+            if (await ((CookieX)_fv1.Data).Delete())
+                _fv1.Data = null;
         }
     }
 }

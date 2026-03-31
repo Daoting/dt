@@ -11,16 +11,15 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.Crud
-{
-    [RptQuery]
-    public partial class CustomRptQuery : RptQuery
-    {
-        public CustomRptQuery()
-        {
-            InitializeComponent();
-        }
+namespace Demo.Crud;
 
-        public override QueryFv Fv => _fv;
+[RptQuery]
+public partial class CustomRptQuery : RptQuery
+{
+    public CustomRptQuery()
+    {
+        InitializeComponent();
     }
+
+    public override QueryFv Fv => _fv;
 }

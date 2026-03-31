@@ -13,21 +13,20 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Workflow
+namespace Dt.Mgr.Workflow;
+
+public sealed partial class WfDeleteMenu : Menu
 {
-    public sealed partial class WfDeleteMenu : Menu
+    Sketch _sketch;
+
+    public WfDeleteMenu(Sketch p_sketch)
     {
-        Sketch _sketch;
+        InitializeComponent();
+        _sketch = p_sketch;
+    }
 
-        public WfDeleteMenu(Sketch p_sketch)
-        {
-            InitializeComponent();
-            _sketch = p_sketch;
-        }
-
-        void OnDel(Mi e)
-        {
-            _sketch.DeleteSelection();
-        }
+    void OnDel(Mi e)
+    {
+        _sketch.DeleteSelection();
     }
 }

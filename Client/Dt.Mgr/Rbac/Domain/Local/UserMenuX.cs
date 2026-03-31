@@ -10,29 +10,28 @@
 using System.Text;
 #endregion
 
-namespace Dt.Mgr
+namespace Dt.Mgr;
+
+/// <summary>
+/// 用户可访问的菜单
+/// </summary>
+[Sqlite("lob")]
+public class UserMenuX : EntityX<UserMenuX>
 {
-    /// <summary>
-    /// 用户可访问的菜单
-    /// </summary>
-    [Sqlite("lob")]
-    public class UserMenuX : EntityX<UserMenuX>
+    #region 构造方法
+    UserMenuX() { }
+
+    public UserMenuX(long ID)
     {
-        #region 构造方法
-        UserMenuX() { }
+        Add("ID", ID);
+        IsAdded = true;
+    }
+    #endregion
 
-        public UserMenuX(long ID)
-        {
-            Add("ID", ID);
-            IsAdded = true;
-        }
-        #endregion
-
-        [PrimaryKey]
-        new public long ID
-        {
-            get { return (long)this["ID"]; }
-            set { this["ID"] = value; }
-        }
+    [PrimaryKey]
+    new public long ID
+    {
+        get { return (long)this["ID"]; }
+        set { this["ID"] = value; }
     }
 }

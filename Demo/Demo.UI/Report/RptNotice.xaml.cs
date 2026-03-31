@@ -11,13 +11,12 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class RptNotice : Win
 {
-    public partial class RptNotice : Win
+    public RptNotice()
     {
-        public RptNotice()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

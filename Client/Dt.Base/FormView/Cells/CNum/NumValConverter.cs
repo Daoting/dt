@@ -11,25 +11,24 @@ using System;
 using Microsoft.UI.Xaml.Data;
 #endregion
 
-namespace Dt.Base.FormView
-{
-    /// <summary>
-    /// 特殊处理CNum与Cell之间null的转换
-    /// </summary>
-    public class NumValConverter : IFvCall
-    {
-        public object Get(Mid m)
-        {
-            if (m.Val == null)
-                return double.NaN;
-            return m.Val;
-        }
+namespace Dt.Base.FormView;
 
-        public object Set(Mid m)
-        {
-            if (double.IsNaN((double)m.Val))
-                return null;
-            return m.Val;
-        }
+/// <summary>
+/// 特殊处理CNum与Cell之间null的转换
+/// </summary>
+public class NumValConverter : IFvCall
+{
+    public object Get(Mid m)
+    {
+        if (m.Val == null)
+            return double.NaN;
+        return m.Val;
+    }
+
+    public object Set(Mid m)
+    {
+        if (double.IsNaN((double)m.Val))
+            return null;
+        return m.Val;
     }
 }

@@ -10,37 +10,36 @@
 
 #endregion
 
-namespace Dt.Base.Docking
+namespace Dt.Base.Docking;
+
+/// <summary>
+/// Pane的停靠状态
+/// </summary>
+public enum PanePosition
 {
     /// <summary>
-    /// Pane的停靠状态
+    /// 停靠在左侧
     /// </summary>
-    public enum PanePosition
-    {
-        /// <summary>
-        /// 停靠在左侧
-        /// </summary>
-        Left,
+    Left,
 
-        /// <summary>
-        /// 停靠在下侧
-        /// </summary>
-        Bottom,
+    /// <summary>
+    /// 停靠在下侧
+    /// </summary>
+    Bottom,
 
-        /// <summary>
-        /// 停靠在右侧
-        /// </summary>
-        Right,
+    /// <summary>
+    /// 停靠在右侧
+    /// </summary>
+    Right,
 
-        /// <summary>
-        /// 停靠在上侧
-        /// </summary>
-        Top,
+    /// <summary>
+    /// 停靠在上侧
+    /// </summary>
+    Top,
 
-        /// <summary>
-        /// 浮动
-        /// </summary>
-        Floating
-    }
+    /// <summary>
+    /// 浮动
+    /// </summary>
+    Floating
 }
 

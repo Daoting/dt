@@ -18,54 +18,53 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class TestTvLeak : Win
 {
-    public partial class TestTvLeak : Win
+    public TestTvLeak()
     {
-        public TestTvLeak()
-        {
-            InitializeComponent();
-            OnLoadTbl(null, null);
-        }
+        InitializeComponent();
+        OnLoadTbl(null, null);
+    }
 
-        void OnLoadTbl(object sender, RoutedEventArgs e)
-        {
-            _tv.Data = TvData.GetTbl();
-        }
+    void OnLoadTbl(object sender, RoutedEventArgs e)
+    {
+        _tv.Data = TvData.GetTbl();
+    }
 
-        void OnLoadData(object sender, RoutedEventArgs e)
-        {
-            _tv.Data = TvData.GetTreeData();
-        }
-        
-        void OnFilter(object sender, RoutedEventArgs e)
-        {
-            _tv.FilterCfg = new FilterCfg();
-        }
+    void OnLoadData(object sender, RoutedEventArgs e)
+    {
+        _tv.Data = TvData.GetTreeData();
+    }
+    
+    void OnFilter(object sender, RoutedEventArgs e)
+    {
+        _tv.FilterCfg = new FilterCfg();
+    }
 
-        void OnCustFilter(object sender, RoutedEventArgs e)
+    void OnCustFilter(object sender, RoutedEventArgs e)
+    {
+        _tv.FilterCfg = new FilterCfg
         {
-            _tv.FilterCfg = new FilterCfg
-            {
-                FilterCols = "name",
-                EnablePinYin = true,
-                IsRealtime = true,
-            };
-        }
+            FilterCols = "name",
+            EnablePinYin = true,
+            IsRealtime = true,
+        };
+    }
 
-        void OnMyFilter(object sender, RoutedEventArgs e)
+    void OnMyFilter(object sender, RoutedEventArgs e)
+    {
+        var cfg = new FilterCfg();
+        cfg.MyFilter = (o, txt) =>
         {
-            var cfg = new FilterCfg();
-            cfg.MyFilter = (o, txt) =>
-            {
-                return true;
-            };
-            _tv.FilterCfg = cfg;
-        }
+            return true;
+        };
+        _tv.FilterCfg = cfg;
+    }
 
-        void OnDelFilter(object sender, RoutedEventArgs e)
-        {
-            _tv.FilterCfg = null;
-        }
+    void OnDelFilter(object sender, RoutedEventArgs e)
+    {
+        _tv.FilterCfg = null;
     }
 }

@@ -15,93 +15,92 @@ using System.Net;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Fsm
+namespace Dt.Fsm;
+
+/// <summary>
+/// 处理文件下载
+/// </summary>
+public class Downloader
 {
-    /// <summary>
-    /// 处理文件下载
-    /// </summary>
-    public class Downloader
+    HttpContext _context;
+
+    public Downloader(HttpContext p_context)
     {
-        HttpContext _context;
+        _context = p_context;
+    }
 
-        public Downloader(HttpContext p_context)
+    public async Task Handle()
+    {
+        // 截取路径
+        string path = _context.Request.Path.Value.Substring(4);
+        FileInfo fileInfo = new FileInfo(Path.Combine(Cfg.Root, path));
+
+        // 缩略图
+        bool isThumb = false;
+        if (path.EndsWith(Cfg.ThumbPostfix))
         {
-            _context = p_context;
-        }
-
-        public async Task Handle()
-        {
-            // 截取路径
-            string path = _context.Request.Path.Value.Substring(4);
-            FileInfo fileInfo = new FileInfo(Path.Combine(Cfg.Root, path));
-
-            // 缩略图
-            bool isThumb = false;
-            if (path.EndsWith(Cfg.ThumbPostfix))
+            if (fileInfo.Exists)
             {
-                if (fileInfo.Exists)
+                isThumb = true;
+            }
+            else
+            {
+                // 未找到缩略图，取原图，视频不处理
+                string originPath = path.Substring(0, path.Length - Cfg.ThumbPostfix.Length);
+                int index = originPath.LastIndexOf('.');
+                if (index > -1)
                 {
-                    isThumb = true;
-                }
-                else
-                {
-                    // 未找到缩略图，取原图，视频不处理
-                    string originPath = path.Substring(0, path.Length - Cfg.ThumbPostfix.Length);
-                    int index = originPath.LastIndexOf('.');
-                    if (index > -1)
+                    string ext = originPath.Substring(index + 1).ToLower();
+                    if (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "bmp" || ext == "gif" || ext == "tif")
                     {
-                        string ext = originPath.Substring(index + 1).ToLower();
-                        if (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "bmp" || ext == "gif" || ext == "tif")
-                        {
-                            // 取原图
-                            path = originPath;
-                            fileInfo = new FileInfo(Path.Combine(Cfg.Root, path));
-                        }
+                        // 取原图
+                        path = originPath;
+                        fileInfo = new FileInfo(Path.Combine(Cfg.Root, path));
                     }
                 }
             }
+        }
 
-            if (!fileInfo.Exists)
-            {
-                _context.Response.Headers["error"] = WebUtility.UrlEncode("😢下载失败，文件不存在！");
-                Log.Information("文件不存在：{0}", path);
-                return;
-            }
+        if (!fileInfo.Exists)
+        {
+            _context.Response.Headers["error"] = WebUtility.UrlEncode("😢下载失败，文件不存在！");
+            Log.Information("文件不存在：{0}", path);
+            return;
+        }
 
-            Log.Information("下载：{0}", path);
+        Log.Information("下载：{0}", path);
 
-            if (!isThumb)
-            {
-                var da = Kit.NewDataAccess();
-                // 查询sql时若未缓存造成自动关闭
-                da.AutoClose = false;
-
-                try
-                {
-                    await da.Exec($"update fsm_file set downloads=downloads+1 where path='{path}'");
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "增加下载次数时异常！");
-                }
-                finally
-                {
-                    await da.Close(true);
-                }
-            }
-
-            var response = _context.Response;
-            response.Headers["Content-Type"] = "application/octet-stream";
-            response.Headers["Content-Transfer-Encoding"] = "binary";
-            response.Headers["Content-Length"] = fileInfo.Length.ToString();
-            // 不以附件形式下载
-            //response.Headers["Content-Disposition"] = "attachment;filename=" + path.Substring(path.LastIndexOf('/') + 1);
+        if (!isThumb)
+        {
+            var da = Kit.NewDataAccess();
+            // 查询sql时若未缓存造成自动关闭
+            da.AutoClose = false;
 
             try
             {
-                await response.SendFileAsync(Path.Combine(Cfg.Root, path), _context.RequestAborted);
+                await da.Exec($"update fsm_file set downloads=downloads+1 where path='{path}'");
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "增加下载次数时异常！");
+            }
+            finally
+            {
+                await da.Close(true);
+            }
         }
+
+        var response = _context.Response;
+        response.Headers["Content-Type"] = "application/octet-stream";
+        response.Headers["Content-Transfer-Encoding"] = "binary";
+        response.Headers["Content-Length"] = fileInfo.Length.ToString();
+        // 不以附件形式下载
+        //response.Headers["Content-Disposition"] = "attachment;filename=" + path.Substring(path.LastIndexOf('/') + 1);
+
+        try
+        {
+            await response.SendFileAsync(Path.Combine(Cfg.Root, path), _context.RequestAborted);
+        }
+        catch { }
     }
 }

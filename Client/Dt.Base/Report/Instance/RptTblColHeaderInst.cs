@@ -10,38 +10,37 @@
 
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+/// <summary>
+/// 表格列头实例
+/// </summary>
+public class RptTblColHeaderInst : RptTblPartInst
 {
-    /// <summary>
-    /// 表格列头实例
-    /// </summary>
-    public class RptTblColHeaderInst : RptTblPartInst
+    public RptTblColHeaderInst(RptItemBase p_item)
+        : base(p_item)
     {
-        public RptTblColHeaderInst(RptItemBase p_item)
-            : base(p_item)
-        {
-        }
+    }
 
-        /// <summary>
-        /// 输出报表项内容
-        /// </summary>
-        protected override void DoOutput()
-        {
-            OutputChildren();
-        }
+    /// <summary>
+    /// 输出报表项内容
+    /// </summary>
+    protected override void DoOutput()
+    {
+        OutputChildren();
+    }
 
-        /// <summary>
-        /// 克隆
-        /// </summary>
-        /// <returns></returns>
-        public RptTblColHeaderInst Clone()
+    /// <summary>
+    /// 克隆
+    /// </summary>
+    /// <returns></returns>
+    public RptTblColHeaderInst Clone()
+    {
+        RptTblColHeaderInst inst = new RptTblColHeaderInst(_item);
+        foreach (RptTextInst item in _children)
         {
-            RptTblColHeaderInst inst = new RptTblColHeaderInst(_item);
-            foreach (RptTextInst item in _children)
-            {
-                inst.AddChild(item.Clone());
-            }
-            return inst;
+            inst.AddChild(item.Clone());
         }
+        return inst;
     }
 }

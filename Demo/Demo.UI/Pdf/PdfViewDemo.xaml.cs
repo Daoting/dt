@@ -22,76 +22,75 @@ using Microsoft.UI;
 using Windows.Storage;
 #endregion
 
-namespace Demo.UI
-{
-    public partial class PdfViewDemo : Win
-    {
-        public PdfViewDemo()
-        {
-            InitializeComponent();
-            LoadPdf();
-        }
+namespace Demo.UI;
 
-        async void LoadPdf()
+public partial class PdfViewDemo : Win
+{
+    public PdfViewDemo()
+    {
+        InitializeComponent();
+        LoadPdf();
+    }
+
+    async void LoadPdf()
+    {
+        var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Demo.UI/Assets/dt.pdf"));
+        _pdf.Open(file);
+    }
+
+    void OnJsOpen(object sender, RoutedEventArgs e)
+    {
+        _pdf.Open();
+    }
+
+    void OnPrint(object sender, RoutedEventArgs e)
+    {
+        _pdf.Print();
+    }
+
+    void OnClear(object sender, RoutedEventArgs e)
+    {
+        _pdf.Clear();
+    }
+    
+    async void OnOpenFile(object sender, RoutedEventArgs e)
+    {
+        var picker = Kit.GetFileOpenPicker();
+        picker.FileTypeFilter.Add(".pdf");
+        var file = await picker.PickSingleFileAsync();
+        if (file != null)
         {
-            var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Demo.UI/Assets/dt.pdf"));
             _pdf.Open(file);
         }
+    }
 
-        void OnJsOpen(object sender, RoutedEventArgs e)
-        {
-            _pdf.Open();
-        }
+    void OnDownload(object sender, RoutedEventArgs e)
+    {
+        _pdf.Download();
+    }
 
-        void OnPrint(object sender, RoutedEventArgs e)
-        {
-            _pdf.Print();
-        }
+    void OnFirstPage(object sender, RoutedEventArgs e)
+    {
+        _pdf.FirstPage();
+    }
 
-        void OnClear(object sender, RoutedEventArgs e)
-        {
-            _pdf.Clear();
-        }
-        
-        async void OnOpenFile(object sender, RoutedEventArgs e)
-        {
-            var picker = Kit.GetFileOpenPicker();
-            picker.FileTypeFilter.Add(".pdf");
-            var file = await picker.PickSingleFileAsync();
-            if (file != null)
-            {
-                _pdf.Open(file);
-            }
-        }
+    void OnLastPage(object sender, RoutedEventArgs e)
+    {
+        _pdf.LastPage();
+    }
 
-        void OnDownload(object sender, RoutedEventArgs e)
-        {
-            _pdf.Download();
-        }
+    void OnNextPage(object sender, RoutedEventArgs e)
+    {
+        _pdf.NextPage();
+    }
 
-        void OnFirstPage(object sender, RoutedEventArgs e)
-        {
-            _pdf.FirstPage();
-        }
+    void OnPrePage(object sender, RoutedEventArgs e)
+    {
+        _pdf.PreviousPage();
+    }
 
-        void OnLastPage(object sender, RoutedEventArgs e)
-        {
-            _pdf.LastPage();
-        }
-
-        void OnNextPage(object sender, RoutedEventArgs e)
-        {
-            _pdf.NextPage();
-        }
-
-        void OnPrePage(object sender, RoutedEventArgs e)
-        {
-            _pdf.PreviousPage();
-        }
-
-        void OnGotoPage(object sender, RoutedEventArgs e)
-        {
-            _pdf.GotoPage(2);
-        }
+    void OnGotoPage(object sender, RoutedEventArgs e)
+    {
+        _pdf.GotoPage(2);
     }
 }

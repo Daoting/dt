@@ -15,29 +15,28 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class LvInFv : Win
 {
-    public partial class LvInFv : Win
+    public LvInFv()
     {
-        public LvInFv()
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-        }
+    }
 
-        void OnLoadData(object sender, RoutedEventArgs e)
-        {
-            var tbl = SampleData.CreatePersonsTbl(int.Parse(((Button)sender).Tag.ToString()));
-            _lvList.Data = tbl;
-            _lvTbl.Data = tbl;
-            _lvTile.Data = tbl;
-        }
+    void OnLoadData(object sender, RoutedEventArgs e)
+    {
+        var tbl = SampleData.CreatePersonsTbl(int.Parse(((Button)sender).Tag.ToString()));
+        _lvList.Data = tbl;
+        _lvTbl.Data = tbl;
+        _lvTile.Data = tbl;
+    }
 
-        void OnLoadNull(object sender, RoutedEventArgs e)
-        {
-            _lvList.Data = null;
-            _lvTbl.Data = null;
-            _lvTile.Data = null;
-        }
+    void OnLoadNull(object sender, RoutedEventArgs e)
+    {
+        _lvList.Data = null;
+        _lvTbl.Data = null;
+        _lvTile.Data = null;
     }
 }

@@ -12,31 +12,30 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.Lob
+namespace Demo.Lob;
+
+public partial class 绑定账号Dlg : Dlg
 {
-    public partial class 绑定账号Dlg : Dlg
+    public 绑定账号Dlg()
     {
-        public 绑定账号Dlg()
-        {
-            InitializeComponent();
-            Menu = Menu.New(Mi.确定(OnOK));
-        }
+        InitializeComponent();
+        Menu = Menu.New(Mi.确定(OnOK));
+    }
 
-        public Row SelectedRow => _lv.SelectedRow;
+    public Row SelectedRow => _lv.SelectedRow;
 
-        public async Task<bool> Show(long p_releatedID)
+    public async Task<bool> Show(long p_releatedID)
+    {
+        _lv.Data = await UserX.Query($"where not exists ( select user_id from 人员 b where a.id=b.user_id and user_id is not null )");
+        if (!Kit.IsPhoneUI)
         {
-            _lv.Data = await UserX.Query($"where not exists ( select user_id from 人员 b where a.id=b.user_id and user_id is not null )");
-            if (!Kit.IsPhoneUI)
-            {
-                Height = Kit.ViewHeight / 2;
-            }
-            return await ShowAsync();
+            Height = Kit.ViewHeight / 2;
         }
+        return await ShowAsync();
+    }
 
-        void OnItemDoubleClick(object obj)
-        {
-            OnOK(null);
-        }
+    void OnItemDoubleClick(object obj)
+    {
+        OnOK(null);
     }
 }

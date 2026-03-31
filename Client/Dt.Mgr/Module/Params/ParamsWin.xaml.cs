@@ -11,31 +11,30 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Module
+namespace Dt.Mgr.Module;
+
+[View(LobViews.参数定义)]
+public partial class ParamsWin : Win
 {
-    [View(LobViews.参数定义)]
-    public partial class ParamsWin : Win
+    readonly ParamsForm _form;
+
+    public ParamsWin()
     {
-        readonly ParamsForm _form;
+        InitializeComponent();
+        _form = new ParamsForm { OwnWin = this };
+        Attach();
+    }
 
-        public ParamsWin()
+    void Attach()
+    {
+        _query.Search += e =>
         {
-            InitializeComponent();
-            _form = new ParamsForm { OwnWin = this };
-            Attach();
-        }
+            _list.Query(new QueryClause(e));
+            NaviTo(_list.Title);
+        };
 
-        void Attach()
-        {
-            _query.Search += e =>
-            {
-                _list.Query(new QueryClause(e));
-                NaviTo(_list.Title);
-            };
+        _list.Msg += e => _ = _form.Query(e);
 
-            _list.Msg += e => _ = _form.Query(e);
-
-            _form.UpdateList += e => _ = _list.Refresh(e.ID);
-        }
+        _form.UpdateList += e => _ = _list.Refresh(e.ID);
     }
 }

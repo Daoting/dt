@@ -20,44 +20,43 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Dt.Base.Tools;
 #endregion
 
-namespace Dt.Mgr.Rbac
+namespace Dt.Mgr.Rbac;
+
+public partial class MenuTree : Tree
 {
-    public partial class MenuTree : Tree
+    public MenuTree()
     {
-        public MenuTree()
+        InitializeComponent();
+        CreateMenu(Menu);
+        _tv.FilterCfg = new FilterCfg
         {
-            InitializeComponent();
-            CreateMenu(Menu);
-            _tv.FilterCfg = new FilterCfg
-            {
-                FilterCols = "name",
-                EnablePinYin = true,
-                Placeholder = "文字或拼音简码",
-                IsRealtime = true,
-            };
-        }
+            FilterCols = "name",
+            EnablePinYin = true,
+            Placeholder = "文字或拼音简码",
+            IsRealtime = true,
+        };
+    }
 
-        public MenuX SelectedMenu => _tv.Selected<MenuX>();
+    public MenuX SelectedMenu => _tv.Selected<MenuX>();
 
-        public void SelectByID(long p_id)
-        {
-            _tv.SelectByID(p_id);
-        }
-        
-        protected override void OnFirstLoaded()
-        {
-            _tv.FixedRoot = new MenuX(ID: 0, Name: "菜单", IsGroup: true);
-            _ = Refresh();
-        }
+    public void SelectByID(long p_id)
+    {
+        _tv.SelectByID(p_id);
+    }
+    
+    protected override void OnFirstLoaded()
+    {
+        _tv.FixedRoot = new MenuX(ID: 0, Name: "菜单", IsGroup: true);
+        _ = Refresh();
+    }
 
-        protected override async Task OnQuery()
-        {
-            _tv.Data = await MenuX.Query("select id,parent_id,name from cm_menu where is_group='1' order by dispidx");
-        }
-        
-        void OnRefresh(Mi e)
-        {
-            RefreshSqliteWin.UpdateSqliteFile("menu");
-        }
+    protected override async Task OnQuery()
+    {
+        _tv.Data = await MenuX.Query("select id,parent_id,name from cm_menu where is_group='1' order by dispidx");
+    }
+    
+    void OnRefresh(Mi e)
+    {
+        RefreshSqliteWin.UpdateSqliteFile("menu");
     }
 }

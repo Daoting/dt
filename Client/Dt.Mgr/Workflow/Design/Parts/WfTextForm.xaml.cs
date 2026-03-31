@@ -11,21 +11,20 @@ using Dt.Base;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Workflow
-{
-    /// <summary>
-    /// 图元属性面板
-    /// </summary>
-    public sealed partial class WfTextForm : UserControl
-    {
-        public WfTextForm()
-        {
-            InitializeComponent();
-        }
+namespace Dt.Mgr.Workflow;
 
-        public void LoadNode(TextBlock p_snode) 
-        {
-            _fv.Data = p_snode;
-        }
+/// <summary>
+/// 图元属性面板
+/// </summary>
+public sealed partial class WfTextForm : UserControl
+{
+    public WfTextForm()
+    {
+        InitializeComponent();
+    }
+
+    public void LoadNode(TextBlock p_snode) 
+    {
+        _fv.Data = p_snode;
     }
 }

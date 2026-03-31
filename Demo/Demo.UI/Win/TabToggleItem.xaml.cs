@@ -19,39 +19,38 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Markup;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class TabToggleItem : Tab
 {
-    public partial class TabToggleItem : Tab
+    public TabToggleItem()
     {
-        public TabToggleItem()
-        {
-            InitializeComponent();
-            Title = "切换" + new Random().Next(100);
-        }
-
-        void OnToggle1(object sender, RoutedEventArgs e)
-        {
-            _win.LeftTab.Toggle(new TabToggleItem());
-        }
-
-        void OnBackToHome(object sender, RoutedEventArgs e)
-        {
-            _win.LeftTab.BackToHome();
-        }
-
-        void OnToggle2(object sender, RoutedEventArgs e)
-        {
-            _win.LeftTab.Toggle(new TabToggleItem(), true);
-        }
-
-        TabToggleItem _inst;
-        void OnToggle3(object sender, RoutedEventArgs e)
-        {
-            if (_inst == null)
-                _inst = new TabToggleItem();
-            _win.LeftTab.Toggle(_inst);
-        }
-
-        TabNavi _win => (TabNavi)OwnWin;
+        InitializeComponent();
+        Title = "切换" + new Random().Next(100);
     }
+
+    void OnToggle1(object sender, RoutedEventArgs e)
+    {
+        _win.LeftTab.Toggle(new TabToggleItem());
+    }
+
+    void OnBackToHome(object sender, RoutedEventArgs e)
+    {
+        _win.LeftTab.BackToHome();
+    }
+
+    void OnToggle2(object sender, RoutedEventArgs e)
+    {
+        _win.LeftTab.Toggle(new TabToggleItem(), true);
+    }
+
+    TabToggleItem _inst;
+    void OnToggle3(object sender, RoutedEventArgs e)
+    {
+        if (_inst == null)
+            _inst = new TabToggleItem();
+        _win.LeftTab.Toggle(_inst);
+    }
+
+    TabNavi _win => (TabNavi)OwnWin;
 }

@@ -13,24 +13,23 @@ using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel.DataTransfer;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public sealed partial class BrushDemo : Win
 {
-    public sealed partial class BrushDemo : Win
+    public BrushDemo()
     {
-        public BrushDemo()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        void OnCopy(object sender, RoutedEventArgs e)
-        {
-            Button btn = sender as Button;
-            var txt = ((TextBlock)(btn.Parent as Grid).Children[0]).Text;
+    void OnCopy(object sender, RoutedEventArgs e)
+    {
+        Button btn = sender as Button;
+        var txt = ((TextBlock)(btn.Parent as Grid).Children[0]).Text;
 
-            DataPackage data = new DataPackage();
-            data.SetText(txt);
-            Clipboard.SetContent(data);
-            Kit.Msg(string.Format("已复制：{0}", txt));
-        }
+        DataPackage data = new DataPackage();
+        data.SetText(txt);
+        Clipboard.SetContent(data);
+        Kit.Msg(string.Format("已复制：{0}", txt));
     }
 }

@@ -10,25 +10,24 @@
 
 #endregion
 
-namespace Dt.Base.Report
-{
-    /// <summary>
-    /// 表格数据行实例
-    /// </summary>
-    public class RptTblRowInst : RptTblPartInst
-    {
-        public RptTblRowInst(RptItemBase p_item)
-            : base(p_item)
-        {
-        }
+namespace Dt.Base.Report;
 
-        /// <summary>
-        /// 输出报表项内容
-        /// </summary>
-        protected override void DoOutput()
-        {
-            Table.Data.Current = Index;
-            OutputChildren();
-        }
+/// <summary>
+/// 表格数据行实例
+/// </summary>
+public class RptTblRowInst : RptTblPartInst
+{
+    public RptTblRowInst(RptItemBase p_item)
+        : base(p_item)
+    {
+    }
+
+    /// <summary>
+    /// 输出报表项内容
+    /// </summary>
+    protected override void DoOutput()
+    {
+        Table.Data.Current = Index;
+        OutputChildren();
     }
 }

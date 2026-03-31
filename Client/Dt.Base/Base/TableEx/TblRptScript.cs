@@ -13,18 +13,17 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 #endregion
 
-namespace Dt.Base
-{
-    /// <summary>
-    /// 导出Lv报表脚本
-    /// </summary>
-    internal class TblRptScript : RptScript
-    {
-        public Table Data {  get; set; }
+namespace Dt.Base;
 
-        public override Task<Table> GetData(string p_name)
-        {
-            return Task.FromResult(Data);
-        }
+/// <summary>
+/// 导出Lv报表脚本
+/// </summary>
+internal class TblRptScript : RptScript
+{
+    public Table Data {  get; set; }
+
+    public override Task<Table> GetData(string p_name)
+    {
+        return Task.FromResult(Data);
     }
 }

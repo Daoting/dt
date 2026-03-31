@@ -11,59 +11,58 @@ using Microsoft.AspNetCore.Http;
 using Polly;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 路由处理类的包装类
+/// </summary>
+class RouteInvoker
 {
-    /// <summary>
-    /// 路由处理类的包装类
-    /// </summary>
-    class RouteInvoker
+    Type _handler;
+    RouteAttribute _attribute;
+    ILogger _logger;
+
+    public RouteInvoker(Type p_handler, RouteAttribute p_attribute)
     {
-        Type _handler;
-        RouteAttribute _attribute;
-        ILogger _logger;
+        _handler = p_handler;
+        _attribute = p_attribute;
+    }
 
-        public RouteInvoker(Type p_handler, RouteAttribute p_attribute)
+    public ILogger Log
+    {
+        get
         {
-            _handler = p_handler;
-            _attribute = p_attribute;
+            if (_logger == null)
+            {
+                _logger = Serilog.Log
+                    .ForContext("route", _attribute.Path)
+                    .ForContext("handler", _handler.Name);
+            }
+            return _logger;
         }
+    }
 
-        public ILogger Log
+    public HttpContext Context { get; private set; }
+    
+    public RouteAttribute Attribute => _attribute;
+
+    public async Task Handle(HttpContext p_context)
+    {
+        try
         {
-            get
-            {
-                if (_logger == null)
-                {
-                    _logger = Serilog.Log
-                        .ForContext("route", _attribute.Path)
-                        .ForContext("handler", _handler.Name);
-                }
-                return _logger;
-            }
+            Context = p_context;
+            var api = ((RouteApi)Activator.CreateInstance(_handler));
+            api.Init(this);
+
+            bool suc = await api.CallHandler();
+
+            // Api调用结束后释放资源
+            await api.Close(suc);
         }
-
-        public HttpContext Context { get; private set; }
-        
-        public RouteAttribute Attribute => _attribute;
-
-        public async Task Handle(HttpContext p_context)
+        catch (Exception ex)
         {
-            try
-            {
-                Context = p_context;
-                var api = ((RouteApi)Activator.CreateInstance(_handler));
-                api.Init(this);
-
-                bool suc = await api.CallHandler();
-
-                // Api调用结束后释放资源
-                await api.Close(suc);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, $"[{_handler.Name}] 路由处理异常，路径：{p_context.Request.Path.Value}");
-                p_context.Response.StatusCode = 500;
-            }
+            Log.Error(ex, $"[{_handler.Name}] 路由处理异常，路径：{p_context.Request.Path.Value}");
+            p_context.Response.StatusCode = 500;
         }
     }
 }

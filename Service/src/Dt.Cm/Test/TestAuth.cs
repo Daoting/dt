@@ -10,38 +10,37 @@
 using Microsoft.AspNetCore.Http;
 #endregion
 
-namespace Dt.Cm
+namespace Dt.Cm;
+
+/// <summary>
+/// 功能测试Api
+/// </summary>
+[Api(IsTest = true)]
+public class TestAuth : RpcApi
 {
-    /// <summary>
-    /// 功能测试Api
-    /// </summary>
-    [Api(IsTest = true)]
-    public class TestAuth : RpcApi
+    public string NoAuth()
     {
-        public string NoAuth()
-        {
-            return "无授权验证";
-        }
-
-        [Auth]
-        public string Auth()
-        {
-            return "必须登录后可访问";
-        }
-
-        [Auth(typeof(MyAuth))]
-        public string CustomAuth()
-        {
-            return "自定义授权验证";
-        }
+        return "无授权验证";
     }
 
-    public class MyAuth : ICustomAuth
+    [Auth]
+    public string Auth()
     {
-        public Task<bool> IsAuthenticated(HttpContext p_context)
-        {
-            string userID = p_context.Request.Headers["uid"];
-            return Task.FromResult(false);
-        }
+        return "必须登录后可访问";
+    }
+
+    [Auth(typeof(MyAuth))]
+    public string CustomAuth()
+    {
+        return "自定义授权验证";
+    }
+}
+
+public class MyAuth : ICustomAuth
+{
+    public Task<bool> IsAuthenticated(HttpContext p_context)
+    {
+        string userID = p_context.Request.Headers["uid"];
+        return Task.FromResult(false);
     }
 }

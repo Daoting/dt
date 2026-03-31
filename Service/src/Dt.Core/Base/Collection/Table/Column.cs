@@ -10,39 +10,38 @@
 using System;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 数据列，已移除列默认值功能！
+/// </summary>
+public class Column
 {
     /// <summary>
-    /// 数据列，已移除列默认值功能！
+    /// 列名不可为空，列类型默认为string
     /// </summary>
-    public class Column
+    /// <param name="p_colName">列名</param>
+    /// <param name="p_colType">列数据类型</param>
+    public Column(string p_colName, Type p_colType = null)
     {
-        /// <summary>
-        /// 列名不可为空，列类型默认为string
-        /// </summary>
-        /// <param name="p_colName">列名</param>
-        /// <param name="p_colType">列数据类型</param>
-        public Column(string p_colName, Type p_colType = null)
-        {
-            if (string.IsNullOrEmpty(p_colName))
-                throw new Exception("未指定列名！");
-            ID = p_colName;
-            Type = (p_colType == null) ? typeof(string) : p_colType;
-        }
-
-        /// <summary>
-        /// 列字段名
-        /// </summary>
-        public string ID { get; }
-
-        /// <summary>
-        ///  列类型
-        /// </summary>
-        public Type Type { get; internal set; }
-
-        /// <summary>
-        /// 字符串类型时的最大长度
-        /// </summary>
-        public int MaxLength { get; set; }
+        if (string.IsNullOrEmpty(p_colName))
+            throw new Exception("未指定列名！");
+        ID = p_colName;
+        Type = (p_colType == null) ? typeof(string) : p_colType;
     }
+
+    /// <summary>
+    /// 列字段名
+    /// </summary>
+    public string ID { get; }
+
+    /// <summary>
+    ///  列类型
+    /// </summary>
+    public Type Type { get; internal set; }
+
+    /// <summary>
+    /// 字符串类型时的最大长度
+    /// </summary>
+    public int MaxLength { get; set; }
 }

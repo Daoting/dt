@@ -13,14 +13,13 @@ using Microsoft.UI.Xaml.Controls;
 using System.Diagnostics;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public sealed partial class ProgressDemo : Win
 {
-    public sealed partial class ProgressDemo : Win
+    public ProgressDemo()
     {
-        public ProgressDemo()
-        {
-            InitializeComponent();
-            
-        }
+        InitializeComponent();
+        
     }
 }

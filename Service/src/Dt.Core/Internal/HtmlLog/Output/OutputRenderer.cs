@@ -18,10 +18,9 @@ using System.IO;
 using System.Net;
 #endregion
 
-namespace Dt.Core.HtmlLog
+namespace Dt.Core.HtmlLog;
+
+abstract class OutputRenderer
 {
-    abstract class OutputRenderer
-    {
-        public abstract void Render(LogEvent logEvent, TextWriter output);
-    }
+    public abstract void Render(LogEvent logEvent, TextWriter output);
 }

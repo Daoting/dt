@@ -19,27 +19,26 @@ using System.IO;
 using System.Net;
 #endregion
 
-namespace Dt.Core.HtmlLog
+namespace Dt.Core.HtmlLog;
+
+abstract class ThemedValueFormatter : LogEventPropertyValueVisitor<ThemedValueFormatterState, int>
 {
-    abstract class ThemedValueFormatter : LogEventPropertyValueVisitor<ThemedValueFormatterState, int>
+    readonly HtmlTheme _theme;
+
+    protected ThemedValueFormatter(HtmlTheme theme)
     {
-        readonly HtmlTheme _theme;
-
-        protected ThemedValueFormatter(HtmlTheme theme)
-        {
-            _theme = theme ?? throw new ArgumentNullException(nameof(theme));
-        }
-
-        protected StyleReset ApplyStyle(TextWriter output, HtmlThemeStyle style)
-        {
-            return _theme.Apply(output, style);
-        }
-
-        public int Format(LogEventPropertyValue value, TextWriter output, string format, bool literalTopLevel = false)
-        {
-            return Visit(new ThemedValueFormatterState { Output = output, Format = format, IsTopLevel = literalTopLevel }, value);
-        }
-
-        public abstract ThemedValueFormatter SwitchTheme(HtmlTheme theme);
+        _theme = theme ?? throw new ArgumentNullException(nameof(theme));
     }
+
+    protected StyleReset ApplyStyle(TextWriter output, HtmlThemeStyle style)
+    {
+        return _theme.Apply(output, style);
+    }
+
+    public int Format(LogEventPropertyValue value, TextWriter output, string format, bool literalTopLevel = false)
+    {
+        return Visit(new ThemedValueFormatterState { Output = output, Format = format, IsTopLevel = literalTopLevel }, value);
+    }
+
+    public abstract ThemedValueFormatter SwitchTheme(HtmlTheme theme);
 }

@@ -9,17 +9,16 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 虚拟实体接口，多个一对一实体的组合实体
+/// </summary>
+public interface IVirEntity
 {
     /// <summary>
-    /// 虚拟实体接口，多个一对一实体的组合实体
+    /// 获取内部所有实体
     /// </summary>
-    public interface IVirEntity
-    {
-        /// <summary>
-        /// 获取内部所有实体
-        /// </summary>
-        /// <returns></returns>
-        List<Entity> GetEntities();
-    }
+    /// <returns></returns>
+    List<Entity> GetEntities();
 }

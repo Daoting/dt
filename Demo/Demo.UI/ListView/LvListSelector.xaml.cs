@@ -15,33 +15,32 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class LvListSelector : Win
 {
-    public partial class LvListSelector : Win
+    public LvListSelector()
     {
-        public LvListSelector()
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            _lv.View = new ListItemSelector
-            {
-                Male = (DataTemplate)Resources["Male"],
-                Lady = (DataTemplate)Resources["Lady"],
-            };
-            _lv.Data = SampleData.CreatePersonsTbl(50);
-        }
+        _lv.View = new ListItemSelector
+        {
+            Male = (DataTemplate)Resources["Male"],
+            Lady = (DataTemplate)Resources["Lady"],
+        };
+        _lv.Data = SampleData.CreatePersonsTbl(50);
     }
-    
-    public partial class ListItemSelector : DataTemplateSelector
-    {
-        public DataTemplate Male { get; set; }
-        public DataTemplate Lady { get; set; }
+}
 
-        protected override DataTemplate SelectTemplateCore(object item)
-        {
-            if (((LvItem)item).Row.Str("xb") == "男")
-                return Male;
-            return Lady;
-        }
+public partial class ListItemSelector : DataTemplateSelector
+{
+    public DataTemplate Male { get; set; }
+    public DataTemplate Lady { get; set; }
+
+    protected override DataTemplate SelectTemplateCore(object item)
+    {
+        if (((LvItem)item).Row.Str("xb") == "男")
+            return Male;
+        return Lady;
     }
 }

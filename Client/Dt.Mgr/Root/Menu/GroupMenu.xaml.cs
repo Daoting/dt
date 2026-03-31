@@ -10,56 +10,55 @@
 using Dt.Base;
 #endregion
 
-namespace Dt.Mgr.Home
+namespace Dt.Mgr.Home;
+
+/// <summary>
+/// 分组菜单项页面
+/// </summary>
+public sealed partial class GroupMenu : Tab
 {
-    /// <summary>
-    /// 分组菜单项页面
-    /// </summary>
-    public sealed partial class GroupMenu : Tab
+    OmMenu _parent;
+
+    public GroupMenu(OmMenu p_parent)
     {
-        OmMenu _parent;
+        InitializeComponent();
+        _parent = p_parent;
+        _tb.Text = MenuDs.GetMenuPath(p_parent);
+        _lv.Data = MenuDs.LoadGroupMenus(p_parent);
+        Title = _parent.Name;
 
-        public GroupMenu(OmMenu p_parent)
+        if (!Kit.IsPhoneUI)
         {
-            InitializeComponent();
-            _parent = p_parent;
-            _tb.Text = MenuDs.GetMenuPath(p_parent);
-            _lv.Data = MenuDs.LoadGroupMenus(p_parent);
-            Title = _parent.Name;
-
-            if (!Kit.IsPhoneUI)
-            {
-                var menu = new Menu { new Mi("收藏", Icons.收藏, OnFav) };
-                menu.Opening += OnMenuOpening;
-                _lv.SetMenu(menu);
-            }
+            var menu = new Menu { new Mi("收藏", Icons.收藏, OnFav) };
+            menu.Opening += OnMenuOpening;
+            _lv.SetMenu(menu);
         }
+    }
 
-        void OnItemClick(ItemClickArgs e)
+    void OnItemClick(ItemClickArgs e)
+    {
+        Kit.RunAsync(() =>
         {
-            Kit.RunAsync(() =>
-            {
-                OmMenu menu = (OmMenu)e.Data;
-                if (menu.IsGroup)
-                    Forward(new GroupMenu(menu));
-                else
-                    MenuDs.OpenMenu(menu);
-            });
-        }
+            OmMenu menu = (OmMenu)e.Data;
+            if (menu.IsGroup)
+                Forward(new GroupMenu(menu));
+            else
+                MenuDs.OpenMenu(menu);
+        });
+    }
 
-        void OnSearch(Mi e)
-        {
-            Forward(new SearchMenu());
-        }
+    void OnSearch(Mi e)
+    {
+        Forward(new SearchMenu());
+    }
 
-        void OnMenuOpening(object sender, AsyncCancelArgs e)
-        {
-            HomeMenu.DoMenuOpening(sender, e);
-        }
+    void OnMenuOpening(object sender, AsyncCancelArgs e)
+    {
+        HomeMenu.DoMenuOpening(sender, e);
+    }
 
-        void OnFav(Mi e)
-        {
-            HomeMenu.DoFavMenu(e);
-        }
+    void OnFav(Mi e)
+    {
+        HomeMenu.DoFavMenu(e);
     }
 }

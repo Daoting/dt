@@ -11,31 +11,30 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.Crud
+namespace Demo.Crud;
+
+using A = 大儿X;
+
+public partial class 普通大儿List : List
 {
-    using A = 大儿X;
-    
-    public partial class 普通大儿List : List
+    public 普通大儿List()
     {
-        public 普通大儿List()
+        InitializeComponent();
+        Menu = CreateMenu();
+        _lv.AddMultiSelMenu(Menu);
+        _lv.SetMenu(CreateContextMenu());
+    }
+    
+    protected override async Task OnQuery()
+    {
+        if (_parentID > 0)
         {
-            InitializeComponent();
-            Menu = CreateMenu();
-            _lv.AddMultiSelMenu(Menu);
-            _lv.SetMenu(CreateContextMenu());
+            _lv.Data = await A.Query($"where parent_id={_parentID}");
         }
-        
-        protected override async Task OnQuery()
+        else
         {
-            if (_parentID > 0)
-            {
-                _lv.Data = await A.Query($"where parent_id={_parentID}");
-            }
-            else
-            {
-                _lv.Data = null;
-            }
-            Menu["增加"].IsEnabled = _parentID > 0;
+            _lv.Data = null;
         }
+        Menu["增加"].IsEnabled = _parentID > 0;
     }
 }

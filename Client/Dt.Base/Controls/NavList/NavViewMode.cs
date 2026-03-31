@@ -9,21 +9,20 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// NavList的视图类型
+/// </summary>
+public enum NavViewMode
 {
     /// <summary>
-    /// NavList的视图类型
+    /// 列表视图
     /// </summary>
-    public enum NavViewMode
-    {
-        /// <summary>
-        /// 列表视图
-        /// </summary>
-        List,
+    List,
 
-        /// <summary>
-        /// 磁贴视图
-        /// </summary>
-        Tile,
-    }
+    /// <summary>
+    /// 磁贴视图
+    /// </summary>
+    Tile,
 }

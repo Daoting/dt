@@ -13,73 +13,72 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+public partial class ParamsXaml : Tab
 {
-    public partial class ParamsXaml : Tab
+    ParamsDlg _dlg;
+
+    public ParamsXaml(ParamsDlg p_dlg)
     {
-        ParamsDlg _dlg;
+        InitializeComponent();
+        _dlg = p_dlg;
+        _fv.Data = _dlg.Info.Root.Params;
+        _tbXaml.Text = _dlg.Info.Root.Params.XamlRow.Str("xaml");
+    }
 
-        public ParamsXaml(ParamsDlg p_dlg)
+    async void OnCreatePreview()
+    {
+        var fv = await _dlg.Info.Root.Params.CreateQueryForm(null);
+        var dlg = new Dlg { Title = "查询面板", MinHeight = 300 };
+        dlg.Content = fv;
+        dlg.Show();
+    }
+    
+    async void OnDesign(object sender, RoutedEventArgs e)
+    {
+        var info = new FvDesignInfo { Xaml = _dlg.Info.Root.Params.XamlRow.Str("xaml"), IsQueryFv = true };
+        var cols = new List<EntityCol>();
+        foreach (var r in _dlg.Info.Root.Params.Data)
         {
-            InitializeComponent();
-            _dlg = p_dlg;
-            _fv.Data = _dlg.Info.Root.Params;
-            _tbXaml.Text = _dlg.Info.Root.Params.XamlRow.Str("xaml");
-        }
-
-        async void OnCreatePreview()
-        {
-            var fv = await _dlg.Info.Root.Params.CreateQueryForm(null);
-            var dlg = new Dlg { Title = "查询面板", MinHeight = 300 };
-            dlg.Content = fv;
-            dlg.Show();
-        }
-        
-        async void OnDesign(object sender, RoutedEventArgs e)
-        {
-            var info = new FvDesignInfo { Xaml = _dlg.Info.Root.Params.XamlRow.Str("xaml"), IsQueryFv = true };
-            var cols = new List<EntityCol>();
-            foreach (var r in _dlg.Info.Root.Params.Data)
+            Type tp;
+            switch (r.Str("type").ToLower())
             {
-                Type tp;
-                switch (r.Str("type").ToLower())
-                {
-                    case "bool":
-                        tp = typeof(bool);
-                        break;
+                case "bool":
+                    tp = typeof(bool);
+                    break;
 
-                    case "double":
-                        tp = typeof(double);
-                        break;
+                case "double":
+                    tp = typeof(double);
+                    break;
 
-                    case "int":
-                        tp = typeof(int);
-                        break;
+                case "int":
+                    tp = typeof(int);
+                    break;
 
-                    case "date":
-                        tp = typeof(DateTime);
-                        break;
+                case "date":
+                    tp = typeof(DateTime);
+                    break;
 
-                    default:
-                        tp = typeof(string);
-                        break;
-                }
-                cols.Add(new EntityCol(r.Str("name"), tp));
+                default:
+                    tp = typeof(string);
+                    break;
             }
-            info.Cols = cols;
-
-            var xaml = await FvDesign.ShowDlg(info);
-            if (!string.IsNullOrEmpty(xaml))
-                _tbXaml.Text = xaml;
+            cols.Add(new EntityCol(r.Str("name"), tp));
         }
+        info.Cols = cols;
 
-        void OnXamlChanged(object sender, TextChangedEventArgs e)
-        {
+        var xaml = await FvDesign.ShowDlg(info);
+        if (!string.IsNullOrEmpty(xaml))
+            _tbXaml.Text = xaml;
+    }
+
+    void OnXamlChanged(object sender, TextChangedEventArgs e)
+    {
 #if WIN || DESKTOP
-            _dlg.Info.Root.Params.XamlRow["xaml"] = _tbXaml.Text.Trim().Replace('\r', '\n');
+        _dlg.Info.Root.Params.XamlRow["xaml"] = _tbXaml.Text.Trim().Replace('\r', '\n');
 #else
-            _dlg.Info.Root.Params.XamlRow["xaml"] = _tbXaml.Text.Trim();
+        _dlg.Info.Root.Params.XamlRow["xaml"] = _tbXaml.Text.Trim();
 #endif
-        }
     }
 }

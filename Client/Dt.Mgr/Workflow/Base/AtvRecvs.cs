@@ -14,34 +14,33 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 #endregion
 
-namespace Dt.Mgr
+namespace Dt.Mgr;
+
+/// <summary>
+/// 后续活动列表
+/// </summary>
+public class AtvRecvs
 {
     /// <summary>
-    /// 后续活动列表
+    /// 普通活动的后续活动列表
     /// </summary>
-    public class AtvRecvs
+    public List<AtvRecv> Atvs { get; } = new List<AtvRecv>();
+
+    /// <summary>
+    /// 同步活动的后续活动
+    /// </summary>
+    public AtvSyncRecv SyncAtv { get; set; }
+
+    /// <summary>
+    /// 结束活动
+    /// </summary>
+    public AtvFinishedRecv FinishedAtv { get; set; }
+
+    /// <summary>
+    /// 后续活动数
+    /// </summary>
+    public int AtvCount
     {
-        /// <summary>
-        /// 普通活动的后续活动列表
-        /// </summary>
-        public List<AtvRecv> Atvs { get; } = new List<AtvRecv>();
-
-        /// <summary>
-        /// 同步活动的后续活动
-        /// </summary>
-        public AtvSyncRecv SyncAtv { get; set; }
-
-        /// <summary>
-        /// 结束活动
-        /// </summary>
-        public AtvFinishedRecv FinishedAtv { get; set; }
-
-        /// <summary>
-        /// 后续活动数
-        /// </summary>
-        public int AtvCount
-        {
-            get { return Atvs.Count + (SyncAtv == null ? 0 : 1) + (FinishedAtv == null ? 0 : 1); }
-        }
+        get { return Atvs.Count + (SyncAtv == null ? 0 : 1) + (FinishedAtv == null ? 0 : 1); }
     }
 }

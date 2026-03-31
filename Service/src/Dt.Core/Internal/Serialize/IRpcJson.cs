@@ -10,21 +10,20 @@
 using System.Text.Json;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 按照Rpc Json数据结构进行序列化和反序列化接口
+/// </summary>
+public interface IRpcJson
 {
     /// <summary>
-    /// 按照Rpc Json数据结构进行序列化和反序列化接口
+    /// 反序列化读取Rpc Json数据
     /// </summary>
-    public interface IRpcJson
-    {
-        /// <summary>
-        /// 反序列化读取Rpc Json数据
-        /// </summary>
-        void ReadRpcJson(ref Utf8JsonReader p_reader);
+    void ReadRpcJson(ref Utf8JsonReader p_reader);
 
-        /// <summary>
-        /// 将对象按照Rpc Json数据结构进行序列化
-        /// </summary>
-        void WriteRpcJson(Utf8JsonWriter p_writer);
-    }
+    /// <summary>
+    /// 将对象按照Rpc Json数据结构进行序列化
+    /// </summary>
+    void WriteRpcJson(Utf8JsonWriter p_writer);
 }

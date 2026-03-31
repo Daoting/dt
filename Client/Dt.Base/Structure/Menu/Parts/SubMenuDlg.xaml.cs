@@ -13,109 +13,108 @@ using System;
 using Windows.Foundation;
 #endregion
 
-namespace Dt.Base.MenuView
+namespace Dt.Base.MenuView;
+
+public partial class SubMenuDlg : Dlg
 {
-    public partial class SubMenuDlg : Dlg
+    Mi _mi;
+
+    public SubMenuDlg(Mi p_mi)
     {
-        Mi _mi;
+        InitializeComponent();
 
-        public SubMenuDlg(Mi p_mi)
+        Background = Res.浅灰1;
+        MinWidth = 160;
+        HideTitleBar = true;
+        Resizeable = false;
+        // 不向下层对话框传递Press事件
+        AllowRelayPress = false;
+
+        // 全面屏底部易误点
+        if (Kit.IsPhoneUI)
+            _panel.Margin = new Thickness(0, 0, 0, 40);
+
+        PlacementTarget = p_mi;
+        ClipElement = p_mi;
+        _mi = p_mi;
+        _mi.Items.ItemsChanged += OnItemsChanged;
+    }
+
+    public void ShowDlg()
+    {
+        if (_panel.Children.Count == 0)
         {
-            InitializeComponent();
-
-            Background = Res.浅灰1;
-            MinWidth = 160;
-            HideTitleBar = true;
-            Resizeable = false;
-            // 不向下层对话框传递Press事件
-            AllowRelayPress = false;
-
-            // 全面屏底部易误点
-            if (Kit.IsPhoneUI)
-                _panel.Margin = new Thickness(0, 0, 0, 40);
-
-            PlacementTarget = p_mi;
-            ClipElement = p_mi;
-            _mi = p_mi;
-            _mi.Items.ItemsChanged += OnItemsChanged;
-        }
-
-        public void ShowDlg()
-        {
-            if (_panel.Children.Count == 0)
+            foreach (var mi in _mi.Items)
             {
-                foreach (var mi in _mi.Items)
-                {
-                    _panel.Children.Add(mi);
-                }
+                _panel.Children.Add(mi);
             }
-
-            if (_mi.Owner.IsContextMenu)
-            {
-                if (Kit.IsPhoneUI)
-                {
-                    PhonePlacement = DlgPlacement.FromBottom;
-                }
-                else
-                {
-                    // 默认放右侧，不能完全显示放左侧
-                    if (_mi.GetBounds().Right + MinWidth > Kit.ViewWidth)
-                        WinPlacement = DlgPlacement.TargetOuterLeftTop;
-                    else
-                        WinPlacement = DlgPlacement.TargetTopRight;
-                }
-            }
-            else
-            {
-                if (Kit.IsPhoneUI)
-                {
-                    PhonePlacement = (_mi.ParentMi == null) ? DlgPlacement.TargetBottomLeft : DlgPlacement.FromBottom;
-                }
-                else
-                {
-                    // 一级放左下方，多级默认放右侧，不能完全显示放左侧
-                    if (_mi.ParentMi == null && !_mi.Owner.IsContextMenu)
-                        WinPlacement = DlgPlacement.TargetBottomLeft;
-                    else if (_mi.GetBounds().Right + MinWidth > Kit.ViewWidth)
-                        WinPlacement = DlgPlacement.TargetOuterLeftTop;
-                    else
-                        WinPlacement = DlgPlacement.TargetTopRight;
-                }
-            }
-
-            Closed -= OnClosed;
-            if (_mi.ParentMi == null || Kit.IsPhoneUI)
-                Closed += OnClosed;
-            Show();
         }
 
-        void OnClosed(Dlg arg1, bool arg2)
-        {
-            _mi.IsSelected = false;
-            if (!_mi.Owner.IsContextMenu)
-                _mi.Owner.Close();
-        }
-
-        void OnItemsChanged(object sender, ItemListChangedArgs e)
-        {
-            _panel.Children.Clear();
-        }
-
-        /// <summary>
-        /// 点击对话框外部时
-        /// </summary>
-        /// <param name="p_point">外部点击位置</param>
-        protected override void OnOuterPressed(Point p_point)
+        if (_mi.Owner.IsContextMenu)
         {
             if (Kit.IsPhoneUI)
             {
-                base.OnOuterPressed(p_point);
+                PhonePlacement = DlgPlacement.FromBottom;
             }
             else
             {
-                // 在空白处点击关闭所有菜单项对话框
-                _mi.Owner?.Close();
+                // 默认放右侧，不能完全显示放左侧
+                if (_mi.GetBounds().Right + MinWidth > Kit.ViewWidth)
+                    WinPlacement = DlgPlacement.TargetOuterLeftTop;
+                else
+                    WinPlacement = DlgPlacement.TargetTopRight;
             }
+        }
+        else
+        {
+            if (Kit.IsPhoneUI)
+            {
+                PhonePlacement = (_mi.ParentMi == null) ? DlgPlacement.TargetBottomLeft : DlgPlacement.FromBottom;
+            }
+            else
+            {
+                // 一级放左下方，多级默认放右侧，不能完全显示放左侧
+                if (_mi.ParentMi == null && !_mi.Owner.IsContextMenu)
+                    WinPlacement = DlgPlacement.TargetBottomLeft;
+                else if (_mi.GetBounds().Right + MinWidth > Kit.ViewWidth)
+                    WinPlacement = DlgPlacement.TargetOuterLeftTop;
+                else
+                    WinPlacement = DlgPlacement.TargetTopRight;
+            }
+        }
+
+        Closed -= OnClosed;
+        if (_mi.ParentMi == null || Kit.IsPhoneUI)
+            Closed += OnClosed;
+        Show();
+    }
+
+    void OnClosed(Dlg arg1, bool arg2)
+    {
+        _mi.IsSelected = false;
+        if (!_mi.Owner.IsContextMenu)
+            _mi.Owner.Close();
+    }
+
+    void OnItemsChanged(object sender, ItemListChangedArgs e)
+    {
+        _panel.Children.Clear();
+    }
+
+    /// <summary>
+    /// 点击对话框外部时
+    /// </summary>
+    /// <param name="p_point">外部点击位置</param>
+    protected override void OnOuterPressed(Point p_point)
+    {
+        if (Kit.IsPhoneUI)
+        {
+            base.OnOuterPressed(p_point);
+        }
+        else
+        {
+            // 在空白处点击关闭所有菜单项对话框
+            _mi.Owner?.Close();
         }
     }
 }

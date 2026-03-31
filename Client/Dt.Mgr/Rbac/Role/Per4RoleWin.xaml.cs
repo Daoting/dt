@@ -11,52 +11,51 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Rbac
+namespace Dt.Mgr.Rbac;
+
+public sealed partial class Per4RoleWin : Win
 {
-    public sealed partial class Per4RoleWin : Win
+    long _roleID;
+
+    public Per4RoleWin(long p_releatedID)
     {
-        long _roleID;
+        InitializeComponent();
+        _roleID = p_releatedID;
+        LoadModule();
+    }
 
-        public Per4RoleWin(long p_releatedID)
-        {
-            InitializeComponent();
-            _roleID = p_releatedID;
-            LoadModule();
-        }
+    async void LoadModule()
+    {
+        _lvModule.Data = await PermissionModuleX.Query(null);
+    }
 
-        async void LoadModule()
-        {
-            _lvModule.Data = await PermissionModuleX.Query(null);
-        }
+    async void OnModuleItemClick(ItemClickArgs e)
+    {
+        if (e.IsChanged)
+            _lvFunc.Data = await PermissionFuncX.Query("where module_id=" + e.Row.ID);
+        NaviTo("功能列表");
+    }
 
-        async void OnModuleItemClick(ItemClickArgs e)
-        {
-            if (e.IsChanged)
-                _lvFunc.Data = await PermissionFuncX.Query("where module_id=" + e.Row.ID);
-            NaviTo("功能列表");
-        }
+    async void OnFuncItemClick(ItemClickArgs e)
+    {
+        if (e.IsChanged)
+            _lvPer.Data = await PermissionX.Query($"where not exists ( select per_id from cm_role_per b where a.id = b.per_id and role_id ={_roleID} ) and func_id={e.Row.ID}");
+        NaviTo("权限列表");
+    }
 
-        async void OnFuncItemClick(ItemClickArgs e)
-        {
-            if (e.IsChanged)
-                _lvPer.Data = await PermissionX.Query($"where not exists ( select per_id from cm_role_per b where a.id = b.per_id and role_id ={_roleID} ) and func_id={e.Row.ID}");
-            NaviTo("权限列表");
-        }
+    public List<long> SelectedIDs => (from row in _lvPer.SelectedRows
+                                      select row.ID).ToList();
 
-        public List<long> SelectedIDs => (from row in _lvPer.SelectedRows
-                                          select row.ID).ToList();
+    public bool IsOK { get; private set; }
 
-        public bool IsOK { get; private set; }
+    void OnOK()
+    {
+        IsOK = true;
+        Close();
+    }
 
-        void OnOK()
-        {
-            IsOK = true;
-            Close();
-        }
-
-        void OnSelectAll()
-        {
-            _lvPer.SelectAll();
-        }
+    void OnSelectAll()
+    {
+        _lvPer.SelectAll();
     }
 }

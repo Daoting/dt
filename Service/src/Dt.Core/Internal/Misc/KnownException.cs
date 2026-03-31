@@ -10,17 +10,16 @@
 using System;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 程序中已做判断的异常
+/// </summary>
+public class KnownException : Exception
 {
-    /// <summary>
-    /// 程序中已做判断的异常
-    /// </summary>
-    public class KnownException : Exception
+    public KnownException(string p_message)
+        : base(p_message)
     {
-        public KnownException(string p_message)
-            : base(p_message)
-        {
-        }
     }
 }
 

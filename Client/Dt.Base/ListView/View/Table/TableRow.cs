@@ -18,221 +18,220 @@ using Microsoft.UI.Xaml.Shapes;
 using System.Collections.Specialized;
 #endregion
 
-namespace Dt.Base.ListView
+namespace Dt.Base.ListView;
+
+/// <summary>
+/// 表格视图的行
+/// </summary>
+public partial class TableRow : LvRow
 {
-    /// <summary>
-    /// 表格视图的行
-    /// </summary>
-    public partial class TableRow : LvRow
+    #region 成员变量
+    internal static Thickness TextMargin = new Thickness(10, 4, 10, 4);
+    readonly Dictionary<Col, UIElement> _cells;
+    #endregion
+
+    #region 构造方法
+    public TableRow(Lv p_owner) : base(p_owner)
     {
-        #region 成员变量
-        internal static Thickness TextMargin = new Thickness(10, 4, 10, 4);
-        readonly Dictionary<Col, UIElement> _cells;
-        #endregion
+        _cells = new Dictionary<Col, UIElement>();
 
-        #region 构造方法
-        public TableRow(Lv p_owner) : base(p_owner)
+        Cols cols = _owner.Cols;
+        cols.ColWidthChanged += OnColWidthChanged;
+        cols.Reloading += OnColsReloading;
+        _owner.Scroll.ViewChanged += OnViewChanged;
+
+        // 背景
+        SetBinding(BackgroundProperty, new Binding { Path = new PropertyPath("Background") });
+
+        LoadCells();
+        AttachEvent();
+    }
+    #endregion
+
+    /// <summary>
+    /// 卸载行
+    /// </summary>
+    protected override void OnUnload()
+    {
+        _cells.Clear();
+        var cols = _owner.Cols;
+        if (cols != null)
         {
-            _cells = new Dictionary<Col, UIElement>();
-
-            Cols cols = _owner.Cols;
-            cols.ColWidthChanged += OnColWidthChanged;
-            cols.Reloading += OnColsReloading;
-            _owner.Scroll.ViewChanged += OnViewChanged;
-
-            // 背景
-            SetBinding(BackgroundProperty, new Binding { Path = new PropertyPath("Background") });
-
-            LoadCells();
-            AttachEvent();
+            cols.ColWidthChanged -= OnColWidthChanged;
+            cols.Reloading -= OnColsReloading;
         }
-        #endregion
+        _owner.Scroll.ViewChanged -= OnViewChanged;
+    }
 
-        /// <summary>
-        /// 卸载行
-        /// </summary>
-        protected override void OnUnload()
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        // 行最小高度41
+        double height = Res.RowOuterHeight;
+
+        // 行单元格
+        Cols cols = _owner.Cols;
+        if (double.IsNaN(_owner.ItemHeight))
         {
-            _cells.Clear();
-            var cols = _owner.Cols;
-            if (cols != null)
-            {
-                cols.ColWidthChanged -= OnColWidthChanged;
-                cols.Reloading -= OnColsReloading;
-            }
-            _owner.Scroll.ViewChanged -= OnViewChanged;
-        }
-
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            // 行最小高度41
-            double height = Res.RowOuterHeight;
-
-            // 行单元格
-            Cols cols = _owner.Cols;
-            if (double.IsNaN(_owner.ItemHeight))
-            {
-                // 自动行高
-                for (int i = 0; i < cols.Count; i++)
-                {
-                    Col col = (Col)cols[i];
-                    if (_cells.TryGetValue(col, out var elem))
-                    {
-                        elem.Measure(new Size(col.ActualWidth, availableSize.Height));
-                        if (elem.DesiredSize.Height > height)
-                            height = elem.DesiredSize.Height;
-                    }
-                }
-            }
-            else
-            {
-                if (_owner.ItemHeight > 0)
-                    height = _owner.ItemHeight;
-
-                for (int i = 0; i < cols.Count; i++)
-                {
-                    Col col = (Col)cols[i];
-                    if (_cells.TryGetValue(col, out var elem))
-                        elem.Measure(new Size(col.ActualWidth, height));
-                }
-            }
-
-            // 行头
-            Grid header = (Grid)Children[_cells.Count];
-            header.Measure(new Size(header.Width, height));
-
-            // 选择背景
-            if (_owner.SelectionMode != SelectionMode.None)
-                ((UIElement)Children[_cells.Count + 1]).Measure(new Size(cols.TotalWidth, height));
-
-            // 交互背景
-            Size size = new Size(cols.TotalWidth + header.Width, height);
-            _rcPointer.Measure(size);
-            return size;
-        }
-
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            Cols cols = _owner.Cols;
-
-            // 行头
-            Grid header = (Grid)Children[_cells.Count];
-            double headerWidth = header.Width;
-            header.Arrange(new Rect(_owner.Scroll.HorizontalOffset, 0, headerWidth, finalSize.Height));
-
-            // 行单元格
+            // 自动行高
             for (int i = 0; i < cols.Count; i++)
             {
                 Col col = (Col)cols[i];
                 if (_cells.TryGetValue(col, out var elem))
-                    elem.Arrange(new Rect(col.Left + headerWidth, 0, col.ActualWidth, finalSize.Height));
+                {
+                    elem.Measure(new Size(col.ActualWidth, availableSize.Height));
+                    if (elem.DesiredSize.Height > height)
+                        height = elem.DesiredSize.Height;
+                }
             }
+        }
+        else
+        {
+            if (_owner.ItemHeight > 0)
+                height = _owner.ItemHeight;
 
-            // 选择背景
-            if (_owner.SelectionMode != SelectionMode.None)
-                ((UIElement)Children[_cells.Count + 1]).Arrange(new Rect(headerWidth, 0, cols.TotalWidth, finalSize.Height));
-
-            // 交互背景
-            _rcPointer.Arrange(new Rect(0, 0, headerWidth + cols.TotalWidth, finalSize.Height));
-            return finalSize;
+            for (int i = 0; i < cols.Count; i++)
+            {
+                Col col = (Col)cols[i];
+                if (_cells.TryGetValue(col, out var elem))
+                    elem.Measure(new Size(col.ActualWidth, height));
+            }
         }
 
-        void LoadCells()
+        // 行头
+        Grid header = (Grid)Children[_cells.Count];
+        header.Measure(new Size(header.Width, height));
+
+        // 选择背景
+        if (_owner.SelectionMode != SelectionMode.None)
+            ((UIElement)Children[_cells.Count + 1]).Measure(new Size(cols.TotalWidth, height));
+
+        // 交互背景
+        Size size = new Size(cols.TotalWidth + header.Width, height);
+        _rcPointer.Measure(size);
+        return size;
+    }
+
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        Cols cols = _owner.Cols;
+
+        // 行头
+        Grid header = (Grid)Children[_cells.Count];
+        double headerWidth = header.Width;
+        header.Arrange(new Rect(_owner.Scroll.HorizontalOffset, 0, headerWidth, finalSize.Height));
+
+        // 行单元格
+        for (int i = 0; i < cols.Count; i++)
         {
-            // 单元格
-            Thickness borderLine = _owner.ShowItemBorder ? new Thickness(0, 0, 1, 1) : new Thickness(0, 0, 1, 0);
-            foreach (var col in _owner.Cols.OfType<Col>())
-            {
-                if (col.Visibility == Visibility.Collapsed)
-                    continue;
+            Col col = (Col)cols[i];
+            if (_cells.TryGetValue(col, out var elem))
+                elem.Arrange(new Rect(col.Left + headerWidth, 0, col.ActualWidth, finalSize.Height));
+        }
 
-                Dot dot = new Dot { Padding = TextMargin, BorderBrush = Res.浅灰2, BorderThickness = borderLine, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
-                CopyColToDot(col, dot);
-                Children.Add(dot);
-                _cells[col] = dot;
-            }
+        // 选择背景
+        if (_owner.SelectionMode != SelectionMode.None)
+            ((UIElement)Children[_cells.Count + 1]).Arrange(new Rect(headerWidth, 0, cols.TotalWidth, finalSize.Height));
 
-            // 行头
-            Grid header = new Grid { Background = Res.浅灰1 };
-            if (_owner.SelectionMode != SelectionMode.None)
-            {
-                header.SetBinding(BackgroundProperty, new Binding
-                {
-                    Path = new PropertyPath("IsSelected"),
-                    Converter = new HeaderBackgroundConverter(),
-                });
-            }
-            var bd = new Border { BorderBrush = Res.浅灰2, BorderThickness = borderLine, IsHitTestVisible = false };
-            header.Children.Add(bd);
-            TextBlock tb = new TextBlock { TextAlignment = Microsoft.UI.Xaml.TextAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
-            tb.SetBinding(TextBlock.TextProperty, new Binding { Path = new PropertyPath("Index") });
-            header.Children.Add(tb);
+        // 交互背景
+        _rcPointer.Arrange(new Rect(0, 0, headerWidth + cols.TotalWidth, finalSize.Height));
+        return finalSize;
+    }
 
-            if (_owner.SelectionMode == SelectionMode.Multiple)
+    void LoadCells()
+    {
+        // 单元格
+        Thickness borderLine = _owner.ShowItemBorder ? new Thickness(0, 0, 1, 1) : new Thickness(0, 0, 1, 0);
+        foreach (var col in _owner.Cols.OfType<Col>())
+        {
+            if (col.Visibility == Visibility.Collapsed)
+                continue;
+
+            Dot dot = new Dot { Padding = TextMargin, BorderBrush = Res.浅灰2, BorderThickness = borderLine, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
+            CopyColToDot(col, dot);
+            Children.Add(dot);
+            _cells[col] = dot;
+        }
+
+        // 行头
+        Grid header = new Grid { Background = Res.浅灰1 };
+        if (_owner.SelectionMode != SelectionMode.None)
+        {
+            header.SetBinding(BackgroundProperty, new Binding
             {
-                header.Width = 81;
-                header.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(40) });
-                header.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-                TextBlock tbCheck = new TextBlock { VerticalAlignment = VerticalAlignment.Center, TextAlignment = Microsoft.UI.Xaml.TextAlignment.Center, FontFamily = Res.IconFont };
-                tbCheck.SetBinding(TextBlock.TextProperty, new Binding
-                {
-                    Path = new PropertyPath("IsSelected"),
-                    Converter = new IsSelectedIconConverter(),
-                });
-                Grid.SetColumn(tbCheck, 1);
-                Grid.SetColumnSpan(bd, 2);
-                header.Children.Add(tbCheck);
-            }
+                Path = new PropertyPath("IsSelected"),
+                Converter = new HeaderBackgroundConverter(),
+            });
+        }
+        var bd = new Border { BorderBrush = Res.浅灰2, BorderThickness = borderLine, IsHitTestVisible = false };
+        header.Children.Add(bd);
+        TextBlock tb = new TextBlock { TextAlignment = Microsoft.UI.Xaml.TextAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+        tb.SetBinding(TextBlock.TextProperty, new Binding { Path = new PropertyPath("Index") });
+        header.Children.Add(tb);
+
+        if (_owner.SelectionMode == SelectionMode.Multiple)
+        {
+            header.Width = 81;
+            header.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(40) });
+            header.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            TextBlock tbCheck = new TextBlock { VerticalAlignment = VerticalAlignment.Center, TextAlignment = Microsoft.UI.Xaml.TextAlignment.Center, FontFamily = Res.IconFont };
+            tbCheck.SetBinding(TextBlock.TextProperty, new Binding
+            {
+                Path = new PropertyPath("IsSelected"),
+                Converter = new IsSelectedIconConverter(),
+            });
+            Grid.SetColumn(tbCheck, 1);
+            Grid.SetColumnSpan(bd, 2);
+            header.Children.Add(tbCheck);
+        }
+        else
+        {
+            header.Width = 40;
+        }
+        Children.Add(header);
+
+        // 选择背景
+        if (_owner.SelectionMode != SelectionMode.None)
+        {
+            var rc = new Rectangle { IsHitTestVisible = false };
+            rc.SetBinding(Rectangle.FillProperty, new Binding
+            {
+                Path = new PropertyPath("IsSelected"),
+                Converter = new SelectedBackgroundConverter(),
+            });
+            Children.Add(rc);
+        }
+
+        // 交互背景
+        _rcPointer = new Rectangle { IsHitTestVisible = false };
+        Children.Add(_rcPointer);
+
+        // 上下文菜单
+        Menu menu = Ex.GetMenu(_owner);
+        if (menu != null)
+        {
+            // 不支持自定义按钮！
+            if (menu.TriggerEvent == TriggerEvent.LeftTapped)
+                Tapped += OnTapped;
             else
-            {
-                header.Width = 40;
-            }
-            Children.Add(header);
-
-            // 选择背景
-            if (_owner.SelectionMode != SelectionMode.None)
-            {
-                var rc = new Rectangle { IsHitTestVisible = false };
-                rc.SetBinding(Rectangle.FillProperty, new Binding
-                {
-                    Path = new PropertyPath("IsSelected"),
-                    Converter = new SelectedBackgroundConverter(),
-                });
-                Children.Add(rc);
-            }
-
-            // 交互背景
-            _rcPointer = new Rectangle { IsHitTestVisible = false };
-            Children.Add(_rcPointer);
-
-            // 上下文菜单
-            Menu menu = Ex.GetMenu(_owner);
-            if (menu != null)
-            {
-                // 不支持自定义按钮！
-                if (menu.TriggerEvent == TriggerEvent.LeftTapped)
-                    Tapped += OnTapped;
-                else
-                    RightTapped += OnRightTapped;
-            }
+                RightTapped += OnRightTapped;
         }
+    }
 
-        void OnColsReloading()
-        {
-            Children.Clear();
-            _cells.Clear();
-            LoadCells();
-        }
+    void OnColsReloading()
+    {
+        Children.Clear();
+        _cells.Clear();
+        LoadCells();
+    }
 
-        void OnColWidthChanged()
-        {
-            InvalidateMeasure();
-        }
+    void OnColWidthChanged()
+    {
+        InvalidateMeasure();
+    }
 
-        void OnViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
-        {
-            _rcPointer.Fill = null;
-            InvalidateArrange();
-        }
+    void OnViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+    {
+        _rcPointer.Fill = null;
+        InvalidateArrange();
     }
 }

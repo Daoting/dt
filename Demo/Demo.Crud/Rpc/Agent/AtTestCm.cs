@@ -1,13 +1,12 @@
-﻿namespace Demo.Crud
+﻿namespace Demo.Crud;
+
+/// <summary>
+/// 公共测试的Api
+/// </summary>
+public partial class AtTestCm : SvcTestAgent<AtTestCm.CM>
 {
     /// <summary>
-    /// 公共测试的Api
+    /// 只为提供服务名称
     /// </summary>
-    public partial class AtTestCm : SvcTestAgent<AtTestCm.CM>
-    {
-        /// <summary>
-        /// 只为提供服务名称
-        /// </summary>
-        public class CM { }
-    }
+    public class CM { }
 }

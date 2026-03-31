@@ -12,340 +12,339 @@ using ScottPlot;
 using System.Diagnostics.CodeAnalysis;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class BaseChart2 : Win
 {
-    public partial class BaseChart2 : Win
+
+    public BaseChart2()
     {
+        InitializeComponent();
+    }
 
-        public BaseChart2()
+    void OnDefAnnotation(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            InitializeComponent();
+            _c.Add.Signal(Generate.Sin());
+            _c.Add.Signal(Generate.Cos());
+            _c.Add.Annotation("默认注释内容");
         }
+    }
 
-        void OnDefAnnotation(object sender, RoutedEventArgs e)
+    void OnCustomAnnotation(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
+            _c.Add.Signal(Generate.Sin());
+            _c.Add.Signal(Generate.Cos());
+
+            var anno = _c.Add.Annotation("自定义\n注释");
+            anno.LabelFontSize = 32;
+            anno.LabelBackgroundColor = Colors.RebeccaPurple.WithAlpha(.3);
+            anno.LabelFontColor = Colors.RebeccaPurple;
+            anno.LabelBorderColor = Colors.Green;
+            anno.LabelBorderWidth = 3;
+            anno.LabelShadowColor = Colors.Transparent;
+            anno.OffsetY = 40;
+            anno.OffsetX = 20;
+        }
+    }
+
+    [UnconditionalSuppressMessage("AOT", "IL3050")]
+    void OnAnnotationPos(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
+        {
+            foreach (Alignment alignment in Enum.GetValues(typeof(Alignment)))
             {
-                _c.Add.Signal(Generate.Sin());
-                _c.Add.Signal(Generate.Cos());
-                _c.Add.Annotation("默认注释内容");
+                _c.Add.Annotation(alignment.ToString(), alignment);
             }
         }
+    }
 
-        void OnCustomAnnotation(object sender, RoutedEventArgs e)
+    void OnArrow(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                _c.Add.Signal(Generate.Sin());
-                _c.Add.Signal(Generate.Cos());
+            Coordinates arrowTip = new(0, 0);
+            Coordinates arrowBase = new(1, 1);
+            CoordinateLine arrowLine = new(arrowBase, arrowTip);
 
-                var anno = _c.Add.Annotation("自定义\n注释");
-                anno.LabelFontSize = 32;
-                anno.LabelBackgroundColor = Colors.RebeccaPurple.WithAlpha(.3);
-                anno.LabelFontColor = Colors.RebeccaPurple;
-                anno.LabelBorderColor = Colors.Green;
-                anno.LabelBorderWidth = 3;
-                anno.LabelShadowColor = Colors.Transparent;
-                anno.OffsetY = 40;
-                anno.OffsetX = 20;
-            }
+            // add a simple arrow
+            _c.Add.Arrow(arrowLine);
+
+            // arrow line and fill styles can be customized
+            var arrow2 = _c.Add.Arrow(arrowLine.WithDelta(1, 0));
+            arrow2.ArrowLineColor = Colors.Red;
+            arrow2.ArrowMinimumLength = 100;
+            arrow2.ArrowLineColor = Colors.Black;
+            arrow2.ArrowFillColor = Colors.Transparent;
+
+            // the shape of the arrowhead can be adjusted
+            var skinny = _c.Add.Arrow(arrowLine.WithDelta(2, 0));
+            skinny.ArrowFillColor = Colors.Green;
+            skinny.ArrowLineWidth = 0;
+            skinny.ArrowWidth = 3;
+            skinny.ArrowheadLength = 20;
+            skinny.ArrowheadAxisLength = 20;
+            skinny.ArrowheadWidth = 7;
+
+            var fat = _c.Add.Arrow(arrowLine.WithDelta(3, 0));
+            fat.ArrowFillColor = Colors.Blue;
+            fat.ArrowLineWidth = 0;
+            fat.ArrowWidth = 18;
+            fat.ArrowheadLength = 20;
+            fat.ArrowheadAxisLength = 20;
+            fat.ArrowheadWidth = 30;
+
+            // offset backs the arrow away from the tip coordinate
+            _c.Add.Marker(arrowLine.WithDelta(4, 0).End);
+            var arrow4 = _c.Add.Arrow(arrowLine.WithDelta(4, 0));
+            arrow4.ArrowOffset = 15;
+
+            _c.Axes.SetLimits(-1, 6, -1, 2);
         }
+    }
 
-        [UnconditionalSuppressMessage("AOT", "IL3050")]
-        void OnAnnotationPos(object sender, RoutedEventArgs e)
+
+    void OnHorAxes(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                foreach (Alignment alignment in Enum.GetValues(typeof(Alignment)))
-                {
-                    _c.Add.Annotation(alignment.ToString(), alignment);
-                }
-            }
+            _c.Add.Signal(Generate.Sin());
+            _c.Add.Signal(Generate.Cos());
+
+            _c.Add.VerticalLine(24);
+            _c.Add.HorizontalLine(0.73);
         }
+    }
 
-        void OnArrow(object sender, RoutedEventArgs e)
+
+    void OnAxesLable(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                Coordinates arrowTip = new(0, 0);
-                Coordinates arrowBase = new(1, 1);
-                CoordinateLine arrowLine = new(arrowBase, arrowTip);
+            _c.Add.Signal(Generate.Sin());
+            _c.Add.Signal(Generate.Cos());
 
-                // add a simple arrow
-                _c.Add.Arrow(arrowLine);
+            // by default labels are drawn on the same side as the axis label
 
-                // arrow line and fill styles can be customized
-                var arrow2 = _c.Add.Arrow(arrowLine.WithDelta(1, 0));
-                arrow2.ArrowLineColor = Colors.Red;
-                arrow2.ArrowMinimumLength = 100;
-                arrow2.ArrowLineColor = Colors.Black;
-                arrow2.ArrowFillColor = Colors.Transparent;
+            var axLine1 = _c.Add.VerticalLine(24);
+            axLine1.Text = "Line 1";
 
-                // the shape of the arrowhead can be adjusted
-                var skinny = _c.Add.Arrow(arrowLine.WithDelta(2, 0));
-                skinny.ArrowFillColor = Colors.Green;
-                skinny.ArrowLineWidth = 0;
-                skinny.ArrowWidth = 3;
-                skinny.ArrowheadLength = 20;
-                skinny.ArrowheadAxisLength = 20;
-                skinny.ArrowheadWidth = 7;
+            var axLine2 = _c.Add.HorizontalLine(0.75);
+            axLine2.Text = "Line 2";
 
-                var fat = _c.Add.Arrow(arrowLine.WithDelta(3, 0));
-                fat.ArrowFillColor = Colors.Blue;
-                fat.ArrowLineWidth = 0;
-                fat.ArrowWidth = 18;
-                fat.ArrowheadLength = 20;
-                fat.ArrowheadAxisLength = 20;
-                fat.ArrowheadWidth = 30;
+            // labels may be drawn on the side opposite of the axis label
 
-                // offset backs the arrow away from the tip coordinate
-                _c.Add.Marker(arrowLine.WithDelta(4, 0).End);
-                var arrow4 = _c.Add.Arrow(arrowLine.WithDelta(4, 0));
-                arrow4.ArrowOffset = 15;
+            var axLine3 = _c.Add.VerticalLine(37);
+            axLine3.Text = "Line 3";
+            axLine3.LabelOppositeAxis = true;
 
-                _c.Axes.SetLimits(-1, 6, -1, 2);
-            }
+            var axLine4 = _c.Add.HorizontalLine(-.75);
+            axLine4.Text = "Line 4";
+            axLine4.LabelOppositeAxis = true;
+
+            // extra padding on the right and top ensures labels have room
+            _c.Axes.Right.MinimumSize = 30;
+            _c.Axes.Top.MinimumSize = 30;
         }
+    }
 
-
-        void OnHorAxes(object sender, RoutedEventArgs e)
+    void OnAxesPos(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                _c.Add.Signal(Generate.Sin());
-                _c.Add.Signal(Generate.Cos());
+            _c.Add.Signal(Generate.Sin());
+            _c.Add.Signal(Generate.Cos());
 
-                _c.Add.VerticalLine(24);
-                _c.Add.HorizontalLine(0.73);
-            }
+            var axLine1 = _c.Add.VerticalLine(42);
+            axLine1.Text = "Line 1";
+            axLine1.LabelRotation = -90;
+            axLine1.LabelAlignment = Alignment.MiddleRight;
+
+            var axLine2 = _c.Add.HorizontalLine(0.75);
+            axLine2.Text = "Line 2";
+            axLine2.LabelRotation = 0;
+            axLine2.LabelAlignment = Alignment.MiddleRight;
+
+            var axLine3 = _c.Add.VerticalLine(20);
+            axLine3.Text = "Line 3";
+            axLine3.LabelRotation = -45;
+            axLine3.LabelAlignment = Alignment.UpperRight;
+
+            // extra padding on the bottom and left for the rotated labels
+            _c.Axes.Bottom.MinimumSize = 60;
+            _c.Axes.Left.MinimumSize = 60;
         }
+    }
 
-
-        void OnAxesLable(object sender, RoutedEventArgs e)
+    void OnAxesType(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                _c.Add.Signal(Generate.Sin());
-                _c.Add.Signal(Generate.Cos());
+            _c.Add.Signal(Generate.Sin());
+            _c.Add.Signal(Generate.Cos());
 
-                // by default labels are drawn on the same side as the axis label
+            var vl1 = _c.Add.VerticalLine(24);
+            vl1.LineWidth = 3;
+            vl1.Color = Colors.Magenta;
 
-                var axLine1 = _c.Add.VerticalLine(24);
-                axLine1.Text = "Line 1";
+            var hl1 = _c.Add.HorizontalLine(0.75);
+            hl1.LineWidth = 2;
+            hl1.Color = Colors.Green;
+            hl1.LinePattern = LinePattern.Dashed;
 
-                var axLine2 = _c.Add.HorizontalLine(0.75);
-                axLine2.Text = "Line 2";
-
-                // labels may be drawn on the side opposite of the axis label
-
-                var axLine3 = _c.Add.VerticalLine(37);
-                axLine3.Text = "Line 3";
-                axLine3.LabelOppositeAxis = true;
-
-                var axLine4 = _c.Add.HorizontalLine(-.75);
-                axLine4.Text = "Line 4";
-                axLine4.LabelOppositeAxis = true;
-
-                // extra padding on the right and top ensures labels have room
-                _c.Axes.Right.MinimumSize = 30;
-                _c.Axes.Top.MinimumSize = 30;
-            }
+            var hl2 = _c.Add.HorizontalLine(-.23);
+            hl2.LineColor = Colors.Navy;
+            hl2.LineWidth = 5;
+            hl2.Text = "Hello";
+            hl2.LabelFontSize = 24;
+            hl2.LabelBackgroundColor = Colors.Blue;
+            hl2.LabelFontColor = Colors.Yellow;
+            hl2.LinePattern = LinePattern.DenselyDashed;
         }
+    }
 
-        void OnAxesPos(object sender, RoutedEventArgs e)
+
+    void OnAxesLegend(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                _c.Add.Signal(Generate.Sin());
-                _c.Add.Signal(Generate.Cos());
+            _c.Add.Signal(Generate.Sin());
+            _c.Add.Signal(Generate.Cos());
 
-                var axLine1 = _c.Add.VerticalLine(42);
-                axLine1.Text = "Line 1";
-                axLine1.LabelRotation = -90;
-                axLine1.LabelAlignment = Alignment.MiddleRight;
+            var axLine1 = _c.Add.VerticalLine(24);
+            axLine1.Text = "Line 1";
 
-                var axLine2 = _c.Add.HorizontalLine(0.75);
-                axLine2.Text = "Line 2";
-                axLine2.LabelRotation = 0;
-                axLine2.LabelAlignment = Alignment.MiddleRight;
+            var axLine2 = _c.Add.HorizontalLine(0.75);
 
-                var axLine3 = _c.Add.VerticalLine(20);
-                axLine3.Text = "Line 3";
-                axLine3.LabelRotation = -45;
-                axLine3.LabelAlignment = Alignment.UpperRight;
+            var axLine3 = _c.Add.VerticalLine(37);
+            axLine3.Text = "Line 3";
+            //axLine3.ExcludeFromLegend = true;
 
-                // extra padding on the bottom and left for the rotated labels
-                _c.Axes.Bottom.MinimumSize = 60;
-                _c.Axes.Left.MinimumSize = 60;
-            }
+            var axLine4 = _c.Add.HorizontalLine(0.25);
+            axLine4.Text = "Line 4";
+
+            var axLine5 = _c.Add.HorizontalLine(-.75);
+            axLine5.Text = "Line 5";
+            //axLine5.ExcludeFromLegend = true;
+
+            _c.ShowLegend();
         }
+    }
 
-        void OnAxesType(object sender, RoutedEventArgs e)
+
+    void OnAxesIgnore(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                _c.Add.Signal(Generate.Sin());
-                _c.Add.Signal(Generate.Cos());
+            _c.Add.Signal(Generate.Sin(51));
+            _c.Add.Signal(Generate.Cos(51));
 
-                var vl1 = _c.Add.VerticalLine(24);
-                vl1.LineWidth = 3;
-                vl1.Color = Colors.Magenta;
+            var hline = _c.Add.HorizontalLine(0.23);
+            hline.IsDraggable = true;
+            hline.EnableAutoscale = false;
 
-                var hl1 = _c.Add.HorizontalLine(0.75);
-                hl1.LineWidth = 2;
-                hl1.Color = Colors.Green;
-                hl1.LinePattern = LinePattern.Dashed;
+            var hSpan = _c.Add.HorizontalSpan(-10, 20);
+            hSpan.IsDraggable = true;
+            hSpan.EnableAutoscale = false;
 
-                var hl2 = _c.Add.HorizontalLine(-.23);
-                hl2.LineColor = Colors.Navy;
-                hl2.LineWidth = 5;
-                hl2.Text = "Hello";
-                hl2.LabelFontSize = 24;
-                hl2.LabelBackgroundColor = Colors.Blue;
-                hl2.LabelFontColor = Colors.Yellow;
-                hl2.LinePattern = LinePattern.DenselyDashed;
-            }
         }
+    }
 
-
-        void OnAxesLegend(object sender, RoutedEventArgs e)
+    void OnAxisSpan(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                _c.Add.Signal(Generate.Sin());
-                _c.Add.Signal(Generate.Cos());
+            _c.Add.Signal(Generate.Sin());
+            _c.Add.Signal(Generate.Cos());
 
-                var axLine1 = _c.Add.VerticalLine(24);
-                axLine1.Text = "Line 1";
+            var hSpan = _c.Add.HorizontalSpan(10, 20);
+            var vSpan = _c.Add.VerticalSpan(0.25, 0.75);
 
-                var axLine2 = _c.Add.HorizontalLine(0.75);
+            hSpan.LegendText = "Horizontal Span";
+            vSpan.LegendText = "Vertical Span";
+            _c.ShowLegend();
 
-                var axLine3 = _c.Add.VerticalLine(37);
-                axLine3.Text = "Line 3";
-                //axLine3.ExcludeFromLegend = true;
-
-                var axLine4 = _c.Add.HorizontalLine(0.25);
-                axLine4.Text = "Line 4";
-
-                var axLine5 = _c.Add.HorizontalLine(-.75);
-                axLine5.Text = "Line 5";
-                //axLine5.ExcludeFromLegend = true;
-
-                _c.ShowLegend();
-            }
         }
+    }
 
-
-        void OnAxesIgnore(object sender, RoutedEventArgs e)
+    void OnAxisSpanStyle(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                _c.Add.Signal(Generate.Sin(51));
-                _c.Add.Signal(Generate.Cos(51));
+            _c.Add.Signal(Generate.Sin());
+            _c.Add.Signal(Generate.Cos());
 
-                var hline = _c.Add.HorizontalLine(0.23);
-                hline.IsDraggable = true;
-                hline.EnableAutoscale = false;
-
-                var hSpan = _c.Add.HorizontalSpan(-10, 20);
-                hSpan.IsDraggable = true;
-                hSpan.EnableAutoscale = false;
-
-            }
+            var hs = _c.Add.HorizontalSpan(10, 20);
+            hs.LegendText = "Hello";
+            hs.LineStyle.Width = 2;
+            hs.LineStyle.Color = Colors.Magenta;
+            hs.LineStyle.Pattern = LinePattern.Dashed;
+            hs.FillStyle.Color = Colors.Magenta.WithAlpha(.2);
         }
+    }
 
-        void OnAxisSpan(object sender, RoutedEventArgs e)
+    void OnCallout(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                _c.Add.Signal(Generate.Sin());
-                _c.Add.Signal(Generate.Cos());
+            double[] xs = Generate.Consecutive(15);
+            double[] ys = Generate.Sin(15);
+            _c.Add.Scatter(xs, ys);
 
-                var hSpan = _c.Add.HorizontalSpan(10, 20);
-                var vSpan = _c.Add.VerticalSpan(0.25, 0.75);
+            _c.Add.Callout("Hello",
+                textLocation: new(7.5, .8),
+                tipLocation: new(xs[6], ys[6]));
 
-                hSpan.LegendText = "Horizontal Span";
-                vSpan.LegendText = "Vertical Span";
-                _c.ShowLegend();
-
-            }
+            _c.Add.Callout("World",
+                textLocation: new(10, 0),
+                tipLocation: new(xs[13], ys[13]));
         }
+    }
 
-        void OnAxisSpanStyle(object sender, RoutedEventArgs e)
+    void OnCrosshair(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                _c.Add.Signal(Generate.Sin());
-                _c.Add.Signal(Generate.Cos());
+            _c.Add.Signal(Generate.Sin());
+            _c.Add.Signal(Generate.Cos());
 
-                var hs = _c.Add.HorizontalSpan(10, 20);
-                hs.LegendText = "Hello";
-                hs.LineStyle.Width = 2;
-                hs.LineStyle.Color = Colors.Magenta;
-                hs.LineStyle.Pattern = LinePattern.Dashed;
-                hs.FillStyle.Color = Colors.Magenta.WithAlpha(.2);
-            }
+            _c.Add.Crosshair(13, .25);
+
         }
+    }
 
-        void OnCallout(object sender, RoutedEventArgs e)
+    void OnCustomCrosshair(object sender, RoutedEventArgs e)
+    {
+        this.NaviChart();
+        using (_c.Defer())
         {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                double[] xs = Generate.Consecutive(15);
-                double[] ys = Generate.Sin(15);
-                _c.Add.Scatter(xs, ys);
+            _c.Add.Signal(Generate.Sin());
+            _c.Add.Signal(Generate.Cos());
 
-                _c.Add.Callout("Hello",
-                    textLocation: new(7.5, .8),
-                    tipLocation: new(xs[6], ys[6]));
+            var cross = _c.Add.Crosshair(13, .25);
 
-                _c.Add.Callout("World",
-                    textLocation: new(10, 0),
-                    tipLocation: new(xs[13], ys[13]));
-            }
-        }
+            cross.LineWidth = 2;
+            cross.LineColor = Colors.Magenta;
 
-        void OnCrosshair(object sender, RoutedEventArgs e)
-        {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                _c.Add.Signal(Generate.Sin());
-                _c.Add.Signal(Generate.Cos());
-
-                _c.Add.Crosshair(13, .25);
-
-            }
-        }
-
-        void OnCustomCrosshair(object sender, RoutedEventArgs e)
-        {
-            this.NaviChart();
-            using (_c.Defer())
-            {
-                _c.Add.Signal(Generate.Sin());
-                _c.Add.Signal(Generate.Cos());
-
-                var cross = _c.Add.Crosshair(13, .25);
-
-                cross.LineWidth = 2;
-                cross.LineColor = Colors.Magenta;
-
-                cross.HorizontalLine.LinePattern = LinePattern.Dotted;
-            }
+            cross.HorizontalLine.LinePattern = LinePattern.Dotted;
         }
     }
 }

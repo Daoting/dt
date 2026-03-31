@@ -11,30 +11,29 @@ using Dt.Cells.Data;
 
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+public sealed partial class HeaderFooterMenu : Menu
 {
-    public sealed partial class HeaderFooterMenu : Menu
+    RptDesignHome _owner;
+
+    public HeaderFooterMenu(RptDesignHome p_owner)
     {
-        RptDesignHome _owner;
+        InitializeComponent();
+        _owner = p_owner;
+    }
 
-        public HeaderFooterMenu(RptDesignHome p_owner)
+    void OnInsertText(Mi e)
+    {
+        Worksheet sheet = _owner.Excel.ActiveSheet;
+        CellRange range = sheet.Selections[0];
+        Dt.Cells.Data.Cell cell = sheet[range.Row, range.Column];
+        //合并单元格
+        if (range.RowCount > 1 || range.ColumnCount > 1)
         {
-            InitializeComponent();
-            _owner = p_owner;
+            cell.RowSpan = range.RowCount;
+            cell.ColumnSpan = range.ColumnCount;
         }
-
-        void OnInsertText(Mi e)
-        {
-            Worksheet sheet = _owner.Excel.ActiveSheet;
-            CellRange range = sheet.Selections[0];
-            Dt.Cells.Data.Cell cell = sheet[range.Row, range.Column];
-            //合并单元格
-            if (range.RowCount > 1 || range.ColumnCount > 1)
-            {
-                cell.RowSpan = range.RowCount;
-                cell.ColumnSpan = range.ColumnCount;
-            }
-            _owner.Info.ExecuteCmd(RptCmds.InsertText, new InsertCmdArgs(new RptText(_owner.GetContainer()), range));
-        }
+        _owner.Info.ExecuteCmd(RptCmds.InsertText, new InsertCmdArgs(new RptText(_owner.GetContainer()), range));
     }
 }

@@ -16,180 +16,179 @@ using System.Linq;
 using System.Reflection;
 #endregion
 
-namespace Dt.Core
-{
-    /// <summary>
-    /// 提供枚举类型的集合数据源，主要适用于ComboBox中绑定，两种用法：
-    /// 1. EnumDataSource.FromType()返回数据源
-    /// 2. new EnumDataSource() { EnumType = typeof(XX) }
-    /// </summary>
+namespace Dt.Core;
+
+/// <summary>
+/// 提供枚举类型的集合数据源，主要适用于ComboBox中绑定，两种用法：
+/// 1. EnumDataSource.FromType()返回数据源
+/// 2. new EnumDataSource() { EnumType = typeof(XX) }
+/// </summary>
 #if WIN
-    [WinRT.GeneratedBindableCustomProperty]
+[WinRT.GeneratedBindableCustomProperty]
 #else
-    [Microsoft.UI.Xaml.Data.Bindable]
+[Microsoft.UI.Xaml.Data.Bindable]
 #endif
-    public partial class EnumDataSource : IEnumerable, INotifyCollectionChanged
+public partial class EnumDataSource : IEnumerable, INotifyCollectionChanged
+{
+    Type _enumType;
+    IList<EnumMember> _viewModels;
+
+    /// <summary>
+    /// 集合变化事件
+    /// </summary>
+    public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+    /// <summary>
+    /// 返回EnumMemberViewModel的集合，可以用来绑定到ComboBox的ItemsSource
+    /// </summary>
+    /// <typeparam name="TEnum">枚举类型</typeparam>
+    /// <returns>EnumMemberViewModel的可枚举集合</returns>
+    [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
+    public static IList<EnumMember> FromType<TEnum>() where TEnum : struct
     {
-        Type _enumType;
-        IList<EnumMember> _viewModels;
-
-        /// <summary>
-        /// 集合变化事件
-        /// </summary>
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
-
-        /// <summary>
-        /// 返回EnumMemberViewModel的集合，可以用来绑定到ComboBox的ItemsSource
-        /// </summary>
-        /// <typeparam name="TEnum">枚举类型</typeparam>
-        /// <returns>EnumMemberViewModel的可枚举集合</returns>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
-        public static IList<EnumMember> FromType<TEnum>() where TEnum : struct
-        {
-            return FromType(typeof(TEnum));
-        }
-
-        /// <summary>
-        /// 返回EnumMemberViewModel的集合，可以用来绑定到ComboBox的ItemsSource
-        /// </summary>
-        /// <param name="enumType"></param>
-        /// <returns></returns>
-        public static IList<EnumMember> FromType(Type enumType)
-        {
-            if (!enumType.GetTypeInfo().IsEnum)
-            {
-                throw new ArgumentException("应为枚举类型！");
-            }
-            return FromTypeCore(enumType);
-        }
-
-        static IList<EnumMember> FromTypeCore(Type enumType)
-        {
-            // 返回 IEnumerable<EnumMember> 时AOT会报错
-            var ls = new List<EnumMember>();
-            foreach (FieldInfo info in from f in enumType.GetRuntimeFields()
-                                       where f.IsLiteral
-                                       select f)
-            {
-                ls.Add(new EnumMember(info.GetValue(enumType), info.Name));
-            }
-            return ls;
-        }
-
-        /// <summary>
-        /// 获取设置枚举类型
-        /// </summary>
-        public Type EnumType
-        {
-            get { return _enumType; }
-            set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException("value");
-                }
-                if (!value.GetTypeInfo().IsEnum)
-                {
-                    throw new ArgumentException("应为枚举类型！");
-                }
-                if (value != _enumType)
-                {
-                    _enumType = value;
-                    Refresh();
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns>
-        /// </returns>
-        public IEnumerator GetEnumerator()
-        {
-            return _viewModels.GetEnumerator();
-        }
-
-        void Refresh()
-        {
-            _viewModels = FromType(_enumType);
-            RaiseCollectionChanged();
-        }
-
-        void RaiseCollectionChanged()
-        {
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-        }
+        return FromType(typeof(TEnum));
     }
 
     /// <summary>
-    /// 单个枚举成员的信息
+    /// 返回EnumMemberViewModel的集合，可以用来绑定到ComboBox的ItemsSource
     /// </summary>
-#if WIN
-    [WinRT.GeneratedBindableCustomProperty]
-#else
-    [Microsoft.UI.Xaml.Data.Bindable]
-#endif
-    public partial class EnumMember
+    /// <param name="enumType"></param>
+    /// <returns></returns>
+    public static IList<EnumMember> FromType(Type enumType)
     {
-        readonly string _name;
-        readonly object _value;
+        if (!enumType.GetTypeInfo().IsEnum)
+        {
+            throw new ArgumentException("应为枚举类型！");
+        }
+        return FromTypeCore(enumType);
+    }
 
-        /// <summary>
-        /// 构造方法
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="name">The name.</param>
-        public EnumMember(object value, string name)
+    static IList<EnumMember> FromTypeCore(Type enumType)
+    {
+        // 返回 IEnumerable<EnumMember> 时AOT会报错
+        var ls = new List<EnumMember>();
+        foreach (FieldInfo info in from f in enumType.GetRuntimeFields()
+                                   where f.IsLiteral
+                                   select f)
+        {
+            ls.Add(new EnumMember(info.GetValue(enumType), info.Name));
+        }
+        return ls;
+    }
+
+    /// <summary>
+    /// 获取设置枚举类型
+    /// </summary>
+    public Type EnumType
+    {
+        get { return _enumType; }
+        set
         {
             if (value == null)
             {
                 throw new ArgumentNullException("value");
             }
-            if (!value.GetType().GetTypeInfo().IsEnum)
+            if (!value.GetTypeInfo().IsEnum)
             {
                 throw new ArgumentException("应为枚举类型！");
             }
-            _value = value;
-
-            if (name == null)
+            if (value != _enumType)
             {
-                throw new ArgumentNullException("name");
+                _enumType = value;
+                Refresh();
             }
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentException("name不可为空！");
-            }
-            _name = name;
         }
+    }
 
-        /// <summary>
-        /// 获取当前枚举成员的名称
-        /// </summary>
-        /// <value>The name.</value>
-        public string Name
-        {
-            get { return _name; }
-        }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>
+    /// </returns>
+    public IEnumerator GetEnumerator()
+    {
+        return _viewModels.GetEnumerator();
+    }
 
-        /// <summary>
-        /// 获取当前枚举成员的值
-        /// </summary>
-        /// <value>The value.</value>
-        public object Value
-        {
-            get { return _value; }
-        }
+    void Refresh()
+    {
+        _viewModels = FromType(_enumType);
+        RaiseCollectionChanged();
+    }
 
-        /// <summary>
-        /// 返回名称
-        /// </summary>
-        /// <returns>
-        /// 名称
-        /// </returns>
-        public override string ToString()
+    void RaiseCollectionChanged()
+    {
+        CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+    }
+}
+
+/// <summary>
+/// 单个枚举成员的信息
+/// </summary>
+#if WIN
+[WinRT.GeneratedBindableCustomProperty]
+#else
+[Microsoft.UI.Xaml.Data.Bindable]
+#endif
+public partial class EnumMember
+{
+    readonly string _name;
+    readonly object _value;
+
+    /// <summary>
+    /// 构造方法
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="name">The name.</param>
+    public EnumMember(object value, string name)
+    {
+        if (value == null)
         {
-            return _name;
+            throw new ArgumentNullException("value");
         }
+        if (!value.GetType().GetTypeInfo().IsEnum)
+        {
+            throw new ArgumentException("应为枚举类型！");
+        }
+        _value = value;
+
+        if (name == null)
+        {
+            throw new ArgumentNullException("name");
+        }
+        if (string.IsNullOrEmpty(name))
+        {
+            throw new ArgumentException("name不可为空！");
+        }
+        _name = name;
+    }
+
+    /// <summary>
+    /// 获取当前枚举成员的名称
+    /// </summary>
+    /// <value>The name.</value>
+    public string Name
+    {
+        get { return _name; }
+    }
+
+    /// <summary>
+    /// 获取当前枚举成员的值
+    /// </summary>
+    /// <value>The value.</value>
+    public object Value
+    {
+        get { return _value; }
+    }
+
+    /// <summary>
+    /// 返回名称
+    /// </summary>
+    /// <returns>
+    /// 名称
+    /// </returns>
+    public override string ToString()
+    {
+        return _name;
     }
 }

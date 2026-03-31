@@ -15,71 +15,70 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class FvInScrollViewer : Win
 {
-    public partial class FvInScrollViewer : Win
+    public FvInScrollViewer()
     {
-        public FvInScrollViewer()
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            Table tbl = new Table
-            {
-                { "txt1" },
-                { "txt2" },
-                { "txt3" },
-                { "txt4" },
-                { "txt5" },
-                { "txt6" },
-            };
-            _fv.Data = tbl.AddRow();
-        }
-
-        void OnScroll(object sender, RoutedEventArgs e)
+        Table tbl = new Table
         {
-            int index = new Random().Next(0, _fv.Items.Count);
-            _fv.ScrollInto(index);
-            Kit.Msg($"滚动到第 {index + 1} 个单元格");
-        }
+            { "txt1" },
+            { "txt2" },
+            { "txt3" },
+            { "txt4" },
+            { "txt5" },
+            { "txt6" },
+        };
+        _fv.Data = tbl.AddRow();
+    }
 
-        void OnScrollTop(object sender, RoutedEventArgs e)
-        {
-            _fv.ScrollTop();
-        }
+    void OnScroll(object sender, RoutedEventArgs e)
+    {
+        int index = new Random().Next(0, _fv.Items.Count);
+        _fv.ScrollInto(index);
+        Kit.Msg($"滚动到第 {index + 1} 个单元格");
+    }
 
-        void OnScrollBottom(object sender, RoutedEventArgs e)
-        {
-            _fv.ScrollBottom();
-        }
+    void OnScrollTop(object sender, RoutedEventArgs e)
+    {
+        _fv.ScrollTop();
+    }
 
-        void OnTopMax(object sender, RoutedEventArgs e)
-        {
-            _top.Height = _sv.ViewportHeight + 100;
-        }
+    void OnScrollBottom(object sender, RoutedEventArgs e)
+    {
+        _fv.ScrollBottom();
+    }
 
-        void OnTop(object sender, RoutedEventArgs e)
-        {
-            _top.Height = _sv.ViewportHeight / 2;
-        }
+    void OnTopMax(object sender, RoutedEventArgs e)
+    {
+        _top.Height = _sv.ViewportHeight + 100;
+    }
 
-        void OnTopZero(object sender, RoutedEventArgs e)
-        {
-            _top.Height = 0;
-        }
+    void OnTop(object sender, RoutedEventArgs e)
+    {
+        _top.Height = _sv.ViewportHeight / 2;
+    }
 
-        void OnBottomMax(object sender, RoutedEventArgs e)
-        {
-            _bottom.Height = _sv.ViewportHeight + 100;
-        }
+    void OnTopZero(object sender, RoutedEventArgs e)
+    {
+        _top.Height = 0;
+    }
 
-        void OnBottom(object sender, RoutedEventArgs e)
-        {
-            _bottom.Height = _sv.ViewportHeight / 2;
-        }
+    void OnBottomMax(object sender, RoutedEventArgs e)
+    {
+        _bottom.Height = _sv.ViewportHeight + 100;
+    }
 
-        void OnBottomZero(object sender, RoutedEventArgs e)
-        {
-            _bottom.Height = 0;
-        }
+    void OnBottom(object sender, RoutedEventArgs e)
+    {
+        _bottom.Height = _sv.ViewportHeight / 2;
+    }
+
+    void OnBottomZero(object sender, RoutedEventArgs e)
+    {
+        _bottom.Height = 0;
     }
 }

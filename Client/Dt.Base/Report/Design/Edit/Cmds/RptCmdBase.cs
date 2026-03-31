@@ -10,24 +10,23 @@
 
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+/// <summary>
+/// 报表项命令基类
+/// </summary>
+internal abstract class RptCmdBase
 {
     /// <summary>
-    /// 报表项命令基类
+    /// 执行命令
     /// </summary>
-    internal abstract class RptCmdBase
-    {
-        /// <summary>
-        /// 执行命令
-        /// </summary>
-        /// <param name="p_args"></param>
-        /// <returns></returns>
-        public abstract object Execute(object p_args);
+    /// <param name="p_args"></param>
+    /// <returns></returns>
+    public abstract object Execute(object p_args);
 
-        /// <summary>
-        /// 撤消
-        /// </summary>
-        /// <param name="p_args"></param>
-        public abstract void Undo(object p_args);
-    }
+    /// <summary>
+    /// 撤消
+    /// </summary>
+    /// <param name="p_args"></param>
+    public abstract void Undo(object p_args);
 }

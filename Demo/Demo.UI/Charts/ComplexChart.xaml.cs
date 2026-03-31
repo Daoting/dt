@@ -24,47 +24,46 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class ComplexChart : Win
 {
-    public partial class ComplexChart : Win
+    Random _rnd = new Random();
+    public ComplexChart()
     {
-        Random _rnd = new Random();
-        public ComplexChart()
+        InitializeComponent();
+        _chart.Data.ItemNames = new string[] { "Cat.1", "Cat.2", "Cat.3", "Cat.4", "Cat.5" };
+        CreateData();
+    }
+
+    void CreateData()
+    {
+        _chart.Data.Children.Clear();
+
+        for (int i = 0; i < 10; i++)
         {
-            InitializeComponent();
-            _chart.Data.ItemNames = new string[] { "Cat.1", "Cat.2", "Cat.3", "Cat.4", "Cat.5" };
-            CreateData();
+            DataSeries ds = new DataSeries() { ValuesSource = CreateRandomArray(5), Label = "series " + i };
+
+            BarColumnOptions.SetStackGroup(ds, i % 2);
+            _chart.Data.Children.Add(ds);
         }
 
-        void CreateData()
+        _chart.Data.Children.Add(new DataSeries()
         {
-            _chart.Data.Children.Clear();
+            ChartType = ChartType.LineSymbols,
+            ValuesSource = CreateRandomArray(5),
+            ConnectionStrokeThickness = 5,
+            Label = "series 10"
+        });
+    }
 
-            for (int i = 0; i < 10; i++)
-            {
-                DataSeries ds = new DataSeries() { ValuesSource = CreateRandomArray(5), Label = "series " + i };
+    double[] CreateRandomArray(int cnt)
+    {
+        double[] vals = new double[cnt];
 
-                BarColumnOptions.SetStackGroup(ds, i % 2);
-                _chart.Data.Children.Add(ds);
-            }
+        for (int i = 0; i < cnt; i++)
+            vals[i] = _rnd.Next(10, 100);
 
-            _chart.Data.Children.Add(new DataSeries()
-            {
-                ChartType = ChartType.LineSymbols,
-                ValuesSource = CreateRandomArray(5),
-                ConnectionStrokeThickness = 5,
-                Label = "series 10"
-            });
-        }
-
-        double[] CreateRandomArray(int cnt)
-        {
-            double[] vals = new double[cnt];
-
-            for (int i = 0; i < cnt; i++)
-                vals[i] = _rnd.Next(10, 100);
-
-            return vals;
-        }
+        return vals;
     }
 }

@@ -11,22 +11,21 @@ using Windows.Foundation;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 提供给子元素获取实际区域大小，如子元素Lv嵌套在ScrollViewer中时
+/// </summary>
+public partial class SizedPresenter : ContentPresenter
 {
     /// <summary>
-    /// 提供给子元素获取实际区域大小，如子元素Lv嵌套在ScrollViewer中时
+    /// 内容的有效区域
     /// </summary>
-    public partial class SizedPresenter : ContentPresenter
-    {
-        /// <summary>
-        /// 内容的有效区域
-        /// </summary>
-        public Size AvailableSize { get; set; }
+    public Size AvailableSize { get; set; }
 
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            AvailableSize = availableSize;
-            return base.MeasureOverride(availableSize);
-        }
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        AvailableSize = availableSize;
+        return base.MeasureOverride(availableSize);
     }
 }

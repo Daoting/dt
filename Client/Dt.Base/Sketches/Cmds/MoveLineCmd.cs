@@ -12,155 +12,154 @@ using System.Collections.Generic;
 using Microsoft.UI.Xaml;
 #endregion
 
-namespace Dt.Base.Sketches
+namespace Dt.Base.Sketches;
+
+/// <summary>
+/// 移动连线命令
+/// </summary>
+public class SketchMoveLineCmd : BaseCommand
 {
+    Sketch _owner;
+
     /// <summary>
-    /// 移动连线命令
+    /// 构造函数
     /// </summary>
-    public class SketchMoveLineCmd : BaseCommand
+    /// <param name="p_owner"></param>
+    /// <param name="p_his"></param>
+    public SketchMoveLineCmd(Sketch p_owner, CmdHistory p_his)
+        : base(p_his)
     {
-        Sketch _owner;
+        _owner = p_owner;
+        AllowExecute = true;
+    }
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="p_owner"></param>
-        /// <param name="p_his"></param>
-        public SketchMoveLineCmd(Sketch p_owner, CmdHistory p_his)
-            : base(p_his)
+    /// <summary>
+    /// 执行命令
+    /// </summary>
+    /// <param name="p_parameter"></param>
+    protected override void DoExecute(object p_parameter)
+    {
+        LineMoveCmdArgs args = p_parameter as LineMoveCmdArgs;
+        SLine line = args.Line;
+        if (args.NewNode == null)
         {
-            _owner = p_owner;
-            AllowExecute = true;
+            line.UpdateAnThumbPos(args.IsHeadNode);
+            _owner.SelectionClerk.SelectLine(line);
+            _owner.DeleteSelection();
         }
-
-        /// <summary>
-        /// 执行命令
-        /// </summary>
-        /// <param name="p_parameter"></param>
-        protected override void DoExecute(object p_parameter)
+        else
         {
-            LineMoveCmdArgs args = p_parameter as LineMoveCmdArgs;
-            SLine line = args.Line;
-            if (args.NewNode == null)
+            if (args.IsHeadNode)
             {
-                line.UpdateAnThumbPos(args.IsHeadNode);
-                _owner.SelectionClerk.SelectLine(line);
-                _owner.DeleteSelection();
+                line.HeaderID = args.NewNode.ID;
+                line.HeaderPort = args.NewPos;
             }
             else
             {
-                if (args.IsHeadNode)
-                {
-                    line.HeaderID = args.NewNode.ID;
-                    line.HeaderPort = args.NewPos;
-                }
-                else
-                {
-                    line.TailID = args.NewNode.ID;
-                    line.TailPort = args.NewPos;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 执行撤消
-        /// </summary>
-        /// <param name="p_parameter"></param>
-        protected override void DoUndo(object p_parameter)
-        {
-            LineMoveCmdArgs args = p_parameter as LineMoveCmdArgs;
-            SLine line = args.Line;
-            if (args.NewNode == null)
-            {
-                _owner.His.Undo();
-            }
-            else
-            {
-                if (args.IsHeadNode)
-                {
-                    line.HeaderID = args.OldNode.ID;
-                    line.HeaderPort = args.OldPos;
-                }
-                else
-                {
-                    line.TailID = args.OldNode.ID;
-                    line.TailPort = args.OldPos;
-                }
+                line.TailID = args.NewNode.ID;
+                line.TailPort = args.NewPos;
             }
         }
     }
 
-    internal class LineMoveCmdArgs
+    /// <summary>
+    /// 执行撤消
+    /// </summary>
+    /// <param name="p_parameter"></param>
+    protected override void DoUndo(object p_parameter)
     {
-        SLine _line;
-        bool _isHeadNode;
-        SNode _oldNode;
-        SNode _newNode;
-        LinkPortPosition _oldPos;
-        LinkPortPosition _newPos;
-
-        /// <summary>
-        /// 无指向的线（将被删除）的线移动参数构造函数
-        /// </summary>
-        /// <param name="p_line"></param>
-        /// <param name="p_isHeadNode"></param>
-        /// <param name="p_oldNode"></param>
-        /// <param name="p_oldPos"></param>
-        public LineMoveCmdArgs(SLine p_line, bool p_isHeadNode, SNode p_oldNode, LinkPortPosition p_oldPos)
+        LineMoveCmdArgs args = p_parameter as LineMoveCmdArgs;
+        SLine line = args.Line;
+        if (args.NewNode == null)
         {
-            _line = p_line;
-            _isHeadNode = p_isHeadNode;
-            _oldNode = p_oldNode;
-            _oldPos = p_oldPos;
+            _owner.His.Undo();
         }
-
-        /// <summary>
-        /// 有指向节点的线移动参数构造函数
-        /// </summary>
-        /// <param name="p_line"></param>
-        /// <param name="p_isHeadNode"></param>
-        /// <param name="p_oldNode"></param>
-        /// <param name="p_oldPos"></param>
-        /// <param name="p_newNode"></param>
-        /// <param name="p_newPos"></param>
-        public LineMoveCmdArgs(SLine p_line, bool p_isHeadNode, SNode p_oldNode, LinkPortPosition p_oldPos, SNode p_newNode, LinkPortPosition p_newPos)
+        else
         {
-            _line = p_line;
-            _isHeadNode = p_isHeadNode;
-            _oldNode = p_oldNode;
-            _oldPos = p_oldPos;
-            _newNode = p_newNode;
-            _newPos = p_newPos;
+            if (args.IsHeadNode)
+            {
+                line.HeaderID = args.OldNode.ID;
+                line.HeaderPort = args.OldPos;
+            }
+            else
+            {
+                line.TailID = args.OldNode.ID;
+                line.TailPort = args.OldPos;
+            }
         }
+    }
+}
 
-        public SLine Line
-        {
-            get { return _line; }
-        }
+internal class LineMoveCmdArgs
+{
+    SLine _line;
+    bool _isHeadNode;
+    SNode _oldNode;
+    SNode _newNode;
+    LinkPortPosition _oldPos;
+    LinkPortPosition _newPos;
 
-        public bool IsHeadNode
-        {
-            get { return _isHeadNode; }
-        }
+    /// <summary>
+    /// 无指向的线（将被删除）的线移动参数构造函数
+    /// </summary>
+    /// <param name="p_line"></param>
+    /// <param name="p_isHeadNode"></param>
+    /// <param name="p_oldNode"></param>
+    /// <param name="p_oldPos"></param>
+    public LineMoveCmdArgs(SLine p_line, bool p_isHeadNode, SNode p_oldNode, LinkPortPosition p_oldPos)
+    {
+        _line = p_line;
+        _isHeadNode = p_isHeadNode;
+        _oldNode = p_oldNode;
+        _oldPos = p_oldPos;
+    }
 
-        public SNode OldNode
-        {
-            get { return _oldNode; }
-        }
+    /// <summary>
+    /// 有指向节点的线移动参数构造函数
+    /// </summary>
+    /// <param name="p_line"></param>
+    /// <param name="p_isHeadNode"></param>
+    /// <param name="p_oldNode"></param>
+    /// <param name="p_oldPos"></param>
+    /// <param name="p_newNode"></param>
+    /// <param name="p_newPos"></param>
+    public LineMoveCmdArgs(SLine p_line, bool p_isHeadNode, SNode p_oldNode, LinkPortPosition p_oldPos, SNode p_newNode, LinkPortPosition p_newPos)
+    {
+        _line = p_line;
+        _isHeadNode = p_isHeadNode;
+        _oldNode = p_oldNode;
+        _oldPos = p_oldPos;
+        _newNode = p_newNode;
+        _newPos = p_newPos;
+    }
 
-        public SNode NewNode
-        {
-            get { return _newNode; }
-        }
+    public SLine Line
+    {
+        get { return _line; }
+    }
 
-        public LinkPortPosition OldPos
-        {
-            get { return _oldPos; }
-        }
+    public bool IsHeadNode
+    {
+        get { return _isHeadNode; }
+    }
 
-        public LinkPortPosition NewPos
-        {
-            get { return _newPos; }
-        }
+    public SNode OldNode
+    {
+        get { return _oldNode; }
+    }
+
+    public SNode NewNode
+    {
+        get { return _newNode; }
+    }
+
+    public LinkPortPosition OldPos
+    {
+        get { return _oldPos; }
+    }
+
+    public LinkPortPosition NewPos
+    {
+        get { return _newPos; }
     }
 }

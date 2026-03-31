@@ -12,34 +12,33 @@ using Serilog.Parsing;
 using System.IO;
 #endregion
 
-namespace Dt.Core.HtmlLog
+namespace Dt.Core.HtmlLog;
+
+class ExceptionTokenRenderer : OutputRenderer
 {
-    class ExceptionTokenRenderer : OutputRenderer
+    const string StackFrameLinePrefix = "   ";
+
+    readonly HtmlTheme _theme;
+
+    public ExceptionTokenRenderer(HtmlTheme theme, PropertyToken pt)
     {
-        const string StackFrameLinePrefix = "   ";
+        _theme = theme;
+    }
 
-        readonly HtmlTheme _theme;
+    public override void Render(LogEvent logEvent, TextWriter output)
+    {
+        // Padding is never applied by this renderer.
 
-        public ExceptionTokenRenderer(HtmlTheme theme, PropertyToken pt)
+        if (logEvent.Exception is null)
+            return;
+
+        var lines = new StringReader(logEvent.Exception.ToString());
+        string nextLine;
+        while ((nextLine = lines.ReadLine()) != null)
         {
-            _theme = theme;
-        }
-
-        public override void Render(LogEvent logEvent, TextWriter output)
-        {
-            // Padding is never applied by this renderer.
-
-            if (logEvent.Exception is null)
-                return;
-
-            var lines = new StringReader(logEvent.Exception.ToString());
-            string nextLine;
-            while ((nextLine = lines.ReadLine()) != null)
-            {
-                var style = nextLine.StartsWith(StackFrameLinePrefix) ? HtmlThemeStyle.SecondaryText : HtmlThemeStyle.Text;
-                using (_theme.Apply(output, style))
-                    output.WriteLine(nextLine);
-            }
+            var style = nextLine.StartsWith(StackFrameLinePrefix) ? HtmlThemeStyle.SecondaryText : HtmlThemeStyle.Text;
+            using (_theme.Apply(output, style))
+                output.WriteLine(nextLine);
         }
     }
 }

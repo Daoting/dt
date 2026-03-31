@@ -11,32 +11,31 @@ using Dt.Base.ListView;
 using Dt.Base.TreeViews;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 接口
+/// </summary>
+public partial class Tv : IDestroy
 {
-    /// <summary>
-    /// 接口
-    /// </summary>
-    public partial class Tv : IDestroy
+    public void Destroy()
     {
-        public void Destroy()
+        KeyDown -= OnKeyDown;
+        if (Scroll != null)
+            Scroll.ViewChanged -= OnScrollViewChanged;
+        
+        _panel?.Destroy();
+
+        if (RootItems?.Count > 0)
         {
-            KeyDown -= OnKeyDown;
-            if (Scroll != null)
-                Scroll.ViewChanged -= OnScrollViewChanged;
-            
-            _panel?.Destroy();
+            RootItems.Destroy();
+        }
+        ClearSelectionOnDataChanged();
 
-            if (RootItems?.Count > 0)
-            {
-                RootItems.Destroy();
-            }
-            ClearSelectionOnDataChanged();
-
-            if (_dataView != null)
-            {
-                _dataView.Destroy();
-                _dataView = null;
-            }
+        if (_dataView != null)
+        {
+            _dataView.Destroy();
+            _dataView = null;
         }
     }
 }

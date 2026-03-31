@@ -15,42 +15,41 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class FvAutoCell : Win
 {
-    public partial class FvAutoCell : Win
+    Table _tbl;
+    int _rowNum;
+
+    public FvAutoCell()
     {
-        Table _tbl;
-        int _rowNum;
+        InitializeComponent();
+        _tbl = new Table { { "name" }, { "fontsize", typeof(double) }, { "id" }, };
+    }
 
-        public FvAutoCell()
+    void OnDataRow(object sender, RoutedEventArgs e)
+    {
+        _fv.Data = _tbl.AddRow(new
         {
-            InitializeComponent();
-            _tbl = new Table { { "name" }, { "fontsize", typeof(double) }, { "id" }, };
-        }
+            name = $"第{++_rowNum}行",
+            fontsize = 22,
+            id = _rowNum.ToString()
+        });
+    }
 
-        void OnDataRow(object sender, RoutedEventArgs e)
-        {
-            _fv.Data = _tbl.AddRow(new
-            {
-                name = $"第{++_rowNum}行",
-                fontsize = 22,
-                id = _rowNum.ToString()
-            });
-        }
+    void OnTgt1(object sender, RoutedEventArgs e)
+    {
+        _fv.Data = _tb;
+    }
 
-        void OnTgt1(object sender, RoutedEventArgs e)
-        {
-            _fv.Data = _tb;
-        }
+    void OnTgt2(object sender, RoutedEventArgs e)
+    {
+        _fv.Data = _btn;
+    }
 
-        void OnTgt2(object sender, RoutedEventArgs e)
-        {
-            _fv.Data = _btn;
-        }
-
-        void OnNull(object sender, RoutedEventArgs e)
-        {
-            _fv.Data = null;
-        }
+    void OnNull(object sender, RoutedEventArgs e)
+    {
+        _fv.Data = null;
     }
 }

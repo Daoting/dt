@@ -12,107 +12,106 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Home
+namespace Dt.Mgr.Home;
+
+/// <summary>
+/// 搜索菜单项
+/// </summary>
+public sealed partial class SearchMenu : Tab
 {
-    /// <summary>
-    /// 搜索菜单项
-    /// </summary>
-    public sealed partial class SearchMenu : Tab
+    public SearchMenu()
     {
-        public SearchMenu()
-        {
-            InitializeComponent();
-            LoadTopBar();
+        InitializeComponent();
+        LoadTopBar();
 
-            if (!Kit.IsPhoneUI)
-            {
-                var menu = new Menu { new Mi("收藏", Icons.收藏, OnFav) };
-                menu.Opening += OnMenuOpening;
-                _lv.SetMenu(menu);
-            }
+        if (!Kit.IsPhoneUI)
+        {
+            var menu = new Menu { new Mi("收藏", Icons.收藏, OnFav) };
+            menu.Opening += OnMenuOpening;
+            _lv.SetMenu(menu);
         }
+    }
 
-        void OnItemClick(ItemClickArgs e)
+    void OnItemClick(ItemClickArgs e)
+    {
+        Kit.RunAsync(() =>
         {
-            Kit.RunAsync(() =>
-            {
-                OmMenu menu = (OmMenu)e.Data;
-                if (menu.IsGroup)
-                    Forward(new GroupMenu(menu));
-                else
-                    MenuDs.OpenMenu(menu);
-            });
-        }
-
-        /// <summary>
-        /// 查询菜单
-        /// </summary>
-        /// <param name="p_filter"></param>
-        void OnSearch(string p_filter)
-        {
-            if (string.IsNullOrEmpty(p_filter))
-                _lv.Data = null;
+            OmMenu menu = (OmMenu)e.Data;
+            if (menu.IsGroup)
+                Forward(new GroupMenu(menu));
             else
-                _lv.Data = MenuDs.LoadMenusByName(p_filter.ToLower());
-        }
+                MenuDs.OpenMenu(menu);
+        });
+    }
 
-        void OnMenuOpening(object sender, AsyncCancelArgs e)
-        {
-            HomeMenu.DoMenuOpening(sender, e);
-        }
+    /// <summary>
+    /// 查询菜单
+    /// </summary>
+    /// <param name="p_filter"></param>
+    void OnSearch(string p_filter)
+    {
+        if (string.IsNullOrEmpty(p_filter))
+            _lv.Data = null;
+        else
+            _lv.Data = MenuDs.LoadMenusByName(p_filter.ToLower());
+    }
 
-        void OnFav(Mi e)
-        {
-            HomeMenu.DoFavMenu(e);
-        }
+    void OnMenuOpening(object sender, AsyncCancelArgs e)
+    {
+        HomeMenu.DoMenuOpening(sender, e);
+    }
 
-        void LoadTopBar()
+    void OnFav(Mi e)
+    {
+        HomeMenu.DoFavMenu(e);
+    }
+
+    void LoadTopBar()
+    {
+        var sb = new Base.SearchBox
         {
-            var sb = new Base.SearchBox
+            Placeholder = "请输入拼音简码或包含的文字...",
+            IsRealtime = true
+        };
+        sb.Search += OnSearch;
+
+        if (Kit.IsPhoneUI)
+        {
+            // 隐藏标题栏
+            HideTitleBar = true;
+
+            Grid grid = new Grid
             {
-                Placeholder = "请输入拼音简码或包含的文字...",
-                IsRealtime = true
+                Background = Res.主蓝,
+                Height = 50,
+                Margin = new Thickness(0, 0, 0, 10),
+                ColumnDefinitions =
+                {
+                    new ColumnDefinition { Width = GridLength.Auto },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
+                },
             };
-            sb.Search += OnSearch;
-
-            if (Kit.IsPhoneUI)
+            var btn = new Button
             {
-                // 隐藏标题栏
-                HideTitleBar = true;
+                Content = "\uE010",
+                Style = Res.浅字符按钮,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                Width = 50,
+            };
+            btn.Click += (s, e) => _ = Backward();
+            grid.Children.Add(btn);
 
-                Grid grid = new Grid
-                {
-                    Background = Res.主蓝,
-                    Height = 50,
-                    Margin = new Thickness(0, 0, 0, 10),
-                    ColumnDefinitions =
-                    {
-                        new ColumnDefinition { Width = GridLength.Auto },
-                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
-                    },
-                };
-                var btn = new Button
-                {
-                    Content = "\uE010",
-                    Style = Res.浅字符按钮,
-                    VerticalAlignment = VerticalAlignment.Stretch,
-                    Width = 50,
-                };
-                btn.Click += (s, e) => _ = Backward();
-                grid.Children.Add(btn);
+            sb.BorderThickness = new Thickness(0);
+            sb.Margin = new Thickness(0, 5, 10, 5);
+            Grid.SetColumn(sb, 1);
+            grid.Children.Add(sb);
 
-                sb.BorderThickness = new Thickness(0);
-                sb.Margin = new Thickness(0, 5, 10, 5);
-                Grid.SetColumn(sb, 1);
-                grid.Children.Add(sb);
-
-                _grid.Children.Add(grid);
-            }
-            else
-            {
-                sb.BorderThickness = new Thickness(0, 0, 0, 1);
-                _grid.Children.Add(sb);
-            }
+            _grid.Children.Add(grid);
+        }
+        else
+        {
+            sb.BorderThickness = new Thickness(0, 0, 0, 1);
+            _grid.Children.Add(sb);
         }
     }
 }

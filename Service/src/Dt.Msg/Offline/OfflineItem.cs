@@ -11,21 +11,20 @@ using Dt.Core;
 using System.Collections.Generic;
 #endregion
 
-namespace Dt.Msg
+namespace Dt.Msg;
+
+/// <summary>
+/// 待离线推送项
+/// </summary>
+public class OfflineItem
 {
     /// <summary>
-    /// 待离线推送项
+    /// 待推送的用户列表
     /// </summary>
-    public class OfflineItem
-    {
-        /// <summary>
-        /// 待推送的用户列表
-        /// </summary>
-        public List<long> Users { get; set; }
+    public List<long> Users { get; set; }
 
-        /// <summary>
-        /// 待推送内容
-        /// </summary>
-        public MsgInfo Msg { get; set; }
-    }
+    /// <summary>
+    /// 待推送内容
+    /// </summary>
+    public MsgInfo Msg { get; set; }
 }

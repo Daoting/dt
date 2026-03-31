@@ -11,30 +11,29 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.Lob
+namespace Demo.Lob;
+
+using A = 物资目录X;
+
+public sealed partial class 物资目录Form : Form
 {
-    using A = 物资目录X;
+    long? _flID;
     
-    public sealed partial class 物资目录Form : Form
+    public 物资目录Form()
     {
-        long? _flID;
-        
-        public 物资目录Form()
-        {
-            InitializeComponent();
-            Menu = CreateMenu();
-        }
+        InitializeComponent();
+        Menu = CreateMenu();
+    }
 
-        protected override async Task OnAdd()
-        {
-            _fv.Data = await A.New(分类id: _args.ParentID ?? _flID);
-        }
+    protected override async Task OnAdd()
+    {
+        _fv.Data = await A.New(分类id: _args.ParentID ?? _flID);
+    }
 
-        protected override async Task OnGet()
-        {
-            var x = await A.View1.GetByID(_args.ID);
-            _flID = x?.分类id;
-            _fv.Data = x;
-        }
+    protected override async Task OnGet()
+    {
+        var x = await A.View1.GetByID(_args.ID);
+        _flID = x?.分类id;
+        _fv.Data = x;
     }
 }

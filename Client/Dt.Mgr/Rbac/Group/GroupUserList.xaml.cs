@@ -11,70 +11,69 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Rbac
+namespace Dt.Mgr.Rbac;
+
+public partial class GroupUserList : List
 {
-    public partial class GroupUserList : List
+    public GroupUserList()
     {
-        public GroupUserList()
+        InitializeComponent();
+        Menu = Menu.New(Mi.添加(OnAddRelated, enable: false), Mi.删除(OnDelRelated));
+        _lv.AddMultiSelMenu(Menu);
+        _lv.SetMenu(Menu.New(Mi.删除(OnDelRelated)));
+    }
+
+    protected override async Task OnQuery()
+    {
+        if (_parentID > 0)
         {
-            InitializeComponent();
-            Menu = Menu.New(Mi.添加(OnAddRelated, enable: false), Mi.删除(OnDelRelated));
-            _lv.AddMultiSelMenu(Menu);
-            _lv.SetMenu(Menu.New(Mi.删除(OnDelRelated)));
+            _lv.Data = await UserX.ExistsInGroup(_parentID.Value);
+        }
+        else
+        {
+            _lv.Data = null;
+        }
+        Menu["添加"].IsEnabled = _parentID > 0;
+    }
+
+    async void OnAddRelated(Mi e)
+    {
+        var dlg = new User4Group();
+        if (await dlg.Show(_parentID.Value, e)
+           && await RbacDs.AddGroupUsers(_parentID.Value, dlg.SelectedIDs))
+        {
+            await Refresh();
+        }
+    }
+    
+    async void OnDelRelated(Mi e)
+    {
+        List<long> ids = null;
+        if (_lv.SelectionMode == Base.SelectionMode.Multiple)
+        {
+            ids = (from row in _lv.SelectedRows
+                   select row.ID).ToList();
+        }
+        else
+        {
+            Row row = e.Row;
+            if (row == null)
+                row = _lv.SelectedRow;
+
+            if (row != null)
+                ids = new List<long> { row.ID };
         }
 
-        protected override async Task OnQuery()
+        if (ids != null && ids.Count > 0)
         {
-            if (_parentID > 0)
+            if (!await Kit.Confirm("确认要删除关联吗？"))
             {
-                _lv.Data = await UserX.ExistsInGroup(_parentID.Value);
+                Kit.Msg("已取消删除！");
+                return;
             }
-            else
-            {
-                _lv.Data = null;
-            }
-            Menu["添加"].IsEnabled = _parentID > 0;
-        }
-
-        async void OnAddRelated(Mi e)
-        {
-            var dlg = new User4Group();
-            if (await dlg.Show(_parentID.Value, e)
-               && await RbacDs.AddGroupUsers(_parentID.Value, dlg.SelectedIDs))
-            {
+            
+            if (await RbacDs.RemoveGroupUsers(_parentID.Value, ids))
                 await Refresh();
-            }
-        }
-        
-        async void OnDelRelated(Mi e)
-        {
-            List<long> ids = null;
-            if (_lv.SelectionMode == Base.SelectionMode.Multiple)
-            {
-                ids = (from row in _lv.SelectedRows
-                       select row.ID).ToList();
-            }
-            else
-            {
-                Row row = e.Row;
-                if (row == null)
-                    row = _lv.SelectedRow;
-
-                if (row != null)
-                    ids = new List<long> { row.ID };
-            }
-
-            if (ids != null && ids.Count > 0)
-            {
-                if (!await Kit.Confirm("确认要删除关联吗？"))
-                {
-                    Kit.Msg("已取消删除！");
-                    return;
-                }
-                
-                if (await RbacDs.RemoveGroupUsers(_parentID.Value, ids))
-                    await Refresh();
-            }
         }
     }
 }

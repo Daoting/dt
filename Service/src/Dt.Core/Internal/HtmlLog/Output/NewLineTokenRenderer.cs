@@ -13,23 +13,22 @@ using System;
 using System.IO;
 #endregion
 
-namespace Dt.Core.HtmlLog
+namespace Dt.Core.HtmlLog;
+
+class NewLineTokenRenderer : OutputRenderer
 {
-    class NewLineTokenRenderer : OutputRenderer
+    readonly Alignment? _alignment;
+
+    public NewLineTokenRenderer(Alignment? alignment)
     {
-        readonly Alignment? _alignment;
+        _alignment = alignment;
+    }
 
-        public NewLineTokenRenderer(Alignment? alignment)
-        {
-            _alignment = alignment;
-        }
-
-        public override void Render(LogEvent logEvent, TextWriter output)
-        {
-            if (_alignment.HasValue)
-                Padding.Apply(output, Environment.NewLine, _alignment.Value.Widen(Environment.NewLine.Length));
-            else
-                output.WriteLine();
-        }
+    public override void Render(LogEvent logEvent, TextWriter output)
+    {
+        if (_alignment.HasValue)
+            Padding.Apply(output, Environment.NewLine, _alignment.Value.Widen(Environment.NewLine.Length));
+        else
+            output.WriteLine();
     }
 }

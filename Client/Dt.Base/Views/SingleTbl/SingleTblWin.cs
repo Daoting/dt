@@ -13,59 +13,58 @@ using Microsoft.UI.Xaml.Controls;
 using System.Text.Json;
 #endregion
 
-namespace Dt.Base.Views
+namespace Dt.Base.Views;
+
+[View("通用单表视图")]
+public partial class SingleTblWin : Win
 {
-    [View("通用单表视图")]
-    public partial class SingleTblWin : Win
+    readonly EntityCfg _cfg;
+    EntityQuery _query;
+    EntityList _list;
+    EntityForm _form;
+    
+    public SingleTblWin(string p_jsonCfg)
+    : this(EntityCfg.Deserialize(p_jsonCfg))
+    { }
+
+    public SingleTblWin(EntityCfg p_cfg)
     {
-        readonly EntityCfg _cfg;
-        EntityQuery _query;
-        EntityList _list;
-        EntityForm _form;
+        _cfg = p_cfg;
+        CreateContent();
+        LoadCfg();
+    }
+
+    /// <summary>
+    /// Register.xaml中注册类型用
+    /// </summary>
+    public SingleTblWin()
+    { }
+
+    void CreateContent()
+    {
+        _query = new EntityQuery() { Order = 1 };
+        Ex.SetDock(_query, PanePosition.Left);
+        Items.Add(_query);
+
+        _list = new EntityList { Title = _cfg.ListCfg.Title };
+        Items.Add(_list);
         
-        public SingleTblWin(string p_jsonCfg)
-        : this(EntityCfg.Deserialize(p_jsonCfg))
-        { }
-
-        public SingleTblWin(EntityCfg p_cfg)
+        _form = new EntityForm { Title = _cfg.FormCfg.Title, OwnWin = this };
+    }
+    
+    void LoadCfg()
+    {
+        _query.LoadCfg(_cfg);
+        _query.Query += e =>
         {
-            _cfg = p_cfg;
-            CreateContent();
-            LoadCfg();
-        }
+            _list.Query(e);
+            NaviTo(_list.Title);
+        };
 
-        /// <summary>
-        /// Register.xaml中注册类型用
-        /// </summary>
-        public SingleTblWin()
-        { }
+        _list.LoadCfg(_cfg);
+        _list.Msg += e => _ = _form.Query(e);
 
-        void CreateContent()
-        {
-            _query = new EntityQuery() { Order = 1 };
-            Ex.SetDock(_query, PanePosition.Left);
-            Items.Add(_query);
-
-            _list = new EntityList { Title = _cfg.ListCfg.Title };
-            Items.Add(_list);
-            
-            _form = new EntityForm { Title = _cfg.FormCfg.Title, OwnWin = this };
-        }
-        
-        void LoadCfg()
-        {
-            _query.LoadCfg(_cfg);
-            _query.Query += e =>
-            {
-                _list.Query(e);
-                NaviTo(_list.Title);
-            };
-
-            _list.LoadCfg(_cfg);
-            _list.Msg += e => _ = _form.Query(e);
-
-            _form.LoadCfg(_cfg);
-            _form.UpdateList += e => _ = _list.Refresh(e.ID);
-        }
+        _form.LoadCfg(_cfg);
+        _form.UpdateList += e => _ = _list.Refresh(e.ID);
     }
 }

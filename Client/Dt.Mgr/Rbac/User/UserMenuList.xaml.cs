@@ -12,25 +12,24 @@ using Dt.Core;
 using System.Collections.Generic;
 #endregion
 
-namespace Dt.Mgr.Rbac
+namespace Dt.Mgr.Rbac;
+
+public sealed partial class UserMenuList : List
 {
-    public sealed partial class UserMenuList : List
+    public UserMenuList()
     {
-        public UserMenuList()
+        InitializeComponent();
+    }
+    
+    protected override async Task OnQuery()
+    {
+        if (_parentID > 0)
         {
-            InitializeComponent();
+            _lv.Data = await At.Query(string.Format(MenuDs.Sql用户可访问的菜单, _parentID.Value));
         }
-        
-        protected override async Task OnQuery()
+        else
         {
-            if (_parentID > 0)
-            {
-                _lv.Data = await At.Query(string.Format(MenuDs.Sql用户可访问的菜单, _parentID.Value));
-            }
-            else
-            {
-                _lv.Data = null;
-            }
+            _lv.Data = null;
         }
     }
 }

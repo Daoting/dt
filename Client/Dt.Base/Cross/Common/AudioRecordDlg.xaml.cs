@@ -18,57 +18,56 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+public sealed partial class AudioRecordDlg : Dlg
 {
-    public sealed partial class AudioRecordDlg : Dlg
+    public AudioRecordDlg()
     {
-        public AudioRecordDlg()
-        {
-            InitializeComponent();
-            HideTitleBar = true;
-            IsPinned = true;
-            PhonePlacement = DlgPlacement.CenterScreen;
-            WinPlacement = DlgPlacement.TargetCenter;
-            StartTimer();
-        }
-
-        /// <summary>
-        /// 录音时长
-        /// </summary>
-        public string Duration
-        {
-            get { return _tbTimer.Text; }
-        }
-
-        void OnSend(object sender, RoutedEventArgs e)
-        {
-            _timer.Stop();
-            Close(true);
-        }
-
-        void OnCancel(object sender, RoutedEventArgs e)
-        {
-            _timer.Stop();
-            Close();
-        }
-
-        #region 定时器
-        DispatcherTimer _timer;
-        int _seconds;
-
-        void StartTimer()
-        {
-            _timer = new DispatcherTimer();
-            _timer.Interval = TimeSpan.FromMilliseconds(1000);
-            _timer.Tick += OnTimerTick;
-            _timer.Start();
-        }
-
-        void OnTimerTick(object sender, object e)
-        {
-            TimeSpan ts = TimeSpan.FromSeconds(++_seconds);
-            _tbTimer.Text = $"{ts.Minutes.ToString("D2")}:{ts.Seconds.ToString("D2")}";
-        }
-        #endregion
+        InitializeComponent();
+        HideTitleBar = true;
+        IsPinned = true;
+        PhonePlacement = DlgPlacement.CenterScreen;
+        WinPlacement = DlgPlacement.TargetCenter;
+        StartTimer();
     }
+
+    /// <summary>
+    /// 录音时长
+    /// </summary>
+    public string Duration
+    {
+        get { return _tbTimer.Text; }
+    }
+
+    void OnSend(object sender, RoutedEventArgs e)
+    {
+        _timer.Stop();
+        Close(true);
+    }
+
+    void OnCancel(object sender, RoutedEventArgs e)
+    {
+        _timer.Stop();
+        Close();
+    }
+
+    #region 定时器
+    DispatcherTimer _timer;
+    int _seconds;
+
+    void StartTimer()
+    {
+        _timer = new DispatcherTimer();
+        _timer.Interval = TimeSpan.FromMilliseconds(1000);
+        _timer.Tick += OnTimerTick;
+        _timer.Start();
+    }
+
+    void OnTimerTick(object sender, object e)
+    {
+        TimeSpan ts = TimeSpan.FromSeconds(++_seconds);
+        _tbTimer.Text = $"{ts.Minutes.ToString("D2")}:{ts.Seconds.ToString("D2")}";
+    }
+    #endregion
 }

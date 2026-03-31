@@ -9,24 +9,23 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Mgr.Workflow
+namespace Dt.Mgr.Workflow;
+
+public partial class WfiTrsX
 {
-    public partial class WfiTrsX
+    public static async Task<WfiTrsX> New(
+        long TrsdID = default,
+        long SrcAtviID = default,
+        long TgtAtviID = default,
+        bool IsRollback = default,
+        DateTime Ctime = default)
     {
-        public static async Task<WfiTrsX> New(
-            long TrsdID = default,
-            long SrcAtviID = default,
-            long TgtAtviID = default,
-            bool IsRollback = default,
-            DateTime Ctime = default)
-        {
-            return new WfiTrsX(
-                ID: await NewID(),
-                TrsdID: TrsdID,
-                SrcAtviID: SrcAtviID,
-                TgtAtviID: TgtAtviID,
-                IsRollback: IsRollback,
-                Ctime: Ctime);
-        }
+        return new WfiTrsX(
+            ID: await NewID(),
+            TrsdID: TrsdID,
+            SrcAtviID: SrcAtviID,
+            TgtAtviID: TgtAtviID,
+            IsRollback: IsRollback,
+            Ctime: Ctime);
     }
 }

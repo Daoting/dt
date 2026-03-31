@@ -10,127 +10,126 @@
 using System.Reflection;
 #endregion
 
-namespace Dt.Core.Rpc
+namespace Dt.Core.Rpc;
+
+/// <summary>
+/// 单体服务时本地直接调用
+/// </summary>
+class NativeApiInvoker : ApiInvoker
 {
+    object _result;
+
     /// <summary>
-    /// 单体服务时本地直接调用
+    /// 固定用户标识
     /// </summary>
-    class NativeApiInvoker : ApiInvoker
+    public override long UserID => 112;
+
+    /// <summary>
+    /// 客户端ip
+    /// </summary>
+    public override string ClientIP => "NativeCall";
+
+    /// <summary>
+    /// 调用的Api名称
+    /// </summary>
+    public override string ApiName { get; protected set; }
+    
+    public async Task<T> Call<T>(string p_svcName, string p_methodName, params object[] p_params)
     {
-        object _result;
+        ApiMethod sm = Silo.GetMethod(p_methodName);
+        if (sm == null)
+            throw new Exception($"未找到Api[{p_methodName}]");
 
-        /// <summary>
-        /// 固定用户标识
-        /// </summary>
-        public override long UserID => 112;
+        var mi = sm.Method;
+        var tgt = Kit.GetService(mi.DeclaringType) as RpcApi;
+        if (tgt == null)
+            throw new Exception($"无法创建服务实例，类型[{mi.DeclaringType.Name}]");
 
-        /// <summary>
-        /// 客户端ip
-        /// </summary>
-        public override string ClientIP => "NativeCall";
+        // 初始化整个调用期间有效的数据包
+        ApiName = p_methodName;
+        SvcName = p_svcName;
+        Bag bag = new Bag(this);
+        tgt.Init(bag);
 
-        /// <summary>
-        /// 调用的Api名称
-        /// </summary>
-        public override string ApiName { get; protected set; }
+        bool suc = await CallMethod(mi, tgt, p_params);
         
-        public async Task<T> Call<T>(string p_svcName, string p_methodName, params object[] p_params)
+        // Api调用结束后释放资源
+        await tgt.Close(suc);
+
+        return ParseResult<T>();
+
+    }
+
+    async Task<bool> CallMethod(MethodInfo mi, RpcApi tgt, object[] p_params)
+    {
+        bool suc = true;
+        _result = null;
+        try
         {
-            ApiMethod sm = Silo.GetMethod(p_methodName);
-            if (sm == null)
-                throw new Exception($"未找到Api[{p_methodName}]");
-
-            var mi = sm.Method;
-            var tgt = Kit.GetService(mi.DeclaringType) as RpcApi;
-            if (tgt == null)
-                throw new Exception($"无法创建服务实例，类型[{mi.DeclaringType.Name}]");
-
-            // 初始化整个调用期间有效的数据包
-            ApiName = p_methodName;
-            SvcName = p_svcName;
-            Bag bag = new Bag(this);
-            tgt.Init(bag);
-
-            bool suc = await CallMethod(mi, tgt, p_params);
-            
-            // Api调用结束后释放资源
-            await tgt.Close(suc);
-
-            return ParseResult<T>();
-
+            if (mi.ReturnType == typeof(Task))
+            {
+                // 异步无返回值时
+                var task = (Task)mi.Invoke(tgt, p_params);
+                await task;
+            }
+            else if (typeof(Task).IsAssignableFrom(mi.ReturnType))
+            {
+                // 异步有返回值
+                var task = (Task)mi.Invoke(tgt, p_params);
+                await task;
+                var pi = task.GetType().GetProperty("Result");
+                if (pi == null)
+                    throw new Exception($"AOT无法反射 {task.GetType().Name} 的Result属性！请在 rd.xml 添加 <Type Name=\"System.Threading.Tasks.Task`1[[System.String]]\" Dynamic=\"Required All\" />");
+                _result = pi.GetValue(task);
+            }
+            else
+            {
+                // 调用同步方法
+                _result = mi.Invoke(tgt, p_params);
+            }
+        }
+        catch
+        {
+            suc = false;
         }
 
-        async Task<bool> CallMethod(MethodInfo mi, RpcApi tgt, object[] p_params)
-        {
-            bool suc = true;
-            _result = null;
-            try
-            {
-                if (mi.ReturnType == typeof(Task))
-                {
-                    // 异步无返回值时
-                    var task = (Task)mi.Invoke(tgt, p_params);
-                    await task;
-                }
-                else if (typeof(Task).IsAssignableFrom(mi.ReturnType))
-                {
-                    // 异步有返回值
-                    var task = (Task)mi.Invoke(tgt, p_params);
-                    await task;
-                    var pi = task.GetType().GetProperty("Result");
-                    if (pi == null)
-                        throw new Exception($"AOT无法反射 {task.GetType().Name} 的Result属性！请在 rd.xml 添加 <Type Name=\"System.Threading.Tasks.Task`1[[System.String]]\" Dynamic=\"Required All\" />");
-                    _result = pi.GetValue(task);
-                }
-                else
-                {
-                    // 调用同步方法
-                    _result = mi.Invoke(tgt, p_params);
-                }
-            }
-            catch
-            {
-                suc = false;
-            }
+        return suc;
+    }
 
-            return suc;
+    T ParseResult<T>()
+    {
+        if (_result == null)
+            return default(T);
+
+        Type tp = _result.GetType();
+        if (typeof(T) == tp)
+        {
+            // 结果对象与给定对象类型相同时
+            return (T)_result;
         }
 
-        T ParseResult<T>()
+        // 特殊处理，将 Row 转 Entity
+        if (tp == typeof(Row) && typeof(T).IsSubclassOf(typeof(Entity)))
         {
-            if (_result == null)
-                return default(T);
-
-            Type tp = _result.GetType();
-            if (typeof(T) == tp)
-            {
-                // 结果对象与给定对象类型相同时
-                return (T)_result;
-            }
-
-            // 特殊处理，将 Row 转 Entity
-            if (tp == typeof(Row) && typeof(T).IsSubclassOf(typeof(Entity)))
-            {
-                // T 是返回值的子类，如 T 为Entity, result为Row
-                object entity = ((Row)_result).CloneTo(typeof(T));
-                return (T)entity;
-            }
-
-            object val;
-            try
-            {
-                val = Convert.ChangeType(_result, typeof(T));
-            }
-            catch
-            {
-                throw new Exception(string.Format("无法将【{0}】转换到【{1}】类型！", _result, typeof(T)));
-            }
-            return (T)val;
+            // T 是返回值的子类，如 T 为Entity, result为Row
+            object entity = ((Row)_result).CloneTo(typeof(T));
+            return (T)entity;
         }
 
-        protected override Task WriteResponse(byte[] p_data, bool p_compress)
+        object val;
+        try
         {
-            throw new NotImplementedException();
+            val = Convert.ChangeType(_result, typeof(T));
         }
+        catch
+        {
+            throw new Exception(string.Format("无法将【{0}】转换到【{1}】类型！", _result, typeof(T)));
+        }
+        return (T)val;
+    }
+
+    protected override Task WriteResponse(byte[] p_data, bool p_compress)
+    {
+        throw new NotImplementedException();
     }
 }

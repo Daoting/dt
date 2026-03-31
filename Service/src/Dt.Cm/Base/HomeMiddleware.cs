@@ -11,31 +11,30 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 #endregion
 
-namespace Dt.Cm
-{
-    /// <summary>
-    /// 重写请求文件路径，指向压缩文件 *.gz
-    /// </summary>
-    public class HomeMiddleware
-    {
-        public Task Handle(HttpContext p_context)
-        {
-            p_context.Response.ContentType = "text/html";
-            return p_context.Response.WriteAsync(_page);
-        }
+namespace Dt.Cm;
 
-        static HomeMiddleware()
-        {
-            try
-            {
-                using (var sr = new StreamReader(typeof(HomeMiddleware).Assembly.GetManifestResourceStream("Dt.Cm.Res.Home.html")))
-                {
-                    _page = sr.ReadToEnd();
-                }
-            }
-            catch { }
-        }
-        
-        static string _page;
+/// <summary>
+/// 重写请求文件路径，指向压缩文件 *.gz
+/// </summary>
+public class HomeMiddleware
+{
+    public Task Handle(HttpContext p_context)
+    {
+        p_context.Response.ContentType = "text/html";
+        return p_context.Response.WriteAsync(_page);
     }
+
+    static HomeMiddleware()
+    {
+        try
+        {
+            using (var sr = new StreamReader(typeof(HomeMiddleware).Assembly.GetManifestResourceStream("Dt.Cm.Res.Home.html")))
+            {
+                _page = sr.ReadToEnd();
+            }
+        }
+        catch { }
+    }
+    
+    static string _page;
 }

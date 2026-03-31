@@ -10,30 +10,29 @@
 using System;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 值变化事件参数
+/// </summary>
+public class ValueChangedEventArgs<T> : EventArgs
 {
     /// <summary>
-    /// 值变化事件参数
+    /// 
     /// </summary>
-    public class ValueChangedEventArgs<T> : EventArgs
+    public ValueChangedEventArgs(T oldValue, T newValue)
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public ValueChangedEventArgs(T oldValue, T newValue)
-        {
-            OldValue = oldValue;
-            NewValue = newValue;
-        }
-
-        /// <summary>
-        /// 获取设置新值
-        /// </summary>
-        public T NewValue { get; set; }
-
-        /// <summary>
-        /// 获取设置旧值
-        /// </summary>
-        public T OldValue { get; set; }
+        OldValue = oldValue;
+        NewValue = newValue;
     }
+
+    /// <summary>
+    /// 获取设置新值
+    /// </summary>
+    public T NewValue { get; set; }
+
+    /// <summary>
+    /// 获取设置旧值
+    /// </summary>
+    public T OldValue { get; set; }
 }

@@ -15,35 +15,34 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Chat
+namespace Dt.Mgr.Chat;
+
+/// <summary>
+/// 聊天人员列表
+/// </summary>
+public sealed partial class ChatMemberList : UserControl
 {
-    /// <summary>
-    /// 聊天人员列表
-    /// </summary>
-    public sealed partial class ChatMemberList : UserControl
+    public event Action<long> ItemClick;
+
+    public ChatMemberList()
     {
-        public event Action<long> ItemClick;
+        InitializeComponent();
 
-        public ChatMemberList()
-        {
-            InitializeComponent();
+        // 按姓名排序
+        _lv.SortDesc = new SortDescription("name", ListSortDirection.Ascending);
+        Loaded += OnLoaded;
+    }
 
-            // 按姓名排序
-            _lv.SortDesc = new SortDescription("name", ListSortDirection.Ascending);
-            Loaded += OnLoaded;
-        }
+    async void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        Loaded -= OnLoaded;
 
-        async void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnLoaded;
+        await ChatDs.Refresh();
+        _lv.Data = await ChatMemberX.Query(null);
+    }
 
-            await ChatDs.Refresh();
-            _lv.Data = await ChatMemberX.Query(null);
-        }
-
-        void OnItemClick(ItemClickArgs e)
-        {
-            ItemClick?.Invoke(e.Row.ID);
-        }
+    void OnItemClick(ItemClickArgs e)
+    {
+        ItemClick?.Invoke(e.Row.ID);
     }
 }

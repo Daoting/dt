@@ -11,47 +11,46 @@ using System.Collections;
 using System.Collections.Concurrent;
 #endregion
 
-namespace Dt.Base.TreeViews
+namespace Dt.Base.TreeViews;
+
+/// <summary>
+/// 负责所有Tv的资源释放，独立线程排队释放，避免影响 UI 切换速度，避免cpu占用过高
+/// </summary>
+class TvCleaner
 {
-    /// <summary>
-    /// 负责所有Tv的资源释放，独立线程排队释放，避免影响 UI 切换速度，避免cpu占用过高
-    /// </summary>
-    class TvCleaner
-    {
 #if WIN
-        static readonly BlockingCollection<TvRootItems> _queue;
-        
-        static TvCleaner()
-        {
-            _queue = new BlockingCollection<TvRootItems>();
-            Task.Run(Clean);
-        }
-
-        public static bool Add(TvRootItems p_target)
-        {
-            if (p_target != null)
-                return _queue.TryAdd(p_target);
-            return false;
-        }
-
-        static void Clean()
-        {
-            while (true)
-            {
-                try
-                {
-                    var root = _queue.Take();
-                    Kit.RunSync(() =>
-                    {
-                        root.Destroy();
-                        root = null;
-                    });
-                }
-                catch { }
-            }
-        }
-#else
-        public static bool Add(TvRootItems p_target) => false;
-#endif
+    static readonly BlockingCollection<TvRootItems> _queue;
+    
+    static TvCleaner()
+    {
+        _queue = new BlockingCollection<TvRootItems>();
+        Task.Run(Clean);
     }
+
+    public static bool Add(TvRootItems p_target)
+    {
+        if (p_target != null)
+            return _queue.TryAdd(p_target);
+        return false;
+    }
+
+    static void Clean()
+    {
+        while (true)
+        {
+            try
+            {
+                var root = _queue.Take();
+                Kit.RunSync(() =>
+                {
+                    root.Destroy();
+                    root = null;
+                });
+            }
+            catch { }
+        }
+    }
+#else
+    public static bool Add(TvRootItems p_target) => false;
+#endif
 }

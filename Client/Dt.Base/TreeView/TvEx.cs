@@ -15,28 +15,27 @@ using Microsoft.UI.Xaml.Data;
 using Dt.Base.Docking;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// Tv扩展方法
+/// </summary>
+public static class TvEx
 {
     /// <summary>
-    /// Tv扩展方法
+    /// 根据Row.ID选择行
     /// </summary>
-    public static class TvEx
+    /// <param name="p_tv"></param>
+    /// <param name="p_id"></param>
+    public static void SelectByID(this Tv p_tv, long p_id)
     {
-        /// <summary>
-        /// 根据Row.ID选择行
-        /// </summary>
-        /// <param name="p_tv"></param>
-        /// <param name="p_id"></param>
-        public static void SelectByID(this Tv p_tv, long p_id)
-        {
-            Table tbl;
-            if (p_tv == null || (tbl = p_tv.Data as Table) == null)
-                return;
-            
-            var row = (from r in tbl
-                       where r.ID == p_id
-                       select r).FirstOrDefault();
-            p_tv.SelectedItem = row;
-        }
+        Table tbl;
+        if (p_tv == null || (tbl = p_tv.Data as Table) == null)
+            return;
+        
+        var row = (from r in tbl
+                   where r.ID == p_id
+                   select r).FirstOrDefault();
+        p_tv.SelectedItem = row;
     }
 }

@@ -20,187 +20,186 @@ using Microsoft.UI.Xaml.Controls;
 
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+/// <summary>
+/// 插入行
+/// </summary>
+internal class InsertTblRowCmd : RptCmdBase
 {
-    /// <summary>
-    /// 插入行
-    /// </summary>
-    internal class InsertTblRowCmd : RptCmdBase
+    public override object Execute(object p_args)
     {
-        public override object Execute(object p_args)
-        {
-            InsertTblRowCmdArgs args = (InsertTblRowCmdArgs)p_args;
-            RptTblPartRow row = new RptTblPartRow(args.Part);
-            InsertTableCmd.BuildCells(row, args.Part.Table.ColSpan, false);
-            args.Part.Rows.Insert(args.Index, row);
-            RptTable tbl = args.Part.Table;
-            tbl.CalcRowSpan();
-            tbl.Update(false);
-            return row;
-        }
-
-        public override void Undo(object p_args)
-        {
-            InsertTblRowCmdArgs args = (InsertTblRowCmdArgs)p_args;
-            args.Part.Rows.RemoveAt(args.Index);
-            RptTable tbl = args.Part.Table;
-            tbl.CalcRowSpan();
-            tbl.Update(true);
-        }
+        InsertTblRowCmdArgs args = (InsertTblRowCmdArgs)p_args;
+        RptTblPartRow row = new RptTblPartRow(args.Part);
+        InsertTableCmd.BuildCells(row, args.Part.Table.ColSpan, false);
+        args.Part.Rows.Insert(args.Index, row);
+        RptTable tbl = args.Part.Table;
+        tbl.CalcRowSpan();
+        tbl.Update(false);
+        return row;
     }
 
-    /// <summary>
-    /// 删除行
-    /// </summary>
-    internal class DeleTblRowCmd : RptCmdBase
+    public override void Undo(object p_args)
     {
-        public override object Execute(object p_args)
-        {
-            DeleTblRowCmdArgs args = (DeleTblRowCmdArgs)p_args;
-            args.Row.TblPart.Rows.RemoveAt(args.Index);
-            RptTable tbl = args.Row.Table;
-            tbl.CalcRowSpan();
-            tbl.Update(true);
-            return args.Row;
-        }
+        InsertTblRowCmdArgs args = (InsertTblRowCmdArgs)p_args;
+        args.Part.Rows.RemoveAt(args.Index);
+        RptTable tbl = args.Part.Table;
+        tbl.CalcRowSpan();
+        tbl.Update(true);
+    }
+}
 
-        public override void Undo(object p_args)
-        {
-            DeleTblRowCmdArgs args = (DeleTblRowCmdArgs)p_args;
-            args.Row.TblPart.Rows.Insert(args.Index, args.Row);
-            RptTable tbl = args.Row.Table;
-            tbl.CalcRowSpan();
-            tbl.Update(false);
-        }
+/// <summary>
+/// 删除行
+/// </summary>
+internal class DeleTblRowCmd : RptCmdBase
+{
+    public override object Execute(object p_args)
+    {
+        DeleTblRowCmdArgs args = (DeleTblRowCmdArgs)p_args;
+        args.Row.TblPart.Rows.RemoveAt(args.Index);
+        RptTable tbl = args.Row.Table;
+        tbl.CalcRowSpan();
+        tbl.Update(true);
+        return args.Row;
     }
 
-    /// <summary>
-    /// 包含列头或列尾
-    /// </summary>
-    internal class ContainHeadOrFootCmd : RptCmdBase
+    public override void Undo(object p_args)
     {
-        public override object Execute(object p_args)
+        DeleTblRowCmdArgs args = (DeleTblRowCmdArgs)p_args;
+        args.Row.TblPart.Rows.Insert(args.Index, args.Row);
+        RptTable tbl = args.Row.Table;
+        tbl.CalcRowSpan();
+        tbl.Update(false);
+    }
+}
+
+/// <summary>
+/// 包含列头或列尾
+/// </summary>
+internal class ContainHeadOrFootCmd : RptCmdBase
+{
+    public override object Execute(object p_args)
+    {
+        ContainHeadOrFootCmdArgs args = (ContainHeadOrFootCmdArgs)p_args;
+        RptTblPart part = null;
+        if (args.Flag == "Header")
+            part = new RptTblColHeader(args.Table);
+        else
+            part = new RptTblFooter(args.Table);
+        RptTblPartRow row = new RptTblPartRow(part);
+        InsertTableCmd.BuildCells(row, args.Table.ColSpan, true);
+        part.Rows.Add(row);
+        if (args.Flag == "Header")
+            args.Table.ColHeader = (RptTblColHeader)part;
+        else
+            args.Table.ColFooter = (RptTblFooter)part;
+        args.Table.CalcRowSpan();
+        args.Table.Update(false);
+        return null;
+    }
+
+    public override void Undo(object p_args)
+    {
+        ContainHeadOrFootCmdArgs args = (ContainHeadOrFootCmdArgs)p_args;
+        if (args.Flag == "Header")
+            args.Table.ColHeader = null;
+        else
+            args.Table.ColFooter = null;
+        args.Table.CalcRowSpan();
+        args.Table.Update(true);
+    }
+}
+
+/// <summary>
+/// 移除列头或列尾
+/// </summary>
+internal class RemoveHeadOrFootCmd : RptCmdBase
+{
+    public override object Execute(object p_args)
+    {
+        RemoveHeadOrFootCmdArgs args = (RemoveHeadOrFootCmdArgs)p_args;
+        if (args.Flag == "Header")
+            args.Table.ColHeader = null;
+        else
+            args.Table.ColFooter = null;
+        args.Table.CalcRowSpan();
+        args.Table.Update(true);
+        return null;
+    }
+
+    public override void Undo(object p_args)
+    {
+        RemoveHeadOrFootCmdArgs args = (RemoveHeadOrFootCmdArgs)p_args;
+        RptTblPart part = null;
+        if (args.Flag == "Header")
+            part = new RptTblColHeader(args.Table);
+        else
+            part = new RptTblFooter(args.Table);
+        foreach (RptTblPartRow row in args.Rows)
         {
-            ContainHeadOrFootCmdArgs args = (ContainHeadOrFootCmdArgs)p_args;
-            RptTblPart part = null;
-            if (args.Flag == "Header")
-                part = new RptTblColHeader(args.Table);
-            else
-                part = new RptTblFooter(args.Table);
-            RptTblPartRow row = new RptTblPartRow(part);
-            InsertTableCmd.BuildCells(row, args.Table.ColSpan, true);
             part.Rows.Add(row);
-            if (args.Flag == "Header")
-                args.Table.ColHeader = (RptTblColHeader)part;
-            else
-                args.Table.ColFooter = (RptTblFooter)part;
-            args.Table.CalcRowSpan();
-            args.Table.Update(false);
-            return null;
         }
-
-        public override void Undo(object p_args)
-        {
-            ContainHeadOrFootCmdArgs args = (ContainHeadOrFootCmdArgs)p_args;
-            if (args.Flag == "Header")
-                args.Table.ColHeader = null;
-            else
-                args.Table.ColFooter = null;
-            args.Table.CalcRowSpan();
-            args.Table.Update(true);
-        }
+        if (args.Flag == "Header")
+            args.Table.ColHeader = (RptTblColHeader)part;
+        else
+            args.Table.ColFooter = (RptTblFooter)part;
+        args.Table.CalcRowSpan();
+        args.Table.Update(false);
     }
+}
 
-    /// <summary>
-    /// 移除列头或列尾
-    /// </summary>
-    internal class RemoveHeadOrFootCmd : RptCmdBase
+internal class InsertTblRowCmdArgs
+{
+    public InsertTblRowCmdArgs(RptTblPart p_part, int p_index)
     {
-        public override object Execute(object p_args)
-        {
-            RemoveHeadOrFootCmdArgs args = (RemoveHeadOrFootCmdArgs)p_args;
-            if (args.Flag == "Header")
-                args.Table.ColHeader = null;
-            else
-                args.Table.ColFooter = null;
-            args.Table.CalcRowSpan();
-            args.Table.Update(true);
-            return null;
-        }
-
-        public override void Undo(object p_args)
-        {
-            RemoveHeadOrFootCmdArgs args = (RemoveHeadOrFootCmdArgs)p_args;
-            RptTblPart part = null;
-            if (args.Flag == "Header")
-                part = new RptTblColHeader(args.Table);
-            else
-                part = new RptTblFooter(args.Table);
-            foreach (RptTblPartRow row in args.Rows)
-            {
-                part.Rows.Add(row);
-            }
-            if (args.Flag == "Header")
-                args.Table.ColHeader = (RptTblColHeader)part;
-            else
-                args.Table.ColFooter = (RptTblFooter)part;
-            args.Table.CalcRowSpan();
-            args.Table.Update(false);
-        }
+        Part = p_part;
+        Index = p_index;
     }
 
-    internal class InsertTblRowCmdArgs
+    internal RptTblPart Part { get; }
+
+    public int Index { get; }
+}
+
+internal class DeleTblRowCmdArgs
+{
+    public DeleTblRowCmdArgs(int p_index, RptTblPartRow p_row)
     {
-        public InsertTblRowCmdArgs(RptTblPart p_part, int p_index)
-        {
-            Part = p_part;
-            Index = p_index;
-        }
-
-        internal RptTblPart Part { get; }
-
-        public int Index { get; }
+        Index = p_index;
+        Row = p_row;
     }
 
-    internal class DeleTblRowCmdArgs
+    public int Index { get; }
+
+    public RptTblPartRow Row { get; }
+}
+
+internal class ContainHeadOrFootCmdArgs
+{
+    public ContainHeadOrFootCmdArgs(string p_flag, RptTable p_table)
     {
-        public DeleTblRowCmdArgs(int p_index, RptTblPartRow p_row)
-        {
-            Index = p_index;
-            Row = p_row;
-        }
-
-        public int Index { get; }
-
-        public RptTblPartRow Row { get; }
+        Flag = p_flag;
+        Table = p_table;
     }
 
-    internal class ContainHeadOrFootCmdArgs
+    public string Flag { get; }
+
+    public RptTable Table { get; }
+}
+
+internal class RemoveHeadOrFootCmdArgs
+{
+    public RemoveHeadOrFootCmdArgs(string p_flag, RptTable p_table, RptTblPartRow[] p_rows)
     {
-        public ContainHeadOrFootCmdArgs(string p_flag, RptTable p_table)
-        {
-            Flag = p_flag;
-            Table = p_table;
-        }
-
-        public string Flag { get; }
-
-        public RptTable Table { get; }
+        Flag = p_flag;
+        Table = p_table;
+        Rows = p_rows;
     }
 
-    internal class RemoveHeadOrFootCmdArgs
-    {
-        public RemoveHeadOrFootCmdArgs(string p_flag, RptTable p_table, RptTblPartRow[] p_rows)
-        {
-            Flag = p_flag;
-            Table = p_table;
-            Rows = p_rows;
-        }
+    public string Flag { get; }
 
-        public string Flag { get; }
+    public RptTable Table { get; }
 
-        public RptTable Table { get; }
-
-        public RptTblPartRow[] Rows { get; }
-    }
+    public RptTblPartRow[] Rows { get; }
 }

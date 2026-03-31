@@ -16,33 +16,32 @@ using Microsoft.UI.Xaml.Input;
 using Dt.Base.FormView;
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+public sealed partial class RptIconDlg : Dlg
 {
-    public sealed partial class RptIconDlg : Dlg
+    public RptIconDlg()
     {
-        public RptIconDlg()
-        {
-            InitializeComponent();
-            _lv.Data = IconItem.GetAllIcons();
-            _lv.Filter = OnFilter;
-            
-            if (!Kit.IsPhoneUI)
-            {
-                Width = 300;
-                Height = 500;
-            }
-        }
-
-        public Icons SelectIcon => ((IconItem)_lv.SelectedItem).Icon;
+        InitializeComponent();
+        _lv.Data = IconItem.GetAllIcons();
+        _lv.Filter = OnFilter;
         
-        void OnSearch(string e)
+        if (!Kit.IsPhoneUI)
         {
-            _lv.Refresh();
+            Width = 300;
+            Height = 500;
         }
+    }
 
-        bool OnFilter(object p_obj)
-        {
-            return ((IconItem)p_obj).IsMatched(_sb.Text);
-        }
+    public Icons SelectIcon => ((IconItem)_lv.SelectedItem).Icon;
+    
+    void OnSearch(string e)
+    {
+        _lv.Refresh();
+    }
+
+    bool OnFilter(object p_obj)
+    {
+        return ((IconItem)p_obj).IsMatched(_sb.Text);
     }
 }

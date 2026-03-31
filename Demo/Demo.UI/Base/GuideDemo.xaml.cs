@@ -20,45 +20,44 @@ using Microsoft.UI.Xaml.Shapes;
 
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class GuideDemo : Dlg
 {
-    public partial class GuideDemo : Dlg
+    public GuideDemo()
     {
-        public GuideDemo()
+        InitializeComponent();
+
+        HideTitleBar = true;
+        WinPlacement = DlgPlacement.Maximized;
+
+        for (int i = 0; i < _fv.Items.Count - 1; i++)
         {
-            InitializeComponent();
+            _sp.Children.Add(new Ellipse { Width = 12, Height = 12, Fill = Res.WhiteBrush, Margin = new Thickness(10) });
+        }
+        ((Ellipse)_sp.Children[0]).Fill = Res.RedBrush;
+        _fv.SelectionChanged += OnSelectionChanged;
+    }
 
-            HideTitleBar = true;
-            WinPlacement = DlgPlacement.Maximized;
-
-            for (int i = 0; i < _fv.Items.Count - 1; i++)
-            {
-                _sp.Children.Add(new Ellipse { Width = 12, Height = 12, Fill = Res.WhiteBrush, Margin = new Thickness(10) });
-            }
-            ((Ellipse)_sp.Children[0]).Fill = Res.RedBrush;
-            _fv.SelectionChanged += OnSelectionChanged;
+    void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        for (int i = 0; i < _sp.Children.Count; i++)
+        {
+            var item = (Ellipse)_sp.Children[i];
+            if (i == _fv.SelectedIndex)
+                item.Fill = Res.RedBrush;
+            else
+                item.Fill = Res.WhiteBrush;
         }
 
-        void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            for (int i = 0; i < _sp.Children.Count; i++)
-            {
-                var item = (Ellipse)_sp.Children[i];
-                if (i == _fv.SelectedIndex)
-                    item.Fill = Res.RedBrush;
-                else
-                    item.Fill = Res.WhiteBrush;
-            }
-
-            if (_fv.SelectedIndex == _fv.Items.Count - 1)
-            {
-                Close();
-            }
-        }
-
-        void OnTest(object sender, RoutedEventArgs e)
+        if (_fv.SelectedIndex == _fv.Items.Count - 1)
         {
             Close();
         }
+    }
+
+    void OnTest(object sender, RoutedEventArgs e)
+    {
+        Close();
     }
 }

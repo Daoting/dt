@@ -12,36 +12,35 @@ using System.Text;
 using Microsoft.UI.Xaml.Data;
 #endregion
 
-namespace Dt.Base
-{
-    /// <summary>
-    /// 切换垂直显示的文本
-    /// </summary>
-    public partial class VerticalTextConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            string result = "";
-            if (value != null)
-            {
-                string text = value.ToString();
-                if (!string.IsNullOrEmpty(text))
-                {
-                    // 每个字符为独立的行
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < text.Length; i++)
-                    {
-                        sb.AppendLine(text.Substring(i, 1));
-                    }
-                    result = sb.ToString().Substring(0, sb.Length - 2);
-                }
-            }
-            return result;
-        }
+namespace Dt.Base;
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
+/// <summary>
+/// 切换垂直显示的文本
+/// </summary>
+public partial class VerticalTextConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        string result = "";
+        if (value != null)
         {
-            return value;
+            string text = value.ToString();
+            if (!string.IsNullOrEmpty(text))
+            {
+                // 每个字符为独立的行
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < text.Length; i++)
+                {
+                    sb.AppendLine(text.Substring(i, 1));
+                }
+                result = sb.ToString().Substring(0, sb.Length - 2);
+            }
         }
+        return result;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        return value;
     }
 }

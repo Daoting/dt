@@ -17,52 +17,51 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class LvList : Win
 {
-    public partial class LvList : Win
+    public LvList()
     {
-        public LvList()
-        {
-            InitializeComponent();
-            _lv.GroupName = "bumen";
-            _lv.Data = SampleData.CreatePersonsTbl(100);
-        }
+        InitializeComponent();
+        _lv.GroupName = "bumen";
+        _lv.Data = SampleData.CreatePersonsTbl(100);
+    }
 
-        void OnLoadData(object sender, RoutedEventArgs e)
-        {
-            _lv.Data = SampleData.CreatePersonsTbl(int.Parse(((Button)sender).Tag.ToString()));
-        }
+    void OnLoadData(object sender, RoutedEventArgs e)
+    {
+        _lv.Data = SampleData.CreatePersonsTbl(int.Parse(((Button)sender).Tag.ToString()));
+    }
 
-        void OnLoadNull(object sender, RoutedEventArgs e)
-        {
-            _lv.Data = null;
-        }
+    void OnLoadNull(object sender, RoutedEventArgs e)
+    {
+        _lv.Data = null;
+    }
 
-        void OnGroup(object sender, RoutedEventArgs e)
-        {
-            _lv.GroupName = "bumen";
-        }
+    void OnGroup(object sender, RoutedEventArgs e)
+    {
+        _lv.GroupName = "bumen";
+    }
 
-        void OnDelGroup(object sender, RoutedEventArgs e)
-        {
-            _lv.GroupName = null;
-        }
+    void OnDelGroup(object sender, RoutedEventArgs e)
+    {
+        _lv.GroupName = null;
+    }
 
-        void OnAutoHeight(object sender, RoutedEventArgs e)
-        {
-            _lv.ItemHeight = double.NaN;
-        }
+    void OnAutoHeight(object sender, RoutedEventArgs e)
+    {
+        _lv.ItemHeight = double.NaN;
+    }
 
-        void OnSelectNull(object sender, RoutedEventArgs e)
-        {
-            _lv.SelectedItem = null;
-        }
+    void OnSelectNull(object sender, RoutedEventArgs e)
+    {
+        _lv.SelectedItem = null;
+    }
 
-        void OnScroll(object sender, RoutedEventArgs e)
-        {
-            int index = new Random().Next(0, _lv.Data.Count);
-            _lv.ScrollInto(index);
-            Kit.Msg($"滚动到第 {index + 1} 行");
-        }
+    void OnScroll(object sender, RoutedEventArgs e)
+    {
+        int index = new Random().Next(0, _lv.Data.Count);
+        _lv.ScrollInto(index);
+        Kit.Msg($"滚动到第 {index + 1} 行");
     }
 }

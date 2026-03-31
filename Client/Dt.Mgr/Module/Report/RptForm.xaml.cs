@@ -11,47 +11,46 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Module
+namespace Dt.Mgr.Module;
+
+public sealed partial class RptForm : Form
 {
-    public sealed partial class RptForm : Form
+    public RptForm()
     {
-        public RptForm()
-        {
-            InitializeComponent();
-            Menu = CreateMenu();
-            Menu.Add("设计", Icons.折线图, call: OnEditTemp);
-        }
+        InitializeComponent();
+        Menu = CreateMenu();
+        Menu.Add("设计", Icons.折线图, call: OnEditTemp);
+    }
 
-        protected override async Task OnAdd()
-        {
-            _fv.Data = await RptX.New();
-        }
+    protected override async Task OnAdd()
+    {
+        _fv.Data = await RptX.New();
+    }
 
-        protected override async Task OnGet()
+    protected override async Task OnGet()
+    {
+        _fv.Data = await RptX.GetByID(_args.ID);
+    }
+    
+    async void OnEditTemp()
+    {
+        RptX rpt = _fv.Data.To<RptX>();
+        if (rpt != null)
         {
-            _fv.Data = await RptX.GetByID(_args.ID);
-        }
-        
-        async void OnEditTemp()
-        {
-            RptX rpt = _fv.Data.To<RptX>();
-            if (rpt != null)
+            if (rpt.IsAdded || rpt.IsChanged)
             {
-                if (rpt.IsAdded || rpt.IsChanged)
+                if (await rpt.Save(false))
                 {
-                    if (await rpt.Save(false))
-                    {
-                        OnUpdateList(new UpdateListArgs { Data = rpt, Event = UpdateListEvent.Saved });
-                        Close();
-                    }
-                    else
-                    {
-                        Kit.Warn("自动保存失败！");
-                        return;
-                    }
+                    OnUpdateList(new UpdateListArgs { Data = rpt, Event = UpdateListEvent.Saved });
+                    Close();
                 }
-                _ = Rpt.ShowDesign(new AppRptDesignInfo(rpt));
+                else
+                {
+                    Kit.Warn("自动保存失败！");
+                    return;
+                }
             }
+            _ = Rpt.ShowDesign(new AppRptDesignInfo(rpt));
         }
     }
 }

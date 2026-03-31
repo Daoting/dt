@@ -12,86 +12,85 @@ using System;
 using Microsoft.UI.Xaml;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class FvLayout : Win
 {
-    public partial class FvLayout : Win
+    public FvLayout()
     {
-        public FvLayout()
-        {
-            InitializeComponent();
-            CreateCells(50);
-            _fv.CellClick += OnCellClick;
-            _ob.Data = _fv.Items[0];
-        }
+        InitializeComponent();
+        CreateCells(50);
+        _fv.CellClick += OnCellClick;
+        _ob.Data = _fv.Items[0];
+    }
 
-        void OnAddClick(object sender, RoutedEventArgs e)
-        {
-            FvCell cell = new FvCell();
-            cell.Title = $"单元格{_fv.Items.Count + 1}";
-            _fv.Items.Add(cell);
-        }
+    void OnAddClick(object sender, RoutedEventArgs e)
+    {
+        FvCell cell = new FvCell();
+        cell.Title = $"单元格{_fv.Items.Count + 1}";
+        _fv.Items.Add(cell);
+    }
 
-        void OnAddFive(object sender, RoutedEventArgs e)
-        {
-            CreateCells(5);
-        }
+    void OnAddFive(object sender, RoutedEventArgs e)
+    {
+        CreateCells(5);
+    }
 
-        void OnAddBatch(object sender, RoutedEventArgs e)
+    void OnAddBatch(object sender, RoutedEventArgs e)
+    {
+        CreateCells(20);
+    }
+
+    void OnDelClick(object sender, RoutedEventArgs e)
+    {
+        if (_fv.Items.Count > 0)
+            _fv.Items.RemoveAt(_fv.Items.Count - 1);
+    }
+
+    void OnClearClick(object sender, RoutedEventArgs e)
+    {
+        _fv.Items.Clear();
+    }
+
+    void OnReset(object sender, RoutedEventArgs e)
+    {
+        var items = _fv.Items;
+        using (items.Defer())
         {
+            items.Clear();
             CreateCells(20);
         }
+    }
 
-        void OnDelClick(object sender, RoutedEventArgs e)
-        {
-            if (_fv.Items.Count > 0)
-                _fv.Items.RemoveAt(_fv.Items.Count - 1);
-        }
+    void OnCellClick(object e)
+    {
+        _ob.Data = e;
+    }
 
-        void OnClearClick(object sender, RoutedEventArgs e)
+    void CreateCells(int p_count)
+    {
+        Random rnd = new Random();
+        for (int i = 0; i < p_count; i++)
         {
-            _fv.Items.Clear();
-        }
-
-        void OnReset(object sender, RoutedEventArgs e)
-        {
-            var items = _fv.Items;
-            using (items.Defer())
+            FvCell cell = new FvCell();
+            if ((i + 1) % 4 == 0)
             {
-                items.Clear();
-                CreateCells(20);
+                cell.ShowTitle = false;
+                //TextBlock tb = new TextBlock { Text = $"空格{_fv.Items.Count + 1}", VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
+                //cell.Editor = tb;
             }
-        }
-
-        void OnCellClick(object e)
-        {
-            _ob.Data = e;
-        }
-
-        void CreateCells(int p_count)
-        {
-            Random rnd = new Random();
-            for (int i = 0; i < p_count; i++)
+            else
             {
-                FvCell cell = new FvCell();
-                if ((i + 1) % 4 == 0)
-                {
-                    cell.ShowTitle = false;
-                    //TextBlock tb = new TextBlock { Text = $"空格{_fv.Items.Count + 1}", VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
-                    //cell.Editor = tb;
-                }
-                else
-                {
-                    cell.Title = $"单元格{_fv.Items.Count + 1}";
-                }
-                cell.RowSpan = rnd.Next(1, 3);
-                _fv.Items.Add(cell);
+                cell.Title = $"单元格{_fv.Items.Count + 1}";
+            }
+            cell.RowSpan = rnd.Next(1, 3);
+            _fv.Items.Add(cell);
 
-                if ((i + 1) % 8 == 0)
-                {
-                    CBar sep = new CBar();
-                    sep.Title = $"分隔行{_fv.Items.Count + 1}";
-                    _fv.Items.Add(sep);
-                }
+            if ((i + 1) % 8 == 0)
+            {
+                CBar sep = new CBar();
+                sep.Title = $"分隔行{_fv.Items.Count + 1}";
+                _fv.Items.Add(sep);
             }
         }
     }

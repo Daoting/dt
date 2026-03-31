@@ -14,82 +14,81 @@ using System.Text.Json;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core.Caches
+namespace Dt.Core.Caches;
+
+/// <summary>
+/// 值为值为按插入顺序排序的字符串列表的缓存基类
+/// </summary>
+/// <typeparam name="TCacheItem">缓存类型，可以为任意类型</typeparam>
+public class ListCache<TCacheItem> : BaseCache
 {
-    /// <summary>
-    /// 值为值为按插入顺序排序的字符串列表的缓存基类
-    /// </summary>
-    /// <typeparam name="TCacheItem">缓存类型，可以为任意类型</typeparam>
-    public class ListCache<TCacheItem> : BaseCache
+    public ListCache(string p_keyPrefix)
+        : base(p_keyPrefix)
     {
-        public ListCache(string p_keyPrefix)
-            : base(p_keyPrefix)
+    }
+
+    /// <summary>
+    /// 在尾部添加元素
+    /// </summary>
+    /// <param name="p_key">不带前缀的键，null时键前缀为完整键</param>
+    /// <param name="p_value">待缓存对象</param>
+    /// <returns></returns>
+    public Task<long> RightPush(object p_key, TCacheItem p_value)
+    {
+        Throw.If(p_value == null);
+        RedisKey key = GetFullKey(p_key);
+        if (!NeedSerialize)
+            return _db.ListRightPushAsync(key, p_value.ToString());
+
+        return _db.ListRightPushAsync(key, Kit.Serialize(p_value));
+    }
+
+    /// <summary>
+    /// 返回名称为key的list中start至end之间的元素
+    /// </summary>
+    /// <param name="p_key">不带前缀的键，null时键前缀为完整键</param>
+    /// <param name="p_start"></param>
+    /// <param name="p_stop">-1表示最后一个元素</param>
+    /// <returns></returns>
+    public async Task<List<TCacheItem>> GetRange(object p_key, long p_start = 0, long p_stop = -1)
+    {
+        RedisKey key = GetFullKey(p_key);
+        var arr = await _db.ListRangeAsync(key, p_start, p_stop);
+        if (arr == null || arr.Length == 0)
+            return default(List<TCacheItem>);
+
+        List<TCacheItem> ls = new List<TCacheItem>();
+        if (NeedSerialize)
         {
-        }
-
-        /// <summary>
-        /// 在尾部添加元素
-        /// </summary>
-        /// <param name="p_key">不带前缀的键，null时键前缀为完整键</param>
-        /// <param name="p_value">待缓存对象</param>
-        /// <returns></returns>
-        public Task<long> RightPush(object p_key, TCacheItem p_value)
-        {
-            Throw.If(p_value == null);
-            RedisKey key = GetFullKey(p_key);
-            if (!NeedSerialize)
-                return _db.ListRightPushAsync(key, p_value.ToString());
-
-            return _db.ListRightPushAsync(key, Kit.Serialize(p_value));
-        }
-
-        /// <summary>
-        /// 返回名称为key的list中start至end之间的元素
-        /// </summary>
-        /// <param name="p_key">不带前缀的键，null时键前缀为完整键</param>
-        /// <param name="p_start"></param>
-        /// <param name="p_stop">-1表示最后一个元素</param>
-        /// <returns></returns>
-        public async Task<List<TCacheItem>> GetRange(object p_key, long p_start = 0, long p_stop = -1)
-        {
-            RedisKey key = GetFullKey(p_key);
-            var arr = await _db.ListRangeAsync(key, p_start, p_stop);
-            if (arr == null || arr.Length == 0)
-                return default(List<TCacheItem>);
-
-            List<TCacheItem> ls = new List<TCacheItem>();
-            if (NeedSerialize)
+            foreach (var val in arr)
             {
-                foreach (var val in arr)
+                if (val.IsNullOrEmpty)
                 {
-                    if (val.IsNullOrEmpty)
-                    {
-                        ls.Add(default);
-                        continue;
-                    }
+                    ls.Add(default);
+                    continue;
+                }
 
-                    var item = Kit.Deserialize<TCacheItem>(val.ToString());
-                    ls.Add(item);
-                }
+                var item = Kit.Deserialize<TCacheItem>(val.ToString());
+                ls.Add(item);
             }
-            else
-            {
-                Type tp = typeof(TCacheItem);
-                foreach (var val in arr)
-                {
-                    ls.Add((TCacheItem)Convert.ChangeType(val, tp));
-                }
-            }
-            return ls;
         }
-
-        bool NeedSerialize
+        else
         {
-            get
+            Type tp = typeof(TCacheItem);
+            foreach (var val in arr)
             {
-                Type tp = typeof(TCacheItem);
-                return tp != typeof(string) && tp.IsClass;
+                ls.Add((TCacheItem)Convert.ChangeType(val, tp));
             }
+        }
+        return ls;
+    }
+
+    bool NeedSerialize
+    {
+        get
+        {
+            Type tp = typeof(TCacheItem);
+            return tp != typeof(string) && tp.IsClass;
         }
     }
 }

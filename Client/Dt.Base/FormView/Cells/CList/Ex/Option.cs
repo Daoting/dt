@@ -11,33 +11,32 @@ using System;
 using Microsoft.UI.Xaml.Data;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 模型库的OmOption作为下拉框数据源
+/// </summary>
+[CListEx]
+public class Option : CListEx
 {
     /// <summary>
-    /// 模型库的OmOption作为下拉框数据源
+    /// 格式：枚举名(包含命名空间),程序集；如：
+    /// <para>Dt.Base.CtType,Dt.Base</para>
     /// </summary>
-    [CListEx]
-    public class Option : CListEx
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public override async Task<INotifyList> GetData()
     {
-        /// <summary>
-        /// 格式：枚举名(包含命名空间),程序集；如：
-        /// <para>Dt.Base.CtType,Dt.Base</para>
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        public override async Task<INotifyList> GetData()
-        {
-            return await AtOption.Query($"select name from OmOption where Category=\"{_params}\"");
-        }
+        return await AtOption.Query($"select name from OmOption where Category=\"{_params}\"");
     }
+}
 
-    public class AtOption : AccessAgent<AtOption.Info>
+public class AtOption : AccessAgent<AtOption.Info>
+{
+    public class Info : AgentInfo
     {
-        public class Info : AgentInfo
-        {
-            public override AccessType Type => AccessType.Local;
+        public override AccessType Type => AccessType.Local;
 
-            public override string Name => "option";
-        }
+        public override string Name => "option";
     }
 }

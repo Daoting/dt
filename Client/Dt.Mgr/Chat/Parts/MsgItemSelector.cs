@@ -12,43 +12,42 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Chat
+namespace Dt.Mgr.Chat;
+
+/// <summary>
+/// 聊天消息模板选择器
+/// </summary>
+internal partial class MsgItemSelector : DataTemplateSelector
 {
-    /// <summary>
-    /// 聊天消息模板选择器
-    /// </summary>
-    internal partial class MsgItemSelector : DataTemplateSelector
+    readonly DataTemplate _myMsg;
+    readonly DataTemplate _myFile;
+    readonly DataTemplate _myLink;
+
+    readonly DataTemplate _otherMsg;
+    readonly DataTemplate _otherFile;
+    readonly DataTemplate _otherLink;
+
+    public MsgItemSelector(ChatDetail p_owner)
     {
-        readonly DataTemplate _myMsg;
-        readonly DataTemplate _myFile;
-        readonly DataTemplate _myLink;
+        _myMsg = (DataTemplate)p_owner.GetResource("MyMsgTemplate");
+        _myFile = (DataTemplate)p_owner.GetResource("MyFileTemplate");
+        _myLink = (DataTemplate)p_owner.GetResource("MyLinkTemplate");
+        _otherMsg = (DataTemplate)p_owner.GetResource("OtherMsgTemplate");
+        _otherFile = (DataTemplate)p_owner.GetResource("OtherFileTemplate");
+        _otherLink = (DataTemplate)p_owner.GetResource("OtherLinkTemplate");
+    }
 
-        readonly DataTemplate _otherMsg;
-        readonly DataTemplate _otherFile;
-        readonly DataTemplate _otherLink;
-
-        public MsgItemSelector(ChatDetail p_owner)
+    protected override DataTemplate SelectTemplateCore(object item)
+    {
+        LetterX l = (LetterX)((LvItem)item).Data;
+        switch (l.LetterType)
         {
-            _myMsg = (DataTemplate)p_owner.GetResource("MyMsgTemplate");
-            _myFile = (DataTemplate)p_owner.GetResource("MyFileTemplate");
-            _myLink = (DataTemplate)p_owner.GetResource("MyLinkTemplate");
-            _otherMsg = (DataTemplate)p_owner.GetResource("OtherMsgTemplate");
-            _otherFile = (DataTemplate)p_owner.GetResource("OtherFileTemplate");
-            _otherLink = (DataTemplate)p_owner.GetResource("OtherLinkTemplate");
-        }
-
-        protected override DataTemplate SelectTemplateCore(object item)
-        {
-            LetterX l = (LetterX)((LvItem)item).Data;
-            switch (l.LetterType)
-            {
-                case LetterType.Text:
-                    return l.IsReceived ? _otherMsg : _myMsg;
-                case LetterType.Link:
-                    return l.IsReceived ? _otherLink : _myLink;
-                default:
-                    return l.IsReceived ? _otherFile : _myFile;
-            }
+            case LetterType.Text:
+                return l.IsReceived ? _otherMsg : _myMsg;
+            case LetterType.Link:
+                return l.IsReceived ? _otherLink : _myLink;
+            default:
+                return l.IsReceived ? _otherFile : _myFile;
         }
     }
 }

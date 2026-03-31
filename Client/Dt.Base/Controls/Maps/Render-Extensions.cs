@@ -12,18 +12,17 @@ using Windows.Foundation;
 using Microsoft.UI.Input;
 #endregion
 
-namespace Dt.Base.Maps
-{
-    public static class MapExtensions
-    {
-        public static ScreenPosition ToScreenPosition(this PointerPoint pointerPoint)
-        {
-            return new ScreenPosition(pointerPoint.Position.X, pointerPoint.Position.Y);
-        }
+namespace Dt.Base.Maps;
 
-        public static ScreenPosition ToScreenPosition(this Point point)
-        {
-            return new ScreenPosition(point.X, point.Y);
-        }
+public static class MapExtensions
+{
+    public static ScreenPosition ToScreenPosition(this PointerPoint pointerPoint)
+    {
+        return new ScreenPosition(pointerPoint.Position.X, pointerPoint.Position.Y);
+    }
+
+    public static ScreenPosition ToScreenPosition(this Point point)
+    {
+        return new ScreenPosition(point.X, point.Y);
     }
 }

@@ -7,219 +7,218 @@ using Microsoft.UI.Xaml.Controls;
 
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 可停靠面板
+/// </summary>
+public partial class DockPanel : Panel
 {
+    #region 静态内容
     /// <summary>
-    /// 可停靠面板
+    /// 停靠位置依赖项属性
     /// </summary>
-    public partial class DockPanel : Panel
+    public static readonly DependencyProperty DockProperty = DependencyProperty.RegisterAttached(
+        "Win",
+        typeof(DockPosition),
+        typeof(DockPanel),
+        new PropertyMetadata(DockPosition.Left, new PropertyChangedCallback(OnDockChanged)));
+
+
+    /// <summary>
+    /// 获取停靠位置属性值
+    /// </summary>
+    /// <param name="element"></param>
+    /// <returns></returns>
+    public static DockPosition GetDock(UIElement element)
     {
-        #region 静态内容
-        /// <summary>
-        /// 停靠位置依赖项属性
-        /// </summary>
-        public static readonly DependencyProperty DockProperty = DependencyProperty.RegisterAttached(
-            "Win",
-            typeof(DockPosition),
-            typeof(DockPanel),
-            new PropertyMetadata(DockPosition.Left, new PropertyChangedCallback(OnDockChanged)));
-
-
-        /// <summary>
-        /// 获取停靠位置属性值
-        /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
-        public static DockPosition GetDock(UIElement element)
+        if (element == null)
         {
-            if (element == null)
-            {
-                throw new ArgumentNullException("element");
-            }
-            return (DockPosition)element.GetValue(DockProperty);
+            throw new ArgumentNullException("element");
         }
+        return (DockPosition)element.GetValue(DockProperty);
+    }
 
-        /// <summary>
-        /// 设置停靠位置属性值
-        /// </summary>
-        public static void SetDock(UIElement element, DockPosition dock)
+    /// <summary>
+    /// 设置停靠位置属性值
+    /// </summary>
+    public static void SetDock(UIElement element, DockPosition dock)
+    {
+        if (element == null)
         {
-            if (element == null)
-            {
-                throw new ArgumentNullException("element");
-            }
-            element.SetValue(DockProperty, dock);
+            throw new ArgumentNullException("element");
         }
+        element.SetValue(DockProperty, dock);
+    }
 
-        static void OnDockChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    static void OnDockChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (!IsValidDock(e.NewValue))
         {
-            if (!IsValidDock(e.NewValue))
+            throw new ArgumentException("停靠位置只可设置为：上下左右！");
+        }
+        FrameworkElement reference = d as FrameworkElement;
+        if (reference != null)
+        {
+            DockPanel parent = reference.Parent as DockPanel;
+            if (parent != null)
             {
-                throw new ArgumentException("停靠位置只可设置为：上下左右！");
+                parent.InvalidateMeasure();
             }
-            FrameworkElement reference = d as FrameworkElement;
-            if (reference != null)
+        }
+    }
+
+    static bool IsValidDock(object o)
+    {
+        DockPosition dock = (DockPosition)o;
+        if (((dock != DockPosition.Left) && (dock != DockPosition.Top)) && (dock != DockPosition.Right))
+        {
+            return (dock == DockPosition.Bottom);
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// 内容区域是否采用填充方式
+    /// </summary>
+    public static readonly DependencyProperty LastChildFillProperty = DependencyProperty.Register(
+        "LastChildFill",
+        typeof(bool),
+        typeof(DockPanel),
+        new PropertyMetadata(true, new PropertyChangedCallback(OnLastChildFillChanged)));
+
+    static void OnLastChildFillChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        DockPanel panel = d as DockPanel;
+        if (panel != null)
+        {
+            panel.InvalidateArrange();
+        }
+    }
+
+    #endregion
+
+    /// <summary>
+    /// 构造方法
+    /// </summary>
+    public DockPanel()
+    {
+    }
+
+    /// <summary>
+    /// 测量
+    /// </summary>
+    /// <param name="availableSize"></param>
+    /// <returns></returns>
+    protected override Size MeasureOverride(Size availableSize)
+    {
+        UIElementCollection internalChildren = Children;
+        double num = 0.0;
+        double num2 = 0.0;
+        double num3 = 0.0;
+        double num4 = 0.0;
+        int num5 = 0;
+        int count = internalChildren.Count;
+        while (num5 < count)
+        {
+            var element = internalChildren[num5];
+            if (element != null)
             {
-                DockPanel parent = reference.Parent as DockPanel;
-                if (parent != null)
+                Size remainingSize = new Size(Math.Max(0.0, availableSize.Width - num3), Math.Max(0.0, availableSize.Height - num4));
+#if WIN
+                element.Measure(remainingSize);
+                Size desiredSize = element.DesiredSize;
+#else
+                Size desiredSize = MeasureElement(element, remainingSize);
+#endif
+                switch (GetDock(element))
                 {
-                    parent.InvalidateMeasure();
+                    case DockPosition.Left:
+                    case DockPosition.Right:
+                        num2 = Math.Max(num2, num4 + desiredSize.Height);
+                        num3 += desiredSize.Width;
+                        break;
+
+                    case DockPosition.Top:
+                    case DockPosition.Bottom:
+                        num = Math.Max(num, num3 + desiredSize.Width);
+                        num4 += desiredSize.Height;
+                        break;
                 }
             }
+            num5++;
         }
+        return new Size(Math.Max(num, num3), Math.Max(num2, num4));
+    }
 
-        static bool IsValidDock(object o)
+    /// <summary>
+    /// 布局
+    /// </summary>
+    /// <param name="finalSize"></param>
+    /// <returns></returns>
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        UIElementCollection internalChildren = Children;
+        int count = internalChildren.Count;
+        int num2 = count - (LastChildFill ? 1 : 0);
+        double x = 0.0;
+        double y = 0.0;
+        double num5 = 0.0;
+        double num6 = 0.0;
+        for (int i = 0; i < count; i++)
         {
-            DockPosition dock = (DockPosition)o;
-            if (((dock != DockPosition.Left) && (dock != DockPosition.Top)) && (dock != DockPosition.Right))
+            var element = internalChildren[i];
+            if (element != null)
             {
-                return (dock == DockPosition.Bottom);
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// 内容区域是否采用填充方式
-        /// </summary>
-        public static readonly DependencyProperty LastChildFillProperty = DependencyProperty.Register(
-            "LastChildFill",
-            typeof(bool),
-            typeof(DockPanel),
-            new PropertyMetadata(true, new PropertyChangedCallback(OnLastChildFillChanged)));
-
-        static void OnLastChildFillChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            DockPanel panel = d as DockPanel;
-            if (panel != null)
-            {
-                panel.InvalidateArrange();
-            }
-        }
-
-        #endregion
-
-        /// <summary>
-        /// 构造方法
-        /// </summary>
-        public DockPanel()
-        {
-        }
-
-        /// <summary>
-        /// 测量
-        /// </summary>
-        /// <param name="availableSize"></param>
-        /// <returns></returns>
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            UIElementCollection internalChildren = Children;
-            double num = 0.0;
-            double num2 = 0.0;
-            double num3 = 0.0;
-            double num4 = 0.0;
-            int num5 = 0;
-            int count = internalChildren.Count;
-            while (num5 < count)
-            {
-                var element = internalChildren[num5];
-                if (element != null)
-                {
-                    Size remainingSize = new Size(Math.Max(0.0, availableSize.Width - num3), Math.Max(0.0, availableSize.Height - num4));
 #if WIN
-                    element.Measure(remainingSize);
-                    Size desiredSize = element.DesiredSize;
+                Size desiredSize = element.DesiredSize;
 #else
-                    Size desiredSize = MeasureElement(element, remainingSize);
+                Size desiredSize = GetElementDesiredSize(element);
 #endif
+                Rect finalRect = new Rect(x, y, Math.Max(0.0, finalSize.Width - (x + num5)), Math.Max(0.0, finalSize.Height - (y + num6)));
+                if (i < num2)
+                {
                     switch (GetDock(element))
                     {
                         case DockPosition.Left:
-                        case DockPosition.Right:
-                            num2 = Math.Max(num2, num4 + desiredSize.Height);
-                            num3 += desiredSize.Width;
+                            x += desiredSize.Width;
+                            finalRect.Width = desiredSize.Width;
                             break;
 
                         case DockPosition.Top:
+                            y += desiredSize.Height;
+                            finalRect.Height = desiredSize.Height;
+                            break;
+
+                        case DockPosition.Right:
+                            num5 += desiredSize.Width;
+                            finalRect.X = Math.Max((double)0.0, (double)(finalSize.Width - num5));
+                            finalRect.Width = desiredSize.Width;
+                            break;
+
                         case DockPosition.Bottom:
-                            num = Math.Max(num, num3 + desiredSize.Width);
-                            num4 += desiredSize.Height;
+                            num6 += desiredSize.Height;
+                            finalRect.Y = Math.Max((double)0.0, (double)(finalSize.Height - num6));
+                            finalRect.Height = desiredSize.Height;
                             break;
                     }
                 }
-                num5++;
-            }
-            return new Size(Math.Max(num, num3), Math.Max(num2, num4));
-        }
-
-        /// <summary>
-        /// 布局
-        /// </summary>
-        /// <param name="finalSize"></param>
-        /// <returns></returns>
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            UIElementCollection internalChildren = Children;
-            int count = internalChildren.Count;
-            int num2 = count - (LastChildFill ? 1 : 0);
-            double x = 0.0;
-            double y = 0.0;
-            double num5 = 0.0;
-            double num6 = 0.0;
-            for (int i = 0; i < count; i++)
-            {
-                var element = internalChildren[i];
-                if (element != null)
-                {
 #if WIN
-                    Size desiredSize = element.DesiredSize;
+                element.Arrange(finalRect);
 #else
-                    Size desiredSize = GetElementDesiredSize(element);
+                ArrangeElement(element, finalRect);
 #endif
-                    Rect finalRect = new Rect(x, y, Math.Max(0.0, finalSize.Width - (x + num5)), Math.Max(0.0, finalSize.Height - (y + num6)));
-                    if (i < num2)
-                    {
-                        switch (GetDock(element))
-                        {
-                            case DockPosition.Left:
-                                x += desiredSize.Width;
-                                finalRect.Width = desiredSize.Width;
-                                break;
-
-                            case DockPosition.Top:
-                                y += desiredSize.Height;
-                                finalRect.Height = desiredSize.Height;
-                                break;
-
-                            case DockPosition.Right:
-                                num5 += desiredSize.Width;
-                                finalRect.X = Math.Max((double)0.0, (double)(finalSize.Width - num5));
-                                finalRect.Width = desiredSize.Width;
-                                break;
-
-                            case DockPosition.Bottom:
-                                num6 += desiredSize.Height;
-                                finalRect.Y = Math.Max((double)0.0, (double)(finalSize.Height - num6));
-                                finalRect.Height = desiredSize.Height;
-                                break;
-                        }
-                    }
-#if WIN
-                    element.Arrange(finalRect);
-#else
-                    ArrangeElement(element, finalRect);
-#endif
-                }
             }
-            return finalSize;
         }
+        return finalSize;
+    }
 
-        /// <summary>
-        /// 获取设置内容区域是否采用填充方式
-        /// </summary>
-        public bool LastChildFill
-        {
-            get { return (bool)GetValue(LastChildFillProperty); }
-            set { SetValue(LastChildFillProperty, value); }
-        }
+    /// <summary>
+    /// 获取设置内容区域是否采用填充方式
+    /// </summary>
+    public bool LastChildFill
+    {
+        get { return (bool)GetValue(LastChildFillProperty); }
+        set { SetValue(LastChildFillProperty, value); }
     }
 }

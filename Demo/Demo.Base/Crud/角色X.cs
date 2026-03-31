@@ -9,50 +9,49 @@
 #region 引用命名
 #endregion
 
-namespace Demo.Base
+namespace Demo.Base;
+
+public partial class 角色X
 {
-    public partial class 角色X
+    public static async Task<角色X> New(
+        string 角色名称 = default,
+        string 角色描述 = default)
     {
-        public static async Task<角色X> New(
-            string 角色名称 = default,
-            string 角色描述 = default)
-        {
-            return new 角色X(
-                ID: await NewID(),
-                角色名称: 角色名称,
-                角色描述: 角色描述);
-        }
+        return new 角色X(
+            ID: await NewID(),
+            角色名称: 角色名称,
+            角色描述: 角色描述);
+    }
 
-        protected override void InitHook()
-        {
-            //OnSaving(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+    protected override void InitHook()
+    {
+        //OnSaving(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnSaved(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnSaved(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnDeleting(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnDeleting(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnDeleted(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnDeleted(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnChanging(cName, e =>
-            //{
-                
-            //});
-        }
+        //OnChanging(cName, e =>
+        //{
+            
+        //});
     }
 }

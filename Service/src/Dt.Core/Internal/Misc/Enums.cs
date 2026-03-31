@@ -9,23 +9,22 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+/// <summary>
+/// 性别
+/// </summary>
+public enum Gender
 {
-    /// <summary>
-    /// 性别
-    /// </summary>
-    public enum Gender
-    {
-        未知,
+    未知,
 
-        男,
+    男,
 
-        女,
+    女,
 
-        //女改男,
+    //女改男,
 
-        //男改女,
+    //男改女,
 
-        //其他
-    }
+    //其他
 }

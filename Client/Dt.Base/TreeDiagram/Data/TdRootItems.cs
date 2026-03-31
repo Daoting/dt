@@ -13,61 +13,60 @@ using Windows.Foundation;
 using Microsoft.UI.Xaml;
 #endregion
 
-namespace Dt.Base.TreeDiagrams
+namespace Dt.Base.TreeDiagrams;
+
+/// <summary>
+/// 根节点集合
+/// </summary>
+internal class TdRootItems : List<TdItem>
 {
-    /// <summary>
-    /// 根节点集合
-    /// </summary>
-    internal class TdRootItems : List<TdItem>
+    TreeDiagram _owner;
+
+    public TdRootItems(TreeDiagram p_owner)
     {
-        TreeDiagram _owner;
-
-        public TdRootItems(TreeDiagram p_owner)
-        {
-            _owner = p_owner;
-        }
-
-        public void ClearUI()
-        {
-            foreach (var item in GetAllItems())
-            {
-                item.ClearUI();
-            }
-        }
-
-        /// <summary>
-        /// 遍历所有节点
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<TdItem> GetAllItems()
-        {
-            foreach (var item in this)
-            {
-                yield return item;
-                if (item.Children.Count > 0)
-                {
-                    foreach (var ti in GetAllChild(item))
-                    {
-                        yield return ti;
-                    }
-                }
-            }
-        }
-
-        IEnumerable<TdItem> GetAllChild(TdItem p_item)
-        {
-            foreach (var child in p_item.Children)
-            {
-                yield return child;
-                if (child.Children.Count > 0)
-                {
-                    foreach (var ti in GetAllChild(child))
-                    {
-                        yield return ti;
-                    }
-                }
-            }
-        }
-
+        _owner = p_owner;
     }
+
+    public void ClearUI()
+    {
+        foreach (var item in GetAllItems())
+        {
+            item.ClearUI();
+        }
+    }
+
+    /// <summary>
+    /// 遍历所有节点
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable<TdItem> GetAllItems()
+    {
+        foreach (var item in this)
+        {
+            yield return item;
+            if (item.Children.Count > 0)
+            {
+                foreach (var ti in GetAllChild(item))
+                {
+                    yield return ti;
+                }
+            }
+        }
+    }
+
+    IEnumerable<TdItem> GetAllChild(TdItem p_item)
+    {
+        foreach (var child in p_item.Children)
+        {
+            yield return child;
+            if (child.Children.Count > 0)
+            {
+                foreach (var ti in GetAllChild(child))
+                {
+                    yield return ti;
+                }
+            }
+        }
+    }
+
 }

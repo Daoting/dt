@@ -20,68 +20,67 @@ using System.IO;
 using System.Net;
 #endregion
 
-namespace Dt.Core.HtmlLog
+namespace Dt.Core.HtmlLog;
+
+class OutputFormatter : ITextFormatter
 {
-    class OutputFormatter : ITextFormatter
+    readonly OutputRenderer[] _renderers;
+
+    public OutputFormatter(string outputTemplate)
     {
-        readonly OutputRenderer[] _renderers;
+        if (outputTemplate is null) throw new ArgumentNullException(nameof(outputTemplate));
+        var template = new MessageTemplateParser().Parse(outputTemplate);
 
-        public OutputFormatter(string outputTemplate)
+        var theme = new HtmlTheme();
+        var renderers = new List<OutputRenderer>();
+        foreach (var token in template.Tokens)
         {
-            if (outputTemplate is null) throw new ArgumentNullException(nameof(outputTemplate));
-            var template = new MessageTemplateParser().Parse(outputTemplate);
-
-            var theme = new HtmlTheme();
-            var renderers = new List<OutputRenderer>();
-            foreach (var token in template.Tokens)
+            if (token is TextToken tt)
             {
-                if (token is TextToken tt)
-                {
-                    renderers.Add(new TextTokenRenderer(theme, tt.Text));
-                    continue;
-                }
-
-                var pt = (PropertyToken)token;
-                if (pt.PropertyName == OutputProperties.LevelPropertyName)
-                {
-                    renderers.Add(new LevelTokenRenderer(theme, pt));
-                }
-                else if (pt.PropertyName == OutputProperties.NewLinePropertyName)
-                {
-                    renderers.Add(new NewLineTokenRenderer(pt.Alignment));
-                }
-                else if (pt.PropertyName == OutputProperties.ExceptionPropertyName)
-                {
-                    renderers.Add(new ExceptionTokenRenderer(theme, pt));
-                }
-                else if (pt.PropertyName == OutputProperties.MessagePropertyName)
-                {
-                    renderers.Add(new MessageTemplateOutputTokenRenderer(theme, pt));
-                }
-                else if (pt.PropertyName == OutputProperties.TimestampPropertyName)
-                {
-                    renderers.Add(new TimestampTokenRenderer(theme, pt));
-                }
-                else if (pt.PropertyName == "Properties")
-                {
-                    renderers.Add(new PropertiesTokenRenderer(theme, pt, template));
-                }
-                else
-                {
-                    renderers.Add(new EventPropertyTokenRenderer(theme, pt));
-                }
+                renderers.Add(new TextTokenRenderer(theme, tt.Text));
+                continue;
             }
 
-            _renderers = renderers.ToArray();
+            var pt = (PropertyToken)token;
+            if (pt.PropertyName == OutputProperties.LevelPropertyName)
+            {
+                renderers.Add(new LevelTokenRenderer(theme, pt));
+            }
+            else if (pt.PropertyName == OutputProperties.NewLinePropertyName)
+            {
+                renderers.Add(new NewLineTokenRenderer(pt.Alignment));
+            }
+            else if (pt.PropertyName == OutputProperties.ExceptionPropertyName)
+            {
+                renderers.Add(new ExceptionTokenRenderer(theme, pt));
+            }
+            else if (pt.PropertyName == OutputProperties.MessagePropertyName)
+            {
+                renderers.Add(new MessageTemplateOutputTokenRenderer(theme, pt));
+            }
+            else if (pt.PropertyName == OutputProperties.TimestampPropertyName)
+            {
+                renderers.Add(new TimestampTokenRenderer(theme, pt));
+            }
+            else if (pt.PropertyName == "Properties")
+            {
+                renderers.Add(new PropertiesTokenRenderer(theme, pt, template));
+            }
+            else
+            {
+                renderers.Add(new EventPropertyTokenRenderer(theme, pt));
+            }
         }
 
-        public void Format(LogEvent logEvent, TextWriter output)
-        {
-            if (logEvent is null) throw new ArgumentNullException(nameof(logEvent));
-            if (output is null) throw new ArgumentNullException(nameof(output));
+        _renderers = renderers.ToArray();
+    }
 
-            foreach (var renderer in _renderers)
-                renderer.Render(logEvent, output);
-        }
+    public void Format(LogEvent logEvent, TextWriter output)
+    {
+        if (logEvent is null) throw new ArgumentNullException(nameof(logEvent));
+        if (output is null) throw new ArgumentNullException(nameof(output));
+
+        foreach (var renderer in _renderers)
+            renderer.Render(logEvent, output);
     }
 }

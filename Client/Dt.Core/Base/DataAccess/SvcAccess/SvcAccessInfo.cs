@@ -10,22 +10,21 @@
 
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core;
+
+class SvcAccessInfo : IAccessInfo
 {
-    class SvcAccessInfo : IAccessInfo
+    readonly SvcAccess _da;
+
+    public SvcAccessInfo(string p_name)
     {
-        readonly SvcAccess _da;
-
-        public SvcAccessInfo(string p_name)
-        {
-            Name = p_name;
-            _da = new SvcAccess(this);
-        }
-
-        public AccessType Type => AccessType.Service;
-
-        public string Name { get; }
-
-        public IDataAccess GetDa() => _da;
+        Name = p_name;
+        _da = new SvcAccess(this);
     }
+
+    public AccessType Type => AccessType.Service;
+
+    public string Name { get; }
+
+    public IDataAccess GetDa() => _da;
 }

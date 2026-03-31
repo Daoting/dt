@@ -18,56 +18,55 @@ using System.Threading.Tasks;
 
 #endregion
 
-namespace Dt.Msg.Api
+namespace Dt.Msg.Api;
+
+/// <summary>
+/// 
+/// </summary>
+[Api(IsTest = true)]
+public class TestMsg : RpcApi
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    [Api(IsTest = true)]
-    public class TestMsg : RpcApi
+    public async Task<int> CloseAllOnline()
     {
-        public async Task<int> CloseAllOnline()
+        // 单副本
+        int cnt = Online.TotalCount;
+        var ls = Online.All.Values.ToList();
+        foreach (var item in ls)
         {
-            // 单副本
-            int cnt = Online.TotalCount;
-            var ls = Online.All.Values.ToList();
-            foreach (var item in ls)
+            foreach (var ci in item)
             {
-                foreach (var ci in item)
+                await ci.Close();
+            }
+        }
+        return cnt;
+    }
+
+    public Task<string> CallCmGetString()
+    {
+        return Kit.Rpc<string>(
+            "cm",
+            "TestSerialize.GetString"
+        );
+    }
+
+    public async Task<int> CallAllReplica(string p_msg, bool p_checkReplica = true)
+    {
+        Log.Information($"{Kit.SvcID}收到：{p_msg}");
+        int total = 1;
+
+        // 查询所有其他副本
+        if (p_checkReplica)
+        {
+            int cnt = Kit.GetSvcReplicaCount();
+            if (cnt > 1)
+            {
+                foreach (var svcID in Kit.GetOtherReplicaIDs())
                 {
-                    await ci.Close();
+                    await Kit.RpcInst<int>(svcID, "TestMsg.CallAllReplica", p_msg, false);
+                    total++;
                 }
             }
-            return cnt;
         }
-
-        public Task<string> CallCmGetString()
-        {
-            return Kit.Rpc<string>(
-                "cm",
-                "TestSerialize.GetString"
-            );
-        }
-
-        public async Task<int> CallAllReplica(string p_msg, bool p_checkReplica = true)
-        {
-            Log.Information($"{Kit.SvcID}收到：{p_msg}");
-            int total = 1;
-
-            // 查询所有其他副本
-            if (p_checkReplica)
-            {
-                int cnt = Kit.GetSvcReplicaCount();
-                if (cnt > 1)
-                {
-                    foreach (var svcID in Kit.GetOtherReplicaIDs())
-                    {
-                        await Kit.RpcInst<int>(svcID, "TestMsg.CallAllReplica", p_msg, false);
-                        total++;
-                    }
-                }
-            }
-            return total;
-        }
+        return total;
     }
 }

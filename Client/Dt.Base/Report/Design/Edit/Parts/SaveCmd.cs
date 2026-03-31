@@ -10,27 +10,26 @@
 using Dt.Core;
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base.Report;
+
+internal class SaveCmd : BaseCommand
 {
-    internal class SaveCmd : BaseCommand
+    RptDesignInfo _owner;
+
+    public SaveCmd(RptDesignInfo p_owner)
     {
-        RptDesignInfo _owner;
+        _owner = p_owner;
+        UpdateAllowExecute();
+        _owner.DirtyChanged += (sender, e) => UpdateAllowExecute();
+    }
 
-        public SaveCmd(RptDesignInfo p_owner)
-        {
-            _owner = p_owner;
-            UpdateAllowExecute();
-            _owner.DirtyChanged += (sender, e) => UpdateAllowExecute();
-        }
+    protected override void DoExecute(object p_parameter)
+    {
+        _ = _owner.SaveTemplate();
+    }
 
-        protected override void DoExecute(object p_parameter)
-        {
-            _ = _owner.SaveTemplate();
-        }
-
-        void UpdateAllowExecute()
-        {
-            AllowExecute = _owner.IsDirty;
-        }
+    void UpdateAllowExecute()
+    {
+        AllowExecute = _owner.IsDirty;
     }
 }

@@ -11,40 +11,39 @@ using Dt.Mgr.Chat;
 using Microsoft.UI.Xaml;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public sealed partial class FsmDemo : Win
 {
-    public sealed partial class FsmDemo : Win
+    public FsmDemo()
     {
-        public FsmDemo()
+        InitializeComponent();
+    }
+    
+    void OnChat(object sender, RoutedEventArgs e)
+    {
+        ChatDs.SendLetter(1, new LetterInfo
         {
-            InitializeComponent();
-        }
-        
-        void OnChat(object sender, RoutedEventArgs e)
-        {
-            ChatDs.SendLetter(1, new LetterInfo
-            {
-                ID = Kit.NewGuid,
-                SenderID = Kit.UserID,
-                SenderName = Kit.UserName,
-                LetterType = LetterType.Image,
-                Content = "[[\"photo/1.jpg\",\"1\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]]",
-                SendTime = Kit.Now,
-            });
-        }
+            ID = Kit.NewGuid,
+            SenderID = Kit.UserID,
+            SenderName = Kit.UserName,
+            LetterType = LetterType.Image,
+            Content = "[[\"photo/1.jpg\",\"1\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]]",
+            SendTime = Kit.Now,
+        });
+    }
 
-        void OnSysMsg(object sender, RoutedEventArgs e)
-        {
-            AtMsg.SendMsg(1, "Hello");
-        }
+    void OnSysMsg(object sender, RoutedEventArgs e)
+    {
+        AtMsg.SendMsg(1, "Hello");
+    }
 
-        void OnCmdMsg(object sender, RoutedEventArgs e)
+    void OnCmdMsg(object sender, RoutedEventArgs e)
+    {
+        AtMsg.SendCmd(1, new MsgInfo
         {
-            AtMsg.SendCmd(1, new MsgInfo
-            {
-                MethodName = "PushApi.Hello",
-                Params = new List<object> { "参数字符串" },
-            });
-        }
+            MethodName = "PushApi.Hello",
+            Params = new List<object> { "参数字符串" },
+        });
     }
 }

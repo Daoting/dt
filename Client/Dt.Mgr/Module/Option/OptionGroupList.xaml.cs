@@ -9,28 +9,27 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Mgr.Module
+namespace Dt.Mgr.Module;
+
+public partial class OptionGroupList : List
 {
-    public partial class OptionGroupList : List
+    public OptionGroupList()
     {
-        public OptionGroupList()
+        InitializeComponent();
+        Menu = CreateMenu();
+        _lv.SetMenu(CreateContextMenu());
+    }
+    
+    protected override async Task OnQuery()
+    {
+        if (_clause == null)
         {
-            InitializeComponent();
-            Menu = CreateMenu();
-            _lv.SetMenu(CreateContextMenu());
+            _lv.Data = await OptionGroupX.Query(null);
         }
-        
-        protected override async Task OnQuery()
+        else
         {
-            if (_clause == null)
-            {
-                _lv.Data = await OptionGroupX.Query(null);
-            }
-            else
-            {
-                var par = await _clause.Build<OptionGroupX>();
-                _lv.Data = await OptionGroupX.Query(par.Sql, par.Params);
-            }
+            var par = await _clause.Build<OptionGroupX>();
+            _lv.Data = await OptionGroupX.Query(par.Sql, par.Params);
         }
     }
 }

@@ -18,23 +18,22 @@ using System.IO;
 using System.Net;
 #endregion
 
-namespace Dt.Core.HtmlLog
+namespace Dt.Core.HtmlLog;
+
+class TextTokenRenderer : OutputRenderer
 {
-    class TextTokenRenderer : OutputRenderer
+    readonly HtmlTheme _theme;
+    readonly string _text;
+
+    public TextTokenRenderer(HtmlTheme theme, string text)
     {
-        readonly HtmlTheme _theme;
-        readonly string _text;
+        _theme = theme;
+        _text = text;
+    }
 
-        public TextTokenRenderer(HtmlTheme theme, string text)
-        {
-            _theme = theme;
-            _text = text;
-        }
-
-        public override void Render(LogEvent logEvent, TextWriter output)
-        {
-            using (_theme.Apply(output, HtmlThemeStyle.TertiaryText))
-                output.Write(_text);
-        }
+    public override void Render(LogEvent logEvent, TextWriter output)
+    {
+        using (_theme.Apply(output, HtmlThemeStyle.TertiaryText))
+            output.Write(_text);
     }
 }

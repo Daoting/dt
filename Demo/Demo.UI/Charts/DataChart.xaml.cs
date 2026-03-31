@@ -19,39 +19,38 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class DataChart : Win
 {
-    public partial class DataChart : Win
+    public DataChart()
     {
-        public DataChart()
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            OnLoadData1(null, null);
-        }
+        OnLoadData1(null, null);
+    }
 
-        void OnLoadData1(object sender, RoutedEventArgs e)
-        {
-            Table tbl = Table.Create(Kit.GetBagFileStream("成绩.json"));
-            _chart.LoadMatrix(tbl, "xm", "subject", "score");
-        }
+    void OnLoadData1(object sender, RoutedEventArgs e)
+    {
+        Table tbl = Table.Create(Kit.GetBagFileStream("成绩.json"));
+        _chart.LoadMatrix(tbl, "xm", "subject", "score");
+    }
 
-        void OnLoadData2(object sender, RoutedEventArgs e)
-        {
-            Table tbl = Table.Create(Kit.GetBagFileStream("成绩.json"));
-            _chart.LoadMatrix(tbl, "subject", "xm", "score");
-        }
+    void OnLoadData2(object sender, RoutedEventArgs e)
+    {
+        Table tbl = Table.Create(Kit.GetBagFileStream("成绩.json"));
+        _chart.LoadMatrix(tbl, "subject", "xm", "score");
+    }
 
-        void OnLoadData3(object sender, RoutedEventArgs e)
-        {
-            Table tbl = Table.Create(Kit.GetBagFileStream("成绩(交叉表).json"));
-            _chart.LoadTable(tbl, "姓名", "语文");
-        }
+    void OnLoadData3(object sender, RoutedEventArgs e)
+    {
+        Table tbl = Table.Create(Kit.GetBagFileStream("成绩(交叉表).json"));
+        _chart.LoadTable(tbl, "姓名", "语文");
+    }
 
-        void OnLoadData4(object sender, RoutedEventArgs e)
-        {
-            Table tbl = Table.Create(Kit.GetBagFileStream("成绩(交叉表).json"));
-            _chart.LoadTable(tbl, "姓名", new List<string> { "语文", "数学", "外语" });
-        }
+    void OnLoadData4(object sender, RoutedEventArgs e)
+    {
+        Table tbl = Table.Create(Kit.GetBagFileStream("成绩(交叉表).json"));
+        _chart.LoadTable(tbl, "姓名", new List<string> { "语文", "数学", "外语" });
     }
 }

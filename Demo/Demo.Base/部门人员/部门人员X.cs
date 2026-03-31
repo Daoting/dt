@@ -9,46 +9,45 @@
 #region 引用命名
 #endregion
 
-namespace Demo.Base
+namespace Demo.Base;
+
+public partial class 部门人员X
 {
-    public partial class 部门人员X
+    public string 部门名称 => (string)this["部门名称"];
+
+    protected override void InitHook()
     {
-        public string 部门名称 => (string)this["部门名称"];
+        //OnSaving(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-        protected override void InitHook()
-        {
-            //OnSaving(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnSaved(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnSaved(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnDeleting(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnDeleting(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnDeleted(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnDeleted(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
-
-            //OnChanging(cName, e =>
-            //{
-                
-            //});
-        }
-
-        #region Sql
-
-        #endregion
+        //OnChanging(cName, e =>
+        //{
+            
+        //});
     }
+
+    #region Sql
+
+    #endregion
 }

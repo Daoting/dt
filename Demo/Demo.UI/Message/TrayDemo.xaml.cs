@@ -13,44 +13,43 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public sealed partial class TrayDemo : Win
 {
-    public sealed partial class TrayDemo : Win
+    public TrayDemo()
     {
-        public TrayDemo()
-        {
-            InitializeComponent();
-        }
-        
-        void OnShowMsg(object sender, RoutedEventArgs e)
-        {
-            Kit.TrayMsg("通知的详情内容");
-        }
+        InitializeComponent();
+    }
+    
+    void OnShowMsg(object sender, RoutedEventArgs e)
+    {
+        Kit.TrayMsg("通知的详情内容");
+    }
 
-        void OnShowWarn(object sender, RoutedEventArgs e)
+    void OnShowWarn(object sender, RoutedEventArgs e)
+    {
+        Kit.TrayMsg("警告通知的详情内容", true);
+    }
+    
+    void OnMoveToTray(object sender, RoutedEventArgs e)
+    {
+        NotifyInfo info = new NotifyInfo();
+        info.Message = "未点击【查看详情】按钮关闭后放入托盘通知";
+        info.Link = "查看详情";
+        info.LinkCallback = e =>
         {
-            Kit.TrayMsg("警告通知的详情内容", true);
-        }
-        
-        void OnMoveToTray(object sender, RoutedEventArgs e)
-        {
-            NotifyInfo info = new NotifyInfo();
-            info.Message = "未点击【查看详情】按钮关闭后放入托盘通知";
-            info.Link = "查看详情";
-            info.LinkCallback = e =>
-            {
-                Kit.Msg("详情内容");
-                Kit.CloseNotify(e);
-            };
-            info.Delay = 3;
-            info.ToTray = e => Kit.TrayMsg(e);
-            Kit.Notify(info);
-        }
+            Kit.Msg("详情内容");
+            Kit.CloseNotify(e);
+        };
+        info.Delay = 3;
+        info.ToTray = e => Kit.TrayMsg(e);
+        Kit.Notify(info);
+    }
 
-        void OnShowSync(object sender, RoutedEventArgs e)
-        {
-            var ni = Kit.Msg("提示信息同步放入托盘通知");
-            Kit.TrayMsg(ni);
-        }
+    void OnShowSync(object sender, RoutedEventArgs e)
+    {
+        var ni = Kit.Msg("提示信息同步放入托盘通知");
+        Kit.TrayMsg(ni);
     }
 }

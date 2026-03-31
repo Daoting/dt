@@ -15,31 +15,30 @@ using System.IO;
 using System.Text;
 #endregion
 
-namespace Dt.Core.HtmlLog
+namespace Dt.Core.HtmlLog;
+
+class HtmlSink : ILogEventSink
 {
-    class HtmlSink : ILogEventSink
+    readonly ITextFormatter _formatter;
+    readonly object _syncRoot;
+
+    const int DefaultWriteBufferCapacity = 256;
+
+    public HtmlSink(
+        ITextFormatter formatter,
+        object syncRoot)
     {
-        readonly ITextFormatter _formatter;
-        readonly object _syncRoot;
+        _formatter = formatter;
+        _syncRoot = syncRoot ?? throw new ArgumentNullException(nameof(syncRoot));
+    }
 
-        const int DefaultWriteBufferCapacity = 256;
-
-        public HtmlSink(
-            ITextFormatter formatter,
-            object syncRoot)
+    public void Emit(LogEvent logEvent)
+    {
+        lock (_syncRoot)
         {
-            _formatter = formatter;
-            _syncRoot = syncRoot ?? throw new ArgumentNullException(nameof(syncRoot));
-        }
-
-        public void Emit(LogEvent logEvent)
-        {
-            lock (_syncRoot)
-            {
-                var sw = new StringWriter(new StringBuilder(DefaultWriteBufferCapacity));
-                _formatter.Format(logEvent, sw);
-                HtmlLogHub.AddLog(sw.ToString());
-            }
+            var sw = new StringWriter(new StringBuilder(DefaultWriteBufferCapacity));
+            _formatter.Format(logEvent, sw);
+            HtmlLogHub.AddLog(sw.ToString());
         }
     }
 }

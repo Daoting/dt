@@ -15,64 +15,63 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// Markdown富文本格
+/// </summary>
+public partial class CMarkdown : FvCell
 {
-    /// <summary>
-    /// Markdown富文本格
-    /// </summary>
-    public partial class CMarkdown : FvCell
+    #region 构造方法
+    public CMarkdown()
     {
-        #region 构造方法
-        public CMarkdown()
-        {
-            DefaultStyleKey = typeof(CMarkdown);
-        }
-        #endregion
+        DefaultStyleKey = typeof(CMarkdown);
+    }
+    #endregion
 
-        #region 事件
-        /// <summary>
-        /// 保存事件
-        /// </summary>
-        public event Action<CMarkdown> Saved;
-        #endregion
+    #region 事件
+    /// <summary>
+    /// 保存事件
+    /// </summary>
+    public event Action<CMarkdown> Saved;
+    #endregion
 
-        protected override void OnApplyCellTemplate()
-        {
-            var btn = (Button)GetTemplateChild("BtnEdit");
-            btn.Click += OnShowDlg;
-        }
+    protected override void OnApplyCellTemplate()
+    {
+        var btn = (Button)GetTemplateChild("BtnEdit");
+        btn.Click += OnShowDlg;
+    }
 
-        void OnShowDlg(object sender, RoutedEventArgs e)
+    void OnShowDlg(object sender, RoutedEventArgs e)
+    {
+        var dlg = new MarkdownDlg(this);
+        if (!Kit.IsPhoneUI)
         {
-            var dlg = new MarkdownDlg(this);
-            if (!Kit.IsPhoneUI)
-            {
-                dlg.Height = Kit.ViewHeight - 140;
-                dlg.Width = Math.Min(900, Kit.ViewWidth - 200);
-            }
-            dlg.ShowDlg();
+            dlg.Height = Kit.ViewHeight - 140;
+            dlg.Width = Math.Min(900, Kit.ViewWidth - 200);
         }
+        dlg.ShowDlg();
+    }
 
-        internal void OnSaved()
-        {
-            Saved?.Invoke(this);
-        }
+    internal void OnSaved()
+    {
+        Saved?.Invoke(this);
+    }
 
-        internal string CurrentText
+    internal string CurrentText
+    {
+        get
         {
-            get
-            {
-                if (ValBinding.Source is ICell cell)
-                    return cell.GetVal<string>();
-                return "";
-            }
+            if (ValBinding.Source is ICell cell)
+                return cell.GetVal<string>();
+            return "";
         }
+    }
 
-        internal Task<bool> SaveText(string p_txt)
-        {
-            Val = p_txt;
-            OnSaved();
-            return Task.FromResult(true);
-        }
+    internal Task<bool> SaveText(string p_txt)
+    {
+        Val = p_txt;
+        OnSaved();
+        return Task.FromResult(true);
     }
 }

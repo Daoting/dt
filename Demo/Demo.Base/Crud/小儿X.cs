@@ -9,50 +9,49 @@
 #region 引用命名
 #endregion
 
-namespace Demo.Base
+namespace Demo.Base;
+
+public partial class 小儿X
 {
-    public partial class 小儿X
+    public static async Task<小儿X> New(
+        long GroupID = default,
+        string 小儿名 = default)
     {
-        public static async Task<小儿X> New(
-            long GroupID = default,
-            string 小儿名 = default)
-        {
-            return new 小儿X(
-                ID: await NewID(),
-                GroupID: GroupID,
-                小儿名: 小儿名);
-        }
+        return new 小儿X(
+            ID: await NewID(),
+            GroupID: GroupID,
+            小儿名: 小儿名);
+    }
 
-        protected override void InitHook()
-        {
-            //OnSaving(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+    protected override void InitHook()
+    {
+        //OnSaving(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnSaved(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnSaved(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnDeleting(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnDeleting(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnDeleted(() =>
-            //{
-                
-            //    return Task.CompletedTask;
-            //});
+        //OnDeleted(() =>
+        //{
+            
+        //    return Task.CompletedTask;
+        //});
 
-            //OnChanging(cName, e =>
-            //{
-                
-            //});
-        }
+        //OnChanging(cName, e =>
+        //{
+            
+        //});
     }
 }

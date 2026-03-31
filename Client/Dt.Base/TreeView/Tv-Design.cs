@@ -10,20 +10,19 @@
 using Microsoft.UI.Xaml;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 设计时
+/// </summary>
+public partial class Tv
 {
     /// <summary>
-    /// 设计时
+    /// 设计时用，行视图的xaml
     /// </summary>
-    public partial class Tv
+    public string ViewXaml
     {
-        /// <summary>
-        /// 设计时用，行视图的xaml
-        /// </summary>
-        public string ViewXaml
-        {
-            get { return Ex.GetViewXaml(this); }
-            set { Ex.SetViewXaml(this, value); }
-        }
+        get { return Ex.GetViewXaml(this); }
+        set { Ex.SetViewXaml(this, value); }
     }
 }

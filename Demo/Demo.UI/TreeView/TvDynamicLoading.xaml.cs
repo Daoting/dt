@@ -17,30 +17,29 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class TvDynamicLoading : Win
 {
-    public partial class TvDynamicLoading : Win
+    public TvDynamicLoading()
     {
-        public TvDynamicLoading()
-        {
-            InitializeComponent();
-            _tv.Data = TvData.GetRootTbl();
-            _tv.LoadingChild += OnLoadingChild;
-        }
+        InitializeComponent();
+        _tv.Data = TvData.GetRootTbl();
+        _tv.LoadingChild += OnLoadingChild;
+    }
 
-        async void OnLoadingChild(LoadingChildArgs e)
+    async void OnLoadingChild(LoadingChildArgs e)
+    {
+        using (e.Wait())
         {
-            using (e.Wait())
-            {
-                // 模拟等待
-                await Task.Delay(400);
-                e.Children = ((ITreeData)TvData.GetTbl()).GetTreeItemChildren(e.CurrentItem.Data);
-            }
+            // 模拟等待
+            await Task.Delay(400);
+            e.Children = ((ITreeData)TvData.GetTbl()).GetTreeItemChildren(e.CurrentItem.Data);
         }
+    }
 
-        void OnCollapseAll(object sender, RoutedEventArgs e)
-        {
-            _tv.CollapseAll();
-        }
+    void OnCollapseAll(object sender, RoutedEventArgs e)
+    {
+        _tv.CollapseAll();
     }
 }

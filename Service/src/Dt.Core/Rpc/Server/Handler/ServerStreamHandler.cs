@@ -12,45 +12,44 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core.Rpc
+namespace Dt.Core.Rpc;
+
+/// <summary>
+/// 客户端发送一个请求，服务端返回数据流的处理类
+/// </summary>
+class ServerStreamHandler : RpcHandler
 {
+    public ServerStreamHandler(ApiInvoker p_invoker)
+        : base(p_invoker)
+    { }
+
     /// <summary>
-    /// 客户端发送一个请求，服务端返回数据流的处理类
+    /// 调用服务方法
     /// </summary>
-    class ServerStreamHandler : RpcHandler
+    /// <returns></returns>
+    protected override Task<bool> CallMethod()
     {
-        public ServerStreamHandler(ApiInvoker p_invoker)
-            : base(p_invoker)
-        { }
-
-        /// <summary>
-        /// 调用服务方法
-        /// </summary>
-        /// <returns></returns>
-        protected override Task<bool> CallMethod()
+        try
         {
-            try
-            {
-                // 补充参数
-                if (_invoker.Args != null && _invoker.Args.Length > 0)
-                    _invoker.Args[_invoker.Args.Length - 1] = new ResponseWriter(_invoker);
+            // 补充参数
+            if (_invoker.Args != null && _invoker.Args.Length > 0)
+                _invoker.Args[_invoker.Args.Length - 1] = new ResponseWriter(_invoker);
 
-                var task = (Task)_invoker.Api.Method.Invoke(_tgt, _invoker.Args);
-                task.Wait(_invoker.RequestAborted);
-            }
-            catch (OperationCanceledException)
-            {
-                // 客户端取消请求，属于调用成功
-            }
-            catch (Exception ex)
-            {
-                if (!(ex.InnerException is OperationCanceledException))
-                {
-                    LogCallError(ex);
-                    return Task.FromResult(false);
-                }
-            }
-            return Task.FromResult(true);
+            var task = (Task)_invoker.Api.Method.Invoke(_tgt, _invoker.Args);
+            task.Wait(_invoker.RequestAborted);
         }
+        catch (OperationCanceledException)
+        {
+            // 客户端取消请求，属于调用成功
+        }
+        catch (Exception ex)
+        {
+            if (!(ex.InnerException is OperationCanceledException))
+            {
+                LogCallError(ex);
+                return Task.FromResult(false);
+            }
+        }
+        return Task.FromResult(true);
     }
 }

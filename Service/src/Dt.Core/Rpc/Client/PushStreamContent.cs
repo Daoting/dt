@@ -14,28 +14,27 @@ using System.Net.Http;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core.Rpc
+namespace Dt.Core.Rpc;
+
+internal class PushStreamContent : HttpContent
 {
-    internal class PushStreamContent : HttpContent
+    private readonly Func<Stream, Task> _onStreamAvailable;
+
+    public PushStreamContent(Func<Stream, Task> onStreamAvailable)
     {
-        private readonly Func<Stream, Task> _onStreamAvailable;
+        _onStreamAvailable = onStreamAvailable;
+    }
 
-        public PushStreamContent(Func<Stream, Task> onStreamAvailable)
-        {
-            _onStreamAvailable = onStreamAvailable;
-        }
+    protected override Task SerializeToStreamAsync(Stream stream, TransportContext context)
+    {
+        // 此处返回的Task未结束前一直可以写入流，实现客户端推送流功能！
+        return _onStreamAvailable(stream);
+    }
 
-        protected override Task SerializeToStreamAsync(Stream stream, TransportContext context)
-        {
-            // 此处返回的Task未结束前一直可以写入流，实现客户端推送流功能！
-            return _onStreamAvailable(stream);
-        }
-
-        protected override bool TryComputeLength(out long length)
-        {
-            // 设置内容长度未知
-            length = -1;
-            return false;
-        }
+    protected override bool TryComputeLength(out long length)
+    {
+        // 设置内容长度未知
+        length = -1;
+        return false;
     }
 }

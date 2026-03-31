@@ -26,82 +26,81 @@ using Microsoft.UI.Xaml.Input;
 using Windows.System;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 滚动相关
+/// </summary>
+public partial class Fv
 {
     /// <summary>
-    /// 滚动相关
+    /// 滚动到最顶端
     /// </summary>
-    public partial class Fv
+    public void ScrollTop()
     {
-        /// <summary>
-        /// 滚动到最顶端
-        /// </summary>
-        public void ScrollTop()
-        {
-            if (_panel.Children.Count > 0)
-                ScrollInto((FrameworkElement)_panel.Children[0]);
-        }
+        if (_panel.Children.Count > 0)
+            ScrollInto((FrameworkElement)_panel.Children[0]);
+    }
 
-        /// <summary>
-        /// 滚动到最底端
-        /// </summary>
-        public void ScrollBottom()
-        {
-            // 末尾为边框
-            if (_panel.Children.Count > 1)
-                ScrollInto((FrameworkElement)_panel.Children[_panel.Children.Count - 2]);
-        }
+    /// <summary>
+    /// 滚动到最底端
+    /// </summary>
+    public void ScrollBottom()
+    {
+        // 末尾为边框
+        if (_panel.Children.Count > 1)
+            ScrollInto((FrameworkElement)_panel.Children[_panel.Children.Count - 2]);
+    }
 
-        /// <summary>
-        /// 将指定格滚动到可视区域
-        /// </summary>
-        /// <param name="p_index">格索引</param>
-        public void ScrollInto(int p_index)
-        {
-            if (p_index >= 0 && p_index < _panel.Children.Count)
-                ScrollInto((FrameworkElement)_panel.Children[p_index]);
-        }
+    /// <summary>
+    /// 将指定格滚动到可视区域
+    /// </summary>
+    /// <param name="p_index">格索引</param>
+    public void ScrollInto(int p_index)
+    {
+        if (p_index >= 0 && p_index < _panel.Children.Count)
+            ScrollInto((FrameworkElement)_panel.Children[p_index]);
+    }
 
-        /// <summary>
-        /// 将指定单元格滚动到可视范围
-        /// </summary>
-        /// <param name="p_elem"></param>
-        public void ScrollInto(FrameworkElement p_elem)
-        {
-            if (_scroll == null || p_elem == null)
-                return;
+    /// <summary>
+    /// 将指定单元格滚动到可视范围
+    /// </summary>
+    /// <param name="p_elem"></param>
+    public void ScrollInto(FrameworkElement p_elem)
+    {
+        if (_scroll == null || p_elem == null)
+            return;
 
-            // 单元格相对面板位置
-            Point pt = p_elem.TransformToVisual(_panel).TransformPoint(new Point());
-            if (_scroll.Content as Panel == _panel)
+        // 单元格相对面板位置
+        Point pt = p_elem.TransformToVisual(_panel).TransformPoint(new Point());
+        if (_scroll.Content as Panel == _panel)
+        {
+            // 内部滚动栏
+            if (pt.Y < _scroll.VerticalOffset)
             {
-                // 内部滚动栏
-                if (pt.Y < _scroll.VerticalOffset)
-                {
-                    // 超出上部
-                    _scroll.ChangeView(null, pt.Y, null);
-                }
-                else if ((pt.Y + p_elem.ActualHeight) > (_scroll.VerticalOffset + _scroll.ViewportHeight))
-                {
-                    // 超出下部
-                    _scroll.ChangeView(null, pt.Y + p_elem.ActualHeight - _scroll.ViewportHeight, null);
-                }
+                // 超出上部
+                _scroll.ChangeView(null, pt.Y, null);
             }
-            else
+            else if ((pt.Y + p_elem.ActualHeight) > (_scroll.VerticalOffset + _scroll.ViewportHeight))
             {
-                // 外部滚动栏
-                // 面板相对滚动栏位置
-                Point ptScroll = _panel.TransformToVisual(_scroll).TransformPoint(new Point());
-                if (pt.Y + ptScroll.Y < 0)
-                {
-                    // 超出上部
-                    _scroll.ChangeView(null, pt.Y + ptScroll.Y + _scroll.VerticalOffset, null);
-                }
-                else if (pt.Y + ptScroll.Y + p_elem.ActualHeight > _scroll.ViewportHeight)
-                {
-                    // 超出下部
-                    _scroll.ChangeView(null, pt.Y + ptScroll.Y + p_elem.ActualHeight + _scroll.VerticalOffset - _scroll.ViewportHeight, null);
-                }
+                // 超出下部
+                _scroll.ChangeView(null, pt.Y + p_elem.ActualHeight - _scroll.ViewportHeight, null);
+            }
+        }
+        else
+        {
+            // 外部滚动栏
+            // 面板相对滚动栏位置
+            Point ptScroll = _panel.TransformToVisual(_scroll).TransformPoint(new Point());
+            if (pt.Y + ptScroll.Y < 0)
+            {
+                // 超出上部
+                _scroll.ChangeView(null, pt.Y + ptScroll.Y + _scroll.VerticalOffset, null);
+            }
+            else if (pt.Y + ptScroll.Y + p_elem.ActualHeight > _scroll.ViewportHeight)
+            {
+                // 超出下部
+                _scroll.ChangeView(null, pt.Y + ptScroll.Y + p_elem.ActualHeight + _scroll.VerticalOffset - _scroll.ViewportHeight, null);
             }
         }
     }

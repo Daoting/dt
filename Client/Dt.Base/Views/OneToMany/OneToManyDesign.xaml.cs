@@ -13,126 +13,125 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 #endregion
 
-namespace Dt.Base.Views
+namespace Dt.Base.Views;
+
+[ViewParamsEditor("通用一对多视图")]
+public sealed partial class OneToManyDesign : Dlg, IViewParamsEditor
 {
-    [ViewParamsEditor("通用一对多视图")]
-    public sealed partial class OneToManyDesign : Dlg, IViewParamsEditor
+    OneToManyCfg _cfg;
+
+    public OneToManyDesign()
     {
-        OneToManyCfg _cfg;
+        InitializeComponent();
+        IsPinned = true;
+        ShowVeil = true;
 
-        public OneToManyDesign()
+        if (!Kit.IsPhoneUI)
         {
-            InitializeComponent();
-            IsPinned = true;
-            ShowVeil = true;
+            Width = 460;
+            Height = 400;
+        }
+    }
 
-            if (!Kit.IsPhoneUI)
+    public async Task<string> ShowDlg(string p_params)
+    {
+        _cfg = OneToManyCfg.Deserialize(p_params);
+        _fv.Data = _cfg.ParentCfg;
+        _lv.Data = _cfg.ChildCfgs;
+        _cb.IsChecked = _cfg.IsUnionForm;
+        if (await ShowAsync())
+        {
+            return GetResult();
+        }
+        return null;
+    }
+
+    string GetResult()
+    {
+        return _cfg.Serialize();
+    }
+
+    [UnconditionalSuppressMessage("AOT", "IL3050")]
+    async void OnEditParent(object sender, TappedRoutedEventArgs e)
+    {
+        var dlg = new EntityDesign();
+        var json = await dlg.ShowDlg(_cfg.ParentCfg.Serialize());
+        if (!string.IsNullOrEmpty(json))
+        {
+            var cfg = Kit.Deserialize<EntityCfg>(json);
+            if (cfg != null)
             {
-                Width = 460;
-                Height = 400;
+                _cfg.ParentCfg = cfg;
+                _fv.Data = _cfg.ParentCfg;
             }
         }
+    }
 
-        public async Task<string> ShowDlg(string p_params)
+    [UnconditionalSuppressMessage("AOT", "IL3050")]
+    async void OnAddChild()
+    {
+        var dlg = new EntityDesign();
+        var json = await dlg.ShowDlg(new EntityCfg { IsChild = true }.Serialize());
+        if (!string.IsNullOrEmpty(json))
         {
-            _cfg = OneToManyCfg.Deserialize(p_params);
-            _fv.Data = _cfg.ParentCfg;
-            _lv.Data = _cfg.ChildCfgs;
-            _cb.IsChecked = _cfg.IsUnionForm;
-            if (await ShowAsync())
+            var cfg = Kit.Deserialize<EntityCfg>(json);
+            if (cfg != null)
             {
-                return GetResult();
-            }
-            return null;
-        }
-
-        string GetResult()
-        {
-            return _cfg.Serialize();
-        }
-
-        [UnconditionalSuppressMessage("AOT", "IL3050")]
-        async void OnEditParent(object sender, TappedRoutedEventArgs e)
-        {
-            var dlg = new EntityDesign();
-            var json = await dlg.ShowDlg(_cfg.ParentCfg.Serialize());
-            if (!string.IsNullOrEmpty(json))
-            {
-                var cfg = Kit.Deserialize<EntityCfg>(json);
-                if (cfg != null)
-                {
-                    _cfg.ParentCfg = cfg;
-                    _fv.Data = _cfg.ParentCfg;
-                }
+                _cfg.ChildCfgs.Add(cfg);
             }
         }
+    }
 
-        [UnconditionalSuppressMessage("AOT", "IL3050")]
-        async void OnAddChild()
+    async void OnDelChild(Mi e)
+    {
+        EntityCfg cfg = null;
+        if (e.Data is EntityCfg entity)
         {
-            var dlg = new EntityDesign();
-            var json = await dlg.ShowDlg(new EntityCfg { IsChild = true }.Serialize());
-            if (!string.IsNullOrEmpty(json))
+            cfg = entity;
+        }
+        else if (_lv.SelectedItem is EntityCfg en)
+        {
+            cfg = en;
+        }
+
+        if (cfg != null
+            && await Kit.Confirm("确认要删除选择的数据吗？"))
+        {
+            _cfg.ChildCfgs.Remove(cfg);
+        }
+    }
+
+    void OnEditChild(Mi e)
+    {
+        if (e.Data is EntityCfg cfg)
+            EditChild(cfg);
+    }
+
+    void OnItemDbClick(object obj)
+    {
+        if (_lv.SelectedItem is EntityCfg cfg)
+            EditChild(cfg);
+    }
+
+    [UnconditionalSuppressMessage("AOT", "IL3050")]
+    async void EditChild(EntityCfg cfg)
+    {
+        var dlg = new EntityDesign();
+        var json = await dlg.ShowDlg(cfg.Serialize());
+        if (!string.IsNullOrEmpty(json))
+        {
+            var ncfg = Kit.Deserialize<EntityCfg>(json);
+            if (ncfg != null)
             {
-                var cfg = Kit.Deserialize<EntityCfg>(json);
-                if (cfg != null)
-                {
-                    _cfg.ChildCfgs.Add(cfg);
-                }
+                int idx = _cfg.ChildCfgs.IndexOf(cfg);
+                _cfg.ChildCfgs.RemoveAt(idx);
+                _cfg.ChildCfgs.Insert(idx, ncfg);
             }
         }
+    }
 
-        async void OnDelChild(Mi e)
-        {
-            EntityCfg cfg = null;
-            if (e.Data is EntityCfg entity)
-            {
-                cfg = entity;
-            }
-            else if (_lv.SelectedItem is EntityCfg en)
-            {
-                cfg = en;
-            }
-
-            if (cfg != null
-                && await Kit.Confirm("确认要删除选择的数据吗？"))
-            {
-                _cfg.ChildCfgs.Remove(cfg);
-            }
-        }
-
-        void OnEditChild(Mi e)
-        {
-            if (e.Data is EntityCfg cfg)
-                EditChild(cfg);
-        }
-
-        void OnItemDbClick(object obj)
-        {
-            if (_lv.SelectedItem is EntityCfg cfg)
-                EditChild(cfg);
-        }
-
-        [UnconditionalSuppressMessage("AOT", "IL3050")]
-        async void EditChild(EntityCfg cfg)
-        {
-            var dlg = new EntityDesign();
-            var json = await dlg.ShowDlg(cfg.Serialize());
-            if (!string.IsNullOrEmpty(json))
-            {
-                var ncfg = Kit.Deserialize<EntityCfg>(json);
-                if (ncfg != null)
-                {
-                    int idx = _cfg.ChildCfgs.IndexOf(cfg);
-                    _cfg.ChildCfgs.RemoveAt(idx);
-                    _cfg.ChildCfgs.Insert(idx, ncfg);
-                }
-            }
-        }
-
-        void OnUnionClick(object sender, RoutedEventArgs e)
-        {
-            _cfg.IsUnionForm = _cb.IsChecked == true;
-        }
+    void OnUnionClick(object sender, RoutedEventArgs e)
+    {
+        _cfg.IsUnionForm = _cb.IsChecked == true;
     }
 }

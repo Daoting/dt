@@ -10,20 +10,19 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 
-namespace Demo.Crud
-{
-    public sealed partial class ImgFileDemo : Win
-    {
-        public ImgFileDemo()
-        {
-            InitializeComponent();
-            LoadImg();
-        }
+namespace Demo.Crud;
 
-        async void LoadImg()
-        {
-            await Kit.LoadImage(Kit.DefaultUserPhoto, _imgFsm);
-            _imgFsmNoCache.Source = await Downloader.GetImage("photo/profilephoto.jpg");
-        }
+public sealed partial class ImgFileDemo : Win
+{
+    public ImgFileDemo()
+    {
+        InitializeComponent();
+        LoadImg();
+    }
+
+    async void LoadImg()
+    {
+        await Kit.LoadImage(Kit.DefaultUserPhoto, _imgFsm);
+        _imgFsmNoCache.Source = await Downloader.GetImage("photo/profilephoto.jpg");
     }
 }

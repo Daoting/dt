@@ -11,25 +11,24 @@ using Dt.Base;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Mgr.Workflow
-{
-    /// <summary>
-    /// 同步活动表单
-    /// </summary>
-    public sealed partial class WfSyncAtvForm : UserControl
-    {
-        public WfSyncAtvForm()
-        {
-            InitializeComponent();
-        }
+namespace Dt.Mgr.Workflow;
 
-        public void LoadNode(SNode p_node)
+/// <summary>
+/// 同步活动表单
+/// </summary>
+public sealed partial class WfSyncAtvForm : UserControl
+{
+    public WfSyncAtvForm()
+    {
+        InitializeComponent();
+    }
+
+    public void LoadNode(SNode p_node)
+    {
+        if (p_node.Tag != _fv.Data)
         {
-            if (p_node.Tag != _fv.Data)
-            {
-                _propBox.LoadNode(p_node);
-                _fv.Data = p_node.Tag;
-            }
+            _propBox.LoadNode(p_node);
+            _fv.Data = p_node.Tag;
         }
     }
 }

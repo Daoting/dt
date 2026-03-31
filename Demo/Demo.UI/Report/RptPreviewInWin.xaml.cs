@@ -11,15 +11,14 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
-{
-    public partial class RptPreviewInWin : Win
-    {
-        public RptPreviewInWin()
-        {
-            InitializeComponent();
-            _btns.Init(1, "在新窗口报表预览");
-        }
+namespace Demo.UI;
 
+public partial class RptPreviewInWin : Win
+{
+    public RptPreviewInWin()
+    {
+        InitializeComponent();
+        _btns.Init(1, "在新窗口报表预览");
     }
+
 }

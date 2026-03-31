@@ -15,29 +15,28 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class LvRowView : Win
 {
-    public partial class LvRowView : Win
+    public LvRowView()
     {
-        public LvRowView()
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            _lv.View = new MyRowView();
-            _lv.Data = SampleData.CreatePersonsTbl(50);
-        }
+        _lv.View = new MyRowView();
+        _lv.Data = SampleData.CreatePersonsTbl(50);
     }
+}
 
-    public class MyRowView : IRowView
+public class MyRowView : IRowView
+{
+    public UIElement Create(LvItem p_item)
     {
-        public UIElement Create(LvItem p_item)
+        return new TextBlock
         {
-            return new TextBlock
-            {
-                Text = p_item.Row.Str("xm"),
-                Margin = new Thickness(10),
-                Foreground = (p_item.Row.Str("xb") == "男") ? Res.BlackBrush : Res.RedBrush,
-            };
-        }
+            Text = p_item.Row.Str("xm"),
+            Margin = new Thickness(10),
+            Foreground = (p_item.Row.Str("xb") == "男") ? Res.BlackBrush : Res.RedBrush,
+        };
     }
 }

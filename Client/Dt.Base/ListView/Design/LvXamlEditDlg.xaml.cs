@@ -14,34 +14,33 @@ using System.Reflection;
 using System.Text;
 #endregion
 
-namespace Dt.Base.ListView
+namespace Dt.Base.ListView;
+
+public partial class LvXamlEditDlg : Dlg
 {
-    public partial class LvXamlEditDlg : Dlg
+    LvDesign _design;
+
+    public LvXamlEditDlg()
     {
-        LvDesign _design;
-
-        public LvXamlEditDlg()
+        InitializeComponent();
+        IsPinned = true;
+        if (!Kit.IsPhoneUI)
         {
-            InitializeComponent();
-            IsPinned = true;
-            if (!Kit.IsPhoneUI)
-            {
-                Width = 600;
-                Height = 500;
-            }
+            Width = 600;
+            Height = 500;
         }
+    }
 
-        public void ShowDlg(LvDesign p_design)
-        {
-            _design = p_design;
-            _tb.Text = _design.Lv.ExportXaml();
-            Show();
-        }
+    public void ShowDlg(LvDesign p_design)
+    {
+        _design = p_design;
+        _tb.Text = _design.Lv.ExportXaml();
+        Show();
+    }
 
-        void OnApply()
-        {
-            _design.Jz(_tb.Text);
-            Close();
-        }
+    void OnApply()
+    {
+        _design.Jz(_tb.Text);
+        Close();
     }
 }

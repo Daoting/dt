@@ -9,14 +9,13 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// Nl集合，方便在xaml中定义对象列表
+/// </summary>
+public class NlItems : Nl<object>
 {
-    /// <summary>
-    /// Nl集合，方便在xaml中定义对象列表
-    /// </summary>
-    public class NlItems : Nl<object>
-    {
-        public NlItems()
-        { }
-    }
+    public NlItems()
+    { }
 }

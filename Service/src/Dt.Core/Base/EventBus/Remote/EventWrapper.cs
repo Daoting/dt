@@ -10,21 +10,20 @@
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core.EventBus
+namespace Dt.Core.EventBus;
+
+/// <summary>
+/// 远程事件传输的包装类
+/// </summary>
+internal class EventWrapper
 {
     /// <summary>
-    /// 远程事件传输的包装类
+    /// 事件类型名称
     /// </summary>
-    internal class EventWrapper
-    {
-        /// <summary>
-        /// 事件类型名称
-        /// </summary>
-        public string EventName { get; set; }
+    public string EventName { get; set; }
 
-        /// <summary>
-        /// 事件内容
-        /// </summary>
-        public string Data { get; set; }
-    }
+    /// <summary>
+    /// 事件内容
+    /// </summary>
+    public string Data { get; set; }
 }

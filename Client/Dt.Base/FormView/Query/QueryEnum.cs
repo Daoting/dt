@@ -9,87 +9,86 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base;
+
+/// <summary>
+/// 单元格查询控制
+/// </summary>
+public enum QueryType
 {
     /// <summary>
-    /// 单元格查询控制
+    /// 不显示比较操作符，是否参与查询取决于 QueryFlag == Ignore
     /// </summary>
-    public enum QueryType
-    {
-        /// <summary>
-        /// 不显示比较操作符，是否参与查询取决于 QueryFlag == Ignore
-        /// </summary>
-        Disable,
-
-        /// <summary>
-        /// 比较操作符可修改
-        /// </summary>
-        Editable,
-
-        /// <summary>
-        /// 比较操作符只读
-        /// </summary>
-        ReadOnly
-    }
+    Disable,
 
     /// <summary>
-    /// 单元格内容构成检索条件时用的比较操作符，
+    /// 比较操作符可修改
     /// </summary>
-    public enum CompFlag
-    {
-        /// <summary>
-        /// 忽略，不参与检索
-        /// </summary>
-        Ignore,
+    Editable,
 
-        /// <summary>
-        /// 相等
-        /// </summary>
-        Equal,
+    /// <summary>
+    /// 比较操作符只读
+    /// </summary>
+    ReadOnly
+}
 
-        /// <summary>
-        /// 不相等
-        /// </summary>
-        Unequal,
+/// <summary>
+/// 单元格内容构成检索条件时用的比较操作符，
+/// </summary>
+public enum CompFlag
+{
+    /// <summary>
+    /// 忽略，不参与检索
+    /// </summary>
+    Ignore,
 
-        /// <summary>
-        /// 小于
-        /// </summary>
-        Less,
+    /// <summary>
+    /// 相等
+    /// </summary>
+    Equal,
 
-        /// <summary>
-        /// 小于等于
-        /// </summary>
-        Ceil,
+    /// <summary>
+    /// 不相等
+    /// </summary>
+    Unequal,
 
-        /// <summary>
-        /// 大于
-        /// </summary>
-        Greater,
+    /// <summary>
+    /// 小于
+    /// </summary>
+    Less,
 
-        /// <summary>
-        /// 大于等于
-        /// </summary>
-        Floor,
+    /// <summary>
+    /// 小于等于
+    /// </summary>
+    Ceil,
 
-        /// <summary>
-        /// 以 ... 开头
-        /// </summary>
-        StartsWith,
+    /// <summary>
+    /// 大于
+    /// </summary>
+    Greater,
 
-        /// <summary>
-        /// 以 ... 结尾
-        /// </summary>
-        EndsWith,
+    /// <summary>
+    /// 大于等于
+    /// </summary>
+    Floor,
 
-        /// <summary>
-        /// 在任何位置出现
-        /// </summary>
-        Contains,
+    /// <summary>
+    /// 以 ... 开头
+    /// </summary>
+    StartsWith,
 
-        /// <summary>
-        /// 空
-        /// </summary>
-        Null,
-    }
+    /// <summary>
+    /// 以 ... 结尾
+    /// </summary>
+    EndsWith,
+
+    /// <summary>
+    /// 在任何位置出现
+    /// </summary>
+    Contains,
+
+    /// <summary>
+    /// 空
+    /// </summary>
+    Null,
 }

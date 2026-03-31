@@ -19,19 +19,18 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 
 #endregion
 
-namespace Demo.UI
+namespace Demo.UI;
+
+public partial class ThreePanelWin : Win
 {
-    public partial class ThreePanelWin : Win
+    public ThreePanelWin()
     {
-        public ThreePanelWin()
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-        }
+    }
 
-        void OnGoto(object sender, RoutedEventArgs e)
-        {
-            NaviTo("主区,右区");
-        }
+    void OnGoto(object sender, RoutedEventArgs e)
+    {
+        NaviTo("主区,右区");
     }
 }

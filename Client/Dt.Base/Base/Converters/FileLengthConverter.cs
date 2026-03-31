@@ -12,21 +12,20 @@ using System;
 using Microsoft.UI.Xaml.Data;
 #endregion
 
-namespace Dt.Base
-{
-    /// <summary>
-    /// 文件长度自动转换为K,M,G
-    /// </summary>
-    public partial class FileLengthConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            return Kit.GetFileSizeDesc((ulong)value);
-        }
+namespace Dt.Base;
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
-        }
+/// <summary>
+/// 文件长度自动转换为K,M,G
+/// </summary>
+public partial class FileLengthConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        return Kit.GetFileSizeDesc((ulong)value);
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+        throw new NotImplementedException();
     }
 }

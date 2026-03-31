@@ -13,41 +13,40 @@ using System;
 using System.IO;
 #endregion
 
-namespace Dt.Core.HtmlLog
+namespace Dt.Core.HtmlLog;
+
+class MessageTemplateOutputTokenRenderer : OutputRenderer
 {
-    class MessageTemplateOutputTokenRenderer : OutputRenderer
+    readonly HtmlTheme _theme;
+    readonly PropertyToken _token;
+    readonly ThemedMessageTemplateRenderer _renderer;
+
+    public MessageTemplateOutputTokenRenderer(HtmlTheme theme, PropertyToken token)
     {
-        readonly HtmlTheme _theme;
-        readonly PropertyToken _token;
-        readonly ThemedMessageTemplateRenderer _renderer;
+        _theme = theme ?? throw new ArgumentNullException(nameof(theme));
+        _token = token ?? throw new ArgumentNullException(nameof(token));
+        bool isLiteral = false, isJson = false;
 
-        public MessageTemplateOutputTokenRenderer(HtmlTheme theme, PropertyToken token)
+        if (token.Format != null)
         {
-            _theme = theme ?? throw new ArgumentNullException(nameof(theme));
-            _token = token ?? throw new ArgumentNullException(nameof(token));
-            bool isLiteral = false, isJson = false;
-
-            if (token.Format != null)
+            for (var i = 0; i < token.Format.Length; ++i)
             {
-                for (var i = 0; i < token.Format.Length; ++i)
-                {
-                    if (token.Format[i] == 'l')
-                        isLiteral = true;
-                    else if (token.Format[i] == 'j')
-                        isJson = true;
-                }
+                if (token.Format[i] == 'l')
+                    isLiteral = true;
+                else if (token.Format[i] == 'j')
+                    isJson = true;
             }
-
-            var valueFormatter = isJson
-                ? (ThemedValueFormatter)new ThemedJsonValueFormatter(theme)
-                : new ThemedDisplayValueFormatter(theme);
-
-            _renderer = new ThemedMessageTemplateRenderer(theme, valueFormatter, isLiteral);
         }
 
-        public override void Render(LogEvent logEvent, TextWriter output)
-        {
-            _renderer.Render(logEvent.MessageTemplate, logEvent.Properties, output);
-        }
+        var valueFormatter = isJson
+            ? (ThemedValueFormatter)new ThemedJsonValueFormatter(theme)
+            : new ThemedDisplayValueFormatter(theme);
+
+        _renderer = new ThemedMessageTemplateRenderer(theme, valueFormatter, isLiteral);
+    }
+
+    public override void Render(LogEvent logEvent, TextWriter output)
+    {
+        _renderer.Render(logEvent.MessageTemplate, logEvent.Properties, output);
     }
 }
