@@ -49,46 +49,40 @@ public class SysTools : RpcApi
         if (!string.IsNullOrEmpty(schema.Comments))
         {
             // 取注释
-            AppendTabSpace(sb, 1);
             sb.AppendLine("/// <summary>");
-            AppendTabSpace(sb, 1);
             sb.Append("/// ");
             sb.AppendLine(schema.Comments);
-            AppendTabSpace(sb, 1);
             sb.AppendLine("/// </summary>");
         }
         // Tbl标签
-        AppendTabSpace(sb, 1);
         sb.Append($"[Tbl(\"{schema.Name}\")]");
 
         sb.AppendLine();
-        AppendTabSpace(sb, 1);
         sb.Append($"public partial class {clsName} : EntityX<{clsName}>");
         sb.AppendLine();
-        AppendTabSpace(sb, 1);
         sb.AppendLine("{");
 
-        AppendTabSpace(sb, 2);
+        AppendTabSpace(sb, 1);
         sb.AppendLine("#region 构造方法");
 
         // 默认构造方法，私有为避免外部使用，内部在反序列化时使用
-        AppendTabSpace(sb, 2);
+        AppendTabSpace(sb, 1);
         sb.AppendLine($"{clsName}() {{ }}");
         sb.AppendLine();
 
         // 构造方法，实体间类型转换时使用
-        AppendTabSpace(sb, 2);
+        AppendTabSpace(sb, 1);
         sb.AppendLine($"public {clsName}(CellList p_cells) : base(p_cells) {{ }}");
         sb.AppendLine();
 
         // 构造方法
-        AppendTabSpace(sb, 2);
+        AppendTabSpace(sb, 1);
         sb.Append("public ");
         sb.Append(clsName);
         sb.AppendLine("(");
         foreach (var col in schema.PrimaryKey)
         {
-            AppendTabSpace(sb, 3);
+            AppendTabSpace(sb, 2);
             sb.Append(col.GetTypeName());
             sb.Append(" ");
             sb.Append(col.GetPropertyName());
@@ -96,7 +90,7 @@ public class SysTools : RpcApi
         }
         foreach (var col in schema.Columns)
         {
-            AppendTabSpace(sb, 3);
+            AppendTabSpace(sb, 2);
             sb.Append(col.GetTypeName());
             sb.Append(" ");
             sb.Append(col.GetPropertyName());
@@ -132,7 +126,7 @@ public class SysTools : RpcApi
         sb.AppendLine("{");
         foreach (var col in schema.PrimaryKey.Concat(schema.Columns))
         {
-            AppendTabSpace(sb, 3);
+            AppendTabSpace(sb, 2);
             sb.Append("Add(\"");
             // 简化写法不需要类型
             //sb.Append(GetTypeName(col.Type));
@@ -145,11 +139,11 @@ public class SysTools : RpcApi
             sb.Append(col.GetPropertyName());
             sb.AppendLine(");");
         }
-        AppendTabSpace(sb, 3);
+        AppendTabSpace(sb, 2);
         sb.AppendLine("IsAdded = true;");
-        AppendTabSpace(sb, 2);
+        AppendTabSpace(sb, 1);
         sb.AppendLine("}");
-        AppendTabSpace(sb, 2);
+        AppendTabSpace(sb, 1);
         sb.AppendLine("#endregion");
 
         // 主键属性
@@ -174,7 +168,7 @@ public class SysTools : RpcApi
         {
             // 无ID时，屏蔽ID属性
             sb.AppendLine();
-            AppendTabSpace(sb, 2);
+            AppendTabSpace(sb, 1);
             sb.AppendLine("new public long ID { get { return -1; } }");
         }
 
@@ -184,7 +178,6 @@ public class SysTools : RpcApi
             AppendColumn(col, sb, false);
         }
 
-        AppendTabSpace(sb, 1);
         sb.Append("}");
 
         return sb.ToString();
@@ -208,10 +201,8 @@ public class SysTools : RpcApi
             return null;
 
         StringBuilder sb = new StringBuilder();
-        AppendTabSpace(sb, 1);
         sb.Append($"public partial class {clsName}");
         sb.AppendLine();
-        AppendTabSpace(sb, 1);
         sb.AppendLine("{");
 
         // 只对单主键id情况生成 New 方法
@@ -219,13 +210,13 @@ public class SysTools : RpcApi
             && schema.PrimaryKey[0].Name.ToLower() == "id"
             && schema.PrimaryKey[0].Type == typeof(long))
         {
-            AppendTabSpace(sb, 2);
+            AppendTabSpace(sb, 1);
             sb.Append($"public static async Task<{clsName}> New");
             sb.AppendLine("(");
 
             foreach (var col in schema.Columns)
             {
-                AppendTabSpace(sb, 3);
+                AppendTabSpace(sb, 2);
                 sb.Append(col.GetTypeName());
                 sb.Append(" ");
                 sb.Append(col.GetPropertyName());
@@ -256,30 +247,29 @@ public class SysTools : RpcApi
             }
             sb.Remove(sb.Length - 3, 3);
             sb.AppendLine(")");
-            AppendTabSpace(sb, 2);
+            AppendTabSpace(sb, 1);
             sb.AppendLine("{");
 
-            AppendTabSpace(sb, 3);
+            AppendTabSpace(sb, 2);
             sb.AppendLine($"return new {clsName}(");
-            AppendTabSpace(sb, 4);
+            AppendTabSpace(sb, 3);
             sb.AppendLine("ID: await NewID(),");
             foreach (var col in schema.Columns)
             {
-                AppendTabSpace(sb, 4);
+                AppendTabSpace(sb, 3);
                 var prop = col.GetPropertyName();
                 sb.AppendLine($"{prop}: {prop},");
             }
             sb.Remove(sb.Length - 3, 3);
             sb.AppendLine(");");
 
-            AppendTabSpace(sb, 2);
+            AppendTabSpace(sb, 1);
             sb.AppendLine("}");
             sb.AppendLine("");
         }
 
         sb.Append(_initHook);
 
-        AppendTabSpace(sb, 1);
         sb.Append("}");
 
         return sb.ToString();
@@ -298,33 +288,33 @@ public class SysTools : RpcApi
         {
             if (sb.Length > 0)
                 sb.AppendLine();
-            AppendTabSpace(sb, 2);
+            AppendTabSpace(sb, 1);
             sb.Append("public static class ");
             sb.AppendLine(mod.Str("name"));
-            AppendTabSpace(sb, 2);
+            AppendTabSpace(sb, 1);
             sb.AppendLine("{");
 
             var funcs = await _da.Query("select * from cm_permission_func where module_id=" + mod.ID);
             foreach (var func in funcs)
             {
-                AppendTabSpace(sb, 3);
+                AppendTabSpace(sb, 2);
                 sb.Append("public static class ");
                 sb.AppendLine(func.Str("name"));
-                AppendTabSpace(sb, 3);
+                AppendTabSpace(sb, 2);
                 sb.AppendLine("{");
 
                 var pers = await _da.Query("select * from cm_permission where func_id=" + func.ID);
                 foreach (var per in pers)
                 {
-                    AppendTabSpace(sb, 4);
+                    AppendTabSpace(sb, 3);
                     sb.AppendLine($"public static Task<bool> {per.Str("name")} => Kit.HasPermission({per.ID}L);");
                 }
 
-                AppendTabSpace(sb, 3);
+                AppendTabSpace(sb, 2);
                 sb.AppendLine("}");
             }
 
-            AppendTabSpace(sb, 2);
+            AppendTabSpace(sb, 1);
             sb.AppendLine("}");
         }
 
@@ -674,11 +664,11 @@ public class SysTools : RpcApi
 
                 if (sb.Length > 0)
                     sb.AppendLine();
-                AppendTabSpace(sb, 3);
+                AppendTabSpace(sb, 2);
                 if (tp == typeof(int) || tp == typeof(float) || tp == typeof(double) || tp == typeof(DateTime))
                 {
                     sb.AppendLine($"row.Add<{col.GetTypeName()}>(\"{col.Name.ToLower()}_min\");");
-                    AppendTabSpace(sb, 3);
+                    AppendTabSpace(sb, 2);
                     sb.Append($"row.Add<{col.GetTypeName()}>(\"{col.Name.ToLower()}_max\");");
                 }
                 else
@@ -715,9 +705,9 @@ public class SysTools : RpcApi
         string tpName = p_col.GetTypeName();
 
         p_sb.AppendLine();
-        AppendTabSpace(p_sb, 2);
+        AppendTabSpace(p_sb, 1);
         p_sb.AppendLine("/// <summary>");
-        AppendTabSpace(p_sb, 2);
+        AppendTabSpace(p_sb, 1);
         p_sb.Append("/// ");
         if (p_col.IsEnumCol)
         {
@@ -732,25 +722,25 @@ public class SysTools : RpcApi
         {
             p_sb.AppendLine(p_col.Comments);
         }
-        AppendTabSpace(p_sb, 2);
+        AppendTabSpace(p_sb, 1);
         p_sb.AppendLine("/// </summary>");
-        AppendTabSpace(p_sb, 2);
+        AppendTabSpace(p_sb, 1);
 
         if (p_isNew)
             p_sb.Append("new ");
         p_sb.AppendLine($"public {tpName} {p_col.GetPropertyName()}");
 
-        AppendTabSpace(p_sb, 2);
+        AppendTabSpace(p_sb, 1);
         p_sb.AppendLine("{");
-        AppendTabSpace(p_sb, 3);
-        p_sb.AppendLine($"get {{ return ({tpName})this[\"{p_col.Name.ToLower()}\"]; }}");
-        AppendTabSpace(p_sb, 3);
-        p_sb.AppendLine($"set {{ this[\"{p_col.Name.ToLower()}\"] = value; }}");
         AppendTabSpace(p_sb, 2);
+        p_sb.AppendLine($"get {{ return ({tpName})this[\"{p_col.Name.ToLower()}\"]; }}");
+        AppendTabSpace(p_sb, 2);
+        p_sb.AppendLine($"set {{ this[\"{p_col.Name.ToLower()}\"] = value; }}");
+        AppendTabSpace(p_sb, 1);
         p_sb.AppendLine("}");
 
         p_sb.AppendLine();
-        AppendTabSpace(p_sb, 2);
+        AppendTabSpace(p_sb, 1);
         p_sb.AppendLine($"public Cell c{p_col.GetPropertyName()} => _cells[\"{p_col.Name.ToLower()}\"];");
     }
 
@@ -792,41 +782,41 @@ public class SysTools : RpcApi
     }
 
     const string _initHook =
-@"        protected override void InitHook()
-        {
-            //OnSaving(() =>
-            //{
+@"    protected override void InitHook()
+    {
+        //OnSaving(() =>
+        //{
                 
-            //    return Task.CompletedTask;
-            //});
+        //    return Task.CompletedTask;
+        //});
 
-            //OnSaved(() =>
-            //{
+        //OnSaved(() =>
+        //{
                 
-            //    return Task.CompletedTask;
-            //});
+        //    return Task.CompletedTask;
+        //});
 
-            //OnDeleting(() =>
-            //{
+        //OnDeleting(() =>
+        //{
                 
-            //    return Task.CompletedTask;
-            //});
+        //    return Task.CompletedTask;
+        //});
 
-            //OnDeleted(() =>
-            //{
+        //OnDeleted(() =>
+        //{
                 
-            //    return Task.CompletedTask;
-            //});
+        //    return Task.CompletedTask;
+        //});
 
-            //OnChanging(cName, e =>
-            //{
+        //OnChanging(cName, e =>
+        //{
                 
-            //});
-        }
+        //});
+    }
 
-        #region Sql
+    #region Sql
 
-        #endregion
+    #endregion
 ";
     #endregion
 }
