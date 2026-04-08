@@ -2,9 +2,9 @@
 
 using A = 大儿X;
 
-public sealed partial class 普通大儿Form : Form
+public sealed partial class 父表大儿Form : Form
 {
-    public 普通大儿Form()
+    public 父表大儿Form()
     {
         InitializeComponent();
         Menu = CreateMenu();

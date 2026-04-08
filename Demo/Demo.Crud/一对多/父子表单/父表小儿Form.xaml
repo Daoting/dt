@@ -1,12 +1,12 @@
 ﻿<a:Form
-    x:Class="Demo.Crud.普通大儿Form"
+    x:Class="Demo.Crud.父表小儿Form"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    Title="大儿表单">
+    Title="小儿表单">
 
     <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
-        <a:CNum ID="parent_id" IsInteger="True" />
-        <a:CText ID="大儿名" />
+        <a:CNum ID="group_id" IsInteger="True" />
+        <a:CText ID="小儿名" />
     </a:Fv>
 </a:Form>

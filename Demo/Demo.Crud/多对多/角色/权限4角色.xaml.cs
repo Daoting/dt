@@ -1,15 +1,4 @@
-﻿#region 文件描述
-/******************************************************************************
-* 创建: Daoting
-* 摘要: 
-* 日志: 2024-06-25 创建
-******************************************************************************/
-#endregion
-
-#region 引用命名
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-#endregion
+﻿using Microsoft.UI.Xaml;
 
 namespace Demo.Crud;
 
@@ -20,7 +9,7 @@ public sealed partial class 权限4角色 : Dlg
         InitializeComponent();
         Menu = Menu.New(Mi.确定(OnOK));
     }
-    
+        
     public IEnumerable<Row> SelectedRows => _lv.SelectedRows;
 
     public async Task<bool> Show(long p_releatedID, FrameworkElement p_target)

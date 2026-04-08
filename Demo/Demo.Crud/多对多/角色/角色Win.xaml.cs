@@ -1,17 +1,4 @@
-﻿#region 文件描述
-/******************************************************************************
-* 创建: Daoting
-* 摘要: 
-* 日志: 2024-06-25 创建
-******************************************************************************/
-#endregion
-
-#region 引用命名
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-#endregion
-
-namespace Demo.Crud;
+﻿namespace Demo.Crud;
 
 [View("角色")]
 public partial class 角色Win : Win
@@ -34,13 +21,13 @@ public partial class 角色Win : Win
         };
 
         _mainList.Msg += e => _ = _mainForm.Query(e);
-        _mainList.Navi += () => NaviTo(_权限List.Title + "," + _用户List.Title);
+        _mainList.Navi += () => NaviTo(_用户List.Title + "," + _权限List.Title);
 
         _mainForm.UpdateList += e => _ = _mainList.Refresh(e.ID);
         _mainForm.UpdateRelated += e => 
         {
-            _权限List.Query(e.ID);
             _用户List.Query(e.ID);
+            _权限List.Query(e.ID);
         };
     }
 }

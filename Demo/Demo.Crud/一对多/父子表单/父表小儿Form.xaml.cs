@@ -1,10 +1,10 @@
 ﻿namespace Demo.Crud;
 
-using A = 大儿X;
+using A = 小儿X;
 
-public sealed partial class 普通大儿Form : Form
+public sealed partial class 父表小儿Form : Form
 {
-    public 普通大儿Form()
+    public 父表小儿Form()
     {
         InitializeComponent();
         Menu = CreateMenu();
@@ -12,7 +12,7 @@ public sealed partial class 普通大儿Form : Form
 
     protected override async Task OnAdd()
     {
-        _fv.Data = await A.New(ParentID: _args.ParentID.Value);
+        _fv.Data = await A.New(GroupID: _args.ParentID.Value);
     }
 
     protected override async Task OnGet()

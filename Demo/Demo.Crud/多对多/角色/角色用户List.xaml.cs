@@ -1,17 +1,4 @@
-﻿#region 文件描述
-/******************************************************************************
-* 创建: Daoting
-* 摘要: 
-* 日志: 2024-06-25 创建
-******************************************************************************/
-#endregion
-
-#region 引用命名
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-#endregion
-
-namespace Demo.Crud;
+﻿namespace Demo.Crud;
 
 public partial class 角色用户List : List
 {
@@ -35,7 +22,7 @@ public partial class 角色用户List : List
         }
         Menu["添加"].IsEnabled = _parentID > 0;
     }
-    
+        
     async void OnAddRelated(Mi e)
     {
         var dlg = new 用户4角色();
@@ -51,7 +38,7 @@ public partial class 角色用户List : List
                 await Refresh();
         }
     }
-    
+        
     async void OnDelRelated(Mi e)
     {
         List<用户角色X> ls = null;
@@ -73,7 +60,7 @@ public partial class 角色用户List : List
             if (row != null)
                 ls = new List<用户角色X> { new 用户角色X(UserID: row.ID, RoleID: _parentID.Value) };
         }
-        
+            
         if (ls != null && ls.Count > 0)
         {
             if (!await Kit.Confirm("确认要删除关联吗？"))

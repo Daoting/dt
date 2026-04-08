@@ -1,32 +1,19 @@
-﻿#region 文件描述
-/******************************************************************************
-* 创建: Daoting
-* 摘要: 
-* 日志: 2024-06-25 创建
-******************************************************************************/
-#endregion
-
-#region 引用命名
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-#endregion
-
-namespace Demo.Crud;
+﻿namespace Demo.Crud;
 
 [View("普通")]
 public partial class 普通Win : Win
 {
     readonly 普通Form _parentForm;
-    普通大儿Form _大儿Form;
-    普通小儿Form _小儿Form;
-
+        普通大儿Form _大儿Form;
+        普通小儿Form _小儿Form;
+    
     public 普通Win()
     {
         InitializeComponent();
         _parentForm = new 普通Form { OwnWin = this };
         Attach();
     }
-    
+        
     void Attach()
     {
         _query.Query += e =>
@@ -34,7 +21,7 @@ public partial class 普通Win : Win
             _parentList.Query(e);
             NaviTo(_parentList.Title);
         };
-        
+            
         _parentList.Msg += e => _ = _parentForm.Query(e);
         _parentList.Navi += () => NaviTo(_大儿List.Title + "," + _小儿List.Title);
 
@@ -43,7 +30,7 @@ public partial class 普通Win : Win
         {
             _大儿List.Query(e.ID);
             _小儿List.Query(e.ID);
-        };
+            };
 
         _大儿List.Msg += e =>
         {

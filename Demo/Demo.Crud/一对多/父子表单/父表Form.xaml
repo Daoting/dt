@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Title="父表表单">
 
-    <a:Fv x:Name="_fv" Create="Add" Delete="Delete" Save="Save">
+    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
         <a:CText ID="父名" />
     </a:Fv>
 
@@ -21,7 +21,7 @@
             </a:Fi.Lv>
             <a:Fi.Fv>
                 <a:Fv x:Name="_fv大儿">
-                    <a:CNum ID="parent_id" />
+                    <a:CNum ID="parent_id" IsInteger="True" />
                     <a:CText ID="大儿名" />
                 </a:Fv>
             </a:Fi.Fv>
@@ -37,7 +37,7 @@
             </a:Fi.Lv>
             <a:Fi.Fv>
                 <a:Fv x:Name="_fv小儿">
-                    <a:CNum ID="group_id" />
+                    <a:CNum ID="group_id" IsInteger="True" />
                     <a:CText ID="小儿名" />
                 </a:Fv>
             </a:Fi.Fv>

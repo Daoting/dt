@@ -5,8 +5,8 @@
     xmlns:a="using:Dt.Base"
     Title="小儿表单">
 
-    <a:Fv x:Name="_fv" Create="Add" Delete="Delete" Save="Save">
-        <a:CNum ID="group_id" />
+    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+        <a:CNum ID="group_id" IsInteger="True" />
         <a:CText ID="小儿名" />
     </a:Fv>
 </a:Form>

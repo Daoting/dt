@@ -5,8 +5,8 @@
     xmlns:a="using:Dt.Base"
     Title="表单">
 
-    <a:Fv x:Name="_fv" Create="Add" Delete="Delete" Save="Save">
-        <a:CNum ID="parent_id" Title="上级id，演示树状结构" />
+    <a:Fv x:Name="_fv" Save="Save" Create="Add" Delete="Delete">
+        <a:CNum ID="parent_id" Title="上级id，演示树状结构" IsInteger="True" />
         <a:CNum ID="序列" IsInteger="True" />
         <a:CText ID="名称" />
         <a:CText ID="限长4" />
