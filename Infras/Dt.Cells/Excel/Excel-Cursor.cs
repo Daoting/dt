@@ -13,6 +13,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Dt.Cells;
 using Microsoft.UI.Input;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Base
@@ -49,7 +50,7 @@ namespace Dt.Base
 #endif
         }
 
-        void SetCursor(HitTestInformation hi)
+        async Task SetCursor(HitTestInformation hi)
         {
             if (CanUserDragFill && hi.ViewportInfo.InDragFillIndicator)
             {
@@ -57,7 +58,7 @@ namespace Dt.Base
                 bool flag2;
                 KeyboardHelper.GetMetaKeyState(out flag, out flag2);
                 CursorType cursorType = flag2 ? CursorType.DragFill_CtrlDragCursor : CursorType.DragFill_DragCursor;
-                SetMouseCursor(cursorType);
+                await SetMouseCursor(cursorType);
             }
             else if (CanUserDragDrop && hi.ViewportInfo.InSelectionDrag)
             {
@@ -65,7 +66,7 @@ namespace Dt.Base
                 bool flag4;
                 KeyboardHelper.GetMetaKeyState(out flag3, out flag4);
                 CursorType type2 = flag4 ? CursorType.DragCell_CtrlDragCursor : CursorType.DragCell_DragCursor;
-                SetMouseCursor(type2);
+                await SetMouseCursor(type2);
             }
             else
             {
@@ -77,7 +78,7 @@ namespace Dt.Base
             }
         }
 
-        void SetCursorForFloatingObject(ViewportFloatingObjectHitTestInformation chartInfo)
+        async Task SetCursorForFloatingObject(ViewportFloatingObjectHitTestInformation chartInfo)
         {
             // hdt 图表锁定时显示默认光标
             if (chartInfo.FloatingObject != null && chartInfo.FloatingObject.Locked)
@@ -86,7 +87,7 @@ namespace Dt.Base
             }
             else if (chartInfo.InMoving)
             {
-                SetMouseCursor(CursorType.DragCell_DragCursor);
+                await SetMouseCursor(CursorType.DragCell_DragCursor);
             }
             else if (chartInfo.InTopNWSEResize || chartInfo.InBottomNWSEResize)
             {
@@ -110,7 +111,7 @@ namespace Dt.Base
             }
         }
 
-        internal async void SetMouseCursor(CursorType cursorType)
+        internal async Task SetMouseCursor(CursorType cursorType)
         {
             if (_mouseCursor == null)
             {

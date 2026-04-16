@@ -299,7 +299,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void OnPointerMoved(object sender, PointerRoutedEventArgs e)
+        async void OnPointerMoved(object sender, PointerRoutedEventArgs e)
         {
             if (_viewport.Excel == null
                 || _viewport.Excel.DecorationRange == null)
@@ -330,7 +330,7 @@ namespace Dt.Cells.UI
             }
             else
             {
-                excel.SetMouseCursor(CursorType.DragCell_DragCursor);
+                await excel.SetMouseCursor(CursorType.DragCell_DragCursor);
             }
         }
 

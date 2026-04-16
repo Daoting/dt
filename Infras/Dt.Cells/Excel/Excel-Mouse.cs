@@ -23,6 +23,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Base
@@ -424,7 +425,7 @@ namespace Dt.Base
         #endregion
 
         #region 鼠标移动
-        void OnPointerMoved(object sender, PointerRoutedEventArgs e)
+        async void OnPointerMoved(object sender, PointerRoutedEventArgs e)
         {
             // 构造ScrollBar时设置
             //if (e.Pointer.PointerDeviceType == PointerDeviceType.Touch)
@@ -453,11 +454,11 @@ namespace Dt.Base
                 {
                     ResetMouseCursor();
                 }
-                ProcessMouseMove(hi);
+                await ProcessMouseMove(hi);
             }
         }
 
-        void ProcessMouseMove(HitTestInformation p_hitInfo)
+        async Task ProcessMouseMove(HitTestInformation p_hitInfo)
         {
             bool flag = false;
             switch (p_hitInfo.HitTestType)
@@ -562,10 +563,10 @@ namespace Dt.Base
                         {
                             if (ActiveSheet.GetActualRowHeight(p_hitInfo.HeaderInfo.ResizingRow, SheetArea.Cells) != 0.0)
                             {
-                                SetMouseCursor(CursorType.Resize_VerticalCursor);
+                                await SetMouseCursor(CursorType.Resize_VerticalCursor);
                                 break;
                             }
-                            SetMouseCursor(CursorType.Resize_VerticalSplitCursor);
+                            await SetMouseCursor(CursorType.Resize_VerticalSplitCursor);
                         }
                         break;
 
@@ -574,10 +575,10 @@ namespace Dt.Base
                         {
                             if (ActiveSheet.GetActualColumnWidth(p_hitInfo.HeaderInfo.ResizingColumn, SheetArea.Cells) != 0.0)
                             {
-                                SetMouseCursor(CursorType.Resize_HorizontalCursor);
+                                await SetMouseCursor(CursorType.Resize_HorizontalCursor);
                                 break;
                             }
-                            SetMouseCursor(CursorType.Resize_HorizontalSplitCursor);
+                            await SetMouseCursor(CursorType.Resize_HorizontalSplitCursor);
                         }
                         break;
 
@@ -586,11 +587,11 @@ namespace Dt.Base
                         {
                             if (IsMovingFloatingOjects)
                             {
-                                SetMouseCursor(CursorType.DragCell_DragCursor);
+                                await SetMouseCursor(CursorType.DragCell_DragCursor);
                             }
                             break;
                         }
-                        SetCursor(p_hitInfo);
+                        await SetCursor(p_hitInfo);
                         break;
 
                     case HitTestType.FloatingObject:
@@ -600,23 +601,23 @@ namespace Dt.Base
                             {
                                 if (IsMovingFloatingOjects)
                                 {
-                                    SetMouseCursor(CursorType.DragCell_DragCursor);
+                                    await SetMouseCursor(CursorType.DragCell_DragCursor);
                                 }
                                 break;
                             }
-                            SetCursorForFloatingObject(p_hitInfo.FloatingObjectInfo);
+                            await SetCursorForFloatingObject(p_hitInfo.FloatingObjectInfo);
                         }
                         break;
 
                 }
                 if (IsResizingColumns)
                 {
-                    SetMouseCursor(CursorType.Resize_HorizontalCursor);
+                    await SetMouseCursor(CursorType.Resize_HorizontalCursor);
                     ContinueColumnResizing();
                 }
                 if (IsResizingRows)
                 {
-                    SetMouseCursor(CursorType.Resize_VerticalCursor);
+                    await SetMouseCursor(CursorType.Resize_VerticalCursor);
                     ContinueRowResizing();
                 }
                 if (IsSelectingCells)
