@@ -3,9 +3,9 @@
 		<!-- 异步锁 -->
 		<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
 		<!-- 多次重试间隔时间可变 -->
-		<PackageReference Include="Polly" Version="8.6.5" />
-		<PackageReference Include="RabbitMQ.Client" Version="7.2.0" />
-		<PackageReference Include="StackExchange.Redis" Version="2.10.14" />
+		<PackageReference Include="Polly" Version="8.6.6" />
+		<PackageReference Include="RabbitMQ.Client" Version="7.2.1" />
+		<PackageReference Include="StackExchange.Redis" Version="2.13.1" />
 		
 		<!-- 日志，两端版本相同 -->
 		<PackageReference Include="Serilog" Version="4.3.1" />
