@@ -31,6 +31,8 @@ public class ChartMenu : IPlotMenu
         Reset();
     }
 
+    public List<ContextMenuItem> ContextMenuItems => _menuItems;
+
     public MenuFlyout GetContextMenu(Plot plot)
     {
         MenuFlyout menu = new();
