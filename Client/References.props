@@ -29,9 +29,9 @@
         <PackageReference Include="Dapper" Version="2.1.79" />
 
         <!-- Map -->
-        <PackageReference Include="Mapsui" Version="5.1.0-beta.6" />
-        <PackageReference Include="Mapsui.Tiling" Version="5.1.0-beta.6" />
-        <PackageReference Include="Mapsui.Rendering.Skia" Version="5.1.0-beta.6" />
+        <PackageReference Include="Mapsui" Version="5.1.0" />
+        <PackageReference Include="Mapsui.Tiling" Version="5.1.0" />
+        <PackageReference Include="Mapsui.Rendering.Skia" Version="5.1.0" />
     </ItemGroup>
 
     <!-- WinAppSdk -->
@@ -43,7 +43,7 @@
         <!-- Lottie动画已正常，Microsoft.Graphics.Win2D需1.2.0以上版本，Microsoft.Maui.Essentials已间接引用 -->
         <PackageReference Include="CommunityToolkit.WinUI.Lottie" Version="8.2.250604" />
         <!-- ScottPlot Mapsui需要 -->
-        <PackageReference Include="SkiaSharp.Views.WinUI" Version="3.119.1" />
+        <PackageReference Include="SkiaSharp.Views.WinUI" Version="3.119.4" />
     </ItemGroup>
 
     <!-- 非WinAppSdk引用 -->
@@ -54,12 +54,12 @@
         <PackageReference Include="Uno.WinUI.Lottie" Version="$(UnoVersion)" />
         <PackageReference Include="Uno.WinUI.Graphics2DSK" Version="$(UnoVersion)" />
         <!-- ScottPlot Lottie都引用，注意版本匹配 -->
-        <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="3.119.1" />
-        <PackageReference Include="SkiaSharp.Skottie" Version="3.119.1" />
+        <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="3.119.4" />
+        <PackageReference Include="SkiaSharp.Skottie" Version="3.119.4" />
         <!-- 异常日志 -->
         <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.2" />
         <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="$(UnoVersion)" />
-        <PackageReference Include="Mapsui.Uno.WinUI" Version="5.1.0-beta.2" />
+        <PackageReference Include="Mapsui.Uno.WinUI" Version="5.1.0" />
     </ItemGroup>
 
     <!-- Android -->
