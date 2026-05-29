@@ -229,7 +229,7 @@ public partial class MapView : Grid, IMapControl, IDisposable
 
     bool GetShiftPressed() => _shiftPressed;
 
-#if !HAS_UNO
+#if WIN
     protected virtual void Dispose(bool disposing)
     {
         SharedDispose(disposing);
@@ -240,8 +240,8 @@ public partial class MapView : Grid, IMapControl, IDisposable
         Dispose(true);
         GC.SuppressFinalize(this);
     }
-#elif HAS_UNO && __IOS__ // on ios don't dispose _canvas, _canvasGPU, _selectRectangle, base class 
-    protected new virtual void Dispose(bool disposing)
+#elif IOS // on ios don't dispose _canvas, _canvasGPU, _selectRectangle, base class 
+    protected virtual void Dispose(bool disposing)
     {
         SharedDispose(disposing);
     }

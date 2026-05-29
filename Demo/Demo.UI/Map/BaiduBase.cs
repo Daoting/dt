@@ -130,7 +130,8 @@ public static class BaiduMap
     {
         var schema = new GlobalSphericalMercator(
             YAxis.TMS, // 百度Y轴顺序是TMS，Y从下往上
-            3, 18);
+            3,
+            18);
 
         return new HttpTileSource(
             schema,

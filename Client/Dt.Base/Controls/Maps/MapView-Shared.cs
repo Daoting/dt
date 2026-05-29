@@ -40,26 +40,20 @@ namespace Dt.Base;
 /// </summary>
 public partial class MapView : INotifyPropertyChanged, IDisposable
 {
-    private readonly TapGestureTracker _tapGestureTracker = new();
-    private readonly FlingTracker _flingTracker = new();
-    private ScreenSize _mapControlScreenSize = new(0, 0);
-    private RenderController _renderController;
+    readonly TapGestureTracker _tapGestureTracker = new();
+    readonly FlingTracker _flingTracker = new();
+    ScreenSize _mapControlScreenSize = new(0, 0);
+    RenderController _renderController;
 
     /// <summary>
     /// The movement allowed between a touch down and touch up in a touch gestures in device independent pixels.
     /// </summary>
-#if __WINDOWSFORMS__
-    [DefaultValue(8)] // Fix WOF1000 Error
-#endif
     public int MaxTapGestureMovement { get; set; } = 8;
 
     /// <summary>
     /// Use fling gesture to move the map. Default is true. Fling means that the map will continue to move for a 
     /// short time after the user has lifted the finger.
     /// </summary>
-#if __WINDOWSFORMS__
-    [DefaultValue(true)] // Fix WOF1000 Error
-#endif
     public bool UseFling { get; set; } = true;
 
     /// <summary>
@@ -87,7 +81,7 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
     /// </summary>
     public event EventHandler<MapEventArgs> MapPointerReleased;
 
-    private void SharedConstructor()
+    void SharedConstructor()
     {
         PlatformUtilities.SetOpenInBrowserFunc(OpenInBrowser);
         Map = new Map();
@@ -95,7 +89,7 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
         _renderController = new(() => Map, InvalidateCanvas);
     }
 
-    private void SharedOnSizeChanged(double width, double height)
+    void SharedOnSizeChanged(double width, double height)
     {
         _mapControlScreenSize = new ScreenSize(width, height);
         TryUpdateViewportSize();
@@ -123,23 +117,12 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
     /// <summary>
     /// Called whenever a property is changed
     /// </summary>
-#if __MAUI__ || __AVALONIA__
-    public new event PropertyChangedEventHandler PropertyChanged;
-#else
     public event PropertyChangedEventHandler PropertyChanged;
-#endif
 
-#if __MAUI__
-    protected override void OnPropertyChanged([CallerMemberName] string propertyName = "")
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-#else
     protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-#endif
 
     /// <summary>
     /// Unsubscribe from map events 
@@ -153,14 +136,14 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
     /// Subscribe to map events
     /// </summary>
     /// <param name="map">Map, to which events to subscribe</param>
-    private void SubscribeToMapEvents(Map map)
+    void SubscribeToMapEvents(Map map)
     {
         map.DataChanged += Map_DataChanged;
         map.PropertyChanged += Map_PropertyChanged;
         map.RefreshGraphicsRequest += Map_RefreshGraphicsRequest;
     }
 
-    private void Map_RefreshGraphicsRequest(object sender, EventArgs e)
+    void Map_RefreshGraphicsRequest(object sender, EventArgs e)
     {
         RefreshGraphics();
     }
@@ -169,7 +152,7 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
     /// Unsubscribe from map events
     /// </summary>
     /// <param name="map">Map, to which events to unsubscribe</param>
-    private void UnsubscribeFromMapEvents(Map map)
+    void UnsubscribeFromMapEvents(Map map)
     {
         var localMap = map;
         localMap.DataChanged -= Map_DataChanged;
@@ -188,7 +171,7 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
         _renderController?.RefreshGraphics();
     }
 
-    private void Map_DataChanged(object sender, DataChangedEventArgs e)
+    void Map_DataChanged(object sender, DataChangedEventArgs e)
     {
         try
         {
@@ -220,7 +203,7 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
         }
     }
 
-    private void Map_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    void Map_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(Layer.Enabled))
         {
@@ -249,47 +232,12 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
     }
 
 #pragma warning disable IDISP002 // Is Disposed in SharedDispose
-    private DisposableWrapper<Map> _map;
+    DisposableWrapper<Map> _map;
 #pragma warning restore IDISP002
 
-#if __MAUI__
-
-    public static readonly BindableProperty MapProperty = BindableProperty.Create(nameof(Map),
-        typeof(Map), typeof(MapControl), default(Map), defaultBindingMode: BindingMode.TwoWay,
-        propertyChanged: MapPropertyChanged, propertyChanging: MapPropertyChanging);
-
-    private static void MapPropertyChanging(BindableObject bindable,
-        object oldValue, object newValue)
-    {
-        var mapControl = (MapControl)bindable;
-        mapControl.BeforeSetMap();
-    }
-
-    private static void MapPropertyChanged(BindableObject bindable,
-        object oldValue, object newValue)
-    {
-        var mapControl = (MapControl)bindable;
-        mapControl.AfterSetMap((Map)newValue);
-    }
-
-    public Map Map
-    {
-        get => (Map)GetValue(MapProperty);
-        set => SetValue(MapProperty, value);
-    }
-
-#else
     /// <summary>
     /// Map holding data for which is shown in this MapControl
     /// </summary>
-#if __BLAZOR__
-    [Parameter]
-    [SuppressMessage("Usage", "BL0007:Component parameters should be auto properties")]
-#endif
-#if __WINDOWSFORMS__
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    [Browsable(false)]
-#endif
     public Map Map
     {
         get
@@ -314,16 +262,15 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
             OnPropertyChanged();
         }
     }
-#endif
 
-    private void BeforeSetMap()
+    void BeforeSetMap()
     {
         if (Map is null) return; // Although the Map property can not null the map argument can null during initializing and binding.
 
         UnsubscribeFromMapEvents(Map);
     }
 
-    private void AfterSetMap(Map map)
+    void AfterSetMap(Map map)
     {
         if (map is null)
             return; // Although the Map property can not null the map argument can null during initializing and binding.
@@ -358,7 +305,7 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
         return stream.ToArray();
     }
 
-    private MapInfoEventArgs CreateMapInfoEventArgs(ScreenPosition screenPosition, MPoint worldPosition, GestureType gestureType)
+    MapInfoEventArgs CreateMapInfoEventArgs(ScreenPosition screenPosition, MPoint worldPosition, GestureType gestureType)
     {
         return new MapInfoEventArgs(screenPosition, worldPosition, gestureType, Map, GetMapInfo, GetRemoteMapInfoAsync);
     }
@@ -377,7 +324,7 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
     /// <summary>
     /// Tries to set the size of the MapControl.Map.Viewport.
     /// </summary>
-    private void TryUpdateViewportSize()
+    void TryUpdateViewportSize()
     {
         if (_mapControlScreenSize.Width <= 0 || _mapControlScreenSize.Height <= 0)
             return;
@@ -390,7 +337,7 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
         }
     }
 
-    private void SharedDispose(bool disposing)
+    void SharedDispose(bool disposing)
     {
         if (disposing)
         {
@@ -400,7 +347,7 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
         }
     }
 
-    private bool OnWidgetTapped(ScreenPosition screenPosition, MPoint worldPosition, GestureType gestureType, bool shiftPressed)
+    bool OnWidgetTapped(ScreenPosition screenPosition, MPoint worldPosition, GestureType gestureType, bool shiftPressed)
     {
         var eventArgs = new WidgetEventArgs(screenPosition, worldPosition, gestureType, Map, shiftPressed, GetMapInfo, GetRemoteMapInfoAsync);
 
@@ -416,7 +363,7 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
         return false;
     }
 
-    private bool OnWidgetPointerPressed(ScreenPosition screenPosition, MPoint worldPosition, bool shiftPressed)
+    bool OnWidgetPointerPressed(ScreenPosition screenPosition, MPoint worldPosition, bool shiftPressed)
     {
         var eventArgs = new WidgetEventArgs(screenPosition, worldPosition, GestureType.Press, Map, shiftPressed, GetMapInfo, GetRemoteMapInfoAsync);
 
@@ -431,7 +378,7 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
         return false;
     }
 
-    private bool OnWidgetPointerMoved(ScreenPosition screenPosition, MPoint worldPosition, GestureType gestureType, bool shiftPressed)
+    bool OnWidgetPointerMoved(ScreenPosition screenPosition, MPoint worldPosition, GestureType gestureType, bool shiftPressed)
     {
         var eventArgs = new WidgetEventArgs(screenPosition, worldPosition, gestureType, Map, shiftPressed, GetMapInfo, GetRemoteMapInfoAsync);
 
@@ -444,7 +391,7 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
         return false;
     }
 
-    private bool OnWidgetPointerReleased(ScreenPosition screenPosition, MPoint worldPosition, bool shiftPressed)
+    bool OnWidgetPointerReleased(ScreenPosition screenPosition, MPoint worldPosition, bool shiftPressed)
     {
         var eventArgs = new WidgetEventArgs(screenPosition, worldPosition, GestureType.Release, Map, shiftPressed, GetMapInfo, GetRemoteMapInfoAsync);
 
@@ -459,7 +406,7 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
         return false;
     }
 
-    private bool OnTapped(ScreenPosition screenPosition, GestureType gestureType)
+    bool OnTapped(ScreenPosition screenPosition, GestureType gestureType)
     {
         var worldPosition = Map.Navigator.Viewport.ScreenToWorld(screenPosition);
         if (OnWidgetTapped(screenPosition, worldPosition, gestureType, GetShiftPressed()))
@@ -472,7 +419,7 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
         return false;
     }
 
-    private bool OnPointerPressed(ReadOnlySpan<ScreenPosition> positions)
+    bool OnPointerPressed(ReadOnlySpan<ScreenPosition> positions)
     {
         if (positions.Length != 1)
             return false;
@@ -486,7 +433,7 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
         return OnMapPointerPressed(screenPosition, worldPosition);
     }
 
-    private bool OnPointerMoved(ReadOnlySpan<ScreenPosition> screenPositions, bool isHovering)
+    bool OnPointerMoved(ReadOnlySpan<ScreenPosition> screenPositions, bool isHovering)
     {
         if (screenPositions.Length != 1)
             return false;
@@ -503,7 +450,7 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
         return false;
     }
 
-    private bool OnPointerReleased(ReadOnlySpan<ScreenPosition> screenPositions)
+    bool OnPointerReleased(ReadOnlySpan<ScreenPosition> screenPositions)
     {
         if (screenPositions.Length != 1)
             return false;
@@ -578,5 +525,5 @@ public partial class MapView : INotifyPropertyChanged, IDisposable
         return eventArgs.Handled;
     }
 
-    private record ScreenSize(double Width, double Height);
+    record ScreenSize(double Width, double Height);
 }
