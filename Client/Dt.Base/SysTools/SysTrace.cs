@@ -60,12 +60,14 @@ public static class SysTrace
                 if (s is Dlg dlg)
                     dlg.Close();
             } },
+#if !WASM
             new Nav("数据库初始化", Icons.数据库) { Desc = "初始化数据库表结构", Callback = (s, n) =>
             {
                 ShowDbInit();
                 if (s is Dlg dlg)
                     dlg.Close();
             } },
+#endif
             new Nav("查找图标", typeof(IconWin), Icons.图标) { Desc = "内置的矢量文字，可用作图标、提示" },
 
             new Nav("更新缓存文件", typeof(RefreshSqliteWin), Icons.刷新) { Desc = "刷新服务端指定的 sqlite 缓存文件" },
@@ -157,6 +159,7 @@ public static class SysTrace
         return nav;
     }
 
+#if !WASM
     public static void ShowDbInit()
     {
         var dlg = new Dlg
@@ -173,7 +176,8 @@ public static class SysTrace
         dlg.LoadTab(new DbInitConnect());
         dlg.Show();
     }
-
+#endif
+    
     /// <summary>
     /// 显示实时日志面板
     /// </summary>

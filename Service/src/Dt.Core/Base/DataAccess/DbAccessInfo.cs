@@ -50,6 +50,7 @@ public class DbAccessInfo
     /// <returns></returns>
     public IDataAccess GetDa()
     {
+#if !WASM
         if (DbType == DatabaseType.MySql)
             return new MySqlAccess(this);
 
@@ -61,7 +62,8 @@ public class DbAccessInfo
 
         if (DbType == DatabaseType.PostgreSql)
             return new PostgreSqlAccess(this);
-
+#endif
+        
         throw new Exception($"无法创建[{DbType}]类型的数据访问对象！");
     }
 }

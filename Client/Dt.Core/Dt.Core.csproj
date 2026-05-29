@@ -31,11 +31,6 @@
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Writer\UnitItem.cs" Link="Base\Domain\Writer\UnitItem.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\IDataAccess.cs" Link="Base\DataAccess\IDataAccess.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\TableSchema.cs" Link="Base\DataAccess\TableSchema.cs" />
-        <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\Access\DbAccess.cs" Link="Base\DataAccess\DbAccess\DbAccess.cs" />
-        <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\Access\MySqlAccess.cs" Link="Base\DataAccess\DbAccess\MySqlAccess.cs" />
-        <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\Access\OracleAccess.cs" Link="Base\DataAccess\DbAccess\OracleAccess.cs" />
-        <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\Access\PostgreSqlAccess.cs" Link="Base\DataAccess\DbAccess\PostgreSqlAccess.cs" />
-        <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\Access\SqlServerAccess.cs" Link="Base\DataAccess\DbAccess\SqlServerAccess.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\DbAccessInfo.cs" Link="Base\DataAccess\DbAccess\DbAccessInfo.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Extensions\EnumEx.cs" Link="Internal\Extensions\EnumEx.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Internal\Extensions\ObjectEx.cs" Link="Internal\Extensions\ObjectEx.cs" />
@@ -68,6 +63,15 @@
 		<Compile Include="..\..\Service\src\Dt.Core\Rpc\RpcKit.cs" Link="Rpc\RpcKit.cs" />
 	</ItemGroup>
 
+    <!-- 非Wasm支持两层架构 -->
+    <ItemGroup Condition="$(IsBrowserWasm) != 'true'">
+        <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\Access\DbAccess.cs" Link="Base\DataAccess\DbAccess\DbAccess.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\Access\MySqlAccess.cs" Link="Base\DataAccess\DbAccess\MySqlAccess.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\Access\OracleAccess.cs" Link="Base\DataAccess\DbAccess\OracleAccess.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\Access\PostgreSqlAccess.cs" Link="Base\DataAccess\DbAccess\PostgreSqlAccess.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\DataAccess\Access\SqlServerAccess.cs" Link="Base\DataAccess\DbAccess\SqlServerAccess.cs" />
+    </ItemGroup>
+    
     <ItemGroup Condition="exists('..\..\..\Tools\File\TestProgressStream.cs')">
         <Compile Include="..\..\..\Tools\File\TestProgressStream.cs" Link="Rpc\Handler\TestProgressStream.cs" />
     </ItemGroup>

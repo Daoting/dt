@@ -7,10 +7,7 @@
 #endregion
 
 #region 引用命名
-using Dt.Base;
-using Dt.Mgr.Module;
 using Microsoft.UI.Xaml;
-using System.DirectoryServices.Protocols;
 #endregion
 
 namespace Dt.Mgr.Rbac;
