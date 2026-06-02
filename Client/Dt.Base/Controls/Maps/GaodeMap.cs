@@ -1,68 +1,72 @@
 ﻿using BruTile.Predefined;
 using BruTile.Web;
 using Mapsui;
-using Mapsui.Animations;
 using Mapsui.Extensions;
 using Mapsui.Projections;
 using Mapsui.Tiling.Layers;
 
 namespace Dt.Base;
 
-public static class GaodeMapExt
+/// <summary>
+/// 将高德地图瓦片作为底层的地图
+/// </summary>
+public class GaodeMap : Map
 {
     const string _gdName = "高德地图";
     
-    /// <summary>
-    /// 将高德地图（街道瓦片）添加到指定的 <see cref="Map"/> 实例中。
-    /// </summary>
-    /// <param name="p_map">要添加图层的 <see cref="Map"/> 实例。</param>
-    /// <returns>返回传入的 <see cref="Map"/> 实例，方便链式调用。</returns>
-    public static Map AddGaode(this Map p_map)
-    {   
-        // 街道图，无水印
-        // {s} = 1/2/3/4（子域名，自动分流服务器，用于并发加载，提高速度）
-        // {z} = 缩放级别
-        // {x}/{y} = 瓦片坐标
-        string amapUrl = "https://webrd0{s}.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scale=1&style=8";
+    // 街道图，无水印
+    // {s} = 1/2/3/4（子域名，自动分流服务器，用于并发加载，提高速度）
+    // {z} = 缩放级别
+    // {x}/{y} = 瓦片坐标
+    const string _streetUrl = "https://webrd0{s}.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scale=1&style=8";
 
+    // 卫星图
+    const string _satelliteUrl = "https://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}";
+
+    // 地形 / 路网图
+    const string _landformUrl = "https://webst0{s}.is.autonavi.com/appmaptile?style=7&x={x}&y={y}&z={z}";
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="p_mapType"></param>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public GaodeMap(GaodeMapType p_mapType = GaodeMapType.Street)
+    {
         var amapSource = new HttpTileSource(
-            new GlobalSphericalMercator(),
-            amapUrl,
+            // 3 全国，18 精细地面
+            new GlobalSphericalMercator(3, 18, _gdName),
+            p_mapType switch
+            {
+                GaodeMapType.Street => _streetUrl,
+                GaodeMapType.Satellite => _satelliteUrl,
+                GaodeMapType.Landform => _landformUrl,
+                _ => throw new ArgumentOutOfRangeException(nameof(p_mapType), p_mapType, null)
+            },
             new[] { "1", "2", "3", "4" }
         );
-        p_map.Layers.Add(new TileLayer(amapSource) { Name = _gdName });
-        return p_map;
+        Layers.Add(new TileLayer(amapSource) { Name = _gdName });
     }
 
     /// <summary>
-    /// 将地图中心定位到指定的地理坐标并按指定分辨率缩放（带可选动画）。
+    /// 将地图中心定位到指定的地理坐标并按指定级别缩放
     /// </summary>
-    /// <param name="p_map">要操作的 <see cref="Map"/> 实例。</param>
     /// <param name="p_lon">输入经度，采用 WGS84（GPS）坐标系。</param>
     /// <param name="p_lat">输入纬度，采用 WGS84（GPS）坐标系。</param>
-    /// <param name="p_resolution">目标分辨率（地图显示单位）</param>
-    /// <param name="p_duration">动画持续时间（毫秒）。默认 <c>-1</c> 表示使用 Mapsui 的默认或无动画。</param>
-    /// <param name="p_easing">可选的动画缓动函数（<see cref="Mapsui.Animations.Easing"/>）。</param>
-    /// <remarks>
-    /// 方法内部会把传入的 WGS84 坐标转换为中国常用的 GCJ-02（俗称“火星坐标”），
-    /// 然后将结果投影为球面墨卡托坐标并执行定位与缩放。
-    /// </remarks>
-    public static void CenterOnAndZoomTo(this Map p_map,
-        double p_lon,
-        double p_lat,
-        double p_resolution,
-        long p_duration = -1L,
-        Mapsui.Animations.Easing p_easing = null)
+    /// <param name="p_level">分辨率级别 0~15</param>
+    public void Locate(double p_lon, double p_lat, int p_level = 15)
     {
+        if (p_level < 0 || p_level >= Navigator.Resolutions.Count)
+            throw new ArgumentOutOfRangeException(nameof(p_level), $"分辨率级别必须在 0 和 {Navigator.Resolutions.Count - 1} 之间。");
+        
         var (gcjLon, gcjLat) = Wgs84ToGcj02(p_lon, p_lat);
         var c = SphericalMercator.FromLonLat(gcjLon, gcjLat).ToMPoint();
-        p_map.Navigator.CenterOnAndZoomTo(c, p_resolution, p_duration, p_easing);
+        Navigator.CenterOnAndZoomTo(c, Navigator.Resolutions[p_level]);
     }
-
+    
     /// <summary>
     /// 将地图中心设置到指定的 GPS 坐标并将缩放级别调整为固定值（当前为 1.1）。
     /// </summary>
-    /// <param name="p_map">要操作的 <see cref="Map"/> 实例。</param>
     /// <param name="p_lon">经度（WGS84/GPS）。</param>
     /// <param name="p_lat">纬度（WGS84/GPS）。</param>
     /// <returns>返回传入的 <see cref="Map"/> 实例，方便链式调用。</returns>
@@ -71,25 +75,11 @@ public static class GaodeMapExt
     /// 注释中保留了将 WGS84 转为 GCJ02 的代码，按需可恢复使用。
     /// 方法会设置一个固定的缩放值（<c>1.1</c>）。
     /// </remarks>
-    public static Map CenterOn(this Map p_map, double p_lon, double p_lat)
+    public void CenterOn(double p_lon, double p_lat)
     {
         var (gcjLon, gcjLat) = Wgs84ToGcj02(p_lon, p_lat);
         var c = SphericalMercator.FromLonLat(gcjLon, gcjLat).ToMPoint();
-        p_map.Navigator.CenterOn(c);
-        return p_map;
-    }
-
-    /// <summary>
-    /// 根据给定的分辨率执行缩放（占位方法，当前未实现具体逻辑）。
-    /// </summary>
-    /// <param name="p_map"></param>
-    /// <param name="p_resolution"></param>
-    /// <param name="p_duration"></param>
-    /// <param name="p_easing"></param>
-    public static Map ZoomTo(this Map p_map, double p_resolution, long p_duration = -1L, Easing p_easing = null)
-    {
-        p_map.Navigator.ZoomTo(p_resolution, p_duration, p_easing);
-        return p_map;
+        Navigator.CenterOn(c);
     }
 
     #region WGS84 转 GCJ02（火星坐标）
@@ -175,4 +165,25 @@ public static class GaodeMapExt
                + (150.0 * Math.Sin(x / 12.0 * PI) + 300.0 * Math.Sin(x / 30.0 * PI)) * 2.0 / 3.0;
     }
     #endregion
+}
+
+/// <summary>
+/// 高德地图瓦片类型
+/// </summary>
+public enum GaodeMapType
+{
+    /// <summary>
+    /// 街道图
+    /// </summary>
+    Street,
+
+    /// <summary>
+    /// 卫星图
+    /// </summary>
+    Satellite,
+
+    /// <summary>
+    /// 地形/路网图
+    /// </summary>
+    Landform,
 }
