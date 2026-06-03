@@ -34,9 +34,6 @@ public sealed partial class MapHome : Win
         tbl.AddRow(new { group = "地图", name = "高德街道图", cls = typeof(GaodeMapDemo) });
         tbl.AddRow(new { group = "地图", name = "高德卫星图", cls = typeof(GaodeSatelliteMapDemo) });
         tbl.AddRow(new { group = "地图", name = "高德路网图", cls = typeof(GaodeLandformMapDemo) });
-        tbl.AddRow(new { group = "地图", name = "百度地图", cls = typeof(BaiduBase) });
-        tbl.AddRow(new { group = "地图", name = "卫星地图", cls = typeof(BaiduSatellite) });
-        tbl.AddRow(new { group = "地图", name = "卫星地图标注", cls = typeof(BaiduSatelliteLabel) });
 
         tbl.AddRow(new { group = "样式", name = "自定义渲染层", cls = typeof(CustomLayerRender) });
         tbl.AddRow(new { group = "样式", name = "基础点样式", cls = typeof(CustomPointStyleBasic) });
