@@ -31,3 +31,16 @@ public class GaodeLandformMapDemo : IMapDemo
         return map;
     }
 }
+
+public static class GaodeMapEx
+{
+    public static void ToTianAnMen(this GaodeMap p_map)
+    {
+        p_map.Locate(116.397500, 39.908722);
+    }
+
+    public static void ToChinaCenter(this GaodeMap p_map)
+    {
+        p_map.Locate(104.195397, 35.86166, 1);
+    }
+}

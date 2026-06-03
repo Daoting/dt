@@ -20,7 +20,7 @@ public class SymbolsSample
         return Task.FromResult(map);
     }
 
-    private static ILayer CreateStylesLayer(MRect? envelope) => new MemoryLayer
+    private static ILayer CreateStylesLayer(MRect envelope) => new MemoryLayer
     {
         Name = "Styles Layer",
         Features = CreateDiverseFeatures(RandomPointsBuilder.GenerateRandomPoints(envelope, 25)),

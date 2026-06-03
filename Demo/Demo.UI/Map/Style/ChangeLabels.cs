@@ -163,7 +163,7 @@ public static partial class GeometryExtensions
         return new GeometryFeature(geometry);
     }
 
-    public static Geometry? InsertCoordinate(this Geometry? geometry, Coordinate coordinate, int segment)
+    public static Geometry InsertCoordinate(this Geometry geometry, Coordinate coordinate, int segment)
     {
         if (geometry is null)
             return null;
@@ -179,7 +179,7 @@ public static partial class GeometryExtensions
             throw new NotSupportedException();
     }
 
-    public static Geometry? DeleteCoordinate(this Geometry? geometry, int index)
+    public static Geometry DeleteCoordinate(this Geometry geometry, int index)
     {
         if (geometry is null)
             return null;

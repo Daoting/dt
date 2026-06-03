@@ -23,7 +23,7 @@ public class AtlasSample
         return Task.FromResult(map);
     }
 
-    private static ILayer CreateAtlasLayer(MRect? envelope)
+    private static ILayer CreateAtlasLayer(MRect envelope)
     {
         return new MemoryLayer
         {

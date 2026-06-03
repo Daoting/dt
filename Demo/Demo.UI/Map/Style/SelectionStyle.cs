@@ -20,7 +20,7 @@ public class SelectionStyle
         return Task.FromResult(map);
     }
 
-    private static void MapTapped(object? s, MapEventArgs e)
+    private static void MapTapped(object s, MapEventArgs e)
     {
         var feature = e.GetMapInfo(e.Map.Layers.Where(l => l.Name == "Points")).Feature;
         if (feature is null)

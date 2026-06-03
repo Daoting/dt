@@ -31,7 +31,7 @@ public class CustomStyle : IMapDemo
         return Task.FromResult(map);
     }
 
-    private static MemoryLayer CreateStylesLayer(MRect? envelope) => new()
+    private static MemoryLayer CreateStylesLayer(MRect envelope) => new()
     {
         Name = _mapInfoLayerName,
         Features = CreateDiverseFeatures(RandomPointsBuilder.GenerateRandomPoints(envelope, 25)),

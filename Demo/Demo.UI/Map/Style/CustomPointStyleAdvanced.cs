@@ -30,19 +30,19 @@ public class CustomPointStyleAdvanced : IMapDemo
     public static Map CreateMap()
     {
         var map = new Map();
-        map.Layers.Add(BaiduMap.CreateTileLayer());
-        map.Layers.Add(new MemoryLayer($"{nameof(CustomPointStyle)}")
-        {
-            Features = CreateFeatures(map.Extent!, 24).ToList(),
-            Style = new StyleCollection
-            {
-                Styles =
-                {
-                    CreateCustomRendererStyle(),
-                    new SymbolStyle() { SymbolScale = 0.2, Fill = new Brush(_color1) }, // Reference point at the center of the position
-                }
-            }
-        });
+        //map.Layers.Add(BaiduMap.CreateTileLayer());
+        //map.Layers.Add(new MemoryLayer($"{nameof(CustomPointStyle)}")
+        //{
+        //    Features = CreateFeatures(map.Extent!, 24).ToList(),
+        //    Style = new StyleCollection
+        //    {
+        //        Styles =
+        //        {
+        //            CreateCustomRendererStyle(),
+        //            new SymbolStyle() { SymbolScale = 0.2, Fill = new Brush(_color1) }, // Reference point at the center of the position
+        //        }
+        //    }
+        //});
         map.Widgets.Add(new MapInfoWidget(map, [map.Layers.Last()]));
 
         MapRenderer.RegisterPointStyleRenderer("custom-style-advanced", MyCustomStyleRenderer);

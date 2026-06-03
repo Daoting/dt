@@ -22,7 +22,7 @@ public class SvgSample
         return Task.FromResult(map);
     }
 
-    private static MemoryLayer CreateSvgLayer(MRect? envelope) => new()
+    private static MemoryLayer CreateSvgLayer(MRect envelope) => new()
     {
         Name = "Svg Layer",
         Features = CreateSvgFeatures(RandomPointsBuilder.GenerateRandomPoints(envelope, _numberOfSvgs)),

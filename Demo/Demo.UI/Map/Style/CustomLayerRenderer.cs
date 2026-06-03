@@ -22,15 +22,21 @@ namespace Demo.UI;
 
 public class CustomLayerRender : IMapDemo
 {
-    public Task<Map> Create() => Task.FromResult(CreateMap());
-
-    public static Map CreateMap()
+    // 1. 定义中国范围（Web墨卡托）
+    static MRect chinaExtent = new MRect(
+        minX: 8187548.55,
+        minY: 428902.92,
+        maxX: 15037407.88,
+        maxY: 7087834.75
+    );
+    
+    public async Task<Map> Create()
     {
-        var map = new Map();
-        map.Layers.Add(BaiduMap.CreateTileLayer());
+        var map = new GaodeMap();
         map.Layers.Add(CreatePointLayer(map));
         MapRenderer.RegisterLayerRenderer("custom-layer-renderer", CustomLayerRenderer);
         map.Widgets.Add(new MapInfoWidget(map, map.Layers.OfType<MemoryLayer>));
+        map.ToChinaCenter();
         return map;
     }
 
@@ -38,7 +44,7 @@ public class CustomLayerRender : IMapDemo
     {
         return new MemoryLayer($"{nameof(CustomLayerRenderer)}")
         {
-            Features = CreateFeatures(map.Extent!, 1_000).ToList(),
+            Features = CreateFeatures(chinaExtent, 500).ToList(),
             Style = new SymbolStyle(),
             CustomLayerRendererName = "custom-layer-renderer"
         };

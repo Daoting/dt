@@ -9,14 +9,14 @@ namespace Demo.UI;
 
 public static class RandomPointsBuilder
 {
-    public static IEnumerable<PointFeature> CreateRandomFeatures(MRect? envelope, int count, Random? random = null, int seed = 123)
+    public static IEnumerable<PointFeature> CreateRandomFeatures(MRect envelope, int count, Random random = null, int seed = 123)
     {
         random ??= new Random(seed);
 
         return CreateFeatures(GenerateRandomPoints(envelope, count, random));
     }
 
-    public static MemoryProvider CreateProviderWithRandomPoints(MRect? envelope, int count, Random? random = null)
+    public static MemoryProvider CreateProviderWithRandomPoints(MRect envelope, int count, Random random = null)
     {
         random ??= new Random(123);
 
@@ -29,12 +29,12 @@ public static class RandomPointsBuilder
         return randomPoints.Select(p => new PointFeature(p) { ["Label"] = counter++.ToString() }).ToList();
     }
 
-    public static IEnumerable<MPoint> GenerateRandomPoints(MRect? envelope, int count, int randomSeed)
+    public static IEnumerable<MPoint> GenerateRandomPoints(MRect envelope, int count, int randomSeed)
     {
         return GenerateRandomPoints(envelope, count, new Random(randomSeed));
     }
 
-    public static IEnumerable<MPoint> GenerateRandomPoints(MRect? envelope, int count, Random? random = null)
+    public static IEnumerable<MPoint> GenerateRandomPoints(MRect envelope, int count, Random random = null)
     {
         random ??= new Random(192);
 

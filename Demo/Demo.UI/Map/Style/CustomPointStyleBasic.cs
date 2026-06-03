@@ -25,7 +25,7 @@ public class CustomPointStyleBasic : IMapDemo
     public static Map CreateMap()
     {
         var map = new Map();
-        map.Layers.Add(BaiduMap.CreateTileLayer());
+        //map.Layers.Add(BaiduMap.CreateTileLayer());
         map.Layers.Add(new MemoryLayer($"{nameof(CustomPointStyle)}")
         {
             Features = CreateFeatures(map.Extent!, 32).ToList(),

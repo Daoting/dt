@@ -256,7 +256,7 @@ public class WorldCitiesFeaturesBuilder
         public double Lat { get; init; }
         public double Long { get; init; }
         public long Population { get; init; }
-        public string? Country { get; init; }
+        public string Country { get; init; }
     }
 }
 
