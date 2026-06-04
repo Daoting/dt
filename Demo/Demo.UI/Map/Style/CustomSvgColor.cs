@@ -44,7 +44,7 @@ public class CustomSvgColor
         return Task.FromResult(map);
     }
 
-    private static TextBoxWidget CreateTextBox(string description) => new()
+    static TextBoxWidget CreateTextBox(string description) => new()
     {
         Text = description,
         VerticalAlignment = Mapsui.Widgets.VerticalAlignment.Top,
@@ -52,7 +52,7 @@ public class CustomSvgColor
         Margin = new MRect(10),
     };
 
-    private static ThemeStyle CreateDynamicSvgStyle(Func<bool> rasterizeSvg) // Use func to get reference to _rasterizeSvg
+    static ThemeStyle CreateDynamicSvgStyle(Func<bool> rasterizeSvg) // Use func to get reference to _rasterizeSvg
     {
         return new ThemeStyle((f) =>
         {
@@ -77,7 +77,7 @@ public class CustomSvgColor
         });
     }
 
-    private static Color GetTypeColor(int type) => type switch
+    static Color GetTypeColor(int type) => type switch
     {
         0 => Color.FromString("#D8737F"),
         1 => Color.FromString("#AB6C82"),
@@ -86,7 +86,7 @@ public class CustomSvgColor
         _ => throw new Exception("Unknown type"),
     };
 
-    private static double CalculateAngle(MPoint point1, MPoint point2)
+    static double CalculateAngle(MPoint point1, MPoint point2)
     {
         var angleInRadians = Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
 

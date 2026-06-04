@@ -39,7 +39,7 @@ public class LabelsDemo : IMapDemo
         }
     };
 
-    private static List<IFeature> CreateFeatures() => [
+    static List<IFeature> CreateFeatures() => [
         CreateFeatureWithDefaultStyle(),
         CreateFeatureWithRightAlignedStyle(),
         CreateFeatureWithBottomAlignedStyle(),
@@ -55,12 +55,12 @@ public class LabelsDemo : IMapDemo
         CreateFeatureWithCharacterWrap(),
     ];
 
-    private static PointFeature CreateFeatureWithDefaultStyle() => new(new MPoint(0, 0))
+    static PointFeature CreateFeatureWithDefaultStyle() => new(new MPoint(0, 0))
     {
         Styles = [new LabelStyle { Text = "Default Label" }]
     };
 
-    private static PointFeature CreateFeatureWithColors() => new(new MPoint(0, -7000000))
+    static PointFeature CreateFeatureWithColors() => new(new MPoint(0, -7000000))
     {
         Styles = [new LabelStyle
         {
@@ -70,7 +70,7 @@ public class LabelsDemo : IMapDemo
         }]
     };
 
-    private static PointFeature CreateFeatureWithBottomAlignedStyle() => new(new MPoint(0, -5000000))
+    static PointFeature CreateFeatureWithBottomAlignedStyle() => new(new MPoint(0, -5000000))
     {
         Styles = [new LabelStyle
         {
@@ -80,7 +80,7 @@ public class LabelsDemo : IMapDemo
         }]
     };
 
-    private static PointFeature CreateFeatureWithRightAlignedStyle() => new(new MPoint(0, -2000000))
+    static PointFeature CreateFeatureWithRightAlignedStyle() => new(new MPoint(0, -2000000))
     {
         Styles = [new LabelStyle
         {
@@ -90,7 +90,7 @@ public class LabelsDemo : IMapDemo
         }]
     };
 
-    private static GeometryFeature CreatePolygonWithLabel() => new()
+    static GeometryFeature CreatePolygonWithLabel() => new()
     {
         Geometry = new WKTReader().Read("POLYGON((-1000000 -10000000, 1000000 -10000000, 1000000 -8000000, -1000000 -8000000, -1000000 -10000000))"),
         Styles = [new LabelStyle
@@ -100,7 +100,7 @@ public class LabelsDemo : IMapDemo
         }]
     };
 
-    private static PointFeature CreateFeatureWithTailTruncation() => new(new MPoint(8000000, 2000000))
+    static PointFeature CreateFeatureWithTailTruncation() => new(new MPoint(8000000, 2000000))
     {
         Styles = [new LabelStyle
         {
@@ -115,7 +115,7 @@ public class LabelsDemo : IMapDemo
         }]
     };
 
-    private static PointFeature CreateFeatureWithHeadTruncation() => new(new MPoint(-8000000, 2000000))
+    static PointFeature CreateFeatureWithHeadTruncation() => new(new MPoint(-8000000, 2000000))
     {
         Styles = [new LabelStyle
         {
@@ -130,7 +130,7 @@ public class LabelsDemo : IMapDemo
         }]
     };
 
-    private static PointFeature CreateFeatureWithMiddleTruncation() => new(new MPoint(0, 2000000))
+    static PointFeature CreateFeatureWithMiddleTruncation() => new(new MPoint(0, 2000000))
     {
         Styles = [new LabelStyle
         {
@@ -145,7 +145,7 @@ public class LabelsDemo : IMapDemo
         }]
     };
 
-    private static PointFeature CreateFeatureWithWordWrapLeft() => new(new MPoint(-8000000, 6000000))
+    static PointFeature CreateFeatureWithWordWrapLeft() => new(new MPoint(-8000000, 6000000))
     {
         Styles = [new LabelStyle
         {
@@ -160,7 +160,7 @@ public class LabelsDemo : IMapDemo
         }]
     };
 
-    private static PointFeature CreateFeatureWithWordWrapCenter() => new(new MPoint(0, 6000000))
+    static PointFeature CreateFeatureWithWordWrapCenter() => new(new MPoint(0, 6000000))
     {
         Styles = [new LabelStyle
         {
@@ -174,7 +174,7 @@ public class LabelsDemo : IMapDemo
         }]
     };
 
-    private static PointFeature CreateFeatureWithWordWrapRight() => new(new MPoint(8000000, 6000000))
+    static PointFeature CreateFeatureWithWordWrapRight() => new(new MPoint(8000000, 6000000))
     {
         Styles = [new LabelStyle
         {
@@ -188,7 +188,7 @@ public class LabelsDemo : IMapDemo
         }]
     };
 
-    private static PointFeature CreateFeatureWithCharacterWrap() => new(new MPoint(0, 10000000))
+    static PointFeature CreateFeatureWithCharacterWrap() => new(new MPoint(0, 10000000))
     {
         Styles = [new LabelStyle
         {
@@ -200,7 +200,7 @@ public class LabelsDemo : IMapDemo
         }]
     };
 
-    private static PointFeature CreateFeatureWithHalo() => new(new MPoint(0, -12000000))
+    static PointFeature CreateFeatureWithHalo() => new(new MPoint(0, -12000000))
     {
         Styles = [new LabelStyle
         {

@@ -22,9 +22,9 @@ namespace Demo.UI;
 
 public class CustomPointStyleAdvanced : IMapDemo
 {
-    private static readonly Color _color1 = Color.FromString("#6A5ACD");
-    private static readonly Color _color2 = Color.FromString("#7B68EE");
-    private static readonly Color _color3 = Color.FromString("#9370DB");
+    static readonly Color _color1 = Color.FromString("#6A5ACD");
+    static readonly Color _color2 = Color.FromString("#7B68EE");
+    static readonly Color _color3 = Color.FromString("#9370DB");
     public Task<Map> Create() => Task.FromResult(CreateMap());
 
     public static Map CreateMap()
@@ -50,7 +50,7 @@ public class CustomPointStyleAdvanced : IMapDemo
         return map;
     }
 
-    private static void MyCustomStyleRenderer(SKCanvas canvas, IPointStyle style, RenderService renderService, float opacity)
+    static void MyCustomStyleRenderer(SKCanvas canvas, IPointStyle style, RenderService renderService, float opacity)
     {
         var width = 30f;
         var halfWidth = width * 0.5f;
@@ -78,7 +78,7 @@ public class CustomPointStyleAdvanced : IMapDemo
         canvas.DrawPath(path3, paint3);
     }
 
-    private static ThemeStyle CreateCustomRendererStyle()
+    static ThemeStyle CreateCustomRendererStyle()
     {
         return new ThemeStyle((f) =>
         {
@@ -99,7 +99,7 @@ public class CustomPointStyleAdvanced : IMapDemo
         });
     }
 
-    private static List<PointFeature> CreateFeatures(MRect envelope, int count)
+    static List<PointFeature> CreateFeatures(MRect envelope, int count)
     {
         var random = new Random(327);
         var randomPoints = RandomPointsBuilder.GenerateRandomPoints(envelope, count, random);

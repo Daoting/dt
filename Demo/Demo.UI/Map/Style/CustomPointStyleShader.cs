@@ -40,26 +40,26 @@ public class CustomPointStyleShader : IMapDemo
         return map;
     }
 
-    private static List<PointFeature> CreateFeatures(MRect envelope, int count) =>
+    static List<PointFeature> CreateFeatures(MRect envelope, int count) =>
         RandomPointsBuilder.GenerateRandomPoints(envelope, count, new Random(934))
         .Select(p => new PointFeature(p))
         .ToList();
 
-    private static void MyBasicCustomStyleRenderer(SKCanvas canvas, IPointStyle style, RenderService renderService, float opacity)
+    static void MyBasicCustomStyleRenderer(SKCanvas canvas, IPointStyle style, RenderService renderService, float opacity)
     {
         using var paint = new SKPaint { Color = SKColors.OliveDrab, IsAntialias = true };
         canvas.DrawCircle(0f, 0f, 10f, paint);
         DrawEllipseWithGradient(canvas, CreatePath());
     }
 
-    private static SKRect CreatePath()
+    static SKRect CreatePath()
     {
         var halfWidth = 20;
         var halfHeight = 20f;
         return new SKRect(-halfWidth, -halfHeight, halfWidth, halfHeight);
     }
 
-    private static TileLayer CreateLayer()
+    static TileLayer CreateLayer()
     {
         var tileSource = KnownTileSources.Create(KnownTileSource.BKGTopPlusGrey);
         return new TileLayer(tileSource, dataFetchStrategy: new DataFetchStrategy()) // DataFetchStrategy prefetches tiles from higher levels
@@ -68,7 +68,7 @@ public class CustomPointStyleShader : IMapDemo
         };
     }
 
-    private static void DrawEllipseWithGradient(SKCanvas canvas, SKRect rect)
+    static void DrawEllipseWithGradient(SKCanvas canvas, SKRect rect)
     {
         // create the shader
         var colors = new SKColor[] {

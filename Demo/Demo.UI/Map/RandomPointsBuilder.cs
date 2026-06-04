@@ -23,7 +23,7 @@ public static class RandomPointsBuilder
         return new MemoryProvider(CreateFeatures(GenerateRandomPoints(envelope, count, random)));
     }
 
-    private static IEnumerable<PointFeature> CreateFeatures(IEnumerable<MPoint> randomPoints)
+    static IEnumerable<PointFeature> CreateFeatures(IEnumerable<MPoint> randomPoints)
     {
         var counter = 0;
         return randomPoints.Select(p => new PointFeature(p) { ["Label"] = counter++.ToString() }).ToList();

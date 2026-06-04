@@ -20,7 +20,7 @@ public class SelectionStyle
         return Task.FromResult(map);
     }
 
-    private static void MapTapped(object s, MapEventArgs e)
+    static void MapTapped(object s, MapEventArgs e)
     {
         var feature = e.GetMapInfo(e.Map.Layers.Where(l => l.Name == "Points")).Feature;
         if (feature is null)
@@ -38,7 +38,7 @@ public class SelectionStyle
         Style = CreateStyle(),
     };
 
-    private static ThemeStyle CreateStyle() => new(static f =>
+    static ThemeStyle CreateStyle() => new(static f =>
     {
         var selected = (f.Data as SomeModel)?.IsSelected ?? false;
         return new StyleCollection
@@ -51,13 +51,13 @@ public class SelectionStyle
         };
     });
 
-    private static SymbolStyle CreateSelectionSymbol(bool enabled) =>
+    static SymbolStyle CreateSelectionSymbol(bool enabled) =>
         new() { Fill = new Brush(Color.White), SymbolScale = 1.4, Enabled = enabled, Outline = null, Opacity = 0.8f };
 
-    private static SymbolStyle CreateSymbol() =>
+    static SymbolStyle CreateSymbol() =>
         new() { Fill = new Brush(new Color(150, 150, 30)) };
 
-    private static MPoint[] CreatePoints() => [
+    static MPoint[] CreatePoints() => [
         new MPoint(0, 0),
         new MPoint(9000000, 0),
         new MPoint(9000000, 9000000),
@@ -68,7 +68,7 @@ public class SelectionStyle
     ];
 
     // This could be some class in your own app domain that you want to visualize in Mapsui.
-    private record SomeModel()
+    record SomeModel()
     {
         public bool IsSelected { get; set; }
     }

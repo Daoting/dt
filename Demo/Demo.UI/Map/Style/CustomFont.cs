@@ -17,14 +17,14 @@ public class CustomFont
         return Task.FromResult(map);
     }
 
-    private static MemoryLayer CreateLayer() => new()
+    static MemoryLayer CreateLayer() => new()
     {
         Name = "Custom Font Labels",
         Features = CreateFeatures(),
         Style = null,
     };
 
-    private static IEnumerable<IFeature> CreateFeatures() =>
+    static IEnumerable<IFeature> CreateFeatures() =>
     [
         new PointFeature(new MPoint(-100, 50)) {
             Styles =

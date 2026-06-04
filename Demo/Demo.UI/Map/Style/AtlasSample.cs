@@ -8,8 +8,8 @@ namespace Demo.UI;
 
 public class AtlasSample
 {
-    private const string _layerName = "Sprites";
-    private static readonly Random _random = new(1);
+    const string _layerName = "Sprites";
+    static readonly Random _random = new(1);
     
     public Task<Map> Create()
     {
@@ -23,7 +23,7 @@ public class AtlasSample
         return Task.FromResult(map);
     }
 
-    private static ILayer CreateAtlasLayer(MRect envelope)
+    static ILayer CreateAtlasLayer(MRect envelope)
     {
         return new MemoryLayer
         {
@@ -33,7 +33,7 @@ public class AtlasSample
         };
     }
 
-    private static IEnumerable<IFeature> CreateAtlasFeatures(IEnumerable<MPoint> randomPoints)
+    static IEnumerable<IFeature> CreateAtlasFeatures(IEnumerable<MPoint> randomPoints)
     {
         var counter = 0;
 
@@ -48,7 +48,7 @@ public class AtlasSample
         }).ToList();
     }
 
-    private static ImageStyle CreateSymbolStyle(int x, int y) => new()
+    static ImageStyle CreateSymbolStyle(int x, int y) => new()
     {
         Image = new Image
         {

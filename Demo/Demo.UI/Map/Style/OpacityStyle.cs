@@ -59,7 +59,7 @@ public class OpacityStyle
         };
     }
 
-    private static Polygon CreatePolygon()
+    static Polygon CreatePolygon()
     {
         return new Polygon(
             new LinearRing(new[] {
@@ -79,7 +79,7 @@ public class OpacityStyle
         );
     }
 
-    private static LineString CreateLineString()
+    static LineString CreateLineString()
     {
         return new LineString(new[] {
             new Coordinate(1000000, 1000000),

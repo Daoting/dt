@@ -29,7 +29,7 @@ public class ThemeStyleSample
         return Task.FromResult(map);
     }
 
-    private static ILayer CreateCountryLayer(IProvider countrySource)
+    static ILayer CreateCountryLayer(IProvider countrySource)
     {
         return new Layer
         {
@@ -39,7 +39,7 @@ public class ThemeStyleSample
         };
     }
 
-    private static ThemeStyle CreateThemeStyle()
+    static ThemeStyle CreateThemeStyle()
     {
         // Pre-create styles to enable caching. Each style instance has a stable GenerationId,
         // allowing the drawable cache to reuse cached drawables for features with the same style.
@@ -104,7 +104,7 @@ public class ThemeStyleSample
         };
     }
 
-    private static ImageStyle CreateCityStyle() => new()
+    static ImageStyle CreateCityStyle() => new()
     {
         Image = "embedded://Mapsui.Samples.Common.Images.location.png",
         Offset = new Offset { Y = 64 },
@@ -114,7 +114,7 @@ public class ThemeStyleSample
 
 public static class ShapeFilesDeployer
 {
-    private static object _lock = new();
+    static object _lock = new();
     public static string ShapeFilesLocation { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Mapsui.Samples");
 
     public static void CopyEmbeddedResourceToFile(string shapefile)

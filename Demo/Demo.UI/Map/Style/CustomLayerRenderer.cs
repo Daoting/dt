@@ -22,14 +22,6 @@ namespace Demo.UI;
 
 public class CustomLayerRender : IMapDemo
 {
-    // 1. 定义中国范围（Web墨卡托）
-    static MRect chinaExtent = new MRect(
-        minX: 8187548.55,
-        minY: 428902.92,
-        maxX: 15037407.88,
-        maxY: 7087834.75
-    );
-    
     public async Task<Map> Create()
     {
         var map = new GaodeMap();
@@ -40,17 +32,17 @@ public class CustomLayerRender : IMapDemo
         return map;
     }
 
-    private static MemoryLayer CreatePointLayer(Map map)
+    static MemoryLayer CreatePointLayer(Map map)
     {
         return new MemoryLayer($"{nameof(CustomLayerRenderer)}")
         {
-            Features = CreateFeatures(chinaExtent, 500).ToList(),
+            Features = CreateFeatures(MapDemo.ChinaExtent, 500).ToList(),
             Style = new SymbolStyle(),
             CustomLayerRendererName = "custom-layer-renderer"
         };
     }
 
-    private static void CustomLayerRenderer(SKCanvas canvas, Viewport viewport, ILayer layer, RenderService renderService)
+    static void CustomLayerRenderer(SKCanvas canvas, Viewport viewport, ILayer layer, RenderService renderService)
     {
         foreach (var feature in layer.GetFeatures(viewport.ToExtent(), viewport.Resolution))
         {
@@ -62,13 +54,13 @@ public class CustomLayerRender : IMapDemo
         }
     }
 
-    private static void DrawSymbolStyle(SKCanvas canvas, IPointStyle style, RenderService renderService, float opacity)
+    static void DrawSymbolStyle(SKCanvas canvas, IPointStyle style, RenderService renderService, float opacity)
     {
         using var paint = new SKPaint { Color = new SKColor(79, 10, 107, 192), IsAntialias = true };
         canvas.DrawCircle(0f, 0f, 10f, paint);
     }
 
-    private static PointFeature[] CreateFeatures(MRect envelope, int count) =>
+    static PointFeature[] CreateFeatures(MRect envelope, int count) =>
         RandomPointsBuilder.GenerateRandomPoints(envelope, count, new Random(934))
             .Select(p => new PointFeature(p)).ToArray();
 }

@@ -55,7 +55,7 @@ public class ChangeLabelsAndShowSelected : IMapDemo
         return Task.FromResult(map);
     }
 
-    private static ThemeStyle CreateSelectedFeatureStyle(Func<long?> selectedFeatureId)
+    static ThemeStyle CreateSelectedFeatureStyle(Func<long?> selectedFeatureId)
     {
         var selectedStyle = CreatePinSymbol(new Color(204, 85, 51));
         var defaultStyle = CreatePinSymbol(new Color(65, 147, 207));
@@ -66,7 +66,7 @@ public class ChangeLabelsAndShowSelected : IMapDemo
         });
     }
 
-    private static LabelStyle CreateAlphabeticLabelStyle(Func<int> getLabelMode) => new()
+    static LabelStyle CreateAlphabeticLabelStyle(Func<int> getLabelMode) => new()
     {
         LabelMethod = f => getLabelMode() switch
         {
@@ -82,7 +82,7 @@ public class ChangeLabelsAndShowSelected : IMapDemo
         BorderColor = Color.DimGray,
     };
 
-    private static MemoryLayer CreatePinLayer(IEnumerable<IFeature> features,
+    static MemoryLayer CreatePinLayer(IEnumerable<IFeature> features,
         LabelStyle labelStyle, ThemeStyle selectedStyle) => new()
         {
             Name = "Pins",
@@ -97,7 +97,7 @@ public class ChangeLabelsAndShowSelected : IMapDemo
             },
         };
 
-    private static SymbolStyle CreateSmallCircleSymbol() => new()
+    static SymbolStyle CreateSmallCircleSymbol() => new()
     {
         SymbolType = SymbolType.Ellipse,
         SymbolScale = 0.5,
@@ -105,7 +105,7 @@ public class ChangeLabelsAndShowSelected : IMapDemo
         Fill = null,
     };
 
-    private static List<IFeature> CreateFeatures(IEnumerable<MPoint> randomPoints)
+    static List<IFeature> CreateFeatures(IEnumerable<MPoint> randomPoints)
     {
         var features = new List<IFeature>();
         var i = 0;
@@ -123,7 +123,7 @@ public class ChangeLabelsAndShowSelected : IMapDemo
         return features;
     }
 
-    private static ImageStyle CreatePinSymbol(Color color) => new()
+    static ImageStyle CreatePinSymbol(Color color) => new()
     {
         Image = new Image
         {
@@ -148,7 +148,7 @@ public class ChangeLabelsAndShowSelected : IMapDemo
         }
     };
 
-    private static Polygon CreateSquarePolygon(int halfWidth) => new(new LinearRing(new[]
+    static Polygon CreateSquarePolygon(int halfWidth) => new(new LinearRing(new[]
     {
         new Coordinate(-halfWidth, -halfWidth),
         new Coordinate(-halfWidth, halfWidth),

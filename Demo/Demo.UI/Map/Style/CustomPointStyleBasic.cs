@@ -35,13 +35,13 @@ public class CustomPointStyleBasic : IMapDemo
         return map;
     }
 
-    private static void MyBasicCustomStyleRenderer(SKCanvas canvas, IPointStyle style, RenderService renderService, float opacity)
+    static void MyBasicCustomStyleRenderer(SKCanvas canvas, IPointStyle style, RenderService renderService, float opacity)
     {
         using var paint = new SKPaint { Color = new SKColor(79, 10, 107, 192), IsAntialias = true };
         canvas.DrawCircle(0f, 0f, 10f, paint);
     }
 
-    private static List<PointFeature> CreateFeatures(MRect envelope, int count) =>
+    static List<PointFeature> CreateFeatures(MRect envelope, int count) =>
         RandomPointsBuilder.GenerateRandomPoints(envelope, count, new Random(934))
             .Select(p => new PointFeature(p)).ToList();
 }

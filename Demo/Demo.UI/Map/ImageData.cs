@@ -42,7 +42,7 @@ public class ImageData : IMapDemo
         return map;
     }
 
-    private static ILayer CreateImageLayer(Map map)
+    static ILayer CreateImageLayer(Map map)
     {
         // Center is Hamburg, Germany
         var center = new MPoint(1113046, 7084790);
@@ -79,7 +79,7 @@ public class ImageData : IMapDemo
         return memoryLayer;
     }
 
-    private static byte[] CreateSquareImageData(int dataPointsInX, int dataPointsInY, Func<int, int, SKColor> getColorForDataPoint)
+    static byte[] CreateSquareImageData(int dataPointsInX, int dataPointsInY, Func<int, int, SKColor> getColorForDataPoint)
     {
         // Create a bitmap, that contains the image data
         using var bitmap = new SKBitmap(dataPointsInX, dataPointsInY);
@@ -95,7 +95,7 @@ public class ImageData : IMapDemo
     // It is much faster than the SetPixel version, but needs unsafe
     // code option.
     /*
-    private static byte[] CreateSquareImageDataFast(int dataPointsInX, int dataPointsInY, Func<int, int, SKColor> getColorForDataPoint)
+    static byte[] CreateSquareImageDataFast(int dataPointsInX, int dataPointsInY, Func<int, int, SKColor> getColorForDataPoint)
     {
         // Create a bitmap, that contains the image data
         using (SKBitmap bitmap = new SKBitmap(dataPointsInX, dataPointsInY))
@@ -123,7 +123,7 @@ public class ImageData : IMapDemo
     }
     */
 
-    private static byte[] CreatePolarImageData(int maxRadius, float stepRadius, float stepAngle, Func<float, float, SKColor> getColorForDataPoint)
+    static byte[] CreatePolarImageData(int maxRadius, float stepRadius, float stepAngle, Func<float, float, SKColor> getColorForDataPoint)
     {
         // Create a bitmap, that contains the image data
         using var bitmap = new SKBitmap(maxRadius * 2, maxRadius * 2);
@@ -167,7 +167,7 @@ public class ImageData : IMapDemo
         return data.ToArray();
     }
 
-    private static SKPoint ConvertPolarToCartesian(double radius, double angle)
+    static SKPoint ConvertPolarToCartesian(double radius, double angle)
     {
         var x = radius * Math.Cos(angle * Math.PI / 180.0);
         var y = radius * Math.Sin(angle * Math.PI / 180.0);
@@ -175,11 +175,11 @@ public class ImageData : IMapDemo
         return new SKPoint((float)x, (float)y);
     }
 
-    private static Random _random = new Random(1234);
-    private static SKColor[] _dataColors = { SKColors.Blue, SKColors.LightBlue, SKColors.Green, SKColors.LightGreen, SKColors.Yellow, SKColors.Orange, SKColors.Red, SKColors.Pink };
-    private static int _numOfDataColors = _dataColors.Length;
+    static Random _random = new Random(1234);
+    static SKColor[] _dataColors = { SKColors.Blue, SKColors.LightBlue, SKColors.Green, SKColors.LightGreen, SKColors.Yellow, SKColors.Orange, SKColors.Red, SKColors.Pink };
+    static int _numOfDataColors = _dataColors.Length;
 
-    private static SKColor GetColorForSquareDataPoint(int x, int y)
+    static SKColor GetColorForSquareDataPoint(int x, int y)
     {
         var value = _random.NextDouble();
 
@@ -194,7 +194,7 @@ public class ImageData : IMapDemo
         return _dataColors[pos].WithAlpha(128);
     }
 
-    private static SKColor GetColorForPolarDataPoint(float r, float a)
+    static SKColor GetColorForPolarDataPoint(float r, float a)
     {
         var value = _random.NextDouble();
 

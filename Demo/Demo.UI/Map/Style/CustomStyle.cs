@@ -31,14 +31,14 @@ public class CustomStyle : IMapDemo
         return Task.FromResult(map);
     }
 
-    private static MemoryLayer CreateStylesLayer(MRect envelope) => new()
+    static MemoryLayer CreateStylesLayer(MRect envelope) => new()
     {
         Name = _mapInfoLayerName,
         Features = CreateDiverseFeatures(RandomPointsBuilder.GenerateRandomPoints(envelope, 25)),
         Style = null,
     };
 
-    private static List<IFeature> CreateDiverseFeatures(IEnumerable<MPoint> randomPoints)
+    static List<IFeature> CreateDiverseFeatures(IEnumerable<MPoint> randomPoints)
     {
         var features = new List<IFeature>();
         var style = new MyCustomStyle();
@@ -54,7 +54,7 @@ public class CustomStyle : IMapDemo
         return features;
     }
 
-    private static SymbolStyle SmallDot() => new() { SymbolScale = 0.2, Fill = new Brush(new Color(40, 40, 40)) };
+    static SymbolStyle SmallDot() => new() { SymbolScale = 0.2, Fill = new Brush(new Color(40, 40, 40)) };
 
     public class MyCustomStyle : BaseStyle
     {
@@ -63,7 +63,7 @@ public class CustomStyle : IMapDemo
 
     public class SkiaCustomStyleRenderer : ISkiaStyleRenderer
     {
-        private static Random _random = new(1);
+        static Random _random = new(1);
 
         public bool Draw(SKCanvas canvas, Viewport viewport, ILayer layer, IFeature feature, IStyle style, RenderService renderService, long iteration)
         {

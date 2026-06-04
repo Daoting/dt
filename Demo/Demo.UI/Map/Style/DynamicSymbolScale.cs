@@ -9,9 +9,9 @@ namespace Demo.UI;
 
 public class DynamicSymbolScale
 {
-    private const double _level1 = 32000.0;
-    private const double _level2 = 16000.0;
-    private const double _level3 = 8000.0;
+    const double _level1 = 32000.0;
+    const double _level2 = 16000.0;
+    const double _level3 = 8000.0;
 
     public Task<Map> Create()
     {
@@ -24,14 +24,14 @@ public class DynamicSymbolScale
         return Task.FromResult(map);
     }
 
-    private static MemoryLayer CreateLayerWithDynamicScaleStyle(Map map) => new()
+    static MemoryLayer CreateLayerWithDynamicScaleStyle(Map map) => new()
     {
         Name = "Dynamic Symbol Scale",
         Features = RandomPointsBuilder.CreateRandomFeatures(map.Extent!.Grow(map.Extent.Width * 0.94 - map.Extent.Width), 50, seed: 245),
         Style = CreateDynamicSymbolScaleStyle()
     };
 
-    private static ThemeStyle CreateDynamicSymbolScaleStyle()
+    static ThemeStyle CreateDynamicSymbolScaleStyle()
     {
         var fill = new Brush(new Color(242, 229, 29, 255));
         var pen = new Pen(Color.DimGray, 1.6);
@@ -68,7 +68,7 @@ public class DynamicSymbolScale
         };
     }
 
-    private static Polygon CreateSquarePolygon(int width)
+    static Polygon CreateSquarePolygon(int width)
     {
         var halfWidth = width / 2;
         return new Polygon(new LinearRing(new[]

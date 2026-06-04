@@ -9,10 +9,10 @@ namespace Demo.UI;
 
 public class DynamicSvgStyle
 {
-    private string Description => "Tab or click in the map to see the change in symbols. This sample shows you can " +
+    string Description => "Tab or click in the map to see the change in symbols. This sample shows you can " +
     "change the size, rotation and color (using BlendModeColor) of a single SVG resource if you use a ThemeStyle";
 
-    private const double circumferenceOfTheEarth = 40075017;
+    const double circumferenceOfTheEarth = 40075017;
 
     public Task<Map> Create()
     {
@@ -29,14 +29,14 @@ public class DynamicSvgStyle
         return Task.FromResult(map);
     }
 
-    private MemoryLayer CreateLayerWithDynamicSvgStyle(Func<MPoint> getTapPosition, Map map) => new()
+    MemoryLayer CreateLayerWithDynamicSvgStyle(Func<MPoint> getTapPosition, Map map) => new()
     {
         Name = "Dynamic Svg Style",
         Features = RandomPointsBuilder.CreateRandomFeatures(map.Extent, 1000),
         Style = CreateDynamicSvgStyle(getTapPosition)
     };
 
-    private ThemeStyle CreateDynamicSvgStyle(Func<MPoint> getTapPosition) // Use Func to make it get the latest clicked position
+    ThemeStyle CreateDynamicSvgStyle(Func<MPoint> getTapPosition) // Use Func to make it get the latest clicked position
     {
         var imageSource = "embedded://Mapsui.Samples.Common.Images.arrow.svg";
 
@@ -65,7 +65,7 @@ public class DynamicSvgStyle
         });
     }
 
-    private static Color ToColor(double distanceBetweenZeroAndOne)
+    static Color ToColor(double distanceBetweenZeroAndOne)
     {
         // Just improvising a bit with the color gradient.
         var red = 32;
@@ -74,7 +74,7 @@ public class DynamicSvgStyle
         return Color.FromArgb(255, red, green, blue);
     }
 
-    private double CalculateAngle(MPoint point1, MPoint point2)
+    double CalculateAngle(MPoint point1, MPoint point2)
     {
         // Use Atan2 for angle
         var radians = Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);

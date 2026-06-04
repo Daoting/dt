@@ -8,7 +8,7 @@ namespace Demo.UI;
 
 public class SvgSample
 {
-    private static readonly int _numberOfSvgs = 2000;
+    static readonly int _numberOfSvgs = 2000;
 
     public Task<Map> Create()
     {
@@ -22,14 +22,14 @@ public class SvgSample
         return Task.FromResult(map);
     }
 
-    private static MemoryLayer CreateSvgLayer(MRect envelope) => new()
+    static MemoryLayer CreateSvgLayer(MRect envelope) => new()
     {
         Name = "Svg Layer",
         Features = CreateSvgFeatures(RandomPointsBuilder.GenerateRandomPoints(envelope, _numberOfSvgs)),
         Style = null,
     };
 
-    private static IFeature[] CreateSvgFeatures(IEnumerable<MPoint> randomPoints)
+    static IFeature[] CreateSvgFeatures(IEnumerable<MPoint> randomPoints)
     {
         var counter = 0;
 
@@ -42,7 +42,7 @@ public class SvgSample
         }).ToArray();
     }
 
-    private static ImageStyle CreateSvgStyle() => new()
+    static ImageStyle CreateSvgStyle() => new()
     {
         Image = "embedded://Mapsui.Samples.Common.Images.Pin.svg",
         SymbolScale = 0.5,

@@ -20,14 +20,14 @@ public class SymbolsSample
         return Task.FromResult(map);
     }
 
-    private static ILayer CreateStylesLayer(MRect envelope) => new MemoryLayer
+    static ILayer CreateStylesLayer(MRect envelope) => new MemoryLayer
     {
         Name = "Styles Layer",
         Features = CreateDiverseFeatures(RandomPointsBuilder.GenerateRandomPoints(envelope, 25)),
         Style = null,
     };
 
-    private static IEnumerable<IFeature> CreateDiverseFeatures(IEnumerable<MPoint> randomPoints)
+    static IEnumerable<IFeature> CreateDiverseFeatures(IEnumerable<MPoint> randomPoints)
     {
         var features = new List<IFeature>();
         var counter = 0;
@@ -50,10 +50,10 @@ public class SymbolsSample
         return features;
     }
 
-    private static SymbolStyle CreateSmallDotStyle() =>
+    static SymbolStyle CreateSmallDotStyle() =>
         new() { SymbolScale = 0.2, Fill = new Brush(new Color(40, 40, 40)) };
 
-    private static IEnumerable<IStyle> CreateDiverseStyles()
+    static IEnumerable<IStyle> CreateDiverseStyles()
     {
         const int radius = 16;
         return
@@ -129,17 +129,17 @@ public class SymbolsSample
         ];
     }
 
-    private static ImageStyle CreateBitmapStyle(string embeddedResourcePath, double scale)
+    static ImageStyle CreateBitmapStyle(string embeddedResourcePath, double scale)
     {
         return new ImageStyle { Image = embeddedResourcePath, SymbolScale = scale, Offset = new Offset(0, 32) };
     }
 
-    private static ImageStyle CreateSvgStyle(string embeddedResourcePath, double scale)
+    static ImageStyle CreateSvgStyle(string embeddedResourcePath, double scale)
     {
         return new ImageStyle { Image = embeddedResourcePath, SymbolScale = scale, RelativeOffset = new RelativeOffset(0.0, 0.5) };
     }
 
-    private static PointFeature CreatePointWithStackedStyles() => new(new MPoint(5000000, -5000000))
+    static PointFeature CreatePointWithStackedStyles() => new(new MPoint(5000000, -5000000))
     {
         Styles =
         [

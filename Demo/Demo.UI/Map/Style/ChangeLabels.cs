@@ -60,7 +60,7 @@ public class ChangeLabels : IMapDemo
         return Task.FromResult(map);
     }
 
-    private static LabelStyle CreateAlphabeticLabelStyle(Func<int> getLabelMode) => new()
+    static LabelStyle CreateAlphabeticLabelStyle(Func<int> getLabelMode) => new()
     {
         LabelMethod = f => getLabelMode() switch
         {
@@ -76,7 +76,7 @@ public class ChangeLabels : IMapDemo
         BorderColor = Color.DimGray,
     };
 
-    private static MemoryLayer CreatePinLayer(IEnumerable<IFeature> features, LabelStyle labelStyle) => new()
+    static MemoryLayer CreatePinLayer(IEnumerable<IFeature> features, LabelStyle labelStyle) => new()
     {
         Name = "Pins",
         Features = features,
@@ -90,7 +90,7 @@ public class ChangeLabels : IMapDemo
         },
     };
 
-    private static SymbolStyle CreateSmallCircleSymbol() => new()
+    static SymbolStyle CreateSmallCircleSymbol() => new()
     {
         SymbolType = SymbolType.Ellipse,
         SymbolScale = 0.5,
@@ -98,7 +98,7 @@ public class ChangeLabels : IMapDemo
         Fill = null,
     };
 
-    private static List<IFeature> CreateFeatures(IEnumerable<MPoint> randomPoints)
+    static List<IFeature> CreateFeatures(IEnumerable<MPoint> randomPoints)
     {
         var features = new List<IFeature>();
         var i = 0;
@@ -116,7 +116,7 @@ public class ChangeLabels : IMapDemo
         return features;
     }
 
-    private static ImageStyle CreatePinSymbol() => new()
+    static ImageStyle CreatePinSymbol() => new()
     {
         Image = new Image
         {
@@ -141,7 +141,7 @@ public class ChangeLabels : IMapDemo
         }
     };
 
-    private static Polygon CreateSquarePolygon(int halfWidth) => new(new LinearRing(new[]
+    static Polygon CreateSquarePolygon(int halfWidth) => new(new LinearRing(new[]
     {
         new Coordinate(-halfWidth, -halfWidth),
         new Coordinate(-halfWidth, halfWidth),

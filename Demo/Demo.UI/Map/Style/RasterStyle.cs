@@ -21,7 +21,7 @@ public class RasterStyleSample
         return Task.FromResult(map);
     }
 
-    private static ThemeStyle CreateThemeStyle(Random random)
+    static ThemeStyle CreateThemeStyle(Random random)
     {
         return new ThemeStyle((f) =>
         {
@@ -31,13 +31,13 @@ public class RasterStyleSample
         });
     }
 
-    private static IStyle CreateRasterStyleWithRandomOutline(IFeature feature, Random random)
+    static IStyle CreateRasterStyleWithRandomOutline(IFeature feature, Random random)
     {
         var color = GenerateRandomColor(random);
         return new RasterStyle { Outline = new Pen(color, 8) };
     }
 
-    private static Color GenerateRandomColor(Random random)
+    static Color GenerateRandomColor(Random random)
     {
         byte[] rgb = new byte[3];
         random.NextBytes(rgb);

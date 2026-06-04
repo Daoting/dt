@@ -10,8 +10,8 @@ namespace Demo.UI;
 
 public class PenStrokeCapSample
 {
-    private const int PolygonSize = 5000000;
-    private const int PenWidth = 12;
+    const int PolygonSize = 5000000;
+    const int PenWidth = 12;
 
     public string Name => "PenStrokeCap";
     public string Category => "Styles";
@@ -33,7 +33,7 @@ public class PenStrokeCapSample
         };
     }
 
-    private static IEnumerable<IFeature> CreatePolygon()
+    static IEnumerable<IFeature> CreatePolygon()
     {
         return new[]
         {
