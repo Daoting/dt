@@ -23,23 +23,21 @@ namespace Demo.UI;
 
 public class CustomPointStyleShader : IMapDemo
 {
-    public Task<Map> Create() => Task.FromResult(CreateMap());
-
-    public static Map CreateMap()
+    public async Task<Map> Create()
     {
-        var map = new Map();
-        map.Layers.Add(CreateLayer());
+        var map = new GaodeMap();
         map.Layers.Add(new MemoryLayer($"{nameof(CustomPointStyle)}")
         {
-            Features = CreateFeatures(map.Extent!, 32).ToList(),
+            Features = CreateFeatures(MapDemo.ChinaExtent, 32).ToList(),
             Style = new CustomPointStyle() { RendererName = "custom-style-shader" },
         });
         map.Widgets.Add(new MapInfoWidget(map, [map.Layers.Last()]));
 
         MapRenderer.RegisterPointStyleRenderer("custom-style-shader", MyBasicCustomStyleRenderer);
+        map.ToChinaCenter();
         return map;
     }
-
+    
     static List<PointFeature> CreateFeatures(MRect envelope, int count) =>
         RandomPointsBuilder.GenerateRandomPoints(envelope, count, new Random(934))
         .Select(p => new PointFeature(p))
@@ -58,16 +56,7 @@ public class CustomPointStyleShader : IMapDemo
         var halfHeight = 20f;
         return new SKRect(-halfWidth, -halfHeight, halfWidth, halfHeight);
     }
-
-    static TileLayer CreateLayer()
-    {
-        var tileSource = KnownTileSources.Create(KnownTileSource.BKGTopPlusGrey);
-        return new TileLayer(tileSource, dataFetchStrategy: new DataFetchStrategy()) // DataFetchStrategy prefetches tiles from higher levels
-        {
-            Name = "BKG Top Plus Grey",
-        };
-    }
-
+    
     static void DrawEllipseWithGradient(SKCanvas canvas, SKRect rect)
     {
         // create the shader

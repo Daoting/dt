@@ -15,29 +15,23 @@ public class CustomStyle : IMapDemo
 {
     const string _mapInfoLayerName = "Custom Style Layer";
     
-    public Task<Map> Create()
+    public async Task<Map> Create()
     {
         // This is the crucial part where we tell the renderer that a CustomStyle should be
         // rendered with the SkiaCustomStyleRenderer
-        MapRenderer.RegisterStyleRenderer(typeof(CustomStyle), new SkiaCustomStyleRenderer());
+        MapRenderer.RegisterStyleRenderer(typeof(MyCustomStyle), new SkiaCustomStyleRenderer());
 
-        var map = new Map();
-
-        map.Layers.Add(OpenStreetMap.CreateTileLayer());
-        map.Layers.Add(CreateStylesLayer(map.Extent));
-
+        var map = new GaodeMap();
+        map.Layers.Add(new MemoryLayer(_mapInfoLayerName)
+        {
+            Features = CreateDiverseFeatures(RandomPointsBuilder.GenerateRandomPoints(MapDemo.ChinaExtent, 25)),
+            Style = null,
+        });
         map.Widgets.Add(new MapInfoWidget(map, l => l.Name == _mapInfoLayerName));
-
-        return Task.FromResult(map);
+        map.ToChinaCenter();
+        return map;
     }
-
-    static MemoryLayer CreateStylesLayer(MRect envelope) => new()
-    {
-        Name = _mapInfoLayerName,
-        Features = CreateDiverseFeatures(RandomPointsBuilder.GenerateRandomPoints(envelope, 25)),
-        Style = null,
-    };
-
+    
     static List<IFeature> CreateDiverseFeatures(IEnumerable<MPoint> randomPoints)
     {
         var features = new List<IFeature>();

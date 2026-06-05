@@ -12,6 +12,7 @@ using Mapsui.Layers;
 using Mapsui.Rendering;
 using Mapsui.Rendering.Skia;
 using Mapsui.Styles;
+using Mapsui.Widgets.InfoWidgets;
 using SkiaSharp;
 #endregion
 
@@ -20,21 +21,19 @@ namespace Demo.UI;
 
 public class CustomPointStyleBasic : IMapDemo
 {
-    public Task<Map> Create() => Task.FromResult(CreateMap());
-
-    public static Map CreateMap()
+    public async Task<Map> Create()
     {
-        var map = new Map();
-        //map.Layers.Add(BaiduMap.CreateTileLayer());
+        var map = new GaodeMap();
         map.Layers.Add(new MemoryLayer($"{nameof(CustomPointStyle)}")
         {
-            Features = CreateFeatures(map.Extent!, 32).ToList(),
+            Features = CreateFeatures(MapDemo.ChinaExtent, 32).ToList(),
             Style = new CustomPointStyle { RendererName = "custom-style-basic" },
         });
         MapRenderer.RegisterPointStyleRenderer("custom-style-basic", MyBasicCustomStyleRenderer);
+        map.ToChinaCenter();
         return map;
     }
-
+    
     static void MyBasicCustomStyleRenderer(SKCanvas canvas, IPointStyle style, RenderService renderService, float opacity)
     {
         using var paint = new SKPaint { Color = new SKColor(79, 10, 107, 192), IsAntialias = true };

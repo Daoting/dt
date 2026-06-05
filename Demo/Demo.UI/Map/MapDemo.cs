@@ -1,4 +1,6 @@
 ﻿using Mapsui;
+using Mapsui.Extensions;
+using Mapsui.Projections;
 
 namespace Demo.UI;
 
@@ -9,11 +11,13 @@ public static class MapDemo
         p_map.Locate(116.397500, 39.908722);
     }
 
-    public static void ToChinaCenter(this GaodeMap p_map)
+    public static void ToChinaCenter(this GaodeMap p_map, int p_level = 1)
     {
-        p_map.Locate(104.195397, 35.86166, 1);
+        p_map.Locate(104.195397, 35.86166, p_level);
     }
 
+    public static MPoint ChinaCenter => SphericalMercator.FromLonLat(104.195397, 35.86166).ToMPoint();
+    
     /// <summary>
     /// 定义中国范围（Web墨卡托）
     /// </summary>

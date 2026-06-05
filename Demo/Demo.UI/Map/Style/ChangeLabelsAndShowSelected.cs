@@ -51,7 +51,7 @@ public class ChangeLabelsAndShowSelected : IMapDemo
             selectedFeatureId = feature?.Id != null ? feature.Id : null;
         };
 
-        map.Navigator.ZoomToBox(map.Extent!.Grow(2000000));
+        map.Navigator.ZoomToBox(MapDemo.ChinaExtent.Grow(2000000));
         return Task.FromResult(map);
     }
 

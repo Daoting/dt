@@ -25,31 +25,29 @@ public class CustomPointStyleAdvanced : IMapDemo
     static readonly Color _color1 = Color.FromString("#6A5ACD");
     static readonly Color _color2 = Color.FromString("#7B68EE");
     static readonly Color _color3 = Color.FromString("#9370DB");
-    public Task<Map> Create() => Task.FromResult(CreateMap());
 
-    public static Map CreateMap()
+    public async Task<Map> Create()
     {
-        var map = new Map();
-        //map.Layers.Add(BaiduMap.CreateTileLayer());
-        //map.Layers.Add(new MemoryLayer($"{nameof(CustomPointStyle)}")
-        //{
-        //    Features = CreateFeatures(map.Extent!, 24).ToList(),
-        //    Style = new StyleCollection
-        //    {
-        //        Styles =
-        //        {
-        //            CreateCustomRendererStyle(),
-        //            new SymbolStyle() { SymbolScale = 0.2, Fill = new Brush(_color1) }, // Reference point at the center of the position
-        //        }
-        //    }
-        //});
+        var map = new GaodeMap();
+        map.Layers.Add(new MemoryLayer($"{nameof(CustomPointStyle)}")
+        {
+            Features = CreateFeatures(MapDemo.ChinaExtent, 24).ToList(),
+            Style = new StyleCollection
+            {
+                Styles =
+                {
+                    CreateCustomRendererStyle(),
+                    new SymbolStyle() { SymbolScale = 0.2, Fill = new Brush(_color1) }, // Reference point at the center of the position
+                }
+            }
+        });
         map.Widgets.Add(new MapInfoWidget(map, [map.Layers.Last()]));
 
         MapRenderer.RegisterPointStyleRenderer("custom-style-advanced", MyCustomStyleRenderer);
-
+        map.ToChinaCenter();
         return map;
     }
-
+    
     static void MyCustomStyleRenderer(SKCanvas canvas, IPointStyle style, RenderService renderService, float opacity)
     {
         var width = 30f;

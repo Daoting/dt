@@ -1,84 +1,87 @@
 ﻿using Mapsui;
 using Mapsui.Layers;
+using Mapsui.Rendering.Skia;
 using Mapsui.Styles;
+using Mapsui.Widgets.InfoWidgets;
+using SkiaSharp;
+using Windows.Storage;
 
 namespace Demo.UI;
 
-public class CustomFont
+public class CustomFont : IMapDemo
 {
-    // FontSource URI for the OpenSans-Regular font embedded in Mapsui.Samples.Common
-    public const string OpenSansSource = "embedded://Mapsui.Samples.Common.Resources.Fonts.OpenSans-Regular.ttf";
-    
-    public Task<Map> Create()
+    public async Task<Map> Create()
     {
-        var map = new Map { BackColor = Color.WhiteSmoke };
-        map.Layers.Add(CreateLayer());
-        map.Navigator.ZoomToBox(map.Layers.First().Extent!.Grow(map.Layers.First().Extent!.Width));
-        return Task.FromResult(map);
+        var map = new GaodeMap { BackColor = Color.WhiteSmoke };
+        map.Layers.Add(new MemoryLayer("Custom Font Labels")
+        {
+            Features = await CreateFeatures(),
+            Style = null,
+        });
+        map.ToChinaCenter(8);
+        return map;
     }
 
-    static MemoryLayer CreateLayer() => new()
+    static async Task<IEnumerable<IFeature>> CreateFeatures()
     {
-        Name = "Custom Font Labels",
-        Features = CreateFeatures(),
-        Style = null,
-    };
+        var c = MapDemo.ChinaCenter;
+        return [
 
-    static IEnumerable<IFeature> CreateFeatures() =>
-    [
-        new PointFeature(new MPoint(-100, 50)) {
-            Styles =
-            [
-                new LabelStyle
+            new PointFeature(new MPoint(c.X-100, c.Y)) {
+                Styles =
+                [
+                    new TextStyle
                 {
-                    Text = "System font",
+                    Text = "自System font",
                     Font = { Size = 18 },
                     BackColor = new Brush(Color.White),
                     ForeColor = Color.Black,
                     HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
                 }
-            ]
-        },
-        new PointFeature(new MPoint(100, 50)) {
-            Styles =
-            [
-                new LabelStyle
-                {
-                    Text = "Custom font",
-                    Font = { Size = 18, FontSource = OpenSansSource },
-                    BackColor = new Brush(Color.LightBlue),
-                    ForeColor = Color.Black,
-                    HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
-                }
-            ]
-        },
-        new PointFeature(new MPoint(-100, -50)) {
-            Styles =
-            [
-                new LabelStyle
-                {
-                    Text = "Bold system font",
-                    Font = { Size = 18, Bold = true },
-                    BackColor = new Brush(Color.White),
-                    ForeColor = Color.Black,
-                    HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
-                }
-            ]
-        },
-        new PointFeature(new MPoint(100, -50)) {
-            Styles =
-            [
-                new LabelStyle
-                {
-                    Text = "Custom font wrap around to show multiple long words",
-                    Font = { Size = 14, FontSource = OpenSansSource },
-                    BackColor = new Brush(Color.LightBlue),
-                    ForeColor = Color.Black,
-                    MaxWidth = 10,
-                    WordWrap = LabelStyle.LineBreakMode.WordWrap,
-                    HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
-                }
-            ]
-        },
-    ];
+                ]
+            },
+            //new PointFeature(new MPoint(c.X + 100, c.Y)) {
+            //    Styles =
+            //    [
+            //        new LabelStyle
+            //    {
+            //        Text = "Custom font自定义",
+            //        Font = { Size = 18, FontSource = MapView.DefaultFontPath },
+            //        BackColor = new Brush(Color.LightBlue),
+            //        ForeColor = Color.Black,
+            //        HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
+            //    }
+            //    ]
+            //},
+            //new PointFeature(new MPoint(-100, -50)) {
+            //    Styles =
+            //    [
+            //        new TextStyle
+            //    {
+            //        Text = "自Bold system font",
+            //        Font = { Size = 18, Bold = true },
+            //        BackColor = new Brush(Color.White),
+            //        ForeColor = Color.Black,
+            //        HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
+            //    }
+            //    ]
+            //},
+            //new PointFeature(new MPoint(100, -50)) {
+            //    Styles =
+            //    [
+            //        new TextStyle
+            //    {
+            //        Text = "自Custom font wrap around to show multiple long words",
+            //        //Font = { Size = 14, FontSource = file.Path },
+            //        BackColor = new Brush(Color.LightBlue),
+            //        ForeColor = Color.Black,
+            //        MaxWidth = 10,
+            //        WordWrap = LabelStyle.LineBreakMode.WordWrap,
+            //        HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
+            //    }
+            //    ]
+            //},
+    
+        ];
+    }
 }
