@@ -7,15 +7,10 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
-using Microsoft.UI;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using SkiaSharp;
-using System.Text.Json;
-using Windows.Storage;
-using Windows.UI;
+using System.Globalization;
+
 #if !WIN
 using Microsoft.Extensions.Logging;
 #endif
@@ -33,6 +28,30 @@ namespace Dt.Base;
 public abstract partial class AppBase : Application
 {
     Stub _stub;
+
+    protected void Init()
+    {
+#if !WIN
+        // 非WinAppSdk平台统一Skia渲染：
+
+        // Skia渲染时默认true，和WinUI一致Frame不保存旧页面。为提高返回时的性能，设置为false
+        // https://platform.uno/docs/articles/controls/Frame.html
+        Uno.UI.FeatureConfiguration.Frame.UseWinUIBehavior = false;
+
+        // Skia渲染时HarmonyOS Sans字体作为默认字体，开源字体无版权问题
+        // uno通过 HarmonySans.ttf.manifest 获取粗体、斜体等样式，wasm无需在css中设置字体
+        // 字体在OnLaunched之前加载，故OnLaunched中设置无效，仍OpenSans字体；需放在App.InitializeComponent后调用！
+        // wasm需要在预加载 https://platform.uno/docs/articles/features/custom-fonts.html#fonts-preloading-on-webassembly
+        Uno.UI.FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/HarmonySans.ttf";
+
+        // Skia渲染时uno默认英文环境，强制设置为中文环境，确保日期等格式正确
+        var ci = CultureInfo.GetCultureInfo("zh-CN");
+        CultureInfo.CurrentUICulture = ci;
+        CultureInfo.CurrentCulture = ci;
+        Thread.CurrentThread.CurrentCulture = ci;
+        Thread.CurrentThread.CurrentUICulture = ci;
+#endif
+    }
 
     /// <summary>
     /// 创建存根对象
@@ -64,19 +83,6 @@ public abstract partial class AppBase : Application
         }
 
         Kit.ResetTick();
-#if !WIN
-        // 非WinAppSdk平台统一Skia渲染：
-
-        // Skia渲染时默认true，和WinUI一致Frame不保存旧页面。为提高返回时的性能，设置为false
-        // https://platform.uno/docs/articles/controls/Frame.html
-        Uno.UI.FeatureConfiguration.Frame.UseWinUIBehavior = false;
-
-        // Skia渲染时HarmonyOS Sans字体作为默认字体，开源字体无版权问题，在构造方法设置对wasm无效！
-        // uno通过 HarmonySans.ttf.manifest 获取粗体、斜体等样式，wasm无需在css中设置字体
-        Uno.UI.FeatureConfiguration.Font.DefaultTextFontFamily = "ms-appx:///Assets/Fonts/HarmonySans.ttf";
-#endif
-        
-        // 创建可视树
         UITree.Init(Title, ThemeBrush);
 
         // 初始化全局配置、类型字典、日志、存根
