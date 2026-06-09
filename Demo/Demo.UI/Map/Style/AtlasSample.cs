@@ -6,7 +6,7 @@ using Mapsui.Widgets.InfoWidgets;
 
 namespace Demo.UI;
 
-public class AtlasSample
+public class AtlasSample : IMapDemo
 {
     const string _layerName = "Sprites";
     static readonly Random _random = new(1);

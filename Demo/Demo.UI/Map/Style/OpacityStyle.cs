@@ -7,7 +7,7 @@ using NetTopologySuite.Geometries;
 
 namespace Demo.UI;
 
-public class OpacityStyle
+public class OpacityStyle : IMapDemo
 {
     public Task<Map> Create()
     {

@@ -7,7 +7,7 @@ using NetTopologySuite.Geometries;
 
 namespace Demo.UI;
 
-public class DynamicSymbolScale
+public class DynamicSymbolScale : IMapDemo
 {
     const double _level1 = 32000.0;
     const double _level2 = 16000.0;
@@ -27,7 +27,7 @@ public class DynamicSymbolScale
     static MemoryLayer CreateLayerWithDynamicScaleStyle(Map map) => new()
     {
         Name = "Dynamic Symbol Scale",
-        Features = RandomPointsBuilder.CreateRandomFeatures(MapDemo.ChinaExtent.Grow(map.Extent.Width * 0.94 - map.Extent.Width), 50, seed: 245),
+        Features = RandomPointsBuilder.CreateRandomFeatures(map.Extent.Grow(map.Extent.Width * 0.94 - map.Extent.Width), 50, seed: 245),
         Style = CreateDynamicSymbolScaleStyle()
     };
 

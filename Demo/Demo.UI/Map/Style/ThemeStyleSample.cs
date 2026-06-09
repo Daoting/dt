@@ -12,7 +12,7 @@ using System.Reflection;
 
 namespace Demo.UI;
 
-public class ThemeStyleSample
+public class ThemeStyleSample : IMapDemo
 {
     public Task<Map> Create()
     {

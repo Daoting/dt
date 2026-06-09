@@ -8,7 +8,7 @@ using NetTopologySuite.Geometries;
 
 namespace Demo.UI;
 
-public class PenStrokeCapSample
+public class PenStrokeCapSample : IMapDemo
 {
     const int PolygonSize = 5000000;
     const int PenWidth = 12;
@@ -16,7 +16,7 @@ public class PenStrokeCapSample
     public string Name => "PenStrokeCap";
     public string Category => "Styles";
 
-    public Task<Map> CreateMapAsync()
+    public Task<Map> Create()
     {
         var map = new Map();
         map.Layers.Add(OpenStreetMap.CreateTileLayer());

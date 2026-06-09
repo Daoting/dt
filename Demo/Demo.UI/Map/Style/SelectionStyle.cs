@@ -8,7 +8,7 @@ using Mapsui.Widgets.InfoWidgets;
 
 namespace Demo.UI;
 
-public class SelectionStyle
+public class SelectionStyle : IMapDemo
 {
     public Task<Map> Create()
     {

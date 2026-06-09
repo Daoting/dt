@@ -6,7 +6,7 @@ using Mapsui.Widgets.InfoWidgets;
 
 namespace Demo.UI;
 
-public class SymbolsSample
+public class SymbolsSample : IMapDemo
 {
     public Task<Map> Create()
     {

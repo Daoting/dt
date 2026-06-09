@@ -6,7 +6,7 @@ using Mapsui.Widgets.ButtonWidgets;
 
 namespace Demo.UI;
 
-public class RasterStyleSample
+public class RasterStyleSample : IMapDemo
 {
     public Task<Map> Create()
     {
