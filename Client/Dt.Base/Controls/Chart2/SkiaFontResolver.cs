@@ -4,10 +4,13 @@ using Windows.Storage;
 
 namespace Dt.Base;
 
+/// <summary>
+/// ScottPlot Map统一设置字体
+/// </summary>
 class SkiaFontResolver : IFontResolver
 {
-    const string DefaultFontName = "HarmonySans";
-    const string IconFontName = "IconFont";
+    public const string DefaultFontName = "HarmonySans";
+    public const string IconFontName = "IconFont";
     static string _fontPath;
     static string _boldFontPath;
     static string _iconFontPath;

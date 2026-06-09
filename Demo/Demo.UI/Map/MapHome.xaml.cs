@@ -36,11 +36,11 @@ public sealed partial class MapHome : Win
         tbl.AddRow(new { group = "高德", name = "路网图", cls = typeof(GaodeLandformMapDemo) });
 
         tbl.AddRow(new { group = "层样式", name = "自定义渲染层", cls = typeof(CustomLayerRender) });
+        tbl.AddRow(new { group = "层样式", name = "自定义字体", cls = typeof(CustomFont) });
         tbl.AddRow(new { group = "层样式", name = "基础点样式", cls = typeof(CustomPointStyleBasic) });
         tbl.AddRow(new { group = "层样式", name = "高级点样式", cls = typeof(CustomPointStyleAdvanced) });
         tbl.AddRow(new { group = "层样式", name = "阴影点样式", cls = typeof(CustomPointStyleShader) });
         tbl.AddRow(new { group = "层样式", name = "自定义样式", cls = typeof(CustomStyle) });
-        tbl.AddRow(new { group = "层样式", name = "自定义字体", cls = typeof(CustomFont) });
         tbl.AddRow(new { group = "层样式", name = "自定义Svg颜色", cls = typeof(CustomSvgColor) });
         tbl.AddRow(new { group = "层样式", name = "动态Svg样式", cls = typeof(DynamicSvgStyle) });
         tbl.AddRow(new { group = "层样式", name = "动态符号缩放比例", cls = typeof(DynamicSymbolScale) });
