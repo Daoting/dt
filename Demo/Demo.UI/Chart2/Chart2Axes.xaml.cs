@@ -39,6 +39,11 @@ public partial class Chart2Axes : Win
 
             _c.YTitle = "纵坐标Title";
             _c.Title = "标题";
+
+            _c.Title = "\uE003";
+            _c.TitleStyle.FontName = "IconFont";
+            _c.TitleStyle.ForeColor = Colors.Green;
+            _c.TitleStyle.FontSize = 50;
         }
     }
 

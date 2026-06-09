@@ -51,6 +51,8 @@ public abstract partial class AppBase : Application
         Thread.CurrentThread.CurrentCulture = ci;
         Thread.CurrentThread.CurrentUICulture = ci;
 #endif
+        // ScottPlot Map用Skia渲染，设置字体
+        _ = SkiaFontResolver.Register();
     }
 
     /// <summary>
