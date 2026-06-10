@@ -26,8 +26,6 @@ public partial class PdfView : WebView2
        typeof(string),
        typeof(PdfView),
        new PropertyMetadata(null));
-
-    const string _folderPath = "Assets/Pdf";
     #endregion
 
     #region 变量
@@ -54,31 +52,33 @@ public partial class PdfView : WebView2
     }
 
     /// <summary>
-    /// 打开文件，文件内容以base64编码传递给js
+    /// 打开本地pdf文件，虚拟主机方式
     /// </summary>
     /// <param name="p_file"></param>
     public async void Open(StorageFile p_file)
     {
         Throw.If(p_file == null, "未选择要打开的文件！");
 
+        // 等待View2准备就绪
+        while (!_inNaviCompleted)
+        {
+            await Task.Delay(200);
+        }
+
         FileName = p_file.Name;
-        Stream stream = await p_file.OpenStreamForReadAsync();
-        byte[] buffer = new byte[stream.Length];
-        await stream.ReadExactlyAsync(buffer);
-        var asBase64 = Convert.ToBase64String(buffer);
-        _ = RunScript(GetOpenScript(asBase64));
+
+#if WIN
+        CoreWebView2.ClearVirtualHostNameToFolderMapping("pdf");
+        var folder = await p_file.GetParentAsync();
+        CoreWebView2.SetVirtualHostNameToFolderMapping("pdf", folder.Path, CoreWebView2HostResourceAccessKind.Allow);
+        CoreWebView2.Navigate($"https://pdf/{p_file.Name}");
+#else
+
+#endif
     }
 
     /// <summary>
-    /// 直接调用js打开pdf文件
-    /// </summary>
-    public void Open()
-    {
-        _ = RunScript("const fileInput = PDFViewerApplication.appConfig.openFileInput; fileInput.click();");
-    }
-
-    /// <summary>
-    /// 打开内容，内容以base64编码传递给js
+    /// 打开内容，内容以base64编码生成html
     /// </summary>
     /// <param name="p_data"></param>
     /// <param name="p_fileName"></param>
@@ -88,75 +88,31 @@ public partial class PdfView : WebView2
             Throw.Msg("pdf内容不可为空！");
 
         FileName = p_fileName;
-        var asBase64 = Convert.ToBase64String(p_data);
-        _ = RunScript(GetOpenScript(asBase64));
+        _ = NavigateToPdf(p_data);
     }
 
+    /// <summary>
+    /// 选择pdf文件并打开
+    /// </summary>
+    public async void OpenPdfFile()
+    {
+        var picker = Kit.GetFileOpenPicker();
+        picker.FileTypeFilter.Add(".pdf");
+        var file = await picker.PickSingleFileAsync();
+        if (file != null)
+        {
+            Open(file);
+        }
+    }
+    
     /// <summary>
     /// 清除pdf内容
     /// </summary>
     public void Clear()
     {
-        _ = RunScript("PDFViewerApplication.close();");
+        Source = null;
     }
     
-    /// <summary>
-    /// 打印，必须弹框
-    /// </summary>
-    public void Print()
-    {
-        _ = RunScript("PDFViewerApplication.triggerPrinting();");
-    }
-
-    /// <summary>
-    /// 下载
-    /// </summary>
-    public void Download()
-    {
-        _ = RunScript("PDFViewerApplication.downloadOrSave();");
-    }
-
-    /// <summary>
-    /// 首页
-    /// </summary>
-    public void FirstPage()
-    {
-        _ = RunScript("PDFViewerApplication.page = 1;");
-    }
-
-    /// <summary>
-    /// 末页
-    /// </summary>
-    public void LastPage()
-    {
-        _ = RunScript("PDFViewerApplication.page = PDFViewerApplication.pagesCount;");
-    }
-
-    /// <summary>
-    /// 下页
-    /// </summary>
-    public void NextPage()
-    {
-        _ = RunScript("PDFViewerApplication.pdfViewer.nextPage();");
-    }
-
-    /// <summary>
-    /// 上页
-    /// </summary>
-    public void PreviousPage()
-    {
-        _ = RunScript("PDFViewerApplication.pdfViewer.previousPage();");
-    }
-
-    /// <summary>
-    /// 转到某页
-    /// </summary>
-    /// <param name="p_no"></param>
-    public void GotoPage(int p_no)
-    {
-        _ = RunScript($"PDFViewerApplication.page = {p_no};");
-    }
-
     #region 内部方法
     async void EnsureView2()
     {
@@ -167,53 +123,35 @@ public partial class PdfView : WebView2
         settings.IsScriptEnabled = true;
         settings.AreDevToolsEnabled = false;
 
-        CoreWebView2.SetVirtualHostNameToFolderMapping("pdf", _folderPath, CoreWebView2HostResourceAccessKind.Allow);
-        CoreWebView2.NavigationCompleted += (s, e) =>
-        {
-            _inNaviCompleted = true;
-            Ready?.Invoke();
-        };
-        Source = new("https://pdf/web/viewer.html");
+        _inNaviCompleted = true;
+        Ready?.Invoke();
     }
-
-    string GetOpenScript(string p_base64)
-    {
-        if (string.IsNullOrEmpty(p_base64))
-            return null;
-
-        // 文件名随内容一起提交
-        string name = string.IsNullOrEmpty(FileName) ? DateTime.Now.ToString("yyyy-MM-dd_HH_mm_ss") + ".pdf" : FileName;
-        return
-$"PDFViewerApplication._contentDispositionFilename = '{name}';" +
-"var binary_string = window.atob('" + p_base64 + @"');
-var len = binary_string.length;
-var bytes = new Uint8Array(len);
-for (var i = 0; i < len; i++) {
-	bytes[i] = binary_string.charCodeAt(i);
-}
-PDFViewerApplication.open({ data: bytes });
-PDFViewerApplication.update();";
-    }
-
-    async Task<string> RunScript(string p_script)
+    
+    async Task NavigateToPdf(byte[] p_data)
     {
         try
         {
-            if (string.IsNullOrEmpty(p_script))
-                return null;
+            if (p_data == null || p_data.Length == 0)
+                return;
 
             while (!_inNaviCompleted)
             {
                 await Task.Delay(200);
             }
 
-            return await this.ExecuteScriptAsync(p_script);
+            var asBase64 = Convert.ToBase64String(p_data);
+            string html = $@"
+<html style='margin:0;padding:0;height:100%;'>
+<body style='margin:0;height:100%;'>
+  <object type='application/pdf' width='100%' height='100%' data='data:application/pdf;base64,{asBase64}'></object>
+</body>
+</html>";
+            NavigateToString(html);
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Pdf脚本运行出错");
+            Log.Error(ex, "打开Pdf出错！");
         }
-        return null;
     }
     #endregion
 }
