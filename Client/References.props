@@ -6,7 +6,7 @@
     <!-- 公共引用包 -->
     <ItemGroup>
         <!-- exe项目引用包，原来在Dt.Client.targets，但WinAppSdk发布时无法自动生成代码和资源 -->
-        <PackageReference Include="Dt.BuildTools" Version="1.6.0" PrivateAssets="none" />
+        <PackageReference Include="Dt.BuildTools" Version="1.5.4" PrivateAssets="none" />
         <PackageReference Include="Uno.Resizetizer" Version="1.12.1" PrivateAssets="none" />
 
         <PackageReference Include="Dt.Infras" Version="5.2.0" />
