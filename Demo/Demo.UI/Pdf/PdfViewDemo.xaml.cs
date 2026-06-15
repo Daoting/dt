@@ -40,11 +40,57 @@ public partial class PdfViewDemo : Win
 
     void OnJsOpen(object sender, RoutedEventArgs e)
     {
-        LoadPdf();
+        _pdf.Open();
     }
-    
+
+    void OnPrint(object sender, RoutedEventArgs e)
+    {
+        _pdf.Print();
+    }
+
+    void OnClear(object sender, RoutedEventArgs e)
+    {
+        _pdf.Clear();
+    }
+
     async void OnOpenFile(object sender, RoutedEventArgs e)
     {
-        _pdf.OpenPdfFile();
+        var picker = Kit.GetFileOpenPicker();
+        picker.FileTypeFilter.Add(".pdf");
+        var file = await picker.PickSingleFileAsync();
+        if (file != null)
+        {
+            _pdf.Open(file);
+        }
+    }
+
+    void OnDownload(object sender, RoutedEventArgs e)
+    {
+        _pdf.Download();
+    }
+
+    void OnFirstPage(object sender, RoutedEventArgs e)
+    {
+        _pdf.FirstPage();
+    }
+
+    void OnLastPage(object sender, RoutedEventArgs e)
+    {
+        _pdf.LastPage();
+    }
+
+    void OnNextPage(object sender, RoutedEventArgs e)
+    {
+        _pdf.NextPage();
+    }
+
+    void OnPrePage(object sender, RoutedEventArgs e)
+    {
+        _pdf.PreviousPage();
+    }
+
+    void OnGotoPage(object sender, RoutedEventArgs e)
+    {
+        _pdf.GotoPage(2);
     }
 }
