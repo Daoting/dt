@@ -55,7 +55,7 @@ abstract class BaseRpc
         _client.DefaultRequestHeaders.Add("uid", "110");
 #elif WASM
         // 识别wasm客户端，允许跨域请求
-        _client.DefaultRequestHeaders.Add("dt-wasm", "allow-cors");
+        _client.DefaultRequestHeaders.Add("dt.client", "wasm");
 #endif
 
         // 默认使用http2协议，避免像 _client.GetAsync 方法使用 1.1

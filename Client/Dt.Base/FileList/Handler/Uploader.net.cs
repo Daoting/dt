@@ -42,7 +42,7 @@ namespace Dt.Base
 #if WASM
             _client = new HttpClient();
             // 识别wasm客户端，允许跨域请求
-            _client.DefaultRequestHeaders.Add("dt-wasm", "");
+            _client.DefaultRequestHeaders.Add("dt.client", "wasm");
 #elif DESKTOP
             // linux wpf
             _client = new HttpClient(new HttpClientHandler

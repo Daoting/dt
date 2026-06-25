@@ -59,7 +59,7 @@ public class DtMiddleware
             }
 
             // 被允许的跨域请求设标志，继续处理
-            if (p_context.Request.Headers.ContainsKey("dt-wasm"))
+            if (p_context.Request.Headers.ContainsKey("dt.client"))
             {
                 p_context.Response.Headers.AccessControlAllowOrigin = "*";
             }
@@ -104,7 +104,7 @@ public class DtMiddleware
         bool isValid = false;
         foreach (var h in p_context.Request.Headers.AccessControlRequestHeaders)
         {
-            if (!string.IsNullOrEmpty(h) && h.Contains("dt-wasm"))
+            if (!string.IsNullOrEmpty(h) && h.Contains("dt.client"))
             {
                 isValid = true;
                 break;

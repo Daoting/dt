@@ -21,7 +21,8 @@ class Rpc {
             var xhr = new XMLHttpRequest();
             xhr.responseType = "arraybuffer";
             xhr.open("post", "https://localhost:1234/.c", true);
-            xhr.setRequestHeader("dt-wasm", "true");
+            // 识别web客户端，允许跨域请求
+            xhr.setRequestHeader("dt.client", "web");
             // 内部用户标识
             xhr.setRequestHeader("uid", "110");
 
@@ -67,7 +68,7 @@ class Rpc {
         return buf.subarray(0, len + 5);
     }
 
-    static async readResult(buf: ArrayBuffer): Promise<string> {
+    private static async readResult(buf: ArrayBuffer): Promise<string> {
         // 1字节压缩标志 + 4字节内容长度
         const arr = new Uint8Array(buf);
 
