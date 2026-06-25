@@ -1,8 +1,8 @@
 
 class Rpc {
-    private data: string;
+    private data: Uint8Array;
 
-    constructor(private serviceName: string, private methodName: string, ...params: any[]) {
+    constructor(serviceName: string, methodName: string, ...params: any[]) {
         // 序列化 json RPC 调用请求
         const array: any[] = [serviceName, methodName];
         if (params && params.length > 0) {
@@ -10,9 +10,9 @@ class Rpc {
                 array.push(params[i]);
             }
         }
-
-        this.data = JSON.stringify(array);
-        console.log(this.data);
+        const str = JSON.stringify(array);
+        console.log("Rpc: " + str);
+        this.data = Rpc.getRequestData(str);
     }
 
     call(): Promise<any> {
@@ -24,56 +24,50 @@ class Rpc {
             xhr.setRequestHeader("dt-wasm", "true");
             // 内部用户标识
             xhr.setRequestHeader("uid", "110");
+
+            // loadstart → progress（多次）→ load / error / abort / timeout → loadend
+            // 1. 仅成功时触发：处理响应
             xhr.onload = async () => {
-                if (xhr.status == 200)
-                    resolve(await Rpc.readFrame(xhr.response));
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    resolve(await Rpc.readResult(xhr.response));
+                } else {
+                    reject(new Error('⚠️ HTTP 错误:' + xhr.status));
+                }
             };
-            xhr.send(Rpc.writeFrame(self.data));
+
+            // 2. 所有结束场景都触发：统一收尾
+            xhr.onloadend = () => { if (xhr) xhr = null; };
+
+            // 错误/中止/超时处理
+            xhr.onerror = () => reject('❌ 网络错误');
+            xhr.onabort = () => reject('⏹️ 请求被中止');
+            xhr.ontimeout = () => reject('⌛ 请求超时');
+
+            xhr.send(self.data);
         });
     }
 
-    static writeFrame(str: string): Uint8Array {
-        // Frame内容
-        var data = [];
-        var len, c;
-        len = str.length;
-        for (var i = 0; i < len; i++) {
-            c = str.charCodeAt(i);
-            if (c >= 0x010000 && c <= 0x10FFFF) {
-                data.push(((c >> 18) & 0x07) | 0xF0);
-                data.push(((c >> 12) & 0x3F) | 0x80);
-                data.push(((c >> 6) & 0x3F) | 0x80);
-                data.push((c & 0x3F) | 0x80);
-            }
-            else if (c >= 0x000800 && c <= 0x00FFFF) {
-                data.push(((c >> 12) & 0x0F) | 0xE0);
-                data.push(((c >> 6) & 0x3F) | 0x80);
-                data.push((c & 0x3F) | 0x80);
-            }
-            else if (c >= 0x000080 && c <= 0x0007FF) {
-                data.push(((c >> 6) & 0x1F) | 0xC0);
-                data.push((c & 0x3F) | 0x80);
-            }
-            else {
-                data.push(c & 0xFF);
-            }
-        }
+    private static getRequestData(str: string): Uint8Array {
+        // 分配最大可能长度：1字节压缩标志 + 4字节内容长度 + 内容
+        let buf = new Uint8Array(str.length * 4 + 5);
+        const encoder = new TextEncoder();
+        const result = encoder.encodeInto(str, buf.subarray(5));
 
         // Frame头
-        var header = [];
         // 始终不压缩
-        header.push(0 & 0xFF);
+        buf[0] = 0 & 0xFF;
         // 内容长度
-        len = data.length;
-        header.push((len >> 24) & 0xFF);
-        header.push((len >> 16) & 0xFF);
-        header.push((len >> 8) & 0xFF);
-        header.push(len & 0xFF);
+        const len = result.written;
+        buf[1] = (len >> 24) & 0xFF;
+        buf[2] = (len >> 16) & 0xFF;
+        buf[3] = (len >> 8) & 0xFF;
+        buf[4] = len & 0xFF;
 
-        return new Uint8Array(header.concat(data));
+        // 零拷贝，仅新建视图
+        return buf.subarray(0, len + 5);
     }
 
-    static async readFrame(buf: ArrayBuffer): Promise<string> {
+    static async readResult(buf: ArrayBuffer): Promise<string> {
         // 1字节压缩标志 + 4字节内容长度
         const arr = new Uint8Array(buf);
 
@@ -81,8 +75,11 @@ class Rpc {
         if (arr[0] == 0)
             return new TextDecoder('utf-8').decode(arr.subarray(5));
 
-        // 解压
-        const decompressionStream = new DecompressionStream('gzip');
+        // 内容压缩，解压
+        // 1. 创建解压流
+        const ds = new DecompressionStream('gzip');
+
+        // 2. 把 Uint8Array 构造成可读流并 pipe 解压
         const stream = new ReadableStream({
             start(controller) {
                 controller.enqueue(arr.subarray(5));
@@ -90,17 +87,23 @@ class Rpc {
             }
         });
 
-        const decompressedStream = stream.pipeThrough(decompressionStream);
-        const reader = decompressedStream.getReader();
-        const chunks: Uint8Array[] = [];
+        // 3. 管道解压
+        const dec = stream.pipeThrough(ds);
+
+        // 4. 读取为字符串
+        const reader = dec.getReader();
+        const decoder = new TextDecoder();
+        let result = '';
 
         while (true) {
             const { done, value } = await reader.read();
             if (done) break;
-            chunks.push(value);
-        }
 
-        return new TextDecoder('utf-8').decode(chunks);
+            // 流式解码，告诉解码器：后面还有数据，先别急着收尾
+            result += decoder.decode(value, { stream: true });
+        }
+        result += decoder.decode();
+        return result;
     }
 }
 
