@@ -309,7 +309,7 @@ public class Dict : Dictionary<string, object>, IRpcJson
                 }
                 else if (tpName == "Number")
                 {
-                    // web端传过来的Number类型
+                    // web端传的Number类型
                     tp = null;
                 }
                 else

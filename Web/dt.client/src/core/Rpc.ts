@@ -1,3 +1,4 @@
+import Serializer from "./Serializer.ts";
 
 class Rpc {
     private data: Uint8Array;
@@ -7,7 +8,7 @@ class Rpc {
         const array: any[] = [serviceName, methodName];
         if (params && params.length > 0) {
             for (let i = 0; i < params.length; i++) {
-                array.push(params[i]);
+                array.push(Serializer.Serialize(params[i]));
             }
         }
         const str = JSON.stringify(array);
@@ -15,7 +16,7 @@ class Rpc {
         this.data = Rpc.getRequestData(str);
     }
 
-    call(): Promise<any> {
+    call<T>(): Promise<T> {
         const self = this;
         return new Promise(function (resolve, reject) {
             var xhr = new XMLHttpRequest();
@@ -30,7 +31,8 @@ class Rpc {
             // 1. 仅成功时触发：处理响应
             xhr.onload = async () => {
                 if (xhr.status >= 200 && xhr.status < 300) {
-                    resolve(await Rpc.readResult(xhr.response));
+                    let result = await Rpc.readResult(xhr.response);
+                    resolve(Rpc.parseResult<T>(result));
                 } else {
                     reject(new Error('⚠️ HTTP 错误:' + xhr.status));
                 }
@@ -105,6 +107,35 @@ class Rpc {
         }
         result += decoder.decode();
         return result;
+    }
+
+    private static parseResult<T>(json: string): T {
+        let result: any = { ResultType: 0, Elapsed: 0, Info: "", Value: null };
+        try {
+            const text = JSON.parse(json);
+            // 0成功，1错误，2警告提示
+            result.ResultType = text[0];
+            // 耗时
+            result.Elapsed = text[1];
+
+            if (result.ResultType == 0)
+                result.Value = Serializer.Deserialize(text[2]);
+            else if (result.ResultType == 1 || result.ResultType == 2)
+                result.Info = text[2];
+            else
+                result.Info = "服务器返回异常：\r\n" + text[2];
+        }
+        catch (e) {
+            result.ResultType = 1;
+            result.Info = "返回Json内容结构不正确！";
+        }
+
+        if (result.ResultType == 0)
+            return result.Value;
+
+        if (result.ResultType == 1)
+            alert(result.Info);
+        throw new Error(result.Info);
     }
 }
 
