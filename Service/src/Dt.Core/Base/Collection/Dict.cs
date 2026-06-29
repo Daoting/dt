@@ -307,11 +307,6 @@ public class Dict : Dictionary<string, object>, IRpcJson
                     tp = Type.GetType("System." + tpName.TrimEnd('?'), true, false);
                     tp = typeof(Nullable<>).MakeGenericType(tp);
                 }
-                else if (tpName == "Number")
-                {
-                    // web端传的Number类型
-                    tp = null;
-                }
                 else
                 {
                     tp = Type.GetType("System." + tpName, true, false);
