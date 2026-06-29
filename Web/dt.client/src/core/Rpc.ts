@@ -119,7 +119,7 @@ class Rpc {
             result.Elapsed = text[1];
 
             if (result.ResultType == 0)
-                result.Value = Serializer.Deserialize(text[2]);
+                result.Value = Serializer.Deserialize<T>(text[2]);
             else if (result.ResultType == 1 || result.ResultType == 2)
                 result.Info = text[2];
             else

@@ -19,11 +19,109 @@ export default class Serializer {
             return Serializer.SerializeDict(p_value);
 
         if (tp === "[object Array]")
-            return Serializer.SerializeObject(p_value);
-        return p_value;
+            return Serializer.SerializeArray(p_value);
+
+        // 字节数组需要base64编码
+        if (tp === "[object Uint8Array]")
+            return btoa(String.fromCharCode(...p_value));
+        return Serializer.SerializeObject(p_value);
     }
 
     /// <summary>序列化数组</summary>
+    static SerializeArray(p_value: any[]): any[] {
+        if (p_value == null || p_value.length === 0)
+            return ["&objs"];
+
+        const obj: any[] = [];
+        const len = p_value.length;
+
+        // 确定数组元素类型
+        let tp = Object.prototype.toString.call(p_value[0]);
+        if (tp === "[object Number]") {
+            // 判断是否都是整数
+            let isInt = Number.isInteger(p_value[0]);
+            for (let i = 1; i < len; i++) {
+                if (typeof p_value[i] === 'number') {
+                    if (isInt != Number.isInteger(p_value[i])) {
+                        isInt = false;
+                        break;
+                    }
+                }
+                else {
+                    tp = '';
+                    break;
+                }
+            }
+            if (tp !== '') {
+                // List<int> List<double>
+                obj.push(isInt ? "&is" : "&ds");
+                for (let i = 0; i < len; i++) {
+                    obj.push(p_value[i]);
+                }
+                return obj;
+            }
+        }
+        else {
+            for (let i = 1; i < len; i++) {
+                const item = p_value[i];
+                if (tp !== Object.prototype.toString.call(item)) {
+                    tp = '';
+                    break;
+                }
+            }
+        }
+
+        if (tp === '') {
+            // 多类型
+            obj.push("&objs");
+            for (let i = 0; i < len; i++) {
+                const item = p_value[i];
+                let type = item.constructor.name;
+                if (type === "String" || type === "Boolean") {
+                    // 简单类型，Number特殊，服务器端按空处理
+                }
+                else if (type === "Date") {
+                    // 和c#同名
+                    type = "DateTime";
+                }
+                else {
+                    // Number和复杂类型 空即可
+                    type = "";
+                }
+                const val: any[] = [];
+                val.push(type);
+                val.push(Serializer.Serialize(item));
+                obj.push(val);
+            }
+        }
+        else {
+            if (tp === "[object String]") {
+                obj.push("&ss");
+            }
+            else if (tp === "[object Boolean]") {
+                obj.push("&bs");
+            }
+            else if (tp === "[object Date]") {
+                obj.push("&dates");
+            }
+            else if (tp === "[object Table]") {
+                obj.push("&tbls");
+            }
+            else if (tp === "[object Dict]") {
+                obj.push("&dicts");
+            }
+            else {
+                // 非内置对象列表
+                obj.push("&object");
+            }
+            for (let i = 0; i < len; i++) {
+                obj.push(Serializer.Serialize(p_value[i]));
+            }
+        }
+        return obj;
+    }
+
+    /// <summary>序列化对象</summary>
     static SerializeObject(p_value: any[]): any[] {
         const obj: any[] = [];
         obj.push("&objs");
@@ -132,15 +230,15 @@ export default class Serializer {
                 item.push(null);
             } else {
                 let tp = v.constructor.name;
-                if (tp === "String" || tp === "Boolean" || tp === "Number") {
-                    // 简单类型，Number需要服务器端特殊处理
+                if (tp === "String" || tp === "Boolean") {
+                    // 简单类型，Number特殊，服务器端按空处理
                 }
                 else if (tp === "Date") {
                     // 和c#同名
                     tp = "DateTime";
                 }
                 else {
-                    // 复杂类型空即可
+                    // Number和复杂类型 空即可
                     tp = "";
                 }
 
