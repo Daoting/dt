@@ -26,9 +26,15 @@
     <button @click="GetObjectList">返回object列表</button>
     <button @click="SetObjectList">发送object列表</button>
 
-
+    <p>Dict</p>
     <button @click="GetBaseDict">返回基本类型Dict</button>
     <button @click="SetDict">发送基本类型Dict</button>
+
+    <p>任意类型</p>
+    <button @click="GetCustomBase">返回非内置对象</button>
+    <button @click="SetCustomBase">发送非内置对象</button>
+    <button @click="GetCustomList">返回非内置对象列表</button>
+    <button @click="SetCustomList">发送非内置对象列表</button>
   </div>
 </template>
 
@@ -137,7 +143,7 @@ const SetStringList = async () => {
   const success = await Kit.rpc<boolean>(
     "cm",
     "TestSerialize.SetStringList",
-    [ "这是一个测试字符串1", "这是一个测试字符串2", "这是一个测试字符串3" ]
+    ["这是一个测试字符串1", "这是一个测试字符串2", "这是一个测试字符串3"]
   );
   console.log(success ? "调用成功！" : "调用不成功！");
 };
@@ -154,7 +160,7 @@ const SetBoolList = async () => {
   const success = await Kit.rpc<boolean>(
     "cm",
     "TestSerialize.SetBoolList",
-    [ true, false, true ]
+    [true, false, true]
   );
   console.log(success ? "调用成功！" : "调用不成功！");
 };
@@ -171,7 +177,7 @@ const SetNumberList = async () => {
   const success = await Kit.rpc<boolean>(
     "cm",
     "TestSerialize.SetIntList",
-    [ 1, 2, 3, 4, 5 ]
+    [1, 2, 3, 4, 5]
   );
   console.log(success ? "调用成功！" : "调用不成功！");
 };
@@ -188,7 +194,7 @@ const SetDoubleList = async () => {
   const success = await Kit.rpc<boolean>(
     "cm",
     "TestSerialize.SetDoubleList",
-    [ 1.1, 2.2, 3.3, 4.4, 5.5 ]
+    [1.1, 2.2, 3.3, 4.4, 5.5]
   );
   console.log(success ? "调用成功！" : "调用不成功！");
 };
@@ -205,7 +211,7 @@ const SetDateTimeList = async () => {
   const success = await Kit.rpc<boolean>(
     "cm",
     "TestSerialize.SetDateTimeList",
-    [ new Date(), new Date(), new Date() ]
+    [new Date(), new Date(), new Date()]
   );
   console.log(success ? "调用成功！" : "调用不成功！");
 };
@@ -222,7 +228,7 @@ const SetObjectList = async () => {
   const success = await Kit.rpc<boolean>(
     "cm",
     "TestSerialize.SetObjectList",
-    [ 123, 'asdf', true, new Date() ]
+    [123, 'asdf', true, new Date()]
   );
   console.log(success ? "调用成功！" : "调用不成功！");
 };
@@ -240,6 +246,41 @@ const SetDict = async () => {
     "cm",
     "TestSerialize.SendDict",
     new Dict([["string", "string value"], ["bool", true], ["number", 123], ["date", new Date()]])
+  );
+  console.log(success ? "调用成功！" : "调用不成功！");
+};
+
+const GetCustomBase = async () => {
+  const dict = await Kit.rpc<Dict>(
+    "cm",
+    "TestSerialize.GetCustomBase"
+  );
+  console.log(dict);
+};
+
+const SetCustomBase = async () => {
+  const success = await Kit.rpc<boolean>(
+    "cm",
+    "TestSerialize.SetCustomBase",
+    { Name: "abv", ExpiryDate: new Date(), Sizes:[ "12", "abc", "wer" ] }
+  );
+  console.log(success ? "调用成功！" : "调用不成功！");
+};
+
+const GetCustomList = async () => {
+  const dict = await Kit.rpc<Dict>(
+    "cm",
+    "TestSerialize.GetCustomList"
+  );
+  console.log(dict);
+};
+
+const SetCustomList = async () => {
+  const success = await Kit.rpc<boolean>(
+    "cm",
+    "TestSerialize.SetCustomList",
+    [{ Name: "1", ExpiryDate: new Date(), Sizes:[ "12", "abc", "wer" ] },
+    { Name: "2", ExpiryDate: new Date(), Sizes:[ "ab", "cd", "ef" ]}]
   );
   console.log(success ? "调用成功！" : "调用不成功！");
 };

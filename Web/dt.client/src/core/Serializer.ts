@@ -13,22 +13,26 @@ export default class Serializer {
         if (tp === "[object String]" || tp === "[object Boolean]" || tp === "[object Number]" || tp === "[object Date]")
             return p_value;
 
+        // 内置类型
         if (tp === "[object Table]")
             return Serializer.SerializeTable(p_value);
         if (tp === "[object Dict]")
             return Serializer.SerializeDict(p_value);
 
+        // 数组列表
         if (tp === "[object Array]")
             return Serializer.SerializeArray(p_value);
 
         // 字节数组需要base64编码
         if (tp === "[object Uint8Array]")
             return btoa(String.fromCharCode(...p_value));
+
+        // 非内置对象
         return Serializer.SerializeObject(p_value);
     }
 
     /// <summary>序列化数组</summary>
-    static SerializeArray(p_value: any[]): any[] {
+    private static SerializeArray(p_value: any[]): any[] {
         if (p_value == null || p_value.length === 0)
             return ["&objs"];
 
@@ -122,19 +126,19 @@ export default class Serializer {
     }
 
     /// <summary>序列化对象</summary>
-    static SerializeObject(p_value: any[]): any[] {
+    private static SerializeObject(p_value: any[]): any[] {
         const obj: any[] = [];
-        obj.push("&objs");
-        const len = p_value.length;
-
-        for (let i = 0; i < len; i++) {
-            obj.push(Serializer.Serialize(p_value[i]));
-        }
+        obj.push("#object");
+        // 序列化对象属性值
+        Object.keys(p_value).forEach(key => {
+            p_value[key] = Serializer.Serialize(p_value[key]);
+        });
+        obj.push(p_value);
         return obj;
     }
 
     /// <summary>序列化Table</summary>
-    static SerializeTable(p_value: any): any[] {
+    private static SerializeTable(p_value: any): any[] {
         const tbl: any[] = [];
         // 类型
         tbl.push("#tbl");
@@ -197,7 +201,7 @@ export default class Serializer {
     }
 
     /// <summary>序列化DataRow</summary>
-    static SerializeRow(p_dataRow: any): any[] {
+    private static SerializeRow(p_dataRow: any): any[] {
         const data: any[] = [];
         const cells = p_dataRow.Cells;
         const len = cells.length;
@@ -211,7 +215,7 @@ export default class Serializer {
     }
 
     /// <summary>序列化Dict</summary>
-    static SerializeDict(p_value: Dict): any[] {
+    private static SerializeDict(p_value: Dict): any[] {
         //[
         //	"#dict",
         //	["key1", "类型", "val1"], // 简单类型System.XXX
@@ -264,29 +268,61 @@ export default class Serializer {
         const tp = Object.prototype.toString.call(p_jsonObj);
 
         // 自定义类型：数组且第一个元素为字符串，且以#或&开头
-        if (tp === "[object Array]" && p_jsonObj.length > 1) {
-            const first = p_jsonObj[0];
-            if (typeof first === "string") {
-                if (first.startsWith("#")) {
-                    const alias = first.substring(1);
-                    if (alias === "tbl")
-                        return Serializer.DeserializeTable(p_jsonObj);
-                    if (alias === "dict")
-                        return Serializer.DeserializeDict(p_jsonObj);
-                    if (alias === "row")
-                        return Serializer.DeserializeTable(p_jsonObj);
-                    if (alias === "msg")
-                        return Serializer.DeserializeTable(p_jsonObj);
-                    if (alias === "letter")
-                        return Serializer.DeserializeTable(p_jsonObj);
-                    if (alias === "object")
-                        return Serializer.DeserializeTable(p_jsonObj);
-                    throw new Error("未知的序列化类型别名：" + alias);
-                }
-                else if (first.startsWith("&")) {
-
-                }
+        let first: string;
+        if (tp === "[object Array]"
+            && p_jsonObj.length > 1
+            && (first = p_jsonObj[0]) != null
+            && typeof first === "string"
+            && (first.startsWith("#") || first.startsWith("&"))) {
+            const alias = first.substring(1);
+            if (first.startsWith("#")) {
+                if (alias === "tbl")
+                    return Serializer.DeserializeTable(p_jsonObj);
+                if (alias === "dict")
+                    return Serializer.DeserializeDict(p_jsonObj);
+                if (alias === "row")
+                    return Serializer.DeserializeTable(p_jsonObj);
+                if (alias === "msg")
+                    return Serializer.DeserializeTable(p_jsonObj);
+                if (alias === "letter")
+                    return Serializer.DeserializeTable(p_jsonObj);
+                if (alias === "object")
+                    return Serializer.DeserializeObject(p_jsonObj[1]);
             }
+            else if (first.startsWith("&")) {
+                // 简单类型的列表，删除第一个标志元素
+                if (alias === "ss" || alias === "bs" || alias === "is" || alias === "ds" || alias === "dates" || alias === "ds") {
+                    p_jsonObj.shift();
+                    return p_jsonObj;
+                }
+
+                const ls: any[] = [];
+                // List<object>
+                if (alias === "objs") {
+                    for (let i = 1; i < p_jsonObj.length; i++) {
+                        const arr = p_jsonObj[i];
+                        if (Array.isArray(arr) && arr.length == 2) {
+                            ls.push(Serializer.Deserialize(arr[1]));
+                        }
+                        else {
+                            throw new Error("反序列化List<object>时，元素结构错误！");
+                        }
+                    }
+                }
+                else {
+                    for (let i = 1; i < p_jsonObj.length; i++) {
+                        const arr = p_jsonObj[i];
+                        if (Array.isArray(arr)) {
+                            ls.push(Serializer.Deserialize(arr));
+                        }
+                        else {
+                            throw new Error("反序列化列表时，元素不是数组！");
+                        }
+                    }
+                }
+                return ls;
+            }
+            throw new Error("未知的序列化类型别名：" + alias);
         }
         return p_jsonObj;
     }
@@ -308,7 +344,7 @@ export default class Serializer {
     }
 
     /// <summary>反序列化DataTable</summary>
-    static DeserializeTable(p_json: any[]): DataTable {
+    private static DeserializeTable(p_json: any[]): DataTable {
         const tbl = new DataTable();
         const len = p_json.length;
 
@@ -350,7 +386,7 @@ export default class Serializer {
     }
 
     /// <summary>反序列化集合类型</summary>
-    static DeserializeArray(p_json: any[]): any[] {
+    private static DeserializeArray(p_json: any[]): any[] {
         const list: any[] = [];
         const len = p_json.length;
 
@@ -359,5 +395,12 @@ export default class Serializer {
         }
 
         return list;
+    }
+
+    private static DeserializeObject(p_jsonObj: any): any {
+        Object.keys(p_jsonObj).forEach(key => {
+            p_jsonObj[key] = Serializer.Deserialize(p_jsonObj[key]);
+        });
+        return p_jsonObj;
     }
 }
