@@ -559,9 +559,10 @@ public class TestSerialize : RpcApi
             { "col5", typeof(Gender) },
             { "col6", typeof(byte) },
             { "col7", typeof(byte[]) },
-            { "col8" },
+            { "col8", typeof(double) },
+            { "col9", typeof(float) },
         };
-        tbl.AddRow(new { col1 = "原始值", col2 = true, col3 = 100L, col4 = DateTime.Now, col5 = Gender.男, col6 = 23, col7 = new byte[] { 10, 20, 30, 40 }, col8 = "字符值" });
+        tbl.AddRow(new { col1 = "原始值", col2 = true, col3 = 100L, col4 = DateTime.Now, col5 = Gender.男, col6 = 23, col7 = new byte[] { 10, 20, 30, 40 }, col8 = 13.2, col9 = 10.01 });
         tbl.AddRow(new { col1 = "列值21", col4 = DateTime.Now });
         tbl[0]["col1"] = "当前值";
         return tbl;

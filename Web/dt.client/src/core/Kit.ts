@@ -1,5 +1,17 @@
 import Rpc from './Rpc.ts'
 
+// 定义：只允许这些字符串，表示 C# 数据类型
+export type CsType =
+  | 'String'
+  | 'Boolean'
+  | 'Int32'
+  | 'Int64'
+  | 'Single'
+  | 'Double'
+  | 'Byte'
+  | 'DateTime'
+  | 'Object'
+
 export default class Kit {
     /**
      * 调用服务API
