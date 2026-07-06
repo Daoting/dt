@@ -1,0 +1,30 @@
+{
+  "name": "dt.client",
+  "private": true,
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/daoting/dt.git",
+    "directory": "WebClient/pkg"
+  },
+  "homepage": "https://daoting.github.io/dt-docs/",
+  "type": "module",
+
+  "module": "./dist/index.es.js",
+  "main": "./dist/index.umd.cjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+
+  "scripts": {
+    "build": "vite build && vue-tsc -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "vue": "^3.5.39"
+  }
+}
