@@ -2,55 +2,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "启动内置Edge",
-      "type": "msedge",
-      "request": "launch",
-      "url": "http://localhost:5173",
-      "runtimeArgs": [
-        "--headless=new",
-        "--remote-debugging-port=9222"
-      ],
-      "presentation": {
-        "hidden": true // 在调试下拉列表中隐藏
-      }
-    },
-    {
-      "name": "附加Edge DevTools",
-      "type": "vscode-edge-devtools.debug",
-      "request": "attach", // 附加
-      "url": "http://localhost:5173",
-      "presentation": {
-        "hidden": true
-      }
-    },
-    {
-      "name": "启动外部Edge调试",
+      "name": "启动Edge调试",
       "type": "pwa-msedge",
       "request": "launch",
       "url": "http://localhost:5173",
       "webRoot": "${workspaceFolder}/app",
       "sourceMaps": true,
       "sourceMapPathOverrides": {
-        "meteor://💻app/*": "${workspaceFolder}/*",
-        "webpack:///./~/*": "${workspaceFolder}/node_modules/*",
-        "webpack:///./src/*": "${workspaceFolder}/app/src/*",
-        "webpack:///src/*": "${workspaceFolder}/app/src/*",
-        "webpack:///./pkg/src/*": "${workspaceFolder}/pkg/src/*",
-        "webpack:///pkg/src/*": "${workspaceFolder}/pkg/src/*",
         "/src/*": "${workspaceFolder}/app/src/*",
         "/@fs/*": "${workspaceFolder}/*",
         "vite:///*": "${workspaceFolder}/*",
         "webpack://?:*/*": "${workspaceFolder}/*"
       }
-    }
-  ],
-  "compounds": [
-    {
-      "name": "启动内置Edge调试",
-      "configurations": [
-        "启动内置Edge",
-        "附加Edge DevTools"
-      ]
     }
   ]
 }
