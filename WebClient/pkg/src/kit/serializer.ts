@@ -1,4 +1,5 @@
 export function serialize(obj: any): any {
+  console.log("serialize");
     const tp = Object.prototype.toString.call(obj);
     if (tp === "[object String]" || tp === "[object Boolean]" || tp === "[object Number]" || tp === "[object Date]") return obj;
   return null;

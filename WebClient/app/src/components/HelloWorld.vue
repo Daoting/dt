@@ -3,8 +3,14 @@ import { ref } from 'vue'
 import viteLogo from '../assets/vite.svg'
 import heroImg from '../assets/hero.png'
 import vueLogo from '../assets/vue.svg'
+import {kit } from 'dt.client'
 
-const count = ref(0)
+const count = ref(0);
+
+function test() {
+  kit.serialize('abc');
+  console.log('test');
+}
 </script>
 
 <template>
@@ -18,7 +24,7 @@ const count = ref(0)
       <h1>Get started</h1>
       <p>Edit <code>src/App.vue</code> and save to test <code>HMR</code></p>
     </div>
-    <button type="button" class="counter" @click="count++">
+    <button type="button" class="counter" @click="test()">
       Count is {{ count }}
     </button>
   </section>

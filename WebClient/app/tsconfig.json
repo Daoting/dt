@@ -1,7 +1,13 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    
+    /* import from时的路径简写 */
+    "paths": {
+      /* 给外部模块起个短名字 */
+      "dt.client": ["../pkg/src/index.ts"],
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
+  "include": ["src/**/*"],
+  "exclude": ["dist", "node_modules"]
 }
