@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import TestSerialize from './test/TestSerialize.vue'
 </script>
 
 <template>
-  <HelloWorld />
+  <TestSerialize />
 </template>

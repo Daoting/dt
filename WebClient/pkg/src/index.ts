@@ -1,3 +1,3 @@
 export * from './table'
 export * from "./zod";
-export * from "./kit";
+export * from "./core";
