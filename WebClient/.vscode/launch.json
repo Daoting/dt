@@ -6,7 +6,6 @@
       "type": "pwa-msedge",
       "request": "launch",
       "url": "http://localhost:5173",
-      "webRoot": "${workspaceFolder}/app",
       "sourceMaps": true,
       "sourceMapPathOverrides": {
         "/src/*": "${workspaceFolder}/app/src/*",
