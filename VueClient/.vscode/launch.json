@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "启动Edge调试",
+      "type": "pwa-msedge",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "/src/*": "${workspaceFolder}/app/src/*",
+        "/@fs/*": "${workspaceFolder}/*",
+        "vite:///*": "${workspaceFolder}/*",
+        "webpack://?:*/*": "${workspaceFolder}/*"
+      }
+    }
+  ]
+}
