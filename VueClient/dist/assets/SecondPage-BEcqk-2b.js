@@ -1,2 +1,0 @@
-import{X as e,Z as t,gt as n,q as r,t as i,ut as a}from"./QBtn-BD7Dyd1Z.js";import{t as o}from"./QPage-DTm1u6wz.js";var s=t({__name:`SecondPage`,setup(t){return(t,s)=>(a(),r(o,{class:`flex flex-center`},{default:n(()=>[e(i,{color:`secondary`,to:`/`,label:`Go to Index Page`,"no-caps":``})]),_:1}))}});export{s as default};
-//# sourceMappingURL=SecondPage-BEcqk-2b.js.map

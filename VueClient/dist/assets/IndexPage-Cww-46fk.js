@@ -1,2 +1,0 @@
-import{K as e,X as t,Z as n,gt as r,q as i,t as a,ut as o}from"./QBtn-BD7Dyd1Z.js";import{Z as s}from"./index-TVks2P3k.js";import{t as c}from"./QPage-DTm1u6wz.js";var l={class:`column items-center`},u=n({__name:`IndexPage`,setup(n){let u=s();function d(){u.push({path:`/second`})}return(n,s)=>(o(),i(c,{class:`flex flex-center`},{default:r(()=>[e(`div`,l,[t(a,{class:`q-mt-md`,color:`primary`,onClick:d,label:`Go to Second Page`,"no-caps":``})])]),_:1}))}});export{u as default};
-//# sourceMappingURL=IndexPage-Cww-46fk.js.map
