@@ -13,7 +13,7 @@
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list bordered>
         <q-item v-for="route in menus" :key="route.path" clickable :to="route.path" active-class="q-item--active">
-          
+
 
           <q-item-section>
             {{ route.meta?.title || route.name }}

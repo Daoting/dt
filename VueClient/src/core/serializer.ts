@@ -1,4 +1,4 @@
-import { Table, Dict, LetterInfo } from "./types";
+import { Table, Dict, LetterInfo, TableInit } from "./types";
 import { newTable } from "./table";
 /**
  * 序列化
@@ -371,15 +371,12 @@ export function deserialize(p_jsonObj: any): any {
  * @returns
  */
 function deserializeTable(p_json: any): Table {
-  const tbl = newTable();
   if (p_json.length !== 3) throw new Error("反序列化Table时，JSON格式不正确！");
-
-  // 列结构
-  tbl.cols = p_json[1];
-  
-  // 数据行
-  tbl.rows = p_json[2];
-  return tbl;
+  const init: TableInit = {
+    cols: p_json[1],
+    rows: p_json[2],
+  };
+  return newTable(init);
 }
 
 function deserializeRow(p_json: any[]): any {

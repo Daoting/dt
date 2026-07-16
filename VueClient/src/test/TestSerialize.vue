@@ -1,50 +1,6 @@
 <template>
-  <div class="q-pa-xl q-gutter-xl">
-    <h2>Quasar 纯 UI 演示</h2>
-
-    <!-- 按钮 -->
-    <div class="q-gutter-sm">
-      <q-btn label="普通按钮" color="primary" to="/fir" />
-      <q-btn label="提示" color="teal" @click="showNotify" />
-      <q-btn label="弹窗" color="orange" @click="showDialog" />
-    </div>
-
-    <!-- 输入框 -->
-    <q-input
-      v-model="value"
-      label="用户名"
-      placeholder="请输入"
-      clearable
-    />
-
-    <!-- 选择器 -->
-    <q-select
-      v-model="selectVal"
-      label="选择选项"
-      :options="['选项1', '选项2', '选项3']"
-    />
-
-    <!-- 卡片 -->
-    <q-card class="q-my-md" style="max-width: 400px">
-      <q-card-section>卡片标题</q-card-section>
-      <q-card-section class="q-pb-md">
-        这是一个 Quasar 卡片内容
-      </q-card-section>
-    </q-card>
-
-    <!-- 表格 -->
-    <q-table
-      title="简单表格"
-      :rows="tableData"
-      :columns="columns"
-      row-key="id"
-    />
-  </div>
-
+  
   <div>
-    <q-btn label="Hello Quasar" color="primary" />
-  <q-input v-model="text" label="输入框" />
-
     <p>基本类型</p>
     <button @click="GetString">返回字符串</button>
     <button @click="SetString">发送字符串</button>
@@ -71,6 +27,10 @@
     <button @click="GetObjectList">返回object列表</button>
     <button @click="SetObjectList">发送object列表</button>
 
+    <p>Table类型</p>
+    <button @click="GetTable">返回Table</button>
+    <button @click="SetTable">发送Table</button>
+
     <p>Dict</p>
     <button @click="GetBaseDict">返回基本类型Dict</button>
     <button @click="SetDict">发送基本类型Dict</button>
@@ -84,39 +44,8 @@
 </template>
 
 <script setup lang="ts">
-import { Kit, Dict } from "../core/index";
-import { ref } from 'vue'
-import { useQuasar } from 'quasar'
+import { Kit, Table, Dict } from "../core/index";
 
-const $q = useQuasar()
-const value = ref('')
-const selectVal = ref('')
-
-// 表格数据
-const columns = [
-  { name: 'id', label: 'ID', field: 'id' },
-  { name: 'name', label: '姓名', field: 'name' },
-  { name: 'age', label: '年龄', field: 'age' },
-]
-const tableData = [
-  { id: 1, name: '张三', age: 22 },
-  { id: 2, name: '李四', age: 25 },
-]
-
-// 提示
-function showNotify() {
-  $q.notify('操作成功')
-}
-
-// 弹窗
-function showDialog() {
-  $q.dialog({
-    title: '确认',
-    message: '确定执行吗？',
-  })
-}
-
-const text = ref('')
 const GetString = async () => {
   const str = await Kit.rpc<string>(
     "cm",
@@ -302,6 +231,23 @@ const SetObjectList = async () => {
     "cm",
     "TestSerialize.SetObjectList",
     [123, 'asdf', true, new Date()]
+  );
+  console.log(success ? "调用成功！" : "调用不成功！");
+};
+
+const GetTable = async () => {
+  const table = await Kit.rpc<Table>(
+    "cm",
+    "TestSerialize.GetTable"
+  );
+  console.log(table);
+};
+
+const SetTable = async () => {
+  const success = await Kit.rpc<boolean>(
+    "cm",
+    "TestSerialize.SetTable",
+    new Dict([["string", "string value"], ["bool", true], ["number", 123], ["date", new Date()]])
   );
   console.log(success ? "调用成功！" : "调用不成功！");
 };

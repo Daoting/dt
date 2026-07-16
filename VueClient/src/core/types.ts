@@ -1,11 +1,23 @@
-export type RowData = unknown | object | any[];
+import { QTableColumn } from "quasar";
+
+export type Row = Record<string, unknown>;
+
+export interface TableInit {
+  cols: unknown[][];
+  rows: unknown[][];
+}
 
 export interface Table {
-  type: "table";
-  cols: readonly RowData[];
-  rows: readonly RowData[];
+  cols: QTableColumn[];
+  rows: Row[];
 }
-    
+
+export function isTable(obj: unknown): obj is Table {
+  return (
+    typeof obj === "object" && obj !== null && "cols" in obj && "rows" in obj
+  );
+}
+
 export class Dict extends Map<string, unknown> {
   // 自定义 toString 标签，Object.prototype.toString 调用
   get [Symbol.toStringTag](): string {

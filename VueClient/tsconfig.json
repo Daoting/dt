@@ -5,8 +5,6 @@
     "types": ["vite/client"],
     "allowArbitraryExtensions": true,
 
-    /* 不会疯狂报赋值null错 */
-    "strictNullChecks": false,
     /* 函数参数类型宽松 */
     "strictFunctionTypes": false,
     /* 关闭 “类属性必须初始化” 检查 */
@@ -15,11 +13,9 @@
     "noImplicitAny": false,
     /* 跳过对 node_modules 里的类型检查 */
     "skipLibCheck": true,
-    /* 强制文件名大小写一致 */
-    "forceConsistentCasingInFileNames": true,
     /* 允许直接 import .json 文件 */
     "resolveJsonModule": true,
-    /*  import时不用写扩展名 */
+    /* import时不用写扩展名 */
     "verbatimModuleSyntax": false,
     /* 让 TS 配合 Vite 找模块、找 Vue 类型 */
     "moduleResolution": "bundler",
