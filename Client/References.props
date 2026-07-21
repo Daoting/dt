@@ -1,6 +1,6 @@
 ﻿<Project>
     <PropertyGroup>
-        <UnoVersion>6.5.237</UnoVersion>
+        <UnoVersion>6.6.166</UnoVersion>
     </PropertyGroup>
 
     <!-- 公共引用包 -->
@@ -9,11 +9,11 @@
         <PackageReference Include="Dt.BuildTools" Version="1.5.4" PrivateAssets="none" />
         <PackageReference Include="Uno.Resizetizer" Version="1.12.1" PrivateAssets="none" />
 
-        <PackageReference Include="Dt.Infras" Version="5.2.0" />
+        <PackageReference Include="Dt.Infras" Version="5.2.2" />
         <PackageReference Include="ScottPlot" Version="5.1.58" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.8" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.10" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.2" />
-        <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.8" />
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.10" />
         
         <!-- 日志，两端版本相同 -->
         <PackageReference Include="Serilog" Version="4.3.1" />
@@ -41,8 +41,8 @@
     <ItemGroup Condition="$(IsWinAppSdk)">
         <PackageReference Include="Dt.Tasks" Version="5.2.0" />
         <!-- 1.8正常；1.7版本主线程异步异常会崩溃、后台任务全新方式；1.6不崩溃但原Dt.Tasks无法运行 -->
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260508005" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1839" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260710003" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2270" />
         <!-- Lottie动画已正常，Microsoft.Graphics.Win2D需1.2.0以上版本，Microsoft.Maui.Essentials已间接引用 -->
         <PackageReference Include="CommunityToolkit.WinUI.Lottie" Version="8.2.250604" />
         <!-- ScottPlot Mapsui需要 -->
@@ -60,7 +60,7 @@
         <PackageReference Include="SkiaSharp.Views.Uno.WinUI" Version="3.119.4" />
         <PackageReference Include="SkiaSharp.Skottie" Version="3.119.4" />
         <!-- 异常日志 -->
-        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.2" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.10" />
         <PackageReference Include="Uno.UI.Adapter.Microsoft.Extensions.Logging" Version="$(UnoVersion)" />
         <PackageReference Include="Mapsui.Uno.WinUI" Version="5.1.0" />
     </ItemGroup>
