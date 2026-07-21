@@ -710,7 +710,8 @@ namespace Dt.Base
                     {
                         // 触发 ManipulationComplete
                         _gestrueRecognizer.ProcessUpEvent(intermediatePoints[0]);
-                        e.Handled = true;
+                        // uno6.5后造成 PointerReleased 事件始终锁定在excel，点excel之外的ui不触发，类似抢焦点
+                        //e.Handled = true;
                     }
                     catch
                     {

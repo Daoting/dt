@@ -13,6 +13,6 @@
   </Folder>
   <Project Path="Dt.Cells/Dt.Cells.csproj" />
   <Project Path="Infras.Demo/Infras.Demo.csproj">
-    <Deploy Solution="Debug|*" />
+    <Deploy />
   </Project>
 </Solution>
