@@ -27,6 +27,7 @@ internal static class Silo
         // Api字典
         Methods = new Dictionary<string, ApiMethod>();
         GroupMethods = new Dictionary<string, List<string>>();
+        EntityDict = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
     }
     #endregion
 
@@ -40,6 +41,11 @@ internal static class Silo
     /// 获取Api分组列表
     /// </summary>
     public static Dictionary<string, List<string>> GroupMethods { get; }
+
+    /// <summary>
+    /// 获取实体类型字典，键为表名，值为实体类型
+    /// </summary>
+    public static Dictionary<string, Type> EntityDict { get; }
     #endregion
 
     #region Api
@@ -202,7 +208,7 @@ internal static class Silo
                     continue;
                 }
             }
-            
+
             // 注册事件处理
             if (IsEventHandler(type, p_services))
                 continue;
@@ -224,6 +230,14 @@ internal static class Silo
                     p_services.AddTransient(type);
                 }
                 continue;
+            }
+
+            // 实体类型字典
+            if (type.IsSubclassOf(typeof(Entity)))
+            {
+                var tbl = type.GetCustomAttribute<TblAttribute>(false);
+                if (tbl != null && !string.IsNullOrEmpty(tbl.Name))
+                    EntityDict[tbl.Name.ToLower()] = type;
             }
         }
     }
@@ -341,6 +355,20 @@ internal static class Silo
             }
         }
         return isHandler;
+    }
+    #endregion
+
+    #region 实体类型
+    /// <summary>
+    /// 获取实体类型，不存在时抛出异常
+    /// </summary>
+    /// <param name="p_tblName">表名</param>
+    /// <returns>实体类型</returns>
+    public static Type GetEntityType(string p_tblName)
+    {
+        if (EntityDict.TryGetValue(p_tblName, out var type))
+            return type;
+        throw new Exception($"表{p_tblName}不存在实体类型！");
     }
     #endregion
 }
