@@ -9,37 +9,36 @@
 #region 引用命名
 #endregion
 
-namespace Demo.Crud
-{
-    public partial class 扩展1X
-    {
-        public static async Task<扩展1X> New(
-            string 扩展1名称 = default,
-            bool 禁止选中 = default,
-            bool 禁止保存 = default)
-        {
-            return new 扩展1X(
-                ID: await NewID(),
-                扩展1名称: 扩展1名称,
-                禁止选中: 禁止选中,
-                禁止保存: 禁止保存);
-        }
+namespace Demo.Crud;
 
-        protected override void InitHook()
+public partial class 扩展1X
+{
+    public static async Task<扩展1X> New(
+        string 扩展1名称 = default,
+        bool 禁止选中 = default,
+        bool 禁止保存 = default)
+    {
+        return new 扩展1X(
+            ID: await NewID(),
+            扩展1名称: 扩展1名称,
+            禁止选中: 禁止选中,
+            禁止保存: 禁止保存);
+    }
+
+    protected override void InitHook()
+    {
+        OnSaving(() =>
         {
-            OnSaving(() =>
+            if (禁止保存)
             {
-                if (禁止保存)
-                {
-                    Throw.Msg("已选中[禁止保存]，保存前校验不通过！");
-                }
-                return Task.CompletedTask;
-            });
-            
-            OnChanging(c禁止选中, e =>
-            {
-                Throw.If(e.Bool, "[禁止选中]列无法选中");
-            });
-        }
+                Throw.Msg("已选中[禁止保存]，保存前校验不通过！");
+            }
+            return Task.CompletedTask;
+        });
+        
+        OnChanging(c禁止选中, e =>
+        {
+            Throw.If(e.Bool, "[禁止选中]列无法选中");
+        });
     }
 }

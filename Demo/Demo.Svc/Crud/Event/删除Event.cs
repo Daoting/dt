@@ -9,20 +9,19 @@
 #region 引用命名
 #endregion
 
-namespace Demo.Crud
-{
-    public class 删除Event : IEvent
-    {
-        public 基础X Tgt { get; set; }
-    }
+namespace Demo.Crud;
 
-    [EventHandler]
-    public class 删除Handler : IEventHandler<删除Event>
+public class 删除Event : IEvent
+{
+    public 基础X Tgt { get; set; }
+}
+
+[EventHandler]
+public class 删除Handler : IEventHandler<删除Event>
+{
+    public Task Handle(删除Event p_event)
     {
-        public Task Handle(删除Event p_event)
-        {
-            Log.Debug("被删实体：" + p_event.Tgt.名称);
-            return Task.CompletedTask;
-        }
+        Log.Debug("被删实体：" + p_event.Tgt.名称);
+        return Task.CompletedTask;
     }
 }

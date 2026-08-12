@@ -9,22 +9,21 @@
 #region 引用命名
 #endregion
 
-namespace Demo.Crud
+namespace Demo.Crud;
+
+public class 值变Event : IEvent
 {
-    public class 值变Event : IEvent
-    {
-        public string OriginalVal { get; set; }
+    public string OriginalVal { get; set; }
 
-        public string NewVal { get; set; }
-    }
+    public string NewVal { get; set; }
+}
 
-    [EventHandler]
-    public class 值变Handler: IEventHandler<值变Event>
+[EventHandler]
+public class 值变Handler: IEventHandler<值变Event>
+{
+    public Task Handle(值变Event p_event)
     {
-        public Task Handle(值变Event p_event)
-        {
-            Log.Debug($"原值：{p_event.OriginalVal}\r\n新值：{p_event.NewVal}");
-            return Task.CompletedTask;
-        }
+        Log.Debug($"原值：{p_event.OriginalVal}\r\n新值：{p_event.NewVal}");
+        return Task.CompletedTask;
     }
 }
