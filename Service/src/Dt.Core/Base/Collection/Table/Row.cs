@@ -286,6 +286,18 @@ public partial class Row : INotifyPropertyChanged, IRpcJson, IEnumerable
         }
         return dt;
     }
+
+    /// <summary>
+    /// 获取当前行所属表的表名
+    /// </summary>
+    /// <returns></returns>
+    public virtual string GetTblName()
+    {
+        var tbl = Table;
+        if (tbl != null)
+            return tbl.GetTblName();
+        return null;
+    }
     #endregion
 
     #region 添加Cell

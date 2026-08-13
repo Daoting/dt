@@ -96,6 +96,16 @@ public class Table<TEntity> : Table, IList<TEntity>
     /// </summary>
     new public IList<TEntity> Items => this;
 
+    /// <summary>
+    /// 获取内部实体的表名，取实体的TblAttribute标签值
+    /// </summary>
+    /// <returns></returns>
+    public override string GetTblName()
+    {
+        var tbl = typeof(TEntity).GetCustomAttribute<TblAttribute>(false);
+        return tbl?.Name;
+    }
+    
     #region IList<TEntity>
     /// <summary>
     /// 通过索引获取的类型为TRow

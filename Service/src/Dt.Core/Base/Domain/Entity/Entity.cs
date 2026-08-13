@@ -220,7 +220,7 @@ public abstract class Entity : Row
         Saved?.Invoke(this);
     }
     #endregion
-    
+
     #region 工具方法
     /// <summary>
     /// 是否为虚拟实体
@@ -331,6 +331,18 @@ public abstract class Entity : Row
     public static bool operator !=(Entity left, Entity right)
     {
         return !(left == right);
+    }
+    #endregion
+
+    #region 表名
+    /// <summary>
+    /// 获取当前实体的表名，取TblAttribute的值
+    /// </summary>
+    /// <returns></returns>
+    public override string GetTblName()
+    {
+        var tbl = GetType().GetCustomAttribute<TblAttribute>(false);
+        return tbl?.Name;
     }
     #endregion
 }
