@@ -9,6 +9,7 @@
 #region 引用命名
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -33,7 +34,7 @@ public class TableSchema
         Name = p_name;
         DbType = p_dbType;
         DbKey = p_dbKey;
-        
+
         switch (p_dbType)
         {
             case DatabaseType.MySql:
@@ -134,7 +135,7 @@ public class TableSchema
     /// <param name="p_rows">实体列表</param>
     /// <returns></returns>
     public List<Dict> GetSaveSql<TEntity>(IList<TEntity> p_rows)
-        where TEntity : Entity
+        where TEntity : Row
     {
         // 不再重复判断
         //if (p_rows == null || p_rows.Count == 0)
@@ -445,7 +446,7 @@ public class TableSchema
     /// <param name="p_rows"></param>
     /// <returns></returns>
     public Dict GetDeleteSql<TEntity>(IList<TEntity> p_rows)
-        where TEntity : Entity
+        where TEntity : Row
     {
         // 不再重复判断
         //if (p_rows == null || p_rows.Count == 0)
@@ -567,7 +568,7 @@ public class TableSchema
                 where p_colName.Equals(c.Name, StringComparison.OrdinalIgnoreCase)
                 select c).FirstOrDefault();
     }
-    
+
     /// <summary>
     /// 将纵向保存的列值转换成横向保存的列值
     /// </summary>
@@ -595,6 +596,37 @@ public class TableSchema
         }
         return rtn;
     }
+
+    #region 静态内容
+    static readonly ConcurrentDictionary<string, TableSchema> _models = new ConcurrentDictionary<string, TableSchema>(StringComparer.OrdinalIgnoreCase);
+
+#if SERVER
+    public static async Task<TableSchema> GetSchema(string p_tblName)
+    {
+        if (_models.TryGetValue(p_tblName, out var m))
+            return m;
+
+        var ts = await DbSchema.GetTableSchema(p_tblName);
+        _models[p_tblName] = ts;
+        return ts;
+    }
+#else
+    public static async Task<TableSchema> GetSchema(string p_tblName)
+    {
+        if (_models.TryGetValue(p_tblName, out var m))
+            return m;
+
+        TableSchema ts;
+        if (At.AccessInfo.Type == AccessType.Service)
+            ts = await Kit.GetRequiredService<IModelCallback>().GetTableSchema(p_tblName);
+        else
+            ts = await At.GetTableSchema(p_tblName);
+        
+        _models[p_tblName] = ts;
+        return ts;
+    }
+#endif
+    #endregion
 }
 
 /// <summary>

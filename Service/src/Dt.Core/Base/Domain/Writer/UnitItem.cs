@@ -14,14 +14,11 @@ namespace Dt.Core;
 
 class UnitItem
 {
-    public UnitItem(EntitySchema p_schema, IList p_data, List<Dict> p_exec)
+    public UnitItem(IList p_data, List<Dict> p_exec)
     {
-        Schema = p_schema;
         Data = p_data;
         Exec = p_exec;
     }
-
-    public EntitySchema Schema { get; }
 
     public IList Data { get; }
 
@@ -37,49 +34,57 @@ class UnitItem
     /// </summary>
     public async Task OnCommited()
     {
-        foreach (var en in Data.Cast<Entity>())
+        foreach (var item in Data)
         {
-            if (IsDelete)
+            if (item is Entity en)
             {
-                // 删除后的回调
-                if (en.GetDeletedHook() is Func<Task> hook)
+                if (IsDelete)
                 {
-                    try
+                    // 删除后的回调
+                    if (en.GetDeletedHook() is Func<Task> hook)
                     {
-                        await hook();
+                        try
+                        {
+                            await hook();
+                        }
+                        catch { }
                     }
-                    catch { }
                 }
-            }
-            else
-            {
-                // 保存后的回调
-                if (en.GetSavedHook() is Func<Task> hook)
+                else
                 {
-                    try
+                    // 保存后的回调
+                    if (en.GetSavedHook() is Func<Task> hook)
                     {
-                        await hook();
+                        try
+                        {
+                            await hook();
+                        }
+                        catch { }
                     }
-                    catch { }
+
+                    // 状态复位
+                    en.AcceptChanges();
+                    // 触发保存后事件
+                    en.OnAfterSaved();
                 }
 
+                // 发布领域事件
+                var ls = en.GetEvents();
+                if (ls != null && ls.Count > 0)
+                {
+                    foreach (var ev in ls)
+                    {
+                        // 不等待
+                        _ = Kit.PublishEvent(ev);
+                    }
+                    // 发布完毕，清空领域事件
+                    en.ClearEvents();
+                }
+            }
+            else if (!IsDelete && item is Row row)
+            {
                 // 状态复位
-                en.AcceptChanges();
-                // 触发保存后事件
-                en.OnAfterSaved();
-            }
-
-            // 发布领域事件
-            var ls = en.GetEvents();
-            if (ls != null && ls.Count > 0)
-            {
-                foreach (var ev in ls)
-                {
-                    // 不等待
-                    _ = Kit.PublishEvent(ev);
-                }
-                // 发布完毕，清空领域事件
-                en.ClearEvents();
+                row.AcceptChanges();
             }
         }
     }

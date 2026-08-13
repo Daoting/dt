@@ -20,7 +20,7 @@ public interface IModelCallback
     /// <summary>
     /// 查询表结构信息
     /// </summary>
-    /// <param name="p_tblAttr">实体类属性标签</param>
+    /// <param name="p_tblName">表名</param>
     /// <returns></returns>
-    Task<TableSchema> GetTableSchema(TblAttribute p_tblAttr);
+    Task<TableSchema> GetTableSchema(string p_tblName);
 }

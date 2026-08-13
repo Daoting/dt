@@ -20,11 +20,11 @@ class ModelCallback : IModelCallback
     /// <summary>
     /// 查询表结构信息
     /// </summary>
-    /// <param name="p_tblAttr">实体类属性标签</param>
+    /// <param name="p_tblName">表名</param>
     /// <returns></returns>
-    public async Task<TableSchema> GetTableSchema(TblAttribute p_tblAttr)
+    public async Task<TableSchema> GetTableSchema(string p_tblName)
     {
-        var tblName = p_tblAttr.Name.ToLower();
+        var tblName = p_tblName.ToLower();
         var data = await AtModel.Query<OmTable>($"select * from OmTable where Name='{tblName}'");
         if (data.Count == 0)
             return null;

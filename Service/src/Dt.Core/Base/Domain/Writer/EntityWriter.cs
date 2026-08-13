@@ -176,13 +176,14 @@ class EntityWriter : IEntityWriter
             var dts = model.Schema.GetSaveSql(ls);
             if (dts != null && dts.Count > 0)
             {
-                var ui = new UnitItem(model, ls, dts);
+                var ui = new UnitItem(ls, dts);
                 _items.Add(ui);
             }
         }
     }
 
     /// <summary>
+    /// 保存Table或 Table`1 中新增、修改、删除的待保存实体
     /// 为方便无法以泛型 Table`1 使用的情况，内部调用：Save`1(Table`1 p_tbl)，
     /// <para>添加Table中新增、修改、删除的待保存实体，最后由Commit统一提交</para>
     /// <para>删除行通过Table的 IsLockedCollection 判断获取</para>
@@ -192,20 +193,58 @@ class EntityWriter : IEntityWriter
     [UnconditionalSuppressMessage("AOT", "IL3050")]
     public async Task Save(Table p_tbl)
     {
-        if (p_tbl == null || !p_tbl.GetType().IsGenericType)
+        if (p_tbl == null || p_tbl.Count == 0)
             return;
 
-        // 泛型方法：Save<TEntity>(Table<TEntity> p_tbl)
-        var save = GetSaveGenericTblMethod();
+        if (p_tbl.GetType().IsGenericType)
+        {
+            // 泛型方法：Save<TEntity>(Table<TEntity> p_tbl)
+            var save = GetSaveGenericTblMethod();
 
-        // 构造泛型方法
-        var mi = save.MakeGenericMethod(p_tbl.GetType().GenericTypeArguments[0]);
+            // 构造泛型方法
+            var mi = save.MakeGenericMethod(p_tbl.GetType().GenericTypeArguments[0]);
 
-        // 调用Save<>方法
-        var task = (Task)mi.Invoke(this, new object[1] { p_tbl });
-        await task;
+            // 调用Save<>方法
+            var task = (Task)mi.Invoke(this, new object[1] { p_tbl });
+            await task;
+        }
+        else
+        {
+            await SaveTableInternal(p_tbl);
+        }
     }
 
+    async Task SaveTableInternal(IEnumerable<Row> p_list)
+    {
+        if (p_list == null)
+            return;
+
+        var first = p_list.FirstOrDefault();
+        string tblName;
+        if (first == null || (tblName = first.GetTblName()) == null)
+            return;
+        
+        // 提取并校验需要保存的实体
+        var ls = new List<Row>();
+        foreach (var item in p_list)
+        {
+            if (item == null || (!item.IsAdded && !item.IsChanged))
+                continue;
+
+            ls.Add(item);
+        }
+        if (ls.Count == 0)
+            return;
+
+        var model = await TableSchema.GetSchema(tblName);
+        var dts = model.GetSaveSql(ls);
+        if (dts != null && dts.Count > 0)
+        {
+            var ui = new UnitItem(ls, dts);
+            _items.Add(ui);
+        }
+    }
+    
     /// <summary>
     /// 保存虚拟实体，批量保存时未将相同类型的实体形成列表统一生成sql！
     /// </summary>
@@ -241,7 +280,7 @@ class EntityWriter : IEntityWriter
                     var dts = model.Schema.GetSaveSql(ls);
                     if (dts != null && dts.Count > 0)
                     {
-                        var ui = new UnitItem(model, ls, dts);
+                        var ui = new UnitItem(ls, dts);
                         _items.Add(ui);
                     }
                 }
@@ -357,7 +396,7 @@ class EntityWriter : IEntityWriter
         if (IsValidSvc(model))
         {
             Dict dt = model.Schema.GetDeleteSql(p_list);
-            var ui = new UnitItem(model, (IList)p_list, new List<Dict> { dt });
+            var ui = new UnitItem((IList)p_list, new List<Dict> { dt });
             ui.IsDelete = true;
             _items.Add(ui);
         }
@@ -438,7 +477,7 @@ class EntityWriter : IEntityWriter
                     // 单个处理
                     var ls = new List<Entity> { obj };
                     Dict dt = model.Schema.GetDeleteSql((IList<Entity>)ls);
-                    var ui = new UnitItem(model, ls, new List<Dict> { dt });
+                    var ui = new UnitItem(ls, new List<Dict> { dt });
                     ui.IsDelete = true;
                     _items.Add(ui);
                 }

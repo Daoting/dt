@@ -55,7 +55,7 @@ public class ChildEntitySchema
         var tbl = Type.GetCustomAttribute<TblAttribute>(false);
         if (tbl != null && !string.IsNullOrEmpty(tbl.Name))
         {
-            Schema = await EntitySchema.GetTableSchema(tbl);
+            Schema = await TableSchema.GetSchema(tbl.Name);
         }
 #if !SERVER
         else

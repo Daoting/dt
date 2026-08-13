@@ -41,18 +41,12 @@ public class EntitySchema
             //throw new Exception($"实体{EntityType.Name}缺少映射表设置！");
             return false;
         
-        Schema = await GetTableSchema(tbl);
+        Schema = await TableSchema.GetSchema(tbl.Name);
         if (Schema.PrimaryKey.Count == 0)
             //throw new Exception($"实体{EntityType.Name}的映射表{Schema.Name}无主键！");
             return false;
         return true;
     }
-
-    internal static Task<TableSchema> GetTableSchema(TblAttribute p_tblAttr)
-    {
-        return DbSchema.GetTableSchema(p_tblAttr.Name);
-    }
-
 #else
     /// <summary>
     /// Entity用到的数据访问信息
@@ -64,7 +58,7 @@ public class EntitySchema
         var tbl = EntityType.GetCustomAttribute<TblAttribute>(false);
         if (tbl != null && !string.IsNullOrEmpty(tbl.Name))
         {
-            Schema = await GetTableSchema(tbl);
+            Schema = await TableSchema.GetSchema(tbl.Name);
             if (At.AccessInfo.Type == AccessType.Service)
             {
                 // '服务名+数据源键名' 作为 IAccessInfo.Name，服务端以数据源键名键名为准构造DataAccess
@@ -100,13 +94,6 @@ public class EntitySchema
             return false;
         }
         return true;
-    }
-
-    internal static Task<TableSchema> GetTableSchema(TblAttribute p_tblAttr)
-    {
-        if (At.AccessInfo.Type == AccessType.Service)
-            return Kit.GetRequiredService<IModelCallback>().GetTableSchema(p_tblAttr);
-        return At.GetTableSchema(p_tblAttr.Name);
     }
 
     internal static TableSchema GetSqliteSchema(Type p_type, string p_dbName)
