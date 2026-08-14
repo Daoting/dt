@@ -35,6 +35,7 @@ public partial class Row : INotifyPropertyChanged, IRpcJson, IEnumerable
     bool _delayCheckChanges;
     bool _isChanged;
     readonly WeakReference _tbl = new WeakReference(null);
+    string _tblName;
     #endregion
 
     #region 构造方法
@@ -288,15 +289,28 @@ public partial class Row : INotifyPropertyChanged, IRpcJson, IEnumerable
     }
 
     /// <summary>
-    /// 获取当前行所属表的表名
+    /// 获取所属的表名，3种表名优先级：Entity标签表名 > 自己内置表名 > 所属Table表名
     /// </summary>
     /// <returns></returns>
     public virtual string GetTblName()
     {
+        if (!string.IsNullOrEmpty(_tblName))
+            return _tblName;
+        
         var tbl = Table;
         if (tbl != null)
             return tbl.GetTblName();
+        
         return null;
+    }
+
+    /// <summary>
+    /// 设置表名
+    /// </summary>
+    /// <param name="p_tblName"></param>
+    public void SetTblName(string p_tblName)
+    {
+        _tblName = p_tblName;
     }
     #endregion
 
