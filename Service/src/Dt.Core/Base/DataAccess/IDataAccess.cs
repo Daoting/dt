@@ -144,6 +144,16 @@ public partial interface IDataAccess
     /// <param name="p_dts">参数列表，每个Dict中包含两个键：text params，text为sql语句，params类型为Dict或List{Dict}</param>
     /// <returns>返回执行后影响的行数</returns>
     Task<int> BatchExec(List<Dict> p_dts);
+
+    /// <summary>
+    /// 一个事务内批量保存列表中所有需要新增、修改、删除的数据
+    /// <para>1. 列表项只支持：有表名的Table、有表名的Row、Entity、Table{TEntity}</para>
+    /// <para>2. Entity、Table{TEntity}支持实体的各种回调和领域事件</para>
+    /// <para>3. 反序列化时根据表名确定是否有对应Entity，没有时按Row、Table处理</para>
+    /// </summary>
+    /// <param name="p_datas">Entity、Table{TEntity}、Row、Table类型的对象列表</param>
+    /// <returns>是否成功</returns>
+    Task<bool> Save(List<object> p_datas);
     #endregion
 
     #region 新ID和序列

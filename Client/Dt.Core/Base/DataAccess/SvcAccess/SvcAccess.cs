@@ -162,6 +162,15 @@ class SvcAccess : IDataAccess
             p_dts
         ).Call<int>();
     }
+
+    public Task<bool> Save(List<object> p_datas)
+    {
+        return new UnaryRpc(
+            _ai.Name,
+            "Da.Save",
+            p_datas
+        ).Call<bool>();
+    }
     #endregion
 
     #region 新ID和序列

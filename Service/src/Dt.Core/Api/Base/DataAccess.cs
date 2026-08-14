@@ -115,22 +115,9 @@ public class Da : RpcApi
     /// </summary>
     /// <param name="p_datas">Entity、Table{TEntity}、Row、Table类型的对象列表</param>
     /// <returns>是否成功</returns>
-    /// <exception cref="Exception"></exception>
-    public async Task<bool> Save(List<object> p_datas)
+    public Task<bool> Save(List<object> p_datas)
     {
-        var w = new EntityWriter(Kit.DataAccess);
-        foreach (var item in p_datas)
-        {
-            if (item is Table table)
-                await w.Save(table);
-            else if (item is Entity entity)
-                await w.Save(entity);
-            else if (item is Row row)
-                await w.Save(row);
-            else
-                throw new Exception($"无法保存非实体类型：{item.GetType().FullName}");
-        }
-        return await w.Commit();
+        return _da.Save(p_datas);
     }
 
     /// <summary>

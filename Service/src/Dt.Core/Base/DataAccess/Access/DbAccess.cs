@@ -530,6 +530,31 @@ abstract class DbAccess : IDataAccess
             ReleaseConnection();
         }
     }
+
+    /// <summary>
+    /// 一个事务内批量保存列表中所有需要新增、修改、删除的数据
+    /// <para>1. 列表项只支持：有表名的Table、有表名的Row、Entity、Table{TEntity}</para>
+    /// <para>2. Entity、Table{TEntity}支持实体的各种回调和领域事件</para>
+    /// <para>3. 反序列化时根据表名确定是否有对应Entity，没有时按Row、Table处理</para>
+    /// </summary>
+    /// <param name="p_datas">Entity、Table{TEntity}、Row、Table类型的对象列表</param>
+    /// <returns>是否成功</returns>
+    public async Task<bool> Save(List<object> p_datas)
+    {
+        var w = new EntityWriter(this);
+        foreach (var item in p_datas)
+        {
+            if (item is Table table)
+                await w.Save(table);
+            else if (item is Entity entity)
+                await w.Save(entity);
+            else if (item is Row row)
+                await w.Save(row);
+            else
+                throw new Exception($"无法保存不支持的类型：{item.GetType().FullName}");
+        }
+        return await w.Commit();
+    }
     #endregion
 
     #region 手动关闭
