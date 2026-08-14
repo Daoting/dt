@@ -607,6 +607,8 @@ public class TableSchema
             return m;
 
         var ts = await DbSchema.GetTableSchema(p_tblName);
+        if (ts == null)
+            Throw.Msg($"未找到表 {p_tblName} 的结构信息！");
         _models[p_tblName] = ts;
         return ts;
     }
@@ -621,6 +623,9 @@ public class TableSchema
             ts = await Kit.GetRequiredService<IModelCallback>().GetTableSchema(p_tblName);
         else
             ts = await At.GetTableSchema(p_tblName);
+        
+        if (ts == null)
+            Throw.Msg($"未找到表 {p_tblName} 的结构信息！");
         
         _models[p_tblName] = ts;
         return ts;

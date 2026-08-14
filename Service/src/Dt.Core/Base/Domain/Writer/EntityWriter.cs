@@ -214,6 +214,21 @@ class EntityWriter : IEntityWriter
         }
     }
 
+    /// <summary>
+    /// 添加待保存的Row，最后由Commit统一提交，需要表名
+    /// </summary>
+    /// <param name="p_row"></param>
+    /// <returns></returns>
+    public Task Save(Row p_row)
+    {
+        if (p_row != null
+            && (p_row.IsAdded || p_row.IsChanged))
+        {
+            return SaveTableInternal(new List<Row> { p_row });
+        }
+        return Task.CompletedTask;
+    }
+    
     async Task SaveTableInternal(IEnumerable<Row> p_list)
     {
         if (p_list == null)
@@ -221,6 +236,7 @@ class EntityWriter : IEntityWriter
 
         var first = p_list.FirstOrDefault();
         string tblName;
+        // 没表名的无法保存
         if (first == null || (tblName = first.GetTblName()) == null)
             return;
         
