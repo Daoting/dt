@@ -46,7 +46,7 @@ class SvcUrlInfo
 
         // da da+dbkey
         if (p_svcName.StartsWith(At.OriginSvc, StringComparison.OrdinalIgnoreCase))
-            return _urlDefSvc;
+            return _urlDefSvc ?? _urlCm;
         
         if (_urlDict.TryGetValue(p_svcName, out var url))
             return url;
