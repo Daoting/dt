@@ -35,7 +35,6 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
     bool _isCollectionChanged = false;
     bool _isDirty = false;
     bool _delayCheckChanges = false;
-    string _tblName;
     #endregion
 
     #region 构造方法
@@ -734,24 +733,6 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
         }
         return tbl;
     }
-
-    /// <summary>
-    /// 获取所属的表名
-    /// </summary>
-    /// <returns></returns>
-    public virtual string GetTblName()
-    {
-        return _tblName;
-    }
-
-    /// <summary>
-    /// 设置表名
-    /// </summary>
-    /// <param name="p_tblName"></param>
-    public void SetTblName(string p_tblName)
-    {
-        _tblName = p_tblName;
-    }
     #endregion
 
     #region 记录集合变化
@@ -954,15 +935,7 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
     {
         p_writer.WriteStartArray();
         // 类型标志
-        var tblName = GetTblName();
-        if (string.IsNullOrEmpty(tblName))
-        {
-            p_writer.WriteStringValue("#tbl");
-        }
-        else
-        {
-            p_writer.WriteStringValue("/tbl:" + tblName);
-        }
+        p_writer.WriteStringValue("#tbl");
 
         // 列
         p_writer.WriteStartArray();

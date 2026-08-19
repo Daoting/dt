@@ -333,30 +333,4 @@ public abstract class Entity : Row
         return !(left == right);
     }
     #endregion
-
-    #region 表名
-    /// <summary>
-    /// 获取当前实体的表名，取TblAttribute的值
-    /// </summary>
-    /// <returns></returns>
-    public override string GetTblName()
-    {
-#if SERVER
-        return GetType().GetCustomAttribute<TblAttribute>(false)?.Name;
-#else
-        var tp = GetType();
-        var tbl = tp.GetCustomAttribute<TblAttribute>(false);
-        if (tbl != null)
-            return tbl.Name;
-
-        var sqlite = tp.GetCustomAttribute<SqliteAttribute>(false);
-        if (sqlite != null && !string.IsNullOrEmpty(sqlite.DbName))
-        {
-            // sqlite表名规范： sqlite:db:tbl
-            return $"sqlite:{sqlite.DbName}:{tp.Name.TrimEnd('X')}";
-        }
-        return null;
-#endif
-    }
-    #endregion
 }

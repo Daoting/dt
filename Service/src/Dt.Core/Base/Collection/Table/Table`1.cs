@@ -95,16 +95,6 @@ public class Table<TEntity> : Table, IList<TEntity>
     /// <para>from item in _atvs.Items</para>
     /// </summary>
     new public IList<TEntity> Items => this;
-
-    /// <summary>
-    /// 获取内部实体的表名，取实体的TblAttribute标签值
-    /// </summary>
-    /// <returns></returns>
-    public override string GetTblName()
-    {
-        var tbl = typeof(TEntity).GetCustomAttribute<TblAttribute>(false);
-        return tbl?.Name;
-    }
     
     #region IList<TEntity>
     /// <summary>
