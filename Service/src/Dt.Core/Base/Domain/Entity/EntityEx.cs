@@ -36,7 +36,7 @@ public static class EntityEx
 #if SERVER
         var ew = new EntityWriter(Kit.DataAccess);
 #else
-        var ew = new EntityWriter(await GetDa(p_entity.GetTblName()));
+        var ew = new EntityWriter(await GetDa(p_entity.GetType()));
 #endif
         await ew.Save(p_entity);
         return await ew.Commit(p_isNotify);
@@ -60,7 +60,7 @@ public static class EntityEx
 #if SERVER
         var ew = new EntityWriter(Kit.DataAccess);
 #else
-        var ew = new EntityWriter(await GetDa(p_tbl.GetTblName()));
+        var ew = new EntityWriter(await GetDa(typeof(TEntity)));
 #endif
         await ew.Save(p_tbl);
         return await ew.Commit(p_isNotify);
@@ -82,7 +82,7 @@ public static class EntityEx
 #if SERVER
         var ew = new EntityWriter(Kit.DataAccess);
 #else
-        var ew = new EntityWriter(await GetDa(p_list.FirstOrDefault()?.GetTblName()));
+        var ew = new EntityWriter(await GetDa(typeof(TEntity)));
 #endif
         await ew.Save(p_list);
         return await ew.Commit(p_isNotify);
@@ -107,17 +107,14 @@ public static class EntityEx
 #if SERVER
         var ew = new EntityWriter(Kit.DataAccess);
 #else
-        var ew = new EntityWriter(await GetDa(p_entity.GetTblName()));
+        var ew = new EntityWriter(await GetDa(p_entity.GetType()));
 #endif
         await ew.SaveWithChild(p_entity);
         return await ew.Commit(p_isNotify);
     }
 
     /// <summary>
-    /// 一个事务内批量保存Table或Table`1中新增、修改、删除的数据
-    /// 1. 为方便无法以泛型 Table`1 使用的情况
-    /// 2. Table需要提供表名，无实体的各种回调和事件
-    /// <para>删除行通过Table的ExistDeleted DeletedRows判断获取</para>
+    /// 为方便无法以泛型 Table`1 使用的情况，一个事务内批量保存Table中新增、修改、删除的实体数据
     /// <para>保存成功后，对于每个保存的实体：</para>
     /// <para>1. 若存在领域事件，则发布事件</para>
     /// <para>2. 若已设置服务端缓存，则删除缓存</para>
@@ -129,34 +126,16 @@ public static class EntityEx
     public static async Task<bool> Save(this Table p_tbl, bool p_isNotify = true)
     {
         if (p_tbl == null
-            || p_tbl.Count == 0)
-            Throw.Msg("待保存的Table不可为空！");
+            || p_tbl.Count == 0
+            || !p_tbl.GetType().IsGenericType)
+            Throw.Msg("待保存的Table不可为空，并且实际类型必须是泛型Table<TEntity>！");
 
 #if SERVER
         var ew = new EntityWriter(Kit.DataAccess);
 #else
-        var ew = new EntityWriter(await GetDa(p_tbl.GetTblName()));
+        var ew = new EntityWriter(await GetDa(p_tbl[0].GetType()));
 #endif
         await ew.Save(p_tbl);
-        return await ew.Commit(p_isNotify);
-    }
-
-    /// <summary>
-    /// 保存普通Row，需要表名
-    /// </summary>
-    /// <param name="p_row">待保存</param>
-    /// <param name="p_isNotify">是否提示保存结果，客户端有效</param>
-    /// <returns>是否成功</returns>
-    public static async Task<bool> Save(this Row p_row, bool p_isNotify = true)
-    {
-        if (p_row == null)
-            Throw.Msg("Row不可为null");
-#if SERVER
-        var ew = new EntityWriter(Kit.DataAccess);
-#else
-        var ew = new EntityWriter(await GetDa(p_row.GetTblName()));
-#endif
-        await ew.Save(p_row);
         return await ew.Commit(p_isNotify);
     }
     #endregion
@@ -179,7 +158,7 @@ public static class EntityEx
 #if SERVER
         var ew = new EntityWriter(Kit.DataAccess);
 #else
-        var ew = new EntityWriter(await GetDa(p_entity.GetTblName()));
+        var ew = new EntityWriter(await GetDa(p_entity.GetType()));
 #endif
         await ew.Delete(p_entity);
         return await ew.Commit(p_isNotify);
@@ -202,7 +181,7 @@ public static class EntityEx
 #if SERVER
         var ew = new EntityWriter(Kit.DataAccess);
 #else
-        var ew = new EntityWriter(await GetDa(p_tbl.GetTblName()));
+        var ew = new EntityWriter(await GetDa(p_tbl[0].GetType()));
 #endif
         await ew.Delete(p_tbl);
         return await ew.Commit(p_isNotify);
@@ -224,7 +203,7 @@ public static class EntityEx
 #if SERVER
         var ew = new EntityWriter(Kit.DataAccess);
 #else
-        var ew = new EntityWriter(await GetDa(p_tbl.GetTblName()));
+        var ew = new EntityWriter(await GetDa(p_tbl[0].GetType()));
 #endif
         await ew.Delete(p_tbl);
         return await ew.Commit(p_isNotify);
@@ -241,14 +220,12 @@ public static class EntityEx
     public static async Task<bool> Delete<TEntity>(this IList<TEntity> p_list, bool p_isNotify = true)
         where TEntity : Entity
     {
-        if (p_list == null || p_list.Count == 0)
-            return false;
-
 #if SERVER
         var ew = new EntityWriter(Kit.DataAccess);
 #else
         // 获取实际类型
-        var ew = new EntityWriter(await GetDa(p_list[0].GetTblName()));
+        Type tp = (p_list != null && p_list.Count > 0) ? p_list[0].GetType() : typeof(TEntity);
+        var ew = new EntityWriter(await GetDa(tp));
 #endif
         await ew.Delete(p_list);
         return await ew.Commit(p_isNotify);
@@ -284,32 +261,18 @@ public static class EntityEx
 
     #region 内部方法
 #if !SERVER
-    static async Task<IDataAccess> GetDa(string p_tblName)
+    static async Task<IDataAccess> GetDa(Type p_type)
     {
-        if (string.IsNullOrEmpty(p_tblName))
-            Throw.Msg("表名不可为空！");
-
         IDataAccess da;
-        if (p_tblName.StartsWith("sqlite:"))
+        if (Entity.IsVirEntity(p_type))
         {
-            var arr = p_tblName.Split(':');
-            if (arr.Length != 3)
-                Throw.Msg("sqlite表名不符合规范！形如 sqlite:db:tbl");
-            da = At.GetAccessInfo(AccessType.Local, arr[1]).GetDa();
+            var vm = await VirEntitySchema.Get(p_type);
+            da = vm.AccessInfo.GetDa();
         }
         else
         {
-            var schema = await TableSchema.GetSchema(p_tblName);
-            if (At.AccessInfo.Type == AccessType.Service)
-            {
-                // '服务名+数据源键名' 作为 IAccessInfo.Name，服务端以数据源键名键名为准构造DataAccess
-                da = At.GetAccessInfo(AccessType.Service, $"{At.OriginSvc}+{schema.DbKey}").GetDa();
-            }
-            else
-            {
-                // 直连库时
-                da = At.AccessInfo.GetDa();
-            }
+            var model = await EntitySchema.Get(p_type);
+            da = model.AccessInfo.GetDa();
         }
         return da;
     }
