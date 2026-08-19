@@ -1,0 +1,30 @@
+﻿<a:Win
+    x:Class="Demo.Crud.SvcCrudDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:l="using:Demo.Crud">
+
+    <a:Fv x:Name="_fv">
+        <a:CBar Title="通过Table增删改" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="增加新行" Click="OnInsert" />
+            <Button Content="更新行" Click="OnUpdate" />
+            <Button Content="删除行" Click="OnDelete" />
+            <Button Content="批量混合" Click="OnBatchMix" />
+        </StackPanel>
+
+        <a:CBar Title="sqlite的Table操作" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="增加新行" Click="OnInsertSqlite" />
+        </StackPanel>
+        <a:CFree ColSpan="0" RowSpan="5" ShowTitle="False">
+            <TextBox
+                x:Name="_tbInfo"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollMode="Enabled" />
+        </a:CFree>
+    </a:Fv>
+</a:Win>

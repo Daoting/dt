@@ -7,12 +7,9 @@
 #endregion
 
 #region 引用命名
-using System;
 using System.Collections;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 #endregion
@@ -619,16 +616,55 @@ public class TableSchema
             return m;
 
         TableSchema ts;
-        if (At.AccessInfo.Type == AccessType.Service)
-            ts = await Kit.GetRequiredService<IModelCallback>().GetTableSchema(p_tblName);
+        if (p_tblName.StartsWith("sqlite:"))
+        {
+            var arr = p_tblName.Split(':');
+            if (arr.Length != 3)
+                Throw.Msg("sqlite表名不符合规范！形如 sqlite:db:tbl");
+            ts = await GetSqliteSchema(arr[1], arr[2]);
+        }
         else
-            ts = await At.GetTableSchema(p_tblName);
-        
+        {
+            if (At.AccessInfo.Type == AccessType.Service)
+                ts = await Kit.GetRequiredService<IModelCallback>().GetTableSchema(p_tblName);
+            else
+                ts = await At.GetTableSchema(p_tblName);
+        }
         if (ts == null)
             Throw.Msg($"未找到表 {p_tblName} 的结构信息！");
-        
+
         _models[p_tblName] = ts;
         return ts;
+    }
+
+    internal static async Task<TableSchema> GetSqliteSchema(string p_dbName, string p_tblName)
+    {
+        var da = At.GetAccessInfo(AccessType.Local, p_dbName).GetDa();
+        var tbl = await da.Query($"PRAGMA table_info({p_tblName});");
+
+        TableSchema schema = new TableSchema(p_tblName, DatabaseType.Sqlite, p_dbName);
+        foreach (var r in tbl)
+        {
+            TableCol col = new TableCol(schema);
+            col.Name = r.Str(1);
+            
+            var tp = r.Str(2).ToLower();
+            if (tp == "integer")
+                col.Type = typeof(int);
+            else if (tp == "real")
+                col.Type = typeof(double);
+            else if (tp == "blob")
+                col.Type = typeof(byte[]);
+            else
+                col.Type = typeof(string);
+
+            col.Nullable = !r.Bool(3);
+            if (r.Bool(5))
+                schema.PrimaryKey.Add(col);
+            else
+                schema.Columns.Add(col);
+        }
+        return schema;
     }
 #endif
     #endregion

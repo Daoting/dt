@@ -7,14 +7,10 @@
 #endregion
 
 #region 引用命名
-using System.Text.Json;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Buffers.Text;
-using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 #endregion
 
@@ -253,6 +249,23 @@ public static class JsonRpcSerializer
                     // 前缀'&'表示集合
                     if (tp.StartsWith("&"))
                         return DeserializeArray(ref p_reader, tp.Substring(1), p_tgtType);
+
+                    // 带表名时可自动反序列化为实体
+                    if (tp.StartsWith("/tbl:"))
+                    {
+                        if (p_tgtType != null)
+                            return DeserializeObject(ref p_reader, "tbl", p_tgtType);
+                        return DeserializeTable(ref p_reader, tp.Substring(5));
+                    }
+
+                    // 带表名时行
+                    if (tp.StartsWith("/row:"))
+                    {
+                        if (p_tgtType != null)
+                            return DeserializeObject(ref p_reader, "row", p_tgtType);
+                        return DeserializeRow(ref p_reader, tp.Substring(5));
+                    }
+                    
                     throw new Exception($"无法自动反序列化Json类型{tp}！");
                 }
 
@@ -429,6 +442,54 @@ public static class JsonRpcSerializer
             target.Add(Deserialize(ref p_reader, itemType));
         }
         return target;
+    }
+
+    static object DeserializeTable(ref Utf8JsonReader p_reader, string p_tblName)
+    {
+#if SERVER
+        Table tbl;
+        var tp = Silo.GetEntityType(p_tblName);
+        if (tp != null)
+        {
+            tbl = Activator.CreateInstance(typeof(Table<>).MakeGenericType(tp)) as Table;
+        }
+        else
+        {
+            tbl = new Table();
+            tbl.SetTblName(p_tblName);
+        }
+        ((IRpcJson)tbl).ReadRpcJson(ref p_reader);
+        return tbl;
+#else
+        var tbl = new Table();
+        tbl.SetTblName(p_tblName);
+        ((IRpcJson)tbl).ReadRpcJson(ref p_reader);
+        return tbl;
+#endif
+    }
+
+    static object DeserializeRow(ref Utf8JsonReader p_reader, string p_tblName)
+    {
+#if SERVER
+        Row row;
+        var tp = Silo.GetEntityType(p_tblName);
+        if (tp != null)
+        {
+            row = Activator.CreateInstance(tp) as Row;
+        }
+        else
+        {
+            row = new Row();
+            row.SetTblName(p_tblName);
+        }
+        ((IRpcJson)row).ReadRpcJson(ref p_reader);
+        return row;
+#else
+        var row = new Row();
+        row.SetTblName(p_tblName);
+        ((IRpcJson)row).ReadRpcJson(ref p_reader);
+        return row;
+#endif
     }
 
     [UnconditionalSuppressMessage("AOT", "IL3050")]

@@ -66,6 +66,7 @@ public partial class DemoMain : Win
             new Nav("实体基础", typeof(AccessDemo)) { Desc = "客户端实体、虚拟实体、父子实体的增删改查、缓存、领域事件等" },
             new Nav("Sqlite实体", typeof(SqliteAccessDemo)) { Desc = "Sqlite实体除了无缓存和无序列外，其余功能都包括"},
             new Nav("服务端实体", typeof(SvcAccessDemo)) { Desc = "服务端实体、虚拟实体、父子实体的增删改查、缓存、领域事件等" },
+            new Nav("服务端CRUD", typeof(SvcCrudDemo)) { Desc = "客户端传递Table Row Entity等数据，服务端提供通用的CRUD，Table Row需提供表名" },
             new Nav("直连数据库", typeof(DbAccessDemo)) { Desc = "客户端直连数据库进行实体增删改查，可切换不同库"},
         };
         group.Title = "基础";

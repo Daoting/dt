@@ -7,15 +7,10 @@
 #endregion
 
 #region 引用命名
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.Json;
 #endregion
@@ -63,11 +58,6 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
     #endregion
 
     #region 属性
-    /// <summary>
-    /// 是否只序列化需要增删改的行
-    /// </summary>
-    public bool SerializeChanged { get; set; }
-
     /// <summary>
     /// 数据表中所有行的所有单元格是否存在已被修改的情况
     /// </summary>
@@ -154,6 +144,11 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
     /// 获取设置用于存储与此对象相关的任意对象值
     /// </summary>
     public object Tag { get; set; }
+
+    /// <summary>
+    /// 是否只序列化需要增删改的行
+    /// </summary>
+    public bool OnlySerializeChanged { get; set; }
     #endregion
 
     #region 创建表结构
@@ -761,7 +756,7 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
 
     #region 记录集合变化
     List<Row> _lockedList;
-    
+
     /// <summary>
     /// 锁定当前集合，开始记录集合变化，包括新增行、删除行，新增行和Row.IsAdded状态无关，是锁定后添加到集合的行
     /// </summary>
@@ -769,7 +764,7 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
     {
         if (_lockedList != null)
             return;
-        
+
         _lockedList = this.ToList();
         CollectionChanged -= OnTblCollectionChanged;
         CollectionChanged += OnTblCollectionChanged;
@@ -783,7 +778,7 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
         CollectionChanged -= OnTblCollectionChanged;
         _lockedList = null;
     }
-    
+
     /// <summary>
     /// 获取已被删除的行列表枚举
     /// </summary>
@@ -927,11 +922,22 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
                 else
                 {
                     // 超出的列值为行状态
-                    string state = p_reader.GetString();
-                    if (state == "Added")
+                    var state = p_reader.GetInt32();
+                    if (state == 1)
+                    {
                         row.IsAdded = true;
-                    else if (state == "Modified")
+                    }
+                    else if (state == 2)
+                    {
                         row.IsChanged = true;
+                    }
+                    else if (state == 0)
+                    {
+                        // 删除行
+                        if (!IsLockedCollection)
+                            LockCollection();
+                        Remove(row);
+                    }
                 }
                 index++;
             }
@@ -947,8 +953,16 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
     void IRpcJson.WriteRpcJson(Utf8JsonWriter p_writer)
     {
         p_writer.WriteStartArray();
-        // 类型
-        p_writer.WriteStringValue("#tbl");
+        // 类型标志
+        var tblName = GetTblName();
+        if (string.IsNullOrEmpty(tblName))
+        {
+            p_writer.WriteStringValue("#tbl");
+        }
+        else
+        {
+            p_writer.WriteStringValue("/tbl:" + tblName);
+        }
 
         // 列
         p_writer.WriteStartArray();
@@ -964,20 +978,35 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
 
         // 行
         p_writer.WriteStartArray();
-        if (SerializeChanged)
+        if (OnlySerializeChanged)
         {
-            // 只序列化需要增加修改的行
+            // 只序列化需要增删改的行
             foreach (Row row in this)
             {
-                if (row.IsChanged)
-                    SerializeJsonRow(row, p_writer);
+                if (row.IsAdded)
+                    SerializeRowWithState(row, p_writer, 1);
+                else if (row.IsChanged)
+                    SerializeRowWithState(row, p_writer, 2);
+            }
+
+            // 包含删除行的情况
+            if (IsLockedCollection)
+            {
+                var ls = from row in DeletedRows
+                         where row != null && !row.IsAdded
+                         select row;
+                foreach (Row row in ls)
+                {
+                    SerializeRowWithState(row, p_writer, 0);
+                }
             }
         }
         else
         {
+            // 无表名、无行状态，只序列化数据
             foreach (Row row in this)
             {
-                SerializeJsonRow(row, p_writer);
+                SerializeRow(row, p_writer);
             }
         }
         p_writer.WriteEndArray();
@@ -985,17 +1014,22 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
         p_writer.WriteEndArray();
     }
 
-    /// <summary>
-    /// 序列化行数据
-    /// </summary>
-    /// <param name="p_dataRow"></param>
-    /// <param name="p_writer"></param>
-    void SerializeJsonRow(Row p_dataRow, Utf8JsonWriter p_writer)
+    void SerializeRow(Row p_dataRow, Utf8JsonWriter p_writer)
     {
         p_writer.WriteStartArray();
         foreach (var cell in p_dataRow.Cells)
         {
-            if (cell.IsChanged)
+            JsonRpcSerializer.Serialize(cell.Val, p_writer);
+        }
+        p_writer.WriteEndArray();
+    }
+
+    void SerializeRowWithState(Row p_dataRow, Utf8JsonWriter p_writer, int p_state)
+    {
+        p_writer.WriteStartArray();
+        foreach (var cell in p_dataRow.Cells)
+        {
+            if (p_state == 2 && cell.IsChanged)
             {
                 // 值变化时传递两值数组 [原始值,当前值]
                 p_writer.WriteStartArray();
@@ -1008,11 +1042,8 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
                 JsonRpcSerializer.Serialize(cell.Val, p_writer);
             }
         }
-        // 行状态，多出的列
-        if (p_dataRow.IsAdded)
-            p_writer.WriteStringValue("Added");
-        else if (p_dataRow.IsChanged)
-            p_writer.WriteStringValue("Modified");
+        // 行状态，多出的列，0:删除，1:新增，2:修改
+        p_writer.WriteNumberValue(p_state);
         p_writer.WriteEndArray();
     }
     #endregion

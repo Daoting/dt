@@ -243,7 +243,7 @@ public static class EntityEx
     {
         if (p_list == null || p_list.Count == 0)
             return false;
-        
+
 #if SERVER
         var ew = new EntityWriter(Kit.DataAccess);
 #else
@@ -288,18 +288,28 @@ public static class EntityEx
     {
         if (string.IsNullOrEmpty(p_tblName))
             Throw.Msg("表名不可为空！");
-        
+
         IDataAccess da;
-        var schema = await TableSchema.GetSchema(p_tblName);
-        if (At.AccessInfo.Type == AccessType.Service)
+        if (p_tblName.StartsWith("sqlite:"))
         {
-            // '服务名+数据源键名' 作为 IAccessInfo.Name，服务端以数据源键名键名为准构造DataAccess
-            da = At.GetAccessInfo(AccessType.Service, $"{At.OriginSvc}+{schema.DbKey}").GetDa();
+            var arr = p_tblName.Split(':');
+            if (arr.Length != 3)
+                Throw.Msg("sqlite表名不符合规范！形如 sqlite:db:tbl");
+            da = At.GetAccessInfo(AccessType.Local, arr[1]).GetDa();
         }
         else
         {
-            // 直连库时
-            da = At.AccessInfo.GetDa();
+            var schema = await TableSchema.GetSchema(p_tblName);
+            if (At.AccessInfo.Type == AccessType.Service)
+            {
+                // '服务名+数据源键名' 作为 IAccessInfo.Name，服务端以数据源键名键名为准构造DataAccess
+                da = At.GetAccessInfo(AccessType.Service, $"{At.OriginSvc}+{schema.DbKey}").GetDa();
+            }
+            else
+            {
+                // 直连库时
+                da = At.AccessInfo.GetDa();
+            }
         }
         return da;
     }
