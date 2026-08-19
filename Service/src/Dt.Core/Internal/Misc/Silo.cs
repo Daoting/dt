@@ -368,7 +368,7 @@ internal static class Silo
     {
         if (EntityDict.TryGetValue(p_tblName, out var type))
             return type;
-        throw new Exception($"表{p_tblName}不存在实体类型！");
+        return null;
     }
     #endregion
 }
