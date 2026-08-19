@@ -183,7 +183,6 @@ class EntityWriter : IEntityWriter
     }
 
     /// <summary>
-    /// 保存Table或 Table`1 中新增、修改、删除的待保存实体
     /// 为方便无法以泛型 Table`1 使用的情况，内部调用：Save`1(Table`1 p_tbl)，
     /// <para>添加Table中新增、修改、删除的待保存实体，最后由Commit统一提交</para>
     /// <para>删除行通过Table的 IsLockedCollection 判断获取</para>
@@ -193,54 +192,33 @@ class EntityWriter : IEntityWriter
     [UnconditionalSuppressMessage("AOT", "IL3050")]
     public async Task Save(Table p_tbl)
     {
-        if (p_tbl == null || p_tbl.Count == 0)
+        if (p_tbl == null || !p_tbl.GetType().IsGenericType)
             return;
 
-        if (p_tbl.GetType().IsGenericType)
-        {
-            // 泛型方法：Save<TEntity>(Table<TEntity> p_tbl)
-            var save = GetSaveGenericTblMethod();
+        // 泛型方法：Save<TEntity>(Table<TEntity> p_tbl)
+        var save = GetSaveGenericTblMethod();
 
-            // 构造泛型方法
-            var mi = save.MakeGenericMethod(p_tbl.GetType().GenericTypeArguments[0]);
+        // 构造泛型方法
+        var mi = save.MakeGenericMethod(p_tbl.GetType().GenericTypeArguments[0]);
 
-            // 调用Save<>方法
-            var task = (Task)mi.Invoke(this, new object[1] { p_tbl });
-            await task;
-        }
-        else
-        {
-            await SaveTableInternal(p_tbl);
-        }
+        // 调用Save<>方法
+        var task = (Task)mi.Invoke(this, new object[1] { p_tbl });
+        await task;
     }
 
     /// <summary>
-    /// 添加待保存的Row，最后由Commit统一提交，需要表名
+    /// 根据表名批量添加列表中新增、修改的待保存实体，最后由Commit统一提交
     /// </summary>
-    /// <param name="p_row"></param>
+    /// <param name="p_list"></param>
+    /// <param name="p_tblName">表名</param>
     /// <returns></returns>
-    public Task Save(Row p_row)
+    async Task SaveWithTblName(IList<Row> p_list, string p_tblName)
     {
-        if (p_row != null
-            && (p_row.IsAdded || p_row.IsChanged))
-        {
-            return SaveTableInternal(new List<Row> { p_row });
-        }
-        return Task.CompletedTask;
-    }
-    
-    async Task SaveTableInternal(IEnumerable<Row> p_list)
-    {
-        if (p_list == null)
+        if (p_list == null || p_list.Count == 0)
             return;
 
-        var first = p_list.FirstOrDefault();
-        string tblName;
-        // 没表名的无法保存
-        if (first == null || (tblName = first.GetTblName()) == null)
-            return;
-        
         // 提取并校验需要保存的实体
+        var first = p_list[0];
         var ls = new List<Row>();
         foreach (var item in p_list)
         {
@@ -252,7 +230,15 @@ class EntityWriter : IEntityWriter
         if (ls.Count == 0)
             return;
 
-        var model = await TableSchema.GetSchema(tblName);
+        TableSchema model;
+#if !SERVER
+        if (_da.AccessInfo.Type == AccessType.Local)
+            model = await TableSchema.GetSqliteSchema(_da.AccessInfo.Name, p_tblName);
+        else
+            model = await TableSchema.GetSchema(p_tblName);
+#else
+        model = await TableSchema.GetSchema(p_tblName);
+#endif
         var dts = model.GetSaveSql(ls);
         if (dts != null && dts.Count > 0)
         {
@@ -260,7 +246,7 @@ class EntityWriter : IEntityWriter
             _items.Add(ui);
         }
     }
-    
+
     /// <summary>
     /// 保存虚拟实体，批量保存时未将相同类型的实体形成列表统一生成sql！
     /// </summary>
@@ -320,11 +306,51 @@ class EntityWriter : IEntityWriter
     }
     #endregion
 
-    public Task SaveItems(List<SaveItem> p_datas)
+    #region 批量增删改
+    /// <summary>
+    /// 批量添加列表中所有需要新增、修改、删除的数据，最后由Commit统一提交
+    /// </summary>
+    /// <param name="p_datas"></param>
+    /// <returns></returns>
+    public async Task SaveItems(List<SaveItem> p_datas)
     {
-        
-        return Task.CompletedTask;
+        foreach (var item in p_datas)
+        {
+            if (item.Data is Table tbl)
+            {
+                if (tbl.GetType().IsGenericType)
+                {
+                    if (item.IsDeleted)
+                        await Delete(tbl);
+                    else
+                        await Save(tbl);
+                }
+                else if (item.IsDeleted)
+                {
+                    await DeleteWithTblName(tbl, item.Table);
+                }
+                else
+                {
+                    await SaveWithTblName(tbl, item.Table);
+                }
+            }
+            else if (item.Data is Entity en)
+            {
+                if (item.IsDeleted)
+                    await Delete(en);
+                else
+                    await Save(en);
+            }
+            else if (item.Data is Row row)
+            {
+                if (item.IsDeleted)
+                    await DeleteWithTblName(new List<Row> { row }, item.Table);
+                else
+                    await SaveWithTblName(new List<Row> { row }, item.Table);
+            }
+        }
     }
+    #endregion
     
     #region 删除
     /// <summary>
@@ -366,7 +392,7 @@ class EntityWriter : IEntityWriter
             || p_tbl.Count == 0
             || !p_tbl.GetType().IsGenericType)
             return;
-        
+
         // 泛型方法：Delete<TEntity>(Table<TEntity> p_tbl)
         var delete = GetDeleteGenericTblMethod();
 
@@ -377,7 +403,7 @@ class EntityWriter : IEntityWriter
         var task = (Task)mi.Invoke(this, new object[1] { p_tbl });
         await task;
     }
-    
+
     /// <summary>
     /// 批量添加待删除的实体，最后由Commit统一提交
     /// </summary>
@@ -466,6 +492,32 @@ class EntityWriter : IEntityWriter
 
         if (ls.Count > 0)
             await Delete(ls);
+    }
+
+    /// <summary>
+    /// 批量添加待删除的行数据，最后由Commit统一提交
+    /// </summary>
+    /// <param name="p_list"></param>
+    /// <param name="p_tblName">表名</param>
+    /// <returns></returns>
+    async Task DeleteWithTblName(IList<Row> p_list, string p_tblName)
+    {
+        if (p_list == null || p_list.Count == 0)
+            return;
+
+        TableSchema model;
+#if !SERVER
+        if (_da.AccessInfo.Type == AccessType.Local)
+            model = await TableSchema.GetSqliteSchema(_da.AccessInfo.Name, p_tblName);
+        else
+            model = await TableSchema.GetSchema(p_tblName);
+#else
+        model = await TableSchema.GetSchema(p_tblName);
+#endif
+        var dt = model.GetDeleteSql(p_list);
+        var ui = new UnitItem((IList)p_list, new List<Dict> { dt });
+        ui.IsDelete = true;
+        _items.Add(ui);
     }
 
     /// <summary>
@@ -601,7 +653,7 @@ class EntityWriter : IEntityWriter
         // 将当前正在保存的Table状态复位
         if (_curTbls.Count > 0)
         {
-            foreach (var tbl in  _curTbls)
+            foreach (var tbl in _curTbls)
             {
                 if (tbl.IsChanged || tbl.IsDirty)
                     tbl.AcceptChanges();
