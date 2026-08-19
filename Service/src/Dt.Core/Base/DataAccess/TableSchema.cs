@@ -616,20 +616,11 @@ public class TableSchema
             return m;
 
         TableSchema ts;
-        if (p_tblName.StartsWith("sqlite:"))
-        {
-            var arr = p_tblName.Split(':');
-            if (arr.Length != 3)
-                Throw.Msg("sqlite表名不符合规范！形如 sqlite:db:tbl");
-            ts = await GetSqliteSchema(arr[1], arr[2]);
-        }
+        if (At.AccessInfo.Type == AccessType.Service)
+            ts = await Kit.GetRequiredService<IModelCallback>().GetTableSchema(p_tblName);
         else
-        {
-            if (At.AccessInfo.Type == AccessType.Service)
-                ts = await Kit.GetRequiredService<IModelCallback>().GetTableSchema(p_tblName);
-            else
-                ts = await At.GetTableSchema(p_tblName);
-        }
+            ts = await At.GetTableSchema(p_tblName);
+
         if (ts == null)
             Throw.Msg($"未找到表 {p_tblName} 的结构信息！");
 
@@ -637,8 +628,12 @@ public class TableSchema
         return ts;
     }
 
-    internal static async Task<TableSchema> GetSqliteSchema(string p_dbName, string p_tblName)
+    public static async Task<TableSchema> GetSqliteSchema(string p_dbName, string p_tblName)
     {
+        var key = $"{p_dbName}:{p_tblName}";
+        if (_models.TryGetValue(key, out var m))
+            return m;
+        
         var da = At.GetAccessInfo(AccessType.Local, p_dbName).GetDa();
         var tbl = await da.Query($"PRAGMA table_info({p_tblName});");
 
@@ -664,6 +659,7 @@ public class TableSchema
             else
                 schema.Columns.Add(col);
         }
+        _models[key] = schema;
         return schema;
     }
 #endif
