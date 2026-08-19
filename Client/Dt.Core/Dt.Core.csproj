@@ -13,6 +13,7 @@
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Row.cs" Link="Base\Collection\Table\Row.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Table.cs" Link="Base\Collection\Table\Table.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Table`1.cs" Link="Base\Collection\Table\Table`1.cs" />
+        <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\SaveItem.cs" Link="Base\Collection\Table\SaveItem.cs" />
 		<Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\Entity.cs" Link="Base\Domain\Entity\Entity.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\EntityEx.cs" Link="Base\Domain\Entity\EntityEx.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Entity\EntityView.cs" Link="Base\Domain\Entity\EntityView.cs" />

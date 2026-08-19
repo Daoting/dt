@@ -163,29 +163,29 @@ class SvcAccess : IDataAccess
         ).Call<int>();
     }
 
-    public Task<bool> Save(List<object> p_datas)
+    public Task<bool> Save(List<SaveItem> p_datas)
     {
         // 整理待保存的数据
-        List<object> datas = new List<object>();
-        foreach (var item in p_datas)
-        {
-            if (item is Table table
-                && !string.IsNullOrEmpty(table.GetTblName()))
-            {
-                table.OnlySerializeChanged = true;
-                datas.Add(item);
-            }
-            else if (item is Row row
-                && (row.IsAdded || row.IsChanged))
-            {
-                datas.Add(item);
-            }
-        }
+        //List<object> datas = new List<object>();
+        //foreach (var item in p_datas)
+        //{
+        //    if (item is Table table
+        //        && !string.IsNullOrEmpty(table.GetTblName()))
+        //    {
+        //        table.OnlySerializeChanged = true;
+        //        datas.Add(item);
+        //    }
+        //    else if (item is Row row
+        //        && (row.IsAdded || row.IsChanged))
+        //    {
+        //        datas.Add(item);
+        //    }
+        //}
 
         return new UnaryRpc(
             _ai.Name,
             "Da.Save",
-            datas
+            p_datas
         ).Call<bool>();
     }
     #endregion

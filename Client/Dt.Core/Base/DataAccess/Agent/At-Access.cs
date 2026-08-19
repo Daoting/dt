@@ -189,35 +189,25 @@ public static partial class At
 
     /// <summary>
     /// 一个事务内批量保存列表中所有需要新增、修改、删除的数据
-    /// <para>1. 列表项只支持：有表名的Table、有表名的Row、Entity、Table{TEntity}</para>
+    /// <para>1. SaveItem项中的Data只支持：有表名的Table、有表名的Row、Entity、Table{TEntity}</para>
     /// <para>2. Entity、Table{TEntity}支持实体的各种回调和领域事件</para>
     /// <para>3. 反序列化时根据表名确定是否有对应Entity，没有时按Row、Table处理</para>
     /// </summary>
-    /// <param name="p_datas">Entity、Table{TEntity}、Row、Table类型的对象列表</param>
+    /// <param name="p_datas">保存项列表</param>
     /// <returns>是否成功</returns>
-    public static Task<bool> Save(List<object> p_datas)
+    public static Task<bool> Save(List<SaveItem> p_datas)
     {
         return _currentAI.GetDa().Save(p_datas);
     }
 
     /// <summary>
-    /// 一个事务内批量保存Table中新增、修改、删除的数据
+    /// 一个事务内批量保存需要新增、修改、删除的数据
     /// </summary>
-    /// <param name="p_tbl">Table{TEntity} 或 有表名的Table</param>
+    /// <param name="p_item">保存项，Table{TEntity} Entity 或 有表名的Table Row</param>
     /// <returns>是否成功</returns>
-    public static Task<bool> Save(Table p_tbl)
+    public static Task<bool> Save(SaveItem p_item)
     {
-        return _currentAI.GetDa().Save(new List<object> { p_tbl });
-    }
-
-    /// <summary>
-    /// 保存Row或Entity数据
-    /// </summary>
-    /// <param name="p_row">Entity 或 有表名的Row对象</param>
-    /// <returns>是否成功</returns>
-    public static Task<bool> Save(Row p_row)
-    {
-        return _currentAI.GetDa().Save(new List<object> { p_row });
+        return _currentAI.GetDa().Save(new List<SaveItem> { p_item });
     }
     #endregion
 

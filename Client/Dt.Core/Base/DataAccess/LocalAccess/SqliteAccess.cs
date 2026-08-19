@@ -158,20 +158,10 @@ class SqliteAccess : IDataAccess
         return await db.BatchExec(p_dts);
     }
 
-    public async Task<bool> Save(List<object> p_datas)
+    public async Task<bool> Save(List<SaveItem> p_datas)
     {
         var w = new EntityWriter(this);
-        foreach (var item in p_datas)
-        {
-            if (item is Table table)
-                await w.Save(table);
-            else if (item is Entity entity)
-                await w.Save(entity);
-            else if (item is Row row)
-                await w.Save(row);
-            else
-                throw new Exception($"无法保存不支持的类型：{item.GetType().FullName}");
-        }
+        await w.SaveItems(p_datas);
         return await w.Commit();
     }
     #endregion

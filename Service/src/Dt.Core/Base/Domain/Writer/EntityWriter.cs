@@ -320,6 +320,12 @@ class EntityWriter : IEntityWriter
     }
     #endregion
 
+    public Task SaveItems(List<SaveItem> p_datas)
+    {
+        
+        return Task.CompletedTask;
+    }
+    
     #region 删除
     /// <summary>
     /// 添加待删除的实体，最后由Commit统一提交

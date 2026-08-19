@@ -109,13 +109,13 @@ public class Da : RpcApi
 
     /// <summary>
     /// 一个事务内批量保存列表中所有需要新增、修改、删除的数据
-    /// <para>1. 列表项只支持：有表名的Table、有表名的Row、Entity、Table{TEntity}</para>
+    /// <para>1. SaveItem项中的Data只支持：有表名的Table、有表名的Row、Entity、Table{TEntity}</para>
     /// <para>2. Entity、Table{TEntity}支持实体的各种回调和领域事件</para>
     /// <para>3. 反序列化时根据表名确定是否有对应Entity，没有时按Row、Table处理</para>
     /// </summary>
-    /// <param name="p_datas">Entity、Table{TEntity}、Row、Table类型的对象列表</param>
+    /// <param name="p_datas">保存项列表</param>
     /// <returns>是否成功</returns>
-    public Task<bool> Save(List<object> p_datas)
+    public Task<bool> Save(List<SaveItem> p_datas)
     {
         return _da.Save(p_datas);
     }
