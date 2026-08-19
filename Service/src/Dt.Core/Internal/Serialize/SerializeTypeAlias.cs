@@ -30,6 +30,7 @@ internal static class SerializeTypeAlias
         _typeCache["tbl"] = typeof(Table);
         _typeCache["row"] = typeof(Row);
         _typeCache["dict"] = typeof(Dict);
+        _typeCache["si"] = typeof(SaveItem);
         _typeCache["ss"] = typeof(List<string>);
         _typeCache["bs"] = typeof(List<bool>);
         _typeCache["is"] = typeof(List<int>);
@@ -39,6 +40,7 @@ internal static class SerializeTypeAlias
         _typeCache["objs"] = typeof(List<object>);
         _typeCache["tbls"] = typeof(List<Table>);
         _typeCache["dicts"] = typeof(List<Dict>);
+        _typeCache["sis"] = typeof(List<SaveItem>);
         // 客户端UWP Release版无法反序列化，因Native无法调用ToArray方法！！！
         //_typeCache["objarr"] = typeof(object[]);
         _typeCache["msg"] = typeof(MsgInfo);

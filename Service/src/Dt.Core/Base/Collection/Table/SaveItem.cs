@@ -4,18 +4,18 @@ namespace Dt.Core;
 
 public class SaveItem
 {
-    string _tblName;
+    string _tbl;
     object _data;
     
     /// <summary>
     /// 表名，实体类型的Table{} Entity不需要设置表名
     /// </summary>
-    public string TableName
+    public string Table
     {
         get
         {
-            if (!string.IsNullOrEmpty(TableName))
-                return _tblName;
+            if (!string.IsNullOrEmpty(_tbl))
+                return _tbl;
 
             // 实体类型不需要设置表名
             if (_data is Table tbl && tbl.GetType().IsGenericType)
@@ -31,7 +31,7 @@ public class SaveItem
             }
             return null;
         }
-        set { _tblName = value; }
+        set { _tbl = value; }
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ public class SaveItem
         set
         {
             if (value == null
-                || (value is not Table && value is not Row))
+                || (value is not Core.Table && value is not Row))
                 Throw.Msg("待保存的数据类型必须为 Table 或 Row！");
             _data = value;
         }
