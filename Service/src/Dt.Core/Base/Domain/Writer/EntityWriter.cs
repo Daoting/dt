@@ -79,20 +79,6 @@ class EntityWriter : IEntityWriter
                 _curTbls.Add(p_tbl);
             }
         }
-
-        if (p_tbl.IsLockedCollection)
-        {
-            // 包含删除行的情况
-            var ls = (from row in p_tbl.DeletedRows
-                      let en = row as TEntity
-                      where en != null && !en.IsAdded
-                      select en).ToList();
-            if (ls.Count > 0)
-            {
-                await Delete(ls);
-                _curTbls.Add(p_tbl);
-            }
-        }
     }
 
     /// <summary>
