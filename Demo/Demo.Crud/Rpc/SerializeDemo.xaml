@@ -95,6 +95,20 @@
             <Button Content="发多表列表" Click="SetTableList" />
         </StackPanel>
 
+        <a:CBar Title="SaveItem类型" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回Table的SaveItem" Click="GetTableSaveItem" />
+            <Button Content="发送Table的SaveItem" Click="SetTableSaveItem" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回Row的SaveItem" Click="GetRowSaveItem" />
+            <Button Content="发送Row的SaveItem" Click="SetRowSaveItem" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回SaveItem列表" Click="GetSaveItems" />
+            <Button Content="发送SaveItem列表" Click="SetSaveItems" />
+        </StackPanel>
+
         <a:CBar Title="Dict类型" />
         <Button Content="返回基本类型Dict" Click="GetBaseDict" />
         <Button Content="返回复杂类型Dict" Click="GetCombineDict" />

@@ -143,11 +143,6 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
     /// 获取设置用于存储与此对象相关的任意对象值
     /// </summary>
     public object Tag { get; set; }
-
-    /// <summary>
-    /// 是否只序列化需要增删改的行
-    /// </summary>
-    public bool OnlySerializeChanged { get; set; }
     #endregion
 
     #region 创建表结构
@@ -807,9 +802,6 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
     #endregion
 
     #region IRpcJson
-    /// <summary>
-    /// 反序列化读取Rpc Json数据
-    /// </summary>
     void IRpcJson.ReadRpcJson(ref Utf8JsonReader p_reader)
     {
         // Entity类型
@@ -912,13 +904,6 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
                     {
                         row.IsChanged = true;
                     }
-                    else if (state == 0)
-                    {
-                        // 删除行
-                        if (!IsLockedCollection)
-                            LockCollection();
-                        Remove(row);
-                    }
                 }
                 index++;
             }
@@ -928,10 +913,17 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
         p_reader.Read();
     }
 
-    /// <summary>
-    /// 将对象按照Rpc Json数据结构进行序列化
-    /// </summary>
     void IRpcJson.WriteRpcJson(Utf8JsonWriter p_writer)
+    {
+        WriteRpcJsonInternal(p_writer, null);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="p_writer"></param>
+    /// <param name="p_saveItem">删除时只序列化非新增的行，否则只序列化新增、修改的行</param>
+    internal void WriteRpcJsonInternal(Utf8JsonWriter p_writer, SaveItem p_saveItem)
     {
         p_writer.WriteStartArray();
         // 类型标志
@@ -951,32 +943,32 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
 
         // 行
         p_writer.WriteStartArray();
-        if (OnlySerializeChanged)
+        if (p_saveItem != null)
         {
-            // 只序列化需要增删改的行
-            foreach (Row row in this)
+            if (p_saveItem.IsDeleted)
             {
-                if (row.IsAdded)
-                    SerializeRowWithState(row, p_writer, 1);
-                else if (row.IsChanged)
-                    SerializeRowWithState(row, p_writer, 2);
-            }
-
-            // 包含删除行的情况
-            if (IsLockedCollection)
-            {
-                var ls = from row in DeletedRows
-                         where row != null && !row.IsAdded
-                         select row;
-                foreach (Row row in ls)
+                // 删除时只序列化非新增的行
+                foreach (Row row in this)
                 {
-                    SerializeRowWithState(row, p_writer, 0);
+                    if (!row.IsAdded)
+                        SerializeRow(row, p_writer);
+                }
+            }
+            else
+            {
+                // 只序列化需要增加、修改的行
+                foreach (Row row in this)
+                {
+                    if (row.IsAdded)
+                        SerializeRowWithState(row, p_writer, 1);
+                    else if (row.IsChanged)
+                        SerializeRowWithState(row, p_writer, 2);
                 }
             }
         }
         else
         {
-            // 无表名、无行状态，只序列化数据
+            // 无行状态，只序列化数据
             foreach (Row row in this)
             {
                 SerializeRow(row, p_writer);
@@ -1015,7 +1007,7 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
                 JsonRpcSerializer.Serialize(cell.Val, p_writer);
             }
         }
-        // 行状态，多出的列，0:删除，1:新增，2:修改
+        // 行状态，多出的列，1:新增，2:修改
         p_writer.WriteNumberValue(p_state);
         p_writer.WriteEndArray();
     }

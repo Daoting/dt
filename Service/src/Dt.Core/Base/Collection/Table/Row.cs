@@ -805,12 +805,12 @@ public partial class Row : INotifyPropertyChanged, IRpcJson, IEnumerable
             // 可能为状态或 {
             p_reader.Read();
             // 状态
-            if (p_reader.TokenType == JsonTokenType.String)
+            if (p_reader.TokenType == JsonTokenType.Number)
             {
-                string state = p_reader.GetString();
-                if (state == "Added")
+                var state = p_reader.GetInt32();
+                if (state == 1)
                     IsAdded = true;
-                else if (state == "Modified")
+                else if (state == 2)
                     IsChanged = true;
                 // {
                 p_reader.Read();
@@ -890,17 +890,55 @@ public partial class Row : INotifyPropertyChanged, IRpcJson, IEnumerable
         p_writer.WriteStartArray();
         p_writer.WriteStringValue("#row");
 
+        p_writer.WriteStartObject();
+        foreach (var cell in _cells)
+        {
+            p_writer.WritePropertyName(cell.ID);
+            if (cell.Type == typeof(string))
+            {
+                // string类型
+                p_writer.WriteStringValue((string)cell.Val);
+            }
+            else
+            {
+                // 非string类型，["类型", "当前值"]
+                p_writer.WriteStartArray();
+                p_writer.WriteStringValue(Table.GetColTypeAlias(cell.Type));
+                JsonRpcSerializer.Serialize(cell.Val, p_writer);
+                p_writer.WriteEndArray();
+            }
+        }
+        p_writer.WriteEndObject();
+
+        p_writer.WriteEndArray();
+    }
+
+    internal void WriteSaveItemJson(Utf8JsonWriter p_writer, SaveItem p_saveItem)
+    {
+        if (p_saveItem == null)
+            return;
+
+        // 删除时按标准序列化
+        if (p_saveItem.IsDeleted)
+        {
+            ((IRpcJson)this).WriteRpcJson(p_writer);
+            return;
+        }
+
+        p_writer.WriteStartArray();
+        p_writer.WriteStringValue("#row");
+
         // 行状态
         if (IsAdded)
-            p_writer.WriteStringValue("Added");
+            p_writer.WriteNumberValue(1);
         else if (IsChanged)
-            p_writer.WriteStringValue("Modified");
+            p_writer.WriteNumberValue(2);
 
         p_writer.WriteStartObject();
         foreach (var cell in _cells)
         {
             p_writer.WritePropertyName(cell.ID);
-            if (cell.IsChanged)
+            if (!IsAdded && cell.IsChanged)
             {
                 // 值变化时传递完整信息 ["类型", "当前值", "原始值"]
                 p_writer.WriteStartArray();

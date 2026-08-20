@@ -17,6 +17,14 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<string> GetStringAsync()
+    {
+        return Kit.Rpc<string>(
+            "cm",
+            "TestSerialize.GetStringAsync"
+        );
+    }
+
     /// <summary>
     /// 字符串参数
     /// </summary>
@@ -39,6 +47,14 @@ public partial class AtTestCm
         return Kit.Rpc<bool>(
             "cm",
             "TestSerialize.GetBool"
+        );
+    }
+
+    public static Task<bool> GetBoolAsync()
+    {
+        return Kit.Rpc<bool>(
+            "cm",
+            "TestSerialize.GetBoolAsync"
         );
     }
 
@@ -67,6 +83,14 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<int> GetIntAsync()
+    {
+        return Kit.Rpc<int>(
+            "cm",
+            "TestSerialize.GetIntAsync"
+        );
+    }
+
     /// <summary>
     /// int参数
     /// </summary>
@@ -89,6 +113,14 @@ public partial class AtTestCm
         return Kit.Rpc<long>(
             "cm",
             "TestSerialize.GetLong"
+        );
+    }
+
+    public static Task<long> GetLongAsync()
+    {
+        return Kit.Rpc<long>(
+            "cm",
+            "TestSerialize.GetLongAsync"
         );
     }
 
@@ -117,6 +149,14 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<double> GetDoubleAsync()
+    {
+        return Kit.Rpc<double>(
+            "cm",
+            "TestSerialize.GetDoubleAsync"
+        );
+    }
+
     /// <summary>
     /// double参数
     /// </summary>
@@ -139,6 +179,14 @@ public partial class AtTestCm
         return Kit.Rpc<DateTime>(
             "cm",
             "TestSerialize.GetDateTime"
+        );
+    }
+
+    public static Task<DateTime> GetDateTimeAsync()
+    {
+        return Kit.Rpc<DateTime>(
+            "cm",
+            "TestSerialize.GetDateTimeAsync"
         );
     }
 
@@ -167,6 +215,14 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<byte[]> GetByteArrayAsync()
+    {
+        return Kit.Rpc<byte[]>(
+            "cm",
+            "TestSerialize.GetByteArrayAsync"
+        );
+    }
+
     /// <summary>
     /// byte[]参数
     /// </summary>
@@ -189,6 +245,14 @@ public partial class AtTestCm
         return Kit.Rpc<MsgInfo>(
             "cm",
             "TestSerialize.GetMsgInfo"
+        );
+    }
+
+    public static Task<MsgInfo> GetMsgInfoAsync()
+    {
+        return Kit.Rpc<MsgInfo>(
+            "cm",
+            "TestSerialize.GetMsgInfoAsync"
         );
     }
 
@@ -217,6 +281,14 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<List<string>> GetStringListAsync()
+    {
+        return Kit.Rpc<List<string>>(
+            "cm",
+            "TestSerialize.GetStringListAsync"
+        );
+    }
+
     /// <summary>
     /// 字符串列表
     /// </summary>
@@ -239,6 +311,14 @@ public partial class AtTestCm
         return Kit.Rpc<List<bool>>(
             "cm",
             "TestSerialize.GetBoolList"
+        );
+    }
+
+    public static Task<List<bool>> GetBoolListAsync()
+    {
+        return Kit.Rpc<List<bool>>(
+            "cm",
+            "TestSerialize.GetBoolListAsync"
         );
     }
 
@@ -267,6 +347,14 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<List<int>> GetIntListAsync()
+    {
+        return Kit.Rpc<List<int>>(
+            "cm",
+            "TestSerialize.GetIntListAsync"
+        );
+    }
+
     /// <summary>
     /// int列表
     /// </summary>
@@ -289,6 +377,14 @@ public partial class AtTestCm
         return Kit.Rpc<List<long>>(
             "cm",
             "TestSerialize.GetLongList"
+        );
+    }
+
+    public static Task<List<long>> GetLongListAsync()
+    {
+        return Kit.Rpc<List<long>>(
+            "cm",
+            "TestSerialize.GetLongListAsync"
         );
     }
 
@@ -317,6 +413,14 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<List<double>> GetDoubleListAsync()
+    {
+        return Kit.Rpc<List<double>>(
+            "cm",
+            "TestSerialize.GetDoubleListAsync"
+        );
+    }
+
     /// <summary>
     /// double列表
     /// </summary>
@@ -339,6 +443,14 @@ public partial class AtTestCm
         return Kit.Rpc<List<DateTime>>(
             "cm",
             "TestSerialize.GetDateTimeList"
+        );
+    }
+
+    public static Task<List<DateTime>> GetDateTimeListAsync()
+    {
+        return Kit.Rpc<List<DateTime>>(
+            "cm",
+            "TestSerialize.GetDateTimeListAsync"
         );
     }
 
@@ -368,6 +480,14 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<List<object>> GetObjectListAsync()
+    {
+        return Kit.Rpc<List<object>>(
+            "cm",
+            "TestSerialize.GetObjectListAsync"
+        );
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -394,6 +514,14 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<Table> GetTableAsync()
+    {
+        return Kit.Rpc<Table>(
+            "cm",
+            "TestSerialize.GetTableAsync"
+        );
+    }
+
     /// <summary>
     /// 由外部传递Table
     /// </summary>
@@ -417,6 +545,15 @@ public partial class AtTestCm
         return Kit.Rpc<T>(
             "cm",
             "TestSerialize.GetRow"
+        );
+    }
+
+    public static Task<T> GetRowAsync<T>()
+        where T : Row
+    {
+        return Kit.Rpc<T>(
+            "cm",
+            "TestSerialize.GetRowAsync"
         );
     }
 
@@ -482,6 +619,14 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<Dict> GetTableDictAsync()
+    {
+        return Kit.Rpc<Dict>(
+            "cm",
+            "TestSerialize.GetTableDictAsync"
+        );
+    }
+
     /// <summary>
     /// 由外部传递多个Table
     /// </summary>
@@ -507,6 +652,14 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<List<Table>> GetTableListAsync()
+    {
+        return Kit.Rpc<List<Table>>(
+            "cm",
+            "TestSerialize.GetTableListAsync"
+        );
+    }
+
     /// <summary>
     /// 由外部传递多个Table
     /// </summary>
@@ -520,6 +673,57 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<SaveItem> GetTableSaveItem()
+    {
+        return Kit.Rpc<SaveItem>(
+            "cm",
+            "TestSerialize.GetTableSaveItem"
+        );
+    }
+
+    public static Task<SaveItem> SetTableSaveItem(SaveItem p_si)
+    {
+        return Kit.Rpc<SaveItem>(
+            "cm",
+            "TestSerialize.SetTableSaveItem",
+            p_si
+        );
+    }
+
+    public static Task<SaveItem> GetRowSaveItem()
+    {
+        return Kit.Rpc<SaveItem>(
+            "cm",
+            "TestSerialize.GetRowSaveItem"
+        );
+    }
+
+    public static Task<SaveItem> SetRowSaveItem(SaveItem p_si)
+    {
+        return Kit.Rpc<SaveItem>(
+            "cm",
+            "TestSerialize.SetRowSaveItem",
+            p_si
+        );
+    }
+
+    public static Task<List<SaveItem>> GetSaveItems()
+    {
+        return Kit.Rpc<List<SaveItem>>(
+            "cm",
+            "TestSerialize.GetSaveItems"
+        );
+    }
+
+    public static Task<List<SaveItem>> SetSaveItems(List<SaveItem> p_sis)
+    {
+        return Kit.Rpc<List<SaveItem>>(
+            "cm",
+            "TestSerialize.SetSaveItems",
+            p_sis
+        );
+    }
+
     /// <summary>
     /// 返回基本数据类型的Dict
     /// </summary>
@@ -529,6 +733,14 @@ public partial class AtTestCm
         return Kit.Rpc<Dict>(
             "cm",
             "TestSerialize.GetBaseDict"
+        );
+    }
+
+    public static Task<Dict> GetBaseDictAsync()
+    {
+        return Kit.Rpc<Dict>(
+            "cm",
+            "TestSerialize.GetBaseDictAsync"
         );
     }
 
@@ -569,6 +781,14 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<List<Dict>> GetDictListAsync()
+    {
+        return Kit.Rpc<List<Dict>>(
+            "cm",
+            "TestSerialize.GetDictListAsync"
+        );
+    }
+
     /// <summary>
     /// 发送Dict列表
     /// </summary>
@@ -592,6 +812,15 @@ public partial class AtTestCm
         return Kit.Rpc<T>(
             "cm",
             "TestSerialize.GetCustomBase"
+        );
+    }
+
+    public static Task<T> GetCustomBaseAsync<T>()
+        where T : class
+    {
+        return Kit.Rpc<T>(
+            "cm",
+            "TestSerialize.GetCustomBaseAsync"
         );
     }
 
@@ -622,6 +851,15 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<List<T>> GetCustomListAsync<T>()
+        where T : class
+    {
+        return Kit.Rpc<List<T>>(
+            "cm",
+            "TestSerialize.GetCustomListAsync"
+        );
+    }
+
     /// <summary>
     /// 由外部传递自定义对象列表
     /// </summary>
@@ -649,6 +887,15 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<T> GetCustomCombineAsync<T>()
+        where T : class
+    {
+        return Kit.Rpc<T>(
+            "cm",
+            "TestSerialize.GetCustomCombineAsync"
+        );
+    }
+
     /// <summary>
     /// 由外部传递复杂自定义类型
     /// </summary>
@@ -673,6 +920,15 @@ public partial class AtTestCm
         return Kit.Rpc<T>(
             "cm",
             "TestSerialize.GetContainCustom"
+        );
+    }
+
+    public static Task<T> GetContainCustomAsync<T>()
+        where T : class
+    {
+        return Kit.Rpc<T>(
+            "cm",
+            "TestSerialize.GetContainCustomAsync"
         );
     }
 

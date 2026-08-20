@@ -740,6 +740,140 @@ public partial class SerializeDemo : Win
         tbl[0].Col1 = "当前值";
         return tbl;
     }
+
+    async void GetTableSaveItem(object sender, RoutedEventArgs e)
+    {
+        var si = await AtTestCm.GetTableSaveItem();
+        _tbInfo.Text = si != null ? "调用成功：\r\n" + GetSaveItemInfo(si) : "调用失败！";
+    }
+
+    async void SetTableSaveItem(object sender, RoutedEventArgs e)
+    {
+        var si = new SaveItem
+        {
+            Table = "tbl_client",
+            Data = CreateTable(),
+        };
+
+        si = await AtTestCm.SetTableSaveItem(si);
+        _tbInfo.Text = si != null ? "调用成功：\r\n" + GetSaveItemInfo(si) : "调用失败！";
+    }
+
+    async void GetRowSaveItem(object sender, RoutedEventArgs e)
+    {
+        var si = await AtTestCm.GetRowSaveItem();
+        _tbInfo.Text = si != null ? "调用成功：\r\n" + GetSaveItemInfo(si) : "调用失败！";
+    }
+
+    async void SetRowSaveItem(object sender, RoutedEventArgs e)
+    {
+        var si = new SaveItem
+        {
+            Table = "tbl_client",
+            Data = CreateTable()[0],
+        };
+
+        si = await AtTestCm.SetRowSaveItem(si);
+        _tbInfo.Text = si != null ? "调用成功：\r\n" + GetSaveItemInfo(si) : "调用失败！";
+    }
+
+    async void GetSaveItems(object sender, RoutedEventArgs e)
+    {
+        var sis = await AtTestCm.GetSaveItems();
+        if (sis == null || sis.Count == 0)
+        {
+            _tbInfo.Text = "调用失败！";
+            return;
+        }
+
+        var msg = "调用成功：\r\n";
+        foreach (var si in sis)
+        {
+            msg += "\r\n";
+            msg += GetSaveItemInfo(si);
+            msg += "\r\n";
+        }
+        _tbInfo.Text = msg;
+    }
+
+    async void SetSaveItems(object sender, RoutedEventArgs e)
+    {
+        var ls = new List<SaveItem>
+        {
+            new SaveItem
+            {
+                Table = "tbl_1",
+                Data = CreateTable(),
+            },
+            new SaveItem
+            {
+                Table = "tbl_2",
+                IsDeleted = true,
+                Data = CreateTable(),
+            },
+            new SaveItem
+            {
+                Table = "tbl_3",
+                Data = CreateTable()[0],
+            },
+            new SaveItem
+            {
+                Table = "tbl_4",
+                IsDeleted = true,
+                Data = CreateTable()[0],
+            }
+        };
+
+        var si = new SaveItem
+        {
+            Table = "tbl_5",
+            IsDeleted = true,
+        };
+        var r = CreateTable()[0];
+        r.IsAdded = false;
+        si.Data = r;
+        ls.Add(si);
+        
+        var sis = await AtTestCm.SetSaveItems(ls);
+        if (sis == null || sis.Count == 0)
+        {
+            _tbInfo.Text = "调用失败！";
+            return;
+        }
+
+        var msg = "调用成功：\r\n";
+        foreach (var item in sis)
+        {
+            msg += "\r\n";
+            msg += GetSaveItemInfo(item);
+            msg += "\r\n";
+        }
+        _tbInfo.Text = msg;
+    }
+
+    string GetSaveItemInfo(SaveItem si)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine("表名：" + si.Table);
+        sb.AppendLine("IsDelete：" + si.IsDeleted);
+        if (si.Data is Table tbl)
+        {
+            foreach (var row in tbl)
+            {
+                sb.Append($"IsAdded:{row.IsAdded}  IsChanged:{row.IsChanged}    ");
+                foreach (var cell in row.Cells)
+                {
+                    sb.AppendFormat("{0}：{1}    ", cell.ID, cell.Val);
+                }
+                sb.AppendLine();
+            }
+        }
+        else if (si.Data is Row row)
+        {
+            sb.Append($"IsAdded:{row.IsAdded}  IsChanged:{row.IsChanged}");
+        }
+        return sb.ToString();
+    }
 }
 
 public class Product

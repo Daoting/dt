@@ -589,6 +589,81 @@ public class TestSerialize : RpcApi
     }
     #endregion
 
+    #region SaveItem
+    public SaveItem GetTableSaveItem()
+    {
+        return new SaveItem
+        {
+            Table = "test_tbl_name",
+            Data = CreateTable(),
+        };
+    }
+
+    public SaveItem SetTableSaveItem(SaveItem p_si)
+    {
+        return p_si;
+    }
+
+    public SaveItem GetRowSaveItem()
+    {
+        return new SaveItem
+        {
+            Table = "test_tbl_name",
+            Data = CreateTable()[0],
+        };
+    }
+
+    public SaveItem SetRowSaveItem(SaveItem p_si)
+    {
+        return p_si;
+    }
+
+    public List<SaveItem> GetSaveItems()
+    {
+        var ls = new List<SaveItem>
+        {
+            new SaveItem
+            {
+                Table = "tbl_1",
+                Data = CreateTable(),
+            },
+            new SaveItem
+            {
+                Table = "tbl_2",
+                IsDeleted = true,
+                Data = CreateTable(),
+            },
+            new SaveItem
+            {
+                Table = "tbl_3",
+                Data = CreateTable()[0],
+            },
+            new SaveItem
+            {
+                Table = "tbl_4",
+                IsDeleted = true,
+                Data = CreateTable()[0],
+            }
+        };
+
+        var si = new SaveItem
+        {
+            Table = "tbl_5",
+            IsDeleted = true,
+        };
+        var r = CreateTable()[0];
+        r.IsAdded = false;
+        si.Data = r;
+        ls.Add(si);
+        return ls;
+    }
+
+    public List<SaveItem> SetSaveItems(List<SaveItem> p_sis)
+    {
+        return p_sis;
+    }
+    #endregion
+
     #region Dict
     /// <summary>
     /// 返回基本数据类型的Dict
