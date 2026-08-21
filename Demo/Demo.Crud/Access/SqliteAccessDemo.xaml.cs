@@ -91,14 +91,11 @@ public partial class SqliteAccessDemo : Win
         var tbl = await 基础X.Page(0, 4, null);
         if (tbl.Count > 1)
         {
-            tbl.LockCollection();
-            // 删
-            tbl.RemoveAt(0);
             // 更
-            tbl[0].名称 = "批增更删" + _rnd.Next(1000);
+            tbl[0].名称 = "批增更" + _rnd.Next(1000);
         }
         // 增
-        tbl.Add(await 基础X.New("批增更删" + _rnd.Next(1000)));
+        tbl.Add(await 基础X.New("批增更" + _rnd.Next(1000)));
         await tbl.Save();
     }
 
@@ -198,9 +195,6 @@ public partial class SqliteAccessDemo : Win
         var tbl = await VirX<主表X, 扩展1X, 扩展2X>.Page(0, 4, null);
         if (tbl.Count > 1)
         {
-            tbl.LockCollection();
-            // 删
-            tbl.RemoveAt(0);
             // 更
             var name = "批更" + _rnd.Next(1000);
             tbl[0].E1.主表名称 = name;
@@ -262,8 +256,6 @@ public partial class SqliteAccessDemo : Win
 
             if (x.Tbl2 != null && x.Tbl2.Count > 1)
             {
-                x.Tbl2.LockCollection();
-                x.Tbl2.RemoveAt(0);
                 foreach (var item in x.Tbl2)
                 {
                     item.小儿名 = name;

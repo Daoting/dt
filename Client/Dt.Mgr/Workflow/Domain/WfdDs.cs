@@ -19,8 +19,11 @@ public static class WfdDs
     {
         var w = await WfdPrcX.NewWriter();
         await w.Save(p_prc);
+        await w.Delete(p_prc.Atvs.CopyDeletedRows());
         await w.Save(p_prc.Atvs);
+        await w.Delete(p_prc.Trss.CopyDeletedRows());
         await w.Save(p_prc.Trss);
+        await w.Delete(p_prc.AtvRoles.CopyDeletedRows());
         await w.Save(p_prc.AtvRoles);
         return await w.Commit();
     }

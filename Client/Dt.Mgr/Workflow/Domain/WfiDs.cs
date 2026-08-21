@@ -898,12 +898,10 @@ public static class WfiDs
         {
             nextAtvs.Add(new WfiAtvX(id));
         }
-        nextAtvs.LockCollection();
-        nextAtvs.Clear();
 
         // 一个事务批量保存
         var w = await WfiAtvX.NewWriter();
-        await w.Save(nextAtvs);
+        await w.Delete(nextAtvs);
         await w.Save(curAtvi);
         await w.Save(newItem);
         return await w.Commit(false);
