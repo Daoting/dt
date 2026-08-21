@@ -24,8 +24,9 @@ public static class UsageDs
         if (tbl.Count > 1)
         {
             tbl.LockCollection();
-            // 删
             tbl.RemoveAt(0);
+            // 删
+            await w.Delete(tbl.CopyDeletedRows());
             // 更
             tbl[0].名称 = "服务更";
         }

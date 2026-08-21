@@ -428,13 +428,20 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
     // DataTable中Copy是复制数据和结构，Clone是只结构，保持相同习惯
 
     /// <summary>
-    /// 通过复制创建空Table（不复制数据！）
+    /// 通过复制创建空Table（不复制数据，但保持原有的泛型！），若创建自定义的泛型Table，请指定实体类型 p_entityType
     /// </summary>
     /// <param name="p_tbl"></param>
+    /// <param name="p_entityType">自定义的泛型Table</param>
     /// <returns></returns>
-    public static Table Clone(Table p_tbl)
+    public static Table Clone(Table p_tbl, Type p_entityType = null)
     {
-        Table tbl = new Table();
+        Table tbl;
+        var entityType = p_entityType ?? (p_tbl.GetType().IsGenericType ? p_tbl.GetType().GenericTypeArguments[0] : typeof(Row));
+        if (entityType == typeof(Row))
+            tbl = new Table();
+        else
+            tbl = (Table)Activator.CreateInstance(typeof(Table<>).MakeGenericType(entityType));
+
         if (p_tbl != null && p_tbl._columns.Count > 0)
         {
             foreach (var col in p_tbl._columns)
@@ -443,15 +450,6 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
             }
         }
         return tbl;
-    }
-
-    /// <summary>
-    /// 通过复制创建空Table（不复制数据！）
-    /// </summary>
-    /// <returns></returns>
-    public Table Clone()
-    {
-        return Clone(this);
     }
 
     /// <summary>
@@ -470,6 +468,35 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
             }
         }
         return tbl;
+    }
+
+    /// <summary>
+    /// 通过复制创建空Table（不复制数据，但保持原有的泛型！）
+    /// </summary>
+    /// <returns></returns>
+    public Table Clone()
+    {
+        return Clone(this);
+    }
+
+    /// <summary>
+    /// 通过复制创建空的泛型Table（不复制数据！）
+    /// </summary>
+    /// <param name="p_rowType"></param>
+    /// <returns></returns>
+    public Table Clone(Type p_rowType)
+    {
+        return Clone(this, p_rowType);
+    }
+
+    /// <summary>
+    /// 通过复制创建空的泛型Table（不复制数据！）
+    /// </summary>
+    /// <returns></returns>
+    public Table Clone<TEntity>()
+        where TEntity : Entity
+    {
+        return Clone(this, typeof(TEntity));
     }
     #endregion
 
@@ -508,18 +535,19 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
     }
 
     /// <summary>
-    /// 将表结构及数据深度克隆到新实体类型的表，返回新实体表，一般类型转换时用
+    /// 将表结构及数据深度克隆到新Table，若未指定实体类型则保持现有类型，若创建自定义的泛型Table，请指定实体类型 p_entityType
     /// </summary>
-    /// <param name="p_rowType">实体类型</param>
+    /// <param name="p_entityType">实体类型</param>
     /// <returns>返回新实体表</returns>
     [UnconditionalSuppressMessage("AOT", "IL3050")]
-    public Table CopyTo(Type p_rowType)
+    public Table CopyTo(Type p_entityType = null)
     {
         Table tbl;
-        if (p_rowType == typeof(Row))
+        var entityType = p_entityType ?? (GetType().IsGenericType ? GetType().GenericTypeArguments[0] : typeof(Row));
+        if (entityType == typeof(Row))
             tbl = new Table();
         else
-            tbl = (Table)Activator.CreateInstance(typeof(Table<>).MakeGenericType(p_rowType));
+            tbl = (Table)Activator.CreateInstance(typeof(Table<>).MakeGenericType(entityType));
 
         // 添加列
         foreach (var col in _columns)
@@ -530,7 +558,7 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
         // 复制数据
         foreach (var row in this)
         {
-            Row clone = row.CloneTo(p_rowType);
+            Row clone = row.CloneTo(entityType);
             clone.Table = tbl;
             tbl.Add(clone);
         }
@@ -766,6 +794,27 @@ public partial class Table : ObservableCollection<Row>, IRpcJson
                 return Enumerable.Empty<Row>();
             return _lockedList.Except(this);
         }
+    }
+
+    /// <summary>
+    /// 复制已被删除的行，锁定集合LockCollection后有效！若返回Table{Entity}，请指定实体类型 p_entityType
+    /// </summary>
+    /// <param name="p_entityType">修改Table的泛型实体类型，null时保持原类型</param>
+    /// <returns></returns>
+    public Table CopyDeletedRows(Type p_entityType = null)
+    {
+        if (_lockedList == null)
+            return null;
+
+        p_entityType = p_entityType ?? (GetType().IsGenericType ? GetType().GenericTypeArguments[0] : typeof(Row));
+        var tbl = Clone(this, p_entityType);
+        foreach (var row in _lockedList.Except(this))
+        {
+            Row clone = row.CloneTo(p_entityType);
+            clone.Table = tbl;
+            tbl.Add(clone);
+        }
+        return tbl;
     }
 
     /// <summary>
