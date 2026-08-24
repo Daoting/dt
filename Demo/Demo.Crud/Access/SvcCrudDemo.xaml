@@ -14,6 +14,14 @@
             <Button Content="批量混合" Click="OnBatchMix" />
         </StackPanel>
 
+        <a:CBar Title="通过Row增删改" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="增加新行" Click="OnInsertRow" />
+            <Button Content="更新行" Click="OnUpdateRow" />
+            <Button Content="删除行" Click="OnDeleteRow" />
+            <Button Content="批量混合" Click="OnBatchRow" />
+        </StackPanel>
+
         <a:CBar Title="sqlite的Table操作" />
         <StackPanel Orientation="Horizontal">
             <Button Content="增加新行" Click="OnInsertSqlite" />
