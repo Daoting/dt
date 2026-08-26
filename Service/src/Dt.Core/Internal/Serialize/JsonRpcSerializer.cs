@@ -107,8 +107,11 @@ public static class JsonRpcSerializer
             case TypeCode.Object:
                 if (tp == typeof(byte[]))
                 {
+                    p_writer.WriteStartArray();
+                    p_writer.WriteStringValue("*bin");
                     // 字节数组需要base64编码
                     p_writer.WriteStringValue(Convert.ToBase64String((byte[])p_value));
+                    p_writer.WriteEndArray();
                 }
                 else if (p_value is IEnumerable)
                 {
@@ -252,13 +255,22 @@ public static class JsonRpcSerializer
                     // 前缀'&'表示集合
                     if (tp.StartsWith("&"))
                         return DeserializeArray(ref p_reader, tp.Substring(1), p_tgtType);
-                    
+
+                    // 单独处理时间和字节数组
                     if (tp == "*date")
                     {
                         var date = p_reader.ReadAsDateTime();
                         p_reader.Read();
                         return date;
                     }
+
+                    if (tp == "*bin")
+                    {
+                        var base64 = p_reader.ReadAsString();
+                        p_reader.Read();
+                        return Convert.FromBase64String(base64);
+                    }
+                    
                     throw new Exception($"无法自动反序列化Json类型{tp}！");
                 }
 
@@ -267,18 +279,19 @@ public static class JsonRpcSerializer
                     if (p_tgtType == null || p_tgtType == typeof(string))
                         return p_reader.GetString();
 
-                    if (p_tgtType == typeof(DateTime) || p_tgtType == typeof(DateTime?))
-                        return p_reader.GetDateTime();
-
                     if (p_tgtType == typeof(bool) || p_tgtType == typeof(bool?))
                     {
                         string val = p_reader.GetString();
                         return (val == "1" || val == "true");
                     }
 
-                    // base64编码的字节数组
-                    if (p_tgtType == typeof(byte[]))
-                        return Convert.FromBase64String(p_reader.GetString());
+                    // 时间和字节数组已单独处理
+                    //if (p_tgtType == typeof(DateTime) || p_tgtType == typeof(DateTime?))
+                    //    return p_reader.GetDateTime();
+
+                    //// base64编码的字节数组
+                    //if (p_tgtType == typeof(byte[]))
+                    //    return Convert.FromBase64String(p_reader.GetString());
 
                     return Convert.ChangeType(p_reader.GetString(), p_tgtType);
                 }
