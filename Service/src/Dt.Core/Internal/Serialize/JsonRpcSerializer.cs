@@ -418,6 +418,15 @@ public static class JsonRpcSerializer
         if (itemType == typeof(object))
             return DeserializeObjsArray(ref p_reader);
 
+        // js客户端无法区分 int long double，按目标类型处理
+        if (type != p_tgtType
+            && p_tgtType.IsGenericType
+            && itemType == typeof(int))
+        {
+            type = p_tgtType;
+            itemType = type.GetGenericArguments()[0];
+        }
+
         // 内置对象列表List<T>
         IList target = Activator.CreateInstance(type) as IList;
         while (p_reader.Read() && p_reader.TokenType != JsonTokenType.EndArray)
