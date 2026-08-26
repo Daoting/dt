@@ -428,7 +428,8 @@ public static class JsonRpcSerializer
             return DeserializeObjsArray(ref p_reader);
 
         // js客户端无法区分 int long double，按目标类型处理
-        if (type != p_tgtType
+        if (p_tgtType != null
+            && type != p_tgtType
             && p_tgtType.IsGenericType
             && itemType == typeof(int))
         {
