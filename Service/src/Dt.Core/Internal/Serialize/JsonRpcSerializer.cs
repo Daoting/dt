@@ -65,7 +65,10 @@ public static class JsonRpcSerializer
                 p_writer.WriteBooleanValue((bool)p_value);
                 break;
             case TypeCode.DateTime:
+                p_writer.WriteStartArray();
+                p_writer.WriteStringValue("*date");
                 p_writer.WriteStringValue((DateTime)p_value);
+                p_writer.WriteEndArray();
                 break;
             case TypeCode.Int64:
                 p_writer.WriteNumberValue((long)p_value);
@@ -249,6 +252,13 @@ public static class JsonRpcSerializer
                     // 前缀'&'表示集合
                     if (tp.StartsWith("&"))
                         return DeserializeArray(ref p_reader, tp.Substring(1), p_tgtType);
+                    
+                    if (tp == "*date")
+                    {
+                        var date = p_reader.ReadAsDateTime();
+                        p_reader.Read();
+                        return date;
+                    }
                     throw new Exception($"无法自动反序列化Json类型{tp}！");
                 }
 
