@@ -65,10 +65,8 @@ public static class JsonRpcSerializer
                 p_writer.WriteBooleanValue((bool)p_value);
                 break;
             case TypeCode.DateTime:
-                p_writer.WriteStartArray();
-                p_writer.WriteStringValue("*date");
-                p_writer.WriteStringValue((DateTime)p_value);
-                p_writer.WriteEndArray();
+                // json中无法区分string和Date类型，加前缀*0*
+                p_writer.WriteStringValue("*0*" + new DateTimeOffset((DateTime)p_value).ToString("o"));
                 break;
             case TypeCode.Int64:
                 p_writer.WriteNumberValue((long)p_value);
@@ -107,11 +105,8 @@ public static class JsonRpcSerializer
             case TypeCode.Object:
                 if (tp == typeof(byte[]))
                 {
-                    p_writer.WriteStartArray();
-                    p_writer.WriteStringValue("*bin");
-                    // 字节数组需要base64编码
-                    p_writer.WriteStringValue(Convert.ToBase64String((byte[])p_value));
-                    p_writer.WriteEndArray();
+                    // 字节数组转base64字符串加前缀*1*
+                    p_writer.WriteStringValue("*1*" + Convert.ToBase64String((byte[])p_value));
                 }
                 else if (p_value is IEnumerable)
                 {
@@ -255,45 +250,36 @@ public static class JsonRpcSerializer
                     // 前缀'&'表示集合
                     if (tp.StartsWith("&"))
                         return DeserializeArray(ref p_reader, tp.Substring(1), p_tgtType);
-
-                    // 单独处理时间和字节数组
-                    if (tp == "*date")
-                    {
-                        var date = p_reader.ReadAsDateTime();
-                        p_reader.Read();
-                        return date;
-                    }
-
-                    if (tp == "*bin")
-                    {
-                        var base64 = p_reader.ReadAsString();
-                        p_reader.Read();
-                        return Convert.FromBase64String(base64);
-                    }
-                    
                     throw new Exception($"无法自动反序列化Json类型{tp}！");
                 }
 
             case JsonTokenType.String:
                 {
-                    if (p_tgtType == null || p_tgtType == typeof(string))
-                        return p_reader.GetString();
+                    var str = p_reader.GetString();
+                    if (p_tgtType == typeof(string))
+                        return str;
+
+                    if (p_tgtType == typeof(DateTime) || p_tgtType == typeof(DateTime?))
+                        return DateTime.Parse(str.StartsWith("*0*") ? str.Substring(3) : str);
 
                     if (p_tgtType == typeof(bool) || p_tgtType == typeof(bool?))
+                        return (str == "1" || str == "true");
+
+                    // base64编码的字节数组
+                    if (p_tgtType == typeof(byte[]))
+                        return Convert.FromBase64String(str.StartsWith("*1*") ? str.Substring(3) : str);
+                    
+                    if (p_tgtType == null)
                     {
-                        string val = p_reader.GetString();
-                        return (val == "1" || val == "true");
+                        // json无法区分string和Date类型
+                        if (str.StartsWith("*0*"))
+                            return DateTime.Parse(str.Substring(3));
+                        if (str.StartsWith("*1*"))
+                            return Convert.FromBase64String(str.Substring(3));
+                        return str;
                     }
 
-                    // 时间和字节数组已单独处理
-                    //if (p_tgtType == typeof(DateTime) || p_tgtType == typeof(DateTime?))
-                    //    return p_reader.GetDateTime();
-
-                    //// base64编码的字节数组
-                    //if (p_tgtType == typeof(byte[]))
-                    //    return Convert.FromBase64String(p_reader.GetString());
-
-                    return Convert.ChangeType(p_reader.GetString(), p_tgtType);
+                    return Convert.ChangeType(str, p_tgtType);
                 }
 
             case JsonTokenType.Number:
