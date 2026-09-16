@@ -66,10 +66,12 @@ public static class JsonRpcSerializer
                 break;
             case TypeCode.DateTime:
                 // json中无法区分string和Date类型，加前缀*0*
-                p_writer.WriteStringValue("*0*" + new DateTimeOffset((DateTime)p_value).ToString("o"));
+                var dt = (DateTime)p_value;
+                p_writer.WriteStringValue("*0*" + (dt.Kind == DateTimeKind.Unspecified ? new DateTimeOffset().ToString("o") : new DateTimeOffset(dt).ToString("o")));
                 break;
             case TypeCode.Int64:
-                p_writer.WriteNumberValue((long)p_value);
+                // js处理json的number时最大值2^53 -1，为兼容js故long统一以string传输
+                p_writer.WriteStringValue(((long)p_value).ToString());
                 break;
             case TypeCode.Int32:
                 p_writer.WriteNumberValue((int)p_value);
@@ -259,6 +261,10 @@ public static class JsonRpcSerializer
                     if (p_tgtType == typeof(string))
                         return str;
 
+                    // js处理json的number时最大值2^53 -1，故long统一以string传输
+                    if (p_tgtType == typeof(long) || p_tgtType == typeof(long?))
+                        return long.Parse(str);
+
                     if (p_tgtType == typeof(DateTime) || p_tgtType == typeof(DateTime?))
                         return DateTime.Parse(str.StartsWith("*0*") ? str.Substring(3) : str);
 
@@ -268,7 +274,7 @@ public static class JsonRpcSerializer
                     // base64编码的字节数组
                     if (p_tgtType == typeof(byte[]))
                         return Convert.FromBase64String(str.StartsWith("*1*") ? str.Substring(3) : str);
-                    
+
                     if (p_tgtType == null)
                     {
                         // json无法区分string和Date类型
@@ -279,6 +285,12 @@ public static class JsonRpcSerializer
                         return str;
                     }
 
+                    // 可空类型
+                    if (p_tgtType != null
+                        && p_tgtType.IsGenericType
+                        && p_tgtType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                        p_tgtType = p_tgtType.GetGenericArguments()[0];
+                    
                     return Convert.ChangeType(str, p_tgtType);
                 }
 
