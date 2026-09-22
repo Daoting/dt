@@ -140,6 +140,17 @@ public class Da : RpcApi
     }
 
     /// <summary>
+    /// 根据表名创建行数据，自动填写ID和列的默认值
+    /// </summary>
+    /// <param name="p_tblName">表名</param>
+    /// <param name="p_count">批量创建的行数，默认1</param>
+    /// <returns></returns>
+    public Task<Table> NewRow(string p_tblName, int p_count = 1)
+    {
+        return _da.NewRow(p_tblName, p_count);
+    }
+    
+    /// <summary>
     /// 获取当前服务默认数据库的类型
     /// </summary>
     /// <returns></returns>

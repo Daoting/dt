@@ -190,7 +190,7 @@ class SvcAccess : IDataAccess
     }
     #endregion
 
-    #region 新ID和序列
+    #region 创建新ID、序列、行
     public Task<long> NewID()
     {
         return new UnaryRpc(
@@ -206,6 +206,16 @@ class SvcAccess : IDataAccess
             "Da.NewSeq",
             p_seqName
         ).Call<long>();
+    }
+
+    public Task<Table> NewRow(string p_tblName, int p_count)
+    {
+        return new UnaryRpc(
+            _ai.Name,
+            "Da.NewRow",
+            p_tblName,
+            p_count
+        ).Call<Table>();
     }
     #endregion
 

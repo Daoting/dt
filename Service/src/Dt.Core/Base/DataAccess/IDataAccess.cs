@@ -156,7 +156,7 @@ public partial interface IDataAccess
     Task<bool> Save(List<SaveItem> p_datas);
     #endregion
 
-    #region 新ID和序列
+    #region 创建新ID、序列、行
     /// <summary>
     /// 获取新ID
     /// </summary>
@@ -169,6 +169,14 @@ public partial interface IDataAccess
     /// <param name="p_seqName">序列名称，不可为空</param>
     /// <returns>新序列值</returns>
     Task<long> NewSeq(string p_seqName);
+
+    /// <summary>
+    /// 根据表名创建行数据，自动填写ID和列的默认值
+    /// </summary>
+    /// <param name="p_tblName">表名</param>
+    /// <param name="p_count">批量创建的行数，默认1</param>
+    /// <returns></returns>
+    Task<Table> NewRow(string p_tblName, int p_count);
     #endregion
 
     #region 缓存

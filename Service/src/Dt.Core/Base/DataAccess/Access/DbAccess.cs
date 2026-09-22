@@ -13,6 +13,7 @@ using System.Data;
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using static Npgsql.Replication.PgOutput.Messages.RelationMessage;
 #endregion
 
 namespace Dt.Core;
@@ -278,6 +279,42 @@ abstract class DbAccess : IDataAccess
     /// <param name="p_seqName">序列名称，不可为空</param>
     /// <returns>新序列值</returns>
     public abstract Task<long> NewSeq(string p_seqName);
+
+    /// <summary>
+    /// 根据表名创建行数据，自动填写ID和列的默认值
+    /// </summary>
+    /// <param name="p_tblName">表名</param>
+    /// <param name="p_count">批量创建的行数，默认1</param>
+    /// <returns></returns>
+    public async Task<Table> NewRow(string p_tblName, int p_count)
+    {
+        var model = await TableSchema.GetSchema(p_tblName);
+        var tbl = new Table();
+        int cnt = p_count > 0 ? p_count : 1;
+        // 批量生成时重复
+        long id = Kit.NewID;
+        for (int i = 0; i < cnt; i++)
+        {
+            Row row = new Row();
+            
+            // 主键
+            foreach (var col in model.PrimaryKey)
+            {
+                if (i == 0)
+                    tbl.Add(col.Name, col.Type);
+                new Cell(row, col.Name, col.Type, col.Type == typeof(long) ? id++ : null);
+            }
+
+            foreach (var col in model.Columns)
+            {
+                if (i == 0)
+                    tbl.Add(col.Name, col.Type);
+                new Cell(row, col.Name, col.Type, string.IsNullOrEmpty(col.Default) ? null : col.Default);
+            }
+            tbl.Add(row);
+        }
+        return tbl;
+    }
 
     async Task QueryInternal<TRow>(Table p_tbl, string p_sqlOrSp, object p_params = null)
         where TRow : Row
@@ -804,10 +841,10 @@ abstract class DbAccess : IDataAccess
     {
         if (string.IsNullOrEmpty(p_key))
             return false;
-        
+
         string val = string.IsNullOrEmpty(p_value) ? "" : p_value;
         List<Dict> ls = new List<Dict>
-        { 
+        {
             new Dict { { "text", $"delete from cm_cache where id='{p_key}'" } },
             new Dict { {"text", $"insert into cm_cache (id,val) values ('{p_key}','{val}')"}},
         };
@@ -825,7 +862,7 @@ abstract class DbAccess : IDataAccess
     {
         if (p_keys == null || p_keys.Count == 0)
             return Task.FromResult(false);
-        
+
         List<Dict> ls = new List<Dict>();
         foreach (var key in p_keys)
         {

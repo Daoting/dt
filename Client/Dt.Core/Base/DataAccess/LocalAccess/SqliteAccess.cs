@@ -176,6 +176,11 @@ class SqliteAccess : IDataAccess
     {
         return Task.FromResult(0L);
     }
+
+    public Task<Table> NewRow(string p_tblName, int p_count)
+    {
+        return Task.FromResult(default(Table));
+    }
     #endregion
 
     #region 缓存
