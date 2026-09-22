@@ -67,7 +67,11 @@ public static class JsonRpcSerializer
             case TypeCode.DateTime:
                 // json中无法区分string和Date类型，加前缀*0*
                 var dt = (DateTime)p_value;
-                p_writer.WriteStringValue("*0*" + (dt.Kind == DateTimeKind.Unspecified ? new DateTimeOffset().ToString("o") : new DateTimeOffset(dt).ToString("o")));
+                // DateTimeOffset只存 UTC 时间，MinValue越界
+                if (dt == DateTime.MinValue)
+                    p_writer.WriteStringValue("*0*" + DateTimeOffset.MinValue.ToString("o"));
+                else
+                    p_writer.WriteStringValue("*0*" + new DateTimeOffset(dt).ToString("o"));
                 break;
             case TypeCode.Int64:
                 // js处理json的number时最大值2^53 -1，为兼容js故long统一以string传输
@@ -290,7 +294,7 @@ public static class JsonRpcSerializer
                         && p_tgtType.IsGenericType
                         && p_tgtType.GetGenericTypeDefinition() == typeof(Nullable<>))
                         p_tgtType = p_tgtType.GetGenericArguments()[0];
-                    
+
                     return Convert.ChangeType(str, p_tgtType);
                 }
 
