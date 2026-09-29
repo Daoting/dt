@@ -27,40 +27,40 @@ class SvcAccess : IDataAccess
     #endregion
 
     #region 查询
-    public Task<Table> Query(string p_sqlOrSp, object p_params = null)
+    public Task<Table> Query(string p_keyOrSql, object p_params = null)
     {
         return new UnaryRpc(
             _ai.Name,
             "Da.Query",
-            p_sqlOrSp,
+            p_keyOrSql,
             p_params
         ).Call<Table>();
     }
 
-    public Task<Table<TEntity>> Query<TEntity>(string p_sqlOrSp, object p_params = null)
+    public Task<Table<TEntity>> Query<TEntity>(string p_keyOrSql, object p_params = null)
         where TEntity : Entity
     {
         return new UnaryRpc(
             _ai.Name,
             "Da.Query",
-            p_sqlOrSp,
+            p_keyOrSql,
             p_params
         ).Call<Table<TEntity>>();
     }
 
-    public Task<Table> Page(int p_starRow, int p_pageSize, string p_sql, object p_params = null)
+    public Task<Table> Page(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
     {
         return new UnaryRpc(
             _ai.Name,
             "Da.Page",
             p_starRow,
             p_pageSize,
-            p_sql,
+            p_keyOrSql,
             p_params
         ).Call<Table>();
     }
 
-    public Task<Table<TEntity>> Page<TEntity>(int p_starRow, int p_pageSize, string p_sql, object p_params = null)
+    public Task<Table<TEntity>> Page<TEntity>(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
         where TEntity : Entity
     {
         return new UnaryRpc(
@@ -68,88 +68,88 @@ class SvcAccess : IDataAccess
             "Da.Page",
             p_starRow,
             p_pageSize,
-            p_sql,
+            p_keyOrSql,
             p_params
         ).Call<Table<TEntity>>();
     }
 
-    public Task<Row> First(string p_sqlOrSp, object p_params = null)
+    public Task<Row> First(string p_keyOrSql, object p_params = null)
     {
         return new UnaryRpc(
             _ai.Name,
             "Da.First",
-            p_sqlOrSp,
+            p_keyOrSql,
             p_params
         ).Call<Row>();
     }
 
-    public Task<TEntity> First<TEntity>(string p_sqlOrSp, object p_params = null)
+    public Task<TEntity> First<TEntity>(string p_keyOrSql, object p_params = null)
         where TEntity : Entity
     {
         return new UnaryRpc(
             _ai.Name,
             "Da.First",
-            p_sqlOrSp,
+            p_keyOrSql,
             p_params
         ).Call<TEntity>();
     }
 
-    public Task<List<T>> FirstCol<T>(string p_sqlOrSp, object p_params = null)
+    public Task<List<T>> FirstCol<T>(string p_keyOrSql, object p_params = null)
     {
         return new UnaryRpc(
             _ai.Name,
             "Da.FirstCol",
             typeof(T).FullName,
-            p_sqlOrSp,
+            p_keyOrSql,
             p_params
         ).Call<List<T>>();
     }
 
-    public Task<object> FirstCol(Type p_type, string p_sqlOrSp, object p_params = null)
+    public Task<object> FirstCol(Type p_type, string p_keyOrSql, object p_params = null)
     {
         return new UnaryRpc(
             _ai.Name,
             "Da.FirstCol",
             p_type.FullName,
-            p_sqlOrSp,
+            p_keyOrSql,
             p_params
         ).Call<object>();
     }
 
-    public Task<T> GetScalar<T>(string p_sqlOrSp, object p_params = null)
+    public Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
     {
         return new UnaryRpc(
             _ai.Name,
             "Da.GetScalar",
-            p_sqlOrSp,
+            p_keyOrSql,
             p_params
         ).Call<T>();
     }
 
-    public Task<IEnumerable<Row>> Each(string p_sqlOrSp, object p_params = null)
+    public Task<IEnumerable<Row>> Each(string p_keyOrSql, object p_params = null)
     {
         throw new NotSupportedException();
     }
 
-    public Task<IEnumerable<TEntity>> Each<TEntity>(string p_sqlOrSp, object p_params = null)
+    public Task<IEnumerable<TEntity>> Each<TEntity>(string p_keyOrSql, object p_params = null)
         where TEntity : Entity
     {
         throw new NotSupportedException();
     }
 
-    public Task<IEnumerable<T>> EachFirstCol<T>(string p_sqlOrSp, object p_params = null)
+    public Task<IEnumerable<T>> EachFirstCol<T>(string p_keyOrSql, object p_params = null)
     {
         throw new NotSupportedException();
     }
     #endregion
 
     #region 增删改
-    public Task<int> Exec(string p_sqlOrSp, object p_params = null)
+    public Task<int> Exec(string p_keyOrSql, object p_params = null)
     {
         return new UnaryRpc(
             _ai.Name,
             "Da.Exec",
-            p_sqlOrSp,
+            p_keyOrSql,
             p_params
         ).Call<int>();
     }

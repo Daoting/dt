@@ -103,6 +103,12 @@ public partial class Kit
     /// 获取所有服务名称的连接字符串，多个服务名称用'+'连接
     /// </summary>
     public static string AllSvcName => Svcs != null ? string.Join(" + ", SvcNames) : "";
+
+    /// <summary>
+    /// 查询Sql语句，默认从缓存字典中查询，service.json中CacheSql为false时直接从表xxx_sql查询！
+    /// <para>输入参数为键名(无空格) 或 Sql语句，含空格时不需查询，直接返回Sql语句</para>
+    /// </summary>
+    public static Func<string, string> Sql { get; internal set; }
     #endregion
 
     #region 系统配置
