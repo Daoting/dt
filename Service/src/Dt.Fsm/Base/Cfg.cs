@@ -87,10 +87,8 @@ public static class Cfg
 
         // 固定卷
         var fv = _config.GetValue<string>("FixedVolume");
-        StringBuilder sb = new StringBuilder("fsm：");
         if (!string.IsNullOrEmpty(fv))
         {
-            sb.Append("固定卷");
             var vols = fv.Split(';');
             foreach (var vol in vols)
             {
@@ -101,15 +99,11 @@ public static class Cfg
                     if (!Directory.Exists(path))
                         Directory.CreateDirectory(path);
                     FixedVolumes.Add(v);
-                    sb.Append(" ");
-                    sb.Append(v);
                 }
             }
-            sb.Append("，");
         }
 
         // 普通卷
-        sb.Append("普通卷");
         SortedSetCache cache = new SortedSetCache(VolumeKey);
         var subs = dir.GetDirectories();
         if (subs != null && subs.Length > 0)
@@ -123,8 +117,6 @@ public static class Cfg
                     Volumes.Add(sub.Name);
                     // 加入缓存
                     cache.Increment(v, 0).Wait();
-                    sb.Append(" ");
-                    sb.Append(v);
                 }
             }
         }
@@ -141,13 +133,9 @@ public static class Cfg
                     Volumes.Add(vol);
                     Directory.CreateDirectory(path);
                     cache.Increment(vol, 0).Wait();
-                    sb.Append(" ");
-                    sb.Append(vol);
                 }
             }
         }
-
-        Log.Information(sb.ToString());
     }
 
     /// <summary>

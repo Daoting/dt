@@ -7,15 +7,12 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using System.Collections.Generic;
-using System.Net.Mime;
+using System.Text;
 #endregion
 
 namespace Dt.Fsm;
@@ -29,7 +26,7 @@ public class SvcStub : Stub
     /// 当前微服务http post请求的最大长度，0时采用默认28.6M
     /// </summary>
     public override long MaxRequestBodySize => 1073741824;
-    
+
     /// <summary>
     /// 定义全局服务
     /// </summary>
@@ -74,5 +71,33 @@ public class SvcStub : Stub
             FileProvider = fileProvider,
             RequestPath = "/drv"
         });
+    }
+
+    /// <summary>
+    /// 获取服务的描述信息，启动时输出到日志和控制台
+    /// </summary>
+    /// <returns></returns>
+    public override string GetDesc()
+    {
+        StringBuilder sb = new();
+        if (Cfg.FixedVolumes?.Count > 0)
+        {
+            sb.Append("固定卷(");
+            foreach (var volume in Cfg.FixedVolumes)
+            {
+                sb.Append(" ");
+                sb.Append(volume);
+            }
+            sb.Append(" )，");
+        }
+
+        sb.Append("普通卷(");
+        foreach (var volume in Cfg.Volumes)
+        {
+            sb.Append(" ");
+            sb.Append(volume);
+        }
+        sb.Append(" )");
+        return sb.ToString();
     }
 }

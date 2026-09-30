@@ -36,4 +36,10 @@ public abstract class Stub
     /// <param name="p_app"></param>
     /// <param name="p_rootRouteHandlers">注册根路由处理</param>
     public virtual void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_rootRouteHandlers) { }
+
+    /// <summary>
+    /// 获取服务的描述信息，启动时输出到日志和控制台
+    /// </summary>
+    /// <returns></returns>
+    public virtual string GetDesc() => null;
 }
