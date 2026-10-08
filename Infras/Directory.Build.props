@@ -19,16 +19,16 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <UnoVersion>6.6.166</UnoVersion>
+        <UnoVersion>6.7.135</UnoVersion>
     </PropertyGroup>
         
     <!-- WinAppSdk -->
     <ItemGroup Condition="$(IsWinAppSdk)">
         <!-- 1.8正常；1.7版本主线程异步异常会崩溃、后台任务全新方式；1.6不崩溃但原Dt.Tasks无法运行 -->
-        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260710003" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2270" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260921001" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2705" />
         <!-- Microsoft.WindowsAppSDK内部引用，排除runtime，否则打包时必须包含 native\WebView2Loader.dll -->
-        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3719.77" ExcludeAssets="runtime" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4191.47" ExcludeAssets="runtime" />
     </ItemGroup>
 
     <!-- 非WinAppSdk引用 -->
@@ -39,7 +39,7 @@
     <!-- 所有App引用 -->
     <ItemGroup Condition="$(IsExe) == 'true'">
         <PackageReference Include="Dt.BuildTools" Version="1.5.3" />
-        <PackageReference Include="Uno.Resizetizer" Version="1.12.1" />
+        <PackageReference Include="Uno.Resizetizer" Version="1.12.7" />
     </ItemGroup>
 
     <!-- Android -->
@@ -68,10 +68,10 @@
 
     <ItemGroup Condition="$(IsBrowserWasm) AND $(IsExe) == 'true'">
         <PackageReference Include="Uno.WinUI.Runtime.Skia.WebAssembly.Browser" Version="$(UnoVersion)" />
-        <PackageReference Include="Uno.Wasm.Bootstrap" Version="10.0.22" />
+        <PackageReference Include="Uno.Wasm.Bootstrap" Version="10.0.98" />
         <PackageReference Include="Uno.WinUI.Runtime.WebAssembly" Version="$(UnoVersion)" PrivateAssets="all" IncludeAssets="none" ExcludeAssets="all" />
         <!-- 不引用link出错 -->
-        <PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.2" />
+        <PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.12" />
     </ItemGroup>
 
     <!-- Desktop -->
@@ -79,7 +79,6 @@
         <PackageReference Include="Uno.WinUI.Runtime.Skia.Linux.FrameBuffer" Version="$(UnoVersion)" />
         <PackageReference Include="Uno.WinUI.Runtime.Skia.MacOS" Version="$(UnoVersion)" />
         <PackageReference Include="Uno.WinUI.Runtime.Skia.Win32" Version="$(UnoVersion)" />
-        <PackageReference Include="Uno.WinUI.Runtime.Skia.Wpf" Version="$(UnoVersion)" />
         <PackageReference Include="Uno.WinUI.Runtime.Skia.X11" Version="$(UnoVersion)" />
 
         <!-- Enable WPF Hardware acceleration over RDP, only if not specified by the project -->
