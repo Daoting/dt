@@ -174,19 +174,18 @@ internal class WebHostStarter
         // GBK编码
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-        // 数据库(服务)
-        string msg = "";
-        string custom = "";
+        // 同步数据库时间
+        DbSchema.SyncDbTime();
+
+        // 服务描述 及 缓存Sql字典
         foreach (var svc in Kit.Svcs)
         {
-            if (svc.DbInfo == Kit.DefaultDbInfo)
-                msg += " " + svc.SvcName;
-            else
-                custom += $", {svc.DbInfo.Name}({svc.SvcName})";
+            var sqlInfo = SqlDict.Cache(svc);
+            sqlInfo = string.IsNullOrEmpty(sqlInfo) ? "" : "，" + sqlInfo;
+            var desc = svc.Stub.GetDesc();
+            desc = string.IsNullOrEmpty(desc) ? "" : "，" + desc;
+            Log.Information($"{svc.SvcName}：{svc.DbInfo.Name}{sqlInfo}{desc}");
         }
-        Log.Information($"数据库(服务)：{Kit.DefaultDbInfo.Name}({msg.TrimStart()}){custom}");
-
-        DbSchema.SyncDbTime();
     }
 
     static void ConfigureInitMode(IApplicationBuilder p_app)

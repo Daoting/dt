@@ -748,12 +748,20 @@ abstract class DbAccess : IDataAccess
 #if SERVER
         // Sql语句中包含空格，键名无空格！
         if (p_keyOrSql.IndexOf(' ') == -1)
-            p_keyOrSql = Kit.Sql(p_keyOrSql);
-        if (Kit.TraceSql)
+        {
+            var sql = Kit.Sql(p_keyOrSql);
+            if (Kit.TraceSql)
+                Kit.ContextLog.Information(p_keyOrSql + ": " + sql);
+            p_keyOrSql = sql;
+        }
+        else if (Kit.TraceSql)
+        {
             Kit.ContextLog.Information(p_keyOrSql);
+        }
 #else
         Log.Debug(p_keyOrSql);
 #endif
+        
         return new CommandDefinition(
             p_keyOrSql,
             p_params,

@@ -37,11 +37,11 @@ public static class DbSchema
             task.Wait();
             
             Kit.TraceSql = trace;
-            Log.Information("同步数据库时间成功");
+            Log.Information($"与默认库 {Kit.DefaultDbInfo.Name} 同步时间成功");
         }
         catch (Exception e)
         {
-            Log.Fatal(e, "同步数据库时间失败！");
+            Log.Fatal(e, $"与默认库 {Kit.DefaultDbInfo.Name} 同步时间失败！");
             throw;
         }
     }

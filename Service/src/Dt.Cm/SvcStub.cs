@@ -113,7 +113,7 @@ public class SvcStub : Stub
     /// 获取服务的描述信息，启动时输出到日志和控制台
     /// </summary>
     /// <returns></returns>
-    public override string GetDesc() => $"3个虚拟目录(/ {Cfg.WasmVirPath} {Cfg.PackageVirPath})";
+    public override string GetDesc() => $"3个虚拟目录( / {Cfg.WasmVirPath} {Cfg.PackageVirPath} )";
     
     FileExtensionContentTypeProvider MimeTypeProvider
     {
