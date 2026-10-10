@@ -7,8 +7,6 @@
 #endregion
 
 #region 引用命名
-using System;
-using System.Collections.Generic;
 #endregion
 
 namespace Dt.Core;
@@ -27,24 +25,38 @@ internal static class SerializeTypeAlias
     {
         // 可序列化类型
         _typeCache = new Dictionary<string, Type>();
+
+        // 内置基本类型
         _typeCache["tbl"] = typeof(Table);
         _typeCache["row"] = typeof(Row);
         _typeCache["dict"] = typeof(Dict);
         _typeCache["si"] = typeof(SaveItem);
+        _typeCache["msg"] = typeof(MsgInfo);
+        _typeCache["letter"] = typeof(LetterInfo);
+
+        // 内置列表
         _typeCache["ss"] = typeof(List<string>);
         _typeCache["bs"] = typeof(List<bool>);
         _typeCache["is"] = typeof(List<int>);
         _typeCache["ls"] = typeof(List<long>);
         _typeCache["ds"] = typeof(List<double>);
         _typeCache["dates"] = typeof(List<DateTime>);
-        _typeCache["objs"] = typeof(List<object>);
         _typeCache["tbls"] = typeof(List<Table>);
         _typeCache["dicts"] = typeof(List<Dict>);
         _typeCache["sis"] = typeof(List<SaveItem>);
-        // 客户端UWP Release版无法反序列化，因Native无法调用ToArray方法！！！
-        //_typeCache["objarr"] = typeof(object[]);
-        _typeCache["msg"] = typeof(MsgInfo);
-        _typeCache["letter"] = typeof(LetterInfo);
+        _typeCache["objs"] = typeof(List<object>);
+
+        // 内置数组
+        _typeCache["sarr"] = typeof(string[]);
+        _typeCache["barr"] = typeof(bool[]);
+        _typeCache["iarr"] = typeof(int[]);
+        _typeCache["larr"] = typeof(long[]);
+        _typeCache["darr"] = typeof(double[]);
+        _typeCache["datearr"] = typeof(DateTime[]);
+        _typeCache["tblarr"] = typeof(Table[]);
+        _typeCache["dictarr"] = typeof(Dict[]);
+        _typeCache["siarr"] = typeof(SaveItem[]);
+        _typeCache["objarr"] = typeof(object[]);
     }
 
     /// <summary>

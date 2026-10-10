@@ -145,54 +145,51 @@ Row
 
 ----------------------------------------------------------------------------------------------------------------
 ※※※ 集合类型
-1. List<string>
+1. List<string> string[]
 [
-    "&ss", 
+    "&ss",  // "sarr"
     "first", 
     "second"
 ]
 
-2. List<bool>
+2. List<bool> bool[]
 [
-    "&bs", 
+    "&bs", // "barr"
     true, 
     false
 ]
 
-3. List<int>
+3. List<int> int[]
 [
-    "&is", 
+    "&is", // "iarr"
     1, 
     2
 ]
 
-4. List<double>
+4. List<long> long[]
 [
-    "&ds", 
+    "&ls", // "larr"
+    1, 
+    2
+]
+
+5. List<double> double[]
+[
+    "&ds", // "darr"
     1, 
     2.5
 ]
 
-5. List<DateTime>
+6. List<DateTime> DateTime[]
 [
-    "&dates", 
+    "&dates", // "datearr"
     "2016-10-18T14:55:09.012940", 
     "2016-10-18T14:55:09.012940"
 ]
 
-6. List<object>
+7. List<Table> Table[]
 [
-    "&objs",
-    ["类型", "asdf"], // 简单类型System.XXX
-    ["Int64", 123], 
-    ["Byte[]", "CgwOEA=="], 
-    ["DateTime", "2016-10-18T14:56:09.848929"],
-	["", ["#row",...]] // 复杂类型空
-]
-
-7. List<Table>
-[
-    "&tbls", 
+    "&tbls", // "tblarr"
     [
         "#tbl",
         [
@@ -221,9 +218,9 @@ Row
     ]
 ]
 
-8. List<Dict>
+8. List<Dict> Dict[]
 [
-    "&dicts", 
+    "&dicts", // "dictarr"
     [
         "#dict", 
         ["key1", "类型", "val1"],
@@ -236,28 +233,9 @@ Row
     ]
 ]
 
-9. 非内置对象列表 List<T>
+9. 批量保存项列表 List<SaveItem> SaveItem[]
 [
-    "&object",
-    [
-        "#object",
-        {
-            "key1":"val1",
-            "key2":"val2"
-        }
-    ],
-    [
-        "#object",
-        {
-            "key1":"val1",
-            "key2":"val2"
-        }
-    ]
-]
-
-10. 批量保存项列表 List<SaveItem>
-[
-    "&sis", 
+    "&sis", // "siarr"
     [
         "#si", 
         "表名",
@@ -301,6 +279,16 @@ Row
             }
         ]
     ]
+]
+
+10. List<object> object[]
+[
+    "&objs", // "objarr"
+    ["类型", "asdf"], // 简单类型System.XXX
+    ["Int64", 123], 
+    ["Byte[]", "CgwOEA=="], 
+    ["DateTime", "2016-10-18T14:56:09.848929"],
+	["", ["#row",...]] // 复杂类型空
 ]
 
 *** 支持类型嵌套

@@ -236,6 +236,16 @@ public class TestSerialize : RpcApi
         return p_ls != null && p_ls.Count > 0;
     }
 
+    public string[] GetStringArray()
+    {
+        return ["first", "second"];
+    }
+
+    public bool SetStringArray(string[] p_ls)
+    {
+        return p_ls != null && p_ls.Length > 0;
+    }
+    
     /// <summary>
     /// 返回bool值列表
     /// </summary>
@@ -267,6 +277,16 @@ public class TestSerialize : RpcApi
         return p_val;
     }
 
+    public bool[] GetBoolArray()
+    {
+        return [true, false, true];
+    }
+
+    public bool[] SetBoolArray(bool[] p_ls)
+    {
+        return p_ls;
+    }
+    
     /// <summary>
     /// 返回int值列表
     /// </summary>
@@ -292,6 +312,16 @@ public class TestSerialize : RpcApi
         return p_val;
     }
 
+    public int[] GetIntArray()
+    {
+        return [1, 2, 3, 4];
+    }
+
+    public int[] SetIntArray(int[] p_ls)
+    {
+        return p_ls;
+    }
+    
     /// <summary>
     /// 返回long值列表
     /// </summary>
@@ -317,6 +347,16 @@ public class TestSerialize : RpcApi
         return p_val;
     }
 
+    public long[] GetLongArray()
+    {
+        return [1, 2, 3, 4];
+    }
+
+    public long[] SetLongArray(long[] p_ls)
+    {
+        return p_ls;
+    }
+    
     /// <summary>
     /// 返回double值列表
     /// </summary>
@@ -340,6 +380,16 @@ public class TestSerialize : RpcApi
         return p_val;
     }
 
+    public double[] GetDoubleArray()
+    {
+        return [200.0d, 100d, 50.123d, 123.45d];
+    }
+
+    public double[] SetDoubleArray(double[] p_ls)
+    {
+        return p_ls;
+    }
+    
     /// <summary>
     /// DateTime列表
     /// </summary>
@@ -370,6 +420,16 @@ public class TestSerialize : RpcApi
         return p_times != null && p_times.Count > 0;
     }
 
+    public DateTime[] GetDateTimeArray()
+    {
+        return [DateTime.Now, DateTime.Now.AddDays(-1)];
+    }
+
+    public bool SetDateTimeArray(DateTime[] p_ls)
+    {
+        return p_ls != null && p_ls.Length > 0;
+    }
+    
     /// <summary>
     /// 
     /// </summary>
@@ -402,6 +462,16 @@ public class TestSerialize : RpcApi
     public bool SetObjectList(List<object> p_ls)
     {
         return p_ls != null && p_ls.Count > 0;
+    }
+
+    public object[] GetObjectArray()
+    {
+        return ["asdf", 123, DateTime.Now, 100.23d];
+    }
+
+    public bool SetObjectArray(object[] p_ls)
+    {
+        return p_ls != null && p_ls.Length > 0;
     }
     #endregion
 
@@ -548,6 +618,16 @@ public class TestSerialize : RpcApi
         return p_ls;
     }
 
+    public Table[] GetTableArray()
+    {
+        return GetTableList().ToArray();
+    }
+
+    public Table[] SetTableArray(Table[] p_ls)
+    {
+        return p_ls;
+    }
+    
     Table CreateTable()
     {
         Table tbl = new Table
@@ -661,6 +741,16 @@ public class TestSerialize : RpcApi
     public List<SaveItem> SetSaveItems(List<SaveItem> p_sis)
     {
         return p_sis;
+    }
+
+    public SaveItem[] GetSaveItemArray()
+    {
+        return GetSaveItems().ToArray();
+    }
+
+    public SaveItem[] SetSaveItemArray(SaveItem[] p_ls)
+    {
+        return p_ls;
     }
     #endregion
 
@@ -793,6 +883,16 @@ public class TestSerialize : RpcApi
     {
         return p_dicts != null && p_dicts.Count > 0;
     }
+
+    public Dict[] GetDictArray()
+    {
+        return GetDictList().ToArray();
+    }
+
+    public Dict[] SetDictArray(Dict[] p_ls)
+    {
+        return p_ls;
+    }
     #endregion
 
     #region 自定义类型
@@ -871,11 +971,21 @@ public class TestSerialize : RpcApi
     /// </summary>
     /// <param name="p_products"></param>
     /// <returns></returns>
-    public bool SetCustomList(List<Product> p_products)
+    public List<Product> SetCustomList(List<Product> p_products)
     {
-        return p_products != null && p_products.Count > 0;
+        return p_products;
     }
 
+    public Product[] GetCustomArray()
+    {
+        return GetCustomList().ToArray();
+    }
+
+    public Product[] SetCustomArray(Product[] p_ls)
+    {
+        return p_ls;
+    }
+    
     /// <summary>
     /// 返回复杂自定义类型
     /// </summary>

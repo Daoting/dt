@@ -39,7 +39,7 @@
             <Button Content="发送MsgInfo" Click="SetMsgInfo" />
         </StackPanel>
 
-        <a:CBar Title="集合类型" />
+        <a:CBar Title="列表类型" />
         <StackPanel Orientation="Horizontal">
             <Button Content="收字符串列表" Click="GetStringList" />
             <Button Content="发字符串列表" Click="SetStringList" />
@@ -69,6 +69,36 @@
             <Button Content="发object列表" Click="SetObjectList" />
         </StackPanel>
 
+        <a:CBar Title="数组类型" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="收字符串数组" Click="GetStringArray" />
+            <Button Content="发字符串数组" Click="SetStringArray" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="收bool数组" Click="GetBoolArray" />
+            <Button Content="发bool数组" Click="SetBoolArray" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="收int数组" Click="GetIntArray" />
+            <Button Content="发int数组" Click="SetIntArray" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="收long数组" Click="GetLongArray" />
+            <Button Content="发long数组" Click="SetLongArray" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="收double数组" Click="GetDoubleArray" />
+            <Button Content="发double数组" Click="SetDoubleArray" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="收DateTime数组" Click="GetDateTimeArray" />
+            <Button Content="发DateTime数组" Click="SetDateTimeArray" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="收object数组" Click="GetObjectArray" />
+            <Button Content="发object数组" Click="SetObjectArray" />
+        </StackPanel>
+
         <a:CBar Title="Table类型" />
         <StackPanel Orientation="Horizontal">
             <Button Content="返回Table" Click="GetTable" />
@@ -87,12 +117,16 @@
             <Button Content="发送Entity" Click="SetEntityRow" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Button Content="返多表Dict" Click="GetTableDict" />
-            <Button Content="发多表Dict" Click="SetTableDict" />
+            <Button Content="返Table的Dict" Click="GetTableDict" />
+            <Button Content="发Table的Dict" Click="SetTableDict" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Button Content="返多表列表" Click="GetTableList" />
-            <Button Content="发多表列表" Click="SetTableList" />
+            <Button Content="返Table列表" Click="GetTableList" />
+            <Button Content="发Table列表" Click="SetTableList" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返Table数组" Click="GetTableArray" />
+            <Button Content="发Table数组" Click="SetTableArray" />
         </StackPanel>
 
         <a:CBar Title="SaveItem类型" />
@@ -108,23 +142,47 @@
             <Button Content="返回SaveItem列表" Click="GetSaveItems" />
             <Button Content="发送SaveItem列表" Click="SetSaveItems" />
         </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回SaveItem数组" Click="GetSaveItemArray" />
+            <Button Content="发送SaveItem数组" Click="SetSaveItemArray" />
+        </StackPanel>
 
         <a:CBar Title="Dict类型" />
-        <Button Content="返回基本类型Dict" Click="GetBaseDict" />
-        <Button Content="返回复杂类型Dict" Click="GetCombineDict" />
-        <Button Content="发送Dict" Click="SendDict" />
-        <Button Content="返回Dict列表" Click="GetDictList" />
-        <Button Content="发送Dict列表" Click="SendDictList" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回基本类型Dict" Click="GetBaseDict" />
+            <Button Content="返回复杂类型Dict" Click="GetCombineDict" />
+            <Button Content="发送Dict" Click="SendDict" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回Dict列表" Click="GetDictList" />
+            <Button Content="发送Dict列表" Click="SendDictList" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回Dict数组" Click="GetDictArray" />
+            <Button Content="发送Dict数组" Click="SendDictArray" />
+        </StackPanel>
 
         <a:CBar Title="任意类型" />
-        <Button Content="返回非内置对象" Click="GetCustomBase" />
-        <Button Content="发送非内置对象" Click="SetCustomBase" />
-        <Button Content="返回非内置对象列表" Click="GetCustomList" />
-        <Button Content="发送非内置对象列表" Click="SetCustomList" />
-        <Button Content="返回嵌套对象" Click="GetCustomCombine" />
-        <Button Content="发送嵌套对象" Click="SetCustomCombine" />
-        <Button Content="返回复杂嵌套对象" Click="GetContainCustom" />
-        <Button Content="发送复杂嵌套对象" Click="SetContainCustom" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回非内置对象" Click="GetCustomBase" />
+            <Button Content="发送非内置对象" Click="SetCustomBase" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回对象列表" Click="GetCustomList" />
+            <Button Content="发送对象列表" Click="SetCustomList" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回对象数组" Click="GetCustomArray" />
+            <Button Content="发送对象数组" Click="SetCustomArray" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回嵌套对象" Click="GetCustomCombine" />
+            <Button Content="发送嵌套对象" Click="SetCustomCombine" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回复杂嵌套对象" Click="GetContainCustom" />
+            <Button Content="发送复杂嵌套对象" Click="SetContainCustom" />
+        </StackPanel>
 
         <a:CFree ColSpan="0" RowSpan="5" ShowTitle="False">
             <TextBox

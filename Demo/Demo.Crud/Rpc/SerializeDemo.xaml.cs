@@ -143,7 +143,7 @@ public partial class SerializeDemo : Win
     }
     #endregion
 
-    #region 集合类型
+    #region 列表类型
     async void GetStringList(object sender, RoutedEventArgs e)
     {
         List<string> ls = await AtTestCm.GetStringList();
@@ -258,6 +258,118 @@ public partial class SerializeDemo : Win
         ls.Add(DateTime.Now);
         ls.Add(100.23d);
         _tbInfo.Text = (await AtTestCm.SetObjectList(ls)) ? "调用成功！" : "调用不成功！";
+    }
+    #endregion
+
+    #region 数组类型
+    async void GetStringArray(object sender, RoutedEventArgs e)
+    {
+        string[] ls = await AtTestCm.GetStringArray();
+        StringBuilder sb = new StringBuilder();
+        sb.AppendFormat("调用成功，共有{0}个字符串：\r\n", ls.Length);
+        foreach (string item in ls)
+        {
+            sb.AppendLine(item);
+        }
+        _tbInfo.Text = sb.ToString();
+    }
+
+    async void SetStringArray(object sender, RoutedEventArgs e)
+    {
+        bool success = await AtTestCm.SetStringArray(["first", "second"]);
+        _tbInfo.Text = success ? "调用成功！" : "调用不成功！";
+    }
+
+    async void GetBoolArray(object sender, RoutedEventArgs e)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine("调用成功：");
+        foreach (var item in await AtTestCm.GetBoolArray())
+        {
+            sb.AppendLine(item.ToString());
+        }
+        _tbInfo.Text = sb.ToString();
+    }
+
+    async void SetBoolArray(object sender, RoutedEventArgs e)
+    {
+        var ls = await AtTestCm.SetBoolArray([true, false, true]);
+        _tbInfo.Text = ls.Length == 3 ? "调用成功！" : "调用不成功！";
+    }
+
+    async void GetIntArray(object sender, RoutedEventArgs e)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine("调用成功：");
+        foreach (var item in await AtTestCm.GetIntArray())
+        {
+            sb.AppendLine(item.ToString());
+        }
+        _tbInfo.Text = sb.ToString();
+    }
+
+    async void SetIntArray(object sender, RoutedEventArgs e)
+    {
+        var ls = await AtTestCm.SetIntArray([1, 2, 3, 4]);
+        _tbInfo.Text = ls.Length == 4 ? "调用成功！" : "调用不成功！";
+    }
+
+    async void GetLongArray(object sender, RoutedEventArgs e)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine("调用成功：");
+        foreach (var item in await AtTestCm.GetLongArray())
+        {
+            sb.AppendLine(item.ToString());
+        }
+        _tbInfo.Text = sb.ToString();
+    }
+
+    async void SetLongArray(object sender, RoutedEventArgs e)
+    {
+        var ls = await AtTestCm.SetLongArray([1, 2, 3, 4]);
+        _tbInfo.Text = ls.Length == 4 ? "调用成功！" : "调用不成功！";
+    }
+
+    async void GetDoubleArray(object sender, RoutedEventArgs e)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine("调用成功：");
+        foreach (var item in await AtTestCm.GetDoubleArray())
+        {
+            sb.AppendLine(item.ToString());
+        }
+        _tbInfo.Text = sb.ToString();
+    }
+
+    async void SetDoubleArray(object sender, RoutedEventArgs e)
+    {
+        var ls = await AtTestCm.SetDoubleArray([200.0d, 100d, 50.123d, 123.45d]);
+        _tbInfo.Text = ls.Length == 4 ? "调用成功！" : "调用不成功！";
+    }
+
+    async void GetDateTimeArray(object sender, RoutedEventArgs e)
+    {
+        DateTime[] dts = await AtTestCm.GetDateTimeArray();
+        _tbInfo.Text = (dts != null) ? string.Format("调用成功: {0}, {1}", dts[0], dts[1]) : "调用不成功！";
+    }
+
+    async void SetDateTimeArray(object sender, RoutedEventArgs e)
+    {
+        DateTime[] tms = new DateTime[] { DateTime.Now, DateTime.Now.AddDays(-1) };
+        _tbInfo.Text = (await AtTestCm.SetDateTimeArray(tms)) ? "调用成功！" : "调用不成功！";
+    }
+
+    async void GetObjectArray(object sender, RoutedEventArgs e)
+    {
+        object[] ls = await AtTestCm.GetObjectArray();
+        _tbInfo.Text = (ls != null && ls.Length > 0) ? "调用成功！" : "调用不成功！";
+    }
+
+    async void SetObjectArray(object sender, RoutedEventArgs e)
+    {
+        object[] ls = new object[] { "asdf", 123, DateTime.Now, 100.23d };
+        _tbInfo.Text = (await AtTestCm.SetObjectArray(ls)) ? "调用成功！" : "调用不成功！";
     }
     #endregion
 
@@ -417,6 +529,36 @@ public partial class SerializeDemo : Win
         tbls = await AtTestCm.SetTableList(tbls);
         _tbInfo.Text = tbls.Count == 2 ? "调用成功！" : "调用不成功！";
     }
+
+    async void GetTableArray(object sender, RoutedEventArgs e)
+    {
+        var tbls = await AtTestCm.GetTableArray();
+        StringBuilder sb = new StringBuilder();
+        sb.AppendFormat("调用成功，共有{0}个DataTable：\r\n", tbls.Length);
+        foreach (var tbl in tbls)
+        {
+            foreach (var row in tbl)
+            {
+                foreach (var cell in row.Cells)
+                {
+                    sb.AppendFormat("{0}：{1}    ", cell.ID, cell.Val);
+                }
+                sb.AppendLine();
+            }
+            sb.AppendLine();
+            sb.AppendLine();
+        }
+        _tbInfo.Text = sb.ToString();
+    }
+
+    async void SetTableArray(object sender, RoutedEventArgs e)
+    {
+        var tbls = new Table[2];
+        tbls[0] = _tbl;
+        tbls[1] = _tbl.Copy();
+        tbls = await AtTestCm.SetTableArray(tbls);
+        _tbInfo.Text = tbls.Length == 2 ? "调用成功！" : "调用不成功！";
+    }
     #endregion
 
     #region Dict
@@ -498,6 +640,34 @@ public partial class SerializeDemo : Win
         bool succ = await AtTestCm.SendDictList(dts);
         _tbInfo.Text = succ ? "调用成功！" : "调用不成功！";
     }
+
+    async void GetDictArray(object sender, RoutedEventArgs e)
+    {
+        var dts = await AtTestCm.GetDictArray();
+        _tbInfo.Text = string.Format("调用成功：\r\n数组中有 {0} 个Dict", dts.Length);
+    }
+
+    async void SendDictArray(object sender, RoutedEventArgs e)
+    {
+        List<Dict> dts = new List<Dict>();
+        Dict dict = new Dict();
+        dict["string"] = "string value";
+        dict["bool"] = true;
+        dict["int"] = 100;
+        dict["long"] = 123234L;
+        dict["double"] = 1234.456d;
+        dict["datetime"] = DateTime.Now;
+        dict["bytearray"] = new byte[] { 10, 12, 14, 16 };
+        dict["null"] = null;
+        dts.Add(dict);
+
+        dict = new Dict();
+        dict["string"] = "string value";
+        dict["bool"] = true;
+        dts.Add(dict);
+        var ls = await AtTestCm.SetDictArray(dts.ToArray());
+        _tbInfo.Text = ls.Length == dts.Count ? "调用成功！" : "调用不成功！";
+    }
     #endregion
 
     #region 自定义类型
@@ -552,7 +722,33 @@ public partial class SerializeDemo : Win
             product.Sizes = new List<string> { "Small", "Medium", "Large" };
             ls.Add(product);
         }
-        _tbInfo.Text = (await AtTestCm.SetCustomList(ls)) ? "调用成功！" : "调用不成功！";
+        var res = await AtTestCm.SetCustomList(ls);
+        _tbInfo.Text = res.Count == ls.Count ? "调用成功！" : "调用不成功！";
+    }
+
+    async void GetCustomArray(object sender, RoutedEventArgs e)
+    {
+        var products = await AtTestCm.GetCustomArray<Product>();
+        if (products == null)
+            _tbInfo.Text = "调用不成功！";
+        else
+            _tbInfo.Text = string.Format("调用成功：\r\n数组长度 {0}", products.Length);
+    }
+
+    async void SetCustomArray(object sender, RoutedEventArgs e)
+    {
+        var ls = new List<Product>();
+        for (int i = 0; i < 5; i++)
+        {
+            Product product = new Product();
+            product.Name = "Apple" + i.ToString();
+            product.ExpiryDate = new DateTime(2016, 12, 28);
+            product.Price = 3.99M + i;
+            product.Sizes = new List<string> { "Small", "Medium", "Large" };
+            ls.Add(product);
+        }
+        var res = await AtTestCm.SetCustomArray(ls.ToArray());
+        _tbInfo.Text = res.Length == ls.Count ? "调用成功！" : "调用不成功！";
     }
 
     async void GetCustomCombine(object sender, RoutedEventArgs e)
@@ -833,7 +1029,7 @@ public partial class SerializeDemo : Win
         r.IsAdded = false;
         si.Data = r;
         ls.Add(si);
-        
+
         var sis = await AtTestCm.SetSaveItems(ls);
         if (sis == null || sis.Count == 0)
         {
@@ -851,6 +1047,80 @@ public partial class SerializeDemo : Win
         _tbInfo.Text = msg;
     }
 
+    async void GetSaveItemArray(object sender, RoutedEventArgs e)
+    {
+        var sis = await AtTestCm.GetSaveItemArray();
+        if (sis == null || sis.Length == 0)
+        {
+            _tbInfo.Text = "调用失败！";
+            return;
+        }
+
+        var msg = "调用成功：\r\n";
+        foreach (var si in sis)
+        {
+            msg += "\r\n";
+            msg += GetSaveItemInfo(si);
+            msg += "\r\n";
+        }
+        _tbInfo.Text = msg;
+    }
+
+    async void SetSaveItemArray(object sender, RoutedEventArgs e)
+    {
+        var ls = new List<SaveItem>
+        {
+            new SaveItem
+            {
+                Table = "tbl_1",
+                Data = CreateTable(),
+            },
+            new SaveItem
+            {
+                Table = "tbl_2",
+                IsDeleted = true,
+                Data = CreateTable(),
+            },
+            new SaveItem
+            {
+                Table = "tbl_3",
+                Data = CreateTable()[0],
+            },
+            new SaveItem
+            {
+                Table = "tbl_4",
+                IsDeleted = true,
+                Data = CreateTable()[0],
+            }
+        };
+
+        var si = new SaveItem
+        {
+            Table = "tbl_5",
+            IsDeleted = true,
+        };
+        var r = CreateTable()[0];
+        r.IsAdded = false;
+        si.Data = r;
+        ls.Add(si);
+
+        var sis = await AtTestCm.SetSaveItemArray(ls.ToArray());
+        if (sis == null || sis.Length == 0)
+        {
+            _tbInfo.Text = "调用失败！";
+            return;
+        }
+
+        var msg = "调用成功：\r\n";
+        foreach (var item in sis)
+        {
+            msg += "\r\n";
+            msg += GetSaveItemInfo(item);
+            msg += "\r\n";
+        }
+        _tbInfo.Text = msg;
+    }
+    
     string GetSaveItemInfo(SaveItem si)
     {
         StringBuilder sb = new StringBuilder();

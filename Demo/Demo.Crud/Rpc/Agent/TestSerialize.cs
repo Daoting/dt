@@ -302,6 +302,23 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<string[]> GetStringArray()
+    {
+        return Kit.Rpc<string[]>(
+            "cm",
+            "TestSerialize.GetStringArray"
+        );
+    }
+
+    public static Task<bool> SetStringArray(string[] p_ls)
+    {
+        return Kit.Rpc<bool>(
+            "cm",
+            "TestSerialize.SetStringArray",
+            (object)p_ls
+        );
+    }
+
     /// <summary>
     /// 返回bool值列表
     /// </summary>
@@ -332,6 +349,23 @@ public partial class AtTestCm
             "cm",
             "TestSerialize.SetBoolList",
             p_val
+        );
+    }
+
+    public static Task<bool[]> GetBoolArray()
+    {
+        return Kit.Rpc<bool[]>(
+            "cm",
+            "TestSerialize.GetBoolArray"
+        );
+    }
+
+    public static Task<bool[]> SetBoolArray(bool[] p_ls)
+    {
+        return Kit.Rpc<bool[]>(
+            "cm",
+            "TestSerialize.SetBoolArray",
+            p_ls
         );
     }
 
@@ -368,6 +402,23 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<int[]> GetIntArray()
+    {
+        return Kit.Rpc<int[]>(
+            "cm",
+            "TestSerialize.GetIntArray"
+        );
+    }
+
+    public static Task<int[]> SetIntArray(int[] p_ls)
+    {
+        return Kit.Rpc<int[]>(
+            "cm",
+            "TestSerialize.SetIntArray",
+            p_ls
+        );
+    }
+
     /// <summary>
     /// 返回long值列表
     /// </summary>
@@ -401,6 +452,23 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<long[]> GetLongArray()
+    {
+        return Kit.Rpc<long[]>(
+            "cm",
+            "TestSerialize.GetLongArray"
+        );
+    }
+
+    public static Task<long[]> SetLongArray(long[] p_ls)
+    {
+        return Kit.Rpc<long[]>(
+            "cm",
+            "TestSerialize.SetLongArray",
+            p_ls
+        );
+    }
+
     /// <summary>
     /// 返回double值列表
     /// </summary>
@@ -431,6 +499,23 @@ public partial class AtTestCm
             "cm",
             "TestSerialize.SetDoubleList",
             p_val
+        );
+    }
+
+    public static Task<double[]> GetDoubleArray()
+    {
+        return Kit.Rpc<double[]>(
+            "cm",
+            "TestSerialize.GetDoubleArray"
+        );
+    }
+
+    public static Task<double[]> SetDoubleArray(double[] p_ls)
+    {
+        return Kit.Rpc<double[]>(
+            "cm",
+            "TestSerialize.SetDoubleArray",
+            p_ls
         );
     }
 
@@ -468,6 +553,23 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<DateTime[]> GetDateTimeArray()
+    {
+        return Kit.Rpc<DateTime[]>(
+            "cm",
+            "TestSerialize.GetDateTimeArray"
+        );
+    }
+
+    public static Task<bool> SetDateTimeArray(DateTime[] p_ls)
+    {
+        return Kit.Rpc<bool>(
+            "cm",
+            "TestSerialize.SetDateTimeArray",
+            p_ls
+        );
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -498,7 +600,24 @@ public partial class AtTestCm
         return Kit.Rpc<bool>(
             "cm",
             "TestSerialize.SetObjectList",
-            (p_ls == null || p_ls.Length == 0) ? null : p_ls.ToList()
+            p_ls
+        );
+    }
+
+    public static Task<object[]> GetObjectArray()
+    {
+        return Kit.Rpc<object[]>(
+            "cm",
+            "TestSerialize.GetObjectArray"
+        );
+    }
+
+    public static Task<bool> SetObjectArray(params object[] p_ls)
+    {
+        return Kit.Rpc<bool>(
+            "cm",
+            "TestSerialize.SetObjectArray",
+            (object)p_ls
         );
     }
 
@@ -673,6 +792,23 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<Table[]> GetTableArray()
+    {
+        return Kit.Rpc<Table[]>(
+            "cm",
+            "TestSerialize.GetTableArray"
+        );
+    }
+
+    public static Task<Table[]> SetTableArray(Table[] p_ls)
+    {
+        return Kit.Rpc<Table[]>(
+            "cm",
+            "TestSerialize.SetTableArray",
+            (object)p_ls
+        );
+    }
+
     public static Task<SaveItem> GetTableSaveItem()
     {
         return Kit.Rpc<SaveItem>(
@@ -721,6 +857,23 @@ public partial class AtTestCm
             "cm",
             "TestSerialize.SetSaveItems",
             p_sis
+        );
+    }
+
+    public static Task<SaveItem[]> GetSaveItemArray()
+    {
+        return Kit.Rpc<SaveItem[]>(
+            "cm",
+            "TestSerialize.GetSaveItemArray"
+        );
+    }
+
+    public static Task<SaveItem[]> SetSaveItemArray(SaveItem[] p_ls)
+    {
+        return Kit.Rpc<SaveItem[]>(
+            "cm",
+            "TestSerialize.SetSaveItemArray",
+            (object)p_ls
         );
     }
 
@@ -802,6 +955,23 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<Dict[]> GetDictArray()
+    {
+        return Kit.Rpc<Dict[]>(
+            "cm",
+            "TestSerialize.GetDictArray"
+        );
+    }
+
+    public static Task<Dict[]> SetDictArray(Dict[] p_ls)
+    {
+        return Kit.Rpc<Dict[]>(
+            "cm",
+            "TestSerialize.SetDictArray",
+            (object)p_ls
+        );
+    }
+
     /// <summary>
     /// 返回基础自定义类型
     /// </summary>
@@ -865,12 +1035,32 @@ public partial class AtTestCm
     /// </summary>
     /// <param name="p_products"></param>
     /// <returns></returns>
-    public static Task<bool> SetCustomList(object p_products)
+    public static Task<List<T>> SetCustomList<T>(List<T> p_products)
+        where T : class
     {
-        return Kit.Rpc<bool>(
+        return Kit.Rpc<List<T>>(
             "cm",
             "TestSerialize.SetCustomList",
             p_products
+        );
+    }
+
+    public static Task<T[]> GetCustomArray<T>()
+        where T : class
+    {
+        return Kit.Rpc<T[]>(
+            "cm",
+            "TestSerialize.GetCustomArray"
+        );
+    }
+
+    public static Task<T[]> SetCustomArray<T>(T[] p_ls)
+        where T : class
+    {
+        return Kit.Rpc<T[]>(
+            "cm",
+            "TestSerialize.SetCustomArray",
+            (object)p_ls
         );
     }
 

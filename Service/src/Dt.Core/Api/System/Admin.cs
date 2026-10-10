@@ -79,7 +79,7 @@ public class Admin : RpcApi
 
         StringBuilder sb = new StringBuilder("<table>");
         sb.Append("<tr><td><table><tr><td width=\"70%\"><input type=\"text\" id=\"routeQuery\" placeholder=\"Url问号后的查询参数，格式如：key=value\" style=\"width:100%; margin:10px 0 10px 0;\"></td><td rowspan=\"2\" style=\"vertical-align: top;\"><div style=\"line-height: 1.5; height: 240px; margin:10px 20px 20px 40px;overflow: auto;\"><div style=\"font-weight: bold;\">返回结果</div><div id=\"routeResult\"></div></td></tr><tr><td><textarea id=\"routeMsg\" placeholder=\"路由消息内容\" style=\"width:100%; height:200px;overflow: auto;\"></textarea></td></tr></table></td></tr>");
-        
+
         int index = 0;
         int num = 0;
         sb.Append("<tr><td><table>");
@@ -98,7 +98,7 @@ public class Admin : RpcApi
         if (num != 4)
             sb.Append("</tr>");
         sb.Append("</table></td></tr>");
-        
+
         sb.Append("</table>");
         return sb.ToString();
     }
@@ -386,9 +386,12 @@ public class Admin : RpcApi
                 else if (!SerializeTypeAlias.IsInternal(tpReturn))
                 {
                     // 非内置类型
-                    retTypeName = "T";
+                    retTypeName = tpReturn.IsArray ? "T[]" : "T";
                     generic = "where T : class";
-                    sb.AppendFormat("public static Task<T> {0}<T>(", mi.Name);
+                    if (tpReturn.IsArray)
+                        sb.AppendFormat("public static Task<T[]> {0}<T>(", mi.Name);
+                    else
+                        sb.AppendFormat("public static Task<T> {0}<T>(", mi.Name);
                     isAppend = true;
                 }
 
@@ -442,6 +445,9 @@ public class Admin : RpcApi
             {
                 for (int i = 0; i < paramsLength; i++)
                 {
+                    if (i > 0)
+                        sb.Append(", ");
+
                     var item = infos[i];
 
                     // 实体类型，降型Row
@@ -461,7 +467,8 @@ public class Admin : RpcApi
                     }
 
                     // 最后的List<object>转为params object[]，方便客户端
-                    if (i == paramsLength - 1 && item.ParameterType == typeof(List<object>))
+                    if (i == paramsLength - 1
+                        && (item.ParameterType == typeof(List<object>) || item.ParameterType == typeof(object[])))
                     {
                         sb.Append("params object[] ");
                         sb.Append(item.Name);
@@ -471,7 +478,10 @@ public class Admin : RpcApi
                     // 非内置类型
                     if (!SerializeTypeAlias.IsInternal(item.ParameterType))
                     {
-                        sb.Append("object ");
+                        if (generic == null)
+                            sb.Append("object ");
+                        else
+                            sb.Append(item.ParameterType.IsArray ? "T[] " : (item.ParameterType.GetInterface("IEnumerable") != null ? "List<T> " : "T "));
                         sb.Append(item.Name);
                         continue;
                     }
@@ -491,9 +501,6 @@ public class Admin : RpcApi
                         else
                             sb.AppendFormat(" = {0}", item.DefaultValue);
                     }
-
-                    if (i < paramsLength - 1)
-                        sb.Append(", ");
                 }
             }
             sb.AppendLine(")");
@@ -549,9 +556,9 @@ public class Admin : RpcApi
                     var item = infos[i];
                     sb.AppendLine(",");
                     AppendTabSpace(sb, 2);
-                    // params object[]转为List<object>
-                    if (i == paramsLength - 1 && item.ParameterType == typeof(List<object>))
-                        sb.AppendFormat("({0} == null || {0}.Length == 0) ? null : {0}.ToList()", item.Name);
+                    // 引用类型数组需要强制转换为object，否则序列化时因为params会被拆分成多个参数！！！
+                    if (item.ParameterType.IsArray && !item.ParameterType.GetElementType().IsValueType)
+                        sb.AppendFormat("(object){0}", item.Name);
                     else
                         sb.Append(item.Name);
                 }
@@ -603,8 +610,22 @@ public class Admin : RpcApi
             tpName = "List<Table>";
         else if (p_type == typeof(List<Dict>))
             tpName = "List<Dict>";
+        else if (p_type == typeof(List<SaveItem>))
+            tpName = "List<SaveItem>";
         else if (p_type == typeof(byte[]))
             tpName = "byte[]";
+        else if (p_type == typeof(string[]))
+            tpName = "string[]";
+        else if (p_type == typeof(bool[]))
+            tpName = "bool[]";
+        else if (p_type == typeof(int[]))
+            tpName = "int[]";
+        else if (p_type == typeof(long[]))
+            tpName = "long[]";
+        else if (p_type == typeof(double[]))
+            tpName = "double[]";
+        else if (p_type == typeof(object[]))
+            tpName = "object[]";
         else if (p_type.IsGenericType)
         {
             var name = p_type.GetGenericTypeDefinition().FullName;
