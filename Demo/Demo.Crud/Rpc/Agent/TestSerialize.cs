@@ -621,6 +621,57 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<List<string>> GetStringListFromObjs()
+    {
+        return Kit.Rpc<List<string>>(
+            "cm",
+            "TestSerialize.GetStringListFromObjs"
+        );
+    }
+
+    public static Task<bool> SetStringListFromObjs(object[] p_ls)
+    {
+        return Kit.Rpc<bool>(
+            "cm",
+            "TestSerialize.SetStringListFromObjs",
+            (object)p_ls
+        );
+    }
+
+    public static Task<List<string>> GetStringListFromArray()
+    {
+        return Kit.Rpc<List<string>>(
+            "cm",
+            "TestSerialize.GetStringListFromArray"
+        );
+    }
+
+    public static Task<bool> SetStringListFromArray(List<string> p_ls)
+    {
+        return Kit.Rpc<bool>(
+            "cm",
+            "TestSerialize.SetStringListFromArray",
+            p_ls
+        );
+    }
+
+    public static Task<string[]> GetStringArrayFromList()
+    {
+        return Kit.Rpc<string[]>(
+            "cm",
+            "TestSerialize.GetStringArrayFromList"
+        );
+    }
+
+    public static Task<bool> SetStringArrayFromList(List<string> p_ls)
+    {
+        return Kit.Rpc<bool>(
+            "cm",
+            "TestSerialize.SetStringArrayFromList",
+            (object)p_ls
+        );
+    }
+
     /// <summary>
     /// 返回Table到客户端
     /// </summary>

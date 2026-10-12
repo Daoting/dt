@@ -373,6 +373,62 @@ public partial class SerializeDemo : Win
     }
     #endregion
 
+    #region 集合转换
+    async void GetStringListFromObjs(object sender, RoutedEventArgs e)
+    {
+        var ls = await AtTestCm.GetStringListFromObjs();
+        StringBuilder sb = new StringBuilder();
+        sb.AppendFormat("调用成功，共有{0}个字符串：\r\n", ls.Count);
+        foreach (string item in ls)
+        {
+            sb.AppendLine(item);
+        }
+        _tbInfo.Text = sb.ToString();
+    }
+
+    async void SetStringListFromObjs(object sender, RoutedEventArgs e)
+    {
+        bool success = await AtTestCm.SetStringListFromObjs(new object[] { "first", "second" });
+        _tbInfo.Text = success ? "调用成功！" : "调用不成功！";
+    }
+
+    async void GetStringListFromArray(object sender, RoutedEventArgs e)
+    {
+        var ls = await AtTestCm.GetStringListFromArray();
+        StringBuilder sb = new StringBuilder();
+        sb.AppendFormat("调用成功，共有{0}个字符串：\r\n", ls.Count);
+        foreach (string item in ls)
+        {
+            sb.AppendLine(item);
+        }
+        _tbInfo.Text = sb.ToString();
+    }
+
+    async void SetStringListFromArray(object sender, RoutedEventArgs e)
+    {
+        bool success = await AtTestCm.SetStringListFromObjs(["first", "second"]);
+        _tbInfo.Text = success ? "调用成功！" : "调用不成功！";
+    }
+
+    async void GetStringArrayFromList(object sender, RoutedEventArgs e)
+    {
+        var ls = await AtTestCm.GetStringArrayFromList();
+        StringBuilder sb = new StringBuilder();
+        sb.AppendFormat("调用成功，共有{0}个字符串：\r\n", ls.Length);
+        foreach (string item in ls)
+        {
+            sb.AppendLine(item);
+        }
+        _tbInfo.Text = sb.ToString();
+    }
+
+    async void SetStringArrayFromList(object sender, RoutedEventArgs e)
+    {
+        bool success = await AtTestCm.SetStringArrayFromList(new List<string> { "first", "second" });
+        _tbInfo.Text = success ? "调用成功！" : "调用不成功！";
+    }
+    #endregion
+
     #region Table
     async void GetTable(object sender, RoutedEventArgs e)
     {
@@ -1120,7 +1176,7 @@ public partial class SerializeDemo : Win
         }
         _tbInfo.Text = msg;
     }
-    
+
     string GetSaveItemInfo(SaveItem si)
     {
         StringBuilder sb = new StringBuilder();

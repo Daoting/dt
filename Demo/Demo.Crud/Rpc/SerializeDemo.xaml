@@ -99,6 +99,24 @@
             <Button Content="发object数组" Click="SetObjectArray" />
         </StackPanel>
 
+        <a:CBar Title="数组列表类型转换" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="收数组自动转列表" Click="GetStringListFromArray" />
+            <Button Content="发数组自动转列表" Click="SetStringListFromArray" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="收列表自动转数组" Click="GetStringArrayFromList" />
+            <Button Content="发列表自动转数组" Click="SetStringArrayFromList" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button
+                Content="收List&lt;object&gt;自动转List&lt;string&gt;"
+                Click="GetStringListFromObjs" />
+            <Button
+                Content="发List&lt;object&gt;自动转List&lt;string&gt;"
+                Click="SetStringListFromObjs" />
+        </StackPanel>
+
         <a:CBar Title="Table类型" />
         <StackPanel Orientation="Horizontal">
             <Button Content="返回Table" Click="GetTable" />

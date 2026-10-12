@@ -432,45 +432,83 @@ public static class JsonRpcSerializer
 
     static object DeserializeCollection(ref Utf8JsonReader p_reader, string p_alias, Type p_tgtType)
     {
-        // 只支持List<T>的情况
+        // 支持List<T>、T[] 和实现IList的类型，支持数组和列表的互相转换
         Type type = SerializeTypeAlias.GetType(p_alias);
 
-        // 简单类型数组
-        if (type.IsArray)
-            return DeserializeSimpleArray(ref p_reader, type.GetElementType(), p_tgtType);
-
-        // 非内置对象列表
-        if (!type.IsGenericType)
+        // 非内置对象列表，实现IList的自定义类型
+        if (!type.IsArray && !type.IsGenericType)
             return DeserializeFreeList(ref p_reader, p_tgtType);
 
-        // List<object>
-        Type itemType = type.GetGenericArguments()[0];
-        if (itemType == typeof(object))
-            return DeserializeObjList(ref p_reader);
-
-        // js客户端无法区分 int long double，按目标类型处理
-        if (p_tgtType != null
-            && type != p_tgtType
-            && p_tgtType.IsGenericType
-            && itemType == typeof(int))
+        Type itemType = null;
+        bool tgtIsArray = false;
+        if (p_tgtType != null)
         {
-            type = p_tgtType;
-            itemType = type.GetGenericArguments()[0];
+            // 以目标类型为准
+            if (p_tgtType.IsGenericType)
+            {
+                tgtIsArray = false;
+                itemType = p_tgtType.GetGenericArguments()[0];
+            }
+            else if (p_tgtType.IsArray)
+            {
+                tgtIsArray = true;
+                itemType = p_tgtType.GetElementType();
+            }
+            else
+            {
+                throw new Exception("目标类型不是数组或列表，无法反序列化！");
+            }
+        }
+        else
+        {
+            if (type.IsGenericType)
+            {
+                tgtIsArray = false;
+                itemType = type.GetGenericArguments()[0];
+            }
+            else if (type.IsArray)
+            {
+                tgtIsArray = true;
+                itemType = type.GetElementType();
+            }
         }
 
-        // 内置对象列表List<T>
-        IList target = Activator.CreateInstance(type) as IList;
-        while (p_reader.Read() && p_reader.TokenType != JsonTokenType.EndArray)
+        IList target = null;
+        Type srcItemType = type.IsGenericType ? type.GetGenericArguments()[0] : type.GetElementType();
+        if (srcItemType == typeof(object))
         {
-            target.Add(Deserialize(ref p_reader, itemType));
+            // List<object> object[]时，反序列方法不同
+            target = DeserializeObjList(ref p_reader, itemType);
         }
-        return target;
+        else
+        {
+            var listType = typeof(List<>).MakeGenericType(itemType);
+            target = Activator.CreateInstance(listType) as IList;
+            while (p_reader.Read() && p_reader.TokenType != JsonTokenType.EndArray)
+            {
+                target.Add(Deserialize(ref p_reader, itemType));
+            }
+        }
+
+        // 目标为List<>时，返回列表
+        if (!tgtIsArray)
+            return target;
+
+        // NativeAOT时反射调用List<T>.ToArray方法在运行时崩溃！！！
+        Array arr = Array.CreateInstance(itemType, target.Count);
+        for (int i = 0; i < target.Count; i++)
+        {
+            arr.SetValue(target[i], i);
+        }
+        return arr;
     }
 
     [UnconditionalSuppressMessage("AOT", "IL3050")]
-    static object DeserializeObjList(ref Utf8JsonReader p_reader)
+    static IList DeserializeObjList(ref Utf8JsonReader p_reader, Type p_tgtType)
     {
-        List<object> ls = new List<object>();
+        var listType = typeof(List<>).MakeGenericType(p_tgtType);
+        IList target = Activator.CreateInstance(listType) as IList;
+        
         // 项起始 [
         while (p_reader.Read())
         {
@@ -484,7 +522,7 @@ public static class JsonRpcSerializer
             p_reader.Read();
             if (tpName == string.Empty)
             {
-                ls.Add(Deserialize(ref p_reader));
+                target.Add(Deserialize(ref p_reader, p_tgtType));
             }
             else
             {
@@ -498,12 +536,12 @@ public static class JsonRpcSerializer
                 {
                     tp = Type.GetType("System." + tpName, true, false);
                 }
-                ls.Add(Deserialize(ref p_reader, tp));
+                target.Add(Deserialize(ref p_reader, tp));
             }
             // 项末尾 ]
             p_reader.Read();
         }
-        return ls;
+        return target;
     }
 
     static object DeserializeFreeList(ref Utf8JsonReader p_reader, Type p_tgtType)
@@ -527,79 +565,6 @@ public static class JsonRpcSerializer
             // 对象末尾 ]
         }
         return target;
-    }
-
-    /// <summary>
-    /// 根据目标类型，数组可以转不同元素类型的数组、不同元素类型的列表
-    /// </summary>
-    /// <param name="p_reader"></param>
-    /// <param name="p_srcType"></param>
-    /// <param name="p_tgtType"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
-    static object DeserializeSimpleArray(ref Utf8JsonReader p_reader, Type p_srcType, Type p_tgtType)
-    {
-        bool isArray = true;
-        var tp = p_srcType;
-
-        // 以目标类型为准
-        if (p_tgtType != null)
-        {
-            if (p_tgtType.IsGenericType)
-            {
-                isArray = false;
-                tp = p_tgtType.GetGenericArguments()[0];
-            }
-            else if (p_tgtType.IsArray)
-            {
-                tp = p_tgtType.GetElementType();
-            }
-            else
-            {
-                throw new Exception("目标类型不是数组或列表，无法转换！");
-            }
-        }
-
-        IList ls;
-        if (p_srcType == typeof(object))
-        {
-            // object[]时，反序列方法不同
-            ls = DeserializeObjList(ref p_reader) as IList;
-
-            // 如 object[] 转 List<string> 或 string[]，需要转换类型
-            if (tp != typeof(object))
-            {
-                var tgtType = typeof(List<>).MakeGenericType(tp);
-                var tgtLs = Activator.CreateInstance(tgtType) as IList;
-                for (int i = 0; i < ls.Count; i++)
-                {
-                    tgtLs.Add(ls[i]);
-                }
-                ls = tgtLs;
-            }
-        }
-        else
-        {
-            // 先反序列化成List<T>，再转换成数组
-            var listType = typeof(List<>).MakeGenericType(tp);
-            ls = Activator.CreateInstance(listType) as IList;
-            while (p_reader.Read() && p_reader.TokenType != JsonTokenType.EndArray)
-            {
-                ls.Add(Deserialize(ref p_reader, tp));
-            }
-        }
-
-        // 目标为List<>时，返回列表
-        if (!isArray)
-            return ls;
-
-        // NativeAOT时反射调用List<T>.ToArray方法运行时崩溃！！！
-        Array arr = Array.CreateInstance(tp, ls.Count);
-        for (int i = 0; i < ls.Count; i++)
-        {
-            arr.SetValue(ls[i], i);
-        }
-        return arr;
     }
     #endregion
 

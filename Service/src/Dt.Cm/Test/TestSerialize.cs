@@ -245,7 +245,7 @@ public class TestSerialize : RpcApi
     {
         return p_ls != null && p_ls.Length > 0;
     }
-    
+
     /// <summary>
     /// 返回bool值列表
     /// </summary>
@@ -286,7 +286,7 @@ public class TestSerialize : RpcApi
     {
         return p_ls;
     }
-    
+
     /// <summary>
     /// 返回int值列表
     /// </summary>
@@ -321,7 +321,7 @@ public class TestSerialize : RpcApi
     {
         return p_ls;
     }
-    
+
     /// <summary>
     /// 返回long值列表
     /// </summary>
@@ -356,7 +356,7 @@ public class TestSerialize : RpcApi
     {
         return p_ls;
     }
-    
+
     /// <summary>
     /// 返回double值列表
     /// </summary>
@@ -389,7 +389,7 @@ public class TestSerialize : RpcApi
     {
         return p_ls;
     }
-    
+
     /// <summary>
     /// DateTime列表
     /// </summary>
@@ -429,7 +429,7 @@ public class TestSerialize : RpcApi
     {
         return p_ls != null && p_ls.Length > 0;
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -470,6 +470,38 @@ public class TestSerialize : RpcApi
     }
 
     public bool SetObjectArray(object[] p_ls)
+    {
+        return p_ls != null && p_ls.Length > 0;
+    }
+    #endregion
+
+    #region 集合转换
+    public List<object> GetStringListFromObjs()
+    {
+        return new List<object>() { "first", "second" };
+    }
+
+    public bool SetStringListFromObjs(List<string> p_ls)
+    {
+        return p_ls != null && p_ls.Count > 0;
+    }
+
+    public string[] GetStringListFromArray()
+    {
+        return ["first", "second"];
+    }
+
+    public bool SetStringListFromArray(List<string> p_ls)
+    {
+        return p_ls != null && p_ls.Count > 0;
+    }
+
+    public List<string> GetStringArrayFromList()
+    {
+        return new List<string> { "first", "second" };
+    }
+
+    public bool SetStringArrayFromList(string[] p_ls)
     {
         return p_ls != null && p_ls.Length > 0;
     }
@@ -627,7 +659,7 @@ public class TestSerialize : RpcApi
     {
         return p_ls;
     }
-    
+
     Table CreateTable()
     {
         Table tbl = new Table
@@ -985,7 +1017,7 @@ public class TestSerialize : RpcApi
     {
         return p_ls;
     }
-    
+
     /// <summary>
     /// 返回复杂自定义类型
     /// </summary>
