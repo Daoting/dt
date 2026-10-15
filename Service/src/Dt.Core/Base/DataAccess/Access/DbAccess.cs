@@ -775,7 +775,7 @@ abstract class DbAccess : IDataAccess
             }
             else
             {
-                // 仅有#，动态生成sql模板
+                // 仅有#，通用查询，动态生成sql模板
                 if (p_params is Dict dt
                     && dt.TryGetValue(_sqlFormatArgs, out object args))
                 {
@@ -784,20 +784,20 @@ abstract class DbAccess : IDataAccess
                         // 单一个表名
                         sql = "SELECT * FROM " + tbl;
                     }
-                    else if (args is object[] arr && arr.Length > 0)
+                    else if (args is IList arr && arr.Count > 0)
                     {
                         // 数组顺序：表名、条件、字段
                         sql = "SELECT";
                         var table = arr[0] as string;
 
-                        if (arr.Length > 2
+                        if (arr.Count > 2
                             && arr[2] is string field
                             && !string.IsNullOrWhiteSpace(field))
                             sql += $" {field} FROM {table}";
                         else
                             sql += " * FROM " + table;
 
-                        if (arr.Length > 1
+                        if (arr.Count > 1
                             && arr[1] is string where
                             && !string.IsNullOrWhiteSpace(where))
                             sql += " WHERE " + where;

@@ -29,6 +29,8 @@ public partial class QueryDemo : Win
     async void OnCommonWhere(object sender, RoutedEventArgs e)
     {
         var tbl = await At.Query("#", new { f = ("crud_基础", "名称 like '%批量%'") });
+        //var tbl = await At.Query("#", new { f = (object[])["crud_基础", "名称 like '%批量%'"] });
+        //var tbl = await At.Query("#", new { f = new List<string> { "crud_基础", "名称 like '%批量%'" } });
         ShowTable(tbl);
     }
 
