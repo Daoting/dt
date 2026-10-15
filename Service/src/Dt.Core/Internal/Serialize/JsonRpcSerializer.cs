@@ -10,6 +10,7 @@
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 #endregion
@@ -118,6 +119,16 @@ public static class JsonRpcSerializer
                 {
                     // 列表
                     SerializeCollection((IEnumerable)p_value, p_writer);
+                }
+                else if (p_value is ITuple tup && tup.Length > 0)
+                {
+                    // 元组转object[]，再序列化
+                    object[] arr = new object[tup.Length];
+                    for (int i = 0; i < tup.Length; i++)
+                    {
+                        arr[i] = tup[i];
+                    }
+                    SerializeCollection(arr, p_writer);
                 }
                 else
                 {
@@ -508,7 +519,7 @@ public static class JsonRpcSerializer
     {
         var listType = typeof(List<>).MakeGenericType(p_tgtType);
         IList target = Activator.CreateInstance(listType) as IList;
-        
+
         // 项起始 [
         while (p_reader.Read())
         {
