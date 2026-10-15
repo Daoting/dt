@@ -1,0 +1,33 @@
+﻿<a:Win
+    x:Class="Demo.Crud.QueryDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CBar Title="Sql键名通用查询" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="通用查询只表名" Click="OnCommonTbl" />
+            <Button Content="通用查询where条件" Click="OnCommonWhere" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="通用查询限制字段" Click="OnCommonField" />
+            <Button Content="通用查询带排序" Click="OnCommonOrder" />
+        </StackPanel>
+
+        <a:CBar Title="sql键名查询" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="通用查询只表名" Click="OnCommonTbl" />
+            <Button Content="通用查询where条件" Click="OnCommonWhere" />
+        </StackPanel>
+
+        <a:CFree ColSpan="0" RowSpan="5" ShowTitle="False">
+            <TextBox
+                x:Name="_tbInfo"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollMode="Enabled" />
+        </a:CFree>
+    </a:Fv>
+</a:Win>

@@ -1,0 +1,52 @@
+﻿#region 文件描述
+/******************************************************************************
+* 创建: Daoting
+* 摘要: 
+* 日志: 2023-02-01 创建
+******************************************************************************/
+#endregion
+
+#region 引用命名
+using Microsoft.UI.Xaml;
+#endregion
+
+namespace Demo.Crud;
+
+public partial class QueryDemo : Win
+{
+    public QueryDemo()
+    {
+        InitializeComponent();
+    }
+
+    async void OnCommonTbl(object sender, RoutedEventArgs e)
+    {
+        var tbl = await At.Query("#", new { f = "crud_基础" });
+        //var tbl = await At.Query("#", new { f = ("crud_基础", "") });
+        ShowTable(tbl);
+    }
+
+    async void OnCommonWhere(object sender, RoutedEventArgs e)
+    {
+        var tbl = await At.Query("#", new { f = ("crud_基础", "名称 like '%批量%'") });
+        ShowTable(tbl);
+    }
+
+    async void OnCommonField(object sender, RoutedEventArgs e)
+    {
+        var tbl = await At.Query("#", new { f = ("crud_基础", "名称 like '%批量%'", "id,名称") });
+        ShowTable(tbl);
+    }
+
+    async void OnCommonOrder(object sender, RoutedEventArgs e)
+    {
+        var tbl = await At.Query("#", new { f = ("crud_基础", "名称 like '%批量%' order by 序列 desc") });
+        ShowTable(tbl);
+    }
+    
+    void ShowTable(Table tbl)
+    {
+        _tbInfo.Text = $"调用成功：\r\n共返回{tbl.Count}行";
+    }
+
+}

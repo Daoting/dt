@@ -38,6 +38,7 @@ public partial class DemoMain : Win
             new Nav("异常处理", typeof(ExceptionDemo), Icons.警告) { Desc ="客户端和服务端异常" },
             new Nav("远程过程调用", typeof(RpcDemo), Icons.耳麦) { Desc = "Rpc调用" },
             new Nav("服务端Api授权控制", typeof(AuthAccess), Icons.小图标) { Desc ="Api授权控制" },
+            new Nav("数据查询", typeof(QueryDemo), Icons.靶子) { Desc = "调用服务进行数据查询方法"},
         };
         group.Title = "Rpc基础";
         ds.Add(group);

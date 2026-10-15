@@ -736,6 +736,8 @@ abstract class DbAccess : IDataAccess
     #endregion
 
     #region 内部方法
+    const string _sqlFormatArgs = "f";
+
     /// <summary>
     /// 创建Dapper的命令定义
     /// </summary>
@@ -745,25 +747,88 @@ abstract class DbAccess : IDataAccess
     /// <returns></returns>
     protected CommandDefinition CreateCommand(string p_sqlOrKey, object p_params, bool p_deferred)
     {
+        var sql = p_sqlOrKey;
+        if (string.IsNullOrWhiteSpace(sql))
+            throw new Exception("Sql语句或键名不能为空！");
+
 #if SERVER
-        // Sql语句中包含空格，键名无空格！
-        if (p_sqlOrKey.IndexOf(' ') == -1)
+        // Sql键名以#开头
+        if (sql[0] == '#')
         {
-            var sql = Kit.Sql(p_sqlOrKey);
+            if (sql.Length > 1)
+            {
+                // 获取sql模板
+                sql = Kit.Sql(p_sqlOrKey.AsSpan(1));
+
+                // sql模板可能需要格式化
+                if (p_params is Dict dt
+                    && dt.TryGetValue(_sqlFormatArgs, out object formatArgs))
+                {
+                    sql = string.Format(sql, (formatArgs is object[] args) ? args : formatArgs);
+                    // 移除格式化键值，提供到Command时异常
+                    dt.Remove(_sqlFormatArgs);
+                }
+                else
+                {
+                    throw new Exception($"Sql键名 {p_sqlOrKey} 不存在！");
+                }
+            }
+            else
+            {
+                // 仅有#，动态生成sql模板
+                if (p_params is Dict dt
+                    && dt.TryGetValue(_sqlFormatArgs, out object args))
+                {
+                    if (args is string tbl)
+                    {
+                        // 单一个表名
+                        sql = "SELECT * FROM " + tbl;
+                    }
+                    else if (args is object[] arr && arr.Length > 0)
+                    {
+                        // 数组顺序：表名、条件、字段
+                        sql = "SELECT";
+                        var table = arr[0] as string;
+
+                        if (arr.Length > 2
+                            && arr[2] is string field
+                            && !string.IsNullOrWhiteSpace(field))
+                            sql += $" {field} FROM {table}";
+                        else
+                            sql += " * FROM " + table;
+
+                        if (arr.Length > 1
+                            && arr[1] is string where
+                            && !string.IsNullOrWhiteSpace(where))
+                            sql += " WHERE " + where;
+                    }
+                    else
+                    {
+                        throw new Exception("通用查询方式需提供单个表名或按顺序提供：表名、条件、字段！");
+                    }
+                    dt.Remove(_sqlFormatArgs);
+                    if (dt.Count == 0)
+                        p_params = null;
+                }
+                else
+                {
+                    throw new Exception("通用查询方式至少提供表名！");
+                }
+            }
+
             if (Kit.TraceSql)
                 Kit.ContextLog.Information(p_sqlOrKey + ": " + sql);
-            p_sqlOrKey = sql;
         }
         else if (Kit.TraceSql)
         {
-            Kit.ContextLog.Information(p_sqlOrKey);
+            Kit.ContextLog.Information(sql);
         }
 #else
-        Log.Debug(p_sqlOrKey);
+        Log.Debug(sql);
 #endif
-        
+
         return new CommandDefinition(
-            p_sqlOrKey,
+            sql,
             p_params,
             _tran,
             null,
