@@ -6,5 +6,8 @@
   "SvcName": "",
 
   // 默认数据源键名，每个微服务还可自定义
-  "DbKey": "pgdt"
+  "DbKey": "pgdt",
+
+  // 是否启用热加载SQL字典，默认false
+  "SqlHotReload": true
 }
