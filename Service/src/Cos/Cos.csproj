@@ -11,6 +11,9 @@
 		<Content Include="..\..\..\logo.png" Link="package\logo.png">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
+        <Content Include="etc\sql\*.sql">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
 	</ItemGroup>
 	<ItemGroup>
 		<RdXmlFile Include="rd.xml" />
