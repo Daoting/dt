@@ -759,7 +759,9 @@ abstract class DbAccess : IDataAccess
             {
                 // 获取sql模板
                 sql = Kit.Sql(p_sqlOrKey.AsSpan(1));
-
+                if (sql == null)
+                    throw new Exception($"Sql键名 {p_sqlOrKey} 不存在！");
+                
                 // sql模板可能需要格式化
                 if (p_params is Dict dt
                     && dt.TryGetValue(_sqlFormatArgs, out object formatArgs))
@@ -767,10 +769,8 @@ abstract class DbAccess : IDataAccess
                     sql = string.Format(sql, (formatArgs is object[] args) ? args : formatArgs);
                     // 移除格式化键值，提供到Command时异常
                     dt.Remove(_sqlFormatArgs);
-                }
-                else
-                {
-                    throw new Exception($"Sql键名 {p_sqlOrKey} 不存在！");
+                    if (dt.Count == 0)
+                        p_params = null;
                 }
             }
             else

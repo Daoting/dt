@@ -15,10 +15,14 @@
             <Button Content="通用查询带排序" Click="OnCommonOrder" />
         </StackPanel>
 
-        <a:CBar Title="sql键名查询" />
+        <a:CBar Title="通过sql键名查询" />
         <StackPanel Orientation="Horizontal">
-            <Button Content="通用查询只表名" Click="OnCommonTbl" />
-            <Button Content="通用查询where条件" Click="OnCommonWhere" />
+            <Button Content="sql无参数" Click="OnSql" />
+            <Button Content="含参数sql" Click="OnSqlParams" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="含格式化串sql" Click="OnSqlArgs" />
+            <Button Content="含格式化串含参数sql" Click="OnSqlArgsParams" />
         </StackPanel>
 
         <a:CFree ColSpan="0" RowSpan="5" ShowTitle="False">

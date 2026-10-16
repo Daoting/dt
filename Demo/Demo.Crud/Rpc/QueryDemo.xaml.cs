@@ -45,6 +45,30 @@ public partial class QueryDemo : Win
         var tbl = await At.Query("#", new { f = ("crud_基础", "名称 like '%批量%' order by 序列 desc") });
         ShowTable(tbl);
     }
+
+    async void OnSql(object sender, RoutedEventArgs e)
+    {
+        var tbl = await At.Query("#sql无参数");
+        ShowTable(tbl);
+    }
+
+    async void OnSqlParams(object sender, RoutedEventArgs e)
+    {
+        var tbl = await At.Query("#含参数sql", new { id = 1 });
+        ShowTable(tbl);
+    }
+
+    async void OnSqlArgs(object sender, RoutedEventArgs e)
+    {
+        var tbl = await At.Query("#含格式化串sql", new { f = "名称 like '%批量%' order by 序列 desc" });
+        ShowTable(tbl);
+    }
+
+    async void OnSqlArgsParams(object sender, RoutedEventArgs e)
+    {
+        var tbl = await At.Query("#含格式化串含参数sql", new { f = "'%批量%'", 序列 = 100 });
+        ShowTable(tbl);
+    }
     
     void ShowTable(Table tbl)
     {
