@@ -177,15 +177,17 @@ internal class WebHostStarter
         // 同步数据库时间
         DbSchema.SyncDbTime();
 
-        // 服务描述 及 缓存Sql字典
+        // 服务描述
         foreach (var svc in Kit.Svcs)
         {
-            var sqlInfo = SqlDict.Cache(svc);
-            sqlInfo = string.IsNullOrEmpty(sqlInfo) ? "" : "，" + sqlInfo;
             var desc = svc.Stub.GetDesc();
-            desc = string.IsNullOrEmpty(desc) ? "" : "，" + desc;
-            Log.Information($"{svc.SvcName}：{svc.DbInfo.Name}{sqlInfo}{desc}");
+            if (!string.IsNullOrEmpty(desc))
+                desc= "，" + desc;
+            Log.Information($"{svc.SvcName}：{svc.DbInfo.Name}{desc}");
         }
+
+        // 缓存Sql字典
+        SqlDict.Start();
     }
 
     static void ConfigureInitMode(IApplicationBuilder p_app)

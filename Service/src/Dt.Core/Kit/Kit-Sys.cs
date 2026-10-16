@@ -105,17 +105,22 @@ public partial class Kit
     public static string AllSvcName => Svcs != null ? string.Join(" + ", SvcNames) : "";
 
     /// <summary>
-    /// 查询Sql语句，默认从缓存字典中查询，service.json中CacheSql为false时直接从表xxx_sql查询！
-    /// <para>输入参数为键名(无空格) 或 Sql语句，含空格时不需查询，直接返回Sql语句</para>
+    /// 从缓存字典中查询Sql语句，键名不包含#前缀
+    /// <param name="p_key">不包含#前缀</param>
     /// </summary>
     public static string Sql(string p_key)
     {
-        return null;
+        return SqlDict.GetSql(p_key);
     }
 
-    public static string Sql(ReadOnlySpan<char> p_key)
+    /// <summary>
+    /// 从缓存字典中查询Sql语句，键名不包含#前缀
+    /// </summary>
+    /// <param name="p_key">不包含#前缀</param>
+    /// <returns></returns>
+    public static string Sql(in ReadOnlySpan<char> p_key)
     {
-        return "select * from {0}";
+        return SqlDict.GetSql(p_key);
     }
     #endregion
 
