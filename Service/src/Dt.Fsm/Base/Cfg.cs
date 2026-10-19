@@ -7,14 +7,8 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
-using Dt.Core.Caches;
 using Microsoft.Extensions.Configuration;
-using Serilog;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+using System.Collections.Concurrent;
 #endregion
 
 namespace Dt.Fsm;
@@ -25,11 +19,6 @@ namespace Dt.Fsm;
 public static class Cfg
 {
     static IConfiguration _config;
-    
-    /// <summary>
-    /// 卷状态缓存键
-    /// </summary>
-    public const string VolumeKey = "volume";
 
     /// <summary>
     /// 缩略图后缀名
@@ -53,6 +42,11 @@ public static class Cfg
     /// 固定卷表
     /// </summary>
     public static List<string> FixedVolumes { get; } = new List<string>();
+
+    /// <summary>
+    /// 普通卷的使用次数
+    /// </summary>
+    public static ConcurrentDictionary<string, int> VolumeUsed { get; } = new();
 
     /// <summary>
     /// 初始化服务配置
@@ -104,7 +98,6 @@ public static class Cfg
         }
 
         // 普通卷
-        SortedSetCache cache = new SortedSetCache(VolumeKey);
         var subs = dir.GetDirectories();
         if (subs != null && subs.Length > 0)
         {
@@ -115,8 +108,8 @@ public static class Cfg
                 if (!FixedVolumes.Contains(v))
                 {
                     Volumes.Add(sub.Name);
-                    // 加入缓存
-                    cache.Increment(v, 0).Wait();
+                    // 卷使用计数
+                    VolumeUsed[v] = 0;
                 }
             }
         }
@@ -132,7 +125,7 @@ public static class Cfg
                 {
                     Volumes.Add(vol);
                     Directory.CreateDirectory(path);
-                    cache.Increment(vol, 0).Wait();
+                    VolumeUsed[vol] = 0;
                 }
             }
         }

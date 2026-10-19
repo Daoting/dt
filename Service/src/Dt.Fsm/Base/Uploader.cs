@@ -7,19 +7,12 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
-using Dt.Core.Caches;
 using Dt.Core.Rpc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.WebUtilities;
-using Serilog;
-using System;
 using System.Buffers;
-using System.Collections.Generic;
-using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Fsm;
@@ -83,7 +76,6 @@ public class Uploader
             return;
         }
 
-        SortedSetCache cache = null;
         _da = Kit.NewDataAccess();
         _da.AutoClose = false;
 
@@ -110,11 +102,18 @@ public class Uploader
             }
             else
             {
-                // 选择正在使用数最低的卷
-                cache = new SortedSetCache(Cfg.VolumeKey);
-                _volume = await cache.GetMin();
+                // 选择使用数最低的卷
+                int minUsed = int.MaxValue;
+                foreach (var v in Cfg.VolumeUsed)
+                {
+                    if (v.Value < minUsed)
+                    {
+                        minUsed = v.Value;
+                        _volume = v.Key;
+                    }
+                }
                 // 该卷使用数加1
-                await cache.Increment(_volume);
+                Cfg.VolumeUsed[_volume]++;
             }
 
             // Section顺序：固定路径(可无)，文件，文件，缩略图，文件
@@ -186,9 +185,6 @@ public class Uploader
         finally
         {
             await _da.Close(true);
-            // 卷使用数减1
-            if (cache != null)
-                await cache.Decrement(_volume);
         }
 
         await Response();
@@ -257,7 +253,7 @@ public class Uploader
         {
             Log.Error(ex, "记录上传文件时异常！");
         }
-        
+
         return desc;
     }
 
