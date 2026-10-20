@@ -24,7 +24,6 @@
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Schema\ChildEntitySchema.cs" Link="Base\Domain\Schema\ChildEntitySchema.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Schema\EntitySchema.cs" Link="Base\Domain\Schema\EntitySchema.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Attributes.cs" Link="Base\Domain\Attributes.cs" />
-        <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\EntityCacher.cs" Link="Base\Domain\EntityCacher.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\EventBus\IEvent.cs" Link="Base\Domain\Event\IEvent.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\EventBus\Local\IEventHandler.cs" Link="Base\Domain\Event\IEventHandler.cs" />
         <Compile Include="..\..\Service\src\Dt.Core\Base\Domain\Writer\IEntityWriter.cs" Link="Base\Domain\Writer\IEntityWriter.cs" />

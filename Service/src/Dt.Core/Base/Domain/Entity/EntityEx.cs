@@ -232,33 +232,6 @@ public static class EntityEx
     }
     #endregion
 
-    #region 缓存
-    /// <summary>
-    /// 清除以某列为键名的实体缓存，键名组成：
-    /// <para>表名:列名:列值</para>
-    /// </summary>
-    /// <typeparam name="TEntity">实体类型</typeparam>
-    /// <param name="p_entity">实体</param>
-    /// <param name="p_colName">主键或唯一索引列名</param>
-    /// <returns></returns>
-    public static async Task ClearCache<TEntity>(this TEntity p_entity, string p_colName)
-        where TEntity : Entity
-    {
-        if (p_entity == null || string.IsNullOrEmpty(p_colName))
-            Throw.Msg("清除实体缓存时列名不可为空！");
-
-        var model = await EntitySchema.Get(p_entity.GetType());
-#if !SERVER
-        if (model.AccessInfo.Type == AccessType.Local)
-            Throw.Msg("本地Sqlite库实体不支持缓存！");
-#endif
-
-        var cacher = new EntityCacher(model);
-        // 可能当前列值已修改，取原始值
-        await cacher.Remove(p_colName, p_entity.Cells[p_colName].GetOriginalVal<string>());
-    }
-    #endregion
-
     #region 内部方法
 #if !SERVER
     static async Task<IDataAccess> GetDa(Type p_type)

@@ -9,8 +9,6 @@
 #region 引用命名
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection;
 #endregion
 
 namespace Dt.Core;
@@ -419,44 +417,7 @@ public abstract class EntityX<TEntity> : Entity
         }
         return parent;
     }
-
-    /// <summary>
-    /// 根据主键或唯一索引值优先从缓存中获取实体，获取过程：
-    /// <para>1. 首先从缓存中获取，有则直接返回</para>
-    /// <para>2. 无则查询数据库，并将查询结果添加到缓存以备下次使用</para>
-    /// </summary>
-    /// <param name="p_keyName">主键或唯一索引列名，确保缓存中键名的唯一</param>
-    /// <param name="p_keyVal">键值</param>
-    /// <returns></returns>
-    public static async Task<TEntity> GetFromCacheFirst(string p_keyName, object p_keyVal)
-    {
-        if (string.IsNullOrWhiteSpace(p_keyName) || p_keyVal == null)
-            Throw.Msg("GetFromCacheFirst查询时主键或唯一索引不可为空！");
-
-        if (_isVirEntity)
-            Throw.Msg("虚拟实体不支持缓存！");
-
-        var model = await EntitySchema.Get(typeof(TEntity));
-#if !SERVER
-        if (model.AccessInfo.Type == AccessType.Local)
-            Throw.Msg("本地Sqlite库实体不支持缓存！");
-#endif
-
-        // 首先从缓存中获取，有则直接返回
-        var cacher = new EntityCacher(model);
-        TEntity entity = await cacher.Get<TEntity>(p_keyName, p_keyVal.ToString());
-
-        if (entity == null)
-        {
-            // 无则查询数据库
-            entity = await GetByKeyInternal(p_keyName, p_keyVal);
-            // 并将查询结果添加到缓存以备下次使用
-            if (entity != null)
-                await cacher.Cache(entity, p_keyName, p_keyVal.ToString());
-        }
-        return entity;
-    }
-
+    
     static async Task<TEntity> GetByKeyInternal(string p_keyName, object p_keyVal)
     {
         // 不再校验

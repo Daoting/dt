@@ -293,45 +293,8 @@ public partial class AccessDemo : Win
         }
         Kit.Msg(msg);
     }
-
     #endregion
-
-    #region 缓存
-    async void OnInsertCache(object sender, RoutedEventArgs e)
-    {
-        var x = await 缓存表X.New(Kit.NewGuid.Substring(0, 11), _rnd.Next(10000).ToString());
-        await x.Save();
-    }
-
-    async void OnUpdateCache(object sender, RoutedEventArgs e)
-    {
-        var x = await 缓存表X.First(null);
-        if (x != null)
-        {
-            x.姓名 = _rnd.Next(1000).ToString();
-            await x.Save();
-        }
-    }
-
-    async void OnDelCache(object sender, RoutedEventArgs e)
-    {
-        var x = await 缓存表X.First(null);
-        if (x != null)
-        {
-            await x.Delete();
-        }
-    }
-
-    async void OnCacheByKey(object sender, RoutedEventArgs e)
-    {
-        var x = await 缓存表X.First(null);
-        if (x != null)
-        {
-            x = await 缓存表X.GetFromCacheFirst("手机号", x.手机号);
-        }
-    }
-    #endregion
-
+    
     #region 领域服务
     async void OnSaveDs(object sender, RoutedEventArgs e)
     {
