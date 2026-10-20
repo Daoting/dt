@@ -121,6 +121,13 @@ internal class WebHostStarter
                 }
             });
 
+            // 注册内存缓存
+            _builder.Services.AddMemoryCache(options =>
+            {
+                // 缓存最大容量单位阈值，不是条目数，单位在添加条目的Option中定义，防止内存暴涨
+                options.SizeLimit = 10000;
+            });
+            
             Kit.ConfigureServices(_builder.Services);
             if (!p_isInitMode)
                 Silo.ConfigureServices(_builder.Services);

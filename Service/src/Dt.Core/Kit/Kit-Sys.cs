@@ -10,6 +10,7 @@
 using Dt.Core.Rpc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Frozen;
@@ -30,6 +31,7 @@ public partial class Kit
     static IDisposable _cfgCallback;
     static IServiceProvider _svcProvider;
     static IHttpContextAccessor _accessor;
+    static IMemoryCache _cache; 
     #endregion
 
     #region 属性
@@ -104,6 +106,11 @@ public partial class Kit
     /// </summary>
     public static string AllSvcName => Svcs != null ? string.Join(" + ", SvcNames) : "";
 
+    /// <summary>
+    /// 获取全局缓存对象
+    /// </summary>
+    public static IMemoryCache Cache => _cache;
+    
     /// <summary>
     /// 从缓存字典中查询Sql语句，键名不包含#前缀
     /// <param name="p_key">不包含#前缀</param>
@@ -265,7 +272,8 @@ public partial class Kit
         // 全局服务容器
         _svcProvider = p_app.ApplicationServices;
         _accessor = _svcProvider.GetRequiredService<IHttpContextAccessor>();
-
+        _cache = _svcProvider.GetRequiredService<IMemoryCache>();
+        
         if (Svcs != null)
         {
             Dictionary<string, RequestDelegate> handlers = new(StringComparer.OrdinalIgnoreCase);
