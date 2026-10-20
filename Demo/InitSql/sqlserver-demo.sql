@@ -37,9 +37,6 @@ GO
 IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[crud_父表]') AND type IN ('U')) DROP TABLE [dbo].[crud_父表]
 GO
 
-IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[crud_缓存表]') AND type IN ('U')) DROP TABLE [dbo].[crud_缓存表]
-GO
-
 IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[crud_角色权限]') AND type IN ('U')) DROP TABLE [dbo].[crud_角色权限]
 GO
 
@@ -2017,21 +2014,6 @@ GO
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for crud_缓存表
--- ----------------------------
-CREATE TABLE [dbo].[crud_缓存表] (
-  [id] bigint NOT NULL,
-  [手机号] char(11) NULL,
-  [姓名] nvarchar(32) NULL
-)
-GO
-
-
--- ----------------------------
--- Records of crud_缓存表
--- ----------------------------
-
--- ----------------------------
 -- Table structure for crud_基础
 -- ----------------------------
 CREATE TABLE [dbo].[crud_基础] (
@@ -3594,15 +3576,6 @@ GO
 ALTER TABLE [dbo].[crud_父表] ADD CONSTRAINT [crud_父表_pkey] PRIMARY KEY CLUSTERED ([id])
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
 GO
-
-
--- ----------------------------
--- Primary Key structure for table crud_缓存表
--- ----------------------------
-ALTER TABLE [dbo].[crud_缓存表] ADD CONSTRAINT [crud_缓存表_pkey] PRIMARY KEY CLUSTERED ([id])
-WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
-GO
-
 
 -- ----------------------------
 -- Primary Key structure for table crud_基础

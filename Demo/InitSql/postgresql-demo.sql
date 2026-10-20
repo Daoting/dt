@@ -14,7 +14,6 @@ DROP TABLE IF EXISTS "crud_主表";
 DROP TABLE IF EXISTS "crud_大儿";
 DROP TABLE IF EXISTS "crud_小儿";
 DROP TABLE IF EXISTS "crud_父表";
-DROP TABLE IF EXISTS crud_缓存表;
 DROP TABLE IF EXISTS crud_角色权限;
 DROP TABLE IF EXISTS crud_用户角色;
 DROP TABLE IF EXISTS crud_用户;
@@ -1208,20 +1207,6 @@ COMMENT ON TABLE "crud_用户角色" IS '用户关联的角色';
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for crud_缓存表
--- ----------------------------
-CREATE TABLE "crud_缓存表" (
-  "id" int8 NOT NULL,
-  "手机号" char(11) COLLATE "pg_catalog"."default",
-  "姓名" varchar(32) COLLATE "pg_catalog"."default"
-)
-;
-
--- ----------------------------
--- Records of crud_缓存表
--- ----------------------------
-
--- ----------------------------
 -- Table structure for crud_角色
 -- ----------------------------
 CREATE TABLE "crud_角色" (
@@ -2153,11 +2138,6 @@ CREATE INDEX "idx_crud_用户角色_userid" ON "crud_用户角色" USING btree (
 -- Primary Key structure for table crud_用户角色
 -- ----------------------------
 ALTER TABLE "crud_用户角色" ADD CONSTRAINT "crud_用户角色_pkey" PRIMARY KEY ("user_id", "role_id");
-
--- ----------------------------
--- Primary Key structure for table crud_缓存表
--- ----------------------------
-ALTER TABLE "crud_缓存表" ADD CONSTRAINT "crud_缓存表_pkey" PRIMARY KEY ("id");
 
 -- ----------------------------
 -- Primary Key structure for table crud_角色

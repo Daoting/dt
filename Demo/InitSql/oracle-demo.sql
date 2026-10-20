@@ -14,7 +14,6 @@ DROP TABLE crud_主表;
 DROP TABLE crud_大儿;
 DROP TABLE crud_小儿;
 DROP TABLE crud_父表;
-DROP TABLE crud_缓存表;
 DROP TABLE crud_角色权限;
 DROP TABLE crud_用户角色;
 DROP TABLE crud_用户;
@@ -876,20 +875,6 @@ CREATE TABLE CRUD_父表 (
 
 -- ----------------------------
 -- Records of crud_父表
--- ----------------------------
-
--- ----------------------------
--- Table structure for crud_缓存表
--- ----------------------------
-CREATE TABLE CRUD_缓存表 (
-  ID NUMBER(19) NOT NULL,
-  手机号 CHAR(11),
-  姓名 VARCHAR2(32)
-)
-;
-
--- ----------------------------
--- Records of crud_缓存表
 -- ----------------------------
 
 -- ----------------------------
@@ -1851,11 +1836,6 @@ CREATE INDEX IDX_大儿_PARENDID
 -- Primary Key structure for table crud_父表
 -- ----------------------------
 ALTER TABLE CRUD_父表 ADD CONSTRAINT CRUD_父表_PKEY PRIMARY KEY (ID);
-
--- ----------------------------
--- Primary Key structure for table crud_缓存表
--- ----------------------------
-ALTER TABLE CRUD_缓存表 ADD CONSTRAINT CRUD_缓存表_PKEY PRIMARY KEY (ID);
 
 -- ----------------------------
 -- Primary Key structure for table crud_基础

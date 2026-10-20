@@ -808,21 +808,6 @@ CREATE TABLE `crud_用户角色`  (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for crud_缓存表
--- ----------------------------
-DROP TABLE IF EXISTS `crud_缓存表`;
-CREATE TABLE `crud_缓存表`  (
-  `id` bigint NOT NULL,
-  `手机号` char(11) NULL,
-  `姓名` varchar(32) NULL,
-  PRIMARY KEY (`id`)
-);
-
--- ----------------------------
--- Records of crud_缓存表
--- ----------------------------
-
--- ----------------------------
 -- Table structure for crud_角色
 -- ----------------------------
 DROP TABLE IF EXISTS `crud_角色`;
