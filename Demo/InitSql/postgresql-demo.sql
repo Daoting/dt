@@ -188,11 +188,12 @@ CACHE 1;
 -- Table structure for cm_cache
 -- ----------------------------
 CREATE TABLE "cm_cache" (
-  "id" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
-  "val" varchar(512) COLLATE "pg_catalog"."default"
+  "id" varchar(255) NOT NULL,
+  "val" varchar(512),
+  "ctime" timestamptz NOT NULL DEFAULT now()
 )
 ;
-COMMENT ON TABLE "cm_cache" IS '模拟redis缓存key value数据，直连数据库时用';
+COMMENT ON TABLE "cm_cache" IS '缓存key value数据';
 
 -- ----------------------------
 -- Records of cm_cache
@@ -204,10 +205,10 @@ COMMENT ON TABLE "cm_cache" IS '模拟redis缓存key value数据，直连数据�
 CREATE TABLE "cm_file_my" (
   "id" int8 NOT NULL,
   "parent_id" int8,
-  "name" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
+  "name" varchar(255) NOT NULL,
   "is_folder" bool NOT NULL,
-  "ext_name" varchar(8) COLLATE "pg_catalog"."default",
-  "info" varchar(512) COLLATE "pg_catalog"."default",
+  "ext_name" varchar(8),
+  "info" varchar(512),
   "ctime" timestamp(0) NOT NULL,
   "user_id" int8 NOT NULL
 )
@@ -232,10 +233,10 @@ COMMENT ON TABLE "cm_file_my" IS '个人文件';
 CREATE TABLE "cm_file_pub" (
   "id" int8 NOT NULL,
   "parent_id" int8,
-  "name" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
+  "name" varchar(255) NOT NULL,
   "is_folder" bool NOT NULL,
-  "ext_name" varchar(8) COLLATE "pg_catalog"."default",
-  "info" varchar(512) COLLATE "pg_catalog"."default",
+  "ext_name" varchar(8),
+  "info" varchar(512),
   "ctime" timestamp(0) NOT NULL
 )
 ;
@@ -259,8 +260,8 @@ INSERT INTO "cm_file_pub" VALUES (2, NULL, '素材库', 't', NULL, '', '2020-10-
 -- ----------------------------
 CREATE TABLE "cm_group" (
   "id" int8 NOT NULL,
-  "name" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
-  "note" varchar(255) COLLATE "pg_catalog"."default"
+  "name" varchar(64) NOT NULL,
+  "note" varchar(255)
 )
 ;
 COMMENT ON COLUMN "cm_group"."id" IS '组标识';
@@ -294,12 +295,12 @@ COMMENT ON TABLE "cm_group_role" IS '组一角色多对多';
 CREATE TABLE "cm_menu" (
   "id" int8 NOT NULL,
   "parent_id" int8,
-  "name" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
+  "name" varchar(64) NOT NULL,
   "is_group" bool NOT NULL,
-  "view_name" varchar(128) COLLATE "pg_catalog"."default",
-  "params" varchar(4000) COLLATE "pg_catalog"."default",
-  "icon" varchar(128) COLLATE "pg_catalog"."default",
-  "note" varchar(512) COLLATE "pg_catalog"."default",
+  "view_name" varchar(128),
+  "params" varchar(4000),
+  "icon" varchar(128),
+  "note" varchar(512),
   "dispidx" int4 NOT NULL,
   "is_locked" bool NOT NULL,
   "ctime" timestamp(0) NOT NULL,
@@ -357,7 +358,7 @@ INSERT INTO "cm_menu" VALUES (8, 1, '流程设计', 'f', '流程设计', NULL, '
 -- ----------------------------
 CREATE TABLE "cm_option" (
   "id" int8 NOT NULL,
-  "name" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
+  "name" varchar(64) NOT NULL,
   "dispidx" int4 NOT NULL,
   "group_id" int8 NOT NULL
 )
@@ -450,7 +451,7 @@ INSERT INTO "cm_option" VALUES (351, 'bool', 351, 5);
 -- ----------------------------
 CREATE TABLE "cm_option_group" (
   "id" int8 NOT NULL,
-  "name" varchar(255) COLLATE "pg_catalog"."default" NOT NULL
+  "name" varchar(255) NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_option_group"."id" IS '标识';
@@ -471,9 +472,9 @@ INSERT INTO "cm_option_group" VALUES (5, '数据类型');
 -- ----------------------------
 CREATE TABLE "cm_params" (
   "id" int8 NOT NULL,
-  "name" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
-  "value" varchar(255) COLLATE "pg_catalog"."default",
-  "note" varchar(255) COLLATE "pg_catalog"."default",
+  "name" varchar(255) NOT NULL,
+  "value" varchar(255),
+  "note" varchar(255),
   "ctime" timestamp(0) NOT NULL,
   "mtime" timestamp(0) NOT NULL
 )
@@ -499,8 +500,8 @@ INSERT INTO "cm_params" VALUES (3, '接收新消息', 'true', '接收通讯录�
 CREATE TABLE "cm_permission" (
   "id" int8 NOT NULL,
   "func_id" int8 NOT NULL,
-  "name" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
-  "note" varchar(255) COLLATE "pg_catalog"."default"
+  "name" varchar(64) NOT NULL,
+  "note" varchar(255)
 )
 ;
 COMMENT ON COLUMN "cm_permission"."id" IS '权限标识';
@@ -522,8 +523,8 @@ INSERT INTO "cm_permission" VALUES (87434002596917248, 87433900117487616, '冲�
 CREATE TABLE "cm_permission_func" (
   "id" int8 NOT NULL,
   "module_id" int8 NOT NULL,
-  "name" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
-  "note" varchar(255) COLLATE "pg_catalog"."default"
+  "name" varchar(64) NOT NULL,
+  "note" varchar(255)
 )
 ;
 COMMENT ON COLUMN "cm_permission_func"."module_id" IS '所属模块';
@@ -542,8 +543,8 @@ INSERT INTO "cm_permission_func" VALUES (87433900117487616, 87433840629673984, '
 -- ----------------------------
 CREATE TABLE "cm_permission_module" (
   "id" int8 NOT NULL,
-  "name" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
-  "note" varchar(255) COLLATE "pg_catalog"."default"
+  "name" varchar(64) NOT NULL,
+  "note" varchar(255)
 )
 ;
 COMMENT ON COLUMN "cm_permission_module"."id" IS '模块标识';
@@ -562,8 +563,8 @@ INSERT INTO "cm_permission_module" VALUES (87433840629673984, '物资管理', NU
 -- ----------------------------
 CREATE TABLE "cm_role" (
   "id" int8 NOT NULL,
-  "name" varchar(32) COLLATE "pg_catalog"."default" NOT NULL,
-  "note" varchar(255) COLLATE "pg_catalog"."default"
+  "name" varchar(32) NOT NULL,
+  "note" varchar(255)
 )
 ;
 COMMENT ON COLUMN "cm_role"."id" IS '角色标识';
@@ -642,9 +643,9 @@ INSERT INTO "cm_role_per" VALUES (87363447483035648, 87434002596917248);
 -- ----------------------------
 CREATE TABLE "cm_rpt" (
   "id" int8 NOT NULL,
-  "name" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
-  "define" varchar(65535) COLLATE "pg_catalog"."default",
-  "note" varchar(255) COLLATE "pg_catalog"."default",
+  "name" varchar(64) NOT NULL,
+  "define" varchar(65535),
+  "note" varchar(255),
   "ctime" timestamp(0) NOT NULL,
   "mtime" timestamp(0) NOT NULL
 )
@@ -666,11 +667,11 @@ COMMENT ON TABLE "cm_rpt" IS '报表模板定义';
 -- ----------------------------
 CREATE TABLE "cm_user" (
   "id" int8 NOT NULL,
-  "acc" varchar(32) COLLATE "pg_catalog"."default",
-  "phone" varchar(16) COLLATE "pg_catalog"."default",
-  "pwd" char(32) COLLATE "pg_catalog"."default" NOT NULL,
-  "name" varchar(32) COLLATE "pg_catalog"."default",
-  "photo" varchar(255) COLLATE "pg_catalog"."default",
+  "acc" varchar(32),
+  "phone" varchar(16),
+  "pwd" char(32) NOT NULL,
+  "name" varchar(32),
+  "photo" varchar(255),
   "expired" bool NOT NULL,
   "ctime" timestamp(0) NOT NULL,
   "mtime" timestamp(0) NOT NULL
@@ -720,7 +721,7 @@ COMMENT ON TABLE "cm_user_group" IS '用户一组多对多';
 CREATE TABLE "cm_user_params" (
   "user_id" int8 NOT NULL,
   "param_id" int8 NOT NULL,
-  "value" varchar(255) COLLATE "pg_catalog"."default",
+  "value" varchar(255),
   "mtime" timestamp(0) NOT NULL
 )
 ;
@@ -765,7 +766,7 @@ INSERT INTO "cm_user_role" VALUES (1, 87368228331089920);
 CREATE TABLE "cm_wfd_atv" (
   "id" int8 NOT NULL,
   "prc_id" int8 NOT NULL,
-  "name" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
+  "name" varchar(64) NOT NULL,
   "type" int2 NOT NULL,
   "exec_scope" int2 NOT NULL,
   "exec_limit" int2 NOT NULL,
@@ -827,11 +828,11 @@ INSERT INTO "cm_wfd_atv_role" VALUES (96767684025544704, 87368228331089920);
 -- ----------------------------
 CREATE TABLE "cm_wfd_prc" (
   "id" int8 NOT NULL,
-  "name" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
-  "diagram" varchar(65535) COLLATE "pg_catalog"."default",
+  "name" varchar(64) NOT NULL,
+  "diagram" varchar(65535),
   "is_locked" bool NOT NULL,
   "singleton" bool NOT NULL,
-  "note" varchar(255) COLLATE "pg_catalog"."default",
+  "note" varchar(255),
   "dispidx" int4 NOT NULL,
   "ctime" timestamp(0) NOT NULL,
   "mtime" timestamp(0) NOT NULL
@@ -915,13 +916,13 @@ CREATE TABLE "cm_wfi_item" (
   "status" int2 NOT NULL,
   "assign_kind" int2 NOT NULL,
   "sender_id" int8,
-  "sender" varchar(32) COLLATE "pg_catalog"."default",
+  "sender" varchar(32),
   "stime" timestamp(0) NOT NULL,
   "is_accept" bool NOT NULL,
   "accept_time" timestamp(0),
   "role_id" int8,
   "user_id" int8,
-  "note" varchar(255) COLLATE "pg_catalog"."default",
+  "note" varchar(255),
   "dispidx" int4 NOT NULL,
   "ctime" timestamp(0) NOT NULL,
   "mtime" timestamp(0) NOT NULL
@@ -954,7 +955,7 @@ COMMENT ON TABLE "cm_wfi_item" IS '工作项';
 CREATE TABLE "cm_wfi_prc" (
   "id" int8 NOT NULL,
   "prcd_id" int8 NOT NULL,
-  "name" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
+  "name" varchar(255) NOT NULL,
   "status" int2 NOT NULL,
   "dispidx" int4 NOT NULL,
   "ctime" timestamp(0) NOT NULL,
@@ -1003,9 +1004,9 @@ COMMENT ON TABLE "cm_wfi_trs" IS '迁移实例';
 -- ----------------------------
 CREATE TABLE "crud_主表" (
   "id" int8 NOT NULL,
-  "主表名称" varchar(255) COLLATE "pg_catalog"."default",
-  "限长4" varchar(16) COLLATE "pg_catalog"."default",
-  "不重复" varchar(255) COLLATE "pg_catalog"."default"
+  "主表名称" varchar(255),
+  "限长4" varchar(16),
+  "不重复" varchar(255)
 )
 ;
 COMMENT ON COLUMN "crud_主表"."限长4" IS '限制最大长度4';
@@ -1022,13 +1023,13 @@ CREATE TABLE "crud_基础" (
   "id" int8 NOT NULL,
   "parent_id" int8,
   "序列" int4 NOT NULL,
-  "名称" varchar(255) COLLATE "pg_catalog"."default",
-  "限长4" varchar(16) COLLATE "pg_catalog"."default",
-  "不重复" varchar(64) COLLATE "pg_catalog"."default",
+  "名称" varchar(255),
+  "限长4" varchar(16),
+  "不重复" varchar(64),
   "禁止选中" bool NOT NULL,
   "禁止保存" bool NOT NULL,
   "禁止删除" bool NOT NULL,
-  "值变事件" varchar(64) COLLATE "pg_catalog"."default",
+  "值变事件" varchar(64),
   "发布插入事件" bool NOT NULL,
   "发布删除事件" bool NOT NULL,
   "创建时间" timestamp(0) NOT NULL,
@@ -1059,7 +1060,7 @@ COMMENT ON COLUMN "crud_基础"."修改时间" IS '最后修改时间';
 CREATE TABLE "crud_大儿" (
   "id" int8 NOT NULL,
   "parent_id" int8 NOT NULL,
-  "大儿名" varchar(255) COLLATE "pg_catalog"."default"
+  "大儿名" varchar(255)
 )
 ;
 
@@ -1072,7 +1073,7 @@ CREATE TABLE "crud_大儿" (
 -- ----------------------------
 CREATE TABLE "crud_字段类型" (
   "id" int8 NOT NULL,
-  "字符串" varchar(255) COLLATE "pg_catalog"."default",
+  "字符串" varchar(255),
   "整型" int4 NOT NULL,
   "可空整型" int4,
   "长整型" int8,
@@ -1099,7 +1100,7 @@ COMMENT ON COLUMN "crud_字段类型"."可空枚举" IS '#Gender#性别';
 CREATE TABLE "crud_小儿" (
   "id" int8 NOT NULL,
   "group_id" int8 NOT NULL,
-  "小儿名" varchar(255) COLLATE "pg_catalog"."default"
+  "小儿名" varchar(255)
 )
 ;
 
@@ -1112,7 +1113,7 @@ CREATE TABLE "crud_小儿" (
 -- ----------------------------
 CREATE TABLE "crud_扩展1" (
   "id" int8 NOT NULL,
-  "扩展1名称" varchar(255) COLLATE "pg_catalog"."default",
+  "扩展1名称" varchar(255),
   "禁止选中" bool NOT NULL,
   "禁止保存" bool NOT NULL
 )
@@ -1130,9 +1131,9 @@ COMMENT ON COLUMN "crud_扩展1"."禁止保存" IS 'true时保存前校验不通
 -- ----------------------------
 CREATE TABLE "crud_扩展2" (
   "id" int8 NOT NULL,
-  "扩展2名称" varchar(255) COLLATE "pg_catalog"."default",
+  "扩展2名称" varchar(255),
   "禁止删除" bool NOT NULL,
-  "值变事件" varchar(255) COLLATE "pg_catalog"."default"
+  "值变事件" varchar(255)
 )
 ;
 COMMENT ON COLUMN "crud_扩展2"."id" IS '标识';
@@ -1148,7 +1149,7 @@ COMMENT ON COLUMN "crud_扩展2"."值变事件" IS '每次值变化时触发领�
 -- ----------------------------
 CREATE TABLE "crud_权限" (
   "id" int8 NOT NULL,
-  "权限名称" varchar(255) COLLATE "pg_catalog"."default"
+  "权限名称" varchar(255)
 )
 ;
 COMMENT ON COLUMN "crud_权限"."id" IS '权限名称';
@@ -1163,7 +1164,7 @@ COMMENT ON TABLE "crud_权限" IS '权限';
 -- ----------------------------
 CREATE TABLE "crud_父表" (
   "id" int8 NOT NULL,
-  "父名" varchar(255) COLLATE "pg_catalog"."default"
+  "父名" varchar(255)
 )
 ;
 
@@ -1176,9 +1177,9 @@ CREATE TABLE "crud_父表" (
 -- ----------------------------
 CREATE TABLE "crud_用户" (
   "id" int8 NOT NULL,
-  "手机号" char(11) COLLATE "pg_catalog"."default",
-  "姓名" varchar(32) COLLATE "pg_catalog"."default",
-  "密码" char(32) COLLATE "pg_catalog"."default"
+  "手机号" char(11),
+  "姓名" varchar(32),
+  "密码" char(32)
 )
 ;
 COMMENT ON COLUMN "crud_用户"."id" IS '用户标识';
@@ -1212,8 +1213,8 @@ COMMENT ON TABLE "crud_用户角色" IS '用户关联的角色';
 -- ----------------------------
 CREATE TABLE "crud_角色" (
   "id" int8 NOT NULL,
-  "角色名称" varchar(32) COLLATE "pg_catalog"."default",
-  "角色描述" varchar(255) COLLATE "pg_catalog"."default"
+  "角色名称" varchar(32),
+  "角色描述" varchar(255)
 )
 ;
 COMMENT ON COLUMN "crud_角色"."id" IS '角色标识';
@@ -1246,10 +1247,10 @@ COMMENT ON TABLE "crud_角色权限" IS '角色关联的权限';
 -- ----------------------------
 CREATE TABLE "fsm_file" (
   "id" int8 NOT NULL,
-  "name" varchar(512) COLLATE "pg_catalog"."default" NOT NULL,
-  "path" varchar(512) COLLATE "pg_catalog"."default" NOT NULL,
+  "name" varchar(512) NOT NULL,
+  "path" varchar(512) NOT NULL,
   "size" int8 NOT NULL,
-  "info" varchar(512) COLLATE "pg_catalog"."default",
+  "info" varchar(512),
   "uploader" int8 NOT NULL,
   "ctime" timestamp(0) NOT NULL,
   "downloads" int8 NOT NULL
@@ -1274,7 +1275,7 @@ COMMENT ON COLUMN "fsm_file"."downloads" IS '下载次数';
 CREATE TABLE "msg_queue" (
   "id" int8 NOT NULL,
   "user_id" int8 NOT NULL,
-  "msg" varchar COLLATE "pg_catalog"."default",
+  "msg" varchar,
   "ctime" timestamptz NOT NULL DEFAULT now()
 );
 COMMENT ON COLUMN "msg_queue"."id" IS '标识';
@@ -1287,15 +1288,15 @@ COMMENT ON COLUMN "msg_queue"."ctime" IS '创建时间';
 -- ----------------------------
 CREATE TABLE "人员" (
   "id" int8 NOT NULL,
-  "姓名" varchar(32) COLLATE "pg_catalog"."default",
+  "姓名" varchar(32),
   "出生日期" timestamp(0),
   "性别" int2,
   "工作日期" timestamp(0),
-  "办公室电话" varchar(32) COLLATE "pg_catalog"."default",
-  "电子邮件" varchar(32) COLLATE "pg_catalog"."default",
+  "办公室电话" varchar(32),
+  "电子邮件" varchar(32),
   "建档时间" timestamp(0),
   "撤档时间" timestamp(0),
-  "撤档原因" varchar(64) COLLATE "pg_catalog"."default",
+  "撤档原因" varchar(64),
   "user_id" int8
 )
 ;
@@ -1314,18 +1315,18 @@ INSERT INTO "人员" VALUES (100436029211963392, '测试员', NULL, NULL, NULL, 
 -- ----------------------------
 CREATE TABLE "供应商" (
   "id" int8 NOT NULL,
-  "名称" varchar(64) COLLATE "pg_catalog"."default",
-  "执照号" varchar(32) COLLATE "pg_catalog"."default",
+  "名称" varchar(64),
+  "执照号" varchar(32),
   "执照效期" timestamp(0),
-  "税务登记号" varchar(32) COLLATE "pg_catalog"."default",
-  "地址" varchar(128) COLLATE "pg_catalog"."default",
-  "电话" varchar(16) COLLATE "pg_catalog"."default",
-  "开户银行" varchar(64) COLLATE "pg_catalog"."default",
-  "帐号" varchar(32) COLLATE "pg_catalog"."default",
-  "联系人" varchar(32) COLLATE "pg_catalog"."default",
+  "税务登记号" varchar(32),
+  "地址" varchar(128),
+  "电话" varchar(16),
+  "开户银行" varchar(64),
+  "帐号" varchar(32),
+  "联系人" varchar(32),
   "建档时间" timestamp(0),
   "撤档时间" timestamp(0),
-  "备注" varchar(255) COLLATE "pg_catalog"."default"
+  "备注" varchar(255)
 )
 ;
 
@@ -1343,15 +1344,15 @@ CREATE TABLE "物资主单" (
   "部门id" int8 NOT NULL,
   "入出类别id" int8 NOT NULL,
   "状态" int2 NOT NULL,
-  "单号" varchar(8) COLLATE "pg_catalog"."default" NOT NULL,
-  "摘要" varchar(64) COLLATE "pg_catalog"."default",
-  "填制人" varchar(32) COLLATE "pg_catalog"."default",
+  "单号" varchar(8) NOT NULL,
+  "摘要" varchar(64),
+  "填制人" varchar(32),
   "填制日期" timestamp(0),
-  "审核人" varchar(32) COLLATE "pg_catalog"."default",
+  "审核人" varchar(32),
   "审核日期" timestamp(0),
   "入出系数" int2,
   "供应商id" int8,
-  "发料人" varchar(32) COLLATE "pg_catalog"."default",
+  "发料人" varchar(32),
   "发料日期" timestamp(0),
   "金额" float4,
   "发票金额" float4
@@ -1375,9 +1376,9 @@ COMMENT ON COLUMN "物资主单"."金额" IS '单据内所有详单的金额和'
 -- ----------------------------
 CREATE TABLE "物资入出类别" (
   "id" int8 NOT NULL,
-  "名称" varchar(32) COLLATE "pg_catalog"."default" NOT NULL,
+  "名称" varchar(32) NOT NULL,
   "系数" int2 NOT NULL,
-  "单号前缀" char(2) COLLATE "pg_catalog"."default" NOT NULL
+  "单号前缀" char(2) NOT NULL
 )
 ;
 COMMENT ON COLUMN "物资入出类别"."系数" IS '1-入库；-1-出库';
@@ -1398,7 +1399,7 @@ INSERT INTO "物资入出类别" VALUES (7, '盘亏', -1, 'PK');
 -- ----------------------------
 CREATE TABLE "物资分类" (
   "id" int8 NOT NULL,
-  "名称" varchar(64) COLLATE "pg_catalog"."default" NOT NULL
+  "名称" varchar(64) NOT NULL
 )
 ;
 
@@ -1421,7 +1422,7 @@ CREATE TABLE "物资库存" (
   "id" int8 NOT NULL,
   "部门id" int8,
   "物资id" int8,
-  "批次" varchar(16) COLLATE "pg_catalog"."default",
+  "批次" varchar(16),
   "可用数量" float4,
   "可用金额" float4,
   "实际数量" float4,
@@ -1441,9 +1442,9 @@ COMMENT ON COLUMN "物资库存"."可用数量" IS '当填写申领单还未审�
 CREATE TABLE "物资目录" (
   "id" int8 NOT NULL,
   "分类id" int8,
-  "名称" varchar(64) COLLATE "pg_catalog"."default",
-  "规格" varchar(64) COLLATE "pg_catalog"."default",
-  "产地" varchar(64) COLLATE "pg_catalog"."default",
+  "名称" varchar(64),
+  "规格" varchar(64),
+  "产地" varchar(64),
   "成本价" float4,
   "核算方式" int2,
   "摊销月数" int4,
@@ -1469,13 +1470,13 @@ INSERT INTO "物资目录" VALUES (95434428013375488, 95413444640272384, '测电
 CREATE TABLE "物资计划" (
   "id" int8 NOT NULL,
   "部门id" int8,
-  "no" varchar(8) COLLATE "pg_catalog"."default",
+  "no" varchar(8),
   "计划类型" int2,
   "编制方法" int2,
-  "摘要" varchar(64) COLLATE "pg_catalog"."default",
-  "编制人" varchar(32) COLLATE "pg_catalog"."default",
+  "摘要" varchar(64),
+  "编制人" varchar(32),
   "编制日期" timestamp(0),
-  "审核人" varchar(32) COLLATE "pg_catalog"."default",
+  "审核人" varchar(32),
   "审核日期" timestamp(0)
 )
 ;
@@ -1517,12 +1518,12 @@ CREATE TABLE "物资详单" (
   "单据id" int8 NOT NULL,
   "物资id" int8,
   "序号" int2,
-  "批次" varchar(16) COLLATE "pg_catalog"."default",
+  "批次" varchar(16),
   "数量" float4,
   "单价" float4,
   "金额" float4,
-  "随货单号" varchar(128) COLLATE "pg_catalog"."default",
-  "发票号" varchar(128) COLLATE "pg_catalog"."default",
+  "随货单号" varchar(128),
+  "发票号" varchar(128),
   "发票日期" timestamp(0),
   "发票金额" float4,
   "盘点时间" timestamp(0),
@@ -1550,9 +1551,9 @@ COMMENT ON COLUMN "物资详单"."盘点金额" IS '盘点有效';
 CREATE TABLE "部门" (
   "id" int8 NOT NULL,
   "上级id" int8,
-  "编码" varchar(16) COLLATE "pg_catalog"."default",
-  "名称" varchar(32) COLLATE "pg_catalog"."default",
-  "说明" varchar(64) COLLATE "pg_catalog"."default",
+  "编码" varchar(16),
+  "名称" varchar(32),
+  "说明" varchar(64),
   "建档时间" timestamp(0),
   "撤档时间" timestamp(0)
 )
@@ -1758,7 +1759,7 @@ ALTER TABLE "cm_file_pub" ADD CONSTRAINT "cm_file_pub_pkey" PRIMARY KEY ("id");
 -- Indexes structure for table cm_group
 -- ----------------------------
 CREATE UNIQUE INDEX "idx_group_name" ON "cm_group" USING btree (
-  "name" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
+  "name" "pg_catalog"."text_ops" ASC NULLS LAST
 );
 COMMENT ON INDEX "idx_group_name" IS '不重复';
 
@@ -1815,7 +1816,7 @@ ALTER TABLE "cm_option_group" ADD CONSTRAINT "cm_option_group_pkey" PRIMARY KEY 
 -- Indexes structure for table cm_params
 -- ----------------------------
 CREATE UNIQUE INDEX "idx_params_name" ON "cm_params" USING btree (
-  "name" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
+  "name" "pg_catalog"."text_ops" ASC NULLS LAST
 );
 
 -- ----------------------------
@@ -1866,7 +1867,7 @@ ALTER TABLE "cm_permission_module" ADD CONSTRAINT "cm_permission_module_pkey" PR
 -- Indexes structure for table cm_role
 -- ----------------------------
 CREATE UNIQUE INDEX "idx_role_name" ON "cm_role" USING btree (
-  "name" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
+  "name" "pg_catalog"."text_ops" ASC NULLS LAST
 );
 COMMENT ON INDEX "idx_role_name" IS '不重复';
 
@@ -1909,7 +1910,7 @@ ALTER TABLE "cm_role_per" ADD CONSTRAINT "cm_role_per_pkey" PRIMARY KEY ("role_i
 -- Indexes structure for table cm_rpt
 -- ----------------------------
 CREATE UNIQUE INDEX "idx_rpt_name" ON "cm_rpt" USING btree (
-  "name" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
+  "name" "pg_catalog"."text_ops" ASC NULLS LAST
 );
 
 -- ----------------------------
@@ -1921,10 +1922,10 @@ ALTER TABLE "cm_rpt" ADD CONSTRAINT "cm_rpt_pkey" PRIMARY KEY ("id");
 -- Indexes structure for table cm_user
 -- ----------------------------
 CREATE INDEX "idx_user_acc" ON "cm_user" USING btree (
-  "acc" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
+  "acc" "pg_catalog"."text_ops" ASC NULLS LAST
 );
 CREATE INDEX "idx_user_phone" ON "cm_user" USING btree (
-  "phone" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
+  "phone" "pg_catalog"."text_ops" ASC NULLS LAST
 );
 
 -- ----------------------------
@@ -2178,7 +2179,7 @@ ALTER TABLE "crud_角色权限" ADD CONSTRAINT "crud_角色权限_pkey" PRIMARY 
 -- Indexes structure for table fsm_file
 -- ----------------------------
 CREATE UNIQUE INDEX "idx_fsm_file_path" ON "fsm_file" USING btree (
-  "path" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
+  "path" "pg_catalog"."text_ops" ASC NULLS LAST
 );
 
 -- ----------------------------

@@ -41,10 +41,11 @@ DROP TABLE IF EXISTS msg_queue;
 -- ----------------------------
 CREATE TABLE "cm_cache" (
   "id" varchar(255) NOT NULL,
-  "val" varchar(512)
+  "val" varchar,
+  "ctime" timestamptz NOT NULL DEFAULT now()
 )
 ;
-COMMENT ON TABLE "cm_cache" IS '模拟redis缓存key value数据，直连数据库时用';
+COMMENT ON TABLE "cm_cache" IS '缓存key value数据';
 
 -- ----------------------------
 -- Table structure for cm_file_my
@@ -758,7 +759,7 @@ COMMENT ON COLUMN "fsm_file"."downloads" IS '下载次数';
 CREATE TABLE "msg_queue" (
   "id" int8 NOT NULL,
   "user_id" int8 NOT NULL,
-  "msg" varchar COLLATE "pg_catalog"."default",
+  "msg" varchar,
   "ctime" timestamptz NOT NULL DEFAULT now()
 );
 COMMENT ON COLUMN "msg_queue"."id" IS '标识';

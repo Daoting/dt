@@ -7,9 +7,10 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `cm_cache`;
 CREATE TABLE `cm_cache` (
   `id` varchar(255) NOT NULL,
-  `val` varchar(512) NOT NULL,
+  `val` varchar(1024) NOT NULL,
+  `ctime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB COMMENT = '模拟redis缓存key value数据，直连数据库时用';
+) ENGINE = InnoDB COMMENT = '缓存key value数据';
 
 -- ----------------------------
 -- Table structure for cm_file_my

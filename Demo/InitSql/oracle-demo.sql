@@ -84,11 +84,12 @@ DROP SEQUENCE CM_WFI_PRC_DISPIDX;
 -- ----------------------------
 CREATE TABLE CM_CACHE (
   ID VARCHAR2(255) NOT NULL,
-  VAL VARCHAR2(512) NOT NULL
+  VAL VARCHAR2(1024) NOT NULL,
+  CTIME DATE DEFAULT SYSDATE NOT NULL
 )
 ;
 
-COMMENT ON TABLE CM_CACHE IS '模拟redis缓存key value数据，直连数据库时用';
+COMMENT ON TABLE CM_CACHE IS '缓存key value数据';
 
 -- ----------------------------
 -- Table structure for cm_file_my

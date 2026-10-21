@@ -89,12 +89,13 @@ GO
 -- ----------------------------
 CREATE TABLE [dbo].[cm_cache] (
   [id] nvarchar(255) NOT NULL,
-  [val] nvarchar(512) NOT NULL
+  [val] nvarchar(1024) NOT NULL,
+  [ctime] DATETIME NOT NULL DEFAULT GETDATE()
 )
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'模拟redis缓存key value数据，直连数据库时用',
+'MS_Description', N'缓存key value数据',
 'SCHEMA', N'dbo',
 'TABLE', N'cm_cache'
 GO
