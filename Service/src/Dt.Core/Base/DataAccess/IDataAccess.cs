@@ -181,34 +181,48 @@ public partial interface IDataAccess
 
     #region 缓存
     /// <summary>
-    /// 根据键查询字符串类型的缓存值
+    /// 根据键查询缓存值，获取过程：
+    /// <para>1. 首先从缓存中获取，有则直接返回</para>
+    /// <para>2. 无且p_persist 为true，则从数据库获取，并按照rpc json规则反序列化，将结果添加到缓存以备下次使用</para>
     /// </summary>
-    /// <param name="p_key">完整缓存键，形如"prefix:key"</param>
-    /// <returns>缓存字符串</returns>
-    Task<string> StringGet(string p_key);
+    /// <param name="p_key">缓存键，字符串或简单值类型</param>
+    /// <param name="p_persist">缓存中无时是否从数据库获取，默认false</param>
+    /// <returns>返回缓存值，自动转换为指定类型</returns>
+    Task<T> GetCache<T>(object p_key, bool p_persist = false);
 
     /// <summary>
-    /// 将键值添加到缓存
+    /// 将键值添加到缓存，并根据p_persist控制是否同时存放在数据库
     /// </summary>
-    /// <param name="p_key">完整缓存键，形如"prefix:key"，非空</param>
-    /// <param name="p_value">待缓存内容</param>
-    /// <param name="p_seconds">过期秒数，0表始终不过期</param>
-    /// <returns></returns>
-    Task<bool> StringSet(string p_key, string p_value, double p_seconds = 0);
+    /// <param name="p_key">缓存键，字符串或简单值类型</param>
+    /// <param name="p_value">缓存值，持久化时按照rpc json规则序列化键值</param>
+    /// <param name="p_persist">是否同时存放在数据库，默认false</param>
+    /// <returns>是否成功</returns>
+    Task<bool> SetCache(object p_key, object p_value, bool p_persist = false);
 
     /// <summary>
-    /// 根据键名删除缓存内容
+    /// 将键值添加到缓存，并设置过期时间，始终不持久化
     /// </summary>
-    /// <param name="p_key">键名</param>
-    /// <returns></returns>
-    Task<bool> KeyDelete(string p_key);
+    /// <param name="p_key">缓存键，字符串或简单值类型</param>
+    /// <param name="p_value">缓存值</param>
+    /// <param name="p_seconds">过期秒数，0表示永久缓存</param>
+    /// <returns>是否成功</returns>
+    Task<bool> SetExpireCache(object p_key, object p_value, double p_seconds);
 
     /// <summary>
-    /// 根据键名列表批量删除缓存
+    /// 删除缓存值，并根据p_persist控制是否同时删除数据库中的值
     /// </summary>
-    /// <param name="p_keys">键名列表</param>
-    /// <returns></returns>
-    Task BatchKeyDelete(List<string> p_keys);
+    /// <param name="p_key">缓存键，字符串或简单值类型</param>
+    /// <param name="p_persist">是否同时删除数据库中的值，默认false</param>
+    /// <returns>是否成功</returns>
+    Task<bool> DeleteCache(object p_key, bool p_persist = false);
+
+    /// <summary>
+    /// 批量删除缓存值，并根据p_persist控制是否同时删除数据库中的值
+    /// </summary>
+    /// <param name="p_keys">缓存键列表，字符串或简单值类型</param>
+    /// <param name="p_persist">是否同时删除数据库中的值，默认false</param>
+    /// <returns>是否成功</returns>
+    Task<bool> BatchDeleteCache(List<object> p_keys, bool p_persist = false);
     #endregion
 
     #region 库信息

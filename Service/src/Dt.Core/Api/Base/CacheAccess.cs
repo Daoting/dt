@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Microsoft.Extensions.Caching.Memory;
 #endregion
 
 namespace Dt.Core;
@@ -18,28 +17,28 @@ namespace Dt.Core;
 [Api(AgentMode = AgentMode.Generic)]
 public class CacheAccess : RpcApi
 {
-    
-    public async Task<T> GetCache<T>(object p_key, bool p_persist)
+    public Task<object> GetCache(object p_key, bool p_persist)
     {
-        if (Kit.Cache.TryGetValue(p_key, out T val))
-            return val;
-        return default;
-    }
-
-    public bool SetCache(object p_key, object p_value, double p_seconds)
-    {
-        var option = new MemoryCacheEntryOptions { Size = 1 };
-        if (p_seconds > 0)
-        {
-            option.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(p_seconds);
-        }
-        Kit.Cache.Set(p_key, p_value, option);
-        return true;
-    }
-
-    public bool DeleteCache(object p_key)
-    {
-        return true;
+        return _da.GetCache<object>(p_key, p_persist);
     }
     
+    public Task<bool> SetCache(object p_key, object p_value, bool p_persist = false)
+    {
+        return _da.SetCache(p_key, p_value, p_persist);
+    }
+
+    public Task<bool> SetExpireCache(object p_key, object p_value, double p_seconds)
+    {
+        return _da.SetExpireCache(p_key, p_value, p_seconds);
+    }
+
+    public Task<bool> DeleteCache(object p_key, bool p_persist = false)
+    {
+        return _da.DeleteCache(p_key, p_persist);
+    }
+
+    public Task<bool> BatchDeleteCache(List<object> p_keys, bool p_persist = false)
+    {
+        return _da.BatchDeleteCache(p_keys, p_persist);
+    }
 }

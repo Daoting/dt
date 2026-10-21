@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dapper;
+using Microsoft.Extensions.Caching.Memory;
 using System.Collections;
 using System.Data;
 using System.Data.Common;
@@ -761,7 +762,7 @@ abstract class DbAccess : IDataAccess
                 sql = Kit.Sql(p_sqlOrKey.AsSpan(1));
                 if (sql == null)
                     throw new Exception($"Sql键名 {p_sqlOrKey} 不存在！");
-                
+
                 // sql模板可能需要格式化
                 if (p_params is Dict dt
                     && dt.TryGetValue(_sqlFormatArgs, out object formatArgs))
@@ -888,46 +889,94 @@ abstract class DbAccess : IDataAccess
     #endregion
 
     #region 缓存
-    public Task<string> StringGet(string p_key)
+    public async Task<T> GetCache<T>(object p_key, bool p_persist = false)
     {
-        if (!string.IsNullOrEmpty(p_key))
-            return GetScalar<string>($"select * from cm_cache where id='{p_key}'");
-        return Task.FromResult(string.Empty);
+        if (p_key == null)
+            return default;
+
+        if (Kit.Cache.TryGetValue(p_key, out T val))
+            return val;
+
+        if (p_persist)
+        {
+            string str = Kit.Serialize(p_key);
+            var v = await GetScalar<string>($"select val from cm_cache where id='{str}'");
+            var result = Kit.Deserialize<T>(v);
+            Kit.Cache.Set(p_key, result, new MemoryCacheEntryOptions { Size = 1 });
+            return result;
+        }
+        return default;
     }
 
-    public async Task<bool> StringSet(string p_key, string p_value, double p_seconds = 0)
+    public async Task<bool> SetCache(object p_key, object p_value, bool p_persist = false)
     {
-        if (string.IsNullOrEmpty(p_key))
+        if (p_key == null || p_value == null)
             return false;
 
-        string val = string.IsNullOrEmpty(p_value) ? "" : p_value;
-        List<Dict> ls = new List<Dict>
+        Kit.Cache.Set(p_key, p_value, new MemoryCacheEntryOptions { Size = 1 });
+        if (p_persist)
         {
-            new Dict { { "text", $"delete from cm_cache where id='{p_key}'" } },
-            new Dict { {"text", $"insert into cm_cache (id,val) values ('{p_key}','{val}')"}},
-        };
-        return await BatchExec(ls) > 0;
+            string key = Kit.Serialize(p_key);
+            string val = Kit.Serialize(p_value);
+            List<Dict> ls = new List<Dict>
+            {
+                new Dict { { "text", $"delete from cm_cache where id='{p_key}'" } },
+                new Dict { {"text", $"insert into cm_cache (id,val) values ('{p_key}','{val}')"}},
+            };
+            return await BatchExec(ls) > 0;
+        }
+        return true;
     }
 
-    public async Task<bool> KeyDelete(string p_key)
+    public Task<bool> SetExpireCache(object p_key, object p_value, double p_seconds)
     {
-        if (!string.IsNullOrEmpty(p_key))
-            return await Exec($"delete from cm_cache where id='{p_key}'") > 0;
-        return false;
-    }
-
-    public Task BatchKeyDelete(List<string> p_keys)
-    {
-        if (p_keys == null || p_keys.Count == 0)
+        if (p_key == null || p_value == null || p_seconds < 0)
             return Task.FromResult(false);
 
-        List<Dict> ls = new List<Dict>();
-        foreach (var key in p_keys)
+        var option = new MemoryCacheEntryOptions { Size = 1 };
+        if (p_seconds > 0)
         {
-            ls.Add(new Dict { { "id", key } });
+            option.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(p_seconds);
         }
-        string prefix = _dbInfo.DbType == DatabaseType.Oracle ? ":" : "@";
-        return Exec($"delete from cm_cache where id={prefix}id", ls);
+        Kit.Cache.Set(p_key, p_value, option);
+        return Task.FromResult(true);
+    }
+
+    public async Task<bool> DeleteCache(object p_key, bool p_persist = false)
+    {
+        if (p_key == null)
+            return false;
+
+        Kit.Cache.Remove(p_key);
+        if (p_persist)
+        {
+            string key = Kit.Serialize(p_key);
+            return await Exec($"delete from cm_cache where id='{key}'") > 0;
+        }
+        return true;
+    }
+
+    public async Task<bool> BatchDeleteCache(List<object> p_keys, bool p_persist = false)
+    {
+        if (p_keys == null || p_keys.Count == 0)
+            return false;
+
+        foreach (var p_key in p_keys)
+        {
+            Kit.Cache.Remove(p_key);
+        }
+
+        if (p_persist)
+        {
+            List<Dict> ls = new List<Dict>();
+            foreach (var key in p_keys)
+            {
+                ls.Add(new Dict { { "id", Kit.Serialize(key) } });
+            }
+            string prefix = _dbInfo.DbType == DatabaseType.Oracle ? ":" : "@";
+            return await Exec($"delete from cm_cache where id={prefix}id", ls) > 0;
+        }
+        return true;
     }
     #endregion
 }
