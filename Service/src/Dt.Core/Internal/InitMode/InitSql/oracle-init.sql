@@ -43,6 +43,7 @@ DROP TABLE cm_file_pub;
 DROP TABLE cm_file_my;
 DROP TABLE cm_user;
 DROP TABLE fsm_file;
+DROP TABLE msg_queue;
 
 -- ----------------------------
 -- Table structure for CM_CACHE
@@ -794,6 +795,21 @@ COMMENT ON COLUMN FSM_FILE.CTIME IS '上传时间';
 COMMENT ON COLUMN FSM_FILE.DOWNLOADS IS '下载次数';
 
 -- ----------------------------
+-- Table structure for msg_queue
+-- ----------------------------
+CREATE TABLE msg_queue (
+  id NUMBER(19) NOT NULL,
+  user_id NUMBER(19) NOT NULL,
+  msg VARCHAR2(255),
+  ctime DATE DEFAULT SYSDATE NOT NULL
+);
+ALTER TABLE msg_queue ADD CONSTRAINT msg_queue_pkey PRIMARY KEY (id);
+COMMENT ON COLUMN msg_queue.id IS '标识';
+COMMENT ON COLUMN msg_queue.user_id IS '用户标识';
+COMMENT ON COLUMN msg_queue.msg IS '消息内容';
+COMMENT ON COLUMN msg_queue.ctime IS '创建时间';
+
+-- ----------------------------
 -- Primary Key structure for table CM_CACHE
 -- ----------------------------
 ALTER TABLE CM_CACHE ADD PRIMARY KEY (ID);
@@ -1120,6 +1136,8 @@ ALTER TABLE FSM_FILE ADD PRIMARY KEY (ID);
 -- ----------------------------
 CREATE UNIQUE INDEX IDX_FSM_FILE_PATH
   ON FSM_FILE (PATH ASC);
+
+CREATE INDEX idx_msg_queue_user_id ON msg_queue(user_id ASC);
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_file_my

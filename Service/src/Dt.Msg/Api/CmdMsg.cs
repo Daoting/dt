@@ -7,10 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
-using Dt.Core.Caches;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Msg;
@@ -98,12 +94,25 @@ public class CmdMsg : RpcApi
         if (offlines.Count > 0)
         {
             // 将消息保存到用户的未推送列表
-            var lc = new ListCache<string>(ClientInfo.MsgQueueKey);
-            foreach (long id in offlines)
-            {
-                await lc.RightPush(id, onlineMsg);
-            }
+            var da = Kit.NewDataAccess();
+            da.AutoClose = false;
 
+            try
+            {
+                foreach (long id in offlines)
+                {
+                    await da.Exec($"insert into msg_queue (id, user_id, msg) values ({Kit.NewID}, {id}, '{onlineMsg}')");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "将消息保存到用户的未推送列表时异常！");
+            }
+            finally
+            {
+                await da.Close(true);
+            }
+            
             // 推送离线提醒，暂未实现
             //if (!string.IsNullOrEmpty(p_msg.Title))
             //    Offline.Add(offlines, p_msg);

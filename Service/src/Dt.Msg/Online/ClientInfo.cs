@@ -7,14 +7,9 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
-using Dt.Core.Caches;
 using Dt.Core.Rpc;
 using Microsoft.AspNetCore.Http;
-using Serilog;
-using System;
 using System.Collections.Concurrent;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Msg;
@@ -27,12 +22,7 @@ public class ClientInfo
     readonly BlockingCollection<string> _queue;
     readonly ResponseWriter _writer;
     readonly Dict _deviceInfo;
-
-    /// <summary>
-    /// 用户未推送消息列表 msg:Queue:userid = list(msginfo)
-    /// </summary>
-    public const string MsgQueueKey = "msg:Queue";
-
+    
     public ClientInfo(Dict p_deviceInfo, ResponseWriter p_writer, long p_userID)
     {
         _deviceInfo = p_deviceInfo;
@@ -97,23 +87,36 @@ public class ClientInfo
     public async Task SendOfflineMsg()
     {
         // 所有离线信息
-        var lc = new ListCache<string>(MsgQueueKey);
-        var ls = await lc.GetRange(UserID);
-        if (ls != null && ls.Count > 0)
+        var da = Kit.NewDataAccess();
+        da.AutoClose = false;
+        try
         {
-            try
+            var ls = await da.FirstCol<string>($"select msg from msg_queue where user_id={UserID} order by id");
+            if (ls != null && ls.Count > 0)
             {
-                foreach (var mi in ls)
+                try
                 {
-                    await _writer.Write(mi);
+                    foreach (var mi in ls)
+                    {
+                        await _writer.Write(mi);
+                    }
                 }
+                catch (Exception ex)
+                {
+                    Log.Warning(ex, "向{0}发送离线信息异常", UserID);
+                }
+                
                 // 删除避免重复推送
-                await lc.Delete(UserID);
+                await da.Exec($"delete from msg_queue where user_id={UserID}");
             }
-            catch (Exception ex)
-            {
-                Log.Warning(ex, "向{0}发送离线信息异常", UserID);
-            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "向{0}发送离线信息异常", UserID);
+        }
+        finally
+        {
+            await da.Close(true);
         }
     }
 

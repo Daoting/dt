@@ -81,6 +81,9 @@ GO
 IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[fsm_file]') AND type IN ('U')) DROP TABLE [dbo].[fsm_file]
 GO
 
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[dbo].[msg_queue]') AND type IN ('U')) DROP TABLE [dbo].[msg_queue]
+GO
+
 -- ----------------------------
 -- Table structure for cm_cache
 -- ----------------------------
@@ -1872,6 +1875,25 @@ GO
 -- ----------------------------
 -- Records of fsm_file
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for msg_queue
+-- ----------------------------
+CREATE TABLE dbo.msg_queue (
+  id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  msg VARCHAR(512) NULL,
+  ctime DATETIME NOT NULL DEFAULT GETDATE(),
+  CONSTRAINT msg_queue_pkey PRIMARY KEY (id)
+);
+GO
+EXEC sp_addextendedproperty @name=N'MS_Description', @value=N'标识',@level0type=N'SCHEMA',@level0name=N'dbo',@level1type=N'TABLE',@level1name=N'msg_queue',@level2type=N'COLUMN',@level2name=N'id';
+EXEC sp_addextendedproperty @name=N'MS_Description', @value=N'用户标识',@level0type=N'SCHEMA',@level0name=N'dbo',@level1type=N'TABLE',@level1name=N'msg_queue',@level2type=N'COLUMN',@level2name=N'user_id';
+EXEC sp_addextendedproperty @name=N'MS_Description', @value=N'消息内容',@level0type=N'SCHEMA',@level0name=N'dbo',@level1type=N'TABLE',@level1name=N'msg_queue',@level2type=N'COLUMN',@level2name=N'msg';
+EXEC sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间',@level0type=N'SCHEMA',@level0name=N'dbo',@level1type=N'TABLE',@level1name=N'msg_queue',@level2type=N'COLUMN',@level2name=N'ctime';
+GO
+CREATE INDEX idx_msg_queue_user_id ON dbo.msg_queue(user_id ASC);
+GO
 
 
 -- ----------------------------

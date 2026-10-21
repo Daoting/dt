@@ -70,6 +70,7 @@ DROP TABLE cm_file_pub;
 DROP TABLE cm_file_my;
 DROP TABLE cm_user;
 DROP TABLE fsm_file;
+DROP TABLE msg_queue;
 
 DROP SEQUENCE CM_MENU_DISPIDX;
 DROP SEQUENCE CM_OPTION_DISPIDX;
@@ -834,7 +835,7 @@ CREATE TABLE FSM_FILE (
   ID NUMBER(19) NOT NULL,
   NAME VARCHAR2(512) NOT NULL,
   PATH VARCHAR2(512) NOT NULL,
-  SIZE NUMBER(19) NOT NULL,
+  "SIZE" NUMBER(19) NOT NULL,
   INFO VARCHAR2(512),
   UPLOADER NUMBER(19) NOT NULL,
   CTIME DATE NOT NULL,
@@ -844,11 +845,26 @@ CREATE TABLE FSM_FILE (
 COMMENT ON COLUMN FSM_FILE.ID IS '文件标识';
 COMMENT ON COLUMN FSM_FILE.NAME IS '文件名称';
 COMMENT ON COLUMN FSM_FILE.PATH IS '存放路径：卷/两级目录/id.ext';
-COMMENT ON COLUMN FSM_FILE.SIZE IS '文件长度';
+COMMENT ON COLUMN FSM_FILE."SIZE" IS '文件长度';
 COMMENT ON COLUMN FSM_FILE.INFO IS '文件描述';
 COMMENT ON COLUMN FSM_FILE.UPLOADER IS '上传人id';
 COMMENT ON COLUMN FSM_FILE.CTIME IS '上传时间';
 COMMENT ON COLUMN FSM_FILE.DOWNLOADS IS '下载次数';
+
+-- ----------------------------
+-- Table structure for msg_queue
+-- ----------------------------
+CREATE TABLE msg_queue (
+  id NUMBER(19) NOT NULL,
+  user_id NUMBER(19) NOT NULL,
+  msg VARCHAR2(255),
+  ctime DATE DEFAULT SYSDATE NOT NULL
+);
+ALTER TABLE msg_queue ADD CONSTRAINT msg_queue_pkey PRIMARY KEY (id);
+COMMENT ON COLUMN msg_queue.id IS '标识';
+COMMENT ON COLUMN msg_queue.user_id IS '用户标识';
+COMMENT ON COLUMN msg_queue.msg IS '消息内容';
+COMMENT ON COLUMN msg_queue.ctime IS '创建时间';
 
 -- ----------------------------
 -- Table structure for crud_大儿
@@ -1820,6 +1836,8 @@ ALTER TABLE FSM_FILE ADD PRIMARY KEY (ID);
 -- ----------------------------
 CREATE UNIQUE INDEX IDX_FSM_FILE_PATH
   ON FSM_FILE (PATH ASC);
+
+CREATE INDEX idx_msg_queue_user_id ON msg_queue(user_id ASC);
 
 -- ----------------------------
 -- Primary Key structure for table crud_大儿

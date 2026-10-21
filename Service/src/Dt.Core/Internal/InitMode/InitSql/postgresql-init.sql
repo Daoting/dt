@@ -34,6 +34,7 @@ DROP TABLE IF EXISTS cm_file_pub;
 DROP TABLE IF EXISTS cm_file_my;
 DROP TABLE IF EXISTS cm_user;
 DROP TABLE IF EXISTS fsm_file;
+DROP TABLE IF EXISTS msg_queue;
 
 -- ----------------------------
 -- Table structure for cm_cache
@@ -752,6 +753,20 @@ COMMENT ON COLUMN "fsm_file"."ctime" IS '上传时间';
 COMMENT ON COLUMN "fsm_file"."downloads" IS '下载次数';
 
 -- ----------------------------
+-- Table structure for msg_queue
+-- ----------------------------
+CREATE TABLE "msg_queue" (
+  "id" int8 NOT NULL,
+  "user_id" int8 NOT NULL,
+  "msg" varchar COLLATE "pg_catalog"."default",
+  "ctime" timestamptz NOT NULL DEFAULT now()
+);
+COMMENT ON COLUMN "msg_queue"."id" IS '标识';
+COMMENT ON COLUMN "msg_queue"."user_id" IS '用户标识';
+COMMENT ON COLUMN "msg_queue"."msg" IS '消息内容';
+COMMENT ON COLUMN "msg_queue"."ctime" IS '创建时间';
+
+-- ----------------------------
 -- Indexes structure for table cm_file_my
 -- ----------------------------
 CREATE INDEX "idx_file_my_parentid" ON "cm_file_my" USING btree (
@@ -1122,6 +1137,18 @@ CREATE UNIQUE INDEX "idx_fsm_file_path" ON "fsm_file" USING btree (
 -- Primary Key structure for table fsm_file
 -- ----------------------------
 ALTER TABLE "fsm_file" ADD PRIMARY KEY ("id");
+
+-- ----------------------------
+-- Indexes structure for table msg_queue
+-- ----------------------------
+CREATE INDEX "idx_msg_queue_user_id" ON "msg_queue" USING btree (
+  "user_id" "pg_catalog"."int8_ops" ASC NULLS LAST
+);
+
+-- ----------------------------
+-- Primary Key structure for table msg_queue
+-- ----------------------------
+ALTER TABLE "msg_queue" ADD CONSTRAINT "msg_queue_pkey" PRIMARY KEY ("id");
 
 -- ----------------------------
 -- Foreign Keys structure for table cm_file_my

@@ -544,6 +544,19 @@ CREATE TABLE `fsm_file`  (
 ) ENGINE = InnoDB;
 
 -- ----------------------------
+-- Table structure for msg_queue
+-- ----------------------------
+DROP TABLE IF EXISTS `msg_queue`;
+CREATE TABLE `msg_queue` (
+  `id` bigint(20) UNSIGNED NOT NULL COMMENT '标识',
+  `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户标识',
+  `msg` VARCHAR(512) COMMENT '消息内容',
+  `ctime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+CREATE INDEX `idx_msg_queue_user_id` ON `msg_queue` (`user_id` ASC);
+
+-- ----------------------------
 -- Table structure for sequence
 -- ----------------------------
 DROP TABLE IF EXISTS `sequence`;

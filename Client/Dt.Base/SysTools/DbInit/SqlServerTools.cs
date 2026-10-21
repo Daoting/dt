@@ -174,7 +174,7 @@ LOG ON
         _info.Log($"创建成功！密码：{_info.NewPwd}");
 
         _info.Log($"数据库【{_info.NewDb}】的所有权限授予给用户【{_info.NewUser}】...");
-        await _da.Exec("sp_addrolemember", new { rolename = "db_owner", membername = _info.NewUser });
+        await _da.Exec($"ALTER ROLE db_owner ADD MEMBER {_info.NewUser}");
         _info.Log("授权成功！");
     }
 
