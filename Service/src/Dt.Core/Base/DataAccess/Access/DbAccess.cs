@@ -8,13 +8,14 @@
 
 #region 引用命名
 using Dapper;
-using Microsoft.Extensions.Caching.Memory;
 using System.Collections;
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using static Npgsql.Replication.PgOutput.Messages.RelationMessage;
+#if SERVER
+using Microsoft.Extensions.Caching.Memory;
+#endif
 #endregion
 
 namespace Dt.Core;
@@ -891,46 +892,59 @@ abstract class DbAccess : IDataAccess
     #region 缓存
     public async Task<T> GetCache<T>(object p_key, bool p_persist = false)
     {
-        if (p_key == null)
+#if SERVER
+        string key = p_key == null ? null : p_key.ToString();
+        if (string.IsNullOrEmpty(key))
             return default;
 
-        if (Kit.Cache.TryGetValue(p_key, out T val))
+        if (Kit.Cache.TryGetValue(key, out T val))
             return val;
 
         if (p_persist)
         {
-            string str = Kit.Serialize(p_key);
-            var v = await GetScalar<string>($"select val from cm_cache where id='{str}'");
-            var result = Kit.Deserialize<T>(v);
-            Kit.Cache.Set(p_key, result, new MemoryCacheEntryOptions { Size = 1 });
-            return result;
+            var v = await GetScalar<string>($"select val from cm_cache where id='{key}'");
+            if (!string.IsNullOrEmpty(v))
+            {
+                var result = Kit.Deserialize<T>(v);
+                Kit.Cache.Set(key, result, new MemoryCacheEntryOptions { Size = 1 });
+                return result;
+            }
         }
         return default;
+#else
+        throw new Exception("直连数据库不支持缓存操作！");
+#endif
     }
 
     public async Task<bool> SetCache(object p_key, object p_value, bool p_persist = false)
     {
-        if (p_key == null || p_value == null)
+#if SERVER
+        string key = p_key == null ? null : p_key.ToString();
+        if (string.IsNullOrEmpty(key))
             return false;
 
-        Kit.Cache.Set(p_key, p_value, new MemoryCacheEntryOptions { Size = 1 });
+        Kit.Cache.Set(key, p_value, new MemoryCacheEntryOptions { Size = 1 });
         if (p_persist)
         {
-            string key = Kit.Serialize(p_key);
             string val = Kit.Serialize(p_value);
             List<Dict> ls = new List<Dict>
             {
-                new Dict { { "text", $"delete from cm_cache where id='{p_key}'" } },
-                new Dict { {"text", $"insert into cm_cache (id,val) values ('{p_key}','{val}')"}},
+                new Dict { { "text", $"delete from cm_cache where id='{key}'" } },
+                new Dict { {"text", $"insert into cm_cache (id,val) values ('{key}','{val}')"}},
             };
             return await BatchExec(ls) > 0;
         }
         return true;
+#else
+        throw new Exception("直连数据库不支持缓存操作！");
+#endif
     }
 
     public Task<bool> SetExpireCache(object p_key, object p_value, double p_seconds)
     {
-        if (p_key == null || p_value == null || p_seconds < 0)
+#if SERVER
+        string key = p_key == null ? null : p_key.ToString();
+        if (string.IsNullOrEmpty(key) || p_value == null || p_seconds < 0)
             return Task.FromResult(false);
 
         var option = new MemoryCacheEntryOptions { Size = 1 };
@@ -938,45 +952,57 @@ abstract class DbAccess : IDataAccess
         {
             option.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(p_seconds);
         }
-        Kit.Cache.Set(p_key, p_value, option);
+        Kit.Cache.Set(key, p_value, option);
         return Task.FromResult(true);
+#else
+        throw new Exception("直连数据库不支持缓存操作！");
+#endif
     }
 
     public async Task<bool> DeleteCache(object p_key, bool p_persist = false)
     {
-        if (p_key == null)
+#if SERVER
+        string key = p_key == null ? null : p_key.ToString();
+        if (string.IsNullOrEmpty(key))
             return false;
 
-        Kit.Cache.Remove(p_key);
+        Kit.Cache.Remove(key);
         if (p_persist)
         {
-            string key = Kit.Serialize(p_key);
             return await Exec($"delete from cm_cache where id='{key}'") > 0;
         }
         return true;
+#else
+        throw new Exception("直连数据库不支持缓存操作！");
+#endif
     }
 
-    public async Task<bool> BatchDeleteCache(List<object> p_keys, bool p_persist = false)
+    public async Task<bool> BatchDeleteCache(IList p_keys, bool p_persist = false)
     {
+#if SERVER
         if (p_keys == null || p_keys.Count == 0)
             return false;
 
-        foreach (var p_key in p_keys)
+        List<Dict> ls = new List<Dict>();
+        foreach (var key in p_keys)
         {
-            Kit.Cache.Remove(p_key);
+            string k = key == null ? null : key.ToString();
+            if (string.IsNullOrEmpty(k))
+                continue;
+
+            Kit.Cache.Remove(k);
+            ls.Add(new Dict { { "id", k } });
         }
 
         if (p_persist)
         {
-            List<Dict> ls = new List<Dict>();
-            foreach (var key in p_keys)
-            {
-                ls.Add(new Dict { { "id", Kit.Serialize(key) } });
-            }
             string prefix = _dbInfo.DbType == DatabaseType.Oracle ? ":" : "@";
             return await Exec($"delete from cm_cache where id={prefix}id", ls) > 0;
         }
         return true;
+#else
+        throw new Exception("直连数据库不支持缓存操作！");
+#endif
     }
     #endregion
 }

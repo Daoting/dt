@@ -61,7 +61,7 @@ public static class LoginDs
             return false;
         }
 
-        string code = await At.StringGet($"{_prefixCode}:{p_phone}");
+        string code = await At.GetCache<string>($"{_prefixCode}:{p_phone}");
         if (code != p_code)
         {
             if (p_showWarning)
@@ -98,7 +98,7 @@ public static class LoginDs
 
         string code = new Random().Next(1000, 9999).ToString();
         // 60秒失效
-        await At.StringSet($"{_prefixCode}:{p_phone}", code, 60);
+        await At.SetExpireCache($"{_prefixCode}:{p_phone}", code, 60);
 
         // 发送短信
 

@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using System.Collections;
 #endregion
 
 namespace Dt.Core;
@@ -231,48 +232,65 @@ public abstract class AccessAgent<TAgentInfo>
         return _info.GetDa().NewSeq(p_seqName);
     }
     #endregion
-    
+
     #region 缓存
     /// <summary>
-    /// 根据键查询字符串类型的缓存值
+    /// 根据键查询缓存值，获取过程：
+    /// <para>1. 首先从缓存中获取，有则直接返回</para>
+    /// <para>2. 无且p_persist 为true，则从数据库获取，并按照rpc json规则反序列化，将结果添加到缓存以备下次使用</para>
     /// </summary>
-    /// <param name="p_key">完整缓存键，形如"prefix:key"</param>
-    /// <returns>缓存字符串</returns>
-    public static Task<string> StringGet(string p_key)
+    /// <param name="p_key">缓存键，字符串或简单值类型，推荐分段式串如：大类1:分组2:标识</param>
+    /// <param name="p_persist">缓存中无时是否从数据库获取，默认false</param>
+    /// <returns>返回缓存值，自动转换为指定类型</returns>
+    public static Task<T> GetCache<T>(object p_key, bool p_persist = false)
     {
-        return _info.GetDa().StringGet(p_key);
+        return _info.GetDa().GetCache<T>(p_key, p_persist);
     }
 
     /// <summary>
-    /// 将键值添加到缓存
+    /// 将键值添加到缓存，并根据p_persist控制是否同时存放在数据库
     /// </summary>
-    /// <param name="p_key">完整缓存键，形如"prefix:key"，非空</param>
-    /// <param name="p_value">待缓存内容</param>
-    /// <param name="p_seconds">过期秒数，0表始终不过期</param>
-    /// <returns></returns>
-    public static Task<bool> StringSet(string p_key, string p_value, double p_seconds = 0)
+    /// <param name="p_key">缓存键，字符串或简单值类型，推荐分段式串如：大类1:分组2:标识</param>
+    /// <param name="p_value">缓存值，持久化时按照rpc json规则序列化键值</param>
+    /// <param name="p_persist">是否同时存放在数据库，默认false</param>
+    /// <returns>是否成功</returns>
+    public static Task<bool> SetCache(object p_key, object p_value, bool p_persist = false)
     {
-        return _info.GetDa().StringSet(p_key, p_value, p_seconds);
+        return _info.GetDa().SetCache(p_key, p_value, p_persist);
     }
 
     /// <summary>
-    /// 根据键名删除缓存内容
+    /// 将键值添加到缓存，并设置过期时间，始终不持久化
     /// </summary>
-    /// <param name="p_key">键名</param>
-    /// <returns></returns>
-    public static Task<bool> KeyDelete(string p_key)
+    /// <param name="p_key">缓存键，字符串或简单值类型，推荐分段式串如：大类1:分组2:标识</param>
+    /// <param name="p_value">缓存值</param>
+    /// <param name="p_seconds">过期秒数，0表示永久缓存</param>
+    /// <returns>是否成功</returns>
+    public static Task<bool> SetExpireCache(object p_key, object p_value, double p_seconds)
     {
-        return _info.GetDa().KeyDelete(p_key);
+        return _info.GetDa().SetExpireCache(p_key, p_value, p_seconds);
     }
 
     /// <summary>
-    /// 根据键名列表批量删除缓存
+    /// 删除缓存值，并根据p_persist控制是否同时删除数据库中的值
     /// </summary>
-    /// <param name="p_keys">键名列表</param>
-    /// <returns></returns>
-    public static Task BatchKeyDelete(List<string> p_keys)
+    /// <param name="p_key">缓存键，字符串或简单值类型，推荐分段式串如：大类1:分组2:标识</param>
+    /// <param name="p_persist">是否同时删除数据库中的值，默认false</param>
+    /// <returns>是否成功</returns>
+    public static Task<bool> DeleteCache(object p_key, bool p_persist = false)
     {
-        return _info.GetDa().BatchKeyDelete(p_keys);
+        return _info.GetDa().DeleteCache(p_key, p_persist);
+    }
+
+    /// <summary>
+    /// 批量删除缓存值，并根据p_persist控制是否同时删除数据库中的值
+    /// </summary>
+    /// <param name="p_keys">缓存键列表，字符串或简单值类型，推荐分段式串如：大类1:分组2:标识</param>
+    /// <param name="p_persist">是否同时删除数据库中的值，默认false</param>
+    /// <returns>是否成功</returns>
+    public static Task<bool> BatchDeleteCache(IList p_keys, bool p_persist = false)
+    {
+        return _info.GetDa().BatchDeleteCache(p_keys, p_persist);
     }
     #endregion
 
@@ -347,6 +365,6 @@ public abstract class AccessAgent<TAgentInfo>
         return _info.GetDa().SyncDbTime();
     }
     #endregion
-    
+
     static IAccessInfo _info = new TAgentInfo().GetAccessInfo();
 }

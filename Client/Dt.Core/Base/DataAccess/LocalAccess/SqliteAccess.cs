@@ -10,6 +10,7 @@
 using Dt.Core.Rpc;
 using Dt.Core.Sqlite;
 using Serilog.Events;
+using System.Collections;
 #endregion
 
 namespace Dt.Core;
@@ -184,37 +185,27 @@ class SqliteAccess : IDataAccess
     #endregion
 
     #region 缓存
-    public Task<string> StringGet(string p_key)
+    public Task<T> GetCache<T>(object p_key, bool p_persist = false)
     {
         throw new NotSupportedException();
     }
 
-    public Task<bool> StringSet(string p_key, string p_value, double p_seconds = 0)
+    public Task<bool> SetCache(object p_key, object p_value, bool p_persist = false)
     {
         throw new NotSupportedException();
     }
 
-    public Task<string> GetEntityJson(string p_key, string p_priKeyPrefix)
+    public Task<bool> SetExpireCache(object p_key, object p_value, double p_seconds)
     {
         throw new NotSupportedException();
     }
 
-    public Task<Dict> HashGetAll(string p_key)
+    public Task<bool> DeleteCache(object p_key, bool p_persist = false)
     {
         throw new NotSupportedException();
     }
 
-    public Task<string> HashGet(string p_key, string p_field)
-    {
-        throw new NotSupportedException();
-    }
-
-    public Task<bool> KeyDelete(string p_key)
-    {
-        throw new NotSupportedException();
-    }
-
-    public Task BatchKeyDelete(List<string> p_keys)
+    public Task<bool> BatchDeleteCache(IList p_keys, bool p_persist = false)
     {
         throw new NotSupportedException();
     }

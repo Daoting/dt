@@ -380,7 +380,7 @@ public static class RbacDs
             PrefixMenu + p_userID,
             PrefixPer + p_userID,
         };
-        At.BatchKeyDelete(ls);
+        At.BatchDeleteCache(ls, true);
     }
 
     /// <summary>
@@ -398,7 +398,7 @@ public static class RbacDs
             ls.Add(PrefixMenu + id);
             ls.Add(PrefixPer + id);
         }
-        At.BatchKeyDelete(ls);
+        At.BatchDeleteCache(ls, true);
     }
 
     /// <summary>
@@ -427,7 +427,7 @@ public static class RbacDs
         {
             keys.Add(p_key + id);
         }
-        await At.BatchKeyDelete(keys);
+        await At.BatchDeleteCache(keys, true);
     }
 
     public const string PrefixMenu = "ver:menu:";

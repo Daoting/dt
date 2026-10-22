@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Core.Rpc;
+using System.Collections;
 #endregion
 
 namespace Dt.Core;
@@ -220,70 +221,56 @@ class SvcAccess : IDataAccess
     #endregion
 
     #region 缓存
-    public Task<string> StringGet(string p_key)
+
+    public Task<T> GetCache<T>(object p_key, bool p_persist = false)
     {
-        return Kit.Rpc<string>(
-            _ai.Name,
-            "CacheAccess.StringGet",
-            p_key
+        return Kit.Rpc<T>(
+            "cm",
+            "CacheAccess.GetCache",
+            p_key,
+            p_persist
         );
     }
 
-    public Task<bool> StringSet(string p_key, string p_value, double p_seconds = 0)
+    public Task<bool> SetCache(object p_key, object p_value, bool p_persist = false)
     {
         return Kit.Rpc<bool>(
-            _ai.Name,
-            "CacheAccess.StringSet",
+            "cm",
+            "CacheAccess.SetCache",
+            p_key,
+            p_value,
+            p_persist
+        );
+    }
+
+    public Task<bool> SetExpireCache(object p_key, object p_value, double p_seconds)
+    {
+        return Kit.Rpc<bool>(
+            "cm",
+            "CacheAccess.SetExpireCache",
             p_key,
             p_value,
             p_seconds
         );
     }
 
-    public Task<string> GetEntityJson(string p_key, string p_priKeyPrefix)
-    {
-        return Kit.Rpc<string>(
-            _ai.Name,
-            "CacheAccess.GetEntityJson",
-            p_key,
-            p_priKeyPrefix
-        );
-    }
-
-    public Task<Dict> HashGetAll(string p_key)
-    {
-        return Kit.Rpc<Dict>(
-            _ai.Name,
-            "CacheAccess.HashGetAll",
-            p_key
-        );
-    }
-
-    public Task<string> HashGet(string p_key, string p_field)
-    {
-        return Kit.Rpc<string>(
-            _ai.Name,
-            "CacheAccess.HashGet",
-            p_key,
-            p_field
-        );
-    }
-
-    public Task<bool> KeyDelete(string p_key)
+    public Task<bool> DeleteCache(object p_key, bool p_persist = false)
     {
         return Kit.Rpc<bool>(
-            _ai.Name,
-            "CacheAccess.KeyDelete",
-            p_key
+            "cm",
+            "CacheAccess.DeleteCache",
+            p_key,
+            p_persist
         );
     }
 
-    public Task BatchKeyDelete(List<string> p_keys)
+    public Task<bool> BatchDeleteCache(IList p_keys, bool p_persist = false)
     {
-        return Kit.Rpc<object>(
-            _ai.Name,
-            "CacheAccess.BatchKeyDelete",
-            p_keys
+        return Kit.Rpc<bool>(
+            "cm",
+            "CacheAccess.BatchDeleteCache",
+            p_keys,
+            p_persist
         );
     }
     #endregion

@@ -45,7 +45,7 @@ class UserCallback : IUserCallback
 
         // 查询当前版本号
         _initPer = true;
-        var ver = await At.StringGet(RbacDs.PrefixPer + Kit.UserID);
+        var ver = await At.GetCache<string>(RbacDs.PrefixPer + Kit.UserID, true);
         if (!string.IsNullOrEmpty(ver))
         {
             var localVer = await CookieX.Get(_perVerKey);
@@ -82,10 +82,10 @@ class UserCallback : IUserCallback
             await AtLob.BatchExec(new List<Dict> { d });
         }
 
-        // redis和本地sqlite都记录版本号
+        // 服务缓存和本地sqlite都记录版本号
         // 版本号是所有用户权限id的和！
         string newVer = sum.ToString();
-        await At.StringSet(RbacDs.PrefixPer + Kit.UserID, newVer);
+        await At.SetCache(RbacDs.PrefixPer + Kit.UserID, newVer, true);
 
         await CookieX.DelByID(_perVerKey, true, false);
         await CookieX.Save(_perVerKey, newVer);

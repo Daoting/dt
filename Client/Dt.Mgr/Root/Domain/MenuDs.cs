@@ -317,7 +317,7 @@ public static class MenuDs
     static async Task<List<long>> GetAllUserMenus()
     {
         // 查询当前版本号
-        var ver = await At.StringGet(RbacDs.PrefixMenu + Kit.UserID);
+        var ver = await At.GetCache<string>(RbacDs.PrefixMenu + Kit.UserID, true);
         if (!string.IsNullOrEmpty(ver))
         {
             var localVer = await CookieX.Get(_menuVerKey);
@@ -349,10 +349,10 @@ public static class MenuDs
             await AtLob.BatchExec(new List<Dict> { d });
         }
 
-        // redis和本地sqlite都记录版本号
+        // 服务缓存和本地sqlite都记录版本号
         // 版本号是所有可访问菜单id的和！
         string newVer = sum.ToString();
-        await At.StringSet(RbacDs.PrefixMenu + Kit.UserID, newVer);
+        await At.SetCache(RbacDs.PrefixMenu + Kit.UserID, newVer, true);
 
         await CookieX.DelByID(_menuVerKey, true, false);
         await CookieX.Save(_menuVerKey, newVer);
