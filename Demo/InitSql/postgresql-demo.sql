@@ -189,7 +189,7 @@ CACHE 1;
 -- ----------------------------
 CREATE TABLE "cm_cache" (
   "id" varchar(255) NOT NULL,
-  "val" varchar(512),
+  "val" varchar,
   "ctime" timestamptz NOT NULL DEFAULT now()
 )
 ;

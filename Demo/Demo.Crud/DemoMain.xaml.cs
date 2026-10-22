@@ -39,6 +39,7 @@ public partial class DemoMain : Win
             new Nav("远程过程调用", typeof(RpcDemo), Icons.耳麦) { Desc = "Rpc调用" },
             new Nav("服务端Api授权控制", typeof(AuthAccess), Icons.小图标) { Desc ="Api授权控制" },
             new Nav("数据查询", typeof(QueryDemo), Icons.靶子) { Desc = "调用服务进行数据查询方法"},
+            new Nav("服务端缓存", typeof(CacheDemo), Icons.标记) { Desc = "全局一级(内存)、二级(库表)缓存" },
         };
         group.Title = "Rpc基础";
         ds.Add(group);

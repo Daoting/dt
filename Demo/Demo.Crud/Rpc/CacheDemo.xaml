@@ -1,0 +1,43 @@
+﻿<a:Win
+    x:Class="Demo.Crud.CacheDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <CheckBox x:Name="_persist" Content="持久化" IsChecked="True" />
+        <a:CBar Title="值类型" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="值为字符串" Click="OnValStr" />
+            <Button Content="值为整数" Click="OnValInt" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="值为时间" Click="OnValDate" />
+            <Button Content="值为bool" Click="OnValBool" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="值为Table" Click="OnValTable" />
+            <Button Content="值为Table列表" Click="OnValTableList" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="值为Dict" Click="OnValDict" />
+            <Button Content="值为Dict列表" Click="OnValDictList" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="键为整数" Click="OnKeyInt" />
+            <Button Content="键为时间" Click="OnKeyDate" />
+        </StackPanel>
+        <Button Content="删除[值为字符串]" Click="OnDelStr" />
+        <Button Content="批量删除以上所有缓存" Click="OnBatchDel" />
+        <Button Content="通配符批量删除" Click="OnBatchStarDel" />
+
+        <a:CFree ColSpan="0" RowSpan="5" ShowTitle="False">
+            <TextBox
+                x:Name="_tbInfo"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollMode="Enabled" />
+        </a:CFree>
+    </a:Fv>
+</a:Win>
