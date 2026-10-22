@@ -160,22 +160,13 @@ public partial class CacheDemo : Win
 
     async void OnBatchStarDel(object sender, RoutedEventArgs e)
     {
-        //List<object> keys = new List<object>()
-        //{
-        //    _prefix + "值为字符串",
-        //    _prefix + "值为整数",
-        //    _prefix + "值为时间",
-        //    _prefix + "值为bool",
-        //    _prefix + "值为Table",
-        //    _prefix + "值为TableList",
-        //    _prefix + "值为Dict",
-        //    _prefix + "值为DictList",
-        //    _prefix + "值为非内置对象",
-        //    _prefix + "值为非内置对象列表",
-        //    12345,
-        //    DateTime.MaxValue
-        //};
-        //var suc = await At.DeleteCache(keys, _persist.IsChecked == true);
-        //_tbInfo.Text = $"批量删除缓存成功：{suc}";
+        var suc = await At.DelCacheByPattern(_prefix, 0, _persist.IsChecked == true);
+        _tbInfo.Text = $"批量删除缓存成功：{suc}";
+    }
+
+    async void OnGetKeys(object sender, RoutedEventArgs e)
+    {
+        var keys = await At.GetCacheKeys(null, 0);
+        _tbInfo.Text = $"所有缓存键：\n{string.Join(",\n", keys)}";
     }
 }

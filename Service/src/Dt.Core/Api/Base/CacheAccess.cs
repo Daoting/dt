@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using System.Collections;
 #endregion
 
 namespace Dt.Core;
@@ -40,5 +41,15 @@ public class CacheAccess : RpcApi
     public Task<bool> BatchDeleteCache(List<object> p_keys, bool p_persist = false)
     {
         return _da.BatchDeleteCache(p_keys, p_persist);
+    }
+
+    public Task<bool> DelCacheByPattern(string p_keyStr, int p_pattern, bool p_persist = false)
+    {
+        return _da.DelCacheByPattern(p_keyStr, p_pattern, p_persist);
+    }
+
+    public Task<List<string>> GetCacheKeys(string p_keyStr, int p_pattern)
+    {
+        return _da.GetCacheKeys(p_keyStr, p_pattern);
     }
 }

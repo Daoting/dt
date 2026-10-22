@@ -1004,5 +1004,77 @@ abstract class DbAccess : IDataAccess
         throw new Exception("直连数据库不支持缓存操作！");
 #endif
     }
+
+    public async Task<bool> DelCacheByPattern(string p_keyStr, int p_pattern, bool p_persist = false)
+    {
+#if SERVER
+        if (string.IsNullOrEmpty(p_keyStr) || p_pattern < 0 || p_pattern > 2)
+            return false;
+
+        var cache = Kit.Cache as MemoryCache;
+        foreach (var key in cache.Keys)
+        {
+            string k = key == null ? null : key.ToString();
+            if (string.IsNullOrEmpty(k))
+                continue;
+
+            bool suc = p_pattern switch
+            {
+                0 => k.StartsWith(p_keyStr),
+                1 => k.EndsWith(p_keyStr),
+                2 => k.Contains(p_keyStr),
+                _ => false,
+            };
+            if (suc)
+            {
+                Kit.Cache.Remove(k);
+            }
+        }
+
+        if (p_persist)
+        {
+            string prefix = p_pattern switch
+            {
+                0 => "'" + p_keyStr + "%'",
+                1 => "'%" + p_keyStr + "'",
+                2 => "'%" + p_keyStr + "%'",
+                _ => null,
+            };
+            return await Exec($"delete from cm_cache where id like {prefix}") > 0;
+        }
+        return true;
+#else
+        throw new Exception("直连数据库不支持缓存操作！");
+#endif
+    }
+
+    public Task<List<string>> GetCacheKeys(string p_keyStr, int p_pattern)
+    {
+#if SERVER
+        var cache = Kit.Cache as MemoryCache;
+        if (string.IsNullOrEmpty(p_keyStr))
+            return Task.FromResult(cache.Keys.Cast<string>().ToList());
+
+        List<string> ls = new();
+        foreach (var key in cache.Keys)
+        {
+            string k = key == null ? "" : key.ToString();
+            bool suc = p_pattern switch
+            {
+                0 => k.StartsWith(p_keyStr),
+                1 => k.EndsWith(p_keyStr),
+                2 => k.Contains(p_keyStr),
+                _ => false,
+            };
+            if (suc)
+            {
+                ls.Add(k);
+            }
+        }
+        return Task.FromResult(ls);
+#else
+        throw new Exception("直连数据库不支持缓存操作！");
+#endif
+    }
     #endregion
 }

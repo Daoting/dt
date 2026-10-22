@@ -209,6 +209,16 @@ class SqliteAccess : IDataAccess
     {
         throw new NotSupportedException();
     }
+
+    public Task<bool> DelCacheByPattern(string p_keyStr, int p_pattern, bool p_persist = false)
+    {
+        throw new NotSupportedException();
+    }
+
+    public Task<List<string>> GetCacheKeys(string p_keyStr, int p_pattern)
+    {
+        throw new NotSupportedException();
+    }
     #endregion
 
     #region 库管理

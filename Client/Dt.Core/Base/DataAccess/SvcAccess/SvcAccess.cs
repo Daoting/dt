@@ -273,6 +273,27 @@ class SvcAccess : IDataAccess
             p_persist
         );
     }
+
+    public Task<bool> DelCacheByPattern(string p_keyStr, int p_pattern, bool p_persist = false)
+    {
+        return Kit.Rpc<bool>(
+            "cm",
+            "CacheAccess.DelCacheByPattern",
+            p_keyStr,
+            p_pattern,
+            p_persist
+        );
+    }
+
+    public Task<List<string>> GetCacheKeys(string p_keyStr, int p_pattern)
+    {
+        return Kit.Rpc<List<string>>(
+            "cm",
+            "CacheAccess.GetCacheKeys",
+            p_keyStr,
+            p_pattern
+        );
+    }
     #endregion
 
     #region 库信息

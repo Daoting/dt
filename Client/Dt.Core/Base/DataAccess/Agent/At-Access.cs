@@ -290,6 +290,29 @@ public static partial class At
     {
         return _currentAI.GetDa().BatchDeleteCache(p_keys, p_persist);
     }
+
+    /// <summary>
+    /// 按照匹配模式批量删除缓存值，并根据p_persist控制是否同时删除数据库中的值
+    /// </summary>
+    /// <param name="p_keyStr">待匹配的键字符串</param>
+    /// <param name="p_pattern">匹配模式：0以开头，1以结尾，2包含</param>
+    /// <param name="p_persist">是否同时删除数据库中的值，默认false</param>
+    /// <returns>是否成功</returns>
+    public static Task<bool> DelCacheByPattern(string p_keyStr, int p_pattern, bool p_persist = false)
+    {
+        return _currentAI.GetDa().DelCacheByPattern(p_keyStr, p_pattern, p_persist);
+    }
+
+    /// <summary>
+    /// 按照匹配模式获取一级缓存(内存)的所有键列表，p_keyStr空时返回所有键
+    /// </summary>
+    /// <param name="p_keyStr">待匹配的键字符串，空时表示匹配所有键</param>
+    /// <param name="p_pattern">匹配模式：0以开头，1以结尾，2包含</param>
+    /// <returns>缓存键列表</returns>
+    public static Task<List<string>> GetCacheKeys(string p_keyStr, int p_pattern)
+    {
+        return _currentAI.GetDa().GetCacheKeys(p_keyStr, p_pattern);
+    }
     #endregion
 
     #region 库信息

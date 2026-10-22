@@ -30,6 +30,7 @@
         <Button Content="删除[值为字符串]" Click="OnDelStr" />
         <Button Content="批量删除以上所有缓存" Click="OnBatchDel" />
         <Button Content="通配符批量删除" Click="OnBatchStarDel" />
+        <Button Content="查询所有键" Click="OnGetKeys" />
 
         <a:CFree ColSpan="0" RowSpan="5" ShowTitle="False">
             <TextBox
