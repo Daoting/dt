@@ -1,6 +1,6 @@
 <Project ToolsVersion="Current">
 	<PropertyGroup>
-		<Version>5.2.2</Version>
+		<Version>5.2.3</Version>
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>

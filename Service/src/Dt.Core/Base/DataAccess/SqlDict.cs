@@ -77,7 +77,7 @@ internal static class SqlDict
         {
             ParseSqlContent(file);
         }
-        Log.Information($"SQL字典共 {_fileToKeys.Count} 个文件，{_workingDict.Count} 条语句");
+        Log.Information($"SQL字典共 {sqlFiles.Length} 个文件，{_workingDict.Count} 条语句");
 
         _sqlDict = _workingDict.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
         _sqlSpanDict = _sqlDict.GetAlternateLookup<ReadOnlySpan<char>>();
