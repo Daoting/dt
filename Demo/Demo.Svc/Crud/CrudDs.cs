@@ -19,7 +19,7 @@ namespace Demo.Crud;
 /// 
 /// </summary>
 [Api]
-public class CrudDs : DomainSvc
+public class CrudDs : RpcApi
 {
     Random _rnd = new Random();
 
@@ -294,50 +294,5 @@ public class CrudDs : DomainSvc
         return msg;
     }
 
-    #endregion
-
-    #region 缓存
-    public async Task<bool> InsertCache()
-    {
-        var x = await 缓存表X.New(Kit.NewGuid.Substring(0, 11), _rnd.Next(10000).ToString());
-        return await x.Save();
-    }
-
-    public async Task<bool> UpdateCache()
-    {
-        var x = await 缓存表X.First(null);
-        if (x != null)
-        {
-            x.姓名 = _rnd.Next(1000).ToString();
-            return await x.Save();
-        }
-        return false;
-    }
-
-    public async Task<bool> DelCache()
-    {
-        var x = await 缓存表X.First(null);
-        if (x != null)
-        {
-            return await x.Delete();
-        }
-        return false;
-    }
-
-    public async Task<string> CacheByKey()
-    {
-        var x = await 缓存表X.First(null);
-        if (x != null)
-        {
-            var model = await EntitySchema.Get(typeof(缓存表X));
-            var key = $"{model.Schema.Name}:手机号:{x.手机号}";
-            await Kit.DeleteCache(key);
-
-            await 缓存表X.GetFromCacheFirst("手机号", x.手机号);
-            var val = await Kit.StringGet<string>(key);
-            return $"缓存键：{key}\r\n缓存值：{val}";
-        }
-        return "无数据";
-    }
     #endregion
 }

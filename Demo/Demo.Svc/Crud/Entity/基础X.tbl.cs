@@ -22,7 +22,7 @@ public partial class 基础X : EntityX<基础X>
     public 基础X(
         long ID,
         long? ParentID = default,
-        int 序列 = default,
+        long 序列 = default,
         string 名称 = default,
         string 限长4 = default,
         string 不重复 = default,
@@ -67,9 +67,9 @@ public partial class 基础X : EntityX<基础X>
     /// <summary>
     /// 序列自动赋值
     /// </summary>
-    public int 序列
+    public long 序列
     {
-        get { return (int)this["序列"]; }
+        get { return (long)this["序列"]; }
         set { this["序列"] = value; }
     }
 
