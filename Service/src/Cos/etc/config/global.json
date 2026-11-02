@@ -17,10 +17,6 @@
     "pgdt": {
       "ConnStr": "Host=10.10.1.2;Port=5432;Database=dt;Username=dt;Password=dt;",
       "DbType": "postgresql"
-    },
-    "zend": {
-      "ConnStr": "Host=10.10.1.2;Port=5432;Database=zend;Username=zend;Password=dt;",
-      "DbType": "postgresql"
     }
   },
 
