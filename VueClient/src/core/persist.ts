@@ -6,11 +6,11 @@ import type { PiniaPluginContext } from 'pinia'
  * store 中配置 { persist: true } 即可自动持久化
  */
 export function piniaPersistPlugin(context: PiniaPluginContext) {
-  const { store } = context
-
+  
   // 如果 store 配置了 persist: true 才开启持久化
-  if (store.$options.persist !== true) return
-
+  if (context.options.persist !== true) return
+  
+  const { store } = context
   const storageKey = `pinia-store-${store.$id}`
 
   // 1. 初始化时从 localStorage 恢复

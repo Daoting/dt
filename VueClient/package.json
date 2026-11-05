@@ -23,15 +23,21 @@
     "@vue/tsconfig": "^0.9.1",
     "prettier": "^3.9.4",
     "sass-embedded": "^1.100.0",
+    "sharp": "^0.35.5",
     "typescript": "~6.0.3",
     "vite": "^8.1.1",
+    "vite-plugin-pwa": "^2.0.0",
     "vue-tsc": "^3.3.6"
   },
   "dependencies": {
     "@quasar/extras": "^2.0.2",
+    "@vee-validate/zod": "^4.15.1",
     "pinia": "^4.0.1",
     "quasar": "^2.21.1",
+    "unplugin-auto-import": "^21.0.0",
+    "vee-validate": "^4.15.1",
     "vue": "^3.5.39",
-    "vue-router": "^5.1.0"
+    "vue-router": "^5.1.0",
+    "zod": "^4.4.3"
   }
 }

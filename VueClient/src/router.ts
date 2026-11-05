@@ -1,30 +1,26 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
+import { useUserStore } from "./stores/user";
 
 const routes = [
   {
     path: "/",
     component: () => import("@/Home.vue"),
+    meta: { title: "收藏夹", icon: "home" },
     children: [
       {
-        path: "/",
-        name: "序列化",
+        path: "TestSerialize",
         component: () => import("@/test/TestSerialize.vue"),
-        meta: { title: "序列化", icon: "home" },
+        meta: { title: "序列化", icon: "storage" },
       },
       {
-        path: "TableBase",
-        component: () => import("@/qtable/TableBase.vue"),
-        meta: { title: "TableBase", icon: "home" },
+        path: "FvDemo",
+        component: () => import("@/test/FvDemo.vue"),
+        meta: { title: "Fv 示例", icon: "style" },
       },
       {
-        path: "first",
-        component: () => import("@/pages/IndexPage.vue"),
-        meta: { title: "first", icon: "home" },
-      },
-      {
-        path: "second",
-        component: () => import("@/pages/SecondPage.vue"),
-        meta: { title: "second", icon: "home" },
+        path: "LvDemo",
+        component: () => import("@/test/LvDemo.vue"),
+        meta: { title: "Lv 示例", icon: "list" },
       },
     ],
   },
@@ -40,8 +36,19 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(), // history 模式（不带 #）
+  history: createWebHashHistory(), // Hash history 模式(带 #)，如http://xxx.com/a/b/#/about，支持相对路径，丢任意子目录都能跑
   routes,
+});
+
+router.beforeEach((to) => {
+  if (to.path === "/login") {
+    return;
+  }
+
+  const user = useUserStore();
+  if (!user.isLogin) {
+    return "/login";
+  }
 });
 
 export default router;

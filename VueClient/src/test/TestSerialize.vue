@@ -1,306 +1,330 @@
 <template>
-  
-  <div>
-    <p>基本类型</p>
-    <button @click="GetString">返回字符串</button>
-    <button @click="SetString">发送字符串</button>
-    <button @click="GetBool">返回bool值</button>
-    <button @click="SetBool">发送bool值</button>
-    <button @click="GetNumber">返回Number值</button>
-    <button @click="SetNumber">发送Number值</button>
-    <button @click="GetDateTime">返回DateTime值</button>
-    <button @click="SetDateTime">发送DateTime值</button>
-    <button @click="GetByteArray">返回byte[]值</button>
-    <button @click="SetByteArray">发送byte[]值</button>
+  <div class="column">
+    <q-bar class="q-mt-md">基本类型</q-bar>
+    <div class="row">
+      <q-btn @click="GetString" label="返回字符串" />
+      <q-btn label="发送字符串" @click="SetString" />
+      <q-btn label="返回bool值" @click="GetBool" />
+      <q-btn label="发送bool值" @click="SetBool" />
+      <q-btn label="返回int值" @click="GetInt" />
+      <q-btn label="发送int值" @click="SetInt" />
+      <q-btn label="返回long值" @click="GetLong" />
+      <q-btn label="发送long值" @click="SetLong" />
+      <q-btn label="返回double值" @click="GetDouble" />
+      <q-btn label="发送double值" @click="SetDouble" />
+      <q-btn label="返回DateTime" @click="GetDateTime" />
+      <q-btn label="发送DateTime" @click="SetDateTime" />
+      <q-btn label="返回byte[]值" @click="GetByteArray" />
+      <q-btn label="发送byte[]值" @click="SetByteArray" />
+      <q-btn label="返回MsgInfo" @click="GetMsgInfo" />
+      <q-btn label="发送MsgInfo" @click="SetMsgInfo" />
+    </div>
 
-    <p>集合类型</p>
-    <button @click="GetStringList">返回字符串列表</button>
-    <button @click="SetStringList">发送字符串列表</button>
-    <button @click="GetBoolList">返回bool列表</button>
-    <button @click="SetBoolList">发送bool列表</button>
-    <button @click="GetNumberList">返回int列表</button>
-    <button @click="SetNumberList">发送int列表</button>
-    <button @click="GetDoubleList">返回double列表</button>
-    <button @click="SetDoubleList">发送double列表</button>
-    <button @click="GetDateTimeList">返回DateTime列表</button>
-    <button @click="SetDateTimeList">发送DateTime列表</button>
-    <button @click="GetObjectList">返回object列表</button>
-    <button @click="SetObjectList">发送object列表</button>
+    <q-bar class="q-mt-md">集合类型</q-bar>
+    <div class="row">
+      <q-btn @click="GetStringList" label="返回字符串列表" />
+      <q-btn label="发送字符串列表" @click="SetStringList" />
+      <q-btn label="返回bool列表" @click="GetBoolList" />
+      <q-btn label="发送bool列表" @click="SetBoolList" />
+      <q-btn label="返回int列表" @click="GetIntList" />
+      <q-btn label="发送int列表" @click="SetIntList" />
+      <q-btn label="返回long列表" @click="GetLongList" />
+      <q-btn label="发送long列表" @click="SetLongList" />
+      <q-btn label="返回double列表" @click="GetDoubleList" />
+      <q-btn label="发送double列表" @click="SetDoubleList" />
+      <q-btn label="返回DateTime列表" @click="GetDateTimeList" />
+      <q-btn label="发送DateTime列表" @click="SetDateTimeList" />
+    </div>
 
-    <p>Table类型</p>
-    <button @click="GetTable">返回Table</button>
-    <button @click="SetTable">发送Table</button>
+    <q-bar class="q-mt-md">Dict类型</q-bar>
+    <div class="row">
+      <q-btn label="返回基本类型Dict" @click="GetBaseDict" />
+      <q-btn label="返回复杂类型Dict" @click="GetCombineDict" />
+      <q-btn label="发送Dict" @click="SendDict" />
+      <q-btn label="返回Dict列表" @click="GetDictList" />
+      <q-btn label="发送Dict列表" @click="SendDictList" />
+    </div>
 
-    <p>Dict</p>
-    <button @click="GetBaseDict">返回基本类型Dict</button>
-    <button @click="SetDict">发送基本类型Dict</button>
+    <q-bar class="q-mt-md">Table类型</q-bar>
+    <div class="row">
+      <q-btn label="返回Table" @click="GetTable" />
+      <q-btn label="发送Table" @click="SetTable" />
+      <q-btn label="返回Row" @click="GetRow" />
+      <q-btn label="发送Row" @click="SetRow" />
+    </div>
 
-    <p>任意类型</p>
-    <button @click="GetCustomBase">返回非内置对象</button>
-    <button @click="SetCustomBase">发送非内置对象</button>
-    <button @click="GetCustomList">返回非内置对象列表</button>
-    <button @click="SetCustomList">发送非内置对象列表</button>
+    <q-bar class="q-mt-md">SaveItem类型</q-bar>
+    <div class="row">
+      <q-btn label="返回Table的SaveItem" @click="GetTableSaveItem" />
+      <q-btn label="发送Table的SaveItem" @click="SetTableSaveItem" />
+      <q-btn label="返回Row的SaveItem" @click="GetRowSaveItem" />
+      <q-btn label="发送Row的SaveItem" @click="SetRowSaveItem" />
+      <q-btn label="返回SaveItem列表" @click="GetSaveItems" />
+      <q-btn label="发送SaveItem列表" @click="SetSaveItems" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Kit, Table, Dict } from "../core/index";
+import { AtTestCm } from "@/test/AtTestCm";
+import { MsgInfo } from "@/core";
 
-const GetString = async () => {
-  const str = await Kit.rpc<string>(
-    "cm",
-    "TestSerialize.GetString"
-  );
-  console.log(str);
-};
+async function GetString() {
+  const str = await AtTestCm.getString();
+  kit.msg(str);
+}
 
-const SetString = async () => {
-  const success = await Kit.rpc<boolean>(
-    "cm",
-    "TestSerialize.SetString",
-    "这是一个测试字符串"
-  );
-  console.log(success ? "调用成功！" : "调用不成功！");
-};
+async function SetString() {
+  const suc = await AtTestCm.setString("发送字符串");
+  kit.msg(suc ? "调用成功" : "调用失败");
+}
 
-const GetBool = async () => {
-  const str = await Kit.rpc<boolean>(
-    "cm",
-    "TestSerialize.GetBool"
-  );
-  console.log(str);
-};
+async function GetBool() {
+  const str = await AtTestCm.getBool();
+  kit.msg("返回值: " + str);
+}
 
-const SetBool = async () => {
-  const success = await Kit.rpc<boolean>(
-    "cm",
-    "TestSerialize.SetBool",
-    true
-  );
-  console.log(success ? "调用成功！" : "调用不成功！");
-};
+async function SetBool() {
+  const suc = await AtTestCm.setBool(true);
+  kit.msg(suc ? "调用成功" : "调用失败");
+}
 
-const GetNumber = async () => {
-  const str = await Kit.rpc<number>(
-    "cm",
-    "TestSerialize.GetInt"
-  );
-  console.log(str);
-};
+async function GetInt() {
+  const str = await AtTestCm.getInt();
+  kit.msg("返回值: " + str);
+}
 
-const SetNumber = async () => {
-  const success = await Kit.rpc<boolean>(
-    "cm",
-    "TestSerialize.SetInt",
-    42
-  );
-  console.log(success ? "调用成功！" : "调用不成功！");
-};
+async function SetInt() {
+  const str = await AtTestCm.setInt(500);
+  kit.msg("发送成功: " + str);
+}
 
-const GetDateTime = async () => {
-  const str = await Kit.rpc<Date>(
-    "cm",
-    "TestSerialize.GetDateTime"
-  );
-  console.log(str);
-};
+async function GetLong() {
+  const str = await AtTestCm.getLong();
+  kit.msg("返回值: " + str);
+}
 
-const SetDateTime = async () => {
-  const success = await Kit.rpc<boolean>(
-    "cm",
-    "TestSerialize.SetDateTime",
-    new Date()
-  );
-  console.log(success ? "调用成功！" : "调用不成功！");
-};
+async function SetLong() {
+  const str = await AtTestCm.setLong(123456789012);
+  kit.msg("发送成功: " + str);
+}
 
-const GetByteArray = async () => {
-  const str = await Kit.rpc<string>(
-    "cm",
-    "TestSerialize.GetByteArray"
-  );
-  // base64转Uint8Array
-  const uint8 = Uint8Array.from(atob(str), c => c.charCodeAt(0));
-  console.log(uint8);
-};
+async function GetDouble() {
+  const str = await AtTestCm.getDouble();
+  kit.msg("返回值: " + str);
+}
 
-const SetByteArray = async () => {
-  const success = await Kit.rpc<boolean>(
-    "cm",
-    "TestSerialize.SetByteArray",
-    new Uint8Array([1, 2, 3, 4, 5])
-  );
-  console.log(success ? "调用成功！" : "调用不成功！");
-};
+async function SetDouble() {
+  const str = await AtTestCm.setDouble(1234.567);
+  kit.msg("发送成功: " + str);
+}
 
-const GetStringList = async () => {
-  const str = await Kit.rpc<string[]>(
-    "cm",
-    "TestSerialize.GetStringList"
-  );
-  console.log(str);
-};
+async function GetDateTime() {
+  const str = await AtTestCm.getDateTime();
+  kit.msg("返回值: " + str);
+}
 
-const SetStringList = async () => {
-  const success = await Kit.rpc<boolean>(
-    "cm",
-    "TestSerialize.SetStringList",
-    ["这是一个测试字符串1", "这是一个测试字符串2", "这是一个测试字符串3"]
-  );
-  console.log(success ? "调用成功！" : "调用不成功！");
-};
+async function SetDateTime() {
+  const str = await AtTestCm.setDateTime(new Date());
+  kit.msg("发送成功: " + str);
+}
 
-const GetBoolList = async () => {
-  const str = await Kit.rpc<boolean>(
-    "cm",
-    "TestSerialize.GetBoolList"
-  );
-  console.log(str);
-};
+async function GetByteArray() {
+  const str = await AtTestCm.getByteArray();
+  kit.msg("返回值: " + str);
+}
 
-const SetBoolList = async () => {
-  const success = await Kit.rpc<boolean>(
-    "cm",
-    "TestSerialize.SetBoolList",
-    [true, false, true]
-  );
-  console.log(success ? "调用成功！" : "调用不成功！");
-};
+async function SetByteArray() {
+  const str = await AtTestCm.setByteArray(new Uint8Array([1, 2, 3, 4]));
+  kit.msg("发送成功: " + str);
+}
 
-const GetNumberList = async () => {
-  const str = await Kit.rpc<number>(
-    "cm",
-    "TestSerialize.GetIntList"
-  );
-  console.log(str);
-};
+async function GetMsgInfo() {
+  const str = await AtTestCm.getMsgInfo();
+  kit.msg("返回值: " + str);
+}
 
-const SetNumberList = async () => {
-  const success = await Kit.rpc<boolean>(
-    "cm",
-    "TestSerialize.SetIntList",
-    [1, 2, 3, 4, 5]
+async function SetMsgInfo() {
+  const str = await AtTestCm.setMsgInfo(
+    {
+      MethodName: "abc.fun",
+      Params: [1, "a", true],
+      Title: "",
+      Content: "",
+    },
   );
-  console.log(success ? "调用成功！" : "调用不成功！");
-};
+  kit.msg("发送成功: " + str);
+}
 
-const GetDoubleList = async () => {
-  const str = await Kit.rpc<number>(
-    "cm",
-    "TestSerialize.GetDoubleList"
-  );
-  console.log(str);
-};
+async function GetStringList() {
+  const str = await AtTestCm.getStringList();
+  kit.msg("返回值: " + str.join(", "));
+}
 
-const SetDoubleList = async () => {
-  const success = await Kit.rpc<boolean>(
-    "cm",
-    "TestSerialize.SetDoubleList",
-    [1.1, 2.2, 3.3, 4.4, 5.5]
-  );
-  console.log(success ? "调用成功！" : "调用不成功！");
-};
+async function SetStringList() {
+  const suc = await AtTestCm.setStringList(["first", "second"]);
+  kit.msg(suc ? "调用成功" : "调用失败");
+}
 
-const GetDateTimeList = async () => {
-  const str = await Kit.rpc<Date[]>(
-    "cm",
-    "TestSerialize.GetDateTimeList"
-  );
-  console.log(str);
-};
+async function GetBoolList() {
+  const str = await AtTestCm.getBoolList();
+  kit.msg("返回值: " + str.join(", "));
+}
 
-const SetDateTimeList = async () => {
-  const success = await Kit.rpc<boolean>(
-    "cm",
-    "TestSerialize.SetDateTimeList",
-    [new Date(), new Date(), new Date()]
-  );
-  console.log(success ? "调用成功！" : "调用不成功！");
-};
+async function SetBoolList() {
+  const suc = await AtTestCm.setBoolList([true, false, true]);
+  kit.msg(suc ? "调用成功" : "调用失败");
+}
 
-const GetObjectList = async () => {
-  const str = await Kit.rpc<Date[]>(
-    "cm",
-    "TestSerialize.GetObjectList"
-  );
-  console.log(str);
-};
+async function GetIntList() {
+  const str = await AtTestCm.getIntList();
+  kit.msg("返回值: " + str.join(", "));
+}
 
-const SetObjectList = async () => {
-  const success = await Kit.rpc<boolean>(
-    "cm",
-    "TestSerialize.SetObjectList",
-    [123, 'asdf', true, new Date()]
-  );
-  console.log(success ? "调用成功！" : "调用不成功！");
-};
+async function SetIntList() {
+  const str = await AtTestCm.setIntList([1, 2, 3, 4]);
+  kit.msg("发送成功: " + str.join(", "));
+}
 
-const GetTable = async () => {
-  const table = await Kit.rpc<Table>(
-    "cm",
-    "TestSerialize.GetTable"
-  );
-  console.log(table);
-};
+async function GetLongList() {
+  const str = await AtTestCm.getLongList();
+  kit.msg("返回值: " + str.join(", "));
+}
 
-const SetTable = async () => {
-  const success = await Kit.rpc<boolean>(
-    "cm",
-    "TestSerialize.SetTable",
-    new Dict([["string", "string value"], ["bool", true], ["number", 123], ["date", new Date()]])
-  );
-  console.log(success ? "调用成功！" : "调用不成功！");
-};
+async function SetLongList() {
+  const str = await AtTestCm.setLongList([12, 2, 3, 4]);
+  kit.msg("发送成功: " + str.join(", "));
+}
 
-const GetBaseDict = async () => {
-  const dict = await Kit.rpc<Dict>(
-    "cm",
-    "TestSerialize.GetBaseDict"
-  );
-  console.log(dict);
-};
+async function GetDoubleList() {
+  const str = await AtTestCm.getDoubleList();
+  kit.msg("返回值: " + str.join(", "));
+}
 
-const SetDict = async () => {
-  const success = await Kit.rpc<boolean>(
-    "cm",
-    "TestSerialize.SendDict",
-    new Dict([["string", "string value"], ["bool", true], ["number", 123], ["date", new Date()]])
-  );
-  console.log(success ? "调用成功！" : "调用不成功！");
-};
+async function SetDoubleList() {
+  const str = await AtTestCm.setDoubleList([1, 2, 3, 4]);
+  kit.msg("发送成功: " + str.join(", "));
+}
 
-const GetCustomBase = async () => {
-  const dict = await Kit.rpc<Dict>(
-    "cm",
-    "TestSerialize.GetCustomBase"
-  );
-  console.log(dict);
-};
+async function GetDateTimeList() {
+  const str = await AtTestCm.getDateTimeList();
+  kit.msg("返回值: " + str.join(", "));
+}
 
-const SetCustomBase = async () => {
-  const success = await Kit.rpc<boolean>(
-    "cm",
-    "TestSerialize.SetCustomBase",
-    { Name: "abv", ExpiryDate: new Date(), Sizes:[ "12", "abc", "wer" ] }
-  );
-  console.log(success ? "调用成功！" : "调用不成功！");
-};
+async function SetDateTimeList() {
+  const suc = await AtTestCm.setDateTimeList([new Date(), new Date()]);
+  kit.msg(suc ? "调用成功" : "调用失败");
+}
 
-const GetCustomList = async () => {
-  const dict = await Kit.rpc<Dict>(
-    "cm",
-    "TestSerialize.GetCustomList"
-  );
-  console.log(dict);
-};
+async function GetBaseDict() {
+  const dt = await AtTestCm.getBaseDict();
+  let msg = "";
+  for (const [key, val] of dt) {
+    msg += key + " = " + val + "<br>";
+  }
+  kit.msg(msg);
+}
 
-const SetCustomList = async () => {
-  const success = await Kit.rpc<boolean>(
-    "cm",
-    "TestSerialize.SetCustomList",
-    [{ Name: "1", ExpiryDate: new Date(), Sizes:[ "12", "abc", "wer" ] },
-    { Name: "2", ExpiryDate: new Date(), Sizes:[ "ab", "cd", "ef" ]}]
-  );
-  console.log(success ? "调用成功！" : "调用不成功！");
-};
+async function GetCombineDict() {
+  const suc = await AtTestCm.getCombineDict();
+  kit.msg(suc ? "调用成功" : "调用失败");
+}
+
+async function SendDict() {
+  const map = new Dict([
+    ["a", 1],
+    ["b", true],
+    ["c", "abc"],
+  ]);
+  const dt = await AtTestCm.sendDict(map);
+  let msg = "";
+  for (const [key, val] of dt) {
+    msg += key + " = " + val + "<br>";
+  }
+  kit.msg(msg);
+}
+
+async function GetDictList() {
+  const ls = await AtTestCm.getDictList();
+  let msg = "返回：<br>";
+  for (const dt of ls) {
+    for (const [key, val] of dt) {
+      msg += key + " = " + val + "<br>";
+    }
+    msg += "<br>";
+  }
+  kit.msg(msg);
+}
+
+async function SendDictList() {
+  const map1 = new Dict([
+    ["a", 1],
+    ["b", true],
+    ["c", "abc"],
+  ]);
+
+  const map2 = new Dict([
+    ["a", 1],
+    ["b", true],
+    ["c", "abc"],
+  ]);
+  
+  const suc = await AtTestCm.sendDictList([map1, map2]);
+  kit.msg(suc ? "调用成功" : "调用失败");
+}
+
+async function GetTable() {
+  const tbl = await AtTestCm.getTable();
+  kit.msg(tbl.toString());
+}
+
+async function SetTable() {
+  const tbl = await AtTestCm.getTable();
+  const tbl2 = await AtTestCm.setTable(tbl);
+  kit.msg(tbl2.toString());
+}
+
+async function GetRow() {
+  const row = await AtTestCm.getRow();
+  kit.msg(row.toString());
+}
+
+async function SetRow() {
+  const row = await AtTestCm.getRow();
+  const row2 = await AtTestCm.setRow(row);
+  kit.msg(row2.toString());
+}
+
+async function GetTableSaveItem() {
+  const si = await AtTestCm.getTableSaveItem();
+  kit.msg(si.toString());
+}
+
+async function SetTableSaveItem() {
+  const si = await AtTestCm.getTableSaveItem();
+  const si2 = await AtTestCm.setTableSaveItem(si);
+  kit.msg(si2.toString());
+}
+
+async function GetRowSaveItem() {
+  const si = await AtTestCm.getRowSaveItem();
+  kit.msg(si.toString());
+}
+
+async function SetRowSaveItem() {
+  const row = await AtTestCm.getRow();
+  const row2 = await AtTestCm.setRow(row);
+  kit.msg(row2.toString());
+}
+
+async function GetSaveItems() {
+  const sis = await AtTestCm.getSaveItems();
+  kit.msg(sis.toString());
+}
+
+async function SetSaveItems() {
+  const row = await AtTestCm.getRow();
+  const row2 = await AtTestCm.setRow(row);
+  kit.msg(row2.toString());
+}
 </script>

@@ -1,4 +1,5 @@
 import * as Serializer from "./serializer";
+import { Dict } from "./types";
 
 /**
  * 调用服务API
@@ -22,10 +23,11 @@ export function rpc<T>(
   const str = JSON.stringify(arr);
   console.log("Rpc: " + str);
 
+  const url = getSvcUrl(serviceName) + "/.c";
   return new Promise(function (resolve, reject) {
     let xhr: XMLHttpRequest | null = new XMLHttpRequest();
     xhr.responseType = "arraybuffer";
-    xhr.open("post", "https://localhost:1234/.c", true);
+    xhr.open("post", url, true);
     // 识别web客户端，允许跨域请求
     xhr.setRequestHeader("dt.client", "web");
     // 内部用户标识
@@ -54,6 +56,65 @@ export function rpc<T>(
 
     xhr.send(getRequestData(str) as XMLHttpRequestBodyInit);
   });
+}
+
+let isSingletonSvc: boolean = false;
+let urlCm: string = "";
+let urlDefSvc: string | null = null;
+let urlDict = new Map<string, string>();
+
+export function getSvcUrl(p_svcName: string): string {
+  // 单体服务(所有微服务合并成一个服务)
+  if (
+    isSingletonSvc
+    || "cm".localeCompare(p_svcName, undefined, { sensitivity: "base" }) === 0
+  ) {
+    return urlCm;
+  }
+  // da da+dbkey
+  if (p_svcName.toLowerCase().startsWith("da")) {
+    return urlDefSvc ?? urlCm;
+  }
+
+  if (urlDict.has(p_svcName)) {
+    return urlDict.get(p_svcName)! as string;
+  }
+  throw new Error(`[${p_svcName}]服务地址不存在！`);
+}
+
+export function setServerUrl(p_server: string) {
+  urlCm = p_server;
+}
+
+export function initSvcUrls(p_svcUrls: Dict | null) {
+  if (p_svcUrls == null) {
+    // 单体服务
+    isSingletonSvc = true;
+  } else if (urlCm != null && urlCm.trim() !== "") {
+    const match = urlCm.match(/^http[s]?:\/\/[^\s:/]+/);
+    let prefix = "";
+    if (match != null) {
+      prefix = match[0];
+    }
+    // 使用Map，key忽略大小写，对应C# Dictionary StringComparer.OrdinalIgnoreCase
+    urlDict = new Map<string, string>();
+
+    for (const [key, val] of Object.entries(p_svcUrls)) {
+      let url = val as string;
+      if (url.startsWith("*")) {
+        url = prefix + url.substring(1).replace(/\\$/, "");
+      }
+      // key统一小写存入Map实现忽略大小写查询（配合GetSvcUrl）
+      urlDict.set(key.toLowerCase(), url);
+    }
+
+    // 查找At.OriginSvc，忽略大小写
+    const originKey = Array.from(urlDict.keys()).find((k) => k === "da");
+    if (!originKey) {
+      throw new Error(`da 服务地址不存在！`);
+    }
+    urlDefSvc = urlDict.get(originKey)!;
+  }
 }
 
 function getRequestData(str: string): Uint8Array {
