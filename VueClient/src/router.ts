@@ -5,7 +5,7 @@ const routes = [
   {
     path: "/",
     component: () => import("@/Home.vue"),
-    meta: { title: "收藏夹", icon: "home" },
+    meta: { title: "搬运工", icon: "home" },
     children: [
       {
         path: "TestSerialize",
