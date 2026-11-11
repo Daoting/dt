@@ -209,7 +209,7 @@ CREATE TABLE "cm_file_my" (
   "is_folder" bool NOT NULL,
   "ext_name" varchar(8),
   "info" varchar(512),
-  "ctime" timestamp(0) NOT NULL,
+  "ctime" timestamptz NOT NULL,
   "user_id" int8 NOT NULL
 )
 ;
@@ -237,7 +237,7 @@ CREATE TABLE "cm_file_pub" (
   "is_folder" bool NOT NULL,
   "ext_name" varchar(8),
   "info" varchar(512),
-  "ctime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_file_pub"."id" IS '文件标识';
@@ -303,8 +303,8 @@ CREATE TABLE "cm_menu" (
   "note" varchar(512),
   "dispidx" int4 NOT NULL,
   "is_locked" bool NOT NULL,
-  "ctime" timestamp(0) NOT NULL,
-  "mtime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL,
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_menu"."id" IS '菜单标识';
@@ -475,8 +475,8 @@ CREATE TABLE "cm_params" (
   "name" varchar(255) NOT NULL,
   "value" varchar(255),
   "note" varchar(255),
-  "ctime" timestamp(0) NOT NULL,
-  "mtime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL,
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_params"."id" IS '用户参数标识';
@@ -646,8 +646,8 @@ CREATE TABLE "cm_rpt" (
   "name" varchar(64) NOT NULL,
   "define" varchar(65535),
   "note" varchar(255),
-  "ctime" timestamp(0) NOT NULL,
-  "mtime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL,
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_rpt"."id" IS '报表标识';
@@ -673,8 +673,8 @@ CREATE TABLE "cm_user" (
   "name" varchar(32),
   "photo" varchar(255),
   "expired" bool NOT NULL,
-  "ctime" timestamp(0) NOT NULL,
-  "mtime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL,
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_user"."id" IS '用户标识';
@@ -722,7 +722,7 @@ CREATE TABLE "cm_user_params" (
   "user_id" int8 NOT NULL,
   "param_id" int8 NOT NULL,
   "value" varchar(255),
-  "mtime" timestamp(0) NOT NULL
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_user_params"."user_id" IS '用户标识';
@@ -777,8 +777,8 @@ CREATE TABLE "cm_wfd_atv" (
   "can_jump_into" bool NOT NULL,
   "trans_kind" int2 NOT NULL,
   "join_kind" int2 NOT NULL,
-  "ctime" timestamp(0) NOT NULL,
-  "mtime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL,
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_wfd_atv"."id" IS '活动标识';
@@ -834,8 +834,8 @@ CREATE TABLE "cm_wfd_prc" (
   "singleton" bool NOT NULL,
   "note" varchar(255),
   "dispidx" int4 NOT NULL,
-  "ctime" timestamp(0) NOT NULL,
-  "mtime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL,
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_wfd_prc"."id" IS '流程标识';
@@ -890,8 +890,8 @@ CREATE TABLE "cm_wfi_atv" (
   "atvd_id" int8 NOT NULL,
   "status" int2 NOT NULL,
   "inst_count" int4 NOT NULL,
-  "ctime" timestamp(0) NOT NULL,
-  "mtime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL,
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_wfi_atv"."id" IS '活动实例标识';
@@ -917,15 +917,15 @@ CREATE TABLE "cm_wfi_item" (
   "assign_kind" int2 NOT NULL,
   "sender_id" int8,
   "sender" varchar(32),
-  "stime" timestamp(0) NOT NULL,
+  "stime" timestamptz NOT NULL,
   "is_accept" bool NOT NULL,
-  "accept_time" timestamp(0),
+  "accept_time" timestamptz,
   "role_id" int8,
   "user_id" int8,
   "note" varchar(255),
   "dispidx" int4 NOT NULL,
-  "ctime" timestamp(0) NOT NULL,
-  "mtime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL,
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_wfi_item"."id" IS '工作项标识';
@@ -958,8 +958,8 @@ CREATE TABLE "cm_wfi_prc" (
   "name" varchar(255) NOT NULL,
   "status" int2 NOT NULL,
   "dispidx" int4 NOT NULL,
-  "ctime" timestamp(0) NOT NULL,
-  "mtime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL,
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_wfi_prc"."id" IS '流程实例标识，同时为业务数据主键';
@@ -984,7 +984,7 @@ CREATE TABLE "cm_wfi_trs" (
   "src_atvi_id" int8 NOT NULL,
   "tgt_atvi_id" int8 NOT NULL,
   "is_rollback" bool NOT NULL,
-  "ctime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_wfi_trs"."id" IS '迁移实例标识';
@@ -1032,8 +1032,8 @@ CREATE TABLE "crud_基础" (
   "值变事件" varchar(64),
   "发布插入事件" bool NOT NULL,
   "发布删除事件" bool NOT NULL,
-  "创建时间" timestamp(0) NOT NULL,
-  "修改时间" timestamp(0) NOT NULL
+  "创建时间" timestamptz NOT NULL,
+  "修改时间" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "crud_基础"."id" IS '标识';
@@ -1079,8 +1079,8 @@ CREATE TABLE "crud_字段类型" (
   "长整型" int8,
   "布尔" bool NOT NULL,
   "可空布尔" bool,
-  "日期时间" timestamp(6) NOT NULL,
-  "可空时间" timestamp(6),
+  "日期时间" timestamptz(6) NOT NULL,
+  "可空时间" timestamptz(6),
   "枚举" int2 NOT NULL,
   "可空枚举" int2,
   "单精度" float4 NOT NULL,
@@ -1252,7 +1252,7 @@ CREATE TABLE "fsm_file" (
   "size" int8 NOT NULL,
   "info" varchar(512),
   "uploader" int8 NOT NULL,
-  "ctime" timestamp(0) NOT NULL,
+  "ctime" timestamptz NOT NULL,
   "downloads" int8 NOT NULL
 )
 ;
@@ -1289,13 +1289,13 @@ COMMENT ON COLUMN "msg_queue"."ctime" IS '创建时间';
 CREATE TABLE "人员" (
   "id" int8 NOT NULL,
   "姓名" varchar(32),
-  "出生日期" timestamp(0),
+  "出生日期" timestamptz,
   "性别" int2,
-  "工作日期" timestamp(0),
+  "工作日期" timestamptz,
   "办公室电话" varchar(32),
   "电子邮件" varchar(32),
-  "建档时间" timestamp(0),
-  "撤档时间" timestamp(0),
+  "建档时间" timestamptz,
+  "撤档时间" timestamptz,
   "撤档原因" varchar(64),
   "user_id" int8
 )
@@ -1317,15 +1317,15 @@ CREATE TABLE "供应商" (
   "id" int8 NOT NULL,
   "名称" varchar(64),
   "执照号" varchar(32),
-  "执照效期" timestamp(0),
+  "执照效期" timestamptz,
   "税务登记号" varchar(32),
   "地址" varchar(128),
   "电话" varchar(16),
   "开户银行" varchar(64),
   "帐号" varchar(32),
   "联系人" varchar(32),
-  "建档时间" timestamp(0),
-  "撤档时间" timestamp(0),
+  "建档时间" timestamptz,
+  "撤档时间" timestamptz,
   "备注" varchar(255)
 )
 ;
@@ -1347,13 +1347,13 @@ CREATE TABLE "物资主单" (
   "单号" varchar(8) NOT NULL,
   "摘要" varchar(64),
   "填制人" varchar(32),
-  "填制日期" timestamp(0),
+  "填制日期" timestamptz,
   "审核人" varchar(32),
-  "审核日期" timestamp(0),
+  "审核日期" timestamptz,
   "入出系数" int2,
   "供应商id" int8,
   "发料人" varchar(32),
-  "发料日期" timestamp(0),
+  "发料日期" timestamptz,
   "金额" float4,
   "发票金额" float4
 )
@@ -1448,8 +1448,8 @@ CREATE TABLE "物资目录" (
   "成本价" float4,
   "核算方式" int2,
   "摊销月数" int4,
-  "建档时间" timestamp(0),
-  "撤档时间" timestamp(0)
+  "建档时间" timestamptz,
+  "撤档时间" timestamptz
 )
 ;
 COMMENT ON COLUMN "物资目录"."规格" IS '计量单位，如 盒、10个/包、20个/箱、支';
@@ -1475,9 +1475,9 @@ CREATE TABLE "物资计划" (
   "编制方法" int2,
   "摘要" varchar(64),
   "编制人" varchar(32),
-  "编制日期" timestamp(0),
+  "编制日期" timestamptz,
   "审核人" varchar(32),
-  "审核日期" timestamp(0)
+  "审核日期" timestamptz
 )
 ;
 COMMENT ON COLUMN "物资计划"."计划类型" IS '#计划类型#月;季;年';
@@ -1524,9 +1524,9 @@ CREATE TABLE "物资详单" (
   "金额" float4,
   "随货单号" varchar(128),
   "发票号" varchar(128),
-  "发票日期" timestamp(0),
+  "发票日期" timestamptz,
   "发票金额" float4,
-  "盘点时间" timestamp(0),
+  "盘点时间" timestamptz,
   "盘点金额" float4
 )
 ;
@@ -1554,8 +1554,8 @@ CREATE TABLE "部门" (
   "编码" varchar(16),
   "名称" varchar(32),
   "说明" varchar(64),
-  "建档时间" timestamp(0),
-  "撤档时间" timestamp(0)
+  "建档时间" timestamptz,
+  "撤档时间" timestamptz
 )
 ;
 COMMENT ON COLUMN "部门"."说明" IS '位置、环境、备注等';

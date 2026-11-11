@@ -2,7 +2,6 @@
 Navicat 从 mysql 导出后修改：
 1. int2 部分转bool 其余保留，转bool的数据需要加''
 2. varchar(21000) varchar(65535)
-3. timestamp 转 timestamp(0)
 */
 
 DROP TABLE IF EXISTS cm_cache;
@@ -57,7 +56,7 @@ CREATE TABLE "cm_file_my" (
   "is_folder" bool NOT NULL,
   "ext_name" varchar(8),
   "info" varchar(512),
-  "ctime" timestamp(0) NOT NULL,
+  "ctime" timestamptz NOT NULL,
   "user_id" int8 NOT NULL
 )
 ;
@@ -81,7 +80,7 @@ CREATE TABLE "cm_file_pub" (
   "is_folder" bool NOT NULL,
   "ext_name" varchar(8),
   "info" varchar(512),
-  "ctime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_file_pub"."id" IS '文件标识';
@@ -139,8 +138,8 @@ CREATE TABLE "cm_menu" (
   "note" varchar(512),
   "dispidx" int4 NOT NULL,
   "is_locked" bool NOT NULL,
-  "ctime" timestamp(0) NOT NULL,
-  "mtime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL,
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_menu"."id" IS '菜单标识';
@@ -293,8 +292,8 @@ CREATE TABLE "cm_params" (
   "name" varchar(255) NOT NULL,
   "value" varchar(255),
   "note" varchar(255),
-  "ctime" timestamp(0) NOT NULL,
-  "mtime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL,
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_params"."id" IS '用户参数标识';
@@ -444,8 +443,8 @@ CREATE TABLE "cm_rpt" (
   "name" varchar(64) NOT NULL,
   "define" varchar(65535),
   "note" varchar(255),
-  "ctime" timestamp(0) NOT NULL,
-  "mtime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL,
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_rpt"."id" IS '报表标识';
@@ -467,8 +466,8 @@ CREATE TABLE "cm_user" (
   "name" varchar(32),
   "photo" varchar(255),
   "expired" bool NOT NULL,
-  "ctime" timestamp(0) NOT NULL,
-  "mtime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL,
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_user"."id" IS '用户标识';
@@ -506,7 +505,7 @@ CREATE TABLE "cm_user_params" (
   "user_id" int8 NOT NULL,
   "param_id" int8 NOT NULL,
   "value" varchar(255),
-  "mtime" timestamp(0) NOT NULL
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_user_params"."user_id" IS '用户标识';
@@ -549,8 +548,8 @@ CREATE TABLE "cm_wfd_atv" (
   "can_jump_into" bool NOT NULL,
   "trans_kind" int2 NOT NULL,
   "join_kind" int2 NOT NULL,
-  "ctime" timestamp(0) NOT NULL,
-  "mtime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL,
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_wfd_atv"."id" IS '活动标识';
@@ -593,8 +592,8 @@ CREATE TABLE "cm_wfd_prc" (
   "singleton" bool NOT NULL,
   "note" varchar(255),
   "dispidx" int4 NOT NULL,
-  "ctime" timestamp(0) NOT NULL,
-  "mtime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL,
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_wfd_prc"."id" IS '流程标识';
@@ -637,8 +636,8 @@ CREATE TABLE "cm_wfi_atv" (
   "atvd_id" int8 NOT NULL,
   "status" int2 NOT NULL,
   "inst_count" int4 NOT NULL,
-  "ctime" timestamp(0) NOT NULL,
-  "mtime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL,
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_wfi_atv"."id" IS '活动实例标识';
@@ -660,15 +659,15 @@ CREATE TABLE "cm_wfi_item" (
   "assign_kind" int2 NOT NULL,
   "sender_id" int8,
   "sender" varchar(32),
-  "stime" timestamp(0) NOT NULL,
+  "stime" timestamptz NOT NULL,
   "is_accept" bool NOT NULL,
-  "accept_time" timestamp(0),
+  "accept_time" timestamptz,
   "role_id" int8,
   "user_id" int8,
   "note" varchar(255),
   "dispidx" int4 NOT NULL,
-  "ctime" timestamp(0) NOT NULL,
-  "mtime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL,
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_wfi_item"."id" IS '工作项标识';
@@ -697,8 +696,8 @@ CREATE TABLE "cm_wfi_prc" (
   "name" varchar(255) NOT NULL,
   "status" int2 NOT NULL,
   "dispidx" int4 NOT NULL,
-  "ctime" timestamp(0) NOT NULL,
-  "mtime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL,
+  "mtime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_wfi_prc"."id" IS '流程实例标识，同时为业务数据主键';
@@ -719,7 +718,7 @@ CREATE TABLE "cm_wfi_trs" (
   "src_atvi_id" int8 NOT NULL,
   "tgt_atvi_id" int8 NOT NULL,
   "is_rollback" bool NOT NULL,
-  "ctime" timestamp(0) NOT NULL
+  "ctime" timestamptz NOT NULL
 )
 ;
 COMMENT ON COLUMN "cm_wfi_trs"."id" IS '迁移实例标识';
@@ -740,7 +739,7 @@ CREATE TABLE "fsm_file" (
   "size" int8 NOT NULL,
   "info" varchar(512),
   "uploader" int8 NOT NULL,
-  "ctime" timestamp(0) NOT NULL,
+  "ctime" timestamptz NOT NULL,
   "downloads" int8 NOT NULL
 )
 ;
