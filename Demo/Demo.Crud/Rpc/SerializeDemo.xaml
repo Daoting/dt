@@ -31,6 +31,14 @@
             <Button Content="发送DateTime" Click="SetDateTime" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
+            <Button Content="返回DateOnly" Click="GetDateOnly" />
+            <Button Content="发送DateOnly" Click="SetDateOnly" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="返回TimeOnly" Click="GetTimeOnly" />
+            <Button Content="发送TimeOnly" Click="SetTimeOnly" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
             <Button Content="返回byte[]值" Click="GetByteArray" />
             <Button Content="发送byte[]值" Click="SetByteArray" />
         </StackPanel>

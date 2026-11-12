@@ -1,15 +1,4 @@
-﻿#region 文件描述
-/******************************************************************************
-* 创建: Daoting
-* 摘要: 
-* 日志: 2024-06-20 创建
-******************************************************************************/
-#endregion
-
-#region 引用命名
-#endregion
-
-namespace Demo.Base;
+﻿namespace Demo.Base;
 
 [Tbl("crud_字段类型")]
 public partial class 字段类型X : EntityX<字段类型X>
@@ -28,7 +17,11 @@ public partial class 字段类型X : EntityX<字段类型X>
         bool 布尔 = default,
         bool? 可空布尔 = default,
         DateTime 日期时间 = default,
-        DateTime? 可空时间 = default,
+        DateTime? 可空日期时间 = default,
+        DateOnly 只日期 = default,
+        DateOnly? 可空只日期 = default,
+        TimeOnly 只时间 = default,
+        TimeOnly? 可空只时间 = default,
         Gender 枚举 = default,
         Gender? 可空枚举 = default,
         float 单精度 = default,
@@ -42,7 +35,11 @@ public partial class 字段类型X : EntityX<字段类型X>
         Add("布尔", 布尔);
         Add("可空布尔", 可空布尔);
         Add("日期时间", 日期时间);
-        Add("可空时间", 可空时间);
+        Add("可空日期时间", 可空日期时间);
+        Add("只日期", 只日期);
+        Add("可空只日期", 可空只日期);
+        Add("只时间", 只时间);
+        Add("可空只时间", 可空只时间);
         Add("枚举", 枚举);
         Add("可空枚举", 可空枚举);
         Add("单精度", 单精度);
@@ -131,13 +128,57 @@ public partial class 字段类型X : EntityX<字段类型X>
     /// <summary>
     /// 
     /// </summary>
-    public DateTime? 可空时间
+    public DateTime? 可空日期时间
     {
-        get { return (DateTime?)this["可空时间"]; }
-        set { this["可空时间"] = value; }
+        get { return (DateTime?)this["可空日期时间"]; }
+        set { this["可空日期时间"] = value; }
     }
 
-    public Cell c可空时间 => _cells["可空时间"];
+    public Cell c可空日期时间 => _cells["可空日期时间"];
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public DateOnly 只日期
+    {
+        get { return (DateOnly)this["只日期"]; }
+        set { this["只日期"] = value; }
+    }
+
+    public Cell c只日期 => _cells["只日期"];
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public DateOnly? 可空只日期
+    {
+        get { return (DateOnly?)this["可空只日期"]; }
+        set { this["可空只日期"] = value; }
+    }
+
+    public Cell c可空只日期 => _cells["可空只日期"];
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public TimeOnly 只时间
+    {
+        get { return (TimeOnly)this["只时间"]; }
+        set { this["只时间"] = value; }
+    }
+
+    public Cell c只时间 => _cells["只时间"];
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public TimeOnly? 可空只时间
+    {
+        get { return (TimeOnly?)this["可空只时间"]; }
+        set { this["可空只时间"] = value; }
+    }
+
+    public Cell c可空只时间 => _cells["可空只时间"];
 
     /// <summary>
     /// 性别

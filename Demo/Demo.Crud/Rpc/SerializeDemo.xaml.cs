@@ -106,6 +106,32 @@ public partial class SerializeDemo : Win
         _tbInfo.Text = (span.TotalSeconds < 1) ? "调用成功！" : "调用不成功！";
     }
 
+    async void GetDateOnly(object sender, RoutedEventArgs e)
+    {
+        var result = await AtTestCm.GetDateOnly();
+        _tbInfo.Text = "返回值：" + result.ToString();
+    }
+
+    async void SetDateOnly(object sender, RoutedEventArgs e)
+    {
+        DateOnly val = DateOnly.FromDateTime(DateTime.Now);
+        DateOnly result = await AtTestCm.SetDateOnly(val);
+        _tbInfo.Text = (result == val) ? "调用成功！" : "调用不成功！";
+    }
+
+    async void GetTimeOnly(object sender, RoutedEventArgs e)
+    {
+        var result = await AtTestCm.GetTimeOnly();
+        _tbInfo.Text = "返回值：" + result.ToString();
+    }
+
+    async void SetTimeOnly(object sender, RoutedEventArgs e)
+    {
+        TimeOnly val = TimeOnly.FromDateTime(DateTime.Now);
+        TimeOnly result = await AtTestCm.SetTimeOnly(val);
+        _tbInfo.Text = (result.Hour == val.Hour && result.Minute == val.Minute && result.Second == val.Second) ? "调用成功！" : "调用不成功！";
+    }
+    
     async void GetByteArray(object sender, RoutedEventArgs e)
     {
         var result = await AtTestCm.GetByteArray();

@@ -157,6 +157,26 @@ public class TestSerialize : RpcApi
         return p_val;
     }
 
+    public DateOnly GetDateOnly()
+    {
+        return DateOnly.FromDateTime(DateTime.Now);
+    }
+
+    public DateOnly SetDateOnly(DateOnly p_val)
+    {
+        return p_val;
+    }
+
+    public TimeOnly GetTimeOnly()
+    {
+        return TimeOnly.FromDateTime(DateTime.Now);
+    }
+
+    public TimeOnly SetTimeOnly(TimeOnly p_val)
+    {
+        return p_val;
+    }
+    
     /// <summary>
     /// 返回byte[]值
     /// </summary>

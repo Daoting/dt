@@ -203,6 +203,40 @@ public partial class AtTestCm
         );
     }
 
+    public static Task<DateOnly> GetDateOnly()
+    {
+        return Kit.Rpc<DateOnly>(
+            "cm",
+            "TestSerialize.GetDateOnly"
+        );
+    }
+
+    public static Task<DateOnly> SetDateOnly(DateOnly p_val)
+    {
+        return Kit.Rpc<DateOnly>(
+            "cm",
+            "TestSerialize.SetDateOnly",
+            p_val
+        );
+    }
+
+    public static Task<TimeOnly> GetTimeOnly()
+    {
+        return Kit.Rpc<TimeOnly>(
+            "cm",
+            "TestSerialize.GetTimeOnly"
+        );
+    }
+
+    public static Task<TimeOnly> SetTimeOnly(TimeOnly p_val)
+    {
+        return Kit.Rpc<TimeOnly>(
+            "cm",
+            "TestSerialize.SetTimeOnly",
+            p_val
+        );
+    }
+
     /// <summary>
     /// 返回byte[]值
     /// </summary>

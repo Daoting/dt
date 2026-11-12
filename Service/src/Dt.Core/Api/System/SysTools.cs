@@ -122,7 +122,7 @@ public class SysTools : RpcApi
         sb.Remove(sb.Length - 3, 3);
         sb.Append(")");
         sb.AppendLine();
-        AppendTabSpace(sb, 2);
+        AppendTabSpace(sb, 1);
         sb.AppendLine("{");
         foreach (var col in schema.PrimaryKey.Concat(schema.Columns))
         {

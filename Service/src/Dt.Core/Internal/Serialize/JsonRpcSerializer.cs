@@ -130,6 +130,16 @@ public static class JsonRpcSerializer
                     }
                     SerializeCollection(arr, p_writer);
                 }
+                else if (p_value is DateOnly date)
+                {
+                    // "o" 固定输出 yyyy-MM-dd，不受区域性影响
+                    p_writer.WriteStringValue(date.ToString("o"));
+                }
+                else if (p_value is TimeOnly time)
+                {
+                    // 精确到秒
+                    p_writer.WriteStringValue(time.ToLongTimeString());
+                }
                 else
                 {
                     SerializeObject(p_value, p_writer);
@@ -281,11 +291,17 @@ public static class JsonRpcSerializer
                     if (p_tgtType == typeof(long) || p_tgtType == typeof(long?))
                         return long.Parse(str);
 
+                    if (p_tgtType == typeof(bool) || p_tgtType == typeof(bool?))
+                        return (str == "1" || str == "true");
+
                     if (p_tgtType == typeof(DateTime) || p_tgtType == typeof(DateTime?))
                         return DateTime.Parse(str.StartsWith("*0*") ? str.Substring(3) : str);
 
-                    if (p_tgtType == typeof(bool) || p_tgtType == typeof(bool?))
-                        return (str == "1" || str == "true");
+                    if (p_tgtType == typeof(DateOnly) || p_tgtType == typeof(DateOnly?))
+                        return DateOnly.Parse(str);
+
+                    if (p_tgtType == typeof(TimeOnly) || p_tgtType == typeof(TimeOnly?))
+                        return TimeOnly.Parse(str);
 
                     // base64编码的字节数组
                     if (p_tgtType == typeof(byte[]))
