@@ -522,6 +522,10 @@ public partial class Cell : INotifyPropertyChanged
             return null;
         }
 
+        // 直接转
+        if (p_tgtType == typeof(string))
+            return p_val.ToString();
+
         // 枚举类型
         if (p_tgtType.IsEnum)
         {

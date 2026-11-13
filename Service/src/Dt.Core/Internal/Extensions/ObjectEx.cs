@@ -44,6 +44,19 @@ public static class ObjectEx
         if (tgtType.IsAssignableFrom(p_obj.GetType()))
             return (T)p_obj;
 
+        // 空字符串转其他类型
+        if (p_obj is string && (string)p_obj == string.Empty)
+        {
+            // 值类型，相当于default
+            if (tgtType.IsValueType)
+                return (T)Activator.CreateInstance(tgtType);
+            return default(T);
+        }
+
+        // 直接转
+        if (tgtType == typeof(string))
+            return (T)(object)p_obj.ToString();
+
         // 枚举类型
         if (tgtType.IsEnum)
         {
