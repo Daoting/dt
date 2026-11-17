@@ -23,8 +23,14 @@ class DateValConverter : IFvCall
         if (m.Val == null)
             return default(DateTime);
 
-        if (m.Val.GetType() == typeof(DateTime))
-            return (DateTime)m.Val;
+        if (m.Val is DateTime dt)
+            return dt;
+
+        if (m.Val is DateOnly date)
+            return date.ToDateTime(TimeOnly.MinValue);
+
+        if (m.Val is TimeOnly time)
+            return DateOnly.MinValue.ToDateTime(time);
 
         try
         {
@@ -44,6 +50,24 @@ class DateValConverter : IFvCall
             if ((DateTime)m.Val == default(DateTime))
                 return null;
             return m.Val;
+        }
+
+        if (m.ValType == typeof(DateOnly))
+            return DateOnly.FromDateTime((DateTime)m.Val);
+
+        if (m.ValType == typeof(DateOnly?))
+        {
+            var dateOnly = DateOnly.FromDateTime((DateTime)m.Val);
+            return dateOnly == DateOnly.MinValue ? null : dateOnly;
+        }
+        
+        if (m.ValType == typeof(TimeOnly))
+            return TimeOnly.FromDateTime((DateTime)m.Val);
+
+        if (m.ValType == typeof(TimeOnly?))
+        {
+            var timeOnly = TimeOnly.FromDateTime((DateTime)m.Val);
+            return timeOnly == TimeOnly.MinValue ? null : timeOnly;
         }
 
         object result = null;
