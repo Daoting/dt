@@ -295,7 +295,11 @@ public static class JsonRpcSerializer
                         return (str == "1" || str == "true");
 
                     if (p_tgtType == typeof(DateTime) || p_tgtType == typeof(DateTime?))
-                        return DateTime.Parse(str.StartsWith("*0*") ? str.Substring(3) : str);
+                    {
+                        var dto = DateTimeOffset.Parse(str.StartsWith("*0*") ? str.Substring(3) : str);
+                        // DateTimeOffset.LocalDateTime在MinValue时来回转换会越界，需特殊处理
+                        return dto == DateTimeOffset.MinValue ? DateTime.MinValue : dto.LocalDateTime;
+                    }
 
                     if (p_tgtType == typeof(DateOnly) || p_tgtType == typeof(DateOnly?))
                         return DateOnly.Parse(str);
