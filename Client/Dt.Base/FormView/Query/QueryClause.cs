@@ -157,7 +157,9 @@ public class QueryClause
             // 忽略空时间
             if (c.Type == typeof(DateTime) && (DateTime)c.Val == default)
                 continue;
-
+            if (c.Type == typeof(DateOnly) && (DateOnly)c.Val == default)
+                continue;
+            
             // 忽略id为0的情况
             if (c.Type == typeof(long) && c.Long == 0 && cell.QueryFlag == CompFlag.Equal)
                 continue;
@@ -174,7 +176,7 @@ public class QueryClause
             if (id.EndsWith("_min", StringComparison.OrdinalIgnoreCase)
                 || id.EndsWith("_max", StringComparison.OrdinalIgnoreCase))
             {
-                name = id.Substring(0, id.Length - 3);
+                name = id.Substring(0, id.Length - 4);
             }
 
             // 表结构中没有该列

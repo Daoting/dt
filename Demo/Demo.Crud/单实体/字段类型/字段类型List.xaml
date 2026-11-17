@@ -14,7 +14,11 @@
             <a:Col ID="布尔" />
             <a:Col ID="可空布尔" />
             <a:Col ID="日期时间" />
-            <a:Col ID="可空时间" />
+            <a:Col ID="可空日期时间" />
+            <a:Col ID="只日期" />
+            <a:Col ID="可空只日期" />
+            <a:Col ID="只时间" />
+            <a:Col ID="可空只时间" />
             <a:Col ID="枚举" />
             <a:Col ID="可空枚举" />
             <a:Col ID="单精度" />

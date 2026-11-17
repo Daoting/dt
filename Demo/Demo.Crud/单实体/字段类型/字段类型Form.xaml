@@ -13,7 +13,11 @@
         <a:CBool ID="布尔" />
         <a:CBool ID="可空布尔" />
         <a:CDate ID="日期时间" />
-        <a:CDate ID="可空时间" />
+        <a:CDate ID="可空日期时间" />
+        <a:CDate ID="只日期" />
+        <a:CDate ID="可空只日期" />
+        <a:CDate ID="只时间" Format="HH:mm" />
+        <a:CDate ID="可空只时间" Format="HH:mm" />
         <a:CList ID="枚举" />
         <a:CList ID="可空枚举" />
         <a:CNum ID="单精度" />

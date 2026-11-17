@@ -401,9 +401,13 @@ public class SysTools : RpcApi
                 {
                     sb.Append($"<a:CNum ID=\"{col.Name.ToLower()}\"{title} />");
                 }
-                else if (tp == typeof(DateTime))
+                else if (tp == typeof(DateTime) || tp == typeof(DateOnly))
                 {
                     sb.Append($"<a:CDate ID=\"{col.Name.ToLower()}\"{title} />");
+                }
+                else if (tp == typeof(TimeOnly))
+                {
+                    sb.Append($"<a:CDate ID=\"{col.Name.ToLower()}\"{title} Format=\"HH:mm\" />");
                 }
                 else
                 {
@@ -614,13 +618,21 @@ public class SysTools : RpcApi
                     AppendTabSpace(sb, 2);
                     sb.Append($"<a:CNum ID=\"{col.Name.ToLower()}_max\" Query=\"Editable\" QueryFlag=\"Ceil\" ShowTitle=\"False\" ColSpan=\"0.5\" />");
                 }
-                else if (tp == typeof(DateTime))
+                else if (tp == typeof(DateTime) || tp == typeof(DateOnly))
                 {
                     sb.Append($"<a:CBar Title=\"{(title == "" ? col.Name : col.Comments)}\" />\r\n");
                     AppendTabSpace(sb, 2);
                     sb.Append($"<a:CDate ID=\"{col.Name.ToLower()}_min\" Query=\"Editable\" QueryFlag=\"Floor\" ShowTitle=\"False\" ColSpan=\"0.5\" />\r\n");
                     AppendTabSpace(sb, 2);
                     sb.Append($"<a:CDate ID=\"{col.Name.ToLower()}_max\" Query=\"Editable\" QueryFlag=\"Ceil\" ShowTitle=\"False\" ColSpan=\"0.5\" />");
+                }
+                else if (tp == typeof(TimeOnly))
+                {
+                    sb.Append($"<a:CBar Title=\"{(title == "" ? col.Name : col.Comments)}\" />\r\n");
+                    AppendTabSpace(sb, 2);
+                    sb.Append($"<a:CDate ID=\"{col.Name.ToLower()}_min\" Query=\"Editable\" QueryFlag=\"Floor\" Format=\"HH:mm\" ShowTitle=\"False\" ColSpan=\"0.5\" />\r\n");
+                    AppendTabSpace(sb, 2);
+                    sb.Append($"<a:CDate ID=\"{col.Name.ToLower()}_max\" Query=\"Editable\" QueryFlag=\"Ceil\" Format=\"HH:mm\" ShowTitle=\"False\" ColSpan=\"0.5\" />");
                 }
                 else
                 {
@@ -665,7 +677,12 @@ public class SysTools : RpcApi
                 if (sb.Length > 0)
                     sb.AppendLine();
                 AppendTabSpace(sb, 2);
-                if (tp == typeof(int) || tp == typeof(float) || tp == typeof(double) || tp == typeof(DateTime))
+                if (tp == typeof(int)
+                    || tp == typeof(float)
+                    || tp == typeof(double)
+                    || tp == typeof(DateTime)
+                    || tp == typeof(DateOnly)
+                    || tp == typeof(TimeOnly))
                 {
                     sb.AppendLine($"row.Add<{col.GetTypeName()}>(\"{col.Name.ToLower()}_min\");");
                     AppendTabSpace(sb, 2);

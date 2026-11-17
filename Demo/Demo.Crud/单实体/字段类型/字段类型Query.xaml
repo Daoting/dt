@@ -19,9 +19,21 @@
         <a:CBar Title="日期时间" />
         <a:CDate ID="日期时间_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
         <a:CDate ID="日期时间_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
-        <a:CBar Title="可空时间" />
-        <a:CDate ID="可空时间_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
-        <a:CDate ID="可空时间_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CBar Title="可空日期时间" />
+        <a:CDate ID="可空日期时间_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate ID="可空日期时间_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CBar Title="只日期" />
+        <a:CDate ID="只日期_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate ID="只日期_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CBar Title="可空只日期" />
+        <a:CDate ID="可空只日期_min" Query="Editable" QueryFlag="Floor" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate ID="可空只日期_max" Query="Editable" QueryFlag="Ceil" ShowTitle="False" ColSpan="0.5" />
+        <a:CBar Title="只时间" />
+        <a:CDate ID="只时间_min" Query="Editable" QueryFlag="Floor" Format="HH:mm" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate ID="只时间_max" Query="Editable" QueryFlag="Ceil" Format="HH:mm" ShowTitle="False" ColSpan="0.5" />
+        <a:CBar Title="可空只时间" />
+        <a:CDate ID="可空只时间_min" Query="Editable" QueryFlag="Floor" Format="HH:mm" ShowTitle="False" ColSpan="0.5" />
+        <a:CDate ID="可空只时间_max" Query="Editable" QueryFlag="Ceil" Format="HH:mm" ShowTitle="False" ColSpan="0.5" />
         <a:CList ID="枚举" Query="Editable" QueryFlag="Equal" />
         <a:CList ID="可空枚举" Query="Editable" QueryFlag="Equal" />
         <a:CBar Title="单精度" />
