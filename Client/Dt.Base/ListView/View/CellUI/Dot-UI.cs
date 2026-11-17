@@ -130,6 +130,12 @@ public partial class Dot
         if (tp == typeof(SolidColorBrush))
             return CreateBrushRect();
 
+        if (tp == typeof(DateOnly))
+            return CreateDateOnlyBlock();
+
+        if (tp == typeof(TimeOnly))
+            return CreateTimeOnlyBlock();
+        
         return CreateDefaultBlock();
     }
 
@@ -203,6 +209,37 @@ public partial class Dot
         return tb;
     }
 
+    TextBlock CreateDateOnlyBlock()
+    {
+        var tb = new TextBlock { Style = Res.LvTextBlock };
+        _set = c =>
+        {
+            string str;
+            // null或DateOnly.MinValue时无显示内容
+            if (c.DateOnly == default)
+                str = "";
+            else
+                str = c.DateOnly.ToString("o");
+
+            tb.Text = str;
+            c.Dot.ToggleVisible(str == "");
+        };
+        return tb;
+    }
+
+    TextBlock CreateTimeOnlyBlock()
+    {
+        var tb = new TextBlock { Style = Res.LvTextBlock };
+        _set = c =>
+        {
+            // null时无显示内容，非null时TimeOnly.MinValue也显示
+            string str = c.CellVal == null ? "" : c.TimeOnly.ToShortTimeString();
+            tb.Text = str;
+            c.Dot.ToggleVisible(str == "");
+        };
+        return tb;
+    }
+    
     TextBlock CreateIcons()
     {
         // 图标

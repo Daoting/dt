@@ -89,6 +89,18 @@ public class CallArgs
     public DateTime Date => GetVal<DateTime>(_dot.ID);
 
     /// <summary>
+    /// 当前单元格的日期值，为null时返回DateOnly.MinValue，即default(DateOnly)！！！
+    /// </summary>
+    /// <returns>日期值</returns>
+    public DateOnly DateOnly => GetVal<DateOnly>(_dot.ID);
+
+    /// <summary>
+    /// 当前单元格的时间值，为null时返回TimeOnly.MinValue，即default(TimeOnly)！！！
+    /// </summary>
+    /// <returns>时间值</returns>
+    public TimeOnly TimeOnly => GetVal<TimeOnly>(_dot.ID);
+
+    /// <summary>
     /// 获取当前单元格的值
     /// </summary>
     public object CellVal => GetColVal(_dot.ID);
